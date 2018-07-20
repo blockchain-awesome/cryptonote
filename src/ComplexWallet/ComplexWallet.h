@@ -31,9 +31,9 @@ namespace CryptoNote
   /************************************************************************/
   /*                                                                      */
   /************************************************************************/
-  class simple_wallet : public CryptoNote::INodeObserver, public CryptoNote::IWalletLegacyObserver, public CryptoNote::INodeRpcProxyObserver {
+  class complex_wallet : public CryptoNote::INodeObserver, public CryptoNote::IWalletLegacyObserver, public CryptoNote::INodeRpcProxyObserver {
   public:
-    simple_wallet(System::Dispatcher& dispatcher, const CryptoNote::Currency& currency, Logging::LoggerManager& log);
+    complex_wallet(System::Dispatcher& dispatcher, const CryptoNote::Currency& currency, Logging::LoggerManager& log);
 
     bool init(const boost::program_options::variables_map& vm);
     bool deinit();
@@ -100,8 +100,8 @@ namespace CryptoNote
     class refresh_progress_reporter_t
     {
     public:
-      refresh_progress_reporter_t(CryptoNote::simple_wallet& simple_wallet)
-        : m_simple_wallet(simple_wallet)
+      refresh_progress_reporter_t(CryptoNote::complex_wallet& complex_wallet)
+        : m_complex_wallet(complex_wallet)
         , m_blockchain_height(0)
         , m_blockchain_height_update_time()
         , m_print_time()
@@ -111,7 +111,7 @@ namespace CryptoNote
       void update(uint64_t height, bool force = false)
       {
         auto current_time = std::chrono::system_clock::now();
-        if (std::chrono::seconds(m_simple_wallet.currency().difficultyTarget() / 2) < current_time - m_blockchain_height_update_time ||
+        if (std::chrono::seconds(m_complex_wallet.currency().difficultyTarget() / 2) < current_time - m_blockchain_height_update_time ||
             m_blockchain_height <= height) {
           update_blockchain_height();
           m_blockchain_height = (std::max)(m_blockchain_height, height);
@@ -126,13 +126,13 @@ namespace CryptoNote
     private:
       void update_blockchain_height()
       {
-        uint64_t blockchain_height = m_simple_wallet.m_node->getLastLocalBlockHeight();
+        uint64_t blockchain_height = m_complex_wallet.m_node->getLastLocalBlockHeight();
         m_blockchain_height = blockchain_height;
         m_blockchain_height_update_time = std::chrono::system_clock::now();
       }
 
     private:
-      CryptoNote::simple_wallet& m_simple_wallet;
+      CryptoNote::complex_wallet& m_complex_wallet;
       uint64_t m_blockchain_height;
       std::chrono::system_clock::time_point m_blockchain_height_update_time;
       std::chrono::system_clock::time_point m_print_time;
