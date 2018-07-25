@@ -3,6 +3,7 @@
 
 #pragma once
 #include <unordered_map>
+#include <boost/program_options/variables_map.hpp>
 
 #include "Common/JsonValue.h"
 #include "JsonRpcServer/JsonRpcServer.h"
@@ -11,6 +12,7 @@
 #include "Serialization/JsonOutputStreamSerializer.h"
 
 #include "IWalletLegacy.h"
+#include "CommandParser.h"
 
 #include "Common/ConsoleHandler.h"
 #include "CryptoNoteCore/CryptoNoteBasicImpl.h"
@@ -32,6 +34,8 @@ public:
   MultiWalletJsonRpcServer(System::Dispatcher &sys, System::Event &stopEvent, const CryptoNote::Currency &currency, Logging::ILogger &loggerGroup);
   MultiWalletJsonRpcServer(const MultiWalletJsonRpcServer &) = delete;
   std::string getCommands();
+  void init(const boost::program_options::variables_map &vm);
+  void handle_command_line(const boost::program_options::variables_map &vm);
 
 protected:
   virtual void processJsonRpcRequest(const Common::JsonValue &req, Common::JsonValue &resp) override;
@@ -75,6 +79,8 @@ private:
   std::string m_daemon_address;
   std::string m_daemon_host;
   uint16_t m_daemon_port;
+  std::string m_bind_ip;
+  uint16_t m_bind_port;
 
   Common::ConsoleHandler m_consoleHandler;
   const CryptoNote::Currency &m_currency;

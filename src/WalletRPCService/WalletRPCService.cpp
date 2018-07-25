@@ -26,7 +26,8 @@ MultiWalletJsonRpcServer::MultiWalletJsonRpcServer(System::Dispatcher &sys, Syst
   // handlers.emplace("login", jsonHandler<Login::Request, Login::Response>(std::bind(&MultiWalletJsonRpcServer::handleLogin, this, std::placeholders::_1, std::placeholders::_2)));
 }
 
-std::string MultiWalletJsonRpcServer::getCommands() {
+std::string MultiWalletJsonRpcServer::getCommands()
+{
   std::stringstream ss;
   ss << "Commands: " << ENDL;
   std::string usage = m_consoleHandler.getUsage();
@@ -36,6 +37,23 @@ std::string MultiWalletJsonRpcServer::getCommands() {
   return ss.str();
 }
 
+void MultiWalletJsonRpcServer::handle_command_line(const boost::program_options::variables_map &vm)
+{
+  m_bind_ip = command_line::get_arg(vm, arg_bind_ip);
+  m_bind_port = command_line::get_arg(vm, arg_bind_port);
+  m_daemon_host = command_line::get_arg(vm, arg_daemon_host);
+  m_daemon_port = command_line::get_arg(vm, arg_daemon_port);
+}
+
+void MultiWalletJsonRpcServer::init(const boost::program_options::variables_map &vm)
+{
+  handle_command_line(vm);
+  cout << "bind ip: " << m_bind_ip << endl;
+  cout << "bind port: " << m_bind_port << endl;
+  cout << "daemon host: " << m_daemon_host << endl;
+  cout << "daemon port: " << m_daemon_port << endl;
+  // start(m_bind_ip, m_bind_port);
+}
 
 void MultiWalletJsonRpcServer::processJsonRpcRequest(const Common::JsonValue &req, Common::JsonValue &resp)
 {
