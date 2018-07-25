@@ -13,26 +13,45 @@
 
 using namespace std;
 
-namespace MultiWalletService {
+namespace MultiWalletService
+{
 
-MultiWalletJsonRpcServer::MultiWalletJsonRpcServer(System::Dispatcher& sys, System::Event& stopEvent, Logging::ILogger& loggerGroup) 
-  : JsonRpcServer(sys, stopEvent, loggerGroup)
-  , logger(loggerGroup, "MultiWalletJsonRpcServer")
+MultiWalletJsonRpcServer::MultiWalletJsonRpcServer(System::Dispatcher &sys, System::Event &stopEvent, const CryptoNote::Currency &currency, Logging::ILogger &loggerGroup)
+    : JsonRpcServer(sys, stopEvent, loggerGroup),
+      m_dispatcher(sys),
+      m_daemon_port(0),
+      m_currency(currency),
+      logger(loggerGroup, "MultiWalletJsonRpcServer")
 {
   // handlers.emplace("login", jsonHandler<Login::Request, Login::Response>(std::bind(&MultiWalletJsonRpcServer::handleLogin, this, std::placeholders::_1, std::placeholders::_2)));
 }
 
-void MultiWalletJsonRpcServer::processJsonRpcRequest(const Common::JsonValue& req, Common::JsonValue& resp) {
-  try {
+std::string MultiWalletJsonRpcServer::getCommands() {
+  std::stringstream ss;
+  ss << "Commands: " << ENDL;
+  std::string usage = m_consoleHandler.getUsage();
+  boost::replace_all(usage, "\n", "\n  ");
+  usage.insert(0, "  ");
+  ss << usage << ENDL;
+  return ss.str();
+}
+
+
+void MultiWalletJsonRpcServer::processJsonRpcRequest(const Common::JsonValue &req, Common::JsonValue &resp)
+{
+  try
+  {
     prepareJsonResponse(req, resp);
 
-    if (!req.contains("method")) {
+    if (!req.contains("method"))
+    {
       logger(Logging::WARNING) << "Field \"method\" is not found in json request: " << req;
       makeGenericErrorReponse(resp, "Invalid Request", -3600);
       return;
     }
 
-    if (!req("method").isString()) {
+    if (!req("method").isString())
+    {
       logger(Logging::WARNING) << "Field \"method\" is not a string type: " << req;
       makeGenericErrorReponse(resp, "Invalid Request", -3600);
       return;
@@ -41,7 +60,8 @@ void MultiWalletJsonRpcServer::processJsonRpcRequest(const Common::JsonValue& re
     std::string method = req("method").getString();
 
     auto it = handlers.find(method);
-    if (it == handlers.end()) {
+    if (it == handlers.end())
+    {
       logger(Logging::WARNING) << "Requested method not found: " << method;
       makeMethodNotFoundResponse(resp);
       return;
@@ -50,18 +70,22 @@ void MultiWalletJsonRpcServer::processJsonRpcRequest(const Common::JsonValue& re
     logger(Logging::DEBUGGING) << method << " request came";
 
     Common::JsonValue params(Common::JsonValue::OBJECT);
-    if (req.contains("params")) {
+    if (req.contains("params"))
+    {
       params = req("params");
     }
 
     it->second(params, resp);
-  } catch (std::exception& e) {
+  }
+  catch (std::exception &e)
+  {
     logger(Logging::WARNING) << "Error occurred while processing JsonRpc request: " << e.what();
     makeGenericErrorReponse(resp, e.what());
   }
 }
 
-std::error_code MultiWalletJsonRpcServer::handleLogin(const Login::Request& request, Login::Response& response) {
+std::error_code MultiWalletJsonRpcServer::handleLogin(const Login::Request &request, Login::Response &response)
+{
 
   cout << request.address << endl;
   cout << request.spendPublicKey << endl;
@@ -70,4 +94,4 @@ std::error_code MultiWalletJsonRpcServer::handleLogin(const Login::Request& requ
   return ec;
 }
 
-}
+} // namespace MultiWalletService
