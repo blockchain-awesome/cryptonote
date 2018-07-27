@@ -10,7 +10,7 @@
 
 #include <boost/program_options.hpp>
 
-namespace PaymentService {
+namespace MultiWalletService {
 
 class ConfigurationError : public std::runtime_error {
 public:
@@ -41,4 +41,4 @@ struct Configuration {
   size_t logLevel;
 };
 
-} //namespace PaymentService
+} //namespace MultiWalletService

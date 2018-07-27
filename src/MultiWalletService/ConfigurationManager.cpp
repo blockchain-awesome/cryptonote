@@ -10,7 +10,7 @@
 #include "Common/CommandLine.h"
 #include "Common/Util.h"
 
-namespace PaymentService {
+namespace MultiWalletService {
 
 namespace po = boost::program_options;
 
@@ -98,4 +98,4 @@ bool ConfigurationManager::init(int argc, char** argv) {
   return true;
 }
 
-} //namespace PaymentService
+} //namespace MultiWalletService

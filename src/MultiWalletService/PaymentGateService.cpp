@@ -18,7 +18,7 @@
 #include "PaymentGate/WalletFactory.h"
 #include <System/Context.h>
 
-# include <iostream>
+#include <iostream>
 
 #ifdef ERROR
 #undef ERROR
@@ -31,22 +31,30 @@
 #endif
 
 using namespace PaymentService;
-using namespace MultiWalletService;
+// using namespace MultiWalletService;
 
 using namespace std;
 
-void changeDirectory(const std::string& path) {
-  if (chdir(path.c_str())) {
+namespace MultiWalletService
+{
+
+void changeDirectory(const std::string &path)
+{
+  if (chdir(path.c_str()))
+  {
     throw std::runtime_error("Couldn't change directory to \'" + path + "\': " + strerror(errno));
   }
 }
 
-void stopSignalHandler(PaymentGateService* pg) {
+void stopSignalHandler(PaymentGateService *pg)
+{
   pg->stop();
 }
 
-bool PaymentGateService::init(int argc, char** argv) {
-  if (!config.init(argc, argv)) {
+bool PaymentGateService::init(int argc, char **argv)
+{
+  if (!config.init(argc, argv))
+  {
     return false;
   }
 
@@ -55,19 +63,22 @@ bool PaymentGateService::init(int argc, char** argv) {
 
   Logging::LoggerRef log(logger, "main");
 
-  if (config.gateConfiguration.testnet) {
+  if (config.gateConfiguration.testnet)
+  {
     log(Logging::INFO) << "Starting in testnet mode";
     currencyBuilder.testnet(true);
   }
 
-  if (!config.gateConfiguration.serverRoot.empty()) {
+  if (!config.gateConfiguration.serverRoot.empty())
+  {
     changeDirectory(config.gateConfiguration.serverRoot);
     log(Logging::INFO) << "Current working directory now is " << config.gateConfiguration.serverRoot;
   }
 
   fileStream.open(config.gateConfiguration.logFile, std::ofstream::app);
 
-  if (!fileStream) {
+  if (!fileStream)
+  {
     throw std::runtime_error("Couldn't open log file");
   }
 
@@ -77,19 +88,21 @@ bool PaymentGateService::init(int argc, char** argv) {
   return true;
 }
 
-WalletConfiguration PaymentGateService::getWalletConfig() const {
-  return WalletConfiguration{
-    config.gateConfiguration.containerFile,
-    config.gateConfiguration.containerPassword
-  };
-}
+// WalletConfiguration PaymentGateService::getWalletConfig() const
+// {
+//   return WalletConfiguration{
+//       config.gateConfiguration.containerFile,
+//       config.gateConfiguration.containerPassword};
+// }
 
-const CryptoNote::Currency PaymentGateService::getCurrency() {
+const CryptoNote::Currency PaymentGateService::getCurrency()
+{
   return currencyBuilder.currency();
 }
 
-void PaymentGateService::run() {
-  
+void PaymentGateService::run()
+{
+
   System::Dispatcher localDispatcher;
   System::Event localStopEvent(localDispatcher);
 
@@ -100,75 +113,46 @@ void PaymentGateService::run() {
 
   Logging::LoggerRef log(logger, "run");
 
-  // if (config.startInprocess) {
-  //   runInProcess(log);
-  // } else {
-    runRpcProxy(log);
-  // }
+  runRpcProxy(log);
 
   this->dispatcher = nullptr;
   this->stopEvent = nullptr;
 }
 
-void PaymentGateService::stop() {
+void PaymentGateService::stop()
+{
   Logging::LoggerRef log(logger, "stop");
 
   log(Logging::INFO) << "Stop signal caught";
 
-  if (dispatcher != nullptr) {
+  if (dispatcher != nullptr)
+  {
     dispatcher->remoteSpawn([&]() {
-      if (stopEvent != nullptr) {
+      if (stopEvent != nullptr)
+      {
         stopEvent->set();
       }
     });
   }
 }
 
-void PaymentGateService::runRpcProxy(Logging::LoggerRef& log) {
+void PaymentGateService::runRpcProxy(Logging::LoggerRef &log)
+{
   log(Logging::INFO) << "Starting Payment Gate with remote node";
   CryptoNote::Currency currency = currencyBuilder.currency();
-  
+
   std::unique_ptr<CryptoNote::INode> node(
-    PaymentService::NodeFactory::createNode(
-      config.remoteNodeConfig.daemonHost, 
-      config.remoteNodeConfig.daemonPort));
+      PaymentService::NodeFactory::createNode(
+          config.remoteNodeConfig.daemonHost,
+          config.remoteNodeConfig.daemonPort));
 
   runWalletService(currency, *node);
 }
 
-void PaymentGateService::runWalletService(const CryptoNote::Currency& currency, CryptoNote::INode& node) {
-  PaymentService::WalletConfiguration walletConfiguration{
-    config.gateConfiguration.containerFile,
-    config.gateConfiguration.containerPassword
-  };
-
-  // std::unique_ptr<CryptoNote::IWallet> wallet (WalletFactory::createWallet(currency, node, *dispatcher));
-
-  // service = new PaymentService::WalletService(currency, *dispatcher, node, *wallet, walletConfiguration, logger);
-  // std::unique_ptr<PaymentService::WalletService> serviceGuard(service);
-  // try {
-  //   service->init();
-  // } catch (std::exception& e) {
-  //   Logging::LoggerRef(logger, "run")(Logging::ERROR, Logging::BRIGHT_RED) << "Failed to init walletService reason: " << e.what();
-  //   return;
-  // }
-
-  // if (config.gateConfiguration.printAddresses) {
-  //   // print addresses and exit
-  //   std::vector<std::string> addresses;
-  //   service->getAddresses(addresses);
-  //   for (const auto& address: addresses) {
-  //     std::cout << "Address: " << address << std::endl;
-  //   }
-  // } else {
-    MultiWalletService::MultiServiceJsonRpcServer rpcServer(*dispatcher, *stopEvent, logger);
-    rpcServer.start(config.gateConfiguration.bindAddress, config.gateConfiguration.bindPort);
-
-    // cout << "end of service" << endl;
-    // try {
-    //   service->saveWallet();
-    // } catch (std::exception& ex) {
-    //   Logging::LoggerRef(logger, "saveWallet")(Logging::WARNING, Logging::YELLOW) << "Couldn't save container: " << ex.what();
-    // }
-  // }
+void PaymentGateService::runWalletService(const CryptoNote::Currency &currency, CryptoNote::INode &node)
+{
+  MultiWalletService::MultiServiceJsonRpcServer rpcServer(*dispatcher, *stopEvent, logger);
+  rpcServer.start(config.gateConfiguration.bindAddress, config.gateConfiguration.bindPort);
 }
+
+} // namespace MultiWalletService

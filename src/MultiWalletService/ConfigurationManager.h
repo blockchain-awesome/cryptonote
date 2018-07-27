@@ -9,7 +9,7 @@
 #include "P2p/NetNodeConfig.h"
 #include "RpcNodeConfiguration.h"
 
-namespace PaymentService {
+namespace MultiWalletService {
 
 class ConfigurationManager {
 public:
@@ -23,4 +23,4 @@ public:
   RpcNodeConfiguration remoteNodeConfig;
 };
 
-} //namespace PaymentService
+} //namespace MultiWalletService

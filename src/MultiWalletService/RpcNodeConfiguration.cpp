@@ -4,7 +4,7 @@
 
 #include "RpcNodeConfiguration.h"
 
-namespace PaymentService {
+namespace MultiWalletService {
 
 namespace po = boost::program_options;
 
@@ -29,4 +29,4 @@ void RpcNodeConfiguration::init(const boost::program_options::variables_map& opt
   }
 }
 
-} //namespace PaymentService
+} //namespace MultiWalletService

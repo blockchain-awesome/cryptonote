@@ -7,7 +7,7 @@
 #include <cstdint>
 #include <boost/program_options.hpp>
 
-namespace PaymentService {
+namespace MultiWalletService {
 
 class RpcNodeConfiguration {
 public:
@@ -20,4 +20,4 @@ public:
   uint16_t daemonPort;
 };
 
-} //namespace PaymentService
+} //namespace MultiWalletService

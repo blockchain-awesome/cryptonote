@@ -2,7 +2,7 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <iostream>
+// #include <iostream>
 #include <memory>
 #include <thread>
 
@@ -23,7 +23,7 @@
 #include <errno.h>
 #endif
 
-#define SERVICE_NAME "Payment Gate"
+using namespace MultiWalletService;
 
 PaymentGateService *ppg;
 
@@ -187,7 +187,7 @@ int main(int argc, char **argv)
       throw std::runtime_error("Failed to start daemon");
     }
   }
-  catch (PaymentService::ConfigurationError &ex)
+  catch (MultiWalletService::ConfigurationError &ex)
   {
     std::cerr << "Configuration error: " << ex.what() << std::endl;
     return 1;

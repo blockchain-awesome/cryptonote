@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <fstream>
+
 #include "ConfigurationManager.h"
 #include "PaymentServiceConfiguration.h"
 
@@ -12,38 +14,44 @@
 #include "Logging/StreamLogger.h"
 
 #include "PaymentGate/NodeFactory.h"
-#include "PaymentGate/WalletService.h"
 
-class PaymentGateService {
+#include "CryptoNoteCore/Currency.h"
+#include "System/Event.h"
+
+using namespace std;
+
+namespace MultiWalletService
+{
+class PaymentGateService
+{
 public:
-
-  PaymentGateService() : dispatcher(nullptr), stopEvent(nullptr), config(), logger(), currencyBuilder(logger) {
+  PaymentGateService() : dispatcher(nullptr), stopEvent(nullptr), config(), logger(), currencyBuilder(logger)
+  {
   }
 
-  bool init(int argc, char** argv);
+  bool init(int argc, char **argv);
 
-  const PaymentService::ConfigurationManager& getConfig() const { return config; }
-  PaymentService::WalletConfiguration getWalletConfig() const;
+  const MultiWalletService::ConfigurationManager &getConfig() const { return config; }
   const CryptoNote::Currency getCurrency();
 
   void run();
   void stop();
-  
-  Logging::ILogger& getLogger() { return logger; }
+
+  Logging::ILogger &getLogger() { return logger; }
 
 private:
+  void runRpcProxy(Logging::LoggerRef &log);
 
-  void runRpcProxy(Logging::LoggerRef& log);
+  void runWalletService(const CryptoNote::Currency &currency, CryptoNote::INode &node);
 
-  void runWalletService(const CryptoNote::Currency& currency, CryptoNote::INode& node);
-
-  System::Dispatcher* dispatcher;
-  System::Event* stopEvent;
-  PaymentService::ConfigurationManager config;
+  System::Dispatcher *dispatcher;
+  System::Event *stopEvent;
+  MultiWalletService::ConfigurationManager config;
   CryptoNote::CurrencyBuilder currencyBuilder;
-  
+
   Logging::LoggerGroup logger;
-  std::ofstream fileStream;
+  ofstream fileStream;
   Logging::StreamLogger fileLogger;
   Logging::ConsoleLogger consoleLogger;
 };
+} // namespace MultiWalletService
