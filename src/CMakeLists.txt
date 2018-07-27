@@ -31,6 +31,7 @@ file(GLOB_RECURSE JsonRpcServer JsonRpcServer/*)
 
 file(GLOB_RECURSE PaymentGate PaymentGate/*)
 file(GLOB_RECURSE PaymentGateService PaymentGateService/*)
+file(GLOB_RECURSE MultiWalletService MultiWalletService/*)
 file(GLOB_RECURSE Miner Miner/*)
 
 source_group("" FILES $${Common} ${ConnectivityTool} ${Crypto} ${CryptoNoteCore} ${CryptoNoteProtocol} ${Daemon} ${JsonRpcServer} ${Http} ${Logging} ${NodeRpcProxy} ${P2p} ${Rpc} ${Serialization} ${SimpleWallet} ${WalletRPCService} ${System} ${Transfers} ${Wallet} ${WalletLegacy})
@@ -57,6 +58,7 @@ add_executable(Daemon ${Daemon})
 add_executable(SimpleWallet ${SimpleWallet})
 add_executable(WalletRPCService ${WalletRPCService})
 add_executable(PaymentGateService ${PaymentGateService})
+add_executable(MultiWalletService ${MultiWalletService})
 add_executable(Miner ${Miner})
 
 if (MSVC)
@@ -68,6 +70,7 @@ target_link_libraries(Daemon CryptoNoteCore P2P Rpc Serialization System Http Lo
 target_link_libraries(SimpleWallet Wallet NodeRpcProxy Transfers Rpc Http Serialization CryptoNoteCore System Logging Common Crypto ${Boost_LIBRARIES})
 target_link_libraries(WalletRPCService PaymentGate JsonRpcServer Wallet NodeRpcProxy Transfers CryptoNoteCore Crypto P2P Rpc Http Serialization System Logging Common InProcessNode upnpc-static BlockchainExplorer ${Boost_LIBRARIES})
 target_link_libraries(PaymentGateService PaymentGate JsonRpcServer Wallet NodeRpcProxy Transfers CryptoNoteCore Crypto P2P Rpc Http Serialization System Logging Common InProcessNode upnpc-static BlockchainExplorer ${Boost_LIBRARIES})
+target_link_libraries(MultiWalletService PaymentGate JsonRpcServer Wallet NodeRpcProxy Transfers CryptoNoteCore Crypto P2P Rpc Http Serialization System Logging Common InProcessNode upnpc-static BlockchainExplorer ${Boost_LIBRARIES})
 target_link_libraries(Miner CryptoNoteCore Rpc Serialization System Http Logging Common Crypto ${Boost_LIBRARIES})
 
 add_dependencies(Rpc version)
@@ -77,12 +80,14 @@ add_dependencies(Daemon version)
 add_dependencies(SimpleWallet version)
 add_dependencies(WalletRPCService version)
 add_dependencies(PaymentGateService version)
+add_dependencies(MultiWalletService version)
 add_dependencies(P2P version)
 
 set_property(TARGET ConnectivityTool PROPERTY OUTPUT_NAME "connectivity_tool")
 set_property(TARGET SimpleWallet PROPERTY OUTPUT_NAME "simplewallet")
 set_property(TARGET WalletRPCService PROPERTY OUTPUT_NAME "rpcwalletd")
 set_property(TARGET PaymentGateService PROPERTY OUTPUT_NAME "walletd")
+set_property(TARGET MultiWalletService PROPERTY OUTPUT_NAME "multiwalletd")
 set_property(TARGET Miner PROPERTY OUTPUT_NAME "miner")
 #TODO Specify the name of daemon for your currency
 set_property(TARGET Daemon PROPERTY OUTPUT_NAME "vigcoind")
