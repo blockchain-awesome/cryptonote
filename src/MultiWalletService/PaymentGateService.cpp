@@ -100,11 +100,11 @@ void PaymentGateService::run() {
 
   Logging::LoggerRef log(logger, "run");
 
-  if (config.startInprocess) {
-    runInProcess(log);
-  } else {
+  // if (config.startInprocess) {
+  //   runInProcess(log);
+  // } else {
     runRpcProxy(log);
-  }
+  // }
 
   this->dispatcher = nullptr;
   this->stopEvent = nullptr;
@@ -122,77 +122,6 @@ void PaymentGateService::stop() {
       }
     });
   }
-}
-
-void PaymentGateService::runInProcess(Logging::LoggerRef& log) {
-  if (!config.coreConfig.configFolderDefaulted) {
-    if (!Tools::directoryExists(config.coreConfig.configFolder)) {
-      throw std::runtime_error("Directory does not exist: " + config.coreConfig.configFolder);
-    }
-  } else {
-    if (!Tools::create_directories_if_necessary(config.coreConfig.configFolder)) {
-      throw std::runtime_error("Can't create directory: " + config.coreConfig.configFolder);
-    }
-  }
-
-  log(Logging::INFO) << "Starting Payment Gate with local node";
-
-  CryptoNote::Currency currency = currencyBuilder.currency();
-  CryptoNote::core core(currency, NULL, logger);
-
-  CryptoNote::CryptoNoteProtocolHandler protocol(currency, *dispatcher, core, NULL, logger);
-  CryptoNote::NodeServer p2pNode(*dispatcher, protocol, logger);
-
-  protocol.set_p2p_endpoint(&p2pNode);
-  core.set_cryptonote_protocol(&protocol);
-
-  log(Logging::INFO) << "initializing p2pNode";
-  if (!p2pNode.init(config.netNodeConfig)) {
-    throw std::runtime_error("Failed to init p2pNode");
-  }
-
-  log(Logging::INFO) << "initializing core";
-  CryptoNote::MinerConfig emptyMiner;
-  core.init(config.coreConfig, emptyMiner, true);
-
-  std::promise<std::error_code> initPromise;
-  auto initFuture = initPromise.get_future();
-
-  std::unique_ptr<CryptoNote::INode> node(new CryptoNote::InProcessNode(core, protocol));
-
-  node->init([&initPromise, &log](std::error_code ec) {
-    if (ec) {
-      log(Logging::WARNING, Logging::YELLOW) << "Failed to init node: " << ec.message();
-    } else {
-      log(Logging::INFO) << "node is inited successfully";
-    }
-
-    initPromise.set_value(ec);
-  });
-
-  auto ec = initFuture.get();
-  if (ec) {
-    throw std::system_error(ec);
-  }
-
-  log(Logging::INFO) << "Spawning p2p server";
-
-  System::Event p2pStarted(*dispatcher);
-  
-  System::Context<> context(*dispatcher, [&]() {
-    p2pStarted.set();
-    p2pNode.run();
-  });
-
-  p2pStarted.wait();
-
-  runWalletService(currency, *node);
-
-  p2pNode.sendStopSignal();
-  context.get();
-  node->shutdown();
-  core.deinit();
-  p2pNode.deinit(); 
 }
 
 void PaymentGateService::runRpcProxy(Logging::LoggerRef& log) {
@@ -236,10 +165,10 @@ void PaymentGateService::runWalletService(const CryptoNote::Currency& currency, 
     rpcServer.start(config.gateConfiguration.bindAddress, config.gateConfiguration.bindPort);
 
     // cout << "end of service" << endl;
-    try {
-      service->saveWallet();
-    } catch (std::exception& ex) {
-      Logging::LoggerRef(logger, "saveWallet")(Logging::WARNING, Logging::YELLOW) << "Couldn't save container: " << ex.what();
-    }
+    // try {
+    //   service->saveWallet();
+    // } catch (std::exception& ex) {
+    //   Logging::LoggerRef(logger, "saveWallet")(Logging::WARNING, Logging::YELLOW) << "Couldn't save container: " << ex.what();
+    // }
   // }
 }
