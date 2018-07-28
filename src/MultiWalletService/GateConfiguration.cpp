@@ -2,26 +2,25 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "PaymentServiceConfiguration.h"
+#include "GateConfiguration.h"
 
 #include <iostream>
 #include <algorithm>
 #include <boost/program_options.hpp>
 
 #include "Logging/ILogger.h"
+#include "CryptoNoteConfig.h"
 
 namespace po = boost::program_options;
+
+using namespace CryptoNote;
 
 namespace MultiWalletService {
 
 Configuration::Configuration() {
-  generateNewContainer = false;
   daemonize = false;
-  registerService = false;
-  unregisterService = false;
-  logFile = "payment_gate.log";
+  logFile = "multi_wallet_gate.log";
   testnet = false;
-  printAddresses = false;
   logLevel = Logging::INFO;
   bindAddress = "";
   bindPort = 0;
@@ -29,37 +28,17 @@ Configuration::Configuration() {
 
 void Configuration::initOptions(boost::program_options::options_description& desc) {
   desc.add_options()
-      ("bind-address", po::value<std::string>()->default_value("0.0.0.0"), "payment service bind address")
-      ("bind-port", po::value<uint16_t>()->default_value(8070), "payment service bind port")
-      ("container-file,w", po::value<std::string>(), "container file")
-      ("container-password,p", po::value<std::string>(), "container password")
-      ("generate-container,g", "generate new container file with one wallet and exit")
+      ("bind-address", po::value<std::string>()->default_value("0.0.0.0"), "multi wallet service bind address")
+      ("bind-port", po::value<uint16_t>()->default_value(RPC_WALLET_PORT), "multi service bind port")
       ("daemon,d", "run as daemon in Unix or as service in Windows")
-#ifdef _WIN32
-      ("register-service", "register service and exit (Windows only)")
-      ("unregister-service", "unregister service and exit (Windows only)")
-#endif
       ("log-file,l", po::value<std::string>(), "log file")
       ("server-root", po::value<std::string>(), "server root. The service will use it as working directory. Don't set it if don't want to change it")
-      ("log-level", po::value<size_t>(), "log level")
-      ("address", "print wallet addresses and exit");
+      ("log-level", po::value<size_t>(), "log level");
 }
 
 void Configuration::init(const boost::program_options::variables_map& options) {
   if (options.count("daemon") != 0) {
     daemonize = true;
-  }
-
-  if (options.count("register-service") != 0) {
-    registerService = true;
-  }
-
-  if (options.count("unregister-service") != 0) {
-    unregisterService = true;
-  }
-
-  if (registerService && unregisterService) {
-    throw ConfigurationError("It's impossible to use both \"register-service\" and \"unregister-service\" at the same time");
   }
 
   if (options["testnet"].as<bool>()) {
@@ -88,28 +67,6 @@ void Configuration::init(const boost::program_options::variables_map& options) {
 
   if (options.count("bind-port") != 0 && (!options["bind-port"].defaulted() || bindPort == 0)) {
     bindPort = options["bind-port"].as<uint16_t>();
-  }
-
-  if (options.count("container-file") != 0) {
-    containerFile = options["container-file"].as<std::string>();
-  }
-
-  if (options.count("container-password") != 0) {
-    containerPassword = options["container-password"].as<std::string>();
-  }
-
-  if (options.count("generate-container") != 0) {
-    generateNewContainer = true;
-  }
-
-  if (options.count("address") != 0) {
-    printAddresses = true;
-  }
-
-  if (!registerService && !unregisterService) {
-    if (containerFile.empty() || containerPassword.empty()) {
-      throw ConfigurationError("Both container-file and container-password parameters are required");
-    }
   }
 }
 

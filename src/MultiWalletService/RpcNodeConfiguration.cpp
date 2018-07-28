@@ -3,6 +3,9 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "RpcNodeConfiguration.h"
+#include "CryptoNoteConfig.h"
+
+using namespace CryptoNote;
 
 namespace MultiWalletService {
 
@@ -16,7 +19,7 @@ RpcNodeConfiguration::RpcNodeConfiguration() {
 void RpcNodeConfiguration::initOptions(boost::program_options::options_description& desc) {
   desc.add_options()
     ("daemon-address", po::value<std::string>()->default_value("localhost"), "daemon address")
-    ("daemon-port", po::value<uint16_t>()->default_value(8081), "daemon port");
+    ("daemon-port", po::value<uint16_t>()->default_value(P2P_DEFAULT_PORT), "daemon port");
 }
 
 void RpcNodeConfiguration::init(const boost::program_options::variables_map& options) {

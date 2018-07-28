@@ -2,7 +2,7 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "PaymentGateService.h"
+#include "MultiWalletService.h"
 
 #include <future>
 
@@ -31,8 +31,6 @@
 #endif
 
 using namespace PaymentService;
-// using namespace MultiWalletService;
-
 using namespace std;
 
 namespace MultiWalletService
@@ -87,13 +85,6 @@ bool PaymentGateService::init(int argc, char **argv)
 
   return true;
 }
-
-// WalletConfiguration PaymentGateService::getWalletConfig() const
-// {
-//   return WalletConfiguration{
-//       config.gateConfiguration.containerFile,
-//       config.gateConfiguration.containerPassword};
-// }
 
 const CryptoNote::Currency PaymentGateService::getCurrency()
 {

@@ -7,7 +7,7 @@
 #include <fstream>
 
 #include "ConfigurationManager.h"
-#include "PaymentServiceConfiguration.h"
+#include "GateConfiguration.h"
 
 #include "Logging/ConsoleLogger.h"
 #include "Logging/LoggerGroup.h"

@@ -5,7 +5,7 @@
 #pragma once
 
 #include "CryptoNoteCore/CoreConfig.h"
-#include "PaymentServiceConfiguration.h"
+#include "GateConfiguration.h"
 #include "P2p/NetNodeConfig.h"
 #include "RpcNodeConfiguration.h"
 

@@ -8,7 +8,7 @@
 
 #include <string.h>
 
-#include "PaymentGateService.h"
+#include "MultiWalletService.h"
 #include "version.h"
 
 #ifdef WIN32
@@ -181,7 +181,6 @@ int main(int argc, char **argv)
 
     Logging::LoggerRef(pg.getLogger(), "main")(Logging::INFO) << "MultiWalletService "
                                                               << " v" << PROJECT_VERSION_LONG;
-    // const auto &config = pg.getConfig();
     if (runDaemon() != 0)
     {
       throw std::runtime_error("Failed to start daemon");
