@@ -17,6 +17,7 @@
 
 #include "CryptoNoteCore/Currency.h"
 #include "System/Event.h"
+#include "WalletInterface.h"
 
 using namespace std;
 
