@@ -22,10 +22,10 @@ using namespace std;
 
 namespace MultiWalletService
 {
-class PaymentGateService
+class MultiWallet
 {
 public:
-  PaymentGateService() : dispatcher(nullptr), stopEvent(nullptr), config(), logger(), currencyBuilder(logger)
+  MultiWallet() : dispatcher(nullptr), stopEvent(nullptr), config(), logger(), currencyBuilder(logger)
   {
   }
 

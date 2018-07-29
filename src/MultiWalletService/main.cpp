@@ -25,7 +25,7 @@
 
 using namespace MultiWalletService;
 
-PaymentGateService *ppg;
+MultiWallet *ppg;
 
 #ifdef WIN32
 SERVICE_STATUS_HANDLE serviceStatusHandle;
@@ -169,7 +169,7 @@ int runDaemon()
 
 int main(int argc, char **argv)
 {
-  PaymentGateService pg;
+  MultiWallet pg;
   ppg = &pg;
 
   try

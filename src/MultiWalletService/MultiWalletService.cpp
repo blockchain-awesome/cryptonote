@@ -44,12 +44,12 @@ void changeDirectory(const std::string &path)
   }
 }
 
-void stopSignalHandler(PaymentGateService *pg)
+void stopSignalHandler(MultiWallet *pg)
 {
   pg->stop();
 }
 
-bool PaymentGateService::init(int argc, char **argv)
+bool MultiWallet::init(int argc, char **argv)
 {
   if (!config.init(argc, argv))
   {
@@ -86,12 +86,12 @@ bool PaymentGateService::init(int argc, char **argv)
   return true;
 }
 
-const CryptoNote::Currency PaymentGateService::getCurrency()
+const CryptoNote::Currency MultiWallet::getCurrency()
 {
   return currencyBuilder.currency();
 }
 
-void PaymentGateService::run()
+void MultiWallet::run()
 {
 
   System::Dispatcher localDispatcher;
@@ -110,7 +110,7 @@ void PaymentGateService::run()
   this->stopEvent = nullptr;
 }
 
-void PaymentGateService::stop()
+void MultiWallet::stop()
 {
   Logging::LoggerRef log(logger, "stop");
 
@@ -127,7 +127,7 @@ void PaymentGateService::stop()
   }
 }
 
-void PaymentGateService::runRpcProxy(Logging::LoggerRef &log)
+void MultiWallet::runRpcProxy(Logging::LoggerRef &log)
 {
   log(Logging::INFO) << "Starting Payment Gate with remote node";
   CryptoNote::Currency currency = currencyBuilder.currency();
@@ -140,10 +140,24 @@ void PaymentGateService::runRpcProxy(Logging::LoggerRef &log)
   runWalletService(currency, *node);
 }
 
-void PaymentGateService::runWalletService(const CryptoNote::Currency &currency, CryptoNote::INode &node)
+void MultiWallet::runWalletService(const CryptoNote::Currency &currency, CryptoNote::INode &node)
 {
   MultiWalletService::MultiServiceJsonRpcServer rpcServer(*dispatcher, *stopEvent, logger);
   rpcServer.start(config.gateConfiguration.bindAddress, config.gateConfiguration.bindPort);
+
+  // std::unique_ptr<CryptoNote::IWallet> wallet(WalletFactory::createWallet(currency, node, *dispatcher));
+
+  // service = new PaymentService::WalletService(currency, *dispatcher, node, *wallet, logger);
+  // std::unique_ptr<PaymentService::WalletService> serviceGuard(service);
+  // try
+  // {
+  //   service->init();
+  // }
+  // catch (std::exception &e)
+  // {
+  //   Logging::LoggerRef(logger, "run")(Logging::ERROR, Logging::BRIGHT_RED) << "Failed to init walletService reason: " << e.what();
+  //   return;
+  // }
 }
 
 } // namespace MultiWalletService

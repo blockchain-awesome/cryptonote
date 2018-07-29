@@ -11,11 +11,11 @@
 #include "Serialization/JsonInputValueSerializer.h"
 #include "Serialization/JsonOutputStreamSerializer.h"
 
-namespace MultiWalletService {
+namespace MultiWalletService
+{
 
-MultiServiceJsonRpcServer::MultiServiceJsonRpcServer(System::Dispatcher& sys, System::Event& stopEvent, Logging::ILogger& loggerGroup) 
-  : JsonRpcServer(sys, stopEvent, loggerGroup)
-  , logger(loggerGroup, "MultiServiceJsonRpcServer")
+MultiServiceJsonRpcServer::MultiServiceJsonRpcServer(System::Dispatcher &sys, System::Event &stopEvent, Logging::ILogger &loggerGroup)
+    : JsonRpcServer(sys, stopEvent, loggerGroup), logger(loggerGroup, "MultiServiceJsonRpcServer")
 {
   // handlers.emplace("reset", jsonHandler<Reset::Request, Reset::Response>(std::bind(&MultiServiceJsonRpcServer::handleReset, this, std::placeholders::_1, std::placeholders::_2)));
   // handlers.emplace("createAddress", jsonHandler<CreateAddress::Request, CreateAddress::Response>(std::bind(&MultiServiceJsonRpcServer::handleCreateAddress, this, std::placeholders::_1, std::placeholders::_2)));
@@ -37,17 +37,21 @@ MultiServiceJsonRpcServer::MultiServiceJsonRpcServer(System::Dispatcher& sys, Sy
   // handlers.emplace("getAddresses", jsonHandler<GetAddresses::Request, GetAddresses::Response>(std::bind(&MultiServiceJsonRpcServer::handleGetAddresses, this, std::placeholders::_1, std::placeholders::_2)));
 }
 
-void MultiServiceJsonRpcServer::processJsonRpcRequest(const Common::JsonValue& req, Common::JsonValue& resp) {
-  try {
+void MultiServiceJsonRpcServer::processJsonRpcRequest(const Common::JsonValue &req, Common::JsonValue &resp)
+{
+  try
+  {
     prepareJsonResponse(req, resp);
 
-    if (!req.contains("method")) {
+    if (!req.contains("method"))
+    {
       logger(Logging::WARNING) << "Field \"method\" is not found in json request: " << req;
       makeGenericErrorReponse(resp, "Invalid Request", -3600);
       return;
     }
 
-    if (!req("method").isString()) {
+    if (!req("method").isString())
+    {
       logger(Logging::WARNING) << "Field \"method\" is not a string type: " << req;
       makeGenericErrorReponse(resp, "Invalid Request", -3600);
       return;
@@ -56,7 +60,8 @@ void MultiServiceJsonRpcServer::processJsonRpcRequest(const Common::JsonValue& r
     std::string method = req("method").getString();
 
     auto it = handlers.find(method);
-    if (it == handlers.end()) {
+    if (it == handlers.end())
+    {
       logger(Logging::WARNING) << "Requested method not found: " << method;
       makeMethodNotFoundResponse(resp);
       return;
@@ -65,12 +70,15 @@ void MultiServiceJsonRpcServer::processJsonRpcRequest(const Common::JsonValue& r
     logger(Logging::DEBUGGING) << method << " request came";
 
     Common::JsonValue params(Common::JsonValue::OBJECT);
-    if (req.contains("params")) {
+    if (req.contains("params"))
+    {
       params = req("params");
     }
 
     it->second(params, resp);
-  } catch (std::exception& e) {
+  }
+  catch (std::exception &e)
+  {
     logger(Logging::WARNING) << "Error occurred while processing JsonRpc request: " << e.what();
     makeGenericErrorReponse(resp, e.what());
   }
@@ -170,4 +178,4 @@ void MultiServiceJsonRpcServer::processJsonRpcRequest(const Common::JsonValue& r
 //   return service.getAddresses(response.addresses);
 // }
 
-}
+} // namespace MultiWalletService
