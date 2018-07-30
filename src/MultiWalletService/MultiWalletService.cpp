@@ -18,8 +18,6 @@
 #include "PaymentGate/WalletFactory.h"
 #include <System/Context.h>
 
-#include <iostream>
-
 #ifdef ERROR
 #undef ERROR
 #endif
@@ -31,7 +29,6 @@
 #endif
 
 using namespace PaymentService;
-using namespace std;
 
 namespace MultiWalletService
 {
@@ -137,16 +134,22 @@ void MultiWallet::runRpcProxy(Logging::LoggerRef &log)
           config.remoteNodeConfig.daemonHost,
           config.remoteNodeConfig.daemonPort));
 
-  runWalletService(currency, *node);
+  runWalletService(currency, *node, log);
+
+  log(Logging::INFO) << "Started wallet Service";
 }
 
-void MultiWallet::runWalletService(const CryptoNote::Currency &currency, CryptoNote::INode &node)
+void MultiWallet::runWalletService(const CryptoNote::Currency &currency, CryptoNote::INode &node, Logging::LoggerRef &log)
 {
-  MultiWalletService::MultiServiceJsonRpcServer rpcServer(*dispatcher, *stopEvent, logger);
+  // dispatcher->remoteSpawn([this, log, currency, node]() {
+  //   log(Logging::INFO) << "starting wallet";
+
+  //   WalletInterface *wallet = new WalletInterface(*dispatcher, currency, node, logger);
+  // });
+  log(Logging::INFO) << "starting rpc server";
+
+  MultiWalletService::MultiServiceJsonRpcServer rpcServer(*dispatcher, *stopEvent, log.getLogger());
   rpcServer.start(config.gateConfiguration.bindAddress, config.gateConfiguration.bindPort);
-
-
-  WalletInterface* wallet = new WalletInterface(*dispatcher, currency, node);
 
   // std::unique_ptr<CryptoNote::IWallet> wallet(WalletFactory::createWallet(currency, node, *dispatcher));
 

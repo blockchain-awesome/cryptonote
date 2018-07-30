@@ -11,8 +11,13 @@
 #include <tuple>
 #include <utility>
 
+#include <iostream>
+
 #include <System/EventLock.h>
 #include <System/RemoteContext.h>
+
+
+#include "Logging/LoggerGroup.h"
 
 #include "ITransaction.h"
 
@@ -37,6 +42,8 @@
 using namespace Common;
 using namespace Crypto;
 using namespace CryptoNote;
+
+using namespace std;
 
 namespace
 {
@@ -264,10 +271,11 @@ CryptoNote::AccountPublicAddress parseAccountAddressString(const std::string &ad
 namespace MultiWalletService
 {
 
-WalletInterface::WalletInterface(System::Dispatcher &dispatcher, const Currency &currency, INode &node, uint32_t transactionSoftLockTime) : m_dispatcher(dispatcher),
+WalletInterface::WalletInterface(System::Dispatcher &dispatcher, const Currency &currency, INode &node, Logging::LoggerGroup &logger, uint32_t transactionSoftLockTime) : m_dispatcher(dispatcher),
                                                                                                                                             m_currency(currency),
                                                                                                                                             m_node(node),
                                                                                                                                             m_stopped(false),
+                                                                                                                                            m_logger(logger),
                                                                                                                                             m_blockchainSynchronizerStarted(false),
                                                                                                                                             m_blockchainSynchronizer(node, currency.genesisBlockHash()),
                                                                                                                                             m_synchronizer(currency, m_blockchainSynchronizer, node),
@@ -358,6 +366,8 @@ void WalletInterface::init()
 {
   m_blockchain.push_back(m_currency.genesisBlockHash());
   m_blockchainSynchronizer.addObserver(this);
+
+  startBlockchainSynchronizer();
 }
 
 // void WalletInterface::initWithKeys(const Crypto::PublicKey &viewPublicKey, const Crypto::SecretKey &viewSecretKey, const std::string &password)
@@ -1972,12 +1982,18 @@ void WalletInterface::onSynchronizationProgressUpdated(uint32_t processedBlockCo
   pushEvent(makeSyncProgressUpdatedEvent(processedBlockCount, totalBlockCount));
 
   uint32_t currentHeight = processedBlockCount - 1;
+
+  Logging::LoggerRef(m_logger, "inteface")(Logging::INFO) << "on synchronizing" << endl;
+
   // unlockBalances(currentHeight);
 }
 
 void WalletInterface::onSynchronizationCompleted()
 {
   System::EventLock lk(m_readyEvent);
+
+  Logging::LoggerRef(m_logger, "inteface")(Logging::INFO) << "on synchronized" << endl;
+
 
   if (m_state == WalletState::NOT_INITIALIZED)
   {
@@ -2233,7 +2249,8 @@ void WalletInterface::deleteUnlockTransactionJob(const Hash &transactionHash)
 
 void WalletInterface::startBlockchainSynchronizer()
 {
-  if (!m_walletsContainer.empty() && !m_blockchainSynchronizerStarted)
+  // if (!m_walletsContainer.empty() && !m_blockchainSynchronizerStarted)
+  if (!m_blockchainSynchronizerStarted)
   {
     m_blockchainSynchronizer.start();
     m_blockchainSynchronizerStarted = true;

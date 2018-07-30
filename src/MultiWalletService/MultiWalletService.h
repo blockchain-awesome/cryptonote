@@ -19,6 +19,8 @@
 #include "System/Event.h"
 #include "WalletInterface.h"
 
+#include <System/ContextGroup.h>
+
 using namespace std;
 
 namespace MultiWalletService
@@ -43,12 +45,14 @@ public:
 private:
   void runRpcProxy(Logging::LoggerRef &log);
 
-  void runWalletService(const CryptoNote::Currency &currency, CryptoNote::INode &node);
+  void runWalletService(const CryptoNote::Currency &currency, CryptoNote::INode &node, Logging::LoggerRef &log);
 
   System::Dispatcher *dispatcher;
   System::Event *stopEvent;
   MultiWalletService::ConfigurationManager config;
   CryptoNote::CurrencyBuilder currencyBuilder;
+
+  // System::ContextGroup walletContextGroup;
 
   Logging::LoggerGroup logger;
   ofstream fileStream;
