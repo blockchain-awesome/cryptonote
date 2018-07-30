@@ -23,8 +23,8 @@ namespace MultiWalletService {
 
 class WalletInterface :
                     // ITransfersObserver,
-                    IBlockchainSynchronizerObserver,
-                    ITransfersSynchronizerObserver
+                    IBlockchainSynchronizerObserver
+                    // ITransfersSynchronizerObserver
                     // IFusionManager 
                     {
 public:
@@ -83,13 +83,17 @@ public:
 
 protected:
 
-  // 新钱包接口区
+  // 区块链同步接口
 
   virtual void synchronizationProgressUpdated(uint32_t processedBlockCount, uint32_t totalBlockCount) override;
   virtual void synchronizationCompleted(std::error_code result) override;
+  void onSynchronizationProgressUpdated(uint32_t processedBlockCount, uint32_t totalBlockCount);
+  void onSynchronizationCompleted();
 
   bool m_blockchainSynchronizerStarted;
   BlockchainSynchronizer m_blockchainSynchronizer;
+
+
 
   void throwIfNotInitialized() const;
   void throwIfStopped() const;
@@ -148,20 +152,19 @@ protected:
   void transactionDeleted(ITransfersSubscription* object, const Crypto::Hash& transactionHash);
 
 
-  void onSynchronizationProgressUpdated(uint32_t processedBlockCount, uint32_t totalBlockCount);
-  void onSynchronizationCompleted();
 
-  virtual void onBlocksAdded(const Crypto::PublicKey& viewPublicKey, const std::vector<Crypto::Hash>& blockHashes) override;
-  void blocksAdded(const std::vector<Crypto::Hash>& blockHashes);
 
-  virtual void onBlockchainDetach(const Crypto::PublicKey& viewPublicKey, uint32_t blockIndex) override;
-  void blocksRollback(uint32_t blockIndex);
+  // virtual void onBlocksAdded(const Crypto::PublicKey& viewPublicKey, const std::vector<Crypto::Hash>& blockHashes) override;
+  // void blocksAdded(const std::vector<Crypto::Hash>& blockHashes);
 
-  virtual void onTransactionDeleteBegin(const Crypto::PublicKey& viewPublicKey, Crypto::Hash transactionHash) override;
-  void transactionDeleteBegin(Crypto::Hash transactionHash);
+  // virtual void onBlockchainDetach(const Crypto::PublicKey& viewPublicKey, uint32_t blockIndex) override;
+  // void blocksRollback(uint32_t blockIndex);
 
-  virtual void onTransactionDeleteEnd(const Crypto::PublicKey& viewPublicKey, Crypto::Hash transactionHash) override;
-  void transactionDeleteEnd(Crypto::Hash transactionHash);
+  // virtual void onTransactionDeleteBegin(const Crypto::PublicKey& viewPublicKey, Crypto::Hash transactionHash) override;
+  // void transactionDeleteBegin(Crypto::Hash transactionHash);
+
+  // virtual void onTransactionDeleteEnd(const Crypto::PublicKey& viewPublicKey, Crypto::Hash transactionHash) override;
+  // void transactionDeleteEnd(Crypto::Hash transactionHash);
 
   std::vector<WalletOuts> pickWalletsWithMoney() const;
   WalletOuts pickWallet(const std::string& address);

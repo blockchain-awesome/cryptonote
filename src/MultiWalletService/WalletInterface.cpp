@@ -323,7 +323,7 @@ void WalletInterface::doShutdown()
 {
   if (m_walletsContainer.size() != 0)
   {
-    m_synchronizer.unsubscribeConsumerNotifications(m_viewPublicKey, this);
+    // m_synchronizer.unsubscribeConsumerNotifications(m_viewPublicKey, this);
   }
 
   stopBlockchainSynchronizer();
@@ -1987,60 +1987,60 @@ void WalletInterface::onSynchronizationCompleted()
   pushEvent(makeSyncCompletedEvent());
 }
 
-void WalletInterface::onBlocksAdded(const Crypto::PublicKey &viewPublicKey, const std::vector<Crypto::Hash> &blockHashes)
-{
-  m_dispatcher.remoteSpawn([this, blockHashes]() { blocksAdded(blockHashes); });
-}
+// void WalletInterface::onBlocksAdded(const Crypto::PublicKey &viewPublicKey, const std::vector<Crypto::Hash> &blockHashes)
+// {
+//   m_dispatcher.remoteSpawn([this, blockHashes]() { blocksAdded(blockHashes); });
+// }
 
-void WalletInterface::blocksAdded(const std::vector<Crypto::Hash> &blockHashes)
-{
-  System::EventLock lk(m_readyEvent);
+// void WalletInterface::blocksAdded(const std::vector<Crypto::Hash> &blockHashes)
+// {
+//   System::EventLock lk(m_readyEvent);
 
-  if (m_state == WalletState::NOT_INITIALIZED)
-  {
-    return;
-  }
+//   if (m_state == WalletState::NOT_INITIALIZED)
+//   {
+//     return;
+//   }
 
-  m_blockchain.insert(m_blockchain.end(), blockHashes.begin(), blockHashes.end());
-}
+//   m_blockchain.insert(m_blockchain.end(), blockHashes.begin(), blockHashes.end());
+// }
 
-void WalletInterface::onBlockchainDetach(const Crypto::PublicKey &viewPublicKey, uint32_t blockIndex)
-{
-  m_dispatcher.remoteSpawn([this, blockIndex]() { blocksRollback(blockIndex); });
-}
+// void WalletInterface::onBlockchainDetach(const Crypto::PublicKey &viewPublicKey, uint32_t blockIndex)
+// {
+//   m_dispatcher.remoteSpawn([this, blockIndex]() { blocksRollback(blockIndex); });
+// }
 
-void WalletInterface::blocksRollback(uint32_t blockIndex)
-{
-  System::EventLock lk(m_readyEvent);
+// void WalletInterface::blocksRollback(uint32_t blockIndex)
+// {
+//   System::EventLock lk(m_readyEvent);
 
-  if (m_state == WalletState::NOT_INITIALIZED)
-  {
-    return;
-  }
+//   if (m_state == WalletState::NOT_INITIALIZED)
+//   {
+//     return;
+//   }
 
-  auto &blockHeightIndex = m_blockchain.get<BlockHeightIndex>();
-  blockHeightIndex.erase(std::next(blockHeightIndex.begin(), blockIndex), blockHeightIndex.end());
-}
+//   auto &blockHeightIndex = m_blockchain.get<BlockHeightIndex>();
+//   blockHeightIndex.erase(std::next(blockHeightIndex.begin(), blockIndex), blockHeightIndex.end());
+// }
 
-void WalletInterface::onTransactionDeleteBegin(const Crypto::PublicKey &viewPublicKey, Crypto::Hash transactionHash)
-{
-  m_dispatcher.remoteSpawn([=]() { transactionDeleteBegin(transactionHash); });
-}
+// void WalletInterface::onTransactionDeleteBegin(const Crypto::PublicKey &viewPublicKey, Crypto::Hash transactionHash)
+// {
+//   m_dispatcher.remoteSpawn([=]() { transactionDeleteBegin(transactionHash); });
+// }
+
+// // TODO remove
+// void WalletInterface::transactionDeleteBegin(Crypto::Hash /*transactionHash*/)
+// {
+// }
+
+// void WalletInterface::onTransactionDeleteEnd(const Crypto::PublicKey &viewPublicKey, Crypto::Hash transactionHash)
+// {
+//   m_dispatcher.remoteSpawn([=]() { transactionDeleteEnd(transactionHash); });
+// }
 
 // TODO remove
-void WalletInterface::transactionDeleteBegin(Crypto::Hash /*transactionHash*/)
-{
-}
-
-void WalletInterface::onTransactionDeleteEnd(const Crypto::PublicKey &viewPublicKey, Crypto::Hash transactionHash)
-{
-  m_dispatcher.remoteSpawn([=]() { transactionDeleteEnd(transactionHash); });
-}
-
-// TODO remove
-void WalletInterface::transactionDeleteEnd(Crypto::Hash transactionHash)
-{
-}
+// void WalletInterface::transactionDeleteEnd(Crypto::Hash transactionHash)
+// {
+// }
 
 void WalletInterface::unlockBalances(uint32_t height)
 {
