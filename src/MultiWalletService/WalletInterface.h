@@ -170,8 +170,8 @@ protected:
   WalletOuts pickWallet(const std::string& address);
   std::vector<WalletOuts> pickWallets(const std::vector<std::string>& addresses);
 
-  void updateBalance(CryptoNote::ITransfersContainer* container);
-  void unlockBalances(uint32_t height);
+  // void updateBalance(CryptoNote::ITransfersContainer* container);
+  // void unlockBalances(uint32_t height);
 
   const WalletRecord& getWalletRecord(const Crypto::PublicKey& key) const;
   const WalletRecord& getWalletRecord(const std::string& address) const;

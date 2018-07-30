@@ -1972,7 +1972,7 @@ void WalletInterface::onSynchronizationProgressUpdated(uint32_t processedBlockCo
   pushEvent(makeSyncProgressUpdatedEvent(processedBlockCount, totalBlockCount));
 
   uint32_t currentHeight = processedBlockCount - 1;
-  unlockBalances(currentHeight);
+  // unlockBalances(currentHeight);
 }
 
 void WalletInterface::onSynchronizationCompleted()
@@ -2042,22 +2042,22 @@ void WalletInterface::onSynchronizationCompleted()
 // {
 // }
 
-void WalletInterface::unlockBalances(uint32_t height)
-{
-  auto &index = m_unlockTransactionsJob.get<BlockHeightIndex>();
-  auto upper = index.upper_bound(height);
+// void WalletInterface::unlockBalances(uint32_t height)
+// {
+//   auto &index = m_unlockTransactionsJob.get<BlockHeightIndex>();
+//   auto upper = index.upper_bound(height);
 
-  if (index.begin() != upper)
-  {
-    for (auto it = index.begin(); it != upper; ++it)
-    {
-      updateBalance(it->container);
-    }
+//   if (index.begin() != upper)
+//   {
+//     for (auto it = index.begin(); it != upper; ++it)
+//     {
+//       updateBalance(it->container);
+//     }
 
-    index.erase(index.begin(), upper);
-    pushEvent(makeMoneyUnlockedEvent());
-  }
-}
+//     index.erase(index.begin(), upper);
+//     pushEvent(makeMoneyUnlockedEvent());
+//   }
+// }
 
 // void WalletInterface::onTransactionUpdated(ITransfersSubscription * /*object*/, const Crypto::Hash & /*transactionHash*/)
 // {
@@ -2130,7 +2130,7 @@ void WalletInterface::transactionUpdated(const TransactionInformation &transacti
   // Update cached balance
   for (auto containerAmounts : containerAmountsList)
   {
-    updateBalance(containerAmounts.container);
+    // updateBalance(containerAmounts.container);
 
     if (transactionInfo.blockHeight != CryptoNote::WALLET_UNCONFIRMED_TRANSACTION_HEIGHT)
     {
@@ -2194,7 +2194,7 @@ void WalletInterface::transactionDeleted(ITransfersSubscription *object, const H
   }
 
   CryptoNote::ITransfersContainer *container = &object->getContainer();
-  updateBalance(container);
+  // updateBalance(container);
   deleteUnlockTransactionJob(transactionHash);
 
   bool updated = false;
@@ -2271,41 +2271,41 @@ void WalletInterface::removeUnconfirmedTransaction(const Crypto::Hash &transacti
   context.get();
 }
 
-void WalletInterface::updateBalance(CryptoNote::ITransfersContainer *container)
-{
-  auto it = m_walletsContainer.get<TransfersContainerIndex>().find(container);
+// void WalletInterface::updateBalance(CryptoNote::ITransfersContainer *container)
+// {
+//   auto it = m_walletsContainer.get<TransfersContainerIndex>().find(container);
 
-  if (it == m_walletsContainer.get<TransfersContainerIndex>().end())
-  {
-    return;
-  }
+//   if (it == m_walletsContainer.get<TransfersContainerIndex>().end())
+//   {
+//     return;
+//   }
 
-  uint64_t actual = container->balance(ITransfersContainer::IncludeAllUnlocked);
-  uint64_t pending = container->balance(ITransfersContainer::IncludeAllLocked);
+//   uint64_t actual = container->balance(ITransfersContainer::IncludeAllUnlocked);
+//   uint64_t pending = container->balance(ITransfersContainer::IncludeAllLocked);
 
-  if (it->actualBalance < actual)
-  {
-    m_actualBalance += actual - it->actualBalance;
-  }
-  else
-  {
-    m_actualBalance -= it->actualBalance - actual;
-  }
+//   if (it->actualBalance < actual)
+//   {
+//     m_actualBalance += actual - it->actualBalance;
+//   }
+//   else
+//   {
+//     m_actualBalance -= it->actualBalance - actual;
+//   }
 
-  if (it->pendingBalance < pending)
-  {
-    m_pendingBalance += pending - it->pendingBalance;
-  }
-  else
-  {
-    m_pendingBalance -= it->pendingBalance - pending;
-  }
+//   if (it->pendingBalance < pending)
+//   {
+//     m_pendingBalance += pending - it->pendingBalance;
+//   }
+//   else
+//   {
+//     m_pendingBalance -= it->pendingBalance - pending;
+//   }
 
-  m_walletsContainer.get<TransfersContainerIndex>().modify(it, [actual, pending](WalletRecord &wallet) {
-    wallet.actualBalance = actual;
-    wallet.pendingBalance = pending;
-  });
-}
+//   m_walletsContainer.get<TransfersContainerIndex>().modify(it, [actual, pending](WalletRecord &wallet) {
+//     wallet.actualBalance = actual;
+//     wallet.pendingBalance = pending;
+//   });
+// }
 
 const WalletRecord &WalletInterface::getWalletRecord(const PublicKey &key) const
 {
