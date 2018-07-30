@@ -21,7 +21,7 @@ using namespace CryptoNote;
 
 namespace MultiWalletService {
 
-class WalletInterface : public IWallet,
+class WalletInterface :
                     ITransfersObserver,
                     IBlockchainSynchronizerObserver,
                     ITransfersSynchronizerObserver,
@@ -31,50 +31,50 @@ public:
   virtual ~WalletInterface();
 
   // virtual void initialize(const std::string& password) override;
-  virtual void initializeWithViewKey(const Crypto::SecretKey& viewSecretKey, const std::string& password) override;
+  // virtual void initializeWithViewKey(const Crypto::SecretKey& viewSecretKey, const std::string& password) override;
   // virtual void load(std::istream& source, const std::string& password) override;
-  virtual void shutdown() override;
+  // virtual void shutdown() override;
 
   // virtual void changePassword(const std::string& oldPassword, const std::string& newPassword) override;
   // virtual void save(std::ostream& destination, bool saveDetails = true, bool saveCache = true) override;
 
-  virtual size_t getAddressCount() const override;
-  virtual std::string getAddress(size_t index) const override;
-  virtual KeyPair getAddressSpendKey(size_t index) const override;
-  virtual KeyPair getAddressSpendKey(const std::string& address) const override;
-  virtual KeyPair getViewKey() const override;
-  virtual std::string createAddress() override;
-  virtual std::string createAddress(const Crypto::SecretKey& spendSecretKey) override;
-  virtual std::string createAddress(const Crypto::PublicKey& spendPublicKey) override;
-  virtual void deleteAddress(const std::string& address) override;
+  // virtual size_t getAddressCount() const override;
+  // virtual std::string getAddress(size_t index) const override;
+  // virtual KeyPair getAddressSpendKey(size_t index) const override;
+  // virtual KeyPair getAddressSpendKey(const std::string& address) const override;
+  // virtual KeyPair getViewKey() const override;
+  // virtual std::string createAddress() override;
+  // virtual std::string createAddress(const Crypto::SecretKey& spendSecretKey) override;
+  // virtual std::string createAddress(const Crypto::PublicKey& spendPublicKey) override;
+  // virtual void deleteAddress(const std::string& address) override;
 
-  virtual uint64_t getActualBalance() const override;
-  virtual uint64_t getActualBalance(const std::string& address) const override;
-  virtual uint64_t getPendingBalance() const override;
-  virtual uint64_t getPendingBalance(const std::string& address) const override;
+  // virtual uint64_t getActualBalance() const override;
+  // virtual uint64_t getActualBalance(const std::string& address) const override;
+  // virtual uint64_t getPendingBalance() const override;
+  // virtual uint64_t getPendingBalance(const std::string& address) const override;
 
-  virtual size_t getTransactionCount() const override;
-  virtual WalletTransaction getTransaction(size_t transactionIndex) const override;
-  virtual size_t getTransactionTransferCount(size_t transactionIndex) const override;
-  virtual WalletTransfer getTransactionTransfer(size_t transactionIndex, size_t transferIndex) const override;
+  // virtual size_t getTransactionCount() const override;
+  // virtual WalletTransaction getTransaction(size_t transactionIndex) const override;
+  // virtual size_t getTransactionTransferCount(size_t transactionIndex) const override;
+  // virtual WalletTransfer getTransactionTransfer(size_t transactionIndex, size_t transferIndex) const override;
 
-  virtual WalletTransactionWithTransfers getTransaction(const Crypto::Hash& transactionHash) const override;
-  virtual std::vector<TransactionsInBlockInfo> getTransactions(const Crypto::Hash& blockHash, size_t count) const override;
-  virtual std::vector<TransactionsInBlockInfo> getTransactions(uint32_t blockIndex, size_t count) const override;
-  virtual std::vector<Crypto::Hash> getBlockHashes(uint32_t blockIndex, size_t count) const override;
-  virtual uint32_t getBlockCount() const override;
-  virtual std::vector<WalletTransactionWithTransfers> getUnconfirmedTransactions() const override;
-  virtual std::vector<size_t> getDelayedTransactionIds() const override;
+  // virtual WalletTransactionWithTransfers getTransaction(const Crypto::Hash& transactionHash) const override;
+  // virtual std::vector<TransactionsInBlockInfo> getTransactions(const Crypto::Hash& blockHash, size_t count) const override;
+  // virtual std::vector<TransactionsInBlockInfo> getTransactions(uint32_t blockIndex, size_t count) const override;
+  // virtual std::vector<Crypto::Hash> getBlockHashes(uint32_t blockIndex, size_t count) const override;
+  // virtual uint32_t getBlockCount() const override;
+  // virtual std::vector<WalletTransactionWithTransfers> getUnconfirmedTransactions() const override;
+  // virtual std::vector<size_t> getDelayedTransactionIds() const override;
 
-  virtual size_t transfer(const TransactionParameters& sendingTransaction) override;
+  // virtual size_t transfer(const TransactionParameters& sendingTransaction) override;
 
-  virtual size_t makeTransaction(const TransactionParameters& sendingTransaction) override;
-  virtual void commitTransaction(size_t) override;
-  virtual void rollbackUncommitedTransaction(size_t) override;
+  // virtual size_t makeTransaction(const TransactionParameters& sendingTransaction) override;
+  // virtual void commitTransaction(size_t) override;
+  // virtual void rollbackUncommitedTransaction(size_t) override;
 
-  virtual void start() override;
-  virtual void stop() override;
-  virtual WalletEvent getEvent() override;
+  // virtual void start() override;
+  // virtual void stop() override;
+  // virtual WalletEvent getEvent() override;
 
   virtual size_t createFusionTransaction(uint64_t threshold, uint64_t mixin) override;
   virtual bool isFusionTransaction(size_t transactionId) const override;

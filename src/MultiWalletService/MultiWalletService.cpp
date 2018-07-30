@@ -146,7 +146,7 @@ void MultiWallet::runWalletService(const CryptoNote::Currency &currency, CryptoN
   rpcServer.start(config.gateConfiguration.bindAddress, config.gateConfiguration.bindPort);
 
 
-  // CryptoNote::IWallet* wallet = new WalletInterface(*dispatcher, currency, node);
+  WalletInterface* wallet = new WalletInterface(*dispatcher, currency, node);
 
   // std::unique_ptr<CryptoNote::IWallet> wallet(WalletFactory::createWallet(currency, node, *dispatcher));
 
