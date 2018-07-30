@@ -22,10 +22,11 @@ using namespace CryptoNote;
 namespace MultiWalletService {
 
 class WalletInterface :
-                    ITransfersObserver,
+                    // ITransfersObserver,
                     IBlockchainSynchronizerObserver,
                     ITransfersSynchronizerObserver,
-                    IFusionManager {
+                    IFusionManager 
+                    {
 public:
   WalletInterface(System::Dispatcher& dispatcher, const Currency& currency, INode& node, uint32_t transactionSoftLockTime = 1);
   virtual ~WalletInterface();
@@ -81,13 +82,25 @@ public:
   virtual IFusionManager::EstimateResult estimate(uint64_t threshold) const override;
 
 protected:
+
+  // 新钱包接口区
+
+  virtual void synchronizationProgressUpdated(uint32_t processedBlockCount, uint32_t totalBlockCount) override;
+  virtual void synchronizationCompleted(std::error_code result) override;
+
+  bool m_blockchainSynchronizerStarted;
+  BlockchainSynchronizer m_blockchainSynchronizer;
+
   void throwIfNotInitialized() const;
   void throwIfStopped() const;
   void throwIfTrackingMode() const;
   void doShutdown();
   void clearCaches();
-  void initWithKeys(const Crypto::PublicKey& viewPublicKey, const Crypto::SecretKey& viewSecretKey, const std::string& password);
-  std::string doCreateAddress(const Crypto::PublicKey& spendPublicKey, const Crypto::SecretKey& spendSecretKey, uint64_t creationTimestamp);
+
+  void init();
+
+  // void initWithKeys(const Crypto::PublicKey& viewPublicKey, const Crypto::SecretKey& viewSecretKey, const std::string& password);
+  // std::string doCreateAddress(const Crypto::PublicKey& spendPublicKey, const Crypto::SecretKey& spendSecretKey, uint64_t creationTimestamp);
 
   struct InputInfo {
     TransactionTypes::InputKeyInfo keyInfo;
@@ -124,18 +137,16 @@ protected:
 
   typedef std::unordered_map<std::string, AddressAmounts> TransfersMap;
 
-  virtual void onError(ITransfersSubscription* object, uint32_t height, std::error_code ec) override;
+  // virtual void onError(ITransfersSubscription* object, uint32_t height, std::error_code ec) override;
 
-  virtual void onTransactionUpdated(ITransfersSubscription* object, const Crypto::Hash& transactionHash) override;
-  virtual void onTransactionUpdated(const Crypto::PublicKey& viewPublicKey, const Crypto::Hash& transactionHash,
-    const std::vector<ITransfersContainer*>& containers) override;
+  // virtual void onTransactionUpdated(ITransfersSubscription* object, const Crypto::Hash& transactionHash) override;
+  // virtual void onTransactionUpdated(const Crypto::PublicKey& viewPublicKey, const Crypto::Hash& transactionHash,
+  //   const std::vector<ITransfersContainer*>& containers) override;
   void transactionUpdated(const TransactionInformation& transactionInfo, const std::vector<ContainerAmounts>& containerAmountsList);
 
-  virtual void onTransactionDeleted(ITransfersSubscription* object, const Crypto::Hash& transactionHash) override;
+  // virtual void onTransactionDeleted(ITransfersSubscription* object, const Crypto::Hash& transactionHash) override;
   void transactionDeleted(ITransfersSubscription* object, const Crypto::Hash& transactionHash);
 
-  virtual void synchronizationProgressUpdated(uint32_t processedBlockCount, uint32_t totalBlockCount) override;
-  virtual void synchronizationCompleted(std::error_code result) override;
 
   void onSynchronizationProgressUpdated(uint32_t processedBlockCount, uint32_t totalBlockCount);
   void onSynchronizationCompleted();
@@ -164,7 +175,7 @@ protected:
   const WalletRecord& getWalletRecord(CryptoNote::ITransfersContainer* container) const;
 
   CryptoNote::AccountPublicAddress parseAddress(const std::string& address) const;
-  std::string addWallet(const Crypto::PublicKey& spendPublicKey, const Crypto::SecretKey& spendSecretKey, uint64_t creationTimestamp);
+  // std::string addWallet(const Crypto::PublicKey& spendPublicKey, const Crypto::SecretKey& spendSecretKey, uint64_t creationTimestamp);
   AccountKeys makeAccountKeys(const WalletRecord& wallet) const;
   size_t getTransactionId(const Crypto::Hash& transactionHash) const;
   void pushEvent(const WalletEvent& event);
@@ -238,8 +249,8 @@ protected:
   void addUnconfirmedTransaction(const ITransactionReader& transaction);
   void removeUnconfirmedTransaction(const Crypto::Hash& transactionHash);
 
-  void unsafeLoad(std::istream& source, const std::string& password);
-  void unsafeSave(std::ostream& destination, bool saveDetails, bool saveCache);
+  // void unsafeLoad(std::istream& source, const std::string& password);
+  // void unsafeSave(std::ostream& destination, bool saveDetails, bool saveCache);
 
   std::vector<OutputToTransfer> pickRandomFusionInputs(uint64_t threshold, size_t minInputCount, size_t maxInputCount);
   ReceiverAmounts decomposeFusionOutputs(uint64_t inputsAmount);
@@ -283,8 +294,7 @@ protected:
   mutable std::unordered_map<size_t, bool> m_fusionTxsCache; // txIndex -> isFusion
   UncommitedTransactions m_uncommitedTransactions;
 
-  bool m_blockchainSynchronizerStarted;
-  BlockchainSynchronizer m_blockchainSynchronizer;
+
   TransfersSyncronizer m_synchronizer;
 
   System::Event m_eventOccurred;

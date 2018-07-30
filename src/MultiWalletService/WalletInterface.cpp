@@ -38,7 +38,8 @@ using namespace Common;
 using namespace Crypto;
 using namespace CryptoNote;
 
-namespace {
+namespace
+{
 
 void asyncRequestCompletion(System::Event &requestFinished)
 {
@@ -353,26 +354,32 @@ void WalletInterface::clearCaches()
   m_blockchain.clear();
 }
 
-void WalletInterface::initWithKeys(const Crypto::PublicKey &viewPublicKey, const Crypto::SecretKey &viewSecretKey, const std::string &password)
+void WalletInterface::init()
 {
-  if (m_state != WalletState::NOT_INITIALIZED)
-  {
-    throw std::system_error(make_error_code(CryptoNote::error::ALREADY_INITIALIZED));
-  }
-
-  throwIfStopped();
-
-  m_viewPublicKey = viewPublicKey;
-  m_viewSecretKey = viewSecretKey;
-  m_password = password;
-
-  assert(m_blockchain.empty());
   m_blockchain.push_back(m_currency.genesisBlockHash());
-
   m_blockchainSynchronizer.addObserver(this);
-
-  m_state = WalletState::INITIALIZED;
 }
+
+// void WalletInterface::initWithKeys(const Crypto::PublicKey &viewPublicKey, const Crypto::SecretKey &viewSecretKey, const std::string &password)
+// {
+//   if (m_state != WalletState::NOT_INITIALIZED)
+//   {
+//     throw std::system_error(make_error_code(CryptoNote::error::ALREADY_INITIALIZED));
+//   }
+
+//   throwIfStopped();
+
+//   m_viewPublicKey = viewPublicKey;
+//   m_viewSecretKey = viewSecretKey;
+//   m_password = password;
+
+//   assert(m_blockchain.empty());
+//   m_blockchain.push_back(m_currency.genesisBlockHash());
+
+//   m_blockchainSynchronizer.addObserver(this);
+
+//   m_state = WalletState::INITIALIZED;
+// }
 
 // void WalletInterface::save(std::ostream& destination, bool saveDetails, bool saveCache) {
 //   throwIfNotInitialized();
@@ -445,28 +452,28 @@ void WalletInterface::initWithKeys(const Crypto::PublicKey &viewPublicKey, const
 //   m_state = WalletState::INITIALIZED;
 // }
 
-void WalletInterface::unsafeLoad(std::istream &source, const std::string &password)
-{
-  WalletSerializer s(
-      *this,
-      m_viewPublicKey,
-      m_viewSecretKey,
-      m_actualBalance,
-      m_pendingBalance,
-      m_walletsContainer,
-      m_synchronizer,
-      m_unlockTransactionsJob,
-      m_transactions,
-      m_transfers,
-      m_transactionSoftLockTime,
-      m_uncommitedTransactions);
+// void WalletInterface::unsafeLoad(std::istream &source, const std::string &password)
+// {
+//   WalletSerializer s(
+//       *this,
+//       m_viewPublicKey,
+//       m_viewSecretKey,
+//       m_actualBalance,
+//       m_pendingBalance,
+//       m_walletsContainer,
+//       m_synchronizer,
+//       m_unlockTransactionsJob,
+//       m_transactions,
+//       m_transfers,
+//       m_transactionSoftLockTime,
+//       m_uncommitedTransactions);
 
-  StdInputStream inputStream(source);
-  s.load(password, inputStream);
+//   StdInputStream inputStream(source);
+//   s.load(password, inputStream);
 
-  m_password = password;
-  m_blockchainSynchronizer.addObserver(this);
-}
+//   m_password = password;
+//   m_blockchainSynchronizer.addObserver(this);
+// }
 
 // void WalletInterface::changePassword(const std::string& oldPassword, const std::string& newPassword) {
 //   throwIfNotInitialized();
@@ -604,53 +611,53 @@ void WalletInterface::unsafeLoad(std::istream &source, const std::string &passwo
 //   return address;
 // }
 
-std::string WalletInterface::addWallet(const Crypto::PublicKey &spendPublicKey, const Crypto::SecretKey &spendSecretKey, uint64_t creationTimestamp)
-{
-  auto &index = m_walletsContainer.get<KeysIndex>();
+// std::string WalletInterface::addWallet(const Crypto::PublicKey &spendPublicKey, const Crypto::SecretKey &spendSecretKey, uint64_t creationTimestamp)
+// {
+//   auto &index = m_walletsContainer.get<KeysIndex>();
 
-  auto trackingMode = getTrackingMode();
+//   auto trackingMode = getTrackingMode();
 
-  if ((trackingMode == WalletTrackingMode::TRACKING && spendSecretKey != NULL_SECRET_KEY) ||
-      (trackingMode == WalletTrackingMode::NOT_TRACKING && spendSecretKey == NULL_SECRET_KEY))
-  {
-    throw std::system_error(make_error_code(error::BAD_ADDRESS));
-  }
+//   if ((trackingMode == WalletTrackingMode::TRACKING && spendSecretKey != NULL_SECRET_KEY) ||
+//       (trackingMode == WalletTrackingMode::NOT_TRACKING && spendSecretKey == NULL_SECRET_KEY))
+//   {
+//     throw std::system_error(make_error_code(error::BAD_ADDRESS));
+//   }
 
-  auto insertIt = index.find(spendPublicKey);
-  if (insertIt != index.end())
-  {
-    throw std::system_error(make_error_code(error::ADDRESS_ALREADY_EXISTS));
-  }
+//   auto insertIt = index.find(spendPublicKey);
+//   if (insertIt != index.end())
+//   {
+//     throw std::system_error(make_error_code(error::ADDRESS_ALREADY_EXISTS));
+//   }
 
-  AccountSubscription sub;
-  sub.keys.address.viewPublicKey = m_viewPublicKey;
-  sub.keys.address.spendPublicKey = spendPublicKey;
-  sub.keys.viewSecretKey = m_viewSecretKey;
-  sub.keys.spendSecretKey = spendSecretKey;
-  sub.transactionSpendableAge = m_transactionSoftLockTime;
-  sub.syncStart.height = 0;
-  sub.syncStart.timestamp = std::max(creationTimestamp, ACCOUNT_CREATE_TIME_ACCURACY) - ACCOUNT_CREATE_TIME_ACCURACY;
+//   AccountSubscription sub;
+//   sub.keys.address.viewPublicKey = m_viewPublicKey;
+//   sub.keys.address.spendPublicKey = spendPublicKey;
+//   sub.keys.viewSecretKey = m_viewSecretKey;
+//   sub.keys.spendSecretKey = spendSecretKey;
+//   sub.transactionSpendableAge = m_transactionSoftLockTime;
+//   sub.syncStart.height = 0;
+//   sub.syncStart.timestamp = std::max(creationTimestamp, ACCOUNT_CREATE_TIME_ACCURACY) - ACCOUNT_CREATE_TIME_ACCURACY;
 
-  auto &trSubscription = m_synchronizer.addSubscription(sub);
-  ITransfersContainer *container = &trSubscription.getContainer();
+//   auto &trSubscription = m_synchronizer.addSubscription(sub);
+//   ITransfersContainer *container = &trSubscription.getContainer();
 
-  WalletRecord wallet;
-  wallet.spendPublicKey = spendPublicKey;
-  wallet.spendSecretKey = spendSecretKey;
-  wallet.container = container;
-  wallet.creationTimestamp = static_cast<time_t>(creationTimestamp);
-  trSubscription.addObserver(this);
+//   WalletRecord wallet;
+//   wallet.spendPublicKey = spendPublicKey;
+//   wallet.spendSecretKey = spendSecretKey;
+//   wallet.container = container;
+//   wallet.creationTimestamp = static_cast<time_t>(creationTimestamp);
+//   trSubscription.addObserver(this);
 
-  index.insert(insertIt, std::move(wallet));
+//   index.insert(insertIt, std::move(wallet));
 
-  if (index.size() == 1)
-  {
-    m_synchronizer.subscribeConsumerNotifications(m_viewPublicKey, this);
-    getViewKeyKnownBlocks(m_viewPublicKey);
-  }
+//   if (index.size() == 1)
+//   {
+//     m_synchronizer.subscribeConsumerNotifications(m_viewPublicKey, this);
+//     getViewKeyKnownBlocks(m_viewPublicKey);
+//   }
 
-  return m_currency.accountAddressAsString({spendPublicKey, m_viewPublicKey});
-}
+//   return m_currency.accountAddressAsString({spendPublicKey, m_viewPublicKey});
+// }
 
 // void WalletInterface::deleteAddress(const std::string &address)
 // {
@@ -1698,8 +1705,8 @@ std::vector<WalletInterface::WalletOuts> WalletInterface::pickWallets(const std:
 }
 
 std::vector<WalletInterface::ReceiverAmounts> WalletInterface::splitDestinations(const std::vector<CryptoNote::WalletTransfer> &destinations,
-                                                                uint64_t dustThreshold,
-                                                                const CryptoNote::Currency &currency)
+                                                                                 uint64_t dustThreshold,
+                                                                                 const CryptoNote::Currency &currency)
 {
 
   std::vector<ReceiverAmounts> decomposedOutputs;
@@ -1937,9 +1944,9 @@ void WalletInterface::throwIfNotInitialized() const
   }
 }
 
-void WalletInterface::onError(ITransfersSubscription *object, uint32_t height, std::error_code ec)
-{
-}
+// void WalletInterface::onError(ITransfersSubscription *object, uint32_t height, std::error_code ec)
+// {
+// }
 
 void WalletInterface::synchronizationProgressUpdated(uint32_t processedBlockCount, uint32_t totalBlockCount)
 {
@@ -2052,37 +2059,37 @@ void WalletInterface::unlockBalances(uint32_t height)
   }
 }
 
-void WalletInterface::onTransactionUpdated(ITransfersSubscription * /*object*/, const Crypto::Hash & /*transactionHash*/)
-{
-  // Deprecated, ignore it. New event handler is onTransactionUpdated(const Crypto::PublicKey&, const Crypto::Hash&, const std::vector<ITransfersContainer*>&)
-}
+// void WalletInterface::onTransactionUpdated(ITransfersSubscription * /*object*/, const Crypto::Hash & /*transactionHash*/)
+// {
+//   // Deprecated, ignore it. New event handler is onTransactionUpdated(const Crypto::PublicKey&, const Crypto::Hash&, const std::vector<ITransfersContainer*>&)
+// }
 
-void WalletInterface::onTransactionUpdated(const Crypto::PublicKey &, const Crypto::Hash &transactionHash, const std::vector<ITransfersContainer *> &containers)
-{
-  assert(!containers.empty());
+// void WalletInterface::onTransactionUpdated(const Crypto::PublicKey &, const Crypto::Hash &transactionHash, const std::vector<ITransfersContainer *> &containers)
+// {
+//   assert(!containers.empty());
 
-  TransactionInformation info;
-  std::vector<ContainerAmounts> containerAmountsList;
-  containerAmountsList.reserve(containers.size());
-  for (auto container : containers)
-  {
-    uint64_t inputsAmount;
-    // Don't move this code to the following remote spawn, because it guarantees that the container has the transaction
-    uint64_t outputsAmount;
-    bool found = container->getTransactionInformation(transactionHash, info, &inputsAmount, &outputsAmount);
-    assert(found == = true);
+//   TransactionInformation info;
+//   std::vector<ContainerAmounts> containerAmountsList;
+//   containerAmountsList.reserve(containers.size());
+//   for (auto container : containers)
+//   {
+//     uint64_t inputsAmount;
+//     // Don't move this code to the following remote spawn, because it guarantees that the container has the transaction
+//     uint64_t outputsAmount;
+//     bool found = container->getTransactionInformation(transactionHash, info, &inputsAmount, &outputsAmount);
+//     assert(found == = true);
 
-    ContainerAmounts containerAmounts;
-    containerAmounts.container = container;
-    containerAmounts.amounts.input = -static_cast<int64_t>(inputsAmount);
-    containerAmounts.amounts.output = static_cast<int64_t>(outputsAmount);
-    containerAmountsList.emplace_back(std::move(containerAmounts));
-  }
+//     ContainerAmounts containerAmounts;
+//     containerAmounts.container = container;
+//     containerAmounts.amounts.input = -static_cast<int64_t>(inputsAmount);
+//     containerAmounts.amounts.output = static_cast<int64_t>(outputsAmount);
+//     containerAmountsList.emplace_back(std::move(containerAmounts));
+//   }
 
-  m_dispatcher.remoteSpawn([this, info, containerAmountsList] {
-    this->transactionUpdated(info, containerAmountsList);
-  });
-}
+//   m_dispatcher.remoteSpawn([this, info, containerAmountsList] {
+//     this->transactionUpdated(info, containerAmountsList);
+//   });
+// }
 
 void WalletInterface::transactionUpdated(const TransactionInformation &transactionInfo, const std::vector<ContainerAmounts> &containerAmountsList)
 {
@@ -2166,10 +2173,10 @@ size_t WalletInterface::getTransactionId(const Hash &transactionHash) const
   return txId;
 }
 
-void WalletInterface::onTransactionDeleted(ITransfersSubscription *object, const Hash &transactionHash)
-{
-  m_dispatcher.remoteSpawn([object, transactionHash, this]() { this->transactionDeleted(object, transactionHash); });
-}
+// void WalletInterface::onTransactionDeleted(ITransfersSubscription *object, const Hash &transactionHash)
+// {
+//   m_dispatcher.remoteSpawn([object, transactionHash, this]() { this->transactionDeleted(object, transactionHash); });
+// }
 
 void WalletInterface::transactionDeleted(ITransfersSubscription *object, const Hash &transactionHash)
 {
