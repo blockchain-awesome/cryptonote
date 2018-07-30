@@ -2118,7 +2118,7 @@ void WalletInterface::transactionUpdated(const TransactionInformation &transacti
   {
     isNew = true;
     transactionId = insertBlockchainTransaction(transactionInfo, totalAmount);
-    m_fusionTxsCache.emplace(transactionId, isFusionTransaction(*it));
+    // m_fusionTxsCache.emplace(transactionId, isFusionTransaction(*it));
   }
 
   if (transactionInfo.blockHeight != CryptoNote::WALLET_UNCONFIRMED_TRANSACTION_HEIGHT)
@@ -2373,85 +2373,85 @@ WalletInterface::WalletTrackingMode WalletInterface::getTrackingMode() const
   return m_walletsContainer.get<RandomAccessIndex>().begin()->spendSecretKey == NULL_SECRET_KEY ? WalletTrackingMode::TRACKING : WalletTrackingMode::NOT_TRACKING;
 }
 
-size_t WalletInterface::createFusionTransaction(uint64_t threshold, uint64_t mixin)
-{
-  Tools::ScopeExit releaseContext([this] {
-    m_dispatcher.yield();
-  });
+// size_t WalletInterface::createFusionTransaction(uint64_t threshold, uint64_t mixin)
+// {
+//   Tools::ScopeExit releaseContext([this] {
+//     m_dispatcher.yield();
+//   });
 
-  System::EventLock lk(m_readyEvent);
+//   System::EventLock lk(m_readyEvent);
 
-  throwIfNotInitialized();
-  throwIfTrackingMode();
-  throwIfStopped();
+//   throwIfNotInitialized();
+//   throwIfTrackingMode();
+//   throwIfStopped();
 
-  const size_t MAX_FUSION_OUTPUT_COUNT = 4;
+//   const size_t MAX_FUSION_OUTPUT_COUNT = 4;
 
-  if (threshold <= m_currency.defaultDustThreshold())
-  {
-    throw std::runtime_error("Threshold must be greater than " + std::to_string(m_currency.defaultDustThreshold()));
-  }
+//   if (threshold <= m_currency.defaultDustThreshold())
+//   {
+//     throw std::runtime_error("Threshold must be greater than " + std::to_string(m_currency.defaultDustThreshold()));
+//   }
 
-  if (m_walletsContainer.get<RandomAccessIndex>().size() == 0)
-  {
-    throw std::runtime_error("You must have at least one address");
-  }
+//   if (m_walletsContainer.get<RandomAccessIndex>().size() == 0)
+//   {
+//     throw std::runtime_error("You must have at least one address");
+//   }
 
-  size_t estimatedFusionInputsCount = m_currency.getApproximateMaximumInputCount(m_currency.fusionTxMaxSize(), MAX_FUSION_OUTPUT_COUNT, mixin);
-  if (estimatedFusionInputsCount < m_currency.fusionTxMinInputCount())
-  {
-    throw std::system_error(make_error_code(error::MIXIN_COUNT_TOO_BIG));
-  }
+//   size_t estimatedFusionInputsCount = m_currency.getApproximateMaximumInputCount(m_currency.fusionTxMaxSize(), MAX_FUSION_OUTPUT_COUNT, mixin);
+//   if (estimatedFusionInputsCount < m_currency.fusionTxMinInputCount())
+//   {
+//     throw std::system_error(make_error_code(error::MIXIN_COUNT_TOO_BIG));
+//   }
 
-  std::vector<OutputToTransfer> fusionInputs = pickRandomFusionInputs(threshold, m_currency.fusionTxMinInputCount(), estimatedFusionInputsCount);
-  if (fusionInputs.size() < m_currency.fusionTxMinInputCount())
-  {
-    //nothing to optimize
-    return WALLET_INVALID_TRANSACTION_ID;
-  }
+//   std::vector<OutputToTransfer> fusionInputs = pickRandomFusionInputs(threshold, m_currency.fusionTxMinInputCount(), estimatedFusionInputsCount);
+//   if (fusionInputs.size() < m_currency.fusionTxMinInputCount())
+//   {
+//     //nothing to optimize
+//     return WALLET_INVALID_TRANSACTION_ID;
+//   }
 
-  typedef CryptoNote::COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS::outs_for_amount outs_for_amount;
-  std::vector<outs_for_amount> mixinResult;
-  if (mixin != 0)
-  {
-    requestMixinOuts(fusionInputs, mixin, mixinResult);
-  }
+//   typedef CryptoNote::COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS::outs_for_amount outs_for_amount;
+//   std::vector<outs_for_amount> mixinResult;
+//   if (mixin != 0)
+//   {
+//     requestMixinOuts(fusionInputs, mixin, mixinResult);
+//   }
 
-  std::vector<InputInfo> keysInfo;
-  prepareInputs(fusionInputs, mixinResult, mixin, keysInfo);
+//   std::vector<InputInfo> keysInfo;
+//   prepareInputs(fusionInputs, mixinResult, mixin, keysInfo);
 
-  std::unique_ptr<ITransaction> fusionTransaction;
-  size_t transactionSize;
-  int round = 0;
-  do
-  {
-    if (round != 0)
-    {
-      fusionInputs.pop_back();
-      keysInfo.pop_back();
-    }
+//   std::unique_ptr<ITransaction> fusionTransaction;
+//   size_t transactionSize;
+//   int round = 0;
+//   do
+//   {
+//     if (round != 0)
+//     {
+//       fusionInputs.pop_back();
+//       keysInfo.pop_back();
+//     }
 
-    uint64_t inputsAmount = std::accumulate(fusionInputs.begin(), fusionInputs.end(), static_cast<uint64_t>(0), [](uint64_t amount, const OutputToTransfer &input) {
-      return amount + input.out.amount;
-    });
+//     uint64_t inputsAmount = std::accumulate(fusionInputs.begin(), fusionInputs.end(), static_cast<uint64_t>(0), [](uint64_t amount, const OutputToTransfer &input) {
+//       return amount + input.out.amount;
+//     });
 
-    ReceiverAmounts decomposedOutputs = decomposeFusionOutputs(inputsAmount);
-    assert(decomposedOutputs.amounts.size() <= MAX_FUSION_OUTPUT_COUNT);
+//     ReceiverAmounts decomposedOutputs = decomposeFusionOutputs(inputsAmount);
+//     assert(decomposedOutputs.amounts.size() <= MAX_FUSION_OUTPUT_COUNT);
 
-    fusionTransaction = makeTransaction(std::vector<ReceiverAmounts>{decomposedOutputs}, keysInfo, "", 0);
+//     fusionTransaction = makeTransaction(std::vector<ReceiverAmounts>{decomposedOutputs}, keysInfo, "", 0);
 
-    transactionSize = getTransactionSize(*fusionTransaction);
+//     transactionSize = getTransactionSize(*fusionTransaction);
 
-    ++round;
-  } while (transactionSize > m_currency.fusionTxMaxSize() && fusionInputs.size() >= m_currency.fusionTxMinInputCount());
+//     ++round;
+//   } while (transactionSize > m_currency.fusionTxMaxSize() && fusionInputs.size() >= m_currency.fusionTxMinInputCount());
 
-  if (fusionInputs.size() < m_currency.fusionTxMinInputCount())
-  {
-    throw std::runtime_error("Unable to create fusion transaction");
-  }
+//   if (fusionInputs.size() < m_currency.fusionTxMinInputCount())
+//   {
+//     throw std::runtime_error("Unable to create fusion transaction");
+//   }
 
-  return validateSaveAndSendTransaction(*fusionTransaction, {}, true, true);
-}
+//   return validateSaveAndSendTransaction(*fusionTransaction, {}, true, true);
+// }
 
 WalletInterface::ReceiverAmounts WalletInterface::decomposeFusionOutputs(uint64_t inputsAmount)
 {
@@ -2466,117 +2466,117 @@ WalletInterface::ReceiverAmounts WalletInterface::decomposeFusionOutputs(uint64_
   return outputs;
 }
 
-bool WalletInterface::isFusionTransaction(size_t transactionId) const
-{
-  throwIfNotInitialized();
-  throwIfStopped();
+// bool WalletInterface::isFusionTransaction(size_t transactionId) const
+// {
+//   throwIfNotInitialized();
+//   throwIfStopped();
 
-  if (m_transactions.size() <= transactionId)
-  {
-    throw std::system_error(make_error_code(CryptoNote::error::INDEX_OUT_OF_RANGE));
-  }
+//   if (m_transactions.size() <= transactionId)
+//   {
+//     throw std::system_error(make_error_code(CryptoNote::error::INDEX_OUT_OF_RANGE));
+//   }
 
-  auto isFusionIter = m_fusionTxsCache.find(transactionId);
-  if (isFusionIter != m_fusionTxsCache.end())
-  {
-    return isFusionIter->second;
-  }
+//   auto isFusionIter = m_fusionTxsCache.find(transactionId);
+//   if (isFusionIter != m_fusionTxsCache.end())
+//   {
+//     return isFusionIter->second;
+//   }
 
-  bool result = isFusionTransaction(m_transactions.get<RandomAccessIndex>()[transactionId]);
-  m_fusionTxsCache.emplace(transactionId, result);
-  return result;
-}
+//   bool result = isFusionTransaction(m_transactions.get<RandomAccessIndex>()[transactionId]);
+//   m_fusionTxsCache.emplace(transactionId, result);
+//   return result;
+// }
 
-bool WalletInterface::isFusionTransaction(const WalletTransaction &walletTx) const
-{
-  if (walletTx.fee != 0)
-  {
-    return false;
-  }
+// bool WalletInterface::isFusionTransaction(const WalletTransaction &walletTx) const
+// {
+//   if (walletTx.fee != 0)
+//   {
+//     return false;
+//   }
 
-  uint64_t inputsSum = 0;
-  uint64_t outputsSum = 0;
-  std::vector<uint64_t> outputsAmounts;
-  std::vector<uint64_t> inputsAmounts;
-  TransactionInformation txInfo;
-  bool gotTx = false;
-  const auto &walletsIndex = m_walletsContainer.get<RandomAccessIndex>();
-  for (const WalletRecord &wallet : walletsIndex)
-  {
-    for (const TransactionOutputInformation &output : wallet.container->getTransactionOutputs(walletTx.hash, ITransfersContainer::IncludeTypeKey | ITransfersContainer::IncludeStateAll))
-    {
-      if (outputsAmounts.size() <= output.outputInTransaction)
-      {
-        outputsAmounts.resize(output.outputInTransaction + 1, 0);
-      }
+//   uint64_t inputsSum = 0;
+//   uint64_t outputsSum = 0;
+//   std::vector<uint64_t> outputsAmounts;
+//   std::vector<uint64_t> inputsAmounts;
+//   TransactionInformation txInfo;
+//   bool gotTx = false;
+//   const auto &walletsIndex = m_walletsContainer.get<RandomAccessIndex>();
+//   for (const WalletRecord &wallet : walletsIndex)
+//   {
+//     for (const TransactionOutputInformation &output : wallet.container->getTransactionOutputs(walletTx.hash, ITransfersContainer::IncludeTypeKey | ITransfersContainer::IncludeStateAll))
+//     {
+//       if (outputsAmounts.size() <= output.outputInTransaction)
+//       {
+//         outputsAmounts.resize(output.outputInTransaction + 1, 0);
+//       }
 
-      assert(output.amount != 0);
-      assert(outputsAmounts[output.outputInTransaction] == 0);
-      outputsAmounts[output.outputInTransaction] = output.amount;
-      outputsSum += output.amount;
-    }
+//       assert(output.amount != 0);
+//       assert(outputsAmounts[output.outputInTransaction] == 0);
+//       outputsAmounts[output.outputInTransaction] = output.amount;
+//       outputsSum += output.amount;
+//     }
 
-    for (const TransactionOutputInformation &input : wallet.container->getTransactionInputs(walletTx.hash, ITransfersContainer::IncludeTypeKey))
-    {
-      inputsSum += input.amount;
-      inputsAmounts.push_back(input.amount);
-    }
+//     for (const TransactionOutputInformation &input : wallet.container->getTransactionInputs(walletTx.hash, ITransfersContainer::IncludeTypeKey))
+//     {
+//       inputsSum += input.amount;
+//       inputsAmounts.push_back(input.amount);
+//     }
 
-    if (!gotTx)
-    {
-      gotTx = wallet.container->getTransactionInformation(walletTx.hash, txInfo);
-    }
-  }
+//     if (!gotTx)
+//     {
+//       gotTx = wallet.container->getTransactionInformation(walletTx.hash, txInfo);
+//     }
+//   }
 
-  if (!gotTx)
-  {
-    return false;
-  }
+//   if (!gotTx)
+//   {
+//     return false;
+//   }
 
-  if (outputsSum != inputsSum || outputsSum != txInfo.totalAmountOut || inputsSum != txInfo.totalAmountIn)
-  {
-    return false;
-  }
-  else
-  {
-    return m_currency.isFusionTransaction(inputsAmounts, outputsAmounts, 0); //size = 0 here because can't get real size of tx in wallet.
-  }
-}
+//   if (outputsSum != inputsSum || outputsSum != txInfo.totalAmountOut || inputsSum != txInfo.totalAmountIn)
+//   {
+//     return false;
+//   }
+//   else
+//   {
+//     return m_currency.isFusionTransaction(inputsAmounts, outputsAmounts, 0); //size = 0 here because can't get real size of tx in wallet.
+//   }
+// }
 
-IFusionManager::EstimateResult WalletInterface::estimate(uint64_t threshold) const
-{
-  throwIfNotInitialized();
-  throwIfStopped();
+// IFusionManager::EstimateResult WalletInterface::estimate(uint64_t threshold) const
+// {
+//   throwIfNotInitialized();
+//   throwIfStopped();
 
-  IFusionManager::EstimateResult result{0, 0};
-  auto walletOuts = pickWalletsWithMoney();
-  std::array<size_t, std::numeric_limits<uint64_t>::digits10 + 1> bucketSizes;
-  bucketSizes.fill(0);
-  for (size_t walletIndex = 0; walletIndex < walletOuts.size(); ++walletIndex)
-  {
-    for (auto &out : walletOuts[walletIndex].outs)
-    {
-      uint8_t powerOfTen = 0;
-      if (m_currency.isAmountApplicableInFusionTransactionInput(out.amount, threshold, powerOfTen))
-      {
-        assert(powerOfTen < std::numeric_limits<uint64_t>::digits10 + 1);
-        bucketSizes[powerOfTen]++;
-      }
-    }
+//   IFusionManager::EstimateResult result{0, 0};
+//   auto walletOuts = pickWalletsWithMoney();
+//   std::array<size_t, std::numeric_limits<uint64_t>::digits10 + 1> bucketSizes;
+//   bucketSizes.fill(0);
+//   for (size_t walletIndex = 0; walletIndex < walletOuts.size(); ++walletIndex)
+//   {
+//     for (auto &out : walletOuts[walletIndex].outs)
+//     {
+//       uint8_t powerOfTen = 0;
+//       if (m_currency.isAmountApplicableInFusionTransactionInput(out.amount, threshold, powerOfTen))
+//       {
+//         assert(powerOfTen < std::numeric_limits<uint64_t>::digits10 + 1);
+//         bucketSizes[powerOfTen]++;
+//       }
+//     }
 
-    result.totalOutputCount += walletOuts[walletIndex].outs.size();
-  }
+//     result.totalOutputCount += walletOuts[walletIndex].outs.size();
+//   }
 
-  for (auto bucketSize : bucketSizes)
-  {
-    if (bucketSize >= m_currency.fusionTxMinInputCount())
-    {
-      result.fusionReadyCount += bucketSize;
-    }
-  }
+//   for (auto bucketSize : bucketSizes)
+//   {
+//     if (bucketSize >= m_currency.fusionTxMinInputCount())
+//     {
+//       result.fusionReadyCount += bucketSize;
+//     }
+//   }
 
-  return result;
-}
+//   return result;
+// }
 
 std::vector<WalletInterface::OutputToTransfer> WalletInterface::pickRandomFusionInputs(uint64_t threshold, size_t minInputCount, size_t maxInputCount)
 {

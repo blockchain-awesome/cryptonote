@@ -24,8 +24,8 @@ namespace MultiWalletService {
 class WalletInterface :
                     // ITransfersObserver,
                     IBlockchainSynchronizerObserver,
-                    ITransfersSynchronizerObserver,
-                    IFusionManager 
+                    ITransfersSynchronizerObserver
+                    // IFusionManager 
                     {
 public:
   WalletInterface(System::Dispatcher& dispatcher, const Currency& currency, INode& node, uint32_t transactionSoftLockTime = 1);
@@ -77,9 +77,9 @@ public:
   // virtual void stop() override;
   // virtual WalletEvent getEvent() override;
 
-  virtual size_t createFusionTransaction(uint64_t threshold, uint64_t mixin) override;
-  virtual bool isFusionTransaction(size_t transactionId) const override;
-  virtual IFusionManager::EstimateResult estimate(uint64_t threshold) const override;
+  // virtual size_t createFusionTransaction(uint64_t threshold, uint64_t mixin) override;
+  // virtual bool isFusionTransaction(size_t transactionId) const override;
+  // virtual IFusionManager::EstimateResult estimate(uint64_t threshold) const override;
 
 protected:
 
