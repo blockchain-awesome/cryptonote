@@ -146,7 +146,6 @@ void MultiWallet::runWalletService(const CryptoNote::Currency &currency, CryptoN
   dispatcher->remoteSpawn([this, &log, &currency, &node, &wallet]() {
     log(Logging::INFO) << "starting wallet";
 
-    // new WalletInterface(*dispatcher, currency, node, logger);
     wallet = new WalletInterface(*dispatcher, currency, node, logger);
 
     log(Logging::INFO) << "end starting wallet";
@@ -157,19 +156,6 @@ void MultiWallet::runWalletService(const CryptoNote::Currency &currency, CryptoN
   rpcServer.start(config.gateConfiguration.bindAddress, config.gateConfiguration.bindPort);
 
   delete wallet;
-  // std::unique_ptr<CryptoNote::IWallet> wallet(WalletFactory::createWallet(currency, node, *dispatcher));
-
-  // service = new PaymentService::WalletService(currency, *dispatcher, node, *wallet, logger);
-  // std::unique_ptr<PaymentService::WalletService> serviceGuard(service);
-  // try
-  // {
-  //   service->init();
-  // }
-  // catch (std::exception &e)
-  // {
-  //   Logging::LoggerRef(logger, "run")(Logging::ERROR, Logging::BRIGHT_RED) << "Failed to init walletService reason: " << e.what();
-  //   return;
-  // }
 }
 
 } // namespace MultiWalletService
