@@ -19,14 +19,12 @@
 
 #include "Logging/LoggerGroup.h"
 
-
 using namespace CryptoNote;
 
 namespace MultiWalletService
 {
 
-class WalletInterface :
-    IBlockchainSynchronizerObserver
+class WalletInterface : IBlockchainSynchronizerObserver
 {
 public:
   WalletInterface(System::Dispatcher &dispatcher, const Currency &currency, INode &node, Logging::LoggerGroup &logger, uint32_t transactionSoftLockTime = 1);
@@ -35,210 +33,37 @@ public:
 protected:
   // 区块链同步接口
 
+  void startBlockchainSynchronizer();
   virtual void synchronizationProgressUpdated(uint32_t processedBlockCount, uint32_t totalBlockCount) override;
   virtual void synchronizationCompleted(std::error_code result) override;
   void onSynchronizationProgressUpdated(uint32_t processedBlockCount, uint32_t totalBlockCount);
   void onSynchronizationCompleted();
+
+  void stopBlockchainSynchronizer();
+
+  // CryptoNote::WalletEvent makeSyncProgressUpdatedEvent(uint32_t current, uint32_t total);
+  // CryptoNote::WalletEvent makeSyncCompletedEvent();
+  void init();
+
+  void pushEvent(const WalletEvent &event);
+
+  Crypto::Hash getBlockHashByIndex(uint32_t blockIndex) const;
 
   bool m_blockchainSynchronizerStarted;
   BlockchainSynchronizer m_blockchainSynchronizer;
 
   Logging::LoggerGroup &m_logger;
 
-  void throwIfNotInitialized() const;
-  void throwIfStopped() const;
-  void throwIfTrackingMode() const;
-  void doShutdown();
-  void clearCaches();
-
-  void init();
-
-  struct InputInfo
-  {
-    TransactionTypes::InputKeyInfo keyInfo;
-    WalletRecord *walletRecord = nullptr;
-    KeyPair ephKeys;
-  };
-
-  struct OutputToTransfer
-  {
-    TransactionOutputInformation out;
-    WalletRecord *wallet;
-  };
-
-  struct ReceiverAmounts
-  {
-    CryptoNote::AccountPublicAddress receiver;
-    std::vector<uint64_t> amounts;
-  };
-
-  struct WalletOuts
-  {
-    WalletRecord *wallet;
-    std::vector<TransactionOutputInformation> outs;
-  };
-
-  typedef std::pair<WalletTransfers::const_iterator, WalletTransfers::const_iterator> TransfersRange;
-
-  struct AddressAmounts
-  {
-    int64_t input = 0;
-    int64_t output = 0;
-  };
-
-  struct ContainerAmounts
-  {
-    ITransfersContainer *container;
-    AddressAmounts amounts;
-  };
-
-  typedef std::unordered_map<std::string, AddressAmounts> TransfersMap;
-  std::vector<WalletOuts> pickWalletsWithMoney() const;
-  WalletOuts pickWallet(const std::string &address);
-  std::vector<WalletOuts> pickWallets(const std::vector<std::string> &addresses);
-
-  // void updateBalance(CryptoNote::ITransfersContainer* container);
-  // void unlockBalances(uint32_t height);
-
-  const WalletRecord &getWalletRecord(const Crypto::PublicKey &key) const;
-  const WalletRecord &getWalletRecord(const std::string &address) const;
-  const WalletRecord &getWalletRecord(CryptoNote::ITransfersContainer *container) const;
-
-  CryptoNote::AccountPublicAddress parseAddress(const std::string &address) const;
-  // std::string addWallet(const Crypto::PublicKey& spendPublicKey, const Crypto::SecretKey& spendSecretKey, uint64_t creationTimestamp);
-  AccountKeys makeAccountKeys(const WalletRecord &wallet) const;
-  size_t getTransactionId(const Crypto::Hash &transactionHash) const;
-  void pushEvent(const WalletEvent &event);
-  // bool isFusionTransaction(const WalletTransaction& walletTx) const;
-
-  struct PreparedTransaction
-  {
-    std::unique_ptr<ITransaction> transaction;
-    std::vector<WalletTransfer> destinations;
-    uint64_t neededMoney;
-    uint64_t changeAmount;
-  };
-
-  void prepareTransaction(std::vector<WalletOuts> &&wallets,
-                          const std::vector<WalletOrder> &orders,
-                          uint64_t fee,
-                          uint64_t mixIn,
-                          const std::string &extra,
-                          uint64_t unlockTimestamp,
-                          const DonationSettings &donation,
-                          const CryptoNote::AccountPublicAddress &changeDestinationAddress,
-                          PreparedTransaction &preparedTransaction);
-
-  void validateTransactionParameters(const TransactionParameters &transactionParameters);
-  size_t doTransfer(const TransactionParameters &transactionParameters);
-
-  void requestMixinOuts(const std::vector<OutputToTransfer> &selectedTransfers,
-                        uint64_t mixIn,
-                        std::vector<CryptoNote::COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS::outs_for_amount> &mixinResult);
-
-  void prepareInputs(const std::vector<OutputToTransfer> &selectedTransfers,
-                     std::vector<CryptoNote::COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS::outs_for_amount> &mixinResult,
-                     uint64_t mixIn,
-                     std::vector<InputInfo> &keysInfo);
-
-  uint64_t selectTransfers(uint64_t needeMoney,
-                           bool dust,
-                           uint64_t dustThreshold,
-                           std::vector<WalletOuts> &&wallets,
-                           std::vector<OutputToTransfer> &selectedTransfers);
-
-  std::vector<ReceiverAmounts> splitDestinations(const std::vector<WalletTransfer> &destinations,
-                                                 uint64_t dustThreshold, const Currency &currency);
-  ReceiverAmounts splitAmount(uint64_t amount, const AccountPublicAddress &destination, uint64_t dustThreshold);
-
-  std::unique_ptr<CryptoNote::ITransaction> makeTransaction(const std::vector<ReceiverAmounts> &decomposedOutputs,
-                                                            std::vector<InputInfo> &keysInfo, const std::string &extra, uint64_t unlockTimestamp);
-
-  void sendTransaction(const CryptoNote::Transaction &cryptoNoteTransaction);
-  size_t validateSaveAndSendTransaction(const ITransactionReader &transaction, const std::vector<WalletTransfer> &destinations, bool isFusion, bool send);
-
-  size_t insertBlockchainTransaction(const TransactionInformation &info, int64_t txBalance);
-  size_t insertOutgoingTransactionAndPushEvent(const Crypto::Hash &transactionHash, uint64_t fee, const BinaryArray &extra, uint64_t unlockTimestamp);
-  void updateTransactionStateAndPushEvent(size_t transactionId, WalletTransactionState state);
-  bool updateWalletTransactionInfo(size_t transactionId, const CryptoNote::TransactionInformation &info, int64_t totalAmount);
-  bool updateTransactionTransfers(size_t transactionId, const std::vector<ContainerAmounts> &containerAmountsList,
-                                  int64_t allInputsAmount, int64_t allOutputsAmount);
-  TransfersMap getKnownTransfersMap(size_t transactionId, size_t firstTransferIdx) const;
-  bool updateAddressTransfers(size_t transactionId, size_t firstTransferIdx, const std::string &address, int64_t knownAmount, int64_t targetAmount);
-  bool updateUnknownTransfers(size_t transactionId, size_t firstTransferIdx, const std::unordered_set<std::string> &myAddresses,
-                              int64_t knownAmount, int64_t myAmount, int64_t totalAmount, bool isOutput);
-  void appendTransfer(size_t transactionId, size_t firstTransferIdx, const std::string &address, int64_t amount);
-  bool adjustTransfer(size_t transactionId, size_t firstTransferIdx, const std::string &address, int64_t amount);
-  bool eraseTransfers(size_t transactionId, size_t firstTransferIdx, std::function<bool(bool, const std::string &)> &&predicate);
-  bool eraseTransfersByAddress(size_t transactionId, size_t firstTransferIdx, const std::string &address, bool eraseOutputTransfers);
-  bool eraseForeignTransfers(size_t transactionId, size_t firstTransferIdx, const std::unordered_set<std::string> &knownAddresses, bool eraseOutputTransfers);
-  void pushBackOutgoingTransfers(size_t txId, const std::vector<WalletTransfer> &destinations);
-  void insertUnlockTransactionJob(const Crypto::Hash &transactionHash, uint32_t blockHeight, CryptoNote::ITransfersContainer *container);
-  void deleteUnlockTransactionJob(const Crypto::Hash &transactionHash);
-  void startBlockchainSynchronizer();
-  void stopBlockchainSynchronizer();
-  void addUnconfirmedTransaction(const ITransactionReader &transaction);
-  void removeUnconfirmedTransaction(const Crypto::Hash &transactionHash);
-
-  std::vector<OutputToTransfer> pickRandomFusionInputs(uint64_t threshold, size_t minInputCount, size_t maxInputCount);
-  ReceiverAmounts decomposeFusionOutputs(uint64_t inputsAmount);
-
-  enum class WalletState
-  {
-    INITIALIZED,
-    NOT_INITIALIZED
-  };
-
-  enum class WalletTrackingMode
-  {
-    TRACKING,
-    NOT_TRACKING,
-    NO_ADDRESSES
-  };
-
-  WalletTrackingMode getTrackingMode() const;
-
-  TransfersRange getTransactionTransfersRange(size_t transactionIndex) const;
-  std::vector<TransactionsInBlockInfo> getTransactionsInBlocks(uint32_t blockIndex, size_t count) const;
-  Crypto::Hash getBlockHashByIndex(uint32_t blockIndex) const;
-
-  std::vector<WalletTransfer> getTransactionTransfers(const WalletTransaction &transaction) const;
-  void filterOutTransactions(WalletTransactions &transactions, WalletTransfers &transfers, std::function<bool(const WalletTransaction &)> &&pred) const;
-  void getViewKeyKnownBlocks(const Crypto::PublicKey &viewPublicKey);
-  CryptoNote::AccountPublicAddress getChangeDestination(const std::string &changeDestinationAddress, const std::vector<std::string> &sourceAddresses) const;
-  bool isMyAddress(const std::string &address) const;
-
-  void deleteContainerFromUnlockTransactionJobs(const ITransfersContainer *container);
-  std::vector<size_t> deleteTransfersForAddress(const std::string &address, std::vector<size_t> &deletedTransactions);
-  void deleteFromUncommitedTransactions(const std::vector<size_t> &deletedTransactions);
-
   System::Dispatcher &m_dispatcher;
   const Currency &m_currency;
   INode &m_node;
   bool m_stopped;
-
-  WalletsContainer m_walletsContainer;
-  UnlockTransactionJobs m_unlockTransactionsJob;
-  WalletTransactions m_transactions;
-  WalletTransfers m_transfers;                               //sorted
-  mutable std::unordered_map<size_t, bool> m_fusionTxsCache; // txIndex -> isFusion
-  UncommitedTransactions m_uncommitedTransactions;
 
   TransfersSyncronizer m_synchronizer;
 
   System::Event m_eventOccurred;
   std::queue<WalletEvent> m_events;
   mutable System::Event m_readyEvent;
-
-  WalletState m_state;
-
-  std::string m_password;
-
-  Crypto::PublicKey m_viewPublicKey;
-  Crypto::SecretKey m_viewSecretKey;
-
-  uint64_t m_actualBalance;
-  uint64_t m_pendingBalance;
 
   uint64_t m_upperTransactionSizeLimit;
   uint32_t m_transactionSoftLockTime;
