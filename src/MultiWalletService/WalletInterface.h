@@ -31,6 +31,7 @@ class WalletInterface :
 public:
   WalletInterface(System::Dispatcher &dispatcher, const Currency &currency, INode &node, Logging::LoggerGroup &logger, uint32_t transactionSoftLockTime = 1);
   virtual ~WalletInterface();
+
 protected:
   // 区块链同步接口
 
@@ -51,9 +52,6 @@ protected:
   void clearCaches();
 
   void init();
-
-  // void initWithKeys(const Crypto::PublicKey& viewPublicKey, const Crypto::SecretKey& viewSecretKey, const std::string& password);
-  // std::string doCreateAddress(const Crypto::PublicKey& spendPublicKey, const Crypto::SecretKey& spendSecretKey, uint64_t creationTimestamp);
 
   struct InputInfo
   {
@@ -101,10 +99,10 @@ protected:
   // virtual void onTransactionUpdated(ITransfersSubscription* object, const Crypto::Hash& transactionHash) override;
   // virtual void onTransactionUpdated(const Crypto::PublicKey& viewPublicKey, const Crypto::Hash& transactionHash,
   //   const std::vector<ITransfersContainer*>& containers) override;
-  void transactionUpdated(const TransactionInformation &transactionInfo, const std::vector<ContainerAmounts> &containerAmountsList);
+  // void transactionUpdated(const TransactionInformation &transactionInfo, const std::vector<ContainerAmounts> &containerAmountsList);
 
   // virtual void onTransactionDeleted(ITransfersSubscription* object, const Crypto::Hash& transactionHash) override;
-  void transactionDeleted(ITransfersSubscription *object, const Crypto::Hash &transactionHash);
+  // void transactionDeleted(ITransfersSubscription *object, const Crypto::Hash &transactionHash);
 
   // virtual void onBlocksAdded(const Crypto::PublicKey& viewPublicKey, const std::vector<Crypto::Hash>& blockHashes) override;
   // void blocksAdded(const std::vector<Crypto::Hash>& blockHashes);

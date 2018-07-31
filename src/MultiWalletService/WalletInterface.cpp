@@ -302,33 +302,6 @@ WalletInterface::~WalletInterface()
   m_dispatcher.yield(); //let remote spawns finish
 }
 
-// void WalletInterface::initialize(const std::string& password) {
-//   Crypto::PublicKey viewPublicKey;
-//   Crypto::SecretKey viewSecretKey;
-//   Crypto::generate_keys(viewPublicKey, viewSecretKey);
-
-//   initWithKeys(viewPublicKey, viewSecretKey, password);
-// }
-
-// void WalletInterface::initializeWithViewKey(const Crypto::SecretKey &viewSecretKey, const std::string &password)
-// {
-//   Crypto::PublicKey viewPublicKey;
-//   if (!Crypto::secret_key_to_public_key(viewSecretKey, viewPublicKey))
-//   {
-//     throw std::system_error(make_error_code(CryptoNote::error::KEY_GENERATION_ERROR));
-//   }
-
-//   initWithKeys(viewPublicKey, viewSecretKey, password);
-// }
-
-// void WalletInterface::shutdown()
-// {
-//   throwIfNotInitialized();
-//   doShutdown();
-
-//   m_dispatcher.yield(); //let remote spawns finish
-// }
-
 void WalletInterface::doShutdown()
 {
   if (m_walletsContainer.size() != 0)
@@ -2111,66 +2084,66 @@ void WalletInterface::onSynchronizationCompleted()
 //   });
 // }
 
-void WalletInterface::transactionUpdated(const TransactionInformation &transactionInfo, const std::vector<ContainerAmounts> &containerAmountsList)
-{
-  System::EventLock lk(m_readyEvent);
+// void WalletInterface::transactionUpdated(const TransactionInformation &transactionInfo, const std::vector<ContainerAmounts> &containerAmountsList)
+// {
+//   System::EventLock lk(m_readyEvent);
 
-  if (m_state == WalletState::NOT_INITIALIZED)
-  {
-    return;
-  }
+//   if (m_state == WalletState::NOT_INITIALIZED)
+//   {
+//     return;
+//   }
 
-  bool updated = false;
-  bool isNew = false;
+//   bool updated = false;
+//   bool isNew = false;
 
-  int64_t totalAmount = std::accumulate(containerAmountsList.begin(), containerAmountsList.end(), static_cast<int64_t>(0),
-                                        [](int64_t sum, const ContainerAmounts &containerAmounts) { return sum + containerAmounts.amounts.input + containerAmounts.amounts.output; });
+//   int64_t totalAmount = std::accumulate(containerAmountsList.begin(), containerAmountsList.end(), static_cast<int64_t>(0),
+//                                         [](int64_t sum, const ContainerAmounts &containerAmounts) { return sum + containerAmounts.amounts.input + containerAmounts.amounts.output; });
 
-  size_t transactionId;
-  auto &hashIndex = m_transactions.get<TransactionIndex>();
-  auto it = hashIndex.find(transactionInfo.transactionHash);
-  if (it != hashIndex.end())
-  {
-    transactionId = std::distance(m_transactions.get<RandomAccessIndex>().begin(), m_transactions.project<RandomAccessIndex>(it));
-    updated |= updateWalletTransactionInfo(transactionId, transactionInfo, totalAmount);
-  }
-  else
-  {
-    isNew = true;
-    transactionId = insertBlockchainTransaction(transactionInfo, totalAmount);
-    // m_fusionTxsCache.emplace(transactionId, isFusionTransaction(*it));
-  }
+//   size_t transactionId;
+//   auto &hashIndex = m_transactions.get<TransactionIndex>();
+//   auto it = hashIndex.find(transactionInfo.transactionHash);
+//   if (it != hashIndex.end())
+//   {
+//     transactionId = std::distance(m_transactions.get<RandomAccessIndex>().begin(), m_transactions.project<RandomAccessIndex>(it));
+//     updated |= updateWalletTransactionInfo(transactionId, transactionInfo, totalAmount);
+//   }
+//   else
+//   {
+//     isNew = true;
+//     transactionId = insertBlockchainTransaction(transactionInfo, totalAmount);
+//     // m_fusionTxsCache.emplace(transactionId, isFusionTransaction(*it));
+//   }
 
-  if (transactionInfo.blockHeight != CryptoNote::WALLET_UNCONFIRMED_TRANSACTION_HEIGHT)
-  {
-    // In some cases a transaction can be included to a block but not removed from m_uncommitedTransactions. Fix it
-    m_uncommitedTransactions.erase(transactionId);
-  }
+//   if (transactionInfo.blockHeight != CryptoNote::WALLET_UNCONFIRMED_TRANSACTION_HEIGHT)
+//   {
+//     // In some cases a transaction can be included to a block but not removed from m_uncommitedTransactions. Fix it
+//     m_uncommitedTransactions.erase(transactionId);
+//   }
 
-  // Update cached balance
-  for (auto containerAmounts : containerAmountsList)
-  {
-    // updateBalance(containerAmounts.container);
+//   // Update cached balance
+//   for (auto containerAmounts : containerAmountsList)
+//   {
+//     // updateBalance(containerAmounts.container);
 
-    if (transactionInfo.blockHeight != CryptoNote::WALLET_UNCONFIRMED_TRANSACTION_HEIGHT)
-    {
-      uint32_t unlockHeight = std::max(transactionInfo.blockHeight + m_transactionSoftLockTime, static_cast<uint32_t>(transactionInfo.unlockTime));
-      insertUnlockTransactionJob(transactionInfo.transactionHash, unlockHeight, containerAmounts.container);
-    }
-  }
+//     if (transactionInfo.blockHeight != CryptoNote::WALLET_UNCONFIRMED_TRANSACTION_HEIGHT)
+//     {
+//       uint32_t unlockHeight = std::max(transactionInfo.blockHeight + m_transactionSoftLockTime, static_cast<uint32_t>(transactionInfo.unlockTime));
+//       insertUnlockTransactionJob(transactionInfo.transactionHash, unlockHeight, containerAmounts.container);
+//     }
+//   }
 
-  updated |= updateTransactionTransfers(transactionId, containerAmountsList, -static_cast<int64_t>(transactionInfo.totalAmountIn),
-                                        static_cast<int64_t>(transactionInfo.totalAmountOut));
+//   updated |= updateTransactionTransfers(transactionId, containerAmountsList, -static_cast<int64_t>(transactionInfo.totalAmountIn),
+//                                         static_cast<int64_t>(transactionInfo.totalAmountOut));
 
-  if (isNew)
-  {
-    pushEvent(makeTransactionCreatedEvent(transactionId));
-  }
-  else if (updated)
-  {
-    pushEvent(makeTransactionUpdatedEvent(transactionId));
-  }
-}
+//   if (isNew)
+//   {
+//     pushEvent(makeTransactionCreatedEvent(transactionId));
+//   }
+//   else if (updated)
+//   {
+//     pushEvent(makeTransactionUpdatedEvent(transactionId));
+//   }
+// }
 
 void WalletInterface::pushEvent(const WalletEvent &event)
 {
@@ -2191,52 +2164,6 @@ size_t WalletInterface::getTransactionId(const Hash &transactionHash) const
   auto txId = std::distance(m_transactions.get<RandomAccessIndex>().begin(), rndIt);
 
   return txId;
-}
-
-// void WalletInterface::onTransactionDeleted(ITransfersSubscription *object, const Hash &transactionHash)
-// {
-//   m_dispatcher.remoteSpawn([object, transactionHash, this]() { this->transactionDeleted(object, transactionHash); });
-// }
-
-void WalletInterface::transactionDeleted(ITransfersSubscription *object, const Hash &transactionHash)
-{
-  System::EventLock lk(m_readyEvent);
-
-  if (m_state == WalletState::NOT_INITIALIZED)
-  {
-    return;
-  }
-
-  auto it = m_transactions.get<TransactionIndex>().find(transactionHash);
-  if (it == m_transactions.get<TransactionIndex>().end())
-  {
-    return;
-  }
-
-  // CryptoNote::ITransfersContainer *container = &object->getContainer();
-  // updateBalance(container);
-  deleteUnlockTransactionJob(transactionHash);
-
-  bool updated = false;
-  m_transactions.get<TransactionIndex>().modify(it, [&updated](CryptoNote::WalletTransaction &tx) {
-    if (tx.state == WalletTransactionState::CREATED || tx.state == WalletTransactionState::SUCCEEDED)
-    {
-      tx.state = WalletTransactionState::CANCELLED;
-      updated = true;
-    }
-
-    if (tx.blockHeight != WALLET_UNCONFIRMED_TRANSACTION_HEIGHT)
-    {
-      tx.blockHeight = WALLET_UNCONFIRMED_TRANSACTION_HEIGHT;
-      updated = true;
-    }
-  });
-
-  if (updated)
-  {
-    auto transactionId = getTransactionId(transactionHash);
-    pushEvent(makeTransactionUpdatedEvent(transactionId));
-  }
 }
 
 void WalletInterface::insertUnlockTransactionJob(const Hash &transactionHash, uint32_t blockHeight, CryptoNote::ITransfersContainer *container)
