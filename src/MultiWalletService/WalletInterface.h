@@ -93,29 +93,6 @@ protected:
   };
 
   typedef std::unordered_map<std::string, AddressAmounts> TransfersMap;
-
-  // virtual void onError(ITransfersSubscription* object, uint32_t height, std::error_code ec) override;
-
-  // virtual void onTransactionUpdated(ITransfersSubscription* object, const Crypto::Hash& transactionHash) override;
-  // virtual void onTransactionUpdated(const Crypto::PublicKey& viewPublicKey, const Crypto::Hash& transactionHash,
-  //   const std::vector<ITransfersContainer*>& containers) override;
-  // void transactionUpdated(const TransactionInformation &transactionInfo, const std::vector<ContainerAmounts> &containerAmountsList);
-
-  // virtual void onTransactionDeleted(ITransfersSubscription* object, const Crypto::Hash& transactionHash) override;
-  // void transactionDeleted(ITransfersSubscription *object, const Crypto::Hash &transactionHash);
-
-  // virtual void onBlocksAdded(const Crypto::PublicKey& viewPublicKey, const std::vector<Crypto::Hash>& blockHashes) override;
-  // void blocksAdded(const std::vector<Crypto::Hash>& blockHashes);
-
-  // virtual void onBlockchainDetach(const Crypto::PublicKey& viewPublicKey, uint32_t blockIndex) override;
-  // void blocksRollback(uint32_t blockIndex);
-
-  // virtual void onTransactionDeleteBegin(const Crypto::PublicKey& viewPublicKey, Crypto::Hash transactionHash) override;
-  // void transactionDeleteBegin(Crypto::Hash transactionHash);
-
-  // virtual void onTransactionDeleteEnd(const Crypto::PublicKey& viewPublicKey, Crypto::Hash transactionHash) override;
-  // void transactionDeleteEnd(Crypto::Hash transactionHash);
-
   std::vector<WalletOuts> pickWalletsWithMoney() const;
   WalletOuts pickWallet(const std::string &address);
   std::vector<WalletOuts> pickWallets(const std::vector<std::string> &addresses);
@@ -202,9 +179,6 @@ protected:
   void stopBlockchainSynchronizer();
   void addUnconfirmedTransaction(const ITransactionReader &transaction);
   void removeUnconfirmedTransaction(const Crypto::Hash &transactionHash);
-
-  // void unsafeLoad(std::istream& source, const std::string& password);
-  // void unsafeSave(std::ostream& destination, bool saveDetails, bool saveCache);
 
   std::vector<OutputToTransfer> pickRandomFusionInputs(uint64_t threshold, size_t minInputCount, size_t maxInputCount);
   ReceiverAmounts decomposeFusionOutputs(uint64_t inputsAmount);
