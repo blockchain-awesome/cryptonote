@@ -141,16 +141,22 @@ void MultiWallet::runRpcProxy(Logging::LoggerRef &log)
 
 void MultiWallet::runWalletService(const CryptoNote::Currency &currency, CryptoNote::INode &node, Logging::LoggerRef &log)
 {
-  // dispatcher->remoteSpawn([this, log, currency, node]() {
-  //   log(Logging::INFO) << "starting wallet";
 
-  //   WalletInterface *wallet = new WalletInterface(*dispatcher, currency, node, logger);
-  // });
+  WalletInterface *wallet;
+  dispatcher->remoteSpawn([this, &log, &currency, &node, &wallet]() {
+    log(Logging::INFO) << "starting wallet";
+
+    // new WalletInterface(*dispatcher, currency, node, logger);
+    wallet = new WalletInterface(*dispatcher, currency, node, logger);
+
+    log(Logging::INFO) << "end starting wallet";
+  });
   log(Logging::INFO) << "starting rpc server";
 
-  MultiWalletService::MultiServiceJsonRpcServer rpcServer(*dispatcher, *stopEvent, log.getLogger());
+  MultiWalletService::MultiServiceJsonRpcServer rpcServer(*dispatcher, *stopEvent, log.getLogger(), *wallet);
   rpcServer.start(config.gateConfiguration.bindAddress, config.gateConfiguration.bindPort);
 
+  delete wallet;
   // std::unique_ptr<CryptoNote::IWallet> wallet(WalletFactory::createWallet(currency, node, *dispatcher));
 
   // service = new PaymentService::WalletService(currency, *dispatcher, node, *wallet, logger);

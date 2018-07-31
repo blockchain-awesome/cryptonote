@@ -155,13 +155,13 @@ CryptoNote::WalletEvent makeTransactionCreatedEvent(size_t id)
   return event;
 }
 
-CryptoNote::WalletEvent makeMoneyUnlockedEvent()
-{
-  CryptoNote::WalletEvent event;
-  event.type = CryptoNote::WalletEventType::BALANCE_UNLOCKED;
+// CryptoNote::WalletEvent makeMoneyUnlockedEvent()
+// {
+//   CryptoNote::WalletEvent event;
+//   event.type = CryptoNote::WalletEventType::BALANCE_UNLOCKED;
 
-  return event;
-}
+//   return event;
+// }
 
 CryptoNote::WalletEvent makeSyncProgressUpdatedEvent(uint32_t current, uint32_t total)
 {
@@ -181,10 +181,10 @@ CryptoNote::WalletEvent makeSyncCompletedEvent()
   return event;
 }
 
-size_t getTransactionSize(const ITransactionReader &transaction)
-{
-  return transaction.getTransactionData().size();
-}
+// size_t getTransactionSize(const ITransactionReader &transaction)
+// {
+//   return transaction.getTransactionData().size();
+// }
 
 std::vector<WalletTransfer> convertOrdersToTransfers(const std::vector<WalletOrder> &orders)
 {
@@ -288,6 +288,8 @@ WalletInterface::WalletInterface(System::Dispatcher &dispatcher, const Currency 
 {
   m_upperTransactionSizeLimit = m_currency.blockGrantedFullRewardZone() * 2 - m_currency.minerTxBlobReservedSize();
   m_readyEvent.set();
+
+  init();
 }
 
 WalletInterface::~WalletInterface()
@@ -366,7 +368,9 @@ void WalletInterface::init()
 {
   m_blockchain.push_back(m_currency.genesisBlockHash());
   m_blockchainSynchronizer.addObserver(this);
+  Logging::LoggerRef log(m_logger, "multi wallet service");
 
+  log(Logging::INFO) << "init wallet";
   startBlockchainSynchronizer();
 }
 
@@ -1981,7 +1985,7 @@ void WalletInterface::onSynchronizationProgressUpdated(uint32_t processedBlockCo
 
   pushEvent(makeSyncProgressUpdatedEvent(processedBlockCount, totalBlockCount));
 
-  uint32_t currentHeight = processedBlockCount - 1;
+  // uint32_t currentHeight = processedBlockCount - 1;
 
   Logging::LoggerRef(m_logger, "inteface")(Logging::INFO) << "on synchronizing" << endl;
 
@@ -2209,7 +2213,7 @@ void WalletInterface::transactionDeleted(ITransfersSubscription *object, const H
     return;
   }
 
-  CryptoNote::ITransfersContainer *container = &object->getContainer();
+  // CryptoNote::ITransfersContainer *container = &object->getContainer();
   // updateBalance(container);
   deleteUnlockTransactionJob(transactionHash);
 

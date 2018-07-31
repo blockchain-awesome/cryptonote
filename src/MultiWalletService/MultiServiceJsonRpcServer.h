@@ -12,12 +12,14 @@
 #include "Serialization/JsonInputValueSerializer.h"
 #include "Serialization/JsonOutputStreamSerializer.h"
 
+#include "WalletInterface.h"
+
 namespace MultiWalletService {
 
 
 class MultiServiceJsonRpcServer : public CryptoNote::JsonRpcServer {
 public:
-  MultiServiceJsonRpcServer(System::Dispatcher& sys, System::Event& stopEvent, Logging::ILogger& loggerGroup);
+  MultiServiceJsonRpcServer(System::Dispatcher& sys, System::Event& stopEvent, Logging::ILogger& loggerGroup, WalletInterface &wallet);
   MultiServiceJsonRpcServer(const MultiServiceJsonRpcServer&) = delete;
 
 protected:
@@ -25,6 +27,8 @@ protected:
 
 private:
   Logging::LoggerRef logger;
+
+  WalletInterface &m_wallet;
 
   typedef std::function<void (const Common::JsonValue& jsonRpcParams, Common::JsonValue& jsonResponse)> HandlerFunction;
 
