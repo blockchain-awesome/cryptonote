@@ -27,18 +27,18 @@
 #include "Transfers/BlockchainSynchronizer.h"
 #include "Transfers/TransfersSynchronizer.h"
 
+#include "Logging/LoggerGroup.h"
+
 namespace CryptoNote
 {
-
-class SyncStarter;
-
 class WalletSingle : public IWalletLegacy,
                      IBlockchainSynchronizerObserver,
-                     ITransfersObserver
+                     ITransfersObserver,
+                     IWalletLegacyObserver
 {
 
 public:
-  WalletSingle(const CryptoNote::Currency &currency, INode &node);
+  WalletSingle(const CryptoNote::Currency &currency, INode &node, Logging::LoggerGroup &logger);
   virtual ~WalletSingle();
 
   virtual void addObserver(IWalletLegacyObserver *observer) override;
@@ -84,6 +84,8 @@ private:
 
   std::vector<TransactionId> deleteOutdatedUnconfirmedTransactions();
 
+  void initCompleted(std::error_code code);
+
   enum WalletState
   {
     NOT_INITIALIZED = 0,
@@ -100,6 +102,8 @@ private:
   INode &m_node;
   bool m_isStopping;
 
+  AccountKeys m_keys;
+
   std::atomic<uint64_t> m_lastNotifiedActualBalance;
   std::atomic<uint64_t> m_lastNotifiedPendingBalance;
 
@@ -112,8 +116,7 @@ private:
 
   WalletAsyncContextCounter m_asyncContextCounter;
   Tools::ObserverManager<CryptoNote::IWalletLegacyObserver> m_observerManager;
-
-  std::unique_ptr<SyncStarter> m_onInitSyncStarter;
+  Logging::LoggerGroup &m_logger;
 };
 
 } //namespace CryptoNote

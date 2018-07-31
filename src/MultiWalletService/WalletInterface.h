@@ -7,7 +7,8 @@
 #include "IWallet.h"
 
 #include <queue>
-#include <unordered_map>
+#include <map>
+#include <string>
 
 #include "Wallet/IFusionManager.h"
 #include "Wallet/WalletIndices.h"
@@ -18,6 +19,7 @@
 #include "Transfers/BlockchainSynchronizer.h"
 
 #include "Logging/LoggerGroup.h"
+#include "WalletSingle.h"
 
 using namespace CryptoNote;
 
@@ -45,6 +47,8 @@ protected:
 
   void pushEvent(const WalletEvent &event);
 
+  void createWallet(const AccountKeys &accountKeys);
+
   Crypto::Hash getBlockHashByIndex(uint32_t blockIndex) const;
 
   bool m_blockchainSynchronizerStarted;
@@ -67,6 +71,8 @@ protected:
   uint32_t m_transactionSoftLockTime;
 
   BlockHashesContainer m_blockchain;
+
+  std::map<std::string, void*> m_wallets;
 };
 
 } // namespace MultiWalletService

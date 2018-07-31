@@ -81,42 +81,25 @@ private:
 namespace CryptoNote
 {
 
-class SyncStarter : public CryptoNote::IWalletLegacyObserver
+WalletSingle::WalletSingle(const CryptoNote::Currency &currency, INode &node, Logging::LoggerGroup &logger) : m_state(NOT_INITIALIZED),
+                                                                                                              m_currency(currency),
+                                                                                                              m_node(node),
+                                                                                                              m_isStopping(false),
+                                                                                                              m_logger(logger),
+                                                                                                              m_lastNotifiedActualBalance(0),
+                                                                                                              m_lastNotifiedPendingBalance(0),
+                                                                                                              m_blockchainSync(node, currency.genesisBlockHash()),
+                                                                                                              m_transfersSync(currency, m_blockchainSync, node),
+                                                                                                              m_transferDetails(nullptr),
+                                                                                                              m_transactionsCache(m_currency.mempoolTxLiveTime()),
+                                                                                                              m_sender(nullptr)
 {
-public:
-  SyncStarter(BlockchainSynchronizer &sync) : m_sync(sync) {}
-  virtual ~SyncStarter() {}
-
-  virtual void initCompleted(std::error_code result) override
-  {
-    if (!result)
-    {
-      m_sync.start();
-    }
-  }
-
-  BlockchainSynchronizer &m_sync;
-};
-
-WalletSingle::WalletSingle(const CryptoNote::Currency &currency, INode &node) : m_state(NOT_INITIALIZED),
-                                                                                m_currency(currency),
-                                                                                m_node(node),
-                                                                                m_isStopping(false),
-                                                                                m_lastNotifiedActualBalance(0),
-                                                                                m_lastNotifiedPendingBalance(0),
-                                                                                m_blockchainSync(node, currency.genesisBlockHash()),
-                                                                                m_transfersSync(currency, m_blockchainSync, node),
-                                                                                m_transferDetails(nullptr),
-                                                                                m_transactionsCache(m_currency.mempoolTxLiveTime()),
-                                                                                m_sender(nullptr),
-                                                                                m_onInitSyncStarter(new SyncStarter(m_blockchainSync))
-{
-  addObserver(m_onInitSyncStarter.get());
+  addObserver(this);
 }
 
 WalletSingle::~WalletSingle()
 {
-  removeObserver(m_onInitSyncStarter.get());
+  removeObserver(this);
 
   {
     std::unique_lock<std::mutex> lock(m_cacheMutex);
@@ -161,6 +144,12 @@ void WalletSingle::initWithKeys(const AccountKeys &accountKeys, const std::strin
   }
 
   m_observerManager.notify(&IWalletLegacyObserver::initCompleted, std::error_code());
+}
+
+void WalletSingle::initCompleted(std::error_code code)
+{
+
+  // log()
 }
 
 void WalletSingle::initSync()
