@@ -41,8 +41,6 @@ protected:
 
   void stopBlockchainSynchronizer();
 
-  // CryptoNote::WalletEvent makeSyncProgressUpdatedEvent(uint32_t current, uint32_t total);
-  // CryptoNote::WalletEvent makeSyncCompletedEvent();
   void init();
 
   void pushEvent(const WalletEvent &event);
