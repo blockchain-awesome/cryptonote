@@ -27,31 +27,24 @@
 #include "Transfers/BlockchainSynchronizer.h"
 #include "Transfers/TransfersSynchronizer.h"
 
-namespace CryptoNote {
+namespace CryptoNote
+{
 
 class SyncStarter;
 
-class WalletSingle : 
-  public IWalletLegacy, 
-  IBlockchainSynchronizerObserver,  
-  ITransfersObserver {
+class WalletSingle : public IWalletLegacy,
+                     IBlockchainSynchronizerObserver,
+                     ITransfersObserver
+{
 
 public:
-  WalletSingle(const CryptoNote::Currency& currency, INode& node);
+  WalletSingle(const CryptoNote::Currency &currency, INode &node);
   virtual ~WalletSingle();
 
-  virtual void addObserver(IWalletLegacyObserver* observer) override;
-  virtual void removeObserver(IWalletLegacyObserver* observer) override;
+  virtual void addObserver(IWalletLegacyObserver *observer) override;
+  virtual void removeObserver(IWalletLegacyObserver *observer) override;
 
-  // virtual void initAndGenerate(const std::string& password) override;
-  // virtual void initAndLoad(std::istream& source, const std::string& password) override;
-  virtual void initWithKeys(const AccountKeys& accountKeys, const std::string& password) override;
-  // virtual void shutdown() override;
-  // virtual void reset() override;
-
-  virtual void save(std::ostream& destination, bool saveDetailed = true, bool saveCache = true) override;
-
-  virtual std::error_code changePassword(const std::string& oldPassword, const std::string& newPassword) override;
+  virtual void initWithKeys(const AccountKeys &accountKeys, const std::string &password) override;
 
   virtual std::string getAddress() override;
 
@@ -63,34 +56,30 @@ public:
 
   virtual TransactionId findTransactionByTransferId(TransferId transferId) override;
 
-  virtual bool getTransaction(TransactionId transactionId, WalletLegacyTransaction& transaction) override;
-  virtual bool getTransfer(TransferId transferId, WalletLegacyTransfer& transfer) override;
+  virtual bool getTransaction(TransactionId transactionId, WalletLegacyTransaction &transaction) override;
+  virtual bool getTransfer(TransferId transferId, WalletLegacyTransfer &transfer) override;
 
-  virtual TransactionId sendTransaction(const WalletLegacyTransfer& transfer, uint64_t fee, const std::string& extra = "", uint64_t mixIn = 0, uint64_t unlockTimestamp = 0) override;
-  virtual TransactionId sendTransaction(const std::vector<WalletLegacyTransfer>& transfers, uint64_t fee, const std::string& extra = "", uint64_t mixIn = 0, uint64_t unlockTimestamp = 0) override;
+  virtual TransactionId sendTransaction(const WalletLegacyTransfer &transfer, uint64_t fee, const std::string &extra = "", uint64_t mixIn = 0, uint64_t unlockTimestamp = 0) override;
+  virtual TransactionId sendTransaction(const std::vector<WalletLegacyTransfer> &transfers, uint64_t fee, const std::string &extra = "", uint64_t mixIn = 0, uint64_t unlockTimestamp = 0) override;
   virtual std::error_code cancelTransaction(size_t transactionId) override;
 
-  virtual void getAccountKeys(AccountKeys& keys) override;
+  virtual void getAccountKeys(AccountKeys &keys) override;
 
 private:
-
   // IBlockchainSynchronizerObserver
   virtual void synchronizationProgressUpdated(uint32_t current, uint32_t total) override;
   virtual void synchronizationCompleted(std::error_code result) override;
 
   // ITransfersObserver
-  virtual void onTransactionUpdated(ITransfersSubscription* object, const Crypto::Hash& transactionHash) override;
-  virtual void onTransactionDeleted(ITransfersSubscription* object, const Crypto::Hash& transactionHash) override;
+  virtual void onTransactionUpdated(ITransfersSubscription *object, const Crypto::Hash &transactionHash) override;
+  virtual void onTransactionDeleted(ITransfersSubscription *object, const Crypto::Hash &transactionHash) override;
 
   void initSync();
   void throwIfNotInitialised();
 
-  void doSave(std::ostream& destination, bool saveDetailed, bool saveCache);
-  void doLoad(std::istream& source);
-
   void synchronizationCallback(WalletRequest::Callback callback, std::error_code ec);
   void sendTransactionCallback(WalletRequest::Callback callback, std::error_code ec);
-  void notifyClients(std::deque<std::shared_ptr<WalletLegacyEvent> >& events);
+  void notifyClients(std::deque<std::shared_ptr<WalletLegacyEvent>> &events);
   void notifyIfBalanceChanged();
 
   std::vector<TransactionId> deleteOutdatedUnconfirmedTransactions();
@@ -107,8 +96,8 @@ private:
   std::mutex m_cacheMutex;
   CryptoNote::AccountBase m_account;
   std::string m_password;
-  const CryptoNote::Currency& m_currency;
-  INode& m_node;
+  const CryptoNote::Currency &m_currency;
+  INode &m_node;
   bool m_isStopping;
 
   std::atomic<uint64_t> m_lastNotifiedActualBalance;
@@ -116,7 +105,7 @@ private:
 
   BlockchainSynchronizer m_blockchainSync;
   TransfersSyncronizer m_transfersSync;
-  ITransfersContainer* m_transferDetails;
+  ITransfersContainer *m_transferDetails;
 
   WalletUserTransactionsCache m_transactionsCache;
   std::unique_ptr<WalletTransactionSender> m_sender;
