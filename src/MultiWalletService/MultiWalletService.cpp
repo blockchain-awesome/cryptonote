@@ -150,6 +150,7 @@ void MultiWallet::runWalletService(const CryptoNote::Currency &currency, CryptoN
 
     log(Logging::INFO) << "end starting wallet";
   });
+
   log(Logging::INFO) << "starting rpc server";
 
   MultiWalletService::MultiServiceJsonRpcServer rpcServer(*dispatcher, *stopEvent, log.getLogger(), *wallet);

@@ -52,8 +52,6 @@ private:
   MultiWalletService::ConfigurationManager config;
   CryptoNote::CurrencyBuilder currencyBuilder;
 
-  // System::ContextGroup walletContextGroup;
-
   Logging::LoggerGroup logger;
   ofstream fileStream;
   Logging::StreamLogger fileLogger;

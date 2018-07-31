@@ -17,7 +17,7 @@ namespace MultiWalletService
 MultiServiceJsonRpcServer::MultiServiceJsonRpcServer(System::Dispatcher &sys, System::Event &stopEvent, Logging::ILogger &loggerGroup, WalletInterface &wallet)
     : JsonRpcServer(sys, stopEvent, loggerGroup), logger(loggerGroup, "MultiServiceJsonRpcServer"), m_wallet(wallet)
 {
-  // handlers.emplace("reset", jsonHandler<Reset::Request, Reset::Response>(std::bind(&MultiServiceJsonRpcServer::handleReset, this, std::placeholders::_1, std::placeholders::_2)));
+  handlers.emplace("login", jsonHandler<Login::Request, Login::Response>(std::bind(&MultiServiceJsonRpcServer::handleLogin, this, std::placeholders::_1, std::placeholders::_2)));
   // handlers.emplace("createAddress", jsonHandler<CreateAddress::Request, CreateAddress::Response>(std::bind(&MultiServiceJsonRpcServer::handleCreateAddress, this, std::placeholders::_1, std::placeholders::_2)));
   // handlers.emplace("deleteAddress", jsonHandler<DeleteAddress::Request, DeleteAddress::Response>(std::bind(&MultiServiceJsonRpcServer::handleDeleteAddress, this, std::placeholders::_1, std::placeholders::_2)));
   // handlers.emplace("getSpendKeys", jsonHandler<GetSpendKeys::Request, GetSpendKeys::Response>(std::bind(&MultiServiceJsonRpcServer::handleGetSpendKeys, this, std::placeholders::_1, std::placeholders::_2)));
@@ -84,13 +84,10 @@ void MultiServiceJsonRpcServer::processJsonRpcRequest(const Common::JsonValue &r
   }
 }
 
-// std::error_code MultiServiceJsonRpcServer::handleReset(const Reset::Request& request, Reset::Response& response) {
-//   if (request.viewSecretKey.empty()) {
-//     return service.resetWallet();
-//   } else {
-//     return service.replaceWithNewWallet(request.viewSecretKey);
-//   }
-// }
+std::error_code MultiServiceJsonRpcServer::handleLogin(const Login::Request &request, Login::Response &response)
+{
+  return std::error_code();
+}
 
 // std::error_code MultiServiceJsonRpcServer::handleCreateAddress(const CreateAddress::Request& request, CreateAddress::Response& response) {
 //   if (request.spendSecretKey.empty() && request.spendPublicKey.empty()) {

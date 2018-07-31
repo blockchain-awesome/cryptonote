@@ -7,11 +7,14 @@
 
 namespace MultiWalletService {
 
-void Reset::Request::serialize(CryptoNote::ISerializer& serializer) {
+void Login::Request::serialize(CryptoNote::ISerializer& serializer) {
   serializer(viewSecretKey, "viewSecretKey");
+  serializer(sendSecretKey, "sendSecretKey");
+  serializer(address, "address");
 }
 
-void Reset::Response::serialize(CryptoNote::ISerializer& serializer) {
+void Login::Response::serialize(CryptoNote::ISerializer& serializer) {
+    serializer(token, "token");
 }
 
 void GetViewKey::Request::serialize(CryptoNote::ISerializer& serializer) {

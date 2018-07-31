@@ -19,14 +19,17 @@ public:
   virtual const char* what() const throw() override { return "Request error"; }
 };
 
-struct Reset {
+struct Login {
   struct Request {
     std::string viewSecretKey;
+    std::string sendSecretKey;
+    std::string address;
 
     void serialize(CryptoNote::ISerializer& serializer);
   };
 
   struct Response {
+    std::string token;
     void serialize(CryptoNote::ISerializer& serializer);
   };
 };
