@@ -8,8 +8,16 @@
 
 #include "MultiServiceJsonRpcMessages.h"
 
+#include "Common/StringTools.h"
+
 #include "Serialization/JsonInputValueSerializer.h"
 #include "Serialization/JsonOutputStreamSerializer.h"
+
+#include "./http/errors.h"
+
+using namespace CryptoNote;
+
+using namespace Errors;
 
 namespace MultiWalletService
 {
@@ -86,6 +94,37 @@ void MultiServiceJsonRpcServer::processJsonRpcRequest(const Common::JsonValue &r
 
 std::error_code MultiServiceJsonRpcServer::handleLogin(const Login::Request &request, Login::Response &response)
 {
+  if (request.address.empty())
+  {
+    return make_error_code(MultiWalletErrorCode::INVALID_ADDRESS);
+  }
+  if (request.sendSecretKey.empty())
+  {
+    return make_error_code(MultiWalletErrorCode::INVALID_SEND_SECRET_KEY);
+  }
+  if (request.viewSecretKey.empty())
+  {
+    return make_error_code(MultiWalletErrorCode::INVALID_VIEW_SECRET_KEY);
+  }
+
+  AccountKeys keys;
+
+  if (!Common::fromHex(request.address, &keys.address, sizeof(keys.address)))
+  {
+    return make_error_code(MultiWalletErrorCode::INVALID_ADDRESS);
+  }
+
+  if (!Common::fromHex(request.viewSecretKey, &keys.viewSecretKey, sizeof(keys.viewSecretKey)))
+  {
+    return make_error_code(MultiWalletErrorCode::INVALID_SEND_SECRET_KEY);
+  }
+
+  if (!Common::fromHex(request.sendSecretKey, &keys.spendSecretKey, sizeof(keys.spendSecretKey)))
+  {
+    return make_error_code(MultiWalletErrorCode::INVALID_VIEW_SECRET_KEY);
+  }
+
+  m_wallet.createWallet(keys);
   return std::error_code();
 }
 

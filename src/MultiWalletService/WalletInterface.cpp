@@ -16,7 +16,6 @@
 #include <System/EventLock.h>
 #include <System/RemoteContext.h>
 
-
 #include "Logging/LoggerGroup.h"
 
 #include "ITransaction.h"
@@ -72,15 +71,15 @@ namespace MultiWalletService
 {
 
 WalletInterface::WalletInterface(System::Dispatcher &dispatcher, const Currency &currency, INode &node, Logging::LoggerGroup &logger, uint32_t transactionSoftLockTime) : m_dispatcher(dispatcher),
-                                                                                                                                            m_currency(currency),
-                                                                                                                                            m_node(node),
-                                                                                                                                            m_stopped(false),
-                                                                                                                                            m_logger(logger),
-                                                                                                                                            m_blockchainSynchronizerStarted(false),
-                                                                                                                                            m_blockchainSynchronizer(node, currency.genesisBlockHash()),
-                                                                                                                                            m_synchronizer(currency, m_blockchainSynchronizer, node),
-                                                                                                                                            m_eventOccurred(m_dispatcher),
-                                                                                                                                            m_readyEvent(m_dispatcher)
+                                                                                                                                                                          m_currency(currency),
+                                                                                                                                                                          m_node(node),
+                                                                                                                                                                          m_stopped(false),
+                                                                                                                                                                          m_logger(logger),
+                                                                                                                                                                          m_blockchainSynchronizerStarted(false),
+                                                                                                                                                                          m_blockchainSynchronizer(node, currency.genesisBlockHash()),
+                                                                                                                                                                          m_synchronizer(currency, m_blockchainSynchronizer, node),
+                                                                                                                                                                          m_eventOccurred(m_dispatcher),
+                                                                                                                                                                          m_readyEvent(m_dispatcher)
 {
   m_upperTransactionSizeLimit = m_currency.blockGrantedFullRewardZone() * 2 - m_currency.minerTxBlobReservedSize();
   m_readyEvent.set();
@@ -118,19 +117,11 @@ void WalletInterface::onSynchronizationProgressUpdated(uint32_t processedBlockCo
   assert(processedBlockCount > 0);
 
   System::EventLock lk(m_readyEvent);
-
-  // if (m_state == WalletState::NOT_INITIALIZED)
-  // {
-  //   return;
-  // }
-
   pushEvent(makeSyncProgressUpdatedEvent(processedBlockCount, totalBlockCount));
 
-  // uint32_t currentHeight = processedBlockCount - 1;
+  currentHeight = processedBlockCount - 1;
 
   Logging::LoggerRef(m_logger, "inteface")(Logging::INFO) << "on synchronizing" << endl;
-
-  // unlockBalances(currentHeight);
 }
 
 void WalletInterface::onSynchronizationCompleted()
@@ -138,7 +129,6 @@ void WalletInterface::onSynchronizationCompleted()
   System::EventLock lk(m_readyEvent);
 
   Logging::LoggerRef(m_logger, "inteface")(Logging::INFO) << "on synchronized" << endl;
-
 
   pushEvent(makeSyncCompletedEvent());
 }
@@ -168,11 +158,17 @@ void WalletInterface::stopBlockchainSynchronizer()
   }
 }
 
-
 Crypto::Hash WalletInterface::getBlockHashByIndex(uint32_t blockIndex) const
 {
   assert(blockIndex < m_blockchain.size());
   return m_blockchain.get<BlockHeightIndex>()[blockIndex];
+}
+
+bool WalletInterface::createWallet(const AccountKeys &accountKeys)
+{
+  std::string address = Common::toHex(&accountKeys.address, sizeof(accountKeys.address));
+  cout << "address is " << address << endl;
+  return true;
 }
 
 } // namespace MultiWalletService

@@ -31,7 +31,7 @@ file(GLOB_RECURSE JsonRpcServer JsonRpcServer/*)
 
 file(GLOB_RECURSE PaymentGate PaymentGate/*)
 file(GLOB_RECURSE PaymentGateService PaymentGateService/*)
-file(GLOB_RECURSE MultiWalletService MultiWalletService/*)
+file(GLOB_RECURSE MultiWalletService MultiWalletService/* MultiWalletService/http/*)
 file(GLOB_RECURSE Miner Miner/*)
 
 source_group("" FILES $${Common} ${ConnectivityTool} ${Crypto} ${CryptoNoteCore} ${CryptoNoteProtocol} ${Daemon} ${JsonRpcServer} ${Http} ${Logging} ${NodeRpcProxy} ${P2p} ${Rpc} ${Serialization} ${SimpleWallet} ${WalletRPCService} ${System} ${Transfers} ${Wallet} ${WalletLegacy})

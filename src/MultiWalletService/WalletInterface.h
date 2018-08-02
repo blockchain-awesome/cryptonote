@@ -31,6 +31,8 @@ class WalletInterface : IBlockchainSynchronizerObserver
 public:
   WalletInterface(System::Dispatcher &dispatcher, const Currency &currency, INode &node, Logging::LoggerGroup &logger, uint32_t transactionSoftLockTime = 1);
   virtual ~WalletInterface();
+  bool createWallet(const AccountKeys &accountKeys);
+  void init();
 
 protected:
   // 区块链同步接口
@@ -43,11 +45,8 @@ protected:
 
   void stopBlockchainSynchronizer();
 
-  void init();
 
   void pushEvent(const WalletEvent &event);
-
-  void createWallet(const AccountKeys &accountKeys);
 
   Crypto::Hash getBlockHashByIndex(uint32_t blockIndex) const;
 
@@ -72,7 +71,9 @@ protected:
 
   BlockHashesContainer m_blockchain;
 
-  std::map<std::string, void*> m_wallets;
+  std::map<std::string, void *> m_wallets;
+
+  uint32_t currentHeight;
 };
 
 } // namespace MultiWalletService
