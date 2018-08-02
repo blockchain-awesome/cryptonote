@@ -167,7 +167,11 @@ Crypto::Hash WalletInterface::getBlockHashByIndex(uint32_t blockIndex) const
 bool WalletInterface::createWallet(const AccountKeys &accountKeys)
 {
   std::string address = Common::toHex(&accountKeys.address, sizeof(accountKeys.address));
-  cout << "address is " << address << endl;
+  Logging::LoggerRef(m_logger, "inteface")(Logging::INFO) << "address is :" << address << endl;
+  CryptoNote::IWalletLegacy *wallet = new WalletSingle(m_currency, m_node, m_logger);
+  wallet->initWithKeys(accountKeys, "");
+  m_wallets[address] = wallet;
+
   return true;
 }
 

@@ -146,6 +146,31 @@ void WalletSingle::initWithKeys(const AccountKeys &accountKeys, const std::strin
   m_observerManager.notify(&IWalletLegacyObserver::initCompleted, std::error_code());
 }
 
+void WalletSingle::initAndGenerate(const std::string &password)
+{
+}
+
+void WalletSingle::initAndLoad(std::istream &source, const std::string &password)
+{
+}
+
+void WalletSingle::shutdown()
+{
+}
+
+void WalletSingle::reset()
+{
+}
+
+void WalletSingle::save(std::ostream &destination, bool saveDetailed, bool saveCache)
+{
+}
+
+std::error_code WalletSingle::changePassword(const std::string &oldPassword, const std::string &newPassword)
+{
+  return std::error_code();
+}
+
 void WalletSingle::initCompleted(std::error_code code)
 {
 
