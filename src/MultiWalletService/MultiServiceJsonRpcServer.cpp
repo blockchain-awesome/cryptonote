@@ -5,6 +5,7 @@
 #include "MultiServiceJsonRpcServer.h"
 
 #include <functional>
+#include <chrono>
 
 #include "MultiServiceJsonRpcMessages.h"
 
@@ -21,6 +22,16 @@ using namespace Errors;
 
 namespace MultiWalletService
 {
+
+std::string get_time_str()
+{
+  auto now = std::chrono::system_clock::now();
+  auto in_time_t = std::chrono::system_clock::to_time_t(now);
+
+  std::stringstream ss;
+  ss << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d %X");
+  return ss.str();
+}
 
 MultiServiceJsonRpcServer::MultiServiceJsonRpcServer(System::Dispatcher &sys, System::Event &stopEvent, Logging::ILogger &loggerGroup, WalletInterface &wallet)
     : JsonRpcServer(sys, stopEvent, loggerGroup), logger(loggerGroup, "MultiServiceJsonRpcServer"), m_wallet(wallet)
@@ -108,23 +119,50 @@ std::error_code MultiServiceJsonRpcServer::handleLogin(const Login::Request &req
   }
 
   AccountKeys keys;
+  logger(Logging::INFO) << "address is " << request.address << ", length" << request.address.size() << endl;
+  logger(Logging::INFO) << "sendSecretKey is " << request.sendSecretKey << ", length" << request.sendSecretKey.size() << endl;
+  logger(Logging::INFO) << "viewSecretKey is " << request.viewSecretKey << ", length" << request.viewSecretKey.size() << endl;
 
-  if (!Common::fromHex(request.address, &keys.address, sizeof(keys.address)))
-  {
-    return make_error_code(MultiWalletErrorCode::INVALID_ADDRESS);
-  }
+  // if (!Common::fromHex(request.address, &keys.address, sizeof(keys.address)))
+  // {
+  //   return make_error_code(MultiWalletErrorCode::INVALID_ADDRESS);
+  // }
+  logger(Logging::INFO) << "before 2: ";
 
   if (!Common::fromHex(request.viewSecretKey, &keys.viewSecretKey, sizeof(keys.viewSecretKey)))
   {
     return make_error_code(MultiWalletErrorCode::INVALID_SEND_SECRET_KEY);
   }
+  logger(Logging::INFO) << "before 3: ";
 
   if (!Common::fromHex(request.sendSecretKey, &keys.spendSecretKey, sizeof(keys.spendSecretKey)))
   {
     return make_error_code(MultiWalletErrorCode::INVALID_VIEW_SECRET_KEY);
   }
 
-  m_wallet.createWallet(keys);
+  secret_key_to_public_key(keys.spendSecretKey, keys.address.spendPublicKey);
+  secret_key_to_public_key(keys.viewSecretKey, keys.address.viewPublicKey);
+
+  std::string address = m_wallet.getAddressesByKeys(keys.address);
+  logger(Logging::INFO) << "generated address: " << address;
+
+  if (!m_wallet.checkAddress(request.address, keys.address))
+  {
+    return make_error_code(MultiWalletErrorCode::INVALID_ADDRESS);
+  }
+
+  logger(Logging::INFO) << "before 4: ";
+
+  if (!m_wallet.isWalletExisted(address))
+  {
+    m_wallet.createWallet(keys);
+  }
+
+  response.token = m_wallet.sha256(get_time_str());
+  logger(Logging::INFO) << "token is: " << response.token;
+
+  logger(Logging::INFO) << "before 5: ";
+
   return std::error_code();
 }
 

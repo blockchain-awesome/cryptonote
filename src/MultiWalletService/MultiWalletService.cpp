@@ -142,11 +142,12 @@ void MultiWallet::runRpcProxy(Logging::LoggerRef &log)
 void MultiWallet::runWalletService(const CryptoNote::Currency &currency, CryptoNote::INode &node, Logging::LoggerRef &log)
 {
 
-  WalletInterface *wallet;
+  WalletInterface *wallet = new WalletInterface(*dispatcher, currency, node, logger);
+
   dispatcher->remoteSpawn([this, &log, &currency, &node, &wallet]() {
     log(Logging::INFO) << "starting wallet";
 
-    wallet = new WalletInterface(*dispatcher, currency, node, logger);
+    wallet->init();
 
     log(Logging::INFO) << "end starting wallet";
   });

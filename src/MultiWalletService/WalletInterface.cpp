@@ -84,7 +84,7 @@ WalletInterface::WalletInterface(System::Dispatcher &dispatcher, const Currency 
   m_upperTransactionSizeLimit = m_currency.blockGrantedFullRewardZone() * 2 - m_currency.minerTxBlobReservedSize();
   m_readyEvent.set();
 
-  init();
+  // init();
 }
 
 WalletInterface::~WalletInterface()
@@ -166,13 +166,58 @@ Crypto::Hash WalletInterface::getBlockHashByIndex(uint32_t blockIndex) const
 
 bool WalletInterface::createWallet(const AccountKeys &accountKeys)
 {
-  std::string address = Common::toHex(&accountKeys.address, sizeof(accountKeys.address));
-  Logging::LoggerRef(m_logger, "inteface")(Logging::INFO) << "address is :" << address << endl;
+
+  Logging::LoggerRef(m_logger, "inteface")(Logging::INFO) << "creating new wallet" << endl;
   CryptoNote::IWalletLegacy *wallet = new WalletSingle(m_currency, m_node, m_logger);
   wallet->initWithKeys(accountKeys, "");
+  std::string address = getAddressesByKeys(accountKeys.address);
   m_wallets[address] = wallet;
-
   return true;
+}
+
+bool WalletInterface::isWalletExisted(const std::string &address)
+{
+  void *wallet = m_wallets[address];
+  if (wallet)
+  {
+    return true;
+  }
+  return false;
+}
+
+bool WalletInterface::checkAddress(const std::string &address, AccountPublicAddress &keys)
+{
+
+  std::string genAddress = m_currency.accountAddressAsString(keys);
+
+  if (genAddress != address)
+  {
+    return false;
+  }
+  return true;
+}
+
+std::string WalletInterface::getAddressesByKeys(const AccountPublicAddress &keys)
+{
+  return m_currency.accountAddressAsString(keys);
+}
+
+std::string WalletInterface::sha256(const std::string str)
+{
+  unsigned char hash[SHA256_DIGEST_LENGTH];
+  SHA256_CTX sha256;
+  SHA256_Init(&sha256);
+  SHA256_Update(&sha256, str.c_str(), str.size());
+  SHA256_Final(hash, &sha256);
+  int i = 0;
+  char outputBuffer[65];
+  for (i = 0; i < SHA256_DIGEST_LENGTH; i++)
+  {
+    sprintf(outputBuffer + (i * 2), "%02x", hash[i]);
+  }
+  outputBuffer[64] = 0;
+  std::string res = outputBuffer;
+  return res;
 }
 
 } // namespace MultiWalletService

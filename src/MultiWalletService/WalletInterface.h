@@ -10,6 +10,8 @@
 #include <map>
 #include <string>
 
+#include <openssl/sha.h>
+
 #include "Wallet/IFusionManager.h"
 #include "Wallet/WalletIndices.h"
 
@@ -34,6 +36,15 @@ public:
   bool createWallet(const AccountKeys &accountKeys);
   void init();
 
+  bool isWalletExisted(const std::string &address);
+
+
+  bool checkAddress(const std::string &address, AccountPublicAddress &keys);
+
+  std::string getAddressesByKeys(const AccountPublicAddress &keys);
+
+  std::string sha256(const std::string str);
+
 protected:
   // 区块链同步接口
 
@@ -44,7 +55,6 @@ protected:
   void onSynchronizationCompleted();
 
   void stopBlockchainSynchronizer();
-
 
   void pushEvent(const WalletEvent &event);
 
