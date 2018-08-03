@@ -117,8 +117,7 @@ struct GetSpendKeys {
 
 struct GetBalance {
   struct Request {
-    std::string address;
-
+    std::string token;
     void serialize(CryptoNote::ISerializer& serializer);
   };
 

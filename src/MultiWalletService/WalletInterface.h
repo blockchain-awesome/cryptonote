@@ -38,8 +38,9 @@ public:
 
   bool isWalletExisted(const std::string &address);
 
-
   bool checkAddress(const std::string &address, AccountPublicAddress &keys);
+
+  CryptoNote::IWalletLegacy *getWallet(const std::string token);
 
   std::string getAddressesByKeys(const AccountPublicAddress &keys);
 

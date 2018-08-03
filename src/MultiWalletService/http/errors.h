@@ -17,10 +17,12 @@ enum MultiWalletErrorCode
   INVALID_ADDRESS = 1,
   INVALID_SEND_SECRET_KEY,
   INVALID_VIEW_SECRET_KEY,
+  INVALID_TOKEN,
 
   MISSING_ADDRESS = 1 << 4,
   MISSING_SEND_SECRET_KEY,
-  MISSING_VIEW_SECRET_KEY
+  MISSING_VIEW_SECRET_KEY,
+  MISSING_TOKEN,
 };
 
 // custom category:
@@ -52,12 +54,16 @@ public:
       return "Invalid send secret key";
     case MultiWalletErrorCode::INVALID_VIEW_SECRET_KEY:
       return "Invalid view secret key";
+    case MultiWalletErrorCode::INVALID_TOKEN:
+      return "Invalid token";
     case MultiWalletErrorCode::MISSING_ADDRESS:
       return "Missing address";
     case MultiWalletErrorCode::MISSING_SEND_SECRET_KEY:
       return "Missing send secret key";
     case MultiWalletErrorCode::MISSING_VIEW_SECRET_KEY:
       return "Missing view secret key";
+    case MultiWalletErrorCode::MISSING_TOKEN:
+      return "Missing token";
     default:
       return "Unknown error";
     }

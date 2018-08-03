@@ -23,13 +23,13 @@ using namespace Errors;
 namespace MultiWalletService
 {
 
-std::string get_time_str()
+std::string get_time_str(time_t time)
 {
-  auto now = std::chrono::system_clock::now();
-  auto in_time_t = std::chrono::system_clock::to_time_t(now);
+  // auto now = std::chrono::system_clock::now();
+  // auto in_time_t = std::chrono::system_clock::to_time_t(time);
 
   std::stringstream ss;
-  ss << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d %X");
+  ss << std::put_time(std::localtime(&time), "%Y-%m-%d %X");
   return ss.str();
 }
 
@@ -37,10 +37,11 @@ MultiServiceJsonRpcServer::MultiServiceJsonRpcServer(System::Dispatcher &sys, Sy
     : JsonRpcServer(sys, stopEvent, loggerGroup), logger(loggerGroup, "MultiServiceJsonRpcServer"), m_wallet(wallet)
 {
   handlers.emplace("login", jsonHandler<Login::Request, Login::Response>(std::bind(&MultiServiceJsonRpcServer::handleLogin, this, std::placeholders::_1, std::placeholders::_2)));
+  handlers.emplace("getBalance", jsonHandler<GetBalance::Request, GetBalance::Response>(std::bind(&MultiServiceJsonRpcServer::handleGetBalance, this, std::placeholders::_1, std::placeholders::_2)));
+
   // handlers.emplace("createAddress", jsonHandler<CreateAddress::Request, CreateAddress::Response>(std::bind(&MultiServiceJsonRpcServer::handleCreateAddress, this, std::placeholders::_1, std::placeholders::_2)));
   // handlers.emplace("deleteAddress", jsonHandler<DeleteAddress::Request, DeleteAddress::Response>(std::bind(&MultiServiceJsonRpcServer::handleDeleteAddress, this, std::placeholders::_1, std::placeholders::_2)));
   // handlers.emplace("getSpendKeys", jsonHandler<GetSpendKeys::Request, GetSpendKeys::Response>(std::bind(&MultiServiceJsonRpcServer::handleGetSpendKeys, this, std::placeholders::_1, std::placeholders::_2)));
-  // handlers.emplace("getBalance", jsonHandler<GetBalance::Request, GetBalance::Response>(std::bind(&MultiServiceJsonRpcServer::handleGetBalance, this, std::placeholders::_1, std::placeholders::_2)));
   // handlers.emplace("getBlockHashes", jsonHandler<GetBlockHashes::Request, GetBlockHashes::Response>(std::bind(&MultiServiceJsonRpcServer::handleGetBlockHashes, this, std::placeholders::_1, std::placeholders::_2)));
   // handlers.emplace("getTransactionHashes", jsonHandler<GetTransactionHashes::Request, GetTransactionHashes::Response>(std::bind(&MultiServiceJsonRpcServer::handleGetTransactionHashes, this, std::placeholders::_1, std::placeholders::_2)));
   // handlers.emplace("getTransactions", jsonHandler<GetTransactions::Request, GetTransactions::Response>(std::bind(&MultiServiceJsonRpcServer::handleGetTransactions, this, std::placeholders::_1, std::placeholders::_2)));
@@ -103,6 +104,49 @@ void MultiServiceJsonRpcServer::processJsonRpcRequest(const Common::JsonValue &r
   }
 }
 
+std::string MultiServiceJsonRpcServer::getAddress(const std::string &token)
+{
+  std::map<std::string, std::string>::iterator it;
+
+  it = m_tokenMap.find(token);
+  if (it == m_tokenMap.end())
+  {
+    return "";
+  }
+  return it->second;
+}
+
+std::error_code MultiServiceJsonRpcServer::handleGetBalance(const GetBalance::Request &request, GetBalance::Response &response)
+{
+
+  logger(Logging::INFO) << "inside handle balance, token: " << request.token << endl;
+
+  if (request.token.empty())
+  {
+    return make_error_code(MultiWalletErrorCode::MISSING_TOKEN);
+  }
+
+  std::string address = getAddress(request.token);
+
+  logger(Logging::INFO) << "retrieved address is : " << address << endl;
+
+  if (address == "")
+  {
+    return make_error_code(MultiWalletErrorCode::INVALID_TOKEN);
+  }
+
+  CryptoNote::IWalletLegacy *wallet = m_wallet.getWallet(address);
+
+  if (wallet == NULL)
+  {
+    return make_error_code(MultiWalletErrorCode::INVALID_ADDRESS);
+  }
+
+  response.availableBalance = wallet->actualBalance();
+  response.lockedAmount = wallet->pendingBalance();
+
+  return std::error_code();
+}
 std::error_code MultiServiceJsonRpcServer::handleLogin(const Login::Request &request, Login::Response &response)
 {
   if (request.address.empty())
@@ -123,10 +167,6 @@ std::error_code MultiServiceJsonRpcServer::handleLogin(const Login::Request &req
   logger(Logging::INFO) << "sendSecretKey is " << request.sendSecretKey << ", length" << request.sendSecretKey.size() << endl;
   logger(Logging::INFO) << "viewSecretKey is " << request.viewSecretKey << ", length" << request.viewSecretKey.size() << endl;
 
-  // if (!Common::fromHex(request.address, &keys.address, sizeof(keys.address)))
-  // {
-  //   return make_error_code(MultiWalletErrorCode::INVALID_ADDRESS);
-  // }
   logger(Logging::INFO) << "before 2: ";
 
   if (!Common::fromHex(request.viewSecretKey, &keys.viewSecretKey, sizeof(keys.viewSecretKey)))
@@ -158,10 +198,16 @@ std::error_code MultiServiceJsonRpcServer::handleLogin(const Login::Request &req
     m_wallet.createWallet(keys);
   }
 
-  response.token = m_wallet.sha256(get_time_str());
+  std::time_t now = std::time(nullptr);
+
+  response.token = m_wallet.sha256(get_time_str(now));
+
   logger(Logging::INFO) << "token is: " << response.token;
 
   logger(Logging::INFO) << "before 5: ";
+
+  m_tokenMap[response.token] = address;
+  m_tokenTime[response.token] = now;
 
   return std::error_code();
 }

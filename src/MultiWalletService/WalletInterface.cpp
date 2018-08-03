@@ -141,7 +141,6 @@ void WalletInterface::pushEvent(const WalletEvent &event)
 
 void WalletInterface::startBlockchainSynchronizer()
 {
-  // if (!m_walletsContainer.empty() && !m_blockchainSynchronizerStarted)
   if (!m_blockchainSynchronizerStarted)
   {
     m_blockchainSynchronizer.start();
@@ -195,6 +194,17 @@ bool WalletInterface::checkAddress(const std::string &address, AccountPublicAddr
     return false;
   }
   return true;
+}
+
+CryptoNote::IWalletLegacy *WalletInterface::getWallet(const std::string address)
+{
+  std::map<std::string, void *>::iterator it;
+  it = m_wallets.find(address);
+  if (it != m_wallets.end())
+  {
+    return (CryptoNote::IWalletLegacy *)it->second;
+  }
+  return NULL;
 }
 
 std::string WalletInterface::getAddressesByKeys(const AccountPublicAddress &keys)
