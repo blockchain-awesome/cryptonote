@@ -56,30 +56,47 @@ private:
   std::future<std::error_code> future;
 };
 
-class SaveWaiter : public CryptoNote::IWalletLegacyObserver
-{
-public:
-  SaveWaiter() : future(promise.get_future()) {}
+// class SaveWaiter : public CryptoNote::IWalletLegacyObserver
+// {
+// public:
+//   SaveWaiter() : future(promise.get_future()) {}
 
-  virtual void saveCompleted(std::error_code result) override
-  {
-    promise.set_value(result);
-  }
+//   virtual void saveCompleted(std::error_code result) override
+//   {
+//     promise.set_value(result);
+//   }
 
-  std::error_code waitSave()
-  {
-    return future.get();
-  }
+//   std::error_code waitSave()
+//   {
+//     return future.get();
+//   }
 
-private:
-  std::promise<std::error_code> promise;
-  std::future<std::error_code> future;
-};
+// private:
+//   std::promise<std::error_code> promise;
+//   std::future<std::error_code> future;
+// };
 
 } //namespace
 
 namespace CryptoNote
 {
+
+class SyncStarter : public CryptoNote::IWalletLegacyObserver
+{
+public:
+  SyncStarter(BlockchainSynchronizer &sync) : m_sync(sync) {}
+  virtual ~SyncStarter() {}
+
+  virtual void initCompleted(std::error_code result) override
+  {
+    if (!result)
+    {
+      m_sync.start();
+    }
+  }
+
+  BlockchainSynchronizer &m_sync;
+};
 
 WalletSingle::WalletSingle(const CryptoNote::Currency &currency, INode &node, Logging::LoggerGroup &logger) : m_state(NOT_INITIALIZED),
                                                                                                               m_currency(currency),
@@ -92,14 +109,16 @@ WalletSingle::WalletSingle(const CryptoNote::Currency &currency, INode &node, Lo
                                                                                                               m_transfersSync(currency, m_blockchainSync, node),
                                                                                                               m_transferDetails(nullptr),
                                                                                                               m_transactionsCache(m_currency.mempoolTxLiveTime()),
-                                                                                                              m_sender(nullptr)
+                                                                                                              m_sender(nullptr),
+                                                                                                              m_onInitSyncStarter(new SyncStarter(m_blockchainSync))
+
 {
-  addObserver(this);
+  addObserver(m_onInitSyncStarter.get());
 }
 
 WalletSingle::~WalletSingle()
 {
-  removeObserver(this);
+  removeObserver(m_onInitSyncStarter.get());
 
   {
     std::unique_lock<std::mutex> lock(m_cacheMutex);
@@ -139,9 +158,11 @@ void WalletSingle::initWithKeys(const AccountKeys &accountKeys, const std::strin
     m_account.setAccountKeys(accountKeys);
     m_account.set_createtime(ACCOUN_CREATE_TIME_ACCURACY);
     m_password = password;
-
+    Logging::LoggerRef(m_logger, "insidde sync ")(Logging::INFO, Logging::YELLOW) << "initwithkeys";
     initSync();
   }
+
+  Logging::LoggerRef(m_logger, "initwithkeys")(Logging::INFO, Logging::YELLOW) << "initwithkeys";
 
   m_observerManager.notify(&IWalletLegacyObserver::initCompleted, std::error_code());
 }
@@ -174,6 +195,13 @@ std::error_code WalletSingle::changePassword(const std::string &oldPassword, con
 void WalletSingle::initCompleted(std::error_code code)
 {
 
+  Logging::LoggerRef(m_logger, "wallet initCompleted")(Logging::INFO, Logging::YELLOW) << "initCompleted error code: " << code;
+
+  // if (!code)
+  // {
+  //   m_blockchainSync.start();
+  // }
+
   // log()
 }
 
@@ -198,16 +226,14 @@ void WalletSingle::initSync()
 std::string WalletSingle::getAddress()
 {
   std::unique_lock<std::mutex> lock(m_cacheMutex);
-  throwIfNotInitialised();
-
   return m_currency.accountAddressAsString(m_account);
 }
 
 uint64_t WalletSingle::actualBalance()
 {
   std::unique_lock<std::mutex> lock(m_cacheMutex);
-  throwIfNotInitialised();
 
+  throwIfNotInitialised();
   return m_transferDetails->balance(ITransfersContainer::IncludeKeyUnlocked) -
          m_transactionsCache.unconfrimedOutsAmount();
 }
@@ -256,7 +282,6 @@ bool WalletSingle::getTransaction(TransactionId transactionId, WalletLegacyTrans
 bool WalletSingle::getTransfer(TransferId transferId, WalletLegacyTransfer &transfer)
 {
   std::unique_lock<std::mutex> lock(m_cacheMutex);
-  throwIfNotInitialised();
 
   return m_transactionsCache.getTransfer(transferId, transfer);
 }
@@ -340,6 +365,9 @@ std::error_code WalletSingle::cancelTransaction(size_t transactionId)
 
 void WalletSingle::synchronizationProgressUpdated(uint32_t current, uint32_t total)
 {
+    Logging::LoggerRef(m_logger, "synchronizationProgressUpdated")(Logging::INFO, Logging::YELLOW) << "synchronizationProgressUpdated";
+    Logging::LoggerRef(m_logger, "synchronizationProgressUpdated")(Logging::INFO, Logging::YELLOW) << "current" << current << ",total" << total;
+
   auto deletedTransactions = deleteOutdatedUnconfirmedTransactions();
 
   // forward notification
@@ -356,13 +384,20 @@ void WalletSingle::synchronizationProgressUpdated(uint32_t current, uint32_t tot
 
 void WalletSingle::synchronizationCompleted(std::error_code result)
 {
+
+  Logging::LoggerRef(m_logger, "synchronizationCompleted")(Logging::INFO, Logging::YELLOW) << "synchronizationCompleted";
+
   if (result != std::make_error_code(std::errc::interrupted))
   {
+    Logging::LoggerRef(m_logger, "not interrupted")(Logging::INFO, Logging::YELLOW) << "not interrupted";
     m_observerManager.notify(&IWalletLegacyObserver::synchronizationCompleted, result);
   }
 
+  Logging::LoggerRef(m_logger, "result")(Logging::INFO, Logging::YELLOW) << result;
+
   if (result)
   {
+    Logging::LoggerRef(m_logger, "return")(Logging::INFO, Logging::YELLOW) << "return";
     return;
   }
 
@@ -429,6 +464,9 @@ void WalletSingle::notifyClients(std::deque<std::shared_ptr<WalletLegacyEvent>> 
 
 void WalletSingle::notifyIfBalanceChanged()
 {
+
+  Logging::LoggerRef(m_logger, "notifyIfBalanceChanged")(Logging::INFO, Logging::YELLOW) << "notifyIfBalanceChanged";
+
   auto actual = actualBalance();
   auto prevActual = m_lastNotifiedActualBalance.exchange(actual);
 

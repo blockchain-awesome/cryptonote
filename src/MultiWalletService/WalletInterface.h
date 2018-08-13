@@ -21,17 +21,20 @@
 #include "Transfers/BlockchainSynchronizer.h"
 
 #include "Logging/LoggerGroup.h"
-#include "WalletSingle.h"
+// #include "WalletSingle.h"
+// #include "WalletInterface.h"
 
 using namespace CryptoNote;
 
 namespace MultiWalletService
 {
 
-class WalletInterface : IBlockchainSynchronizerObserver
+// class SyncStarter;
+
+class WalletInterface
 {
 public:
-  WalletInterface(System::Dispatcher &dispatcher, const Currency &currency, INode &node, Logging::LoggerGroup &logger, uint32_t transactionSoftLockTime = 1);
+  WalletInterface(System::Dispatcher &dispatcher, const Currency &currency, INode &node, Logging::LoggerGroup &logger);
   virtual ~WalletInterface();
   bool createWallet(const AccountKeys &accountKeys);
   void init();
@@ -49,38 +52,39 @@ public:
 protected:
   // 区块链同步接口
 
-  void startBlockchainSynchronizer();
-  virtual void synchronizationProgressUpdated(uint32_t processedBlockCount, uint32_t totalBlockCount) override;
-  virtual void synchronizationCompleted(std::error_code result) override;
-  void onSynchronizationProgressUpdated(uint32_t processedBlockCount, uint32_t totalBlockCount);
-  void onSynchronizationCompleted();
+  // void startBlockchainSynchronizer();
+  // virtual void synchronizationProgressUpdated(uint32_t processedBlockCount, uint32_t totalBlockCount) override;
+  // virtual void synchronizationCompleted(std::error_code result) override;
+  // void onSynchronizationProgressUpdated(uint32_t processedBlockCount, uint32_t totalBlockCount);
+  // void onSynchronizationCompleted();
 
-  void stopBlockchainSynchronizer();
+  // void stopBlockchainSynchronizer();
 
-  void pushEvent(const WalletEvent &event);
+  // void pushEvent(const WalletEvent &event);
 
-  Crypto::Hash getBlockHashByIndex(uint32_t blockIndex) const;
+  // Crypto::Hash getBlockHashByIndex(uint32_t blockIndex) const;
 
-  bool m_blockchainSynchronizerStarted;
-  BlockchainSynchronizer m_blockchainSynchronizer;
+  // bool m_blockchainSynchronizerStarted;
+  // BlockchainSynchronizer m_blockchainSynchronizer;
+  // std::unique_ptr<SyncStarter> m_onInitSyncStarter;
 
   Logging::LoggerGroup &m_logger;
+
+  // CryptoNote::AccountBase m_account;
 
   System::Dispatcher &m_dispatcher;
   const Currency &m_currency;
   INode &m_node;
-  bool m_stopped;
+  // bool m_stopped;
 
-  TransfersSyncronizer m_synchronizer;
+  // System::Event m_eventOccurred;
+  // std::queue<WalletEvent> m_events;
+  // mutable System::Event m_readyEvent;
 
-  System::Event m_eventOccurred;
-  std::queue<WalletEvent> m_events;
-  mutable System::Event m_readyEvent;
+  // uint64_t m_upperTransactionSizeLimit;
+  // uint32_t m_transactionSoftLockTime;
 
-  uint64_t m_upperTransactionSizeLimit;
-  uint32_t m_transactionSoftLockTime;
-
-  BlockHashesContainer m_blockchain;
+  // BlockHashesContainer m_blockchain;
 
   std::map<std::string, void *> m_wallets;
 

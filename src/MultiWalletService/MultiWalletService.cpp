@@ -17,6 +17,7 @@
 #include "P2p/NetNode.h"
 #include "PaymentGate/WalletFactory.h"
 #include <System/Context.h>
+#include "NodeRpcProxy/NodeRpcProxy.h"
 
 #ifdef ERROR
 #undef ERROR
@@ -129,10 +130,31 @@ void MultiWallet::runRpcProxy(Logging::LoggerRef &log)
   log(Logging::INFO) << "Starting Payment Gate with remote node";
   CryptoNote::Currency currency = currencyBuilder.currency();
 
-  std::unique_ptr<CryptoNote::INode> node(
-      PaymentService::NodeFactory::createNode(
-          config.remoteNodeConfig.daemonHost,
-          config.remoteNodeConfig.daemonPort));
+  log(Logging::INFO) << "daemon host " << config.remoteNodeConfig.daemonHost;
+  log(Logging::INFO) << "daemon port " << config.remoteNodeConfig.daemonPort;
+
+  std::unique_ptr<INode> node(new NodeRpcProxy(
+      config.remoteNodeConfig.daemonHost,
+      config.remoteNodeConfig.daemonPort));
+
+  // std::unique_ptr<CryptoNote::INode> node(
+  //     PaymentService::NodeFactory::createNode(
+  //         config.remoteNodeConfig.daemonHost,
+  //         config.remoteNodeConfig.daemonPort));
+
+  // std::unique_ptr<INode> node(new NodeRpcProxy(daemon_host, daemon_port));
+
+  std::promise<std::error_code> errorPromise;
+  std::future<std::error_code> error = errorPromise.get_future();
+  auto callback = [&errorPromise](std::error_code e) { errorPromise.set_value(e); };
+  node->init(callback);
+  if (error.get())
+  {
+    log(Logging::ERROR) << ("failed to init NodeRPCProxy");
+    return;
+  }
+
+  log(Logging::ERROR) << ("NodeRPCProxy started");
 
   runWalletService(currency, *node, log);
 
@@ -147,7 +169,7 @@ void MultiWallet::runWalletService(const CryptoNote::Currency &currency, CryptoN
   dispatcher->remoteSpawn([this, &log, &currency, &node, &wallet]() {
     log(Logging::INFO) << "starting wallet";
 
-    wallet->init();
+    // wallet->init();
 
     log(Logging::INFO) << "end starting wallet";
   });
@@ -156,6 +178,7 @@ void MultiWallet::runWalletService(const CryptoNote::Currency &currency, CryptoN
 
   MultiWalletService::MultiServiceJsonRpcServer rpcServer(*dispatcher, *stopEvent, log.getLogger(), *wallet);
   rpcServer.start(config.gateConfiguration.bindAddress, config.gateConfiguration.bindPort);
+  log(Logging::INFO) << "ending rpc server";
 
   delete wallet;
 }

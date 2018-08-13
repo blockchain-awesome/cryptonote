@@ -31,10 +31,12 @@
 
 namespace CryptoNote
 {
+
+class SyncStarter;
+
 class WalletSingle : public IWalletLegacy,
                      IBlockchainSynchronizerObserver,
-                     ITransfersObserver,
-                     IWalletLegacyObserver
+                     ITransfersObserver
 {
 
 public:
@@ -44,15 +46,15 @@ public:
   virtual void addObserver(IWalletLegacyObserver *observer) override;
   virtual void removeObserver(IWalletLegacyObserver *observer) override;
 
-  virtual void initAndGenerate(const std::string& password) override;
-  virtual void initAndLoad(std::istream& source, const std::string& password) override;
-  virtual void initWithKeys(const AccountKeys& accountKeys, const std::string& password) override;
+  virtual void initAndGenerate(const std::string &password) override;
+  virtual void initAndLoad(std::istream &source, const std::string &password) override;
+  virtual void initWithKeys(const AccountKeys &accountKeys, const std::string &password) override;
   virtual void shutdown() override;
   virtual void reset() override;
 
-  virtual void save(std::ostream& destination, bool saveDetailed = true, bool saveCache = true) override;
+  virtual void save(std::ostream &destination, bool saveDetailed = true, bool saveCache = true) override;
 
-  virtual std::error_code changePassword(const std::string& oldPassword, const std::string& newPassword) override;
+  virtual std::error_code changePassword(const std::string &oldPassword, const std::string &newPassword) override;
 
   virtual std::string getAddress() override;
 
@@ -116,6 +118,8 @@ private:
   std::atomic<uint64_t> m_lastNotifiedPendingBalance;
 
   BlockchainSynchronizer m_blockchainSync;
+  std::unique_ptr<SyncStarter> m_onInitSyncStarter;
+
   TransfersSyncronizer m_transfersSync;
   ITransfersContainer *m_transferDetails;
 

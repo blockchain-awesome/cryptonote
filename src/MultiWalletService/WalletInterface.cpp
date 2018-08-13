@@ -35,8 +35,12 @@
 #include "Wallet/WalletSerialization.h"
 #include "Wallet/WalletErrors.h"
 #include "Wallet/WalletUtils.h"
+#include "WalletLegacy/WalletHelper.h"
+
 
 #include "WalletInterface.h"
+#include "WalletSingle.h"
+#include "WalletLegacy/WalletLegacy.h"
 
 using namespace Common;
 using namespace Crypto;
@@ -44,47 +48,61 @@ using namespace CryptoNote;
 
 using namespace std;
 
-namespace
-{
+// namespace
+// {
 
-CryptoNote::WalletEvent makeSyncProgressUpdatedEvent(uint32_t current, uint32_t total)
-{
-  CryptoNote::WalletEvent event;
-  event.type = CryptoNote::WalletEventType::SYNC_PROGRESS_UPDATED;
-  event.synchronizationProgressUpdated.processedBlockCount = current;
-  event.synchronizationProgressUpdated.totalBlockCount = total;
+// CryptoNote::WalletEvent makeSyncProgressUpdatedEvent(uint32_t current, uint32_t total)
+// {
+//   CryptoNote::WalletEvent event;
+//   event.type = CryptoNote::WalletEventType::SYNC_PROGRESS_UPDATED;
+//   event.synchronizationProgressUpdated.processedBlockCount = current;
+//   event.synchronizationProgressUpdated.totalBlockCount = total;
 
-  return event;
-}
+//   return event;
+// }
 
-CryptoNote::WalletEvent makeSyncCompletedEvent()
-{
-  CryptoNote::WalletEvent event;
-  event.type = CryptoNote::WalletEventType::SYNC_COMPLETED;
+// CryptoNote::WalletEvent makeSyncCompletedEvent()
+// {
+//   CryptoNote::WalletEvent event;
+//   event.type = CryptoNote::WalletEventType::SYNC_COMPLETED;
 
-  return event;
-}
+//   return event;
+// }
 
-} // namespace
+// } // namespace
 
 namespace MultiWalletService
 {
+// class SyncStarter : public CryptoNote::IWalletLegacyObserver
+// {
+// public:
+//   SyncStarter(BlockchainSynchronizer &sync) : m_sync(sync) {}
+//   virtual ~SyncStarter() {}
 
-WalletInterface::WalletInterface(System::Dispatcher &dispatcher, const Currency &currency, INode &node, Logging::LoggerGroup &logger, uint32_t transactionSoftLockTime) : m_dispatcher(dispatcher),
-                                                                                                                                                                          m_currency(currency),
-                                                                                                                                                                          m_node(node),
-                                                                                                                                                                          m_stopped(false),
-                                                                                                                                                                          m_logger(logger),
-                                                                                                                                                                          m_blockchainSynchronizerStarted(false),
-                                                                                                                                                                          m_blockchainSynchronizer(node, currency.genesisBlockHash()),
-                                                                                                                                                                          m_synchronizer(currency, m_blockchainSynchronizer, node),
-                                                                                                                                                                          m_eventOccurred(m_dispatcher),
-                                                                                                                                                                          m_readyEvent(m_dispatcher)
+//   virtual void initCompleted(std::error_code result) override
+//   {
+//     if (!result)
+//     {
+
+//       m_sync.start();
+//     }
+//   }
+
+//   BlockchainSynchronizer &m_sync;
+// };
+
+WalletInterface::WalletInterface(System::Dispatcher &dispatcher, const Currency &currency, INode &node, Logging::LoggerGroup &logger) : m_dispatcher(dispatcher),
+                                                                                                                                        m_currency(currency),
+                                                                                                                                        m_node(node),
+                                                                                                                                        m_logger(logger)
+// m_blockchainSynchronizerStarted(false),
+// m_blockchainSynchronizer(node, currency.genesisBlockHash()),
+// m_eventOccurred(m_dispatcher),
+// m_onInitSyncStarter(new SyncStarter(m_blockchainSynchronizer)),
+// m_readyEvent(m_dispatcher)
 {
-  m_upperTransactionSizeLimit = m_currency.blockGrantedFullRewardZone() * 2 - m_currency.minerTxBlobReservedSize();
-  m_readyEvent.set();
-
-  // init();
+  // m_upperTransactionSizeLimit = m_currency.blockGrantedFullRewardZone() * 2 - m_currency.minerTxBlobReservedSize();
+  // m_readyEvent.set();
 }
 
 WalletInterface::~WalletInterface()
@@ -92,82 +110,106 @@ WalletInterface::~WalletInterface()
   m_dispatcher.yield(); //let remote spawns finish
 }
 
-void WalletInterface::init()
-{
-  m_blockchain.push_back(m_currency.genesisBlockHash());
-  m_blockchainSynchronizer.addObserver(this);
-  Logging::LoggerRef log(m_logger, "multi wallet service");
+// void WalletInterface::init()
+// {
 
-  log(Logging::INFO) << "init wallet";
-  startBlockchainSynchronizer();
-}
+//   m_blockchain.push_back(m_currency.genesisBlockHash());
 
-void WalletInterface::synchronizationProgressUpdated(uint32_t processedBlockCount, uint32_t totalBlockCount)
-{
-  m_dispatcher.remoteSpawn([processedBlockCount, totalBlockCount, this]() { onSynchronizationProgressUpdated(processedBlockCount, totalBlockCount); });
-}
+//   m_blockchainSynchronizer.addObserver(this);
+//   Logging::LoggerRef log(m_logger, "multi wallet service");
 
-void WalletInterface::synchronizationCompleted(std::error_code result)
-{
-  m_dispatcher.remoteSpawn([this]() { onSynchronizationCompleted(); });
-}
+//   log(Logging::INFO) << "init wallet";
+// }
 
-void WalletInterface::onSynchronizationProgressUpdated(uint32_t processedBlockCount, uint32_t totalBlockCount)
-{
-  assert(processedBlockCount > 0);
+// void WalletInterface::synchronizationProgressUpdated(uint32_t processedBlockCount, uint32_t totalBlockCount)
+// {
 
-  System::EventLock lk(m_readyEvent);
-  pushEvent(makeSyncProgressUpdatedEvent(processedBlockCount, totalBlockCount));
+//   Logging::LoggerRef log(m_logger, "synchronizationProgressUpdated");
+//   log(Logging::INFO) << "wallet interface synchronized";
+//   log(Logging::INFO) << "processedBlockCount" << processedBlockCount;
+//   log(Logging::INFO) << "totalBlockCount" << totalBlockCount;
+//   m_dispatcher.remoteSpawn([processedBlockCount, totalBlockCount, this]() { onSynchronizationProgressUpdated(processedBlockCount, totalBlockCount); });
+// }
 
-  currentHeight = processedBlockCount - 1;
+// void WalletInterface::synchronizationCompleted(std::error_code result)
+// {
+//   Logging::LoggerRef log(m_logger, "synchronizationCompleted");
+//   log(Logging::INFO) << "wallet interface synchronized";
+//   log(Logging::INFO) << result;
 
-  Logging::LoggerRef(m_logger, "inteface")(Logging::INFO) << "on synchronizing" << endl;
-}
+//   m_dispatcher.remoteSpawn([this]() { onSynchronizationCompleted(); });
+// }
 
-void WalletInterface::onSynchronizationCompleted()
-{
-  System::EventLock lk(m_readyEvent);
+// void WalletInterface::onSynchronizationProgressUpdated(uint32_t processedBlockCount, uint32_t totalBlockCount)
+// {
+//   assert(processedBlockCount > 0);
 
-  Logging::LoggerRef(m_logger, "inteface")(Logging::INFO) << "on synchronized" << endl;
+//   Logging::LoggerRef log(m_logger, "onSynchronizationProgressUpdated");
+//   log(Logging::INFO) << "processedBlockCount" << processedBlockCount;
+//   log(Logging::INFO) << "totalBlockCount" << totalBlockCount;
 
-  pushEvent(makeSyncCompletedEvent());
-}
+//   System::EventLock lk(m_readyEvent);
+//   pushEvent(makeSyncProgressUpdatedEvent(processedBlockCount, totalBlockCount));
 
-void WalletInterface::pushEvent(const WalletEvent &event)
-{
-  m_events.push(event);
-  m_eventOccurred.set();
-}
+//   currentHeight = processedBlockCount - 1;
 
-void WalletInterface::startBlockchainSynchronizer()
-{
-  if (!m_blockchainSynchronizerStarted)
-  {
-    m_blockchainSynchronizer.start();
-    m_blockchainSynchronizerStarted = true;
-  }
-}
+//   Logging::LoggerRef(m_logger, "inteface")(Logging::INFO) << "on synchronizing" << endl;
+// }
 
-void WalletInterface::stopBlockchainSynchronizer()
-{
-  if (m_blockchainSynchronizerStarted)
-  {
-    m_blockchainSynchronizer.stop();
-    m_blockchainSynchronizerStarted = false;
-  }
-}
+// void WalletInterface::onSynchronizationCompleted()
+// {
+//   System::EventLock lk(m_readyEvent);
 
-Crypto::Hash WalletInterface::getBlockHashByIndex(uint32_t blockIndex) const
-{
-  assert(blockIndex < m_blockchain.size());
-  return m_blockchain.get<BlockHeightIndex>()[blockIndex];
-}
+//   Logging::LoggerRef(m_logger, "inteface")(Logging::INFO) << "on synchronized" << endl;
+
+//   pushEvent(makeSyncCompletedEvent());
+// }
+
+// void WalletInterface::pushEvent(const WalletEvent &event)
+// {
+//   m_events.push(event);
+//   m_eventOccurred.set();
+// }
+
+// void WalletInterface::startBlockchainSynchronizer()
+// {
+//   if (!m_blockchainSynchronizerStarted)
+//   {
+//     Logging::LoggerRef(m_logger, "startBlockchainSynchronizer")(Logging::INFO) << "started" << endl;
+
+//     m_blockchainSynchronizer.start();
+//     m_blockchainSynchronizerStarted = true;
+//   }
+// }
+
+// void WalletInterface::stopBlockchainSynchronizer()
+// {
+//   if (m_blockchainSynchronizerStarted)
+//   {
+//     m_blockchainSynchronizer.stop();
+//     m_blockchainSynchronizerStarted = false;
+//   }
+// }
+
+// Crypto::Hash WalletInterface::getBlockHashByIndex(uint32_t blockIndex) const
+// {
+//   assert(blockIndex < m_blockchain.size());
+//   return m_blockchain.get<BlockHeightIndex>()[blockIndex];
+// }
 
 bool WalletInterface::createWallet(const AccountKeys &accountKeys)
 {
 
   Logging::LoggerRef(m_logger, "inteface")(Logging::INFO) << "creating new wallet" << endl;
   CryptoNote::IWalletLegacy *wallet = new WalletSingle(m_currency, m_node, m_logger);
+  // CryptoNote::IWalletLegacy *wallet = new WalletLegacy(m_currency, m_node);
+
+
+  WalletHelper::InitWalletResultObserver initObserver;
+  std::future<std::error_code> f_initError = initObserver.initResult.get_future();
+
+  WalletHelper::IWalletRemoveObserverGuard removeGuard(*wallet, initObserver);
+
   wallet->initWithKeys(accountKeys, "");
   std::string address = getAddressesByKeys(accountKeys.address);
   m_wallets[address] = wallet;
