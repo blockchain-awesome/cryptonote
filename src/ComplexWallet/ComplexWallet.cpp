@@ -137,73 +137,7 @@ bool complex_wallet::init(const boost::program_options::variables_map &vm)
 {
   handle_command_line(vm);
 
-  // if (!m_daemon_address.empty() && (!m_daemon_host.empty() || 0 != m_daemon_port)) {
-  //   fail_msg_writer() << "you can't specify daemon host or port several times";
-  //   return false;
-  // }
-
-  // if (m_generate_new.empty() && m_wallet_file_arg.empty()) {
-  //   std::cout << "Nor 'generate-new-wallet' neither 'wallet-file' argument was specified.\nWhat do you want to do?\n[O]pen existing wallet, [G]enerate new wallet file or [E]xit.\n";
-  //   char c;
-  //   do {
-  //     std::string answer;
-  //     std::getline(std::cin, answer);
-  //     c = answer[0];
-  //     if (!(c == 'O' || c == 'G' || c == 'E' || c == 'o' || c == 'g' || c == 'e')) {
-  //       std::cout << "Unknown command: " << c <<std::endl;
-  //     } else {
-  //       break;
-  //     }
-  //   } while (true);
-
-  //   if (c == 'E' || c == 'e') {
-  //     return false;
-  //   }
-
-  //   std::cout << "Specify wallet file name (e.g., wallet.bin).\n";
-  //   std::string userInput;
-  //   do {
-  //     std::cout << "Wallet file name: ";
-  //     std::getline(std::cin, userInput);
-  //     boost::algorithm::trim(userInput);
-  //   } while (userInput.empty());
-
-  //   if (c == 'g' || c == 'G') {
-  //     m_generate_new = userInput;
-  //   } else {
-  //     m_wallet_file_arg = userInput;
-  //   }
-  // }
-
-  // if (!m_generate_new.empty() && !m_wallet_file_arg.empty()) {
-  //   fail_msg_writer() << "you can't specify 'generate-new-wallet' and 'wallet-file' arguments simultaneously";
-  //   return false;
-  // }
-
   std::string walletFileName;
-  // if (!m_generate_new.empty()) {
-  //   std::string ignoredString;
-  //   WalletHelper::prepareFileNames(m_generate_new, ignoredString, walletFileName);
-  //   boost::system::error_code ignore;
-  //   if (boost::filesystem::exists(walletFileName, ignore)) {
-  //     fail_msg_writer() << walletFileName << " already exists";
-  //     return false;
-  //   }
-  // }
-
-  // if (m_daemon_host.empty())
-  //   m_daemon_host = "localhost";
-  // if (!m_daemon_port)
-  //   m_daemon_port = RPC_DEFAULT_PORT;
-
-  // if (!m_daemon_address.empty()) {
-  //   if (!parseUrlAddress(m_daemon_address, m_daemon_host, m_daemon_port)) {
-  //     fail_msg_writer() << "failed to parse daemon address: " << m_daemon_address;
-  //     return false;
-  //   }
-  // } else {
-  //   m_daemon_address = std::string("http://") + m_daemon_host + ":" + std::to_string(m_daemon_port);
-  // }
 
   Tools::PasswordContainer pwd_container;
   if (command_line::has_arg(vm, arg_password))

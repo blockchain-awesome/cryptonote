@@ -371,15 +371,11 @@ JsonValue buildLoggerConfiguration(Level level, const std::string &logfile)
 std::string tryToOpenWalletOrLoadKeysOrThrow(LoggerRef &logger, std::unique_ptr<IWalletLegacy> &wallet, const std::string &walletFile, const std::string &password)
 {
   std::string walletFileName = walletFile;
-  // WalletHelper::prepareFileNames(walletFile, keys_file, walletFileName);
-
   boost::system::error_code ignore;
-  // bool keysExists = boost::filesystem::exists(keys_file, ignore);
   bool walletExists = boost::filesystem::exists(walletFileName, ignore);
-  // if (!walletExists && !keysExists && boost::filesystem::exists(walletFile, ignore))
   if (!walletExists)
   {
-          throw std::runtime_error("File '" + walletFile + "' not exist!");
+    throw std::runtime_error("File '" + walletFile + "' not exist!");
   }
   {
     logger(INFO) << "Loading wallet...";
@@ -394,7 +390,6 @@ std::string tryToOpenWalletOrLoadKeysOrThrow(LoggerRef &logger, std::unique_ptr<
 
     walletFile.close();
     return walletFileName;
-
   }
 }
 
