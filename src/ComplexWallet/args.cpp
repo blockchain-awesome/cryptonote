@@ -388,7 +388,7 @@ std::string tryToOpenWalletOrLoadKeysOrThrow(LoggerRef &logger, std::unique_ptr<
     walletExists = true;
   }
 
-  if (walletExists)
+  // if (walletExists)
   {
     logger(INFO) << "Loading wallet...";
     std::ifstream walletFile;
@@ -441,44 +441,44 @@ std::string tryToOpenWalletOrLoadKeysOrThrow(LoggerRef &logger, std::unique_ptr<
       return walletFileName;
     }
   }
-  else if (keysExists)
-  { //wallet not exists but keys presented
-    std::stringstream ss;
-    CryptoNote::importLegacyKeys(keys_file, password, ss);
-    boost::filesystem::rename(keys_file, keys_file + ".back");
+  // else if (keysExists)
+  // { //wallet not exists but keys presented
+  //   std::stringstream ss;
+  //   CryptoNote::importLegacyKeys(keys_file, password, ss);
+  //   boost::filesystem::rename(keys_file, keys_file + ".back");
 
-    WalletHelper::InitWalletResultObserver initObserver;
-    std::future<std::error_code> f_initError = initObserver.initResult.get_future();
+  //   WalletHelper::InitWalletResultObserver initObserver;
+  //   std::future<std::error_code> f_initError = initObserver.initResult.get_future();
 
-    WalletHelper::IWalletRemoveObserverGuard removeGuard(*wallet, initObserver);
-    wallet->initAndLoad(ss, password);
-    auto initError = f_initError.get();
+  //   WalletHelper::IWalletRemoveObserverGuard removeGuard(*wallet, initObserver);
+  //   wallet->initAndLoad(ss, password);
+  //   auto initError = f_initError.get();
 
-    removeGuard.removeObserver();
-    if (initError)
-    {
-      throw std::runtime_error("failed to load wallet: " + initError.message());
-    }
+  //   removeGuard.removeObserver();
+  //   if (initError)
+  //   {
+  //     throw std::runtime_error("failed to load wallet: " + initError.message());
+  //   }
 
-    logger(INFO) << "Storing wallet...";
+  //   logger(INFO) << "Storing wallet...";
 
-    try
-    {
-      CryptoNote::WalletHelper::storeWallet(*wallet, walletFileName);
-    }
-    catch (std::exception &e)
-    {
-      logger(ERROR, BRIGHT_RED) << "Failed to store wallet: " << e.what();
-      throw std::runtime_error("error saving wallet file '" + walletFileName + "'");
-    }
+  //   try
+  //   {
+  //     CryptoNote::WalletHelper::storeWallet(*wallet, walletFileName);
+  //   }
+  //   catch (std::exception &e)
+  //   {
+  //     logger(ERROR, BRIGHT_RED) << "Failed to store wallet: " << e.what();
+  //     throw std::runtime_error("error saving wallet file '" + walletFileName + "'");
+  //   }
 
-    logger(INFO, BRIGHT_GREEN) << "Stored ok";
-    return walletFileName;
-  }
-  else
-  { //no wallet no keys
-    throw std::runtime_error("wallet file '" + walletFileName + "' is not found");
-  }
+  //   logger(INFO, BRIGHT_GREEN) << "Stored ok";
+  //   return walletFileName;
+  // }
+  // else
+  // { //no wallet no keys
+  //   throw std::runtime_error("wallet file '" + walletFileName + "' is not found");
+  // }
 }
 
 } // namespace CryptoNote
