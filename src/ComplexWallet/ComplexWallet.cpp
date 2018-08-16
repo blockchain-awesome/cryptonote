@@ -219,23 +219,23 @@ bool complex_wallet::init(const boost::program_options::variables_map& vm) {
     return false;
   }
 
-  if (!m_generate_new.empty()) {
-    std::string walletAddressFile = prepareWalletAddressFilename(m_generate_new);
-    boost::system::error_code ignore;
-    if (boost::filesystem::exists(walletAddressFile, ignore)) {
-      logger(ERROR, BRIGHT_RED) << "Address file already exists: " + walletAddressFile;
-      return false;
-    }
+  // if (!m_generate_new.empty()) {
+  //   std::string walletAddressFile = prepareWalletAddressFilename(m_generate_new);
+  //   boost::system::error_code ignore;
+  //   if (boost::filesystem::exists(walletAddressFile, ignore)) {
+  //     logger(ERROR, BRIGHT_RED) << "Address file already exists: " + walletAddressFile;
+  //     return false;
+  //   }
 
-    if (!new_wallet(walletFileName, pwd_container.password())) {
-      logger(ERROR, BRIGHT_RED) << "account creation failed";
-      return false;
-    }
+  //   if (!new_wallet(walletFileName, pwd_container.password())) {
+  //     logger(ERROR, BRIGHT_RED) << "account creation failed";
+  //     return false;
+  //   }
 
-    if (!writeAddressFile(walletAddressFile, m_wallet->getAddress())) {
-      logger(WARNING, BRIGHT_RED) << "Couldn't write wallet address file: " + walletAddressFile;
-    }
-  } else {
+  //   if (!writeAddressFile(walletAddressFile, m_wallet->getAddress())) {
+  //     logger(WARNING, BRIGHT_RED) << "Couldn't write wallet address file: " + walletAddressFile;
+  //   }
+  // } else {
     m_wallet.reset(new WalletLegacy(m_currency, *m_node));
 
     try {
@@ -255,7 +255,7 @@ bool complex_wallet::init(const boost::program_options::variables_map& vm) {
       "**********************************************************************\n" <<
       "Use \"help\" command to see the list of available commands.\n" <<
       "**********************************************************************";
-  }
+  // }
 
   return true;
 }
