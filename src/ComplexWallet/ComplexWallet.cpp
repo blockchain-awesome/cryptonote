@@ -30,7 +30,6 @@
 #include "Rpc/HttpClient.h"
 
 #include "Wallet/WalletRpcServer.h"
-#include "WalletLegacy/WalletLegacy.h"
 #include "Wallet/LegacyKeysImporter.h"
 #include "WalletLegacy/WalletHelper.h"
 
@@ -40,6 +39,9 @@
 
 #include "args.h"
 
+#include "SingleWallet.h"
+
+
 #if defined(WIN32)
 #include <crtdbg.h>
 #endif
@@ -47,6 +49,8 @@
 using namespace CryptoNote;
 using namespace Logging;
 using Common::JsonValue;
+
+using namespace ComplexWallet;
 
 namespace po = boost::program_options;
 
@@ -164,7 +168,7 @@ bool complex_wallet::init(const boost::program_options::variables_map &vm)
     fail_msg_writer() << "failed to init NodeRPCProxy: " << error.message();
     return false;
   }
-  m_wallet.reset(new WalletLegacy(m_currency, *m_node));
+  m_wallet.reset(new SingleWallet(m_currency, *m_node));
 
   try
   {
@@ -212,7 +216,7 @@ bool complex_wallet::new_wallet(const std::string &wallet_file, const std::strin
 {
   m_wallet_file = wallet_file;
 
-  m_wallet.reset(new WalletLegacy(m_currency, *m_node.get()));
+  m_wallet.reset(new SingleWallet(m_currency, *m_node.get()));
   m_node->addObserver(static_cast<INodeObserver *>(this));
   m_wallet->addObserver(this);
   try
