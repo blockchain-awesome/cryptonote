@@ -37,7 +37,6 @@
 
 namespace po = boost::program_options;
 
-
 int main(int argc, char *argv[])
 {
 #ifdef WIN32
@@ -80,7 +79,7 @@ int main(int argc, char *argv[])
       CryptoNote::Currency tmp_currency = CryptoNote::CurrencyBuilder(logManager).currency();
       CryptoNote::complex_wallet tmp_wallet(dispatcher, tmp_currency, logManager);
 
-      std::cout << CRYPTONOTE_NAME << " wallet v" << PROJECT_VERSION_LONG << std::endl;
+      std::cout << CRYPTONOTE_NAME << " wallet version " << PROJECT_VERSION_LONG << std::endl;
       std::cout << "Usage: simplewallet [--wallet-file=<file>|--generate-new-wallet=<file>] [--daemon-address=<host>:<port>] [<COMMAND>]";
       std::cout << desc_all << '\n'
                 << tmp_wallet.get_commands_str();
@@ -88,7 +87,7 @@ int main(int argc, char *argv[])
     }
     else if (command_line::get_arg(vm, command_line::arg_version))
     {
-      std::cout << CRYPTONOTE_NAME << " wallet v" << PROJECT_VERSION_LONG;
+      std::cout << CRYPTONOTE_NAME << " wallet version " << PROJECT_VERSION_LONG;
       return false;
     }
 
@@ -111,12 +110,14 @@ int main(int argc, char *argv[])
 
   logManager.configure(buildLoggerConfiguration(logLevel, Common::ReplaceExtenstion(argv[0], ".log")));
 
-  logger(INFO, BRIGHT_WHITE) << CRYPTONOTE_NAME << " wallet v" << PROJECT_VERSION_LONG;
+  logger(INFO, BRIGHT_WHITE) << CRYPTONOTE_NAME << " wallet version " << PROJECT_VERSION_LONG;
 
   CryptoNote::Currency currency = CryptoNote::CurrencyBuilder(logManager).testnet(command_line::get_arg(vm, arg_testnet)).currency();
 
   if (command_line::has_arg(vm, Tools::wallet_rpc_server::arg_rpc_bind_port))
   {
+    logger(INFO) << "inside port.";
+
     //runs wallet with rpc interface
     if (!command_line::has_arg(vm, arg_wallet_file))
     {
@@ -214,6 +215,8 @@ int main(int argc, char *argv[])
   }
   else
   {
+    logger(INFO) << "inside cmd.";
+
     //runs wallet with console interface
     CryptoNote::complex_wallet wal(dispatcher, currency, logManager);
 
@@ -222,7 +225,6 @@ int main(int argc, char *argv[])
       logger(ERROR, BRIGHT_RED) << "Failed to initialize wallet";
       return 1;
     }
-
     std::vector<std::string> command = command_line::get_arg(vm, arg_command);
     if (!command.empty())
       wal.process_command(command);
@@ -231,7 +233,11 @@ int main(int argc, char *argv[])
       wal.stop();
     });
 
+    logger(INFO) << "before runing.";
+
     wal.run();
+
+    logger(INFO) << "after running.";
 
     if (!wal.deinit())
     {
