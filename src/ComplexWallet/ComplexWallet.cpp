@@ -87,7 +87,7 @@ complex_wallet::complex_wallet(System::Dispatcher &dispatcher, const CryptoNote:
                                                                                                                                     m_daemon_port(0),
                                                                                                                                     m_currency(currency),
                                                                                                                                     logManager(log),
-                                                                                                                                    logger(log, "simplewallet"),
+                                                                                                                                    logger(log, "complexwallet"),
                                                                                                                                     m_refresh_progress_reporter(*this),
                                                                                                                                     m_initResultPromise(nullptr),
                                                                                                                                     m_walletSynchronized(false)
@@ -257,7 +257,7 @@ bool complex_wallet::new_wallet(const std::string &wallet_file, const std::strin
   success_msg_writer() << "**********************************************************************\n"
                        << "Your wallet has been generated.\n"
                        << "Use \"help\" command to see the list of available commands.\n"
-                       << "Always use \"exit\" command when closing simplewallet to save\n"
+                       << "Always use \"exit\" command when closing complexwallet to save\n"
                        << "current session's state. Otherwise, you will possibly need to synchronize \n"
                        << "your wallet again. Your wallet key is NOT under risk anyway.\n"
                        << "**********************************************************************";
