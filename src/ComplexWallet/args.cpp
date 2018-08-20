@@ -53,6 +53,10 @@ namespace CryptoNote
 
 const command_line::arg_descriptor<std::string> arg_wallet_file = {"wallet-file", "Use wallet <arg>", "", true};
 const command_line::arg_descriptor<std::string> arg_generate_new_wallet = {"generate-new-wallet", "Generate new wallet and save it to <arg>", ""};
+const command_line::arg_descriptor<std::string> arg_generate_wallet = {"generate-wallet", "Generate new wallet by keys", ""};
+const command_line::arg_descriptor<std::string> arg_address = {"address", "Address", ""};
+const command_line::arg_descriptor<std::string> arg_send_key = {"send-key", "Send private key", ""};
+const command_line::arg_descriptor<std::string> arg_view_key = {"view-key", "View private key", ""};
 const command_line::arg_descriptor<std::string> arg_daemon_address = {"daemon-address", "Use daemon instance at <host>:<port>", ""};
 const command_line::arg_descriptor<std::string> arg_daemon_host = {"daemon-host", "Use daemon instance at host <arg> instead of localhost", "localhost"};
 const command_line::arg_descriptor<std::string> arg_password = {"password", "Wallet password", "", true};

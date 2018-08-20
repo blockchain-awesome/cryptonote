@@ -207,20 +207,20 @@ void SingleWallet::doLoad(std::istream& source) {
   try {
     std::unique_lock<std::mutex> lock(m_cacheMutex);
     
-    std::string cache;
+    // std::string cache;
     WalletLegacySerializer serializer(m_account, m_transactionsCache);
-    serializer.deserialize(source, m_password, cache);
+    // serializer.deserialize(source, m_password, cache);
       
     initSync();
 
-    try {
-      if (!cache.empty()) {
-        std::stringstream stream(cache);
-        m_transfersSync.load(stream);
-      }
-    } catch (const std::exception&) {
-      // ignore cache loading errors
-    }
+    // try {
+    //   if (!cache.empty()) {
+    //     std::stringstream stream(cache);
+    //     m_transfersSync.load(stream);
+    //   }
+    // } catch (const std::exception&) {
+    //   // ignore cache loading errors
+    // }
   } catch (std::system_error& e) {
     runAtomic(m_cacheMutex, [this] () {this->m_state = SingleWallet::NOT_INITIALIZED;} );
     m_observerManager.notify(&IWalletLegacyObserver::initCompleted, e.code());

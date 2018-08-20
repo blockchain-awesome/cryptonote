@@ -25,6 +25,10 @@ namespace CryptoNote
 {
 extern const command_line::arg_descriptor<std::string> arg_wallet_file;
 extern const command_line::arg_descriptor<std::string> arg_generate_new_wallet;
+extern const command_line::arg_descriptor<std::string> arg_generate_wallet;
+extern const command_line::arg_descriptor<std::string> arg_address;
+extern const command_line::arg_descriptor<std::string> arg_send_key;
+extern const command_line::arg_descriptor<std::string> arg_view_key;
 extern const command_line::arg_descriptor<std::string> arg_daemon_address;
 extern const command_line::arg_descriptor<std::string> arg_daemon_host;
 extern const command_line::arg_descriptor<std::string> arg_password;
