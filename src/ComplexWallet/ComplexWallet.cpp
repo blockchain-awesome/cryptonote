@@ -179,8 +179,7 @@ bool complex_wallet::generate_wallet_by_keys(std::string &wallet_file, std::stri
 
   memcpy(keyStore, &sendPubKey, sizeof(Crypto::PublicKey));
   memcpy(keyStore + sizeof(Crypto::PublicKey), &viewPubKey, sizeof(Crypto::PublicKey));
-  // memcpy(&prefix58, pPrefix, 8);
-
+  
   using namespace parameters;
   const uint64_t prefix = CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX;
   std::string addressStr = Tools::Base58::encode_addr(prefix, std::string(keyStore, sizeof(Crypto::PublicKey) * 2));
@@ -198,118 +197,67 @@ bool complex_wallet::generate_wallet_by_keys(std::string &wallet_file, std::stri
   keys.spendSecretKey = sendSecretKey;
   keys.viewSecretKey = viewSecretKey;
 
-  m_wallet.reset(new SingleWallet(m_currency, *m_node.get()));
-  // m_node->addObserver(static_cast<INodeObserver *>(this));
-  // m_wallet->addObserver(this);
   try
   {
-
-    // m_initResultPromise.reset(new std::promise<std::error_code>());
-    // std::future<std::error_code> f_initError = m_initResultPromise->get_future();
-    // m_wallet->initWithKeys(keys, "");
-
-    logger(Logging::INFO) << "inited keys!";
-
-    // auto initError = f_initError.get();
-    // m_initResultPromise.reset(nullptr);
-    // if (initError)
-    // {
-    //   fail_msg_writer() << "failed to generate new wallet: " << initError.message();
-    //   return false;
-    // }
-
+    std::ofstream file;
     try
     {
-
-      logger(Logging::INFO) << "file exists!" << wallet_file;
-
-      std::ofstream file;
-      try
+      file.open(wallet_file, std::ios_base::binary | std::ios_base::out | std::ios::trunc);
+      if (file.fail())
       {
-        logger(Logging::INFO) << "opening!";
-
-        file.open(wallet_file, std::ios_base::binary | std::ios_base::out | std::ios::trunc);
-        if (file.fail())
-        {
-          throw std::runtime_error("error opening file: " + wallet_file);
-        }
+        throw std::runtime_error("error opening file: " + wallet_file);
       }
-      catch (std::exception &e)
-      {
-        logger(Logging::INFO) << "exception !" << e.what();
-      }
-
-      logger(Logging::INFO) << "file opens!";
-      try
-      {
-        std::stringstream plainArchive;
-        StdOutputStream plainStream(plainArchive);
-        CryptoNote::BinaryOutputStreamSerializer serializer(plainStream);
-
-        // Saving Keys;
-
-        CryptoNote::KeysStorage ks;
-
-        ks.creationTimestamp = time(NULL);
-        ks.spendPublicKey = keys.address.spendPublicKey;
-        ks.spendSecretKey = keys.spendSecretKey;
-        ks.viewPublicKey = keys.address.viewPublicKey;
-        ks.viewSecretKey = keys.viewSecretKey;
-
-        ks.serialize(serializer, "keys");
-
-        bool hasDetails = false;
-
-        serializer(hasDetails, "has_details");
-
-        std::string cache("");
-
-        serializer.binary(const_cast<std::string &>(cache), "cache");
-
-        std::string plain = plainArchive.str();
-        std::string cipher;
-
-        // Crypto::chacha8_iv iv = encrypt(plain, password, cipher);
-
-        Crypto::chacha8_key key;
-        Crypto::cn_context context;
-        Crypto::generate_chacha8_key(context, password, key);
-
-        cipher.resize(plain.size());
-
-        Crypto::chacha8_iv iv = Crypto::rand<Crypto::chacha8_iv>();
-        Crypto::chacha8(plain.data(), plain.size(), key, iv, &cipher[0]);
-
-        uint32_t version = 1;
-        StdOutputStream output(file);
-        CryptoNote::BinaryOutputStreamSerializer s(output);
-        s.beginObject("wallet");
-        s(version, "version");
-        s(iv, "iv");
-        s(cipher, "data");
-        s.endObject();
-
-        file.flush();
-        logger(Logging::INFO) << "saved!";
-      }
-      catch (std::exception &)
-      {
-        // m_wallet->removeObserver(&o);
-        logger(Logging::INFO) << "exception saving!";
-      }
-
-      // m_wallet->removeObserver(&o);
-      file.close();
     }
     catch (std::exception &e)
     {
-      fail_msg_writer() << "failed to save new wallet: " << e.what();
-      throw;
+      logger(Logging::INFO) << "exception !" << e.what();
     }
+    std::stringstream plainArchive;
+    StdOutputStream plainStream(plainArchive);
+    CryptoNote::BinaryOutputStreamSerializer serializer(plainStream);
 
-    // AccountKeys keys;
-    // m_wallet->getAccountKeys(keys);
+    // Saving Keys;
 
+    CryptoNote::KeysStorage ks;
+
+    ks.creationTimestamp = time(NULL);
+    ks.spendPublicKey = keys.address.spendPublicKey;
+    ks.spendSecretKey = keys.spendSecretKey;
+    ks.viewPublicKey = keys.address.viewPublicKey;
+    ks.viewSecretKey = keys.viewSecretKey;
+
+    ks.serialize(serializer, "keys");
+
+    bool hasDetails = false;
+
+    serializer(hasDetails, "has_details");
+
+    std::string cache("");
+
+    serializer.binary(const_cast<std::string &>(cache), "cache");
+
+    std::string plain = plainArchive.str();
+    std::string cipher;
+    Crypto::chacha8_key key;
+    Crypto::cn_context context;
+    Crypto::generate_chacha8_key(context, password, key);
+
+    cipher.resize(plain.size());
+
+    Crypto::chacha8_iv iv = Crypto::rand<Crypto::chacha8_iv>();
+    Crypto::chacha8(plain.data(), plain.size(), key, iv, &cipher[0]);
+
+    uint32_t version = 1;
+    StdOutputStream output(file);
+    CryptoNote::BinaryOutputStreamSerializer s(output);
+    s.beginObject("wallet");
+    s(version, "version");
+    s(iv, "iv");
+    s(cipher, "data");
+    s.endObject();
+
+    file.flush();
+    file.close();
     logger(INFO, BRIGHT_WHITE) << "Generated new wallet: " << address << std::endl
                                << "view key: " << Common::podToHex(keys.viewSecretKey);
   }

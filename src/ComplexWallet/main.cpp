@@ -118,9 +118,7 @@ int main(int argc, char *argv[])
   logger(INFO, BRIGHT_WHITE) << CRYPTONOTE_NAME << " wallet version " << PROJECT_VERSION_LONG;
 
   CryptoNote::Currency currency = CryptoNote::CurrencyBuilder(logManager).testnet(command_line::get_arg(vm, arg_testnet)).currency();
-
-  logger(INFO) << "inside cmd.";
-
+  
   //runs wallet with console interface
   CryptoNote::complex_wallet wal(dispatcher, currency, logManager);
 
@@ -131,14 +129,7 @@ int main(int argc, char *argv[])
     std::string address = command_line::get_arg(vm, arg_address);
     std::string sendKey = command_line::get_arg(vm, arg_send_key);
     std::string viewKey = command_line::get_arg(vm, arg_view_key);
-
-    std::cout << "wallet:" << genWallet << std::endl;
-    std::cout << "address:" << address << std::endl;
-    std::cout << "sendKey:" << sendKey << std::endl;
-    std::cout << "viewKey:" << viewKey << std::endl;
-
     wal.generate_wallet_by_keys(genWallet, address, sendKey, viewKey);
-
     return 0;
   }
 
