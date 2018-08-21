@@ -23,6 +23,7 @@
 #include "Common/StringTools.h"
 #include "Common/PathTools.h"
 #include "Common/Util.h"
+#include "Common/Base58.h"
 #include "CryptoNoteCore/CryptoNoteFormatUtils.h"
 #include "CryptoNoteProtocol/CryptoNoteProtocolHandler.h"
 #include "NodeRpcProxy/NodeRpcProxy.h"
@@ -40,7 +41,7 @@
 #include "args.h"
 
 #include "SingleWallet.h"
-
+#include "CryptoNoteConfig.h"
 
 #if defined(WIN32)
 #include <crtdbg.h>
@@ -136,12 +137,147 @@ bool complex_wallet::set_log(const std::vector<std::string> &args)
   logManager.setMaxLevel(static_cast<Logging::Level>(l));
   return true;
 }
+
+bool complex_wallet::generate_wallet_by_keys(std::string &wallet_file, std::string &address, std::string &sendKey, std::string &viewKey)
+
+{
+
+  Crypto::SecretKey viewSecretKey;
+  Crypto::SecretKey sendSecretKey;
+  if (!Common::podFromHex(viewKey, viewSecretKey))
+  {
+    logger(Logging::ERROR) << "Cannot parse view secret key: " << viewKey;
+    return false;
+  }
+  if (!Common::podFromHex(sendKey, sendSecretKey))
+  {
+    logger(Logging::ERROR) << "Cannot parse send secret key: " << sendKey;
+    return false;
+  }
+
+  Crypto::PublicKey sendPubKey;
+  Crypto::PublicKey viewPubKey;
+
+  if (!Crypto::secret_key_to_public_key(sendSecretKey, sendPubKey))
+  {
+    logger(Logging::ERROR) << "Cannot get send public key from secret key: " << sendKey;
+    return false;
+  }
+
+  if (!Crypto::secret_key_to_public_key(viewSecretKey, viewPubKey))
+  {
+    logger(Logging::ERROR) << "Cannot get send public key from secret key: " << viewKey;
+    return false;
+  }
+
+  char keyStore[sizeof(Crypto::PublicKey) * 2];
+
+  memcpy(keyStore, &sendPubKey, sizeof(Crypto::PublicKey));
+  memcpy(keyStore + sizeof(Crypto::PublicKey), &viewPubKey, sizeof(Crypto::PublicKey));
+  // memcpy(&prefix58, pPrefix, 8);
+
+  using namespace parameters;
+  const uint64_t prefix = CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX;
+  std::string addressStr = Tools::Base58::encode_addr(prefix, std::string(keyStore, sizeof(Crypto::PublicKey) * 2));
+  if (addressStr != address)
+  {
+    logger(Logging::ERROR) << "Addresses mismatch!" << addressStr;
+    return false;
+  }
+
+  logger(Logging::INFO) << "Addresses match!";
+
+  CryptoNote::AccountKeys keys;
+  keys.address.spendPublicKey = sendPubKey;
+  keys.address.viewPublicKey = viewPubKey;
+  keys.spendSecretKey = sendSecretKey;
+  keys.viewSecretKey = viewSecretKey;
+
+  m_wallet.reset(new SingleWallet(m_currency, *m_node.get()));
+  // m_node->addObserver(static_cast<INodeObserver *>(this));
+  // m_wallet->addObserver(this);
+  try
+  {
+
+    // m_initResultPromise.reset(new std::promise<std::error_code>());
+    // std::future<std::error_code> f_initError = m_initResultPromise->get_future();
+    // m_wallet->initWithKeys(keys, "");
+
+    logger(Logging::INFO) << "inited keys!";
+
+    // auto initError = f_initError.get();
+    // m_initResultPromise.reset(nullptr);
+    // if (initError)
+    // {
+    //   fail_msg_writer() << "failed to generate new wallet: " << initError.message();
+    //   return false;
+    // }
+
+    try
+    {
+
+      logger(Logging::INFO) << "file exists!" << wallet_file;
+
+      std::ofstream file;
+      try
+      {
+        logger(Logging::INFO) << "opening!";
+
+        file.open(wallet_file, std::ios_base::binary | std::ios_base::out | std::ios::trunc);
+        if (file.fail())
+        {
+          throw std::runtime_error("error opening file: " + wallet_file);
+        }
+      }
+      catch (std::exception &e)
+      {
+        logger(Logging::INFO) << "exception !" << e.what();
+      }
+
+      logger(Logging::INFO) << "file opens!";
+      try
+      {
+        // std::future<std::error_code> f = o.saveResult.get_future();
+        // m_wallet->addObserver(&o);
+        // m_wallet->save(file, false, false);
+        // e = f.get();
+        logger(Logging::INFO) << "saved!";
+      }
+      catch (std::exception &)
+      {
+        // m_wallet->removeObserver(&o);
+        logger(Logging::INFO) << "exception saving!";
+      }
+
+      // m_wallet->removeObserver(&o);
+      // file.close();
+    }
+    catch (std::exception &e)
+    {
+      fail_msg_writer() << "failed to save new wallet: " << e.what();
+      throw;
+    }
+
+    // AccountKeys keys;
+    // m_wallet->getAccountKeys(keys);
+
+    // logger(INFO, BRIGHT_WHITE) << "Generated new wallet: " << m_wallet->getAddress() << std::endl
+    //                            << "view key: " << Common::podToHex(keys.viewSecretKey);
+  }
+  catch (const std::exception &e)
+  {
+    fail_msg_writer() << "failed to generate new wallet: " << e.what();
+    return false;
+  }
+  return true;
+}
+
 //----------------------------------------------------------------------------------------------------
 bool complex_wallet::init(const boost::program_options::variables_map &vm)
 {
   handle_command_line(vm);
 
-  std::string walletFileName;
+  std::string wallet_file;
 
   Tools::PasswordContainer pwd_container;
   if (command_line::has_arg(vm, arg_password))

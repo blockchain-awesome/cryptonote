@@ -105,22 +105,6 @@ int main(int argc, char *argv[])
   if (!r)
     return 1;
 
-  if (command_line::has_arg(vm, arg_generate_wallet) && command_line::has_arg(vm, arg_send_key) && command_line::has_arg(vm, arg_view_key))
-  {
-
-    std::string genWallet = command_line::get_arg(vm, arg_generate_wallet);
-    std::string address = command_line::get_arg(vm, arg_address);
-    std::string sendKey = command_line::get_arg(vm, arg_send_key);
-    std::string viewKey = command_line::get_arg(vm, arg_view_key);
-
-    std::cout << "wallet:" << genWallet << std::endl;
-    std::cout << "address:" << address << std::endl;
-    std::cout << "sendKey:" << sendKey << std::endl;
-    std::cout << "viewKey:" << sendKey << std::endl;
-
-    return 0;
-  }
-
   //set up logging options
   Level logLevel = DEBUGGING;
 
@@ -139,6 +123,24 @@ int main(int argc, char *argv[])
 
   //runs wallet with console interface
   CryptoNote::complex_wallet wal(dispatcher, currency, logManager);
+
+  if (command_line::has_arg(vm, arg_generate_wallet) && command_line::has_arg(vm, arg_send_key) && command_line::has_arg(vm, arg_view_key))
+  {
+
+    std::string genWallet = command_line::get_arg(vm, arg_generate_wallet);
+    std::string address = command_line::get_arg(vm, arg_address);
+    std::string sendKey = command_line::get_arg(vm, arg_send_key);
+    std::string viewKey = command_line::get_arg(vm, arg_view_key);
+
+    std::cout << "wallet:" << genWallet << std::endl;
+    std::cout << "address:" << address << std::endl;
+    std::cout << "sendKey:" << sendKey << std::endl;
+    std::cout << "viewKey:" << viewKey << std::endl;
+
+    wal.generate_wallet_by_keys(genWallet, address, sendKey, viewKey);
+
+    return 0;
+  }
 
   if (!wal.init(vm))
   {
