@@ -141,12 +141,9 @@ bool complex_wallet::set_log(const std::vector<std::string> &args)
   return true;
 }
 
-bool complex_wallet::generate_wallet_by_keys(std::string &wallet_file, std::string &address, std::string &sendKey, std::string &viewKey)
+bool complex_wallet::generate_wallet_by_keys(std::string &wallet_file, std::string &password, std::string &address, std::string &spendKey, std::string &viewKey)
 
 {
-
-  std::string password = "";
-
   Crypto::SecretKey viewSecretKey;
   Crypto::SecretKey sendSecretKey;
   if (!Common::podFromHex(viewKey, viewSecretKey))
@@ -154,9 +151,9 @@ bool complex_wallet::generate_wallet_by_keys(std::string &wallet_file, std::stri
     logger(Logging::ERROR) << "Cannot parse view secret key: " << viewKey;
     return false;
   }
-  if (!Common::podFromHex(sendKey, sendSecretKey))
+  if (!Common::podFromHex(spendKey, sendSecretKey))
   {
-    logger(Logging::ERROR) << "Cannot parse send secret key: " << sendKey;
+    logger(Logging::ERROR) << "Cannot parse send secret key: " << spendKey;
     return false;
   }
 
@@ -165,7 +162,7 @@ bool complex_wallet::generate_wallet_by_keys(std::string &wallet_file, std::stri
 
   if (!Crypto::secret_key_to_public_key(sendSecretKey, sendPubKey))
   {
-    logger(Logging::ERROR) << "Cannot get send public key from secret key: " << sendKey;
+    logger(Logging::ERROR) << "Cannot get send public key from secret key: " << spendKey;
     return false;
   }
 

@@ -129,7 +129,8 @@ int main(int argc, char *argv[])
     std::string address = command_line::get_arg(vm, arg_address);
     std::string sendKey = command_line::get_arg(vm, arg_send_key);
     std::string viewKey = command_line::get_arg(vm, arg_view_key);
-    wal.generate_wallet_by_keys(genWallet, address, sendKey, viewKey);
+    std::string password = command_line::get_arg(vm, arg_password);
+    wal.generate_wallet_by_keys(genWallet, password, address, sendKey, viewKey);
     return 0;
   }
 

@@ -41,7 +41,7 @@ public:
   bool run();
   void stop();
 
-  bool generate_wallet_by_keys(std::string& file, std::string& address, std::string& sendKey, std::string& viewKey);
+bool generate_wallet_by_keys(std::string &wallet_file, std::string &password, std::string &address, std::string &spendKey, std::string &viewKey);
 
   bool process_command(const std::vector<std::string> &args);
   std::string get_commands_str();
