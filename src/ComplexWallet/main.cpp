@@ -118,27 +118,31 @@ int main(int argc, char *argv[])
   logger(INFO, BRIGHT_WHITE) << CRYPTONOTE_NAME << " wallet version " << PROJECT_VERSION_LONG;
 
   CryptoNote::Currency currency = CryptoNote::CurrencyBuilder(logManager).testnet(command_line::get_arg(vm, arg_testnet)).currency();
-  
+
   //runs wallet with console interface
   CryptoNote::complex_wallet wal(dispatcher, currency, logManager);
 
-  if (command_line::has_arg(vm, arg_generate_wallet) && command_line::has_arg(vm, arg_send_key) && command_line::has_arg(vm, arg_view_key))
-  {
+  std::string genWallet = command_line::get_arg(vm, arg_generate_wallet);
+  std::string sendKey = command_line::get_arg(vm, arg_send_key);
+  std::string viewKey = command_line::get_arg(vm, arg_view_key);
 
-    std::string genWallet = command_line::get_arg(vm, arg_generate_wallet);
+  if (genWallet.length() && sendKey.length() && viewKey.length())
+  {
     std::string address = command_line::get_arg(vm, arg_address);
-    std::string sendKey = command_line::get_arg(vm, arg_send_key);
-    std::string viewKey = command_line::get_arg(vm, arg_view_key);
     std::string password = command_line::get_arg(vm, arg_password);
+
     wal.generate_wallet_by_keys(genWallet, password, address, sendKey, viewKey);
     return 0;
   }
+  std::cout << "before init" << std::endl;
 
   if (!wal.init(vm))
   {
     logger(ERROR, BRIGHT_RED) << "Failed to initialize wallet";
     return 1;
   }
+
+  std::cout << "after init" << std::endl;
   std::vector<std::string> command = command_line::get_arg(vm, arg_command);
   if (!command.empty())
     wal.process_command(command);

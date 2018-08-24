@@ -176,7 +176,7 @@ bool complex_wallet::generate_wallet_by_keys(std::string &wallet_file, std::stri
 
   memcpy(keyStore, &sendPubKey, sizeof(Crypto::PublicKey));
   memcpy(keyStore + sizeof(Crypto::PublicKey), &viewPubKey, sizeof(Crypto::PublicKey));
-  
+
   using namespace parameters;
   const uint64_t prefix = CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX;
   std::string addressStr = Tools::Base58::encode_addr(prefix, std::string(keyStore, sizeof(Crypto::PublicKey) * 2));
@@ -269,7 +269,12 @@ bool complex_wallet::generate_wallet_by_keys(std::string &wallet_file, std::stri
 //----------------------------------------------------------------------------------------------------
 bool complex_wallet::init(const boost::program_options::variables_map &vm)
 {
+
+  std::cout << "before handle command" << std::endl;
+
   handle_command_line(vm);
+
+  std::cout << "handle command" << std::endl;
 
   std::string wallet_file;
 
@@ -283,6 +288,14 @@ bool complex_wallet::init(const boost::program_options::variables_map &vm)
     fail_msg_writer() << "failed to read wallet password";
     return false;
   }
+
+  if (!m_wallet_file_arg.length()) {
+    std::cout << "wallet file required" << std::endl;
+    return false;
+  }
+
+  std::cout << "handle password" << std::endl;
+  std::cout << "daemon host: " << m_daemon_host << ", daemon port: " << m_daemon_port << std::endl;
 
   this->m_node.reset(new NodeRpcProxy(m_daemon_host, m_daemon_port));
 
@@ -396,19 +409,6 @@ bool complex_wallet::new_wallet(const std::string &wallet_file, const std::strin
 //----------------------------------------------------------------------------------------------------
 bool complex_wallet::close_wallet()
 {
-  try
-  {
-    CryptoNote::WalletHelper::storeWallet(*m_wallet, m_wallet_file);
-  }
-  catch (const std::exception &e)
-  {
-    fail_msg_writer() << e.what();
-    return false;
-  }
-
-  m_wallet->removeObserver(this);
-  m_wallet->shutdown();
-
   return true;
 }
 
@@ -803,7 +803,7 @@ bool complex_wallet::run()
   std::cout << std::endl;
 
   std::string addr_start = m_wallet->getAddress().substr(0, 6);
-  m_consoleHandler.start(false, "[wallet " + addr_start + "]: ", Common::Console::Color::BrightYellow);
+  m_consoleHandler.start(false, "[multi wallet service started]: ", Common::Console::Color::BrightYellow);
   return true;
 }
 //----------------------------------------------------------------------------------------------------

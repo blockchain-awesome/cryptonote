@@ -51,7 +51,7 @@ namespace po = boost::program_options;
 namespace CryptoNote
 {
 
-const command_line::arg_descriptor<std::string> arg_wallet_file = {"wallet-file", "Use wallet <arg>", "", true};
+const command_line::arg_descriptor<std::string> arg_wallet_file = {"wallet-file", "Use wallet <arg>", ""};
 const command_line::arg_descriptor<std::string> arg_generate_new_wallet = {"generate-new-wallet", "Generate new wallet and save it to <arg>", ""};
 const command_line::arg_descriptor<std::string> arg_generate_wallet = {"generate-wallet", "Generate new wallet by keys", ""};
 const command_line::arg_descriptor<std::string> arg_address = {"address", "Address", ""};
