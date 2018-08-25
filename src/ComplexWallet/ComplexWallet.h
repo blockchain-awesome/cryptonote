@@ -41,7 +41,7 @@ public:
   bool run();
   void stop();
 
-bool generate_wallet_by_keys(std::string &wallet_file, std::string &password, std::string &address, std::string &spendKey, std::string &viewKey);
+  bool generate_wallet_by_keys(std::string &wallet_file, std::string &password, std::string &address, std::string &spendKey, std::string &viewKey);
 
   bool process_command(const std::vector<std::string> &args);
   std::string get_commands_str();
@@ -162,6 +162,10 @@ private:
 
   std::unique_ptr<CryptoNote::NodeRpcProxy> m_node;
   std::unique_ptr<CryptoNote::IWalletLegacy> m_wallet;
+
+  // Wallet Manager
+  std::map<std::string, void *> m_wallets;
+
   refresh_progress_reporter_t m_refresh_progress_reporter;
 
   bool m_walletSynchronized;

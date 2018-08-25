@@ -381,20 +381,19 @@ std::string tryToOpenWalletOrLoadKeysOrThrow(LoggerRef &logger, std::unique_ptr<
   {
     throw std::runtime_error("File '" + walletFile + "' not exist!");
   }
+
+  logger(INFO) << "Loading wallet...";
+  std::ifstream ifs;
+  ifs.open(walletFileName, std::ios_base::binary | std::ios_base::in);
+  if (ifs.fail())
   {
-    logger(INFO) << "Loading wallet...";
-    std::ifstream walletFile;
-    walletFile.open(walletFileName, std::ios_base::binary | std::ios_base::in);
-    if (walletFile.fail())
-    {
-      throw std::runtime_error("error opening wallet file '" + walletFileName + "'");
-    }
-
-    initAndLoadWallet(*wallet, walletFile, password);
-
-    walletFile.close();
-    return walletFileName;
+    throw std::runtime_error("error opening wallet file '" + walletFileName + "'");
   }
+
+  initAndLoadWallet(*wallet, ifs, password);
+
+  ifs.close();
+  return walletFileName;
 }
 
 } // namespace CryptoNote
