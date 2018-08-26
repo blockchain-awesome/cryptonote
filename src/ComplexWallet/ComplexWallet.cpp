@@ -94,7 +94,10 @@ complex_wallet::complex_wallet(System::Dispatcher &dispatcher, const CryptoNote:
                                                                                                                                     logger(log, "complexwallet"),
                                                                                                                                     m_refresh_progress_reporter(*this),
                                                                                                                                     m_initResultPromise(nullptr),
-                                                                                                                                    m_walletSynchronized(false)
+                                                                                                                                    m_walletSynchronized(false),
+                                                                                                                                    m_wallet_manager(nullptr),
+                                                                                                                                    m_rpc_server(nullptr)
+
 {
   m_consoleHandler.setHandler("start_mining", boost::bind(&complex_wallet::start_mining, this, _1), "start_mining [<number_of_threads>] - Start mining in daemon");
   m_consoleHandler.setHandler("stop_mining", boost::bind(&complex_wallet::stop_mining, this, _1), "Stop mining in daemon");
@@ -289,7 +292,8 @@ bool complex_wallet::init(const boost::program_options::variables_map &vm)
     return false;
   }
 
-  if (!m_wallet_file_arg.length()) {
+  if (!m_wallet_file_arg.length())
+  {
     std::cout << "wallet file required" << std::endl;
     return false;
   }
@@ -331,6 +335,17 @@ bool complex_wallet::init(const boost::program_options::variables_map &vm)
   success_msg_writer() << "**********************************************************************\n"
                        << "Use \"help\" command to see the list of available commands.\n"
                        << "**********************************************************************";
+
+  System::Event localStopEvent(m_dispatcher);
+
+  WalletManager* wm = new WalletManager(m_dispatcher, m_currency, *m_node, logManager);
+
+  m_wallet_manager.reset(wm);
+
+  m_rpc_server.reset(new ComplexWalletServer(m_dispatcher, localStopEvent, logManager, *wm));
+  m_rpc_server->start(m_bind_host, m_bind_port);
+  logger(Logging::INFO) << "starting rpc server!";
+
   return true;
 }
 //----------------------------------------------------------------------------------------------------
@@ -353,6 +368,8 @@ void complex_wallet::handle_command_line(const boost::program_options::variables
   m_daemon_address = command_line::get_arg(vm, arg_daemon_address);
   m_daemon_host = command_line::get_arg(vm, arg_daemon_host);
   m_daemon_port = command_line::get_arg(vm, arg_daemon_port);
+  m_bind_host = command_line::get_arg(vm, arg_bind_host);
+  m_bind_port = command_line::get_arg(vm, arg_bind_port);
 }
 //----------------------------------------------------------------------------------------------------
 bool complex_wallet::new_wallet(const std::string &wallet_file, const std::string &password)

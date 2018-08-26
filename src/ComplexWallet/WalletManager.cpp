@@ -48,7 +48,7 @@ using namespace CryptoNote;
 namespace ComplexWallet
 {
 
-WalletManager::WalletManager(System::Dispatcher &dispatcher, const Currency &currency, INode &node, Logging::LoggerGroup &logger) : m_dispatcher(dispatcher),
+WalletManager::WalletManager(System::Dispatcher &dispatcher, const Currency &currency, INode &node, Logging::LoggerManager &logger) : m_dispatcher(dispatcher),
                                                                                                                                     m_currency(currency),
                                                                                                                                     m_node(node),
                                                                                                                                     m_logger(logger)

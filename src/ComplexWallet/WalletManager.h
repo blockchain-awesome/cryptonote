@@ -16,7 +16,7 @@
 #include "Transfers/TransfersSynchronizer.h"
 #include "Transfers/BlockchainSynchronizer.h"
 
-#include "Logging/LoggerGroup.h"
+#include "Logging/LoggerManager.h"
 
 using namespace CryptoNote;
 
@@ -27,7 +27,7 @@ class WalletManager
 {
 
 public:
-  WalletManager(System::Dispatcher &dispatcher, const Currency &currency, INode &node, Logging::LoggerGroup &logger);
+  WalletManager(System::Dispatcher &dispatcher, const Currency &currency, INode &node, Logging::LoggerManager  &logger);
   virtual ~WalletManager();
 
   bool createWallet(const AccountKeys &accountKeys);

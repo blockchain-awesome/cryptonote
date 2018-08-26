@@ -26,6 +26,9 @@
 #include <System/Dispatcher.h>
 #include <System/Ipv4Address.h>
 
+#include "RpcServer.h"
+#include "WalletManager.h"
+
 namespace CryptoNote
 {
 /************************************************************************/
@@ -150,6 +153,9 @@ private:
   std::string m_daemon_host;
   uint16_t m_daemon_port;
 
+  std::string m_bind_host;
+  uint16_t m_bind_port;
+
   std::string m_wallet_file;
 
   std::unique_ptr<std::promise<std::error_code>> m_initResultPromise;
@@ -164,7 +170,10 @@ private:
   std::unique_ptr<CryptoNote::IWalletLegacy> m_wallet;
 
   // Wallet Manager
-  std::map<std::string, void *> m_wallets;
+  std::unique_ptr<ComplexWallet::WalletManager> m_wallet_manager;
+
+  // RPCServer
+  std::unique_ptr<ComplexWallet::ComplexWalletServer> m_rpc_server;
 
   refresh_progress_reporter_t m_refresh_progress_reporter;
 

@@ -29,6 +29,8 @@ extern const command_line::arg_descriptor<std::string> arg_generate_wallet;
 extern const command_line::arg_descriptor<std::string> arg_address;
 extern const command_line::arg_descriptor<std::string> arg_send_key;
 extern const command_line::arg_descriptor<std::string> arg_view_key;
+extern const command_line::arg_descriptor<std::string> arg_bind_host;
+extern const command_line::arg_descriptor<uint16_t> arg_bind_port;
 extern const command_line::arg_descriptor<std::string> arg_daemon_address;
 extern const command_line::arg_descriptor<std::string> arg_daemon_host;
 extern const command_line::arg_descriptor<std::string> arg_password;
