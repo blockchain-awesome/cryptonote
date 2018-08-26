@@ -336,15 +336,15 @@ bool complex_wallet::init(const boost::program_options::variables_map &vm)
                        << "Use \"help\" command to see the list of available commands.\n"
                        << "**********************************************************************";
 
-  // System::Event localStopEvent(m_dispatcher);
+  System::Event localStopEvent(m_dispatcher);
 
-  // WalletManager* wm = new WalletManager(m_dispatcher, m_currency, *m_node, logManager);
+  WalletManager* wm = new WalletManager(m_dispatcher, m_currency, *m_node, logManager);
 
-  // m_wallet_manager.reset(wm);
+  m_wallet_manager.reset(wm);
 
   // m_rpc_server.reset(new ComplexWalletServer(m_dispatcher, localStopEvent, logManager, *wm));
   // m_rpc_server->start(m_bind_host, m_bind_port);
-  // logger(Logging::INFO) << "starting rpc server!";
+  logger(Logging::INFO) << "starting rpc server!";
 
   return true;
 }
@@ -354,6 +354,10 @@ bool complex_wallet::deinit()
   m_wallet->removeObserver(this);
   m_node->removeObserver(static_cast<INodeObserver *>(this));
   m_node->removeObserver(static_cast<INodeRpcProxyObserver *>(this));
+
+  m_wallet_manager.reset();
+  m_rpc_server.reset();
+
 
   if (!m_wallet.get())
     return true;
