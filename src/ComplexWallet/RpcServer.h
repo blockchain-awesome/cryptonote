@@ -26,6 +26,8 @@ public:
 
   std::string getAddress(const std::string &token);
 
+  virtual void start(const std::string &bindAddress, uint16_t bindPort) override;
+
 protected:
   virtual void processJsonRpcRequest(const Common::JsonValue &req, Common::JsonValue &resp) override;
 
@@ -90,4 +92,4 @@ private:
   // std::error_code handleGetAddresses(const GetAddresses::Request& request, GetAddresses::Response& response);
 };
 
-} //namespace MultiWalletService
+} // namespace ComplexWallet

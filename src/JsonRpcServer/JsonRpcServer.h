@@ -28,12 +28,12 @@ class TcpConnection;
 
 namespace CryptoNote {
 
-class JsonRpcServer : HttpServer {
+class JsonRpcServer : public HttpServer {
 public:
   JsonRpcServer(System::Dispatcher& sys, System::Event& stopEvent, Logging::ILogger& loggerGroup);
   JsonRpcServer(const JsonRpcServer&) = delete;
 
-  void start(const std::string& bindAddress, uint16_t bindPort);
+  virtual void start(const std::string& bindAddress, uint16_t bindPort);
 
 protected:
   static void makeErrorResponse(const std::error_code& ec, Common::JsonValue& resp);

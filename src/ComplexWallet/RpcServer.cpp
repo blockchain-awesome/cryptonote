@@ -10,6 +10,7 @@
 #include "JsonRpcParameters.h"
 
 #include "Common/StringTools.h"
+#include "Rpc/HttpServer.h"
 
 #include "Serialization/JsonInputValueSerializer.h"
 #include "Serialization/JsonOutputStreamSerializer.h"
@@ -55,6 +56,11 @@ ComplexWalletServer::ComplexWalletServer(System::Dispatcher &sys, System::Event 
   // handlers.emplace("getViewKey", jsonHandler<GetViewKey::Request, GetViewKey::Response>(std::bind(&JsonRpcServer::handleGetViewKey, this, std::placeholders::_1, std::placeholders::_2)));
   // handlers.emplace("getStatus", jsonHandler<GetStatus::Request, GetStatus::Response>(std::bind(&JsonRpcServer::handleGetStatus, this, std::placeholders::_1, std::placeholders::_2)));
   // handlers.emplace("getAddresses", jsonHandler<GetAddresses::Request, GetAddresses::Response>(std::bind(&JsonRpcServer::handleGetAddresses, this, std::placeholders::_1, std::placeholders::_2)));
+}
+
+void ComplexWalletServer::start(const std::string &bindAddress, uint16_t bindPort)
+{
+  HttpServer::start(bindAddress, bindPort);
 }
 
 void ComplexWalletServer::processJsonRpcRequest(const Common::JsonValue &req, Common::JsonValue &resp)
@@ -298,4 +304,4 @@ std::error_code ComplexWalletServer::handleLogin(const Login::Request &request, 
 //   return service.getAddresses(response.addresses);
 // }
 
-} // namespace MultiWalletService
+} // namespace ComplexWallet

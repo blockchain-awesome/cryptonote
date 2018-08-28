@@ -44,6 +44,8 @@ public:
   bool run();
   void stop();
 
+  std::unique_ptr<CryptoNote::NodeRpcProxy> &get_node();
+
   bool generate_wallet_by_keys(std::string &wallet_file, std::string &password, std::string &address, std::string &spendKey, std::string &viewKey);
 
   bool process_command(const std::vector<std::string> &args);

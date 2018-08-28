@@ -34,6 +34,9 @@
 
 #include "args.h"
 #include "ComplexWallet.h"
+#include "WalletManager.h"
+
+using namespace ComplexWallet;
 
 namespace po = boost::program_options;
 
@@ -149,8 +152,29 @@ int main(int argc, char *argv[])
   if (!command.empty())
     wal.process_command(command);
 
-  Tools::SignalHandler::install([&wal] {
+  System::Event localStopEvent(dispatcher);
+
+  WalletManager *wm = new WalletManager(dispatcher, currency, *wal.get_node(), logManager);
+
+  // wal.m_wallet_manager.reset(wm);
+
+  ComplexWalletServer *cws = new ComplexWalletServer(dispatcher, localStopEvent, logManager, *wm);
+
+  // m_rpc_server.reset(cws);
+
+  std::string bind_host = command_line::get_arg(vm, arg_bind_host);
+  uint16_t bind_port = command_line::get_arg(vm, arg_bind_port);
+
+  std::cout << "bind host: " << bind_host << ", bind port: " << bind_port << std::endl;
+
+  LoggerRef log = logger;
+
+  log(Logging::INFO) << "starting rpc server";
+  cws->start(bind_host, bind_port);
+
+  Tools::SignalHandler::install([&wal, &cws, &log] {
     wal.stop();
+    log(Logging::INFO) << "Complex server stopped!";
   });
 
   logger(INFO) << "before runing.";
@@ -167,6 +191,10 @@ int main(int argc, char *argv[])
   {
     logger(INFO) << "Wallet closed";
   }
+
+  cws->stop();
+  log(Logging::INFO) << "Complex server is shutdown!";
+
   return 1;
   //CATCH_ENTRY_L0("main", 1);
 }
