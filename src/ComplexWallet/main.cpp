@@ -139,18 +139,6 @@ int main(int argc, char *argv[])
     wal.generate_wallet_by_keys(genWallet, password, address, sendKey, viewKey);
     return 0;
   }
-  std::cout << "before init" << std::endl;
-
-  if (!wal.init(vm))
-  {
-    logger(ERROR, BRIGHT_RED) << "Failed to initialize wallet";
-    return 1;
-  }
-
-  std::cout << "after init" << std::endl;
-  std::vector<std::string> command = command_line::get_arg(vm, arg_command);
-  if (!command.empty())
-    wal.process_command(command);
 
   System::Event localStopEvent(dispatcher);
 
@@ -171,10 +159,24 @@ int main(int argc, char *argv[])
 
   log(Logging::INFO) << "starting rpc server";
   cws->start(bind_host, bind_port);
+  log(Logging::INFO) << "started rpc server";
+
+  std::cout << "before init" << std::endl;
+
+  if (!wal.init(vm))
+  {
+    logger(ERROR, BRIGHT_RED) << "Failed to initialize wallet";
+    return 1;
+  }
+
+  std::cout << "after init" << std::endl;
+  std::vector<std::string> command = command_line::get_arg(vm, arg_command);
+  if (!command.empty())
+    wal.process_command(command);
 
   Tools::SignalHandler::install([&wal, &cws, &log] {
     wal.stop();
-    log(Logging::INFO) << "Complex server stopped!";
+    // log(Logging::INFO) << "Complex server stopped!";
   });
 
   logger(INFO) << "before runing.";

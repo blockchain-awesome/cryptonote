@@ -813,9 +813,7 @@ bool complex_wallet::run()
       m_walletSynchronizedCV.wait(lock);
     }
   }
-
-  std::cout << std::endl;
-
+  
   std::string addr_start = m_wallet->getAddress().substr(0, 6);
   m_consoleHandler.start(false, "[multi wallet service started]: ", Common::Console::Color::BrightYellow);
   return true;
