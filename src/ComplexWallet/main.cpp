@@ -144,11 +144,7 @@ int main(int argc, char *argv[])
 
   WalletManager *wm = new WalletManager(dispatcher, currency, *wal.get_node(), logManager);
 
-  // wal.m_wallet_manager.reset(wm);
-
   ComplexWalletServer *cws = new ComplexWalletServer(dispatcher, localStopEvent, logManager, *wm);
-
-  // m_rpc_server.reset(cws);
 
   std::string bind_host = command_line::get_arg(vm, arg_bind_host);
   uint16_t bind_port = command_line::get_arg(vm, arg_bind_port);
@@ -163,6 +159,20 @@ int main(int argc, char *argv[])
 
   std::cout << "before init" << std::endl;
 
+    std::promise<std::error_code> errorPromise;
+  std::future<std::error_code> f_error = errorPromise.get_future();
+  auto callback = [&errorPromise](std::error_code e) { errorPromise.set_value(e); };
+
+  cws->init(callback);
+  auto error = f_error.get();
+  if (error)
+  {
+    log(Logging::INFO) << "failed to init Rpc Server! " << error.message();
+    return false;
+  }
+
+  log(Logging::INFO) << "successfully init rpc server!";
+
   if (!wal.init(vm))
   {
     logger(ERROR, BRIGHT_RED) << "Failed to initialize wallet";
@@ -176,7 +186,8 @@ int main(int argc, char *argv[])
 
   Tools::SignalHandler::install([&wal, &cws, &log] {
     wal.stop();
-    // log(Logging::INFO) << "Complex server stopped!";
+    cws->stop();
+    log(Logging::INFO) << "Complex server stopped!";
   });
 
   logger(INFO) << "before runing.";

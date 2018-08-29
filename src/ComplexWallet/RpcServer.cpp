@@ -63,6 +63,24 @@ void ComplexWalletServer::start(const std::string &bindAddress, uint16_t bindPor
   HttpServer::start(bindAddress, bindPort);
 }
 
+void ComplexWalletServer::init(const INode::Callback &callback)
+
+{
+  m_workerThread = std::thread([this, callback] {
+    try
+    {
+
+      callback(std::error_code());
+      stopEvent.wait();
+      // Make sure all remote spawns are executed
+      stop();
+    }
+    catch (std::exception &)
+    {
+    }
+  });
+}
+
 void ComplexWalletServer::processJsonRpcRequest(const Common::JsonValue &req, Common::JsonValue &resp)
 {
   try

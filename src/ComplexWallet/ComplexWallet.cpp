@@ -269,9 +269,10 @@ bool complex_wallet::generate_wallet_by_keys(std::string &wallet_file, std::stri
   return true;
 }
 
-  std::unique_ptr<CryptoNote::NodeRpcProxy> &complex_wallet::get_node() {
-    return m_node;
-  }
+std::unique_ptr<CryptoNote::NodeRpcProxy> &complex_wallet::get_node()
+{
+  return m_node;
+}
 
 //----------------------------------------------------------------------------------------------------
 bool complex_wallet::init(const boost::program_options::variables_map &vm)
@@ -319,6 +320,9 @@ bool complex_wallet::init(const boost::program_options::variables_map &vm)
     fail_msg_writer() << "failed to init NodeRPCProxy: " << error.message();
     return false;
   }
+
+  std::cout << "NodeRPCProxy iniialized!" << std::endl;
+
   m_wallet.reset(new SingleWallet(m_currency, *m_node));
 
   try
@@ -813,7 +817,7 @@ bool complex_wallet::run()
       m_walletSynchronizedCV.wait(lock);
     }
   }
-  
+
   std::string addr_start = m_wallet->getAddress().substr(0, 6);
   m_consoleHandler.start(false, "[multi wallet service started]: ", Common::Console::Color::BrightYellow);
   return true;

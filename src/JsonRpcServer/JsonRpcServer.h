@@ -45,7 +45,6 @@ protected:
 
   virtual void processJsonRpcRequest(const Common::JsonValue& req, Common::JsonValue& resp) = 0;
 
-private:
   // HttpServer
   virtual void processRequest(const CryptoNote::HttpRequest& request, CryptoNote::HttpResponse& response) override;
 

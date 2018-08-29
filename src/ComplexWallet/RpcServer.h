@@ -26,6 +26,8 @@ public:
 
   std::string getAddress(const std::string &token);
 
+  void init(const INode::Callback& callback);
+
   virtual void start(const std::string &bindAddress, uint16_t bindPort) override;
 
 protected:
@@ -33,7 +35,8 @@ protected:
 
 private:
   Logging::LoggerRef logger;
-
+  std::mutex m_mutex;
+  std::thread m_workerThread;
   WalletManager &m_wallet;
 
   std::map<std::string, std::string> m_tokenMap;
