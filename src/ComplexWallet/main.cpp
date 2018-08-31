@@ -35,6 +35,7 @@
 #include "args.h"
 #include "ComplexWallet.h"
 #include "WalletManager.h"
+#include "WalletFile.h"
 
 using namespace ComplexWallet;
 
@@ -135,8 +136,7 @@ int main(int argc, char *argv[])
   {
     std::string address = command_line::get_arg(vm, arg_address);
     std::string password = command_line::get_arg(vm, arg_password);
-
-    wal.generate_wallet_by_keys(genWallet, password, address, sendKey, viewKey);
+    create_wallet_by_keys(genWallet, password, address, sendKey, viewKey, logger);
     return 0;
   }
 
@@ -159,7 +159,7 @@ int main(int argc, char *argv[])
 
   std::cout << "before init" << std::endl;
 
-    std::promise<std::error_code> errorPromise;
+  std::promise<std::error_code> errorPromise;
   std::future<std::error_code> f_error = errorPromise.get_future();
   auto callback = [&errorPromise](std::error_code e) { errorPromise.set_value(e); };
 

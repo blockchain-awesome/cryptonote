@@ -219,6 +219,8 @@ std::error_code ComplexWalletServer::handleLogin(const Login::Request &request, 
 
   if (!m_wallet.isWalletExisted(address))
   {
+    logger(Logging::INFO) << "wallet created! ";
+
     m_wallet.createWallet(keys);
   }
 
@@ -232,6 +234,8 @@ std::error_code ComplexWalletServer::handleLogin(const Login::Request &request, 
 
   m_tokenMap[response.token] = address;
   m_tokenTime[response.token] = now;
+
+  logger(Logging::INFO) << "successfully handled";
 
   return std::error_code();
 }

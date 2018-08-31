@@ -183,7 +183,11 @@ void SingleWallet::initWithKeys(const AccountKeys &accountKeys, const std::strin
     m_account.set_createtime(ACCOUN_CREATE_TIME_ACCURACY);
     m_password = password;
 
+    std::cout << "inside initWithKeys" << std::endl;
+
     initSync();
+
+    std::cout << "after initWithKeys" << std::endl;
   }
 
   m_observerManager.notify(&IWalletLegacyObserver::initCompleted, std::error_code());

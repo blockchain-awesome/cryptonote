@@ -49,9 +49,9 @@ namespace ComplexWallet
 {
 
 WalletManager::WalletManager(System::Dispatcher &dispatcher, const Currency &currency, INode &node, Logging::LoggerManager &logger) : m_dispatcher(dispatcher),
-                                                                                                                                    m_currency(currency),
-                                                                                                                                    m_node(node),
-                                                                                                                                    m_logger(logger)
+                                                                                                                                      m_currency(currency),
+                                                                                                                                      m_node(node),
+                                                                                                                                      m_logger(logger)
 {
 }
 
@@ -64,16 +64,18 @@ bool WalletManager::createWallet(const AccountKeys &accountKeys)
 
   Logging::LoggerRef(m_logger, "inteface")(Logging::INFO) << "creating new wallet" << endl;
   CryptoNote::IWalletLegacy *wallet = new SingleWallet(m_currency, m_node);
-  // // CryptoNote::IWalletLegacy *wallet = new WalletLegacy(m_currency, m_node);
+  // CryptoNote::IWalletLegacy *wallet = new WalletLegacy(m_currency, m_node);
 
   // WalletHelper::InitWalletResultObserver initObserver;
   // std::future<std::error_code> f_initError = initObserver.initResult.get_future();
 
   // WalletHelper::IWalletRemoveObserverGuard removeGuard(*wallet, initObserver);
 
-  // wallet->initWithKeys(accountKeys, "");
   std::string address = getAddressesByKeys(accountKeys.address);
   m_wallets[address] = wallet;
+
+  // wallet->initWithKeys(accountKeys, "");
+
   return true;
 }
 

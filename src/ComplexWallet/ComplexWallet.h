@@ -46,8 +46,6 @@ public:
 
   std::unique_ptr<CryptoNote::NodeRpcProxy> &get_node();
 
-  bool generate_wallet_by_keys(std::string &wallet_file, std::string &password, std::string &address, std::string &spendKey, std::string &viewKey);
-
   bool process_command(const std::vector<std::string> &args);
   std::string get_commands_str();
 
@@ -126,7 +124,7 @@ private:
 
       if (std::chrono::milliseconds(1) < current_time - m_print_time || force)
       {
-        std::cout << "complex wallet Height " << height << " of " << m_blockchain_height << '\r';
+        std::cout << "complex wallet Height " << height << " of " << m_blockchain_height << "\r\r";
         m_print_time = current_time;
       }
     }

@@ -33,6 +33,7 @@ function run() {
 
     const token = login.result.token;
 
+    console.log(login1);
     console.log(login);
 
     const wrongLogin = await requestRPC("http://127.0.0.1:19888/json_rpc", {
