@@ -28,6 +28,7 @@ file(GLOB_RECURSE Wallet Wallet/*)
 file(GLOB_RECURSE WalletLegacy WalletLegacy/*)
 
 file(GLOB_RECURSE JsonRpcServer JsonRpcServer/*)
+file(GLOB_RECURSE api api/*)
 
 file(GLOB_RECURSE PaymentGate PaymentGate/*)
 file(GLOB_RECURSE PaymentGateService PaymentGateService/*)
@@ -60,6 +61,7 @@ add_executable(ComplexWallet ${ComplexWallet})
 add_executable(PaymentGateService ${PaymentGateService})
 add_executable(MultiWalletService ${MultiWalletService})
 add_executable(Miner ${Miner})
+add_executable(api ${api})
 
 if (MSVC)
   target_link_libraries(System ws2_32)
@@ -72,6 +74,7 @@ target_link_libraries(ComplexWallet JsonRpcServer Wallet NodeRpcProxy Transfers 
 target_link_libraries(PaymentGateService PaymentGate JsonRpcServer Wallet NodeRpcProxy Transfers CryptoNoteCore Crypto P2P Rpc Http Serialization System Logging Common InProcessNode upnpc-static BlockchainExplorer ${Boost_LIBRARIES})
 target_link_libraries(MultiWalletService PaymentGate JsonRpcServer Wallet NodeRpcProxy Transfers CryptoNoteCore Crypto P2P Rpc Http Serialization System Logging Common InProcessNode upnpc-static BlockchainExplorer ${Boost_LIBRARIES} OpenSSL::SSL)
 target_link_libraries(Miner CryptoNoteCore Rpc Serialization System Http Logging Common Crypto ${Boost_LIBRARIES})
+target_link_libraries(api CryptoNoteCore Serialization System Logging Common Crypto ${Boost_LIBRARIES})
 
 add_dependencies(Rpc version)
 
@@ -80,7 +83,7 @@ add_dependencies(Daemon version)
 add_dependencies(SimpleWallet version)
 add_dependencies(ComplexWallet version)
 add_dependencies(PaymentGateService version)
-add_dependencies(MultiWalletService version)
+add_dependencies(api version)
 add_dependencies(P2P version)
 
 set_property(TARGET ConnectivityTool PROPERTY OUTPUT_NAME "connectivity_tool")
@@ -89,5 +92,6 @@ set_property(TARGET ComplexWallet PROPERTY OUTPUT_NAME "complexwallet")
 set_property(TARGET PaymentGateService PROPERTY OUTPUT_NAME "walletd")
 set_property(TARGET MultiWalletService PROPERTY OUTPUT_NAME "multiwalletd")
 set_property(TARGET Miner PROPERTY OUTPUT_NAME "miner")
+set_property(TARGET api PROPERTY OUTPUT_NAME "api")
 #TODO Specify the name of daemon for your currency
 set_property(TARGET Daemon PROPERTY OUTPUT_NAME "vigcoind")
