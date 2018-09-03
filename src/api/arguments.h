@@ -31,17 +31,17 @@ public:
         version();
         return false;
       }
-      return true;
-    });
-  }
-  template <typename F>
-  bool parseParameter(F executor)
-  {
-    return command_line::handle_error_helper(m_desc_all, [&] {
       auto parser = po::command_line_parser(m_argc, m_argv).options(*m_parameter->getDesc()).positional(m_positional_options);
       po::store(parser.run(), m_vm);
       po::notify(m_vm);
-      return executor();
+      return true;
+    });
+  }
+  template <typename H>
+  bool parseParameter(H executor)
+  {
+    return command_line::handle_error_helper(m_desc_all, [&] {
+      return executor(m_vm);
     });
   }
 

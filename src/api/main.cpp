@@ -23,7 +23,14 @@ int main(int argc, char *argv[])
     std::cout << CRYPTONOTE_NAME << " api version " << PROJECT_VERSION_LONG << std::endl;
   };
 
-  api::Arguments *arg = api::get_argument_handler(argc, argv, helpHandler, versionHandler);
+  auto parameterHandler = [](po::variables_map &vm) {
+    std::cout << "inside parameter handling" << PROJECT_VERSION_LONG << std::endl;
+    api::ParsedParameters p(vm);
+    std::cout << " is parsed: " << p.prepared() << std::endl;
+    return true;
+  };
+
+  api::Arguments *arg = api::get_argument_handler(argc, argv, helpHandler, versionHandler, parameterHandler);
 
   std::cout << "Inside API main" << std::endl;
 }
