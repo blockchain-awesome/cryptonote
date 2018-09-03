@@ -3,9 +3,10 @@
 #include <Logging/LoggerManager.h>
 #include <CryptoNoteCore/Currency.h>
 
-#include "arguments.h"
+#include "cli.h"
+#include "version.h"
 
-using namespace api;
+using namespace CryptoNote;
 
 int main(int argc, char *argv[])
 {
@@ -13,20 +14,24 @@ int main(int argc, char *argv[])
 
   CryptoNote::Currency currency = CryptoNote::CurrencyBuilder(logManager).currency();
 
-  api::Options general("General options");
+  auto helpHandler = [] {
+    std::cout << CRYPTONOTE_NAME << " api version " << PROJECT_VERSION_LONG << std::endl;
+    std::cout << "Usage: api";
+  };
 
-  general.add(command_line::arg_help);
-  general.add(command_line::arg_version);
+  auto versionHandler = [] {
+    std::cout << CRYPTONOTE_NAME << " wallet version " << PROJECT_VERSION_LONG;
+  };
 
-  api::Options parameter("API options");
-  parameter.add(api::arg_address);
-  parameter.add(api::arg_view_key);
-  parameter.add(api::arg_daemon_host);
-  parameter.add(api::arg_daemon_port);
-  parameter.add(api::arg_log_level);
-  parameter.add(api::arg_testnet);
+  api::Arguments* arg = api::get_argument_handler(argc, argv, helpHandler, versionHandler);
 
-  api::Arguments Arguments(general, parameter);
+  // arg->init(argc, argv);
+
+
+
+  // if (!arg->parseGeneral(helpHandler, versionHandler)) {
+
+  // }
 
   std::cout << "Inside API main" << std::endl;
 }
