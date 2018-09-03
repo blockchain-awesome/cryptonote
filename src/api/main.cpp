@@ -16,22 +16,14 @@ int main(int argc, char *argv[])
 
   auto helpHandler = [] {
     std::cout << CRYPTONOTE_NAME << " api version " << PROJECT_VERSION_LONG << std::endl;
-    std::cout << "Usage: api";
+    std::cout << "Usage: api" << std::endl;
   };
 
   auto versionHandler = [] {
-    std::cout << CRYPTONOTE_NAME << " wallet version " << PROJECT_VERSION_LONG;
+    std::cout << CRYPTONOTE_NAME << " api version " << PROJECT_VERSION_LONG << std::endl;
   };
 
-  api::Arguments* arg = api::get_argument_handler(argc, argv, helpHandler, versionHandler);
-
-  // arg->init(argc, argv);
-
-
-
-  // if (!arg->parseGeneral(helpHandler, versionHandler)) {
-
-  // }
+  api::Arguments *arg = api::get_argument_handler(argc, argv, helpHandler, versionHandler);
 
   std::cout << "Inside API main" << std::endl;
 }

@@ -16,21 +16,14 @@ public:
   template <typename F, typename G>
   bool parseGeneral(F help, G version)
   {
-
-    // std::cout << *m_general->getDesc() << std::endl;
-
-    // po::options_description &desc = *m_general->getDesc();
-
-    // std::cout << desc << std::endl;
-
     return command_line::handle_error_helper(m_desc_all, [&] {
-      std::cout << "inside parseGeneral" << std::endl;
       const auto &desc = *m_general->getDesc();
       const auto &option = command_line::parse_command_line(m_argc, m_argv, desc, true);
       po::store(option, m_vm);
       if (command_line::get_arg(m_vm, command_line::arg_help))
       {
         help();
+        std::cout << desc << std::endl;
         return false;
       }
       else if (command_line::get_arg(m_vm, command_line::arg_version))
@@ -44,8 +37,6 @@ public:
   template <typename F>
   bool parseParameter(F executor)
   {
-    m_desc_all.add(*m_general->getDesc()).add(*m_parameter->getDesc());
-
     return command_line::handle_error_helper(m_desc_all, [&] {
       auto parser = po::command_line_parser(m_argc, m_argv).options(*m_parameter->getDesc()).positional(m_positional_options);
       po::store(parser.run(), m_vm);
