@@ -24,24 +24,38 @@ int main(int argc, char *argv[])
     std::cout << CryptoNote::CRYPTONOTE_NAME << " api version " << PROJECT_VERSION_LONG << std::endl;
   };
 
-  auto parameterHandler = [&node](po::variables_map &vm) {
+  auto parameterHandler = [&](po::variables_map &vm) {
     std::cout << "inside parameter handling" << PROJECT_VERSION_LONG << std::endl;
     api::ParsedParameters p(vm);
     std::cout << " is parsed: " << p.prepared() << std::endl;
+    node = std::unique_ptr<api::Node>(new api::Node(p.daemon_host, p.daemon_port));
 
     if (!p.daemon_host.empty() && p.daemon_port)
     {
-      node = std::unique_ptr<api::Node>(new api::Node(p.daemon_host, p.daemon_port));
+      // std::thread t([&]() {
+      std::cout << " starting node. " << std::endl;
+      if (!node->init(currency))
+      {
+        std::cout << "failed to init NodeRPCProxy" << std::endl;
+      }
+      std::cout << "started node" << std::endl;
+      // });
+      // t.detach();
     }
     return true;
   };
 
   api::Arguments *arg = api::get_argument_handler(argc, argv, helpHandler, versionHandler, parameterHandler);
 
-  if (!node->init())
-  {
-    std::cout << "failed to init NodeRPCProxy" << std::endl;
-  }
+  size_t count = node->getPeerCount();
+  
+  std::cout << "peer:" << count << std::endl;
+
+  node->wait(1000 * 10);
+
+  count = node->getPeerCount();
+
+  std::cout << "peer:" << count << std::endl;
 
   std::cout << "Node Successfully Connected!" << std::endl;
 
