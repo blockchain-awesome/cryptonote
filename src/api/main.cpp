@@ -6,7 +6,7 @@
 #include "cli.h"
 #include "version.h"
 #include "node.h"
-#include "keys.h"
+#include "account.h"
 
 int main(int argc, char *argv[])
 {
@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
     if (!p.daemon_host.empty() && p.daemon_port)
     {
       std::cout << " starting node. " << std::endl;
-      if (!node->init(currency))
+      if (!node->init(currency, logManager))
       {
         std::cout << "failed to init NodeRPCProxy" << std::endl;
       }

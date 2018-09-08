@@ -6,10 +6,12 @@
 #include "NodeRpcProxy/NodeRpcProxy.h"
 #include "Transfers/BlockchainSynchronizer.h"
 #include "Transfers/TransfersSynchronizer.h"
+#include "BlockchainExplorer/BlockchainExplorer.h"
 #include "ITransfersSynchronizer.h"
 
 #include <CryptoNoteCore/Account.h>
 #include <CryptoNoteCore/Currency.h>
+#include <Logging/ILogger.h>
 
 namespace api
 {
@@ -22,7 +24,7 @@ class Node : public CryptoNote::INodeObserver,
 public:
   Node(std::string &host, uint16_t port);
   CryptoNote::ITransfersSubscription &initAccount(CryptoNote::AccountKeys &keys);
-  bool init(CryptoNote::Currency &currency);
+  bool init(CryptoNote::Currency &currency, Logging::ILogger &logger);
   void wait(size_t milliseconds = 1000);
 
   void startSync();
@@ -65,6 +67,7 @@ private:
   bool m_isBlockchainSynced = false;
   std::unique_ptr<CryptoNote::BlockchainSynchronizer> m_blockchainSync;
   std::unique_ptr<CryptoNote::TransfersSyncronizer> m_transfersSync;
+  std::unique_ptr<CryptoNote::BlockchainExplorer> m_blockchainExplorer;
 
   std::unique_ptr<CryptoNote::Currency> m_currency;
 

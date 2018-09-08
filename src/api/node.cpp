@@ -26,6 +26,7 @@ void Node::lastKnownBlockHeightUpdated(uint32_t height)
 }
 void Node::poolChanged()
 {
+  std::cout << "pool changed!" << std::endl;
 }
 void Node::blockchainSynchronized(uint32_t height)
 {
@@ -46,6 +47,7 @@ void Node::synchronizationProgressUpdated(uint32_t processedBlockCount, uint32_t
   std::cout << "sync updated processed blockes :" << processedBlockCount << std::endl;
   std::cout << "sync updated total blockes :" << totalBlockCount << std::endl;
 }
+
 void Node::synchronizationCompleted(std::error_code result)
 {
   std::cout << "sync completed" << result.value() << std::endl;
@@ -104,7 +106,7 @@ CryptoNote::ITransfersSubscription &Node::initAccount(CryptoNote::AccountKeys &k
   // m_sender.reset(new WalletTransactionSender(m_currency, m_transactionsCache, m_account.getAccountKeys(), *m_transferDetails));
 }
 
-bool Node::init(CryptoNote::Currency &currency)
+bool Node::init(CryptoNote::Currency &currency, Logging::ILogger& logger)
 {
   if (!m_isBlockchainSynced)
   {
@@ -119,7 +121,12 @@ bool Node::init(CryptoNote::Currency &currency)
     m_blockchainSync = std::unique_ptr<CryptoNote::BlockchainSynchronizer>(new CryptoNote::BlockchainSynchronizer(*m_node, currency.genesisBlockHash()));
     m_blockchainSync->addObserver(this);
     m_transfersSync = std::unique_ptr<CryptoNote::TransfersSyncronizer>(new CryptoNote::TransfersSyncronizer(
-          currency, *m_blockchainSync, *m_node));
+        currency, *m_blockchainSync, *m_node));
+    m_blockchainExplorer = std::unique_ptr<CryptoNote::BlockchainExplorer>(new CryptoNote::BlockchainExplorer(
+
+      *m_node, logger
+    ));
+    // m_transfersSync->addObserver(static_cast<INodeObserver *>(this));
   }
   return true;
 }

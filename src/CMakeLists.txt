@@ -74,7 +74,7 @@ target_link_libraries(ComplexWallet JsonRpcServer Wallet NodeRpcProxy Transfers 
 target_link_libraries(PaymentGateService PaymentGate JsonRpcServer Wallet NodeRpcProxy Transfers CryptoNoteCore Crypto P2P Rpc Http Serialization System Logging Common InProcessNode upnpc-static BlockchainExplorer ${Boost_LIBRARIES})
 target_link_libraries(MultiWalletService PaymentGate JsonRpcServer Wallet NodeRpcProxy Transfers CryptoNoteCore Crypto P2P Rpc Http Serialization System Logging Common InProcessNode upnpc-static BlockchainExplorer ${Boost_LIBRARIES} OpenSSL::SSL)
 target_link_libraries(Miner CryptoNoteCore Rpc Serialization System Http Logging Common Crypto ${Boost_LIBRARIES})
-target_link_libraries(api NodeRpcProxy Transfers Rpc Http CryptoNoteCore Serialization System Logging Common Crypto ${Boost_LIBRARIES})
+target_link_libraries(api BlockchainExplorer Wallet NodeRpcProxy Transfers Rpc Http CryptoNoteCore Serialization System Logging Common Crypto ${Boost_LIBRARIES})
 
 add_dependencies(Rpc version)
 
