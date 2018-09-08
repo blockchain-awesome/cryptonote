@@ -8,6 +8,7 @@ namespace api
 {
 
 extern const command_line::arg_descriptor<std::string> arg_address;
+extern const command_line::arg_descriptor<std::string> arg_spend_key;
 extern const command_line::arg_descriptor<std::string> arg_view_key;
 extern const command_line::arg_descriptor<std::string> arg_daemon_host;
 extern const command_line::arg_descriptor<uint16_t> arg_daemon_port;
@@ -24,21 +25,23 @@ public:
     {
       address = command_line::get_arg(vm, arg_address);
       view_key = command_line::get_arg(vm, arg_view_key);
+      spend_key = command_line::get_arg(vm, arg_spend_key);
       daemon_host = command_line::get_arg(vm, arg_daemon_host);
       daemon_port = command_line::get_arg(vm, arg_daemon_port);
     }
     catch (std::exception &e)
     {
-      std::cout << e.what() << std::endl;
+      std::cout << "parameter error: " << e.what() << std::endl;
     }
   }
 
-  bool prepared() {
-    return (!address.empty() && !view_key.empty());
+  bool preparedAccount() {
+    return (!address.empty() && !view_key.empty() && !spend_key.empty());
   }
 
   std::string address;
   std::string view_key;
+  std::string spend_key;
   std::string daemon_host;
   uint16_t daemon_port;
   uint32_t log_level;
@@ -62,6 +65,7 @@ Arguments *get_argument_handler(int argc, char *argv[], F f, G g, H h)
   // api::Options parameter("API options");
 
   parameter.add(api::arg_address);
+  parameter.add(api::arg_spend_key);
   parameter.add(api::arg_view_key);
   parameter.add(api::arg_daemon_host);
   parameter.add(api::arg_daemon_port);

@@ -6,6 +6,7 @@
 #include "cli.h"
 #include "version.h"
 #include "node.h"
+#include "keys.h"
 
 int main(int argc, char *argv[])
 {
@@ -15,6 +16,9 @@ int main(int argc, char *argv[])
 
   std::unique_ptr<api::Node> node;
 
+  std::unique_ptr<api::Account> account;
+  std::unique_ptr<CryptoNote::TransfersSyncronizer> transfer;
+  std::unique_ptr<CryptoNote::BlockchainSynchronizer> bcsync;
   auto helpHandler = [] {
     std::cout << CryptoNote::CRYPTONOTE_NAME << " api version " << PROJECT_VERSION_LONG << std::endl;
     std::cout << "Usage: api" << std::endl;
@@ -27,20 +31,29 @@ int main(int argc, char *argv[])
   auto parameterHandler = [&](po::variables_map &vm) {
     std::cout << "inside parameter handling" << PROJECT_VERSION_LONG << std::endl;
     api::ParsedParameters p(vm);
-    std::cout << " is parsed: " << p.prepared() << std::endl;
+    std::cout << " is parsed: " << p.preparedAccount() << std::endl;
     node = std::unique_ptr<api::Node>(new api::Node(p.daemon_host, p.daemon_port));
 
     if (!p.daemon_host.empty() && p.daemon_port)
     {
-      // std::thread t([&]() {
       std::cout << " starting node. " << std::endl;
       if (!node->init(currency))
       {
         std::cout << "failed to init NodeRPCProxy" << std::endl;
       }
       std::cout << "started node" << std::endl;
-      // });
-      // t.detach();
+    }
+
+    if (p.preparedAccount())
+    {
+      std::cout << "inside account prepared!" << std::endl;
+      bcsync = std::unique_ptr<CryptoNote::BlockchainSynchronizer>(
+          new CryptoNote::BlockchainSynchronizer(node->getNode(), currency.genesisBlockHash()));
+
+      account = std::unique_ptr<api::Account>(new api::Account(p.spend_key, p.view_key));
+      transfer = std::unique_ptr<CryptoNote::TransfersSyncronizer>(new CryptoNote::TransfersSyncronizer(
+          currency, *bcsync.get(), node->getNode()));
+      node->initAccount(*transfer.get(), account->toKeys());
     }
     return true;
   };
@@ -48,7 +61,7 @@ int main(int argc, char *argv[])
   api::Arguments *arg = api::get_argument_handler(argc, argv, helpHandler, versionHandler, parameterHandler);
 
   size_t count = node->getPeerCount();
-  
+
   std::cout << "peer:" << count << std::endl;
 
   node->wait(1000 * 10);

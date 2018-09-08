@@ -13,6 +13,7 @@ namespace api
 {
 
 const command_line::arg_descriptor<std::string> arg_address = {"address", "Address", ""};
+const command_line::arg_descriptor<std::string> arg_spend_key = {"spend-key", "Spend private key", ""};
 const command_line::arg_descriptor<std::string> arg_view_key = {"view-key", "View private key", ""};
 const command_line::arg_descriptor<std::string> arg_daemon_host = {"daemon-host", "Use daemon instance at host <arg> instead of localhost", "localhost"};
 const command_line::arg_descriptor<uint16_t> arg_daemon_port = {"daemon-port", "Use daemon instance at port <arg> instead of 8081",

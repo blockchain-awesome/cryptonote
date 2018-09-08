@@ -14,6 +14,55 @@ Node::Node(std::string &host, uint16_t port) : m_host(host), m_port(port)
   m_node->addObserver(static_cast<INodeObserver *>(this));
 }
 
+// Interface CryptoNote::ITransfersObserver
+// void Node::addObserver(CryptoNote::IBlockchainSynchronizerObserver *observer){
+
+// };
+// void Node::removeObserver(CryptoNote::IBlockchainSynchronizerObserver *observer){
+
+// };
+
+// void Node::save(std::ostream &os){
+
+// };
+// void Node::load(std::istream &in){
+
+// };
+
+// void Node::addConsumer(CryptoNote::IBlockchainConsumer *consumer){
+
+// };
+// bool Node::removeConsumer(CryptoNote::IBlockchainConsumer *consumer)
+// {
+//   return true;
+// };
+// CryptoNote::IStreamSerializable *Node::getConsumerState(CryptoNote::IBlockchainConsumer *consumer) const
+// {
+//   return nullptr;
+// };
+// std::vector<Crypto::Hash> Node::getConsumerKnownBlocks(CryptoNote::IBlockchainConsumer &consumer) const
+// {
+//   std::vector<Crypto::Hash> v;
+//   return v;
+// };
+
+// std::future<std::error_code> Node::addUnconfirmedTransaction(const CryptoNote::ITransactionReader &transaction){
+
+// return std::future<std::error_code>
+// };
+// std::future<void> Node::removeUnconfirmedTransaction(const Crypto::Hash &transactionHash){
+
+// };
+
+// void Node::start(){
+
+// };
+// void Node::stop(){
+
+// };
+
+// End CryptoNote::ITransfersObserver
+
 // Interface CryptoNote::INodeObserver
 
 void Node::localBlockchainUpdated(uint32_t height)
@@ -72,31 +121,32 @@ void Node::connectionStatusUpdated(bool connected)
 
 void Node::onTransactionDeleted(CryptoNote::ITransfersSubscription *object, const Crypto::Hash &transactionHash)
 {
+  std::cout << "onTransactionDeleted" << std::endl;
 }
 
 void Node::onTransactionUpdated(CryptoNote::ITransfersSubscription *object, const Crypto::Hash &transactionHash)
 {
+  std::cout << "onTransactionUpdated" << std::endl;
 }
 
 void Node::onError(CryptoNote::ITransfersSubscription *object,
                    uint32_t height, std::error_code ec)
 {
+  std::cout << "onError" << std::endl;
 }
 
-CryptoNote::ITransfersSubscription &Node::initAccount(CryptoNote::Currency &currency, CryptoNote::AccountBase &account)
+CryptoNote::ITransfersSubscription &Node::initAccount(CryptoNote::TransfersSyncronizer &transferSync, CryptoNote::AccountKeys &keys)
 {
-  init(currency);
-
   CryptoNote::AccountSubscription sub;
-  sub.keys = reinterpret_cast<const CryptoNote::AccountKeys &>(account.getAccountKeys());
+  sub.keys = keys;
   sub.transactionSpendableAge = 1;
   sub.syncStart.height = 0;
-  sub.syncStart.timestamp = account.get_createtime();
-  auto &subObject = m_transfersSync->addSubscription(sub);
+  sub.syncStart.timestamp = time(0);
+  auto &subObject = transferSync.addSubscription(sub);
   // m_transferDetails = &subObject.getContainer();
   subObject.addObserver(this);
 
-  startSync();
+  // startSync();
 
   return subObject;
 
