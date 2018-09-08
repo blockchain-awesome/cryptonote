@@ -11,14 +11,10 @@
 int main(int argc, char *argv[])
 {
   Logging::LoggerManager logManager;
-
   CryptoNote::Currency currency = CryptoNote::CurrencyBuilder(logManager).currency();
-
   std::unique_ptr<api::Node> node;
-
   std::unique_ptr<api::Account> account;
-  std::unique_ptr<CryptoNote::TransfersSyncronizer> transfer;
-  std::unique_ptr<CryptoNote::BlockchainSynchronizer> bcsync;
+
   auto helpHandler = [] {
     std::cout << CryptoNote::CRYPTONOTE_NAME << " api version " << PROJECT_VERSION_LONG << std::endl;
     std::cout << "Usage: api" << std::endl;
@@ -47,13 +43,8 @@ int main(int argc, char *argv[])
     if (p.preparedAccount())
     {
       std::cout << "inside account prepared!" << std::endl;
-      bcsync = std::unique_ptr<CryptoNote::BlockchainSynchronizer>(
-          new CryptoNote::BlockchainSynchronizer(node->getNode(), currency.genesisBlockHash()));
-
       account = std::unique_ptr<api::Account>(new api::Account(p.spend_key, p.view_key));
-      transfer = std::unique_ptr<CryptoNote::TransfersSyncronizer>(new CryptoNote::TransfersSyncronizer(
-          currency, *bcsync.get(), node->getNode()));
-      node->initAccount(*transfer.get(), account->toKeys());
+      node->initAccount(account->toKeys());
     }
     return true;
   };
