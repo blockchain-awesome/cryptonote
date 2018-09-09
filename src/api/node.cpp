@@ -51,6 +51,14 @@ void Node::synchronizationProgressUpdated(uint32_t processedBlockCount, uint32_t
 void Node::synchronizationCompleted(std::error_code result)
 {
   std::cout << "sync completed" << result.value() << std::endl;
+  try
+  {
+    m_blockchain->init();
+  }
+  catch (std::exception &e)
+  {
+    std::cout << "Failed to initialize blockchain :" << e.what() << std::endl;
+  }
 }
 
 // End CryptoNote::IBlockchainSynchronizerObserver
@@ -106,7 +114,7 @@ CryptoNote::ITransfersSubscription &Node::initAccount(CryptoNote::AccountKeys &k
   // m_sender.reset(new WalletTransactionSender(m_currency, m_transactionsCache, m_account.getAccountKeys(), *m_transferDetails));
 }
 
-bool Node::init(CryptoNote::Currency &currency, Logging::ILogger& logger)
+bool Node::init(CryptoNote::Currency &currency, Logging::ILogger &logger)
 {
   if (!m_isBlockchainSynced)
   {
@@ -122,11 +130,17 @@ bool Node::init(CryptoNote::Currency &currency, Logging::ILogger& logger)
     m_blockchainSync->addObserver(this);
     m_transfersSync = std::unique_ptr<CryptoNote::TransfersSyncronizer>(new CryptoNote::TransfersSyncronizer(
         currency, *m_blockchainSync, *m_node));
-    m_blockchainExplorer = std::unique_ptr<CryptoNote::BlockchainExplorer>(new CryptoNote::BlockchainExplorer(
+    // m_blockchainExplorer = std::unique_ptr<CryptoNote::BlockchainExplorer>(new CryptoNote::BlockchainExplorer(
 
-      *m_node, logger
-    ));
-    // m_transfersSync->addObserver(static_cast<INodeObserver *>(this));
+    //     *m_node, logger));
+
+    CryptoNote::RealTimeProvider timeProvider;
+    CryptoNote::tx_memory_pool *mempool = new CryptoNote::tx_memory_pool(currency, *m_blockchain.get(), timeProvider, logger);
+
+    m_blockchain = std::unique_ptr<CryptoNote::Blockchain>(new CryptoNote::Blockchain(
+        currency,
+        *mempool,
+        logger));
   }
   return true;
 }

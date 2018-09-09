@@ -10,6 +10,7 @@
 #include "ITransfersSynchronizer.h"
 
 #include <CryptoNoteCore/Account.h>
+#include <CryptoNoteCore/Blockchain.h>
 #include <CryptoNoteCore/Currency.h>
 #include <Logging/ILogger.h>
 
@@ -68,6 +69,7 @@ private:
   std::unique_ptr<CryptoNote::BlockchainSynchronizer> m_blockchainSync;
   std::unique_ptr<CryptoNote::TransfersSyncronizer> m_transfersSync;
   std::unique_ptr<CryptoNote::BlockchainExplorer> m_blockchainExplorer;
+  std::unique_ptr<CryptoNote::Blockchain> m_blockchain;
 
   std::unique_ptr<CryptoNote::Currency> m_currency;
 
