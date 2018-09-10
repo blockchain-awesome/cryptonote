@@ -50,10 +50,11 @@ void Node::synchronizationProgressUpdated(uint32_t processedBlockCount, uint32_t
 
 void Node::synchronizationCompleted(std::error_code result)
 {
-  std::cout << "sync completed" << result.value() << std::endl;
+  std::cout << "sync completed: " << result.value() << std::endl;
   try
   {
     m_blockchain->init();
+    std::cout << "blockchain inited !" << std::endl;
   }
   catch (std::exception &e)
   {
@@ -135,7 +136,7 @@ bool Node::init(CryptoNote::Currency &currency, Logging::ILogger &logger)
     //     *m_node, logger));
 
     CryptoNote::RealTimeProvider timeProvider;
-    CryptoNote::tx_memory_pool *mempool = new CryptoNote::tx_memory_pool(currency, *m_blockchain.get(), timeProvider, logger);
+    CryptoNote::tx_memory_pool *mempool = new CryptoNote::tx_memory_pool(currency, *this, timeProvider, logger);
 
     m_blockchain = std::unique_ptr<CryptoNote::Blockchain>(new CryptoNote::Blockchain(
         currency,
@@ -175,4 +176,30 @@ void Node::wait(size_t milliseconds)
   }
   std::cout << "end waiting" << std::endl;
 }
+
+bool Node::checkTransactionInputs(const CryptoNote::Transaction &tx, CryptoNote::BlockInfo &maxUsedBlock)
+{
+    std::cout << "checkTransactionInputs" << std::endl;
+
+  return true;
+}
+bool Node::checkTransactionInputs(const CryptoNote::Transaction &tx, CryptoNote::BlockInfo &maxUsedBlock, CryptoNote::BlockInfo &lastFailed)
+{
+    std::cout << "checkTransactionInputs" << std::endl;
+
+  return true;
+}
+bool Node::haveSpentKeyImages(const CryptoNote::Transaction &tx)
+{
+    std::cout << "haveSpentKeyImages" << std::endl;
+
+  return true;
+}
+bool Node::checkTransactionSize(size_t blobSize)
+{
+    std::cout << "blobSize" << blobSize << std::endl;
+
+  return true;
+}
+
 } // namespace api

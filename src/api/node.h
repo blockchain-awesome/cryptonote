@@ -19,7 +19,8 @@ namespace api
 class Node : public CryptoNote::INodeObserver,
              public CryptoNote::INodeRpcProxyObserver,
              public CryptoNote::IBlockchainSynchronizerObserver,
-             public CryptoNote::ITransfersObserver
+             public CryptoNote::ITransfersObserver,
+             public CryptoNote::ITransactionValidator
 {
 
 public:
@@ -59,6 +60,13 @@ public:
 
   virtual void onError(CryptoNote::ITransfersSubscription *object,
                        uint32_t height, std::error_code ec);
+
+  // Interface CryptoNote::ITransactionValidator
+
+  virtual bool checkTransactionInputs(const CryptoNote::Transaction &tx, CryptoNote::BlockInfo &maxUsedBlock) override;
+  virtual bool checkTransactionInputs(const CryptoNote::Transaction &tx, CryptoNote::BlockInfo &maxUsedBlock, CryptoNote::BlockInfo &lastFailed) override;
+  virtual bool haveSpentKeyImages(const CryptoNote::Transaction &tx) override;
+  virtual bool checkTransactionSize(size_t blobSize) override;
 
 private:
   std::unique_ptr<CryptoNote::NodeRpcProxy> m_node;
