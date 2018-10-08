@@ -6,9 +6,9 @@
 
 #include <stdexcept>
 
-#include "Common/MemoryInputStream.h"
-#include "Common/StdInputStream.h"
-#include "Common/StdOutputStream.h"
+#include "common/MemoryInputStream.h"
+#include "common/StdInputStream.h"
+#include "common/StdOutputStream.h"
 #include "Serialization/BinaryOutputStreamSerializer.h"
 #include "Serialization/BinaryInputStreamSerializer.h"
 #include "CryptoNoteCore/Account.h"

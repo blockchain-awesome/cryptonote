@@ -11,8 +11,8 @@
 
 #include <boost/filesystem.hpp>
 
-#include "Common/int-util.h"
-#include "Common/Util.h"
+#include "common/int-util.h"
+#include "common/Util.h"
 #include "crypto/hash.h"
 
 #include "Serialization/SerializationTools.h"

@@ -10,7 +10,7 @@
 #include "CryptoNoteProtocol/ICryptoNoteProtocolObserver.h"
 #include "CryptoNoteCore/ICore.h"
 #include "CryptoNoteCore/ICoreObserver.h"
-#include "Common/ObserverManager.h"
+#include "common/ObserverManager.h"
 #include "BlockchainExplorer/BlockchainExplorerDataBuilder.h"
 
 #include <thread>

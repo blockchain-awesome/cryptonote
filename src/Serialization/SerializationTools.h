@@ -6,8 +6,8 @@
 
 #include <list>
 #include <vector>
-#include <Common/MemoryInputStream.h>
-#include <Common/StringOutputStream.h>
+#include <common/MemoryInputStream.h>
+#include <common/StringOutputStream.h>
 #include "JsonInputStreamSerializer.h"
 #include "JsonOutputStreamSerializer.h"
 #include "KVBinaryInputStreamSerializer.h"

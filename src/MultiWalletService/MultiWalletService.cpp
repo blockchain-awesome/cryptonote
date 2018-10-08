@@ -6,7 +6,7 @@
 
 #include <future>
 
-#include "Common/SignalHandler.h"
+#include "common/SignalHandler.h"
 #include "InProcessNode/InProcessNode.h"
 #include "Logging/LoggerRef.h"
 #include "MultiServiceJsonRpcServer.h"

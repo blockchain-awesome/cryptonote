@@ -4,7 +4,7 @@
 
 #include "BlockchainIndices.h"
 
-#include "Common/StringTools.h"
+#include "common/StringTools.h"
 #include "CryptoNoteCore/CryptoNoteTools.h"
 #include "CryptoNoteCore/CryptoNoteFormatUtils.h"
 #include "BlockchainExplorer/BlockchainExplorerDataBuilder.h"

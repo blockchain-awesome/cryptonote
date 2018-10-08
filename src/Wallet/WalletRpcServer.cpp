@@ -6,8 +6,8 @@
 
 #include <fstream>
 
-#include "Common/CommandLine.h"
-#include "Common/StringTools.h"
+#include "common/CommandLine.h"
+#include "common/StringTools.h"
 #include "CryptoNoteCore/CryptoNoteFormatUtils.h"
 #include "CryptoNoteCore/Account.h"
 #include "crypto/hash.h"

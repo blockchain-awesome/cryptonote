@@ -8,7 +8,7 @@
 #include <cassert>
 #include <cstring>
 #include <stdexcept>
-#include <Common/StreamTools.h>
+#include <common/StreamTools.h>
 #include "KVBinaryCommon.h"
 
 using namespace Common;

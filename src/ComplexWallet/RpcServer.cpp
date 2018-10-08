@@ -9,7 +9,7 @@
 
 #include "JsonRpcParameters.h"
 
-#include "Common/StringTools.h"
+#include "common/StringTools.h"
 #include "Rpc/HttpServer.h"
 
 #include "Serialization/JsonInputValueSerializer.h"

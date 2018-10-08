@@ -12,7 +12,7 @@
 #include <boost/archive/binary_iarchive.hpp>
 #include <boost/program_options.hpp>
 
-#include "Common/CommandLine.h"
+#include "common/CommandLine.h"
 #include "CryptoNoteCore/CryptoNoteBasic.h"
 #include "CryptoNoteCore/CryptoNoteBasicImpl.h"
 #include "CryptoNoteCore/CryptoNoteFormatUtils.h"

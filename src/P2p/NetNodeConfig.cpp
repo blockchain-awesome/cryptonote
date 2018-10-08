@@ -6,9 +6,9 @@
 
 #include <boost/utility/value_init.hpp>
 
-#include <Common/Util.h>
-#include "Common/CommandLine.h"
-#include "Common/StringTools.h"
+#include <common/Util.h>
+#include "common/CommandLine.h"
+#include "common/StringTools.h"
 #include "crypto/crypto.h"
 #include "CryptoNoteConfig.h"
 

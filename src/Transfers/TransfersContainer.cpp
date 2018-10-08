@@ -4,8 +4,8 @@
 
 #include "TransfersContainer.h"
 #include "IWalletLegacy.h"
-#include "Common/StdInputStream.h"
-#include "Common/StdOutputStream.h"
+#include "common/StdInputStream.h"
+#include "common/StdOutputStream.h"
 #include "CryptoNoteCore/CryptoNoteFormatUtils.h"
 #include "Serialization/BinaryInputStreamSerializer.h"
 #include "Serialization/BinaryOutputStreamSerializer.h"

@@ -17,8 +17,8 @@
 #include <boost/utility/value_init.hpp>
 
 #include "crypto/crypto.h"
-#include "Common/CommandLine.h"
-#include "Common/StringTools.h"
+#include "common/CommandLine.h"
+#include "common/StringTools.h"
 #include "Serialization/SerializationTools.h"
 
 #include "CryptoNoteFormatUtils.h"

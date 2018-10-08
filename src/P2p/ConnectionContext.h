@@ -9,7 +9,7 @@
 #include <unordered_set>
 
 #include <boost/uuid/uuid.hpp>
-#include "Common/StringTools.h"
+#include "common/StringTools.h"
 #include "crypto/hash.h"
 
 namespace CryptoNote {

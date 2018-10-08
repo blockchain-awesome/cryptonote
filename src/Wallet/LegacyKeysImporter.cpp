@@ -7,7 +7,7 @@
 #include <vector>
 #include <system_error>
 
-#include "Common/StringTools.h"
+#include "common/StringTools.h"
 
 #include "CryptoNoteCore/Currency.h"
 #include "CryptoNoteCore/Account.h"

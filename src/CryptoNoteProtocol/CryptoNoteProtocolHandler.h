@@ -6,7 +6,7 @@
 
 #include <atomic>
 
-#include <Common/ObserverManager.h>
+#include <common/ObserverManager.h>
 
 #include "CryptoNoteCore/ICore.h"
 

@@ -12,11 +12,11 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
 
-#include "Common/CommandLine.h"
-#include "Common/SignalHandler.h"
-#include "Common/StringTools.h"
-#include "Common/PathTools.h"
-#include "Common/Util.h"
+#include "common/CommandLine.h"
+#include "common/SignalHandler.h"
+#include "common/StringTools.h"
+#include "common/PathTools.h"
+#include "common/Util.h"
 #include "CryptoNoteCore/CryptoNoteFormatUtils.h"
 #include "CryptoNoteProtocol/CryptoNoteProtocolHandler.h"
 #include "NodeRpcProxy/NodeRpcProxy.h"

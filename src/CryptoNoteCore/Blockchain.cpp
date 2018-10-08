@@ -7,10 +7,10 @@
 #include <algorithm>
 #include <cstdio>
 #include <boost/foreach.hpp>
-#include "Common/Math.h"
-#include "Common/ShuffleGenerator.h"
-#include "Common/StdInputStream.h"
-#include "Common/StdOutputStream.h"
+#include "common/Math.h"
+#include "common/ShuffleGenerator.h"
+#include "common/StdInputStream.h"
+#include "common/StdOutputStream.h"
 #include "Rpc/CoreRpcServerCommandsDefinitions.h"
 #include "Serialization/BinarySerializationTools.h"
 #include "CryptoNoteTools.h"

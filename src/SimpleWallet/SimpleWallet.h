@@ -14,7 +14,7 @@
 #include "IWalletLegacy.h"
 #include "PasswordContainer.h"
 
-#include "Common/ConsoleHandler.h"
+#include "common/ConsoleHandler.h"
 #include "CryptoNoteCore/CryptoNoteBasicImpl.h"
 #include "CryptoNoteCore/Currency.h"
 #include "NodeRpcProxy/NodeRpcProxy.h"

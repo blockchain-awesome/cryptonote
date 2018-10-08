@@ -8,7 +8,7 @@
 #include <cstdint>
 #include <cstring> // memcpy
 #include <vector>
-#include <Common/IOutputStream.h>
+#include <common/IOutputStream.h>
 
 namespace CryptoNote {
 

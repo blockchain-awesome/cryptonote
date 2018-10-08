@@ -7,7 +7,7 @@
 #include <iosfwd>
 #include <string>
 #include <vector>
-#include "../Common/JsonValue.h"
+#include "../common/JsonValue.h"
 #include "JsonInputValueSerializer.h"
 
 namespace CryptoNote {

@@ -18,11 +18,11 @@
 
 #include "ITransaction.h"
 
-#include "Common/ScopeExit.h"
-#include "Common/ShuffleGenerator.h"
-#include "Common/StdInputStream.h"
-#include "Common/StdOutputStream.h"
-#include "Common/StringTools.h"
+#include "common/ScopeExit.h"
+#include "common/ShuffleGenerator.h"
+#include "common/StdInputStream.h"
+#include "common/StdOutputStream.h"
+#include "common/StringTools.h"
 #include "CryptoNoteCore/Account.h"
 #include "CryptoNoteCore/Currency.h"
 #include "CryptoNoteCore/CryptoNoteFormatUtils.h"

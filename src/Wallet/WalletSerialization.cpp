@@ -8,9 +8,9 @@
 #include <sstream>
 #include <type_traits>
 
-#include "Common/MemoryInputStream.h"
-#include "Common/StdInputStream.h"
-#include "Common/StdOutputStream.h"
+#include "common/MemoryInputStream.h"
+#include "common/StdInputStream.h"
+#include "common/StdOutputStream.h"
 #include "CryptoNoteCore/CryptoNoteSerialization.h"
 #include "CryptoNoteCore/CryptoNoteTools.h"
 

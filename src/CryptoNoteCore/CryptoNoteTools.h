@@ -5,9 +5,9 @@
 #pragma once
 
 #include <limits>
-#include "Common/MemoryInputStream.h"
-#include "Common/StringTools.h"
-#include "Common/VectorOutputStream.h"
+#include "common/MemoryInputStream.h"
+#include "common/StringTools.h"
+#include "common/VectorOutputStream.h"
 #include "Serialization/BinaryOutputStreamSerializer.h"
 #include "Serialization/BinaryInputStreamSerializer.h"
 #include "CryptoNoteSerialization.h"

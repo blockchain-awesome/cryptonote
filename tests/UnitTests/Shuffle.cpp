@@ -8,7 +8,7 @@
 
 #include <unordered_set>
 #include "crypto/crypto.h"
-#include "Common/ShuffleGenerator.h"
+#include "common/ShuffleGenerator.h"
 
 class ShuffleTest : public ::testing::Test {
 public:

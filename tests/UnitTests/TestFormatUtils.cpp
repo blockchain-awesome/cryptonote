@@ -6,13 +6,13 @@
 
 #include <vector>
 
-#include "Common/Util.h"
+#include "common/Util.h"
 #include "CryptoNoteCore/Account.h"
 #include "CryptoNoteCore/CryptoNoteFormatUtils.h"
 #include "CryptoNoteCore/CryptoNoteTools.h"
 #include "CryptoNoteCore/Currency.h"
 #include "CryptoNoteCore/TransactionExtra.h"
-#include "Common/StringTools.h"
+#include "common/StringTools.h"
 
 #include <Logging/LoggerGroup.h>
 

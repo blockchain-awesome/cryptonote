@@ -19,7 +19,7 @@
 
 #include "CryptoNoteCore/OnceInInterval.h"
 #include "CryptoNoteProtocol/CryptoNoteProtocolHandler.h"
-#include "Common/CommandLine.h"
+#include "common/CommandLine.h"
 #include "Logging/LoggerRef.h"
 
 #include "ConnectionContext.h"

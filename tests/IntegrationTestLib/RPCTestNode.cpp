@@ -8,7 +8,7 @@
 #include <vector>
 #include <thread>
 
-#include "Common/StringTools.h"
+#include "common/StringTools.h"
 #include "CryptoNoteCore/CryptoNoteTools.h"
 #include "NodeRpcProxy/NodeRpcProxy.h"
 #include "Rpc/CoreRpcServerCommandsDefinitions.h"

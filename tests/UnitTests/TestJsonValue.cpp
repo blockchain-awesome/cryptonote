@@ -3,7 +3,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "gtest/gtest.h"
-#include <Common/JsonValue.h>
+#include <common/JsonValue.h>
 
 using Common::JsonValue;
 

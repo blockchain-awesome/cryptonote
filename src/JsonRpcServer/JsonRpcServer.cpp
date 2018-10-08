@@ -18,7 +18,7 @@
 #include "HTTP/HttpParser.h"
 #include "HTTP/HttpResponse.h"
 
-#include "Common/JsonValue.h"
+#include "common/JsonValue.h"
 #include "Serialization/JsonInputValueSerializer.h"
 #include "Serialization/JsonOutputStreamSerializer.h"
 

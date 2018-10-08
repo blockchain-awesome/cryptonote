@@ -9,13 +9,13 @@
 #include <CryptoNoteCore/TransactionApi.h>
 
 #include "CryptoNoteConfig.h"
-#include "Common/StringTools.h"
+#include "common/StringTools.h"
 #include "CryptoNoteCore/CryptoNoteTools.h"
 #include "CryptoNoteCore/IBlock.h"
 #include "CryptoNoteCore/VerificationContext.h"
 #include "CryptoNoteProtocol/CryptoNoteProtocolHandlerCommon.h"
 #include "InProcessNodeErrors.h"
-#include "Common/StringTools.h"
+#include "common/StringTools.h"
 
 using namespace Crypto;
 using namespace Common;

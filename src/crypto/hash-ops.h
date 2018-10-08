@@ -11,8 +11,8 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#include "../Common/static_assert.h"
-#include "Common/int-util.h"
+#include "../common/static_assert.h"
+#include "common/int-util.h"
 
 static inline void *padd(void *p, size_t i) {
   return (char *) p + i;

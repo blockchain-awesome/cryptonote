@@ -5,7 +5,7 @@
 #include "BlockValidation.h"
 #include "TestGenerator.h"
 #include "CryptoNoteCore/CryptoNoteTools.h"
-#include "Common/StringTools.h"
+#include "common/StringTools.h"
 
 using namespace Common;
 using namespace Crypto;

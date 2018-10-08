@@ -8,7 +8,7 @@
 #include <System/InterruptedException.h>
 #include <System/Timer.h>
 
-#include "Common/StringTools.h"
+#include "common/StringTools.h"
 #include "CryptoNoteConfig.h"
 #include "CryptoNoteCore/CryptoNoteTools.h"
 #include "CryptoNoteCore/CryptoNoteFormatUtils.h"

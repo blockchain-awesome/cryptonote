@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "Common/ConsoleHandler.h"
+#include "common/ConsoleHandler.h"
 
 #include <Logging/LoggerRef.h>
 #include <Logging/LoggerManager.h>

@@ -11,7 +11,7 @@
 #include "INode.h"
 #include "CryptoNoteCore/CryptoNoteBasic.h"
 #include "TestBlockchainGenerator.h"
-#include "Common/ObserverManager.h"
+#include "common/ObserverManager.h"
 #include "Wallet/WalletAsyncContextCounter.h"
 
 

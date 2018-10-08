@@ -18,7 +18,7 @@
 #include <System/Timer.h>
 #include <CryptoNoteCore/TransactionApi.h>
 
-#include "Common/StringTools.h"
+#include "common/StringTools.h"
 #include "CryptoNoteCore/CryptoNoteBasicImpl.h"
 #include "CryptoNoteCore/CryptoNoteTools.h"
 #include "Rpc/CoreRpcServerCommandsDefinitions.h"

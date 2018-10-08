@@ -6,7 +6,7 @@
 
 #include <future>
 
-#include <Common/StringTools.h>
+#include <common/StringTools.h>
 #include <Logging/ConsoleLogger.h>
 
 #include "CryptoNoteCore/Core.h"

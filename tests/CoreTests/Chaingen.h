@@ -8,8 +8,8 @@
 #include <boost/serialization/variant.hpp>
 #include "CryptoNoteCore/CoreConfig.h"
 
-#include "Common/CommandLine.h"
-#include "Common/ConsoleTools.h"
+#include "common/CommandLine.h"
+#include "common/ConsoleTools.h"
 
 #include "CryptoNoteCore/Account.h"
 #include "CryptoNoteCore/Core.h"

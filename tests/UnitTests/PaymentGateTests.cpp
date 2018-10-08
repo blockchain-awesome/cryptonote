@@ -6,7 +6,7 @@
 #include <numeric>
 
 #include <System/Timer.h>
-#include <Common/StringTools.h>
+#include <common/StringTools.h>
 #include <Logging/ConsoleLogger.h>
 
 #include "PaymentGate/WalletService.h"

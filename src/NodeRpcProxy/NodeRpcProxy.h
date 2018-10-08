@@ -11,7 +11,7 @@
 #include <thread>
 #include <unordered_set>
 
-#include "Common/ObserverManager.h"
+#include "common/ObserverManager.h"
 #include "INode.h"
 
 namespace System {

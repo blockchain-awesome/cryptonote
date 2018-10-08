@@ -4,7 +4,7 @@
 
 #include "BlockchainMonitor.h"
 
-#include "Common/StringTools.h"
+#include "common/StringTools.h"
 
 #include <System/EventLock.h>
 #include <System/Timer.h>

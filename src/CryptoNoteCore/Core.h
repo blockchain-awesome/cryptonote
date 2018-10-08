@@ -16,7 +16,7 @@
 #include "CryptoNoteCore/MinerConfig.h"
 #include "ICore.h"
 #include "ICoreObserver.h"
-#include "Common/ObserverManager.h"
+#include "common/ObserverManager.h"
 
 #include "System/Dispatcher.h"
 #include "CryptoNoteCore/MessageQueue.h"

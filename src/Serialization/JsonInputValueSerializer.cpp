@@ -7,7 +7,7 @@
 #include <cassert>
 #include <stdexcept>
 
-#include "Common/StringTools.h"
+#include "common/StringTools.h"
 
 using Common::JsonValue;
 using namespace CryptoNote;

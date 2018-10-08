@@ -7,7 +7,7 @@
 #include <string.h>
 #include <tuple>
 #include <boost/uuid/uuid.hpp>
-#include "Common/StringTools.h"
+#include "common/StringTools.h"
 
 namespace CryptoNote
 {

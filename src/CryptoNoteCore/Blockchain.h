@@ -9,8 +9,8 @@
 #include "google/sparse_hash_set"
 #include "google/sparse_hash_map"
 
-#include "Common/ObserverManager.h"
-#include "Common/Util.h"
+#include "common/ObserverManager.h"
+#include "common/Util.h"
 #include "CryptoNoteCore/BlockIndex.h"
 #include "CryptoNoteCore/Checkpoints.h"
 #include "CryptoNoteCore/Currency.h"

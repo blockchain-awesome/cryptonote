@@ -1,7 +1,7 @@
 add_definitions(-DSTATICLIB)
 
 file(GLOB_RECURSE BlockchainExplorer BlockchainExplorer/*)
-file(GLOB_RECURSE Common Common/*)
+file(GLOB_RECURSE Common common/*)
 file(GLOB_RECURSE ConnectivityTool ConnectivityTool/*)
 file(GLOB_RECURSE Crypto crypto/*)
 file(GLOB_RECURSE CryptoNoteCore CryptoNoteCore/* CryptoNoteConfig.h)

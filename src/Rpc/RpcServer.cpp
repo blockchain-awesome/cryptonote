@@ -8,7 +8,7 @@
 #include <unordered_map>
 
 // CryptoNote
-#include "Common/StringTools.h"
+#include "common/StringTools.h"
 #include "CryptoNoteCore/CryptoNoteTools.h"
 #include "CryptoNoteCore/Core.h"
 #include "CryptoNoteCore/IBlock.h"

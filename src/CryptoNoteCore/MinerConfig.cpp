@@ -4,7 +4,7 @@
 
 #include "MinerConfig.h"
 
-#include "Common/CommandLine.h"
+#include "common/CommandLine.h"
 
 namespace CryptoNote {
 

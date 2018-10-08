@@ -5,9 +5,9 @@
 #include "crypto/chacha.h"
 #include "CryptoNoteConfig.h"
 #include "WalletLegacy/KeysStorage.h"
-#include "Common/StringTools.h"
-#include "Common/StdOutputStream.h"
-#include "Common/Base58.h"
+#include "common/StringTools.h"
+#include "common/StdOutputStream.h"
+#include "common/Base58.h"
 #include "CryptoNoteCore/CryptoNoteBasicImpl.h"
 #include "CryptoNoteCore/Currency.h"
 

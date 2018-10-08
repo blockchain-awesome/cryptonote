@@ -4,7 +4,7 @@
 
 #include "gtest/gtest.h"
 
-#include "Common/Util.h"
+#include "common/Util.h"
 
 #include "P2p/PeerListManager.h"
 #include "P2p/PeerListManager.cpp"

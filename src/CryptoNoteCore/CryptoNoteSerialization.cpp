@@ -16,7 +16,7 @@
 #include "Serialization/BinaryInputStreamSerializer.h"
 #include "Serialization/BinaryOutputStreamSerializer.h"
 
-#include "Common/StringOutputStream.h"
+#include "common/StringOutputStream.h"
 #include "crypto/crypto.h"
 
 #include "Account.h"

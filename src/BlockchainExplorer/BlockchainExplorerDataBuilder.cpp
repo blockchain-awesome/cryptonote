@@ -7,7 +7,7 @@
 #include <boost/utility/value_init.hpp>
 #include <boost/range/combine.hpp>
 
-#include "Common/StringTools.h"
+#include "common/StringTools.h"
 #include "CryptoNoteCore/CryptoNoteFormatUtils.h"
 #include "CryptoNoteCore/CryptoNoteTools.h"
 #include "CryptoNoteCore/TransactionExtra.h"

@@ -8,7 +8,7 @@
 #include "CryptoNoteCore/CryptoNoteTools.h"
 #include "CryptoNoteCore/Currency.h"
 
-#include <Common/Math.h>
+#include <common/Math.h>
 
 #include "Chaingen.h"
 

@@ -6,7 +6,7 @@
 
 #include <unordered_map>
 
-#include "Common/JsonValue.h"
+#include "common/JsonValue.h"
 #include "JsonRpcServer/JsonRpcServer.h"
 #include "PaymentServiceJsonRpcMessages.h"
 #include "Serialization/JsonInputValueSerializer.h"

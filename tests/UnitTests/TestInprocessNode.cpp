@@ -17,7 +17,7 @@
 #include "CryptoNoteCore/TransactionApi.h"
 #include "CryptoNoteCore/CryptoNoteTools.h"
 #include "CryptoNoteCore/VerificationContext.h"
-#include "Common/StringTools.h"
+#include "common/StringTools.h"
 
 using namespace Crypto;
 using namespace CryptoNote;

@@ -3,7 +3,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "Checkpoints.h"
-#include "Common/StringTools.h"
+#include "common/StringTools.h"
 
 using namespace Logging;
 

@@ -9,8 +9,8 @@
 
 #include "DaemonCommandsHandler.h"
 
-#include "Common/SignalHandler.h"
-#include "Common/PathTools.h"
+#include "common/SignalHandler.h"
+#include "common/PathTools.h"
 #include "crypto/hash.h"
 #include "CryptoNoteCore/Core.h"
 #include "CryptoNoteCore/CoreConfig.h"

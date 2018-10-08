@@ -9,7 +9,7 @@
 #include <numeric>
 #include <tuple>
 
-#include "Common/StringTools.h"
+#include "common/StringTools.h"
 #include "CryptoNoteCore/Currency.h"
 #include "CryptoNoteCore/TransactionApi.h"
 #include "CryptoNoteCore/TransactionApiExtra.h"

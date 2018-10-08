@@ -6,8 +6,8 @@
 
 #include "IWallet.h"
 #include "WalletIndices.h"
-#include "Common/IInputStream.h"
-#include "Common/IOutputStream.h"
+#include "common/IInputStream.h"
+#include "common/IOutputStream.h"
 #include "Transfers/TransfersSynchronizer.h"
 #include "Serialization/BinaryInputStreamSerializer.h"
 

@@ -12,7 +12,7 @@
 #include "CryptoNoteCore/CryptoNoteSerialization.h"
 
 #include "Serialization/BinarySerializationTools.h"
-#include "Common/Base58.cpp"
+#include "common/Base58.cpp"
 
 using namespace Tools;
 using namespace CryptoNote;

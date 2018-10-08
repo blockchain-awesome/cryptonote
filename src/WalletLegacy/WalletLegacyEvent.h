@@ -5,7 +5,7 @@
 #pragma once
 
 #include "IWalletLegacy.h"
-#include "Common/ObserverManager.h"
+#include "common/ObserverManager.h"
 
 namespace CryptoNote
 {

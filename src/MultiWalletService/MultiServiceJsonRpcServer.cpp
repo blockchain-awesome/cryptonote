@@ -9,7 +9,7 @@
 
 #include "MultiServiceJsonRpcMessages.h"
 
-#include "Common/StringTools.h"
+#include "common/StringTools.h"
 
 #include "Serialization/JsonInputValueSerializer.h"
 #include "Serialization/JsonOutputStreamSerializer.h"

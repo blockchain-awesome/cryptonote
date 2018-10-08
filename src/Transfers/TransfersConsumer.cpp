@@ -7,7 +7,7 @@
 #include <numeric>
 
 #include "CommonTypes.h"
-#include "Common/BlockingQueue.h"
+#include "common/BlockingQueue.h"
 #include "CryptoNoteCore/CryptoNoteFormatUtils.h"
 #include "CryptoNoteCore/TransactionApi.h"
 

@@ -3,7 +3,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "WalletHelper.h"
-#include "Common/PathTools.h"
+#include "common/PathTools.h"
 
 #include <fstream>
 #include <boost/filesystem.hpp>

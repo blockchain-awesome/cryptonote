@@ -16,9 +16,9 @@
 #include <boost/multi_index/ordered_index.hpp>
 #include <boost/multi_index/member.hpp>
 
-#include "Common/Util.h"
-#include "Common/int-util.h"
-#include "Common/ObserverManager.h"
+#include "common/Util.h"
+#include "common/int-util.h"
+#include "common/ObserverManager.h"
 #include "crypto/hash.h"
 
 #include "CryptoNoteCore/CryptoNoteBasic.h"

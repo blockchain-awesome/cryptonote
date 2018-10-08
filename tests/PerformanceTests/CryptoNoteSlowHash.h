@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "Common/StringTools.h"
+#include "common/StringTools.h"
 #include "crypto/crypto.h"
 #include "CryptoNoteCore/CryptoNoteBasic.h"
 

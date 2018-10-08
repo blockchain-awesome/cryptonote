@@ -9,7 +9,7 @@
 #include <functional>
 
 #include "CoreRpcServerCommandsDefinitions.h"
-#include <Common/JsonValue.h>
+#include <common/JsonValue.h>
 #include "Serialization/ISerializer.h"
 #include "Serialization/SerializationTools.h"
 

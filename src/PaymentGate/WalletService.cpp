@@ -14,7 +14,7 @@
 
 #include <System/Timer.h>
 #include <System/InterruptedException.h>
-#include "Common/Util.h"
+#include "common/Util.h"
 
 #include "crypto/crypto.h"
 #include "CryptoNote.h"

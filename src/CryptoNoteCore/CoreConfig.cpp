@@ -4,8 +4,8 @@
 
 #include "CoreConfig.h"
 
-#include "Common/Util.h"
-#include "Common/CommandLine.h"
+#include "common/Util.h"
+#include "common/CommandLine.h"
 
 namespace CryptoNote {
 
