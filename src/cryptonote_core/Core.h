@@ -8,19 +8,19 @@
 #include <boost/program_options/variables_map.hpp>
 
 #include "P2p/NetNodeCommon.h"
-#include "CryptoNoteProtocol/CryptoNoteProtocolHandlerCommon.h"
+#include "cryptonote_protocol/CryptoNoteProtocolHandlerCommon.h"
 #include "Currency.h"
 #include "TransactionPool.h"
 #include "Blockchain.h"
-#include "CryptoNoteCore/IMinerHandler.h"
-#include "CryptoNoteCore/MinerConfig.h"
+#include "cryptonote_core/IMinerHandler.h"
+#include "cryptonote_core/MinerConfig.h"
 #include "ICore.h"
 #include "ICoreObserver.h"
 #include "common/ObserverManager.h"
 
 #include "System/Dispatcher.h"
-#include "CryptoNoteCore/MessageQueue.h"
-#include "CryptoNoteCore/BlockchainMessages.h"
+#include "cryptonote_core/MessageQueue.h"
+#include "cryptonote_core/BlockchainMessages.h"
 
 #include <Logging/LoggerMessage.h>
 

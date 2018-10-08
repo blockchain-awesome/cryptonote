@@ -5,9 +5,9 @@
 #include "DaemonCommandsHandler.h"
 
 #include "P2p/NetNode.h"
-#include "CryptoNoteCore/Miner.h"
-#include "CryptoNoteCore/Core.h"
-#include "CryptoNoteProtocol/CryptoNoteProtocolHandler.h"
+#include "cryptonote_core/Miner.h"
+#include "cryptonote_core/Core.h"
+#include "cryptonote_protocol/CryptoNoteProtocolHandler.h"
 #include "Serialization/SerializationTools.h"
 #include "version.h"
 

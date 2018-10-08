@@ -6,10 +6,10 @@
 
 #include <vector>
 
-#include "CryptoNoteCore/Account.h"
-#include "CryptoNoteCore/CryptoNoteBasic.h"
-#include "CryptoNoteCore/CryptoNoteFormatUtils.h"
-#include "CryptoNoteCore/CryptoNoteTools.h"
+#include "cryptonote_core/Account.h"
+#include "cryptonote_core/CryptoNoteBasic.h"
+#include "cryptonote_core/CryptoNoteFormatUtils.h"
+#include "cryptonote_core/CryptoNoteTools.h"
 #include "crypto/crypto.h"
 
 #include "MultiTransactionTestBase.h"

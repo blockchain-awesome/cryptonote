@@ -11,10 +11,10 @@
 #include "System/Dispatcher.h"
 #include "System/Event.h"
 
-#include "CryptoNoteCore/MessageQueue.h"
-#include "CryptoNoteCore/BlockchainMessages.h"
-#include "CryptoNoteCore/IntrusiveLinkedList.h"
-#include "CryptoNoteCore/CryptoNoteTools.h"
+#include "cryptonote_core/MessageQueue.h"
+#include "cryptonote_core/BlockchainMessages.h"
+#include "cryptonote_core/IntrusiveLinkedList.h"
+#include "cryptonote_core/CryptoNoteTools.h"
 
 using namespace CryptoNote;
 

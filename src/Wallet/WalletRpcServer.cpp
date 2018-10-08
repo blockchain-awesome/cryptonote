@@ -8,8 +8,8 @@
 
 #include "common/CommandLine.h"
 #include "common/StringTools.h"
-#include "CryptoNoteCore/CryptoNoteFormatUtils.h"
-#include "CryptoNoteCore/Account.h"
+#include "cryptonote_core/CryptoNoteFormatUtils.h"
+#include "cryptonote_core/Account.h"
 #include "crypto/hash.h"
 #include "WalletLegacy/WalletHelper.h"
 // #include "wallet_errors.h"

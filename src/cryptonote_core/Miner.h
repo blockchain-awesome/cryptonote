@@ -9,12 +9,12 @@
 #include <mutex>
 #include <thread>
 
-#include "CryptoNoteCore/CryptoNoteBasic.h"
-#include "CryptoNoteCore/Currency.h"
-#include "CryptoNoteCore/Difficulty.h"
-#include "CryptoNoteCore/IMinerHandler.h"
-#include "CryptoNoteCore/MinerConfig.h"
-#include "CryptoNoteCore/OnceInInterval.h"
+#include "cryptonote_core/CryptoNoteBasic.h"
+#include "cryptonote_core/Currency.h"
+#include "cryptonote_core/Difficulty.h"
+#include "cryptonote_core/IMinerHandler.h"
+#include "cryptonote_core/MinerConfig.h"
+#include "cryptonote_core/OnceInInterval.h"
 
 #include <Logging/LoggerRef.h>
 

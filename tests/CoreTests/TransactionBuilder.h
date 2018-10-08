@@ -4,9 +4,9 @@
 
 #pragma once
 
-#include "CryptoNoteCore/Account.h"
-#include "CryptoNoteCore/CryptoNoteFormatUtils.h"
-#include "CryptoNoteCore/Currency.h"
+#include "cryptonote_core/Account.h"
+#include "cryptonote_core/CryptoNoteFormatUtils.h"
+#include "cryptonote_core/Currency.h"
 
 class TransactionBuilder {
 public:

@@ -13,12 +13,12 @@
 #include <boost/program_options.hpp>
 
 #include "common/CommandLine.h"
-#include "CryptoNoteCore/CryptoNoteBasic.h"
-#include "CryptoNoteCore/CryptoNoteBasicImpl.h"
-#include "CryptoNoteCore/CryptoNoteFormatUtils.h"
-#include "CryptoNoteCore/CryptoNoteTools.h"
-#include "CryptoNoteCore/Core.h"
-#include "CryptoNoteCore/Currency.h"
+#include "cryptonote_core/CryptoNoteBasic.h"
+#include "cryptonote_core/CryptoNoteBasicImpl.h"
+#include "cryptonote_core/CryptoNoteFormatUtils.h"
+#include "cryptonote_core/CryptoNoteTools.h"
+#include "cryptonote_core/Core.h"
+#include "cryptonote_core/Currency.h"
 
 //#include "AccountBoostSerialization.h"
 //#include "cryptonote_boost_serialization.h"

@@ -6,10 +6,10 @@
 
 #include "INode.h"
 #include "ITransaction.h"
-#include "CryptoNoteProtocol/ICryptoNoteProtocolQuery.h"
-#include "CryptoNoteProtocol/ICryptoNoteProtocolObserver.h"
-#include "CryptoNoteCore/ICore.h"
-#include "CryptoNoteCore/ICoreObserver.h"
+#include "cryptonote_protocol/ICryptoNoteProtocolQuery.h"
+#include "cryptonote_protocol/ICryptoNoteProtocolObserver.h"
+#include "cryptonote_core/ICore.h"
+#include "cryptonote_core/ICoreObserver.h"
 #include "common/ObserverManager.h"
 #include "BlockchainExplorer/BlockchainExplorerDataBuilder.h"
 

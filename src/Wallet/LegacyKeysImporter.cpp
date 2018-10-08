@@ -9,9 +9,9 @@
 
 #include "common/StringTools.h"
 
-#include "CryptoNoteCore/Currency.h"
-#include "CryptoNoteCore/Account.h"
-#include "CryptoNoteCore/CryptoNoteTools.h"
+#include "cryptonote_core/Currency.h"
+#include "cryptonote_core/Account.h"
+#include "cryptonote_core/CryptoNoteTools.h"
 
 #include "Serialization/SerializationTools.h"
 

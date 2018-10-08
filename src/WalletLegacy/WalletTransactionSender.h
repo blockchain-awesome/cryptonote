@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "CryptoNoteCore/Account.h"
-#include "CryptoNoteCore/Currency.h"
+#include "cryptonote_core/Account.h"
+#include "cryptonote_core/Currency.h"
 
 #include "INode.h"
 #include "WalletLegacy/WalletSendTransactionContext.h"

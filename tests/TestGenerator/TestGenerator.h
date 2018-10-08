@@ -10,11 +10,11 @@
 #include <unordered_map>
 
 #include "crypto/hash.h"
-#include "CryptoNoteCore/CryptoNoteBasic.h"
-#include "CryptoNoteCore/CryptoNoteBasicImpl.h"
-#include "CryptoNoteCore/CryptoNoteFormatUtils.h"
-#include "CryptoNoteCore/Currency.h"
-#include "CryptoNoteCore/Difficulty.h"
+#include "cryptonote_core/CryptoNoteBasic.h"
+#include "cryptonote_core/CryptoNoteBasicImpl.h"
+#include "cryptonote_core/CryptoNoteFormatUtils.h"
+#include "cryptonote_core/Currency.h"
+#include "cryptonote_core/Difficulty.h"
 
 
 class test_generator

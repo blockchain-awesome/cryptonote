@@ -11,7 +11,7 @@
 #include "../common/Util.h"
 #include "../common/StringTools.h"
 #include "../crypto/crypto.h"
-#include "../CryptoNoteProtocol/CryptoNoteProtocolDefinitions.h"
+#include "../cryptonote_protocol/CryptoNoteProtocolDefinitions.h"
 #include "../Logging/LoggerRef.h"
 #include "../Rpc/CoreRpcServerCommandsDefinitions.h"
 #include "CryptoNoteFormatUtils.h"
@@ -23,7 +23,7 @@
 #undef ERROR
 
 using namespace Logging;
-#include "CryptoNoteCore/CoreConfig.h"
+#include "cryptonote_core/CoreConfig.h"
 
 using namespace  Common;
 

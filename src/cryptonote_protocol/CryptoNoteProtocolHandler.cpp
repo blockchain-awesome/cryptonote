@@ -9,11 +9,11 @@
 #include <boost/uuid/uuid_io.hpp>
 #include <System/Dispatcher.h>
 
-#include "CryptoNoteCore/CryptoNoteBasicImpl.h"
-#include "CryptoNoteCore/CryptoNoteFormatUtils.h"
-#include "CryptoNoteCore/CryptoNoteTools.h"
-#include "CryptoNoteCore/Currency.h"
-#include "CryptoNoteCore/VerificationContext.h"
+#include "cryptonote_core/CryptoNoteBasicImpl.h"
+#include "cryptonote_core/CryptoNoteFormatUtils.h"
+#include "cryptonote_core/CryptoNoteTools.h"
+#include "cryptonote_core/Currency.h"
+#include "cryptonote_core/VerificationContext.h"
 #include "P2p/LevinProtocol.h"
 
 using namespace Logging;

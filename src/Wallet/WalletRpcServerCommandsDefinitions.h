@@ -3,8 +3,8 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #pragma once
-#include "CryptoNoteProtocol/CryptoNoteProtocolDefinitions.h"
-#include "CryptoNoteCore/CryptoNoteBasic.h"
+#include "cryptonote_protocol/CryptoNoteProtocolDefinitions.h"
+#include "cryptonote_core/CryptoNoteBasic.h"
 #include "crypto/hash.h"
 #include "Rpc/CoreRpcServerCommandsDefinitions.h"
 #include "WalletRpcServerErrorCodes.h"

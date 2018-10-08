@@ -9,7 +9,7 @@
 
 #include <Logging/ConsoleLogger.h>
 #include <System/Dispatcher.h>
-#include "CryptoNoteCore/Currency.h"
+#include "cryptonote_core/Currency.h"
 
 #include "../IntegrationTestLib/TestNetwork.h"
 

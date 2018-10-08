@@ -9,13 +9,13 @@
 
 // CryptoNote
 #include "common/StringTools.h"
-#include "CryptoNoteCore/CryptoNoteTools.h"
-#include "CryptoNoteCore/Core.h"
-#include "CryptoNoteCore/IBlock.h"
-#include "CryptoNoteCore/Miner.h"
-#include "CryptoNoteCore/TransactionExtra.h"
+#include "cryptonote_core/CryptoNoteTools.h"
+#include "cryptonote_core/Core.h"
+#include "cryptonote_core/IBlock.h"
+#include "cryptonote_core/Miner.h"
+#include "cryptonote_core/TransactionExtra.h"
 
-#include "CryptoNoteProtocol/ICryptoNoteProtocolQuery.h"
+#include "cryptonote_protocol/ICryptoNoteProtocolQuery.h"
 
 #include "P2p/NetNode.h"
 

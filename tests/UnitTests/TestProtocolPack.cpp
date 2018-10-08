@@ -5,7 +5,7 @@
 #include <boost/lexical_cast.hpp>
 
 #include "gtest/gtest.h"
-#include "CryptoNoteProtocol/CryptoNoteProtocolDefinitions.h"
+#include "cryptonote_protocol/CryptoNoteProtocolDefinitions.h"
 #include "Serialization/SerializationTools.h"
 
 TEST(protocol_pack, protocol_pack_command) 

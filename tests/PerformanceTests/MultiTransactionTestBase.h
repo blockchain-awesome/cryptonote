@@ -6,11 +6,11 @@
 
 #include <vector>
 
-#include "CryptoNoteCore/Account.h"
-#include "CryptoNoteCore/CryptoNoteBasic.h"
-#include "CryptoNoteCore/CryptoNoteFormatUtils.h"
-#include "CryptoNoteCore/Currency.h"
-#include "CryptoNoteCore/TransactionExtra.h"
+#include "cryptonote_core/Account.h"
+#include "cryptonote_core/CryptoNoteBasic.h"
+#include "cryptonote_core/CryptoNoteFormatUtils.h"
+#include "cryptonote_core/Currency.h"
+#include "cryptonote_core/TransactionExtra.h"
 
 #include "crypto/crypto.h"
 

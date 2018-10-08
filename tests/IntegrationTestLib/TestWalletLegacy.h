@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "CryptoNoteCore/Currency.h"
+#include "cryptonote_core/Currency.h"
 #include "INode.h"
 #include "IWalletLegacy.h"
 #include "System/Dispatcher.h"

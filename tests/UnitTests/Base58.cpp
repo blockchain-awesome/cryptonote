@@ -7,9 +7,9 @@
 #include <cstdint>
 #include <Logging/LoggerGroup.h>
 
-#include "CryptoNoteCore/CryptoNoteBasicImpl.h"
-#include "CryptoNoteCore/Currency.h"
-#include "CryptoNoteCore/CryptoNoteSerialization.h"
+#include "cryptonote_core/CryptoNoteBasicImpl.h"
+#include "cryptonote_core/Currency.h"
+#include "cryptonote_core/CryptoNoteSerialization.h"
 
 #include "Serialization/BinarySerializationTools.h"
 #include "common/Base58.cpp"

@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "CryptoNoteCore/CryptoNoteBasic.h"
-#include "CryptoNoteCore/Difficulty.h"
+#include "cryptonote_core/CryptoNoteBasic.h"
+#include "cryptonote_core/Difficulty.h"
 
 namespace CryptoNote {
   struct IMinerHandler {

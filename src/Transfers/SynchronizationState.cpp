@@ -8,7 +8,7 @@
 #include "common/StdOutputStream.h"
 #include "Serialization/BinaryInputStreamSerializer.h"
 #include "Serialization/BinaryOutputStreamSerializer.h"
-#include "CryptoNoteCore/CryptoNoteSerialization.h"
+#include "cryptonote_core/CryptoNoteSerialization.h"
 
 using namespace Common;
 

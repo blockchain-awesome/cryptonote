@@ -3,7 +3,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "TransactionApiHelpers.h"
-#include "CryptoNoteCore/TransactionApi.h"
+#include "cryptonote_core/TransactionApi.h"
 
 using namespace CryptoNote;
 using namespace Crypto;

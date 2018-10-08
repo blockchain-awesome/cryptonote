@@ -21,14 +21,14 @@
 #include "common/ObserverManager.h"
 #include "crypto/hash.h"
 
-#include "CryptoNoteCore/CryptoNoteBasic.h"
-#include "CryptoNoteCore/CryptoNoteBasicImpl.h"
-#include "CryptoNoteCore/Currency.h"
-#include "CryptoNoteCore/ITimeProvider.h"
-#include "CryptoNoteCore/ITransactionValidator.h"
-#include "CryptoNoteCore/ITxPoolObserver.h"
-#include "CryptoNoteCore/VerificationContext.h"
-#include "CryptoNoteCore/BlockchainIndices.h"
+#include "cryptonote_core/CryptoNoteBasic.h"
+#include "cryptonote_core/CryptoNoteBasicImpl.h"
+#include "cryptonote_core/Currency.h"
+#include "cryptonote_core/ITimeProvider.h"
+#include "cryptonote_core/ITransactionValidator.h"
+#include "cryptonote_core/ITxPoolObserver.h"
+#include "cryptonote_core/VerificationContext.h"
+#include "cryptonote_core/BlockchainIndices.h"
 
 #include <Logging/LoggerRef.h>
 

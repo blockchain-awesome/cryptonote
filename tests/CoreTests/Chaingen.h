@@ -6,17 +6,17 @@
 
 #include <boost/program_options.hpp>
 #include <boost/serialization/variant.hpp>
-#include "CryptoNoteCore/CoreConfig.h"
+#include "cryptonote_core/CoreConfig.h"
 
 #include "common/CommandLine.h"
 #include "common/ConsoleTools.h"
 
-#include "CryptoNoteCore/Account.h"
-#include "CryptoNoteCore/Core.h"
-#include "CryptoNoteCore/TransactionExtra.h"
+#include "cryptonote_core/Account.h"
+#include "cryptonote_core/Core.h"
+#include "cryptonote_core/TransactionExtra.h"
 
 #include "../TestGenerator/TestGenerator.h"
-#include "CryptoNoteCore/CryptoNoteTools.h"
+#include "cryptonote_core/CryptoNoteTools.h"
 
 #include "BoostSerializationHelper.h"
 #include "AccountBoostSerialization.h"

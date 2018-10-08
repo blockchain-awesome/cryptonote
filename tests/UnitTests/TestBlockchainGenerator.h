@@ -7,10 +7,10 @@
 #include <vector>
 #include <unordered_map>
 
-#include "CryptoNoteCore/Account.h"
-#include "CryptoNoteCore/CryptoNoteBasic.h"
-#include "CryptoNoteCore/Currency.h"
-#include "CryptoNoteCore/BlockchainIndices.h"
+#include "cryptonote_core/Account.h"
+#include "cryptonote_core/CryptoNoteBasic.h"
+#include "cryptonote_core/Currency.h"
+#include "cryptonote_core/BlockchainIndices.h"
 #include "crypto/hash.h"
 
 #include "../TestGenerator/TestGenerator.h"

@@ -3,8 +3,8 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "TransactionBuilder.h"
-#include "CryptoNoteCore/TransactionExtra.h"
-#include "CryptoNoteCore/CryptoNoteTools.h"
+#include "cryptonote_core/TransactionExtra.h"
+#include "cryptonote_core/CryptoNoteTools.h"
 
 using namespace CryptoNote;
 using namespace Crypto;

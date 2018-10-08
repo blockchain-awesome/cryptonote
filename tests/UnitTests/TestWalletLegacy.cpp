@@ -12,8 +12,8 @@
 #include "INode.h"
 #include "WalletLegacy/WalletLegacy.h"
 #include "WalletLegacy/WalletHelper.h"
-#include "CryptoNoteCore/Account.h"
-#include "CryptoNoteCore/Currency.h"
+#include "cryptonote_core/Account.h"
+#include "cryptonote_core/Currency.h"
 #include "CryptoNote.h"
 
 #include "INodeStubs.h"

@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "CryptoNoteCore/CryptoNoteBasic.h"
-#include "CryptoNoteCore/CryptoNoteFormatUtils.h"
+#include "cryptonote_core/CryptoNoteBasic.h"
+#include "cryptonote_core/CryptoNoteFormatUtils.h"
 
 #include "SingleTransactionTestBase.h"
 

@@ -12,10 +12,10 @@
 #include "ICoreStub.h"
 #include "ICryptoNoteProtocolQueryStub.h"
 #include "INodeStubs.h"
-#include "CryptoNoteCore/TransactionApi.h"
+#include "cryptonote_core/TransactionApi.h"
 #include "TestBlockchainGenerator.h"
 
-#include "CryptoNoteCore/CryptoNoteTools.h"
+#include "cryptonote_core/CryptoNoteTools.h"
 
 #include "Logging/FileLogger.h"
 

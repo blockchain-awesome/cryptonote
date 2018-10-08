@@ -2,7 +2,7 @@
 #pragma once
 
 #include <string>
-#include <CryptoNoteCore/Account.h>
+#include <cryptonote_core/Account.h>
 
 namespace api
 {

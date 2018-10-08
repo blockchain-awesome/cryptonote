@@ -11,19 +11,19 @@
 
 #include "common/ObserverManager.h"
 #include "common/Util.h"
-#include "CryptoNoteCore/BlockIndex.h"
-#include "CryptoNoteCore/Checkpoints.h"
-#include "CryptoNoteCore/Currency.h"
-#include "CryptoNoteCore/IBlockchainStorageObserver.h"
-#include "CryptoNoteCore/ITransactionValidator.h"
-#include "CryptoNoteCore/SwappedVector.h"
-#include "CryptoNoteCore/CryptoNoteFormatUtils.h"
-#include "CryptoNoteCore/TransactionPool.h"
-#include "CryptoNoteCore/BlockchainIndices.h"
+#include "cryptonote_core/BlockIndex.h"
+#include "cryptonote_core/Checkpoints.h"
+#include "cryptonote_core/Currency.h"
+#include "cryptonote_core/IBlockchainStorageObserver.h"
+#include "cryptonote_core/ITransactionValidator.h"
+#include "cryptonote_core/SwappedVector.h"
+#include "cryptonote_core/CryptoNoteFormatUtils.h"
+#include "cryptonote_core/TransactionPool.h"
+#include "cryptonote_core/BlockchainIndices.h"
 
-#include "CryptoNoteCore/MessageQueue.h"
-#include "CryptoNoteCore/BlockchainMessages.h"
-#include "CryptoNoteCore/IntrusiveLinkedList.h"
+#include "cryptonote_core/MessageQueue.h"
+#include "cryptonote_core/BlockchainMessages.h"
+#include "cryptonote_core/IntrusiveLinkedList.h"
 
 #include <Logging/LoggerRef.h>
 

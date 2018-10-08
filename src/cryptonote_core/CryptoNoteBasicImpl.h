@@ -7,7 +7,7 @@
 #include "common/StringTools.h"
 #include "crypto/crypto.h"
 #include "crypto/hash.h"
-#include "CryptoNoteCore/CryptoNoteBasic.h"
+#include "cryptonote_core/CryptoNoteBasic.h"
 
 
 namespace CryptoNote {

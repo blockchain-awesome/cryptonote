@@ -8,12 +8,12 @@
 
 #include <common/ObserverManager.h>
 
-#include "CryptoNoteCore/ICore.h"
+#include "cryptonote_core/ICore.h"
 
-#include "CryptoNoteProtocol/CryptoNoteProtocolDefinitions.h"
-#include "CryptoNoteProtocol/CryptoNoteProtocolHandlerCommon.h"
-#include "CryptoNoteProtocol/ICryptoNoteProtocolObserver.h"
-#include "CryptoNoteProtocol/ICryptoNoteProtocolQuery.h"
+#include "cryptonote_protocol/CryptoNoteProtocolDefinitions.h"
+#include "cryptonote_protocol/CryptoNoteProtocolHandlerCommon.h"
+#include "cryptonote_protocol/ICryptoNoteProtocolObserver.h"
+#include "cryptonote_protocol/ICryptoNoteProtocolQuery.h"
 
 #include "P2p/P2pProtocolDefinitions.h"
 #include "P2p/NetNodeCommon.h"

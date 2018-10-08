@@ -11,10 +11,10 @@
 #include <system_error>
 
 #include <CryptoNote.h>
-#include "CryptoNoteCore/Difficulty.h"
+#include "cryptonote_core/Difficulty.h"
 
-#include "CryptoNoteCore/MessageQueue.h"
-#include "CryptoNoteCore/BlockchainMessages.h"
+#include "cryptonote_core/MessageQueue.h"
+#include "cryptonote_core/BlockchainMessages.h"
 
 namespace CryptoNote {
 

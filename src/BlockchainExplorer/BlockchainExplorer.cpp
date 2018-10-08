@@ -8,7 +8,7 @@
 #include <functional>
 #include <memory>
 
-#include "CryptoNoteCore/CryptoNoteFormatUtils.h"
+#include "cryptonote_core/CryptoNoteFormatUtils.h"
 #include "CryptoNoteConfig.h"
 
 #include "BlockchainExplorerErrors.h"

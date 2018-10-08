@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include <Logging/LoggerManager.h>
-#include <CryptoNoteCore/Currency.h>
+#include <cryptonote_core/Currency.h>
 
 #include "cli.h"
 #include "version.h"

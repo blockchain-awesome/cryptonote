@@ -4,10 +4,10 @@
 
 #include "ICoreStub.h"
 
-#include "CryptoNoteCore/CryptoNoteFormatUtils.h"
-#include "CryptoNoteCore/CryptoNoteTools.h"
-#include "CryptoNoteCore/IBlock.h"
-#include "CryptoNoteCore/VerificationContext.h"
+#include "cryptonote_core/CryptoNoteFormatUtils.h"
+#include "cryptonote_core/CryptoNoteTools.h"
+#include "cryptonote_core/IBlock.h"
+#include "cryptonote_core/VerificationContext.h"
 
 
 ICoreStub::ICoreStub() :

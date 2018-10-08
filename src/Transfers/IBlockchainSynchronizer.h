@@ -10,7 +10,7 @@
 #include <unordered_set>
 
 #include "crypto/crypto.h"
-#include "CryptoNoteCore/CryptoNoteBasic.h"
+#include "cryptonote_core/CryptoNoteBasic.h"
 
 #include "IObservable.h"
 #include "IStreamSerializable.h"

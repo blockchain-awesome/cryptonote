@@ -6,7 +6,7 @@
 
 #include "NodeRpcProxy/NodeRpcProxy.h"
 #include "Wallet/WalletGreen.h"
-#include "CryptoNoteCore/Currency.h"
+#include "cryptonote_core/Currency.h"
 
 #include <stdlib.h>
 #include <future>

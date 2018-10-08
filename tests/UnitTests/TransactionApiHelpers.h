@@ -8,9 +8,9 @@
 #include "ITransaction.h"
 #include "crypto/crypto.h"
 
-#include "CryptoNoteCore/Account.h"
-#include "CryptoNoteCore/CryptoNoteFormatUtils.h"
-#include "CryptoNoteCore/CryptoNoteTools.h"
+#include "cryptonote_core/Account.h"
+#include "cryptonote_core/CryptoNoteFormatUtils.h"
+#include "cryptonote_core/CryptoNoteTools.h"
 
 #include "Transfers/TransfersContainer.h"
 

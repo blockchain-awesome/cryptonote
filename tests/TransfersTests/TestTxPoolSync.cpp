@@ -4,10 +4,10 @@
 
 #include "gtest/gtest.h"
 
-#include "CryptoNoteCore/Account.h"
-#include "CryptoNoteCore/CoreConfig.h"
-#include "CryptoNoteCore/Core.h"
-#include "CryptoNoteCore/Currency.h"
+#include "cryptonote_core/Account.h"
+#include "cryptonote_core/CoreConfig.h"
+#include "cryptonote_core/Core.h"
+#include "cryptonote_core/Currency.h"
 #include "Logging/LoggerManager.h"
 #include "P2p/NetNodeConfig.h"
 #include "System/Dispatcher.h"

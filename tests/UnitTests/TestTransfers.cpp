@@ -10,7 +10,7 @@
 #include "INodeStubs.h"
 #include "TestBlockchainGenerator.h"
 #include "TransactionApiHelpers.h"
-#include "CryptoNoteCore/TransactionApi.h"
+#include "cryptonote_core/TransactionApi.h"
 
 #include <boost/scoped_array.hpp>
 

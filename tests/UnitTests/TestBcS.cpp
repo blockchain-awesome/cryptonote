@@ -8,9 +8,9 @@
 #include "Transfers/TransfersConsumer.h"
 
 #include "crypto/hash.h"
-#include "CryptoNoteCore/TransactionApi.h"
-#include "CryptoNoteCore/CryptoNoteFormatUtils.h"
-#include "CryptoNoteCore/CryptoNoteTools.h"
+#include "cryptonote_core/TransactionApi.h"
+#include "cryptonote_core/CryptoNoteFormatUtils.h"
+#include "cryptonote_core/CryptoNoteTools.h"
 #include "Logging/ConsoleLogger.h"
 
 #include "INodeStubs.h"

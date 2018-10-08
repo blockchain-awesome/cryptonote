@@ -8,8 +8,8 @@
 
 #include "CommonTypes.h"
 #include "common/BlockingQueue.h"
-#include "CryptoNoteCore/CryptoNoteFormatUtils.h"
-#include "CryptoNoteCore/TransactionApi.h"
+#include "cryptonote_core/CryptoNoteFormatUtils.h"
+#include "cryptonote_core/TransactionApi.h"
 
 #include "IWallet.h"
 #include "INode.h"

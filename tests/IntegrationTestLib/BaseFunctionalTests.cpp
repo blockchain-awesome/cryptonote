@@ -19,8 +19,8 @@
 #include <System/InterruptedException.h>
 
 #include "P2p/NetNodeConfig.h"
-#include "CryptoNoteCore/CoreConfig.h"
-#include "CryptoNoteCore/CryptoNoteTools.h"
+#include "cryptonote_core/CoreConfig.h"
+#include "cryptonote_core/CryptoNoteTools.h"
 #include "WalletLegacy/WalletLegacy.h"
 
 #include "Logger.h"

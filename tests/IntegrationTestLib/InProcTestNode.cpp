@@ -9,10 +9,10 @@
 #include <common/StringTools.h>
 #include <Logging/ConsoleLogger.h>
 
-#include "CryptoNoteCore/Core.h"
-#include "CryptoNoteCore/CoreConfig.h"
-#include "CryptoNoteCore/Miner.h"
-#include "CryptoNoteProtocol/CryptoNoteProtocolHandler.h"
+#include "cryptonote_core/Core.h"
+#include "cryptonote_core/CoreConfig.h"
+#include "cryptonote_core/Miner.h"
+#include "cryptonote_protocol/CryptoNoteProtocolHandler.h"
 #include "P2p/NetNode.h"
 #include "InProcessNode/InProcessNode.h"
 

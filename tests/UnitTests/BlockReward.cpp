@@ -4,8 +4,8 @@
 
 #include "gtest/gtest.h"
 
-#include "CryptoNoteCore/CryptoNoteBasicImpl.h"
-#include "CryptoNoteCore/Currency.h"
+#include "cryptonote_core/CryptoNoteBasicImpl.h"
+#include "cryptonote_core/Currency.h"
 #include <Logging/LoggerGroup.h>
 
 using namespace CryptoNote;

@@ -7,8 +7,8 @@
 #include <vector>
 #include <array>
 
-#include "CryptoNoteProtocol/ICryptoNoteProtocolQuery.h"
-#include "CryptoNoteCore/ICore.h"
+#include "cryptonote_protocol/ICryptoNoteProtocolQuery.h"
+#include "cryptonote_core/ICore.h"
 #include "BlockchainExplorerData.h"
 
 namespace CryptoNote {

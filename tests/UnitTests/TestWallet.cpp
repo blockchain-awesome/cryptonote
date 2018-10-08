@@ -10,9 +10,9 @@
 #include <tuple>
 
 #include "common/StringTools.h"
-#include "CryptoNoteCore/Currency.h"
-#include "CryptoNoteCore/TransactionApi.h"
-#include "CryptoNoteCore/TransactionApiExtra.h"
+#include "cryptonote_core/Currency.h"
+#include "cryptonote_core/TransactionApi.h"
+#include "cryptonote_core/TransactionApiExtra.h"
 #include "INodeStubs.h"
 #include "TestBlockchainGenerator.h"
 #include "TransactionApiHelpers.h"

@@ -11,9 +11,9 @@
 #include "Logging/LoggerRef.h"
 #include "MultiServiceJsonRpcServer.h"
 
-#include "CryptoNoteCore/CoreConfig.h"
-#include "CryptoNoteCore/Core.h"
-#include "CryptoNoteProtocol/CryptoNoteProtocolHandler.h"
+#include "cryptonote_core/CoreConfig.h"
+#include "cryptonote_core/Core.h"
+#include "cryptonote_protocol/CryptoNoteProtocolHandler.h"
 #include "P2p/NetNode.h"
 #include "PaymentGate/WalletFactory.h"
 #include <System/Context.h>

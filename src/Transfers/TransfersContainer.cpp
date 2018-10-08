@@ -6,7 +6,7 @@
 #include "IWalletLegacy.h"
 #include "common/StdInputStream.h"
 #include "common/StdOutputStream.h"
-#include "CryptoNoteCore/CryptoNoteFormatUtils.h"
+#include "cryptonote_core/CryptoNoteFormatUtils.h"
 #include "Serialization/BinaryInputStreamSerializer.h"
 #include "Serialization/BinaryOutputStreamSerializer.h"
 #include "Serialization/SerializationOverloads.h"

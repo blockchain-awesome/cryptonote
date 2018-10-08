@@ -17,7 +17,7 @@
 #include <System/Dispatcher.h>
 #include <Logging/ConsoleLogger.h>
 
-#include "CryptoNoteCore/Currency.h"
+#include "cryptonote_core/Currency.h"
 #include "IWalletLegacy.h"
 #include "INode.h"
 #include "TestNode.h"

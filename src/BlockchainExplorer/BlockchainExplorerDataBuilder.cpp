@@ -8,9 +8,9 @@
 #include <boost/range/combine.hpp>
 
 #include "common/StringTools.h"
-#include "CryptoNoteCore/CryptoNoteFormatUtils.h"
-#include "CryptoNoteCore/CryptoNoteTools.h"
-#include "CryptoNoteCore/TransactionExtra.h"
+#include "cryptonote_core/CryptoNoteFormatUtils.h"
+#include "cryptonote_core/CryptoNoteTools.h"
+#include "cryptonote_core/TransactionExtra.h"
 #include "CryptoNoteConfig.h"
 
 namespace CryptoNote {
