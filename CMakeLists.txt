@@ -14,7 +14,7 @@ configure_file(${CMAKE_SOURCE_DIR}/CTestCustom.cmake ${CMAKE_BINARY_DIR})
 
 project(CryptoNote)
 
-include_directories(include src external "${CMAKE_BINARY_DIR}/version")
+include_directories(include src external contrib/epee/include "${CMAKE_BINARY_DIR}/version")
 if(APPLE)
   include_directories(SYSTEM /usr/include/malloc)
   enable_language(ASM)
