@@ -87,7 +87,7 @@ struct EllipticCurveScalar {
   typename std::enable_if<std::is_pod<T>::value, T>::type rand() {
     typename std::remove_cv<T>::type res;
     std::lock_guard<std::mutex> lock(random_lock);
-    generate_random_bytes(sizeof(T), &res);
+    generate_random_bytes_not_thread_safe(sizeof(T), &res);
     return res;
   }
 
