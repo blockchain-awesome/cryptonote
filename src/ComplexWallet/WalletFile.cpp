@@ -2,7 +2,7 @@
 
 #include <fstream>
 
-#include "crypto/chacha8.h"
+#include "crypto/chacha.h"
 #include "CryptoNoteConfig.h"
 #include "WalletLegacy/KeysStorage.h"
 #include "Common/StringTools.h"

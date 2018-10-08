@@ -9,7 +9,7 @@
 #include <istream>
 
 #include "crypto/hash.h"
-#include "crypto/chacha8.h"
+#include "crypto/chacha.h"
 
 namespace CryptoNote {
 class AccountBase;
