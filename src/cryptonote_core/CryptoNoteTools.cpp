@@ -20,12 +20,12 @@ bool toBinaryArray(const BinaryArray& object, BinaryArray& binaryArray) {
   return true;
 }
 
-void getBinaryArrayHash(const BinaryArray& binaryArray, Crypto::Hash& hash) {
+void getBinaryArrayHash(const BinaryArray& binaryArray, crypto::Hash& hash) {
   cn_fast_hash(binaryArray.data(), binaryArray.size(), hash);
 }
 
-Crypto::Hash getBinaryArrayHash(const BinaryArray& binaryArray) {
-  Crypto::Hash hash;
+crypto::Hash getBinaryArrayHash(const BinaryArray& binaryArray) {
+  crypto::Hash hash;
   getBinaryArrayHash(binaryArray, hash);
   return hash;
 }

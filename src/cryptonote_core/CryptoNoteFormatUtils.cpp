@@ -20,7 +20,7 @@
 #include "CryptoNoteConfig.h"
 
 using namespace Logging;
-using namespace Crypto;
+using namespace crypto;
 using namespace Common;
 
 namespace CryptoNote {

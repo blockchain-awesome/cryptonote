@@ -98,15 +98,15 @@ bool test_transaction_generation_and_ring_signature()
   bool r = constructTransaction(miner_acc2.getAccountKeys(), sources, destinations, std::vector<uint8_t>(), tx_rc1, 0, logger);
   CHECK_AND_ASSERT_MES(r, false, "failed to construct transaction");
 
-  Crypto::Hash pref_hash = getObjectHash(*static_cast<TransactionPrefix*>(&tx_rc1));
-  std::vector<const Crypto::PublicKey *> output_keys;
+  crypto::Hash pref_hash = getObjectHash(*static_cast<TransactionPrefix*>(&tx_rc1));
+  std::vector<const crypto::PublicKey *> output_keys;
   output_keys.push_back(&boost::get<KeyOutput>(tx_mine_1.outputs[0].target).key);
   output_keys.push_back(&boost::get<KeyOutput>(tx_mine_2.outputs[0].target).key);
   output_keys.push_back(&boost::get<KeyOutput>(tx_mine_3.outputs[0].target).key);
   output_keys.push_back(&boost::get<KeyOutput>(tx_mine_4.outputs[0].target).key);
   output_keys.push_back(&boost::get<KeyOutput>(tx_mine_5.outputs[0].target).key);
   output_keys.push_back(&boost::get<KeyOutput>(tx_mine_6.outputs[0].target).key);
-  r = Crypto::check_ring_signature(pref_hash, boost::get<KeyInput>(tx_rc1.inputs[0]).keyImage,
+  r = crypto::check_ring_signature(pref_hash, boost::get<KeyInput>(tx_rc1.inputs[0]).keyImage,
     output_keys, &tx_rc1.signatures[0][0]);
   CHECK_AND_ASSERT_MES(r, false, "failed to check ring signature");
 

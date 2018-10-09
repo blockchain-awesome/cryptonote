@@ -19,7 +19,7 @@
 #include "cryptonote_core/VerificationContext.h"
 #include "common/StringTools.h"
 
-using namespace Crypto;
+using namespace crypto;
 using namespace CryptoNote;
 using namespace Common;
 
@@ -107,7 +107,7 @@ TEST_F(InProcessNodeTests, getPeersCountSuccess) {
 }
 
 TEST_F(InProcessNodeTests, getLastLocalBlockHeightSuccess) {
-  Crypto::Hash ignore;
+  crypto::Hash ignore;
   coreStub.set_blockchain_top(10, ignore);
 
   ASSERT_EQ(10, node.getLastLocalBlockHeight());
@@ -119,7 +119,7 @@ TEST_F(InProcessNodeTests, getLastKnownBlockHeightSuccess) {
 }
 
 TEST_F(InProcessNodeTests, getTransactionOutsGlobalIndicesSuccess) {
-  Crypto::Hash ignore;
+  crypto::Hash ignore;
   std::vector<uint32_t> indices;
   std::vector<uint32_t> expectedIndices;
 
@@ -137,7 +137,7 @@ TEST_F(InProcessNodeTests, getTransactionOutsGlobalIndicesSuccess) {
 }
 
 TEST_F(InProcessNodeTests, getTransactionOutsGlobalIndicesFailure) {
-  Crypto::Hash ignore;
+  crypto::Hash ignore;
   std::vector<uint32_t> indices;
   coreStub.set_outputs_gindexs(indices, false);
 
@@ -148,9 +148,9 @@ TEST_F(InProcessNodeTests, getTransactionOutsGlobalIndicesFailure) {
 }
 
 TEST_F(InProcessNodeTests, getRandomOutsByAmountsSuccess) {
-  Crypto::PublicKey ignoredPublicKey;
-  Crypto::SecretKey ignoredSectetKey;
-  Crypto::generate_keys(ignoredPublicKey, ignoredSectetKey);
+  crypto::PublicKey ignoredPublicKey;
+  crypto::SecretKey ignoredSectetKey;
+  crypto::generate_keys(ignoredPublicKey, ignoredSectetKey);
 
   CryptoNote::COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_response expectedResp;
   CryptoNote::COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_outs_for_amount out;
@@ -200,7 +200,7 @@ TEST_F(InProcessNodeTests, getLastKnownBlockHeightUninitialized) {
 
 TEST_F(InProcessNodeTests, getNewBlocksUninitialized) {
   CryptoNote::InProcessNode newNode(coreStub, protocolQueryStub);
-  std::vector<Crypto::Hash> knownBlockIds;
+  std::vector<crypto::Hash> knownBlockIds;
   std::vector<CryptoNote::block_complete_entry> newBlocks;
   uint32_t startHeight;
 
@@ -215,7 +215,7 @@ TEST_F(InProcessNodeTests, getTransactionOutsGlobalIndicesUninitialized) {
   std::vector<uint32_t> outsGlobalIndices;
 
   CallbackStatus status;
-  newNode.getTransactionOutsGlobalIndices(Crypto::Hash(), outsGlobalIndices, [&] (std::error_code ec) { status.setStatus(ec); });
+  newNode.getTransactionOutsGlobalIndices(crypto::Hash(), outsGlobalIndices, [&] (std::error_code ec) { status.setStatus(ec); });
   ASSERT_TRUE(status.wait());
   ASSERT_NE(std::error_code(), status.getStatus());
 }
@@ -245,7 +245,7 @@ TEST_F(InProcessNodeTests, getBlocksByHeightEmpty) {
   ASSERT_EQ(blockHeights.size(), 0);
   ASSERT_EQ(blocks.size(), 0);
 
-  coreStub.set_blockchain_top(0, boost::value_initialized<Crypto::Hash>());
+  coreStub.set_blockchain_top(0, boost::value_initialized<crypto::Hash>());
 
   CallbackStatus status;
   node.getBlocks(blockHeights, blocks, [&status] (std::error_code ec) { status.setStatus(ec); });
@@ -261,7 +261,7 @@ TEST_F(InProcessNodeTests, getBlocksByHeightMany) {
 
   std::vector<CryptoNote::Block> expectedBlocks;
 
-  coreStub.set_blockchain_top(0, boost::value_initialized<Crypto::Hash>());
+  coreStub.set_blockchain_top(0, boost::value_initialized<crypto::Hash>());
 
   generator.generateEmptyBlocks(NUMBER_OF_BLOCKS);
   ASSERT_GE(generator.getBlockchain().size(), NUMBER_OF_BLOCKS);
@@ -289,7 +289,7 @@ TEST_F(InProcessNodeTests, getBlocksByHeightMany) {
     EXPECT_EQ(sameHeight.get<1>().size(), 1);
     for (const CryptoNote::BlockDetails& block : sameHeight.get<1>()) {
       EXPECT_EQ(block.height, sameHeight.get<0>().get<0>());
-      Crypto::Hash expectedCryptoHash = CryptoNote::get_block_hash(sameHeight.get<0>().get<1>());
+      crypto::Hash expectedCryptoHash = CryptoNote::get_block_hash(sameHeight.get<0>().get<1>());
       Hash expectedHash = reinterpret_cast<const Hash&>(expectedCryptoHash);
       EXPECT_EQ(block.hash, expectedHash);
       EXPECT_FALSE(block.isOrphaned);
@@ -303,7 +303,7 @@ TEST_F(InProcessNodeTests, getBlocksByHeightFail) {
   std::vector<uint32_t> blockHeights;
   std::vector<std::vector<CryptoNote::BlockDetails>> actualBlocks;
 
-  coreStub.set_blockchain_top(0, boost::value_initialized<Crypto::Hash>());
+  coreStub.set_blockchain_top(0, boost::value_initialized<crypto::Hash>());
 
   generator.generateEmptyBlocks(NUMBER_OF_BLOCKS);
   ASSERT_LT(generator.getBlockchain().size(), NUMBER_OF_BLOCKS * 2);
@@ -339,12 +339,12 @@ TEST_F(InProcessNodeTests, getBlocksByHeightNotInited) {
 }
 
 TEST_F(InProcessNodeTests, getBlocksByHashEmpty) {
-  std::vector<Crypto::Hash> blockHashes;
+  std::vector<crypto::Hash> blockHashes;
   std::vector<CryptoNote::BlockDetails> blocks;
   ASSERT_EQ(blockHashes.size(), 0);
   ASSERT_EQ(blocks.size(), 0);
 
-  coreStub.set_blockchain_top(0, boost::value_initialized<Crypto::Hash>());
+  coreStub.set_blockchain_top(0, boost::value_initialized<crypto::Hash>());
 
   CallbackStatus status;
   node.getBlocks(blockHashes, blocks, [&status] (std::error_code ec) { status.setStatus(ec); });
@@ -355,12 +355,12 @@ TEST_F(InProcessNodeTests, getBlocksByHashEmpty) {
 TEST_F(InProcessNodeTests, getBlocksByHashMany) {
   const size_t NUMBER_OF_BLOCKS = 10;
 
-  std::vector<Crypto::Hash> blockHashes;
+  std::vector<crypto::Hash> blockHashes;
   std::vector<CryptoNote::BlockDetails> actualBlocks;
 
   std::vector<CryptoNote::Block> expectedBlocks;
 
-  coreStub.set_blockchain_top(0, boost::value_initialized<Crypto::Hash>());
+  coreStub.set_blockchain_top(0, boost::value_initialized<crypto::Hash>());
 
   generator.generateEmptyBlocks(NUMBER_OF_BLOCKS);
   ASSERT_GE(generator.getBlockchain().size(), NUMBER_OF_BLOCKS);
@@ -384,8 +384,8 @@ TEST_F(InProcessNodeTests, getBlocksByHashMany) {
   ASSERT_EQ(blockHashes.size(), actualBlocks.size());
   auto range1 = boost::combine(blockHashes, expectedBlocks);
   auto range = boost::combine(range1, actualBlocks);
-  for (const boost::tuple<boost::tuple<Crypto::Hash, CryptoNote::Block>, CryptoNote::BlockDetails>& sameHeight : range) {
-    Crypto::Hash expectedCryptoHash = CryptoNote::get_block_hash(sameHeight.get<0>().get<1>());
+  for (const boost::tuple<boost::tuple<crypto::Hash, CryptoNote::Block>, CryptoNote::BlockDetails>& sameHeight : range) {
+    crypto::Hash expectedCryptoHash = CryptoNote::get_block_hash(sameHeight.get<0>().get<1>());
     EXPECT_EQ(expectedCryptoHash, sameHeight.get<0>().get<0>());
     Hash expectedHash = reinterpret_cast<const Hash&>(expectedCryptoHash);
     EXPECT_EQ(sameHeight.get<1>().hash, expectedHash);
@@ -396,10 +396,10 @@ TEST_F(InProcessNodeTests, getBlocksByHashMany) {
 TEST_F(InProcessNodeTests, getBlocksByHashFail) {
   const size_t NUMBER_OF_BLOCKS = 10;
 
-  std::vector<Crypto::Hash> blockHashes;
+  std::vector<crypto::Hash> blockHashes;
   std::vector<CryptoNote::BlockDetails> actualBlocks;
 
-  coreStub.set_blockchain_top(0, boost::value_initialized<Crypto::Hash>());
+  coreStub.set_blockchain_top(0, boost::value_initialized<crypto::Hash>());
 
   generator.generateEmptyBlocks(NUMBER_OF_BLOCKS);
   ASSERT_LT(generator.getBlockchain().size(), NUMBER_OF_BLOCKS * 2);
@@ -409,7 +409,7 @@ TEST_F(InProcessNodeTests, getBlocksByHashFail) {
   }
 
   for (uint32_t i = 0; i < NUMBER_OF_BLOCKS * 2; ++i) {
-    blockHashes.push_back(boost::value_initialized<Crypto::Hash>());
+    blockHashes.push_back(boost::value_initialized<crypto::Hash>());
   }
 
   ASSERT_EQ(actualBlocks.size(), 0);
@@ -423,7 +423,7 @@ TEST_F(InProcessNodeTests, getBlocksByHashFail) {
 TEST_F(InProcessNodeTests, getBlocksByHashNotInited) {
   CryptoNote::InProcessNode newNode(coreStub, protocolQueryStub);
 
-  std::vector<Crypto::Hash> blockHashes;
+  std::vector<crypto::Hash> blockHashes;
   std::vector<CryptoNote::BlockDetails> blocks;
   ASSERT_EQ(blockHashes.size(), 0);
   ASSERT_EQ(blocks.size(), 0);
@@ -435,12 +435,12 @@ TEST_F(InProcessNodeTests, getBlocksByHashNotInited) {
 }
 
 TEST_F(InProcessNodeTests, getTxEmpty) {
-  std::vector<Crypto::Hash> transactionHashes;
+  std::vector<crypto::Hash> transactionHashes;
   std::vector<CryptoNote::TransactionDetails> transactions;
   ASSERT_EQ(transactionHashes.size(), 0);
   ASSERT_EQ(transactions.size(), 0);
 
-  coreStub.set_blockchain_top(0, boost::value_initialized<Crypto::Hash>());
+  coreStub.set_blockchain_top(0, boost::value_initialized<crypto::Hash>());
 
   CallbackStatus status;
   node.getTransactions(transactionHashes, transactions, [&status] (std::error_code ec) { status.setStatus(ec); });
@@ -452,12 +452,12 @@ TEST_F(InProcessNodeTests, getTxMany) {
   size_t POOL_TX_NUMBER = 10;
   size_t BLOCKCHAIN_TX_NUMBER = 10;
 
-  std::vector<Crypto::Hash> transactionHashes;
+  std::vector<crypto::Hash> transactionHashes;
   std::vector<CryptoNote::TransactionDetails> actualTransactions;
 
-  std::vector<std::tuple<CryptoNote::Transaction, Crypto::Hash, uint64_t>> expectedTransactions;
+  std::vector<std::tuple<CryptoNote::Transaction, crypto::Hash, uint64_t>> expectedTransactions;
 
-  coreStub.set_blockchain_top(0, boost::value_initialized<Crypto::Hash>());
+  coreStub.set_blockchain_top(0, boost::value_initialized<crypto::Hash>());
 
   size_t prevBlockchainSize = generator.getBlockchain().size();
   for (size_t i = 0; i < BLOCKCHAIN_TX_NUMBER; ++i) {
@@ -481,7 +481,7 @@ TEST_F(InProcessNodeTests, getTxMany) {
     auto tx = ::createTx(*txptr.get());
     transactionHashes.push_back(CryptoNote::getObjectHash(tx));
     coreStub.addTransaction(tx);
-    expectedTransactions.push_back(std::make_tuple(tx, boost::value_initialized<Crypto::Hash>(), boost::value_initialized<uint64_t>()));
+    expectedTransactions.push_back(std::make_tuple(tx, boost::value_initialized<crypto::Hash>(), boost::value_initialized<uint64_t>()));
   }
 
   ASSERT_EQ(transactionHashes.size(), BLOCKCHAIN_TX_NUMBER + POOL_TX_NUMBER);
@@ -498,12 +498,12 @@ TEST_F(InProcessNodeTests, getTxMany) {
   ASSERT_EQ(transactionHashes.size(), actualTransactions.size());
   auto range1 = boost::combine(transactionHashes, actualTransactions);
   auto range = boost::combine(range1, expectedTransactions);
-  for (const boost::tuple<boost::tuple<Crypto::Hash, CryptoNote::TransactionDetails>, std::tuple<CryptoNote::Transaction, Crypto::Hash, uint64_t>>& sameHeight : range) {
-    Crypto::Hash expectedCryptoHash = CryptoNote::getObjectHash(std::get<0>(sameHeight.get<1>()));
+  for (const boost::tuple<boost::tuple<crypto::Hash, CryptoNote::TransactionDetails>, std::tuple<CryptoNote::Transaction, crypto::Hash, uint64_t>>& sameHeight : range) {
+    crypto::Hash expectedCryptoHash = CryptoNote::getObjectHash(std::get<0>(sameHeight.get<1>()));
     EXPECT_EQ(expectedCryptoHash, sameHeight.get<0>().get<0>());
     Hash expectedHash = reinterpret_cast<const Hash&>(expectedCryptoHash);
     EXPECT_EQ(sameHeight.get<0>().get<1>().hash, expectedHash);
-    if (std::get<1>(sameHeight.get<1>()) != boost::value_initialized<Crypto::Hash>()) {
+    if (std::get<1>(sameHeight.get<1>()) != boost::value_initialized<crypto::Hash>()) {
       EXPECT_TRUE(sameHeight.get<0>().get<1>().inBlockchain);
       Hash expectedBlockHash = reinterpret_cast<const Hash&>(std::get<1>(sameHeight.get<1>()));
       EXPECT_EQ(sameHeight.get<0>().get<1>().blockHash, expectedBlockHash);
@@ -518,12 +518,12 @@ TEST_F(InProcessNodeTests, getTxFail) {
   size_t POOL_TX_NUMBER = 10;
   size_t BLOCKCHAIN_TX_NUMBER = 10;
 
-  std::vector<Crypto::Hash> transactionHashes;
+  std::vector<crypto::Hash> transactionHashes;
   std::vector<CryptoNote::TransactionDetails> actualTransactions;
 
-  std::vector<std::tuple<CryptoNote::Transaction, Crypto::Hash, uint64_t>> expectedTransactions;
+  std::vector<std::tuple<CryptoNote::Transaction, crypto::Hash, uint64_t>> expectedTransactions;
 
-  coreStub.set_blockchain_top(0, boost::value_initialized<Crypto::Hash>());
+  coreStub.set_blockchain_top(0, boost::value_initialized<crypto::Hash>());
 
   size_t prevBlockchainSize = generator.getBlockchain().size();
   for (size_t i = 0; i < BLOCKCHAIN_TX_NUMBER; ++i) {
@@ -546,7 +546,7 @@ TEST_F(InProcessNodeTests, getTxFail) {
     auto txptr = CryptoNote::createTransaction();
     auto tx = ::createTx(*txptr.get());
     transactionHashes.push_back(CryptoNote::getObjectHash(tx));
-    expectedTransactions.push_back(std::make_tuple(tx, boost::value_initialized<Crypto::Hash>(), boost::value_initialized<uint64_t>()));
+    expectedTransactions.push_back(std::make_tuple(tx, boost::value_initialized<crypto::Hash>(), boost::value_initialized<uint64_t>()));
   }
 
   ASSERT_EQ(transactionHashes.size(), BLOCKCHAIN_TX_NUMBER + POOL_TX_NUMBER);
@@ -564,12 +564,12 @@ TEST_F(InProcessNodeTests, getTxFail) {
 TEST_F(InProcessNodeTests, getTxNotInited) {
   CryptoNote::InProcessNode newNode(coreStub, protocolQueryStub);
 
-  std::vector<Crypto::Hash> transactionHashes;
+  std::vector<crypto::Hash> transactionHashes;
   std::vector<CryptoNote::TransactionDetails> transactions;
   ASSERT_EQ(transactionHashes.size(), 0);
   ASSERT_EQ(transactions.size(), 0);
 
-  coreStub.set_blockchain_top(0, boost::value_initialized<Crypto::Hash>());
+  coreStub.set_blockchain_top(0, boost::value_initialized<crypto::Hash>());
 
   CallbackStatus status;
   newNode.getTransactions(transactionHashes, transactions, [&status] (std::error_code ec) { status.setStatus(ec); });
@@ -612,10 +612,10 @@ TEST_F(InProcessNodeTests, getLastLocalBlockTimestamp) {
   class GetBlockTimestampCore : public ICoreStub {
   public:
     GetBlockTimestampCore(uint64_t timestamp) : timestamp(timestamp) {}
-    virtual void get_blockchain_top(uint32_t& height, Crypto::Hash& top_id) override {
+    virtual void get_blockchain_top(uint32_t& height, crypto::Hash& top_id) override {
     }
 
-    virtual bool getBlockByHash(const Crypto::Hash &h, CryptoNote::Block &blk) override {
+    virtual bool getBlockByHash(const crypto::Hash &h, CryptoNote::Block &blk) override {
       blk.timestamp = timestamp;
       return true;
     }
@@ -639,10 +639,10 @@ TEST_F(InProcessNodeTests, getLastLocalBlockTimestamp) {
 TEST_F(InProcessNodeTests, getLastLocalBlockTimestampError) {
   class GetBlockTimestampErrorCore : public ICoreStub {
   public:
-    virtual void get_blockchain_top(uint32_t& height, Crypto::Hash& top_id) override {
+    virtual void get_blockchain_top(uint32_t& height, crypto::Hash& top_id) override {
     }
 
-    virtual bool getBlockByHash(const Crypto::Hash &h, CryptoNote::Block &blk) override {
+    virtual bool getBlockByHash(const crypto::Hash &h, CryptoNote::Block &blk) override {
       return false;
     }
   };
@@ -660,11 +660,11 @@ TEST_F(InProcessNodeTests, getLastLocalBlockTimestampError) {
 TEST_F(InProcessNodeTests, getPoolDiffereceNotInited) {
   CryptoNote::InProcessNode newNode(coreStub, protocolQueryStub);
 
-  std::vector<Crypto::Hash> knownPoolTxIds; 
-  Crypto::Hash knownBlockId = boost::value_initialized<Crypto::Hash>();
+  std::vector<crypto::Hash> knownPoolTxIds; 
+  crypto::Hash knownBlockId = boost::value_initialized<crypto::Hash>();
   bool isBcActual = false;
   std::vector<std::unique_ptr<ITransactionReader>> newTxs;
-  std::vector<Crypto::Hash> deletedTxIds;
+  std::vector<crypto::Hash> deletedTxIds;
 
   CallbackStatus status;
   newNode.getPoolSymmetricDifference(std::move(knownPoolTxIds), knownBlockId, isBcActual, newTxs, deletedTxIds, [&status](std::error_code ec) { status.setStatus(ec); });
@@ -675,7 +675,7 @@ TEST_F(InProcessNodeTests, getPoolDiffereceNotInited) {
 TEST_F(InProcessNodeTests, getPoolDiffereceActualBC) {
   size_t POOL_TX_NUMBER = 10;
 
-  std::unordered_set<Crypto::Hash> transactionHashes;
+  std::unordered_set<crypto::Hash> transactionHashes;
 
   coreStub.setPoolChangesResult(true);
 
@@ -692,11 +692,11 @@ TEST_F(InProcessNodeTests, getPoolDiffereceActualBC) {
 
   ASSERT_EQ(transactionHashes.size(), POOL_TX_NUMBER);
 
-  std::vector<Crypto::Hash> knownPoolTxIds;
-  Crypto::Hash knownBlockId = CryptoNote::getObjectHash(generator.getBlockchain().back());
+  std::vector<crypto::Hash> knownPoolTxIds;
+  crypto::Hash knownBlockId = CryptoNote::getObjectHash(generator.getBlockchain().back());
   bool isBcActual = false;
   std::vector<std::unique_ptr<ITransactionReader>> newTxs;
-  std::vector<Crypto::Hash> deletedTxIds;
+  std::vector<crypto::Hash> deletedTxIds;
 
   CallbackStatus status;
   node.getPoolSymmetricDifference(std::move(knownPoolTxIds), knownBlockId, isBcActual, newTxs, deletedTxIds, [&status](std::error_code ec) { status.setStatus(ec); });
@@ -714,7 +714,7 @@ TEST_F(InProcessNodeTests, getPoolDiffereceActualBC) {
 TEST_F(InProcessNodeTests, getPoolDiffereceNotActualBC) {
   size_t POOL_TX_NUMBER = 10;
 
-  std::unordered_set<Crypto::Hash> transactionHashes;
+  std::unordered_set<crypto::Hash> transactionHashes;
 
   coreStub.setPoolChangesResult(false);
 
@@ -731,11 +731,11 @@ TEST_F(InProcessNodeTests, getPoolDiffereceNotActualBC) {
 
   ASSERT_EQ(transactionHashes.size(), POOL_TX_NUMBER);
 
-  std::vector<Crypto::Hash> knownPoolTxIds;
-  Crypto::Hash knownBlockId = CryptoNote::getObjectHash(generator.getBlockchain().back());
+  std::vector<crypto::Hash> knownPoolTxIds;
+  crypto::Hash knownBlockId = CryptoNote::getObjectHash(generator.getBlockchain().back());
   bool isBcActual = false;
   std::vector<std::unique_ptr<ITransactionReader>> newTxs;
-  std::vector<Crypto::Hash> deletedTxIds;
+  std::vector<crypto::Hash> deletedTxIds;
 
   CallbackStatus status;
   node.getPoolSymmetricDifference(std::move(knownPoolTxIds), knownBlockId, isBcActual, newTxs, deletedTxIds, [&status](std::error_code ec) { status.setStatus(ec); });

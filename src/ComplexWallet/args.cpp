@@ -178,7 +178,7 @@ bool TransferCommand::parseArguments(LoggerRef &logger, const std::vector<std::s
 
         if (!m_currency.parseAccountAddressString(arg, de.addr))
         {
-          Crypto::Hash paymentId;
+          crypto::Hash paymentId;
           if (CryptoNote::parsePaymentId(arg, paymentId))
           {
             logger(ERROR, BRIGHT_RED) << "Invalid payment ID usage. Please, use -p <payment_id>. See help for details.";
@@ -267,7 +267,7 @@ void printListTransfersItem(LoggerRef &logger, const WalletLegacyTransaction &tx
 {
   std::vector<uint8_t> extraVec = Common::asBinaryArray(txInfo.extra);
 
-  Crypto::Hash paymentId;
+  crypto::Hash paymentId;
   std::string paymentIdStr = (getPaymentIdFromTxExtra(extraVec, paymentId) && paymentId != NULL_HASH ? Common::podToHex(paymentId) : "");
 
   char timeString[TIMESTAMP_MAX_WIDTH + 1];

@@ -156,7 +156,7 @@ bool InProcTestNode::submitBlock(const std::string& block) {
   return bvc.m_added_to_main_chain;
 }
 
-bool InProcTestNode::getTailBlockId(Crypto::Hash &tailBlockId) {
+bool InProcTestNode::getTailBlockId(crypto::Hash &tailBlockId) {
   tailBlockId = core->get_tail_id();
   return true;
 }

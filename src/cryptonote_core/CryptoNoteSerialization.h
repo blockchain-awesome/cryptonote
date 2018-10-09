@@ -9,7 +9,7 @@
 #include "Serialization/ISerializer.h"
 #include "crypto/crypto.h"
 
-namespace Crypto {
+namespace crypto {
 
 bool serialize(PublicKey& pubKey, Common::StringView name, CryptoNote::ISerializer& serializer);
 bool serialize(SecretKey& secKey, Common::StringView name, CryptoNote::ISerializer& serializer);

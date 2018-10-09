@@ -13,7 +13,7 @@
 
 
 using namespace CryptoNote;
-using namespace Crypto;
+using namespace crypto;
 using namespace Tests::Common;
 
 extern System::Dispatcher globalSystem;

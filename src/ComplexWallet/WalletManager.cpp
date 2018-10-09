@@ -38,7 +38,7 @@
 #include "WalletLegacy/WalletLegacy.h"
 
 using namespace Common;
-using namespace Crypto;
+using namespace crypto;
 using namespace CryptoNote;
 
 using namespace std;

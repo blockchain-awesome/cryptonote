@@ -289,7 +289,7 @@ TEST_F(TransfersContainer_addTransaction, handlesAddingUnconfirmedOutputToKey) {
   ASSERT_EQ(0, amountIn);
   ASSERT_EQ(TEST_OUTPUT_AMOUNT, amountOut);
 
-  std::vector<Crypto::Hash> unconfirmedTransactions;
+  std::vector<crypto::Hash> unconfirmedTransactions;
   container.getUnconfirmedTransactions(unconfirmedTransactions);
   ASSERT_EQ(1, unconfirmedTransactions.size());
 }
@@ -335,7 +335,7 @@ TEST_F(TransfersContainer_addTransaction, handlesAddingConfirmedOutputToKey) {
   ASSERT_EQ(0, amountIn);
   ASSERT_EQ(TEST_OUTPUT_AMOUNT, amountOut);
 
-  std::vector<Crypto::Hash> unconfirmedTransactions;
+  std::vector<crypto::Hash> unconfirmedTransactions;
   container.getUnconfirmedTransactions(unconfirmedTransactions);
   ASSERT_TRUE(unconfirmedTransactions.empty());
 }
@@ -372,7 +372,7 @@ TEST_F(TransfersContainer_addTransaction, addingEmptyTransactionOuptutsDoesNotCh
   TransactionInformation txInfo;
   ASSERT_FALSE(container.getTransactionInformation(tx->getTransactionHash(), txInfo));
 
-  std::vector<Crypto::Hash> unconfirmedTransactions;
+  std::vector<crypto::Hash> unconfirmedTransactions;
   container.getUnconfirmedTransactions(unconfirmedTransactions);
   ASSERT_TRUE(unconfirmedTransactions.empty());
 }
@@ -519,7 +519,7 @@ class TransfersContainer_deleteUnconfirmedTransaction : public TransfersContaine
 TEST_F(TransfersContainer_deleteUnconfirmedTransaction, tryDeleteNonExistingTx) {
   addTransaction();
   ASSERT_EQ(1, container.transactionsCount());
-  ASSERT_FALSE(container.deleteUnconfirmedTransaction(Crypto::rand<Crypto::Hash>()));
+  ASSERT_FALSE(container.deleteUnconfirmedTransaction(crypto::rand<crypto::Hash>()));
   ASSERT_EQ(1, container.transactionsCount());
 }
 
@@ -590,7 +590,7 @@ TEST_F(TransfersContainer_markTransactionConfirmed, nonExistingTransaction) {
   addTransaction();
   ASSERT_EQ(1, container.transactionsCount());
   ASSERT_EQ(TEST_OUTPUT_AMOUNT, container.balance(ITransfersContainer::IncludeAllLocked));
-  ASSERT_FALSE(markConfirmed(Crypto::rand<Hash>()));
+  ASSERT_FALSE(markConfirmed(crypto::rand<Hash>()));
   ASSERT_EQ(1, container.transactionsCount());
   ASSERT_EQ(TEST_OUTPUT_AMOUNT, container.balance(ITransfersContainer::IncludeAllLocked));
 }

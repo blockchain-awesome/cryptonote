@@ -25,7 +25,7 @@
 #undef ERROR
 
 using namespace Logging;
-using namespace Crypto;
+using namespace crypto;
 using namespace Common;
 
 namespace CryptoNote {
@@ -183,7 +183,7 @@ bool RpcServer::on_get_blocks(const COMMAND_RPC_GET_BLOCKS_FAST::request& req, C
 
   uint32_t totalBlockCount;
   uint32_t startBlockIndex;
-  std::vector<Crypto::Hash> supplement = m_core.findBlockchainSupplement(req.block_ids, COMMAND_RPC_GET_BLOCKS_FAST_MAX_COUNT, totalBlockCount, startBlockIndex);
+  std::vector<crypto::Hash> supplement = m_core.findBlockchainSupplement(req.block_ids, COMMAND_RPC_GET_BLOCKS_FAST_MAX_COUNT, totalBlockCount, startBlockIndex);
 
   res.current_height = totalBlockCount;
   res.start_height = startBlockIndex;
@@ -453,7 +453,7 @@ bool RpcServer::on_getblockhash(const COMMAND_RPC_GETBLOCKHASH::request& req, CO
   }
 
   uint32_t h = static_cast<uint32_t>(req[0]);
-  Crypto::Hash blockId = m_core.getBlockIdByHeight(h);
+  crypto::Hash blockId = m_core.getBlockIdByHeight(h);
   if (blockId == NULL_HASH) {
     throw JsonRpc::JsonRpcError{ 
       CORE_RPC_ERROR_CODE_TOO_BIG_HEIGHT,

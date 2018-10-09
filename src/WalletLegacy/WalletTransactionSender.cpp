@@ -16,7 +16,7 @@
 
 #include <random>
 
-using namespace Crypto;
+using namespace crypto;
 
 namespace {
 
@@ -342,7 +342,7 @@ uint64_t WalletTransactionSender::selectTransfersToSend(uint64_t neededMoney, bo
     }
   }
 
-  std::default_random_engine randomGenerator(Crypto::rand<std::default_random_engine::result_type>());
+  std::default_random_engine randomGenerator(crypto::rand<std::default_random_engine::result_type>());
   bool selectOneDust = addDust && !unusedDust.empty();
   uint64_t foundMoney = 0;
 

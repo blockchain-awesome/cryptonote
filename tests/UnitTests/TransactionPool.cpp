@@ -116,8 +116,8 @@ public:
   std::vector<AccountBase> m_miners;
   std::vector<Transaction> m_miner_txs;
   std::vector<TransactionSourceEntry> m_sources;
-  std::vector<Crypto::PublicKey> m_public_keys;
-  std::vector<const Crypto::PublicKey*> m_public_key_ptrs;
+  std::vector<crypto::PublicKey> m_public_keys;
+  std::vector<const crypto::PublicKey*> m_public_key_ptrs;
 
   Logging::LoggerGroup m_logger;
   const CryptoNote::Currency& m_currency;
@@ -264,7 +264,7 @@ TEST_F(tx_pool, fillblock_same_fee)
   TestPool<TransactionValidator, RealTimeProvider> pool(currency, logger);
   uint64_t fee = currency.minimumFee();
 
-  std::unordered_map<Crypto::Hash, std::unique_ptr<Transaction>> transactions;
+  std::unordered_map<crypto::Hash, std::unique_ptr<Transaction>> transactions;
 
   // generate transactions
   for (int i = 1; i <= 50; ++i) {
@@ -320,7 +320,7 @@ TEST_F(tx_pool, fillblock_same_size)
   const uint64_t fee = currency.minimumFee();
   const size_t totalTransactions = 50;
 
-  std::unordered_map<Crypto::Hash, std::unique_ptr<Transaction>> transactions;
+  std::unordered_map<crypto::Hash, std::unique_ptr<Transaction>> transactions;
 
 
   // generate transactions
@@ -737,13 +737,13 @@ public:
     std::unique_ptr<tx_memory_pool> pool(new tx_memory_pool(currency, validator, timeProvider, logger));
     ASSERT_TRUE(pool->init(m_configDir.string()));
 
-    std::unordered_map<Crypto::Hash, Transaction> ordinaryTxs;
+    std::unordered_map<crypto::Hash, Transaction> ordinaryTxs;
     for (size_t i = 0; i < poolOrdinaryTxCount; ++i) {
       auto tx = createTestOrdinaryTransaction(currency);
       ordinaryTxs.emplace(getObjectHash(tx), std::move(tx));
     }
 
-    std::unordered_map<Crypto::Hash, Transaction> fusionTxs;
+    std::unordered_map<crypto::Hash, Transaction> fusionTxs;
     for (size_t i = 0; i < poolFusionTxCount; ++i) {
       auto tx = createTestFusionTransaction(currency);
       fusionTxs.emplace(getObjectHash(tx), std::move(tx));

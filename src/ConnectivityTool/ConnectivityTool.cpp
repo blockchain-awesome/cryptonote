@@ -212,7 +212,7 @@ bool handle_request_stat(po::variables_map& vm, PeerIdType peer_id) {
     return false;
   }
 
-  Crypto::SecretKey prvk;
+  crypto::SecretKey prvk;
   if (!Common::podFromHex(command_line::get_arg(vm, arg_priv_key), prvk)) {
     std::cout << "{" << ENDL << "  \"status\": \"ERROR: " << "wrong secret key set \"" << ENDL << "}";
     return false;
@@ -252,10 +252,10 @@ bool handle_request_stat(po::variables_map& vm, PeerIdType peer_id) {
     proof_of_trust pot;
     pot.peer_id = peer_id;
     pot.time = time(NULL);
-    Crypto::PublicKey pubk;
+    crypto::PublicKey pubk;
     Common::podFromHex(P2P_STAT_TRUSTED_PUB_KEY, pubk);
-    Crypto::Hash h = get_proof_of_trust_hash(pot);
-    Crypto::generate_signature(h, pubk, prvk, pot.sign);
+    crypto::Hash h = get_proof_of_trust_hash(pot);
+    crypto::generate_signature(h, pubk, prvk, pot.sign);
 
     if (command_line::get_arg(vm, arg_request_stat_info)) {
       COMMAND_REQUEST_STAT_INFO::request req;
@@ -281,7 +281,7 @@ bool handle_request_stat(po::variables_map& vm, PeerIdType peer_id) {
     if (command_line::get_arg(vm, arg_request_net_state))  {
       ++pot.time;
       h = get_proof_of_trust_hash(pot);
-      Crypto::generate_signature(h, pubk, prvk, pot.sign);
+      crypto::generate_signature(h, pubk, prvk, pot.sign);
       COMMAND_REQUEST_NETWORK_STATE::request req{ pot };
       COMMAND_REQUEST_NETWORK_STATE::response res;
 
@@ -310,8 +310,8 @@ bool handle_request_stat(po::variables_map& vm, PeerIdType peer_id) {
 
 //---------------------------------------------------------------------------------------------------------------
 bool generate_and_print_keys() {
-  Crypto::PublicKey pk;
-  Crypto::SecretKey sk;
+  crypto::PublicKey pk;
+  crypto::SecretKey sk;
   generate_keys(pk, sk);
   std::cout << "PUBLIC KEY: " << Common::podToHex(pk) << ENDL
             << "PRIVATE KEY: " << Common::podToHex(sk);

@@ -7,7 +7,7 @@
 #include "cryptonote_core/CryptoNoteTools.h"
 
 using namespace CryptoNote;
-using namespace Crypto;
+using namespace crypto;
 using namespace Common;
 
 TransactionBuilder::TransactionBuilder(const CryptoNote::Currency& currency, uint64_t unlockTime)
@@ -58,7 +58,7 @@ TransactionBuilder& TransactionBuilder::addMultisignatureOut(uint64_t amount, co
 }
 
 Transaction TransactionBuilder::build() const {
-  Crypto::Hash prefixHash;
+  crypto::Hash prefixHash;
 
   Transaction tx;
   addTransactionPublicKeyToExtra(tx.extra, m_txKey.publicKey);
@@ -82,7 +82,7 @@ void TransactionBuilder::fillInputs(Transaction& tx, std::vector<CryptoNote::Key
   for (const TransactionSourceEntry& src_entr : m_sources) {
     contexts.push_back(KeyPair());
     KeyPair& in_ephemeral = contexts.back();
-    Crypto::KeyImage img;
+    crypto::KeyImage img;
     generate_key_image_helper(m_senderKeys, src_entr.realTransactionPublicKey, src_entr.realOutputIndexInTransaction, in_ephemeral, img);
 
     // put key image into tx input
@@ -108,10 +108,10 @@ void TransactionBuilder::fillOutputs(Transaction& tx) const {
   size_t output_index = 0;
   
   for(const auto& dst_entr : m_destinations) {
-    Crypto::KeyDerivation derivation;
-    Crypto::PublicKey out_eph_public_key;
-    Crypto::generate_key_derivation(dst_entr.addr.viewPublicKey, m_txKey.secretKey, derivation);
-    Crypto::derive_public_key(derivation, output_index, dst_entr.addr.spendPublicKey, out_eph_public_key);
+    crypto::KeyDerivation derivation;
+    crypto::PublicKey out_eph_public_key;
+    crypto::generate_key_derivation(dst_entr.addr.viewPublicKey, m_txKey.secretKey, derivation);
+    crypto::derive_public_key(derivation, output_index, dst_entr.addr.spendPublicKey, out_eph_public_key);
 
     TransactionOutput out;
     out.amount = dst_entr.amount;
@@ -129,10 +129,10 @@ void TransactionBuilder::fillOutputs(Transaction& tx) const {
     target.requiredSignatureCount = mdst.requiredSignatures;
 
     for (const auto& key : mdst.keys) {
-      Crypto::KeyDerivation derivation;
-      Crypto::PublicKey ephemeralPublicKey;
-      Crypto::generate_key_derivation(key.address.viewPublicKey, m_txKey.secretKey, derivation);
-      Crypto::derive_public_key(derivation, output_index, key.address.spendPublicKey, ephemeralPublicKey);
+      crypto::KeyDerivation derivation;
+      crypto::PublicKey ephemeralPublicKey;
+      crypto::generate_key_derivation(key.address.viewPublicKey, m_txKey.secretKey, derivation);
+      crypto::derive_public_key(derivation, output_index, key.address.spendPublicKey, ephemeralPublicKey);
       target.keys.push_back(ephemeralPublicKey);
     }
     out.amount = mdst.amount;
@@ -143,7 +143,7 @@ void TransactionBuilder::fillOutputs(Transaction& tx) const {
 }
 
 
-void TransactionBuilder::signSources(const Crypto::Hash& prefixHash, const std::vector<CryptoNote::KeyPair>& contexts, Transaction& tx) const {
+void TransactionBuilder::signSources(const crypto::Hash& prefixHash, const std::vector<CryptoNote::KeyPair>& contexts, Transaction& tx) const {
   
   tx.signatures.clear();
 
@@ -151,14 +151,14 @@ void TransactionBuilder::signSources(const Crypto::Hash& prefixHash, const std::
 
   // sign TransactionInputToKey sources
   for (const auto& src_entr : m_sources) {
-    std::vector<const Crypto::PublicKey*> keys_ptrs;
+    std::vector<const crypto::PublicKey*> keys_ptrs;
 
     for (const auto& o : src_entr.outputs) {
       keys_ptrs.push_back(&o.second);
     }
 
-    tx.signatures.push_back(std::vector<Crypto::Signature>());
-    std::vector<Crypto::Signature>& sigs = tx.signatures.back();
+    tx.signatures.push_back(std::vector<crypto::Signature>());
+    std::vector<crypto::Signature>& sigs = tx.signatures.back();
     sigs.resize(src_entr.outputs.size());
     generate_ring_signature(prefixHash, boost::get<KeyInput>(tx.inputs[i]).keyImage, keys_ptrs, contexts[i].secretKey, src_entr.realOutput, sigs.data());
     i++;
@@ -170,16 +170,16 @@ void TransactionBuilder::signSources(const Crypto::Hash& prefixHash, const std::
     auto& outsigs = tx.signatures.back();
 
     for (const auto& key : msrc.keys) {
-      Crypto::KeyDerivation derivation;
-      Crypto::PublicKey ephemeralPublicKey;
-      Crypto::SecretKey ephemeralSecretKey;
+      crypto::KeyDerivation derivation;
+      crypto::PublicKey ephemeralPublicKey;
+      crypto::SecretKey ephemeralSecretKey;
 
-      Crypto::generate_key_derivation(msrc.srcTxPubKey, key.viewSecretKey, derivation);
-      Crypto::derive_public_key(derivation, msrc.srcOutputIndex, key.address.spendPublicKey, ephemeralPublicKey);
-      Crypto::derive_secret_key(derivation, msrc.srcOutputIndex, key.spendSecretKey, ephemeralSecretKey);
+      crypto::generate_key_derivation(msrc.srcTxPubKey, key.viewSecretKey, derivation);
+      crypto::derive_public_key(derivation, msrc.srcOutputIndex, key.address.spendPublicKey, ephemeralPublicKey);
+      crypto::derive_secret_key(derivation, msrc.srcOutputIndex, key.spendSecretKey, ephemeralSecretKey);
 
-      Crypto::Signature sig;
-      Crypto::generate_signature(prefixHash, ephemeralPublicKey, ephemeralSecretKey, sig);
+      crypto::Signature sig;
+      crypto::generate_signature(prefixHash, ephemeralPublicKey, ephemeralSecretKey, sig);
       outsigs.push_back(sig);
     }
   }

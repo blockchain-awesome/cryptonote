@@ -20,7 +20,7 @@
 
 using namespace CryptoNote;
 using namespace Tests::Common;
-using namespace Crypto;
+using namespace crypto;
 
 extern System::Dispatcher globalSystem;
 extern Tests::Common::BaseFunctionalTestsConfig config;

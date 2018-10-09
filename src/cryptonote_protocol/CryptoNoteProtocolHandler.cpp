@@ -133,7 +133,7 @@ void CryptoNoteProtocolHandler::log_connections() {
 
 uint32_t CryptoNoteProtocolHandler::get_current_blockchain_height() {
   uint32_t height;
-  Crypto::Hash blockId;
+  crypto::Hash blockId;
   m_core.get_blockchain_top(height, blockId);
   return height;
 }
@@ -383,7 +383,7 @@ int CryptoNoteProtocolHandler::handle_response_get_objects(int command, NOTIFY_R
   }
 
   uint32_t height;
-  Crypto::Hash top;
+  crypto::Hash top;
   m_core.get_blockchain_top(height, top);
   logger(DEBUGGING, BRIGHT_GREEN) << "Local blockchain updated, new height = " << height;
 
@@ -529,7 +529,7 @@ bool CryptoNoteProtocolHandler::on_connection_synchronized() {
     m_core.on_synchronized();
 
     uint32_t height;
-    Crypto::Hash hash;
+    crypto::Hash hash;
     m_core.get_blockchain_top(height, hash);
     m_observerManager.notify(&ICryptoNoteProtocolObserver::blockchainSynchronized, height);
   }
@@ -581,7 +581,7 @@ int CryptoNoteProtocolHandler::handleRequestTxPool(int command, NOTIFY_REQUEST_T
   logger(Logging::TRACE) << context << "NOTIFY_REQUEST_TX_POOL: txs.size() = " << arg.txs.size();
 
   std::vector<Transaction> addedTransactions;
-  std::vector<Crypto::Hash> deletedTransactions;
+  std::vector<crypto::Hash> deletedTransactions;
   m_core.getPoolChanges(arg.txs, addedTransactions, deletedTransactions);
 
   if (!addedTransactions.empty()) {
@@ -664,7 +664,7 @@ void CryptoNoteProtocolHandler::recalculateMaxObservedHeight(const CryptoNoteCon
   });
 
   uint32_t localHeight = 0;
-  Crypto::Hash ignore;
+  crypto::Hash ignore;
   m_core.get_blockchain_top(localHeight, ignore);
   m_observedHeight = std::max(peerHeight, localHeight + 1);
 }

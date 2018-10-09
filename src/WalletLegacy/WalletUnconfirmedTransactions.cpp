@@ -9,7 +9,7 @@
 #include "Serialization/ISerializer.h"
 #include "Serialization/SerializationOverloads.h"
 
-using namespace Crypto;
+using namespace crypto;
 
 namespace CryptoNote {
 

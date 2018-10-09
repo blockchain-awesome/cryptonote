@@ -36,12 +36,12 @@ bool Account::init()
     return false;
   }
 
-  if (!Crypto::secret_key_to_public_key(m_secret_keys.spend, m_public_keys.spend))
+  if (!crypto::secret_key_to_public_key(m_secret_keys.spend, m_public_keys.spend))
   {
     return false;
   }
 
-  if (!Crypto::secret_key_to_public_key(m_secret_keys.view, m_public_keys.view))
+  if (!crypto::secret_key_to_public_key(m_secret_keys.view, m_public_keys.view))
   {
     return false;
   }
@@ -50,12 +50,12 @@ bool Account::init()
 
 std::string &Account::toAdress()
 {
-  char keyStore[sizeof(Crypto::PublicKey) * 2];
+  char keyStore[sizeof(crypto::PublicKey) * 2];
 
-  memcpy(keyStore, &m_public_keys.spend, sizeof(Crypto::PublicKey));
-  memcpy(keyStore + sizeof(Crypto::PublicKey), &m_public_keys.view, sizeof(Crypto::PublicKey));
+  memcpy(keyStore, &m_public_keys.spend, sizeof(crypto::PublicKey));
+  memcpy(keyStore + sizeof(crypto::PublicKey), &m_public_keys.view, sizeof(crypto::PublicKey));
   const uint64_t prefix = CryptoNote::parameters::CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX;
-  m_address = Tools::Base58::encode_addr(prefix, std::string(keyStore, sizeof(Crypto::PublicKey) * 2));
+  m_address = Tools::Base58::encode_addr(prefix, std::string(keyStore, sizeof(crypto::PublicKey) * 2));
   return m_address;
 }
 

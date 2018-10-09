@@ -20,8 +20,8 @@ using namespace CryptoNote;
  bool create_wallet_by_keys(std::string &wallet_file, std::string &password,
   std::string &address, std::string &spendKey, std::string &viewKey,
   Logging::LoggerRef &logger) {
-  Crypto::SecretKey viewSecretKey;
-  Crypto::SecretKey sendSecretKey;
+  crypto::SecretKey viewSecretKey;
+  crypto::SecretKey sendSecretKey;
   if (!Common::podFromHex(viewKey, viewSecretKey))
   {
     logger(Logging::ERROR) << "Cannot parse view secret key: " << viewKey;
@@ -33,29 +33,29 @@ using namespace CryptoNote;
     return false;
   }
 
-  Crypto::PublicKey sendPubKey;
-  Crypto::PublicKey viewPubKey;
+  crypto::PublicKey sendPubKey;
+  crypto::PublicKey viewPubKey;
 
-  if (!Crypto::secret_key_to_public_key(sendSecretKey, sendPubKey))
+  if (!crypto::secret_key_to_public_key(sendSecretKey, sendPubKey))
   {
     logger(Logging::ERROR) << "Cannot get send public key from secret key: " << spendKey;
     return false;
   }
 
-  if (!Crypto::secret_key_to_public_key(viewSecretKey, viewPubKey))
+  if (!crypto::secret_key_to_public_key(viewSecretKey, viewPubKey))
   {
     logger(Logging::ERROR) << "Cannot get send public key from secret key: " << viewKey;
     return false;
   }
 
-  char keyStore[sizeof(Crypto::PublicKey) * 2];
+  char keyStore[sizeof(crypto::PublicKey) * 2];
 
-  memcpy(keyStore, &sendPubKey, sizeof(Crypto::PublicKey));
-  memcpy(keyStore + sizeof(Crypto::PublicKey), &viewPubKey, sizeof(Crypto::PublicKey));
+  memcpy(keyStore, &sendPubKey, sizeof(crypto::PublicKey));
+  memcpy(keyStore + sizeof(crypto::PublicKey), &viewPubKey, sizeof(crypto::PublicKey));
 
   using namespace parameters;
   const uint64_t prefix = CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX;
-  std::string addressStr = Tools::Base58::encode_addr(prefix, std::string(keyStore, sizeof(Crypto::PublicKey) * 2));
+  std::string addressStr = Tools::Base58::encode_addr(prefix, std::string(keyStore, sizeof(crypto::PublicKey) * 2));
   if (addressStr != address)
   {
     logger(Logging::ERROR) << "Addresses mismatch!" << addressStr;
@@ -111,14 +111,14 @@ using namespace CryptoNote;
 
     std::string plain = plainArchive.str();
     std::string cipher;
-    Crypto::chacha8_key key;
-    Crypto::cn_context context;
-    Crypto::generate_chacha8_key(context, password, key);
+    crypto::chacha8_key key;
+    crypto::cn_context context;
+    crypto::generate_chacha8_key(context, password, key);
 
     cipher.resize(plain.size());
 
-    Crypto::chacha8_iv iv = Crypto::rand<Crypto::chacha8_iv>();
-    Crypto::chacha8(plain.data(), plain.size(), key, iv, &cipher[0]);
+    crypto::chacha8_iv iv = crypto::rand<crypto::chacha8_iv>();
+    crypto::chacha8(plain.data(), plain.size(), key, iv, &cipher[0]);
 
     uint32_t version = 1;
     StdOutputStream output(file);

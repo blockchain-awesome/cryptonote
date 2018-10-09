@@ -81,12 +81,12 @@ void Node::connectionStatusUpdated(bool connected)
 
 // End CryptoNote::INodeRpcProxyObserver
 
-void Node::onTransactionDeleted(CryptoNote::ITransfersSubscription *object, const Crypto::Hash &transactionHash)
+void Node::onTransactionDeleted(CryptoNote::ITransfersSubscription *object, const crypto::Hash &transactionHash)
 {
   std::cout << "onTransactionDeleted" << std::endl;
 }
 
-void Node::onTransactionUpdated(CryptoNote::ITransfersSubscription *object, const Crypto::Hash &transactionHash)
+void Node::onTransactionUpdated(CryptoNote::ITransfersSubscription *object, const crypto::Hash &transactionHash)
 {
   std::cout << "onTransactionUpdated" << std::endl;
 }

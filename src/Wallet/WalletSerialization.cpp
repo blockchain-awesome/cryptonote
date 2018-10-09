@@ -23,7 +23,7 @@
 #include "WalletLegacy/WalletLegacySerialization.h"
 
 using namespace Common;
-using namespace Crypto;
+using namespace crypto;
 
 namespace {
 
@@ -42,7 +42,7 @@ struct ObsoleteSpentOutputDto {
   Hash transactionHash;
   uint32_t outputInTransaction;
   uint64_t walletIndex;
-  Crypto::Hash spendingTransactionHash;
+  crypto::Hash spendingTransactionHash;
 };
 
 //DO NOT CHANGE IT
@@ -170,7 +170,7 @@ std::string encrypt(const std::string& plain, CryptoNote::CryptoContext& cryptoC
   std::string cipher;
   cipher.resize(plain.size());
 
-  Crypto::chacha8(plain.data(), plain.size(), cryptoContext.key, cryptoContext.iv, &cipher[0]);
+  crypto::chacha8(plain.data(), plain.size(), cryptoContext.key, cryptoContext.iv, &cipher[0]);
 
   return cipher;
 }
@@ -200,7 +200,7 @@ std::string decrypt(const std::string& cipher, CryptoNote::CryptoContext& crypto
   std::string plain;
   plain.resize(cipher.size());
 
-  Crypto::chacha8(cipher.data(), cipher.size(), cryptoContext.key, cryptoContext.iv, &plain[0]);
+  crypto::chacha8(cipher.data(), cipher.size(), cryptoContext.key, cryptoContext.iv, &plain[0]);
   return plain;
 }
 
@@ -221,7 +221,7 @@ void deserializeEncrypted(Object& obj, const std::string& name, CryptoNote::Cryp
 
 bool verifyKeys(const SecretKey& sec, const PublicKey& expected_pub) {
   PublicKey pub;
-  bool r = Crypto::secret_key_to_public_key(sec, pub);
+  bool r = crypto::secret_key_to_public_key(sec, pub);
 
   return r && expected_pub == pub;
 }
@@ -327,10 +327,10 @@ void WalletSerializer::save(const std::string& password, Common::IOutputStream& 
 CryptoContext WalletSerializer::generateCryptoContext(const std::string& password) {
   CryptoContext context;
 
-  Crypto::cn_context c;
-  Crypto::generate_chacha8_key(c, password, context.key);
+  crypto::cn_context c;
+  crypto::generate_chacha8_key(c, password, context.key);
 
-  context.iv = Crypto::rand<Crypto::chacha8_iv>();
+  context.iv = crypto::rand<crypto::chacha8_iv>();
 
   return context;
 }
@@ -342,7 +342,7 @@ void WalletSerializer::saveVersion(Common::IOutputStream& destination) {
   s(version, "version");
 }
 
-void WalletSerializer::saveIv(Common::IOutputStream& destination, Crypto::chacha8_iv& iv) {
+void WalletSerializer::saveIv(Common::IOutputStream& destination, crypto::chacha8_iv& iv) {
   BinaryOutputStreamSerializer s(destination);
   s.binary(reinterpret_cast<void *>(&iv.data), sizeof(iv.data), "chacha_iv");
 }
@@ -610,15 +610,15 @@ uint32_t WalletSerializer::loadVersion(Common::IInputStream& source) {
   return version;
 }
 
-void WalletSerializer::loadIv(Common::IInputStream& source, Crypto::chacha8_iv& iv) {
+void WalletSerializer::loadIv(Common::IInputStream& source, crypto::chacha8_iv& iv) {
   CryptoNote::BinaryInputStreamSerializer s(source);
 
   s.binary(static_cast<void *>(&iv.data), sizeof(iv.data), "chacha_iv");
 }
 
-void WalletSerializer::generateKey(const std::string& password, Crypto::chacha8_key& key) {
-  Crypto::cn_context context;
-  Crypto::generate_chacha8_key(context, password, key);
+void WalletSerializer::generateKey(const std::string& password, crypto::chacha8_key& key) {
+  crypto::cn_context context;
+  crypto::generate_chacha8_key(context, password, key);
 }
 
 void WalletSerializer::loadKeys(Common::IInputStream& source, CryptoContext& cryptoContext) {
@@ -669,14 +669,14 @@ void WalletSerializer::loadWallets(Common::IInputStream& source, CryptoContext& 
     }
 
     if (dto.spendSecretKey != NULL_SECRET_KEY) {
-      Crypto::PublicKey restoredPublicKey;
-      bool r = Crypto::secret_key_to_public_key(dto.spendSecretKey, restoredPublicKey);
+      crypto::PublicKey restoredPublicKey;
+      bool r = crypto::secret_key_to_public_key(dto.spendSecretKey, restoredPublicKey);
 
       if (!r || dto.spendPublicKey != restoredPublicKey) {
         throw std::system_error(make_error_code(error::WRONG_PASSWORD), "Restored spend public key doesn't correspond to secret key");
       }
     } else {
-      if (!Crypto::check_key(dto.spendPublicKey)) {
+      if (!crypto::check_key(dto.spendPublicKey)) {
         throw std::system_error(make_error_code(error::WRONG_PASSWORD), "Public spend key is incorrect");
       }
     }
@@ -789,7 +789,7 @@ void WalletSerializer::loadUncommitedTransactions(Common::IInputStream& source, 
 }
 
 void WalletSerializer::initTransactionPool() {
-  std::unordered_set<Crypto::Hash> uncommitedTransactionsSet;
+  std::unordered_set<crypto::Hash> uncommitedTransactionsSet;
   std::transform(uncommitedTransactions.begin(), uncommitedTransactions.end(), std::inserter(uncommitedTransactionsSet, uncommitedTransactionsSet.end()),
     [](const UncommitedTransactions::value_type& pair) {
       return getObjectHash(pair.second);

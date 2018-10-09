@@ -20,7 +20,7 @@ public:
   ~TestWalletLegacy();
 
   std::error_code init();
-  std::error_code sendTransaction(const std::string& address, uint64_t amount, Crypto::Hash& txHash);
+  std::error_code sendTransaction(const std::string& address, uint64_t amount, crypto::Hash& txHash);
   void waitForSynchronizationToHeight(uint32_t height);
   CryptoNote::IWalletLegacy* wallet();
   CryptoNote::AccountPublicAddress address() const;

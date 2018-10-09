@@ -134,7 +134,7 @@ bool wallet_rpc_server::on_transfer(const wallet_rpc::COMMAND_RPC_TRANSFER::requ
   if (!req.payment_id.empty()) {
     std::string payment_id_str = req.payment_id;
 
-    Crypto::Hash payment_id;
+    crypto::Hash payment_id;
     if (!CryptoNote::parsePaymentId(payment_id_str, payment_id)) {
       throw JsonRpc::JsonRpcError(WALLET_RPC_ERROR_CODE_WRONG_PAYMENT_ID, 
         "Payment id has invalid format: \"" + payment_id_str + "\", expected 64-character string");
@@ -187,7 +187,7 @@ bool wallet_rpc_server::on_store(const wallet_rpc::COMMAND_RPC_STORE::request& r
 }
 //------------------------------------------------------------------------------------------------------------------------------
 bool wallet_rpc_server::on_get_payments(const wallet_rpc::COMMAND_RPC_GET_PAYMENTS::request& req, wallet_rpc::COMMAND_RPC_GET_PAYMENTS::response& res) {
-  Crypto::Hash expectedPaymentId;
+  crypto::Hash expectedPaymentId;
   CryptoNote::BinaryArray payment_id_blob;
 
   if (!Common::fromHex(req.payment_id, payment_id_blob)) {
@@ -198,7 +198,7 @@ bool wallet_rpc_server::on_get_payments(const wallet_rpc::COMMAND_RPC_GET_PAYMEN
     throw JsonRpc::JsonRpcError(WALLET_RPC_ERROR_CODE_WRONG_PAYMENT_ID, "Payment ID has invalid size");
   }
 
-  expectedPaymentId = *reinterpret_cast<const Crypto::Hash*>(payment_id_blob.data());
+  expectedPaymentId = *reinterpret_cast<const crypto::Hash*>(payment_id_blob.data());
   size_t transactionsCount = m_wallet.getTransactionCount();
   for (size_t trantransactionNumber = 0; trantransactionNumber < transactionsCount; ++trantransactionNumber) {
     WalletLegacyTransaction txInfo;
@@ -212,7 +212,7 @@ bool wallet_rpc_server::on_get_payments(const wallet_rpc::COMMAND_RPC_GET_PAYMEN
     extraVec.reserve(txInfo.extra.size());
     std::for_each(txInfo.extra.begin(), txInfo.extra.end(), [&extraVec](const char el) { extraVec.push_back(el); });
 
-    Crypto::Hash paymentId;
+    crypto::Hash paymentId;
     if (getPaymentIdFromTxExtra(extraVec, paymentId) && paymentId == expectedPaymentId) {
       wallet_rpc::payment_details rpc_payment;
       rpc_payment.tx_hash = Common::podToHex(txInfo.hash);
@@ -260,7 +260,7 @@ bool wallet_rpc_server::on_get_transfers(const wallet_rpc::COMMAND_RPC_GET_TRANS
     extraVec.reserve(txInfo.extra.size());
     std::for_each(txInfo.extra.begin(), txInfo.extra.end(), [&extraVec](const char el) { extraVec.push_back(el); });
 
-    Crypto::Hash paymentId;
+    crypto::Hash paymentId;
     transfer.paymentId = (getPaymentIdFromTxExtra(extraVec, paymentId) && paymentId != NULL_HASH ? Common::podToHex(paymentId) : "");
 
     res.transfers.push_back(transfer);

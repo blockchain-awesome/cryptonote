@@ -149,7 +149,7 @@ private:
 //VARIANT_TAG(binary_archive, event_visitor_settings, 0xcf);
 
 typedef boost::variant<CryptoNote::Block, CryptoNote::Transaction, CryptoNote::AccountBase, callback_entry, serialized_block, serialized_transaction, event_visitor_settings> test_event_entry;
-typedef std::unordered_map<Crypto::Hash, const CryptoNote::Transaction*> map_hash2tx_t;
+typedef std::unordered_map<crypto::Hash, const CryptoNote::Transaction*> map_hash2tx_t;
 
 class test_chain_unit_base: boost::noncopyable
 {
@@ -183,7 +183,7 @@ CryptoNote::Transaction construct_tx_with_fee(Logging::ILogger& logger, std::vec
                                             uint64_t amount, uint64_t fee);
 
 void get_confirmed_txs(const std::vector<CryptoNote::Block>& blockchain, const map_hash2tx_t& mtx, map_hash2tx_t& confirmed_txs);
-bool find_block_chain(const std::vector<test_event_entry>& events, std::vector<CryptoNote::Block>& blockchain, map_hash2tx_t& mtx, const Crypto::Hash& head);
+bool find_block_chain(const std::vector<test_event_entry>& events, std::vector<CryptoNote::Block>& blockchain, map_hash2tx_t& mtx, const crypto::Hash& head);
 void fill_tx_sources_and_destinations(const std::vector<test_event_entry>& events, const CryptoNote::Block& blk_head,
                                       const CryptoNote::AccountBase& from, const CryptoNote::AccountBase& to,
                                       uint64_t amount, uint64_t fee, size_t nmix,

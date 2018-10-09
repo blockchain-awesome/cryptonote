@@ -14,7 +14,7 @@
 #include <numeric>
 #include <unordered_set>
 
-using namespace Crypto;
+using namespace crypto;
 
 namespace {
 
@@ -30,7 +30,7 @@ namespace {
 
 namespace CryptoNote {
 
-  using namespace Crypto;
+  using namespace crypto;
 
   ////////////////////////////////////////////////////////////////////////
   // class Transaction declaration

@@ -62,7 +62,7 @@ protected:
 
   // void pushEvent(const WalletEvent &event);
 
-  // Crypto::Hash getBlockHashByIndex(uint32_t blockIndex) const;
+  // crypto::Hash getBlockHashByIndex(uint32_t blockIndex) const;
 
   // bool m_blockchainSynchronizerStarted;
   // BlockchainSynchronizer m_blockchainSynchronizer;

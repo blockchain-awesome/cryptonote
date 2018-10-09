@@ -16,8 +16,8 @@
 namespace CryptoNote {
 
 struct CryptoContext {
-  Crypto::chacha8_key key;
-  Crypto::chacha8_iv iv;
+  crypto::chacha8_key key;
+  crypto::chacha8_iv iv;
 
   void incIv();
 };
@@ -26,8 +26,8 @@ class WalletSerializer {
 public:
   WalletSerializer(
     ITransfersObserver& transfersObserver,
-    Crypto::PublicKey& viewPublicKey,
-    Crypto::SecretKey& viewSecretKey,
+    crypto::PublicKey& viewPublicKey,
+    crypto::SecretKey& viewSecretKey,
     uint64_t& actualBalance,
     uint64_t& pendingBalance,
     WalletsContainer& walletsContainer,
@@ -51,7 +51,7 @@ private:
   CryptoContext generateCryptoContext(const std::string& password);
 
   void saveVersion(Common::IOutputStream& destination);
-  void saveIv(Common::IOutputStream& destination, Crypto::chacha8_iv& iv);
+  void saveIv(Common::IOutputStream& destination, crypto::chacha8_iv& iv);
   void saveKeys(Common::IOutputStream& destination, CryptoContext& cryptoContext);
   void savePublicKey(Common::IOutputStream& destination, CryptoContext& cryptoContext);
   void saveSecretKey(Common::IOutputStream& destination, CryptoContext& cryptoContext);
@@ -65,8 +65,8 @@ private:
   void saveTransfers(Common::IOutputStream& destination, CryptoContext& cryptoContext);
 
   uint32_t loadVersion(Common::IInputStream& source);
-  void loadIv(Common::IInputStream& source, Crypto::chacha8_iv& iv);
-  void generateKey(const std::string& password, Crypto::chacha8_key& key);
+  void loadIv(Common::IInputStream& source, crypto::chacha8_iv& iv);
+  void generateKey(const std::string& password, crypto::chacha8_key& key);
   void loadKeys(Common::IInputStream& source, CryptoContext& cryptoContext);
   void loadPublicKey(Common::IInputStream& source, CryptoContext& cryptoContext);
   void loadSecretKey(Common::IInputStream& source, CryptoContext& cryptoContext);
@@ -92,8 +92,8 @@ private:
   void updateTransfersSign();
 
   ITransfersObserver& m_transfersObserver;
-  Crypto::PublicKey& m_viewPublicKey;
-  Crypto::SecretKey& m_viewSecretKey;
+  crypto::PublicKey& m_viewPublicKey;
+  crypto::SecretKey& m_viewSecretKey;
   uint64_t& m_actualBalance;
   uint64_t& m_pendingBalance;
   WalletsContainer& m_walletsContainer;

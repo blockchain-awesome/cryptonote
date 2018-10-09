@@ -131,7 +131,7 @@ bool serializeVarintVector(std::vector<uint32_t>& vector, CryptoNote::ISerialize
 
 }
 
-namespace Crypto {
+namespace crypto {
 
 bool serialize(PublicKey& pubKey, Common::StringView name, CryptoNote::ISerializer& serializer) {
   return serializePod(pubKey, name, serializer);
@@ -213,13 +213,13 @@ void serialize(Transaction& tx, ISerializer& serializer) {
         throw std::runtime_error("Serialization error: unexpected signatures size");
       }
 
-      for (Crypto::Signature& sig : tx.signatures[i]) {
+      for (crypto::Signature& sig : tx.signatures[i]) {
         serializePod(sig, "", serializer);
       }
 
     } else {
-      std::vector<Crypto::Signature> signatures(signatureSize);
-      for (Crypto::Signature& sig : signatures) {
+      std::vector<crypto::Signature> signatures(signatureSize);
+      for (crypto::Signature& sig : signatures) {
         serializePod(sig, "", serializer);
       }
 

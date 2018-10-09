@@ -15,7 +15,7 @@
 #include "ITransaction.h"
 
 using namespace Logging;
-using namespace Crypto;
+using namespace crypto;
 
 namespace CryptoNote {
 

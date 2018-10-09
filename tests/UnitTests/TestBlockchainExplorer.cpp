@@ -21,7 +21,7 @@
 
 #include "BlockchainExplorer/BlockchainExplorer.h"
 
-using namespace Crypto;
+using namespace crypto;
 using namespace CryptoNote;
 
 namespace {

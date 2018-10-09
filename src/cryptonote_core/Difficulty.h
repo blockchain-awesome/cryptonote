@@ -13,5 +13,5 @@ namespace CryptoNote
 {
     typedef std::uint64_t difficulty_type;
 
-    bool check_hash(const Crypto::Hash &hash, difficulty_type difficulty);
+    bool check_hash(const crypto::Hash &hash, difficulty_type difficulty);
 }

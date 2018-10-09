@@ -21,13 +21,13 @@ using namespace Common;
 
 namespace {
 
-bool verifyKeys(const Crypto::SecretKey& sec, const Crypto::PublicKey& expected_pub) {
-  Crypto::PublicKey pub;
-  bool r = Crypto::secret_key_to_public_key(sec, pub);
+bool verifyKeys(const crypto::SecretKey& sec, const crypto::PublicKey& expected_pub) {
+  crypto::PublicKey pub;
+  bool r = crypto::secret_key_to_public_key(sec, pub);
   return r && expected_pub == pub;
 }
 
-void throwIfKeysMissmatch(const Crypto::SecretKey& sec, const Crypto::PublicKey& expected_pub) {
+void throwIfKeysMissmatch(const crypto::SecretKey& sec, const crypto::PublicKey& expected_pub) {
   if (!verifyKeys(sec, expected_pub))
     throw std::system_error(make_error_code(CryptoNote::error::WRONG_PASSWORD));
 }
@@ -60,7 +60,7 @@ void WalletLegacySerializer::serialize(std::ostream& stream, const std::string& 
   std::string plain = plainArchive.str();
   std::string cipher;
 
-  Crypto::chacha8_iv iv = encrypt(plain, password, cipher);
+  crypto::chacha8_iv iv = encrypt(plain, password, cipher);
 
   uint32_t version = walletSerializationVersion;
   StdOutputStream output(stream);
@@ -87,15 +87,15 @@ void WalletLegacySerializer::saveKeys(CryptoNote::ISerializer& serializer) {
   keys.serialize(serializer, "keys");
 }
 
-Crypto::chacha8_iv WalletLegacySerializer::encrypt(const std::string& plain, const std::string& password, std::string& cipher) {
-  Crypto::chacha8_key key;
-  Crypto::cn_context context;
-  Crypto::generate_chacha8_key(context, password, key);
+crypto::chacha8_iv WalletLegacySerializer::encrypt(const std::string& plain, const std::string& password, std::string& cipher) {
+  crypto::chacha8_key key;
+  crypto::cn_context context;
+  crypto::generate_chacha8_key(context, password, key);
 
   cipher.resize(plain.size());
 
-  Crypto::chacha8_iv iv = Crypto::rand<Crypto::chacha8_iv>();
-  Crypto::chacha8(plain.data(), plain.size(), key, iv, &cipher[0]);
+  crypto::chacha8_iv iv = crypto::rand<crypto::chacha8_iv>();
+  crypto::chacha8(plain.data(), plain.size(), key, iv, &cipher[0]);
 
   return iv;
 }
@@ -110,7 +110,7 @@ void WalletLegacySerializer::deserialize(std::istream& stream, const std::string
   uint32_t version;
   serializerEncrypted(version, "version");
 
-  Crypto::chacha8_iv iv;
+  crypto::chacha8_iv iv;
   serializerEncrypted(iv, "iv");
 
   std::string cipher;
@@ -130,7 +130,7 @@ void WalletLegacySerializer::deserialize(std::istream& stream, const std::string
   if (account.getAccountKeys().spendSecretKey != NULL_SECRET_KEY) {
     throwIfKeysMissmatch(account.getAccountKeys().spendSecretKey, account.getAccountKeys().address.spendPublicKey);
   } else {
-    if (!Crypto::check_key(account.getAccountKeys().address.spendPublicKey)) {
+    if (!crypto::check_key(account.getAccountKeys().address.spendPublicKey)) {
       throw std::system_error(make_error_code(CryptoNote::error::WRONG_PASSWORD));
     }
   }
@@ -146,14 +146,14 @@ void WalletLegacySerializer::deserialize(std::istream& stream, const std::string
   serializer.binary(cache, "cache");
 }
 
-void WalletLegacySerializer::decrypt(const std::string& cipher, std::string& plain, Crypto::chacha8_iv iv, const std::string& password) {
-  Crypto::chacha8_key key;
-  Crypto::cn_context context;
-  Crypto::generate_chacha8_key(context, password, key);
+void WalletLegacySerializer::decrypt(const std::string& cipher, std::string& plain, crypto::chacha8_iv iv, const std::string& password) {
+  crypto::chacha8_key key;
+  crypto::cn_context context;
+  crypto::generate_chacha8_key(context, password, key);
 
   plain.resize(cipher.size());
 
-  Crypto::chacha8(cipher.data(), cipher.size(), key, iv, &plain[0]);
+  crypto::chacha8(cipher.data(), cipher.size(), key, iv, &plain[0]);
 }
 
 void WalletLegacySerializer::loadKeys(CryptoNote::ISerializer& serializer) {

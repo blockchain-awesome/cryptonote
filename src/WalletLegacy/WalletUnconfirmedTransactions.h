@@ -18,7 +18,7 @@
 namespace CryptoNote {
 class ISerializer;
 
-typedef std::pair<Crypto::PublicKey, size_t> TransactionOutputId;
+typedef std::pair<crypto::PublicKey, size_t> TransactionOutputId;
 }
 
 namespace std {
@@ -26,7 +26,7 @@ namespace std {
 template<> 
 struct hash<CryptoNote::TransactionOutputId> {
   size_t operator()(const CryptoNote::TransactionOutputId &_v) const {    
-    return hash<Crypto::PublicKey>()(_v.first) ^ _v.second;
+    return hash<crypto::PublicKey>()(_v.first) ^ _v.second;
   } 
 }; 
 
@@ -56,11 +56,11 @@ public:
 
   bool serialize(CryptoNote::ISerializer& s);
 
-  bool findTransactionId(const Crypto::Hash& hash, TransactionId& id);
-  void erase(const Crypto::Hash& hash);
+  bool findTransactionId(const crypto::Hash& hash, TransactionId& id);
+  void erase(const crypto::Hash& hash);
   void add(const CryptoNote::Transaction& tx, TransactionId transactionId, 
     uint64_t amount, const std::list<TransactionOutputInformation>& usedOutputs);
-  void updateTransactionId(const Crypto::Hash& hash, TransactionId id);
+  void updateTransactionId(const crypto::Hash& hash, TransactionId id);
 
   uint64_t countUnconfirmedOutsAmount() const;
   uint64_t countUnconfirmedTransactionsAmount() const;
@@ -74,7 +74,7 @@ private:
   void collectUsedOutputs();
   void deleteUsedOutputs(const std::vector<TransactionOutputId>& usedOutputs);
 
-  typedef std::unordered_map<Crypto::Hash, UnconfirmedTransferDetails, boost::hash<Crypto::Hash>> UnconfirmedTxsContainer;
+  typedef std::unordered_map<crypto::Hash, UnconfirmedTransferDetails, boost::hash<crypto::Hash>> UnconfirmedTxsContainer;
   typedef std::unordered_set<TransactionOutputId> UsedOutputsContainer;
 
   UnconfirmedTxsContainer m_unconfirmedTxs;

@@ -6,7 +6,7 @@
 
 #include <cstdint>
 
-namespace Crypto {
+namespace crypto {
 
 struct Hash {
   uint8_t data[32];

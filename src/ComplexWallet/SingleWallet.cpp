@@ -12,7 +12,7 @@
 
 #include "SingleWallet.h"
 
-using namespace Crypto;
+using namespace crypto;
 
 using namespace ComplexWallet;
 

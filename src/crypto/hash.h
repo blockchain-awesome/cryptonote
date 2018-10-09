@@ -9,7 +9,7 @@
 #include <CryptoTypes.h>
 #include "generic-ops.h"
 
-namespace Crypto {
+namespace crypto {
 
   extern "C" {
 #include "hash-ops.h"

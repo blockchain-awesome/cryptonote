@@ -88,7 +88,7 @@ bool init_output_indices(map_output_idx_t& outs, std::map<uint64_t, std::vector<
         vector<const Transaction*> vtx;
         vtx.push_back(&blk.baseTransaction);
 
-        for (const Crypto::Hash& h : blk.transactionHashes) {
+        for (const crypto::Hash& h : blk.transactionHashes) {
             const map_hash2tx_t::const_iterator cit = mtx.find(h);
             if (mtx.end() == cit)
                 throw std::runtime_error("block contains an unknown tx hash");
@@ -132,7 +132,7 @@ bool init_spent_output_indices(map_output_idx_t& outs, map_output_t& outs_mine, 
             output_index &oi = outs[o.first][o.second[i]];
 
             // construct key image for this output
-            Crypto::KeyImage img;
+            crypto::KeyImage img;
             KeyPair in_ephemeral;
             generate_key_image_helper(from.getAccountKeys(), getTransactionPublicKeyFromExtra(oi.p_tx->extra), oi.out_no, in_ephemeral, img);
 
@@ -322,10 +322,10 @@ uint64_t get_balance(const CryptoNote::AccountBase& addr, const std::vector<Cryp
 
 void get_confirmed_txs(const std::vector<CryptoNote::Block>& blockchain, const map_hash2tx_t& mtx, map_hash2tx_t& confirmed_txs)
 {
-  std::unordered_set<Crypto::Hash> confirmed_hashes;
+  std::unordered_set<crypto::Hash> confirmed_hashes;
   for (const Block& blk : blockchain)
   {
-    for (const Crypto::Hash& tx_hash : blk.transactionHashes)
+    for (const crypto::Hash& tx_hash : blk.transactionHashes)
     {
       confirmed_hashes.insert(tx_hash);
     }
@@ -340,8 +340,8 @@ void get_confirmed_txs(const std::vector<CryptoNote::Block>& blockchain, const m
   }
 }
 
-bool find_block_chain(const std::vector<test_event_entry>& events, std::vector<CryptoNote::Block>& blockchain, map_hash2tx_t& mtx, const Crypto::Hash& head) {
-    std::unordered_map<Crypto::Hash, const Block*> block_index;
+bool find_block_chain(const std::vector<test_event_entry>& events, std::vector<CryptoNote::Block>& blockchain, map_hash2tx_t& mtx, const crypto::Hash& head) {
+    std::unordered_map<crypto::Hash, const Block*> block_index;
     BOOST_FOREACH(const test_event_entry& ev, events)
     {
         if (typeid(Block) == ev.type())
@@ -357,7 +357,7 @@ bool find_block_chain(const std::vector<test_event_entry>& events, std::vector<C
     }
 
     bool b_success = false;
-    Crypto::Hash id = head;
+    crypto::Hash id = head;
     for (auto it = block_index.find(id); block_index.end() != it; it = block_index.find(id))
     {
         blockchain.push_back(*it->second);

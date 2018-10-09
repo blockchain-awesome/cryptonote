@@ -12,7 +12,7 @@
 #include "WalletLegacy/WalletLegacySerializer.h"
 #include "WalletLegacy/WalletUtils.h"
 
-using namespace Crypto;
+using namespace crypto;
 
 namespace {
 

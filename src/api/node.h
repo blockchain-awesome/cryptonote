@@ -54,9 +54,9 @@ public:
   virtual void synchronizationCompleted(std::error_code result) override;
 
   // Interface CryptoNote::ITransfersObserver
-  virtual void onTransactionDeleted(CryptoNote::ITransfersSubscription *object, const Crypto::Hash &transactionHash) override;
+  virtual void onTransactionDeleted(CryptoNote::ITransfersSubscription *object, const crypto::Hash &transactionHash) override;
 
-  virtual void onTransactionUpdated(CryptoNote::ITransfersSubscription *object, const Crypto::Hash &transactionHash) override;
+  virtual void onTransactionUpdated(CryptoNote::ITransfersSubscription *object, const crypto::Hash &transactionHash) override;
 
   virtual void onError(CryptoNote::ITransfersSubscription *object,
                        uint32_t height, std::error_code ec);

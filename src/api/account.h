@@ -8,14 +8,14 @@ namespace api
 {
 struct SecretKeyPair
 {
-  Crypto::SecretKey view;
-  Crypto::SecretKey spend;
+  crypto::SecretKey view;
+  crypto::SecretKey spend;
 };
 
 struct PublicKeyPair
 {
-  Crypto::PublicKey view;
-  Crypto::PublicKey spend;
+  crypto::PublicKey view;
+  crypto::PublicKey spend;
 };
 
 class Account

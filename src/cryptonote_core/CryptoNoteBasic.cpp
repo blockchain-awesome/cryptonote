@@ -9,7 +9,7 @@ namespace CryptoNote {
 
 KeyPair generateKeyPair() {
   KeyPair k;
-  Crypto::generate_keys(k.publicKey, k.secretKey);
+  crypto::generate_keys(k.publicKey, k.secretKey);
   return k;
 }
 

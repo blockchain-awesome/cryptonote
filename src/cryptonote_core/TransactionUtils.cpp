@@ -11,12 +11,12 @@
 #include "CryptoNoteFormatUtils.h"
 #include "TransactionExtra.h"
 
-using namespace Crypto;
+using namespace crypto;
 
 namespace CryptoNote {
 
 bool checkInputsKeyimagesDiff(const CryptoNote::TransactionPrefix& tx) {
-  std::unordered_set<Crypto::KeyImage> ki;
+  std::unordered_set<crypto::KeyImage> ki;
   for (const auto& in : tx.inputs) {
     if (in.type() == typeid(KeyInput)) {
       if (!ki.insert(boost::get<KeyInput>(in).keyImage).second)
@@ -103,8 +103,8 @@ const TransactionOutput& getOutputChecked(const CryptoNote::TransactionPrefix& t
   return output;
 }
 
-bool isOutToKey(const Crypto::PublicKey& spendPublicKey, const Crypto::PublicKey& outKey, const Crypto::KeyDerivation& derivation, size_t keyIndex) {
-  Crypto::PublicKey pk;
+bool isOutToKey(const crypto::PublicKey& spendPublicKey, const crypto::PublicKey& outKey, const crypto::KeyDerivation& derivation, size_t keyIndex) {
+  crypto::PublicKey pk;
   derive_public_key(derivation, keyIndex, spendPublicKey, pk);
   return pk == outKey;
 }
@@ -116,13 +116,13 @@ bool findOutputsToAccount(const CryptoNote::TransactionPrefix& transaction, cons
   // only view secret key is used, spend key is not needed
   keys.viewSecretKey = viewSecretKey;
 
-  Crypto::PublicKey txPubKey = getTransactionPublicKeyFromExtra(transaction.extra);
+  crypto::PublicKey txPubKey = getTransactionPublicKeyFromExtra(transaction.extra);
 
   amount = 0;
   size_t keyIndex = 0;
   uint32_t outputIndex = 0;
 
-  Crypto::KeyDerivation derivation;
+  crypto::KeyDerivation derivation;
   generate_key_derivation(txPubKey, keys.viewSecretKey, derivation);
 
   for (const TransactionOutput& o : transaction.outputs) {

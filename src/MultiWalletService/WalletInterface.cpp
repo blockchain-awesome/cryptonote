@@ -43,7 +43,7 @@
 #include "WalletLegacy/WalletLegacy.h"
 
 using namespace Common;
-using namespace Crypto;
+using namespace crypto;
 using namespace CryptoNote;
 
 using namespace std;
@@ -191,7 +191,7 @@ WalletInterface::~WalletInterface()
 //   }
 // }
 
-// Crypto::Hash WalletInterface::getBlockHashByIndex(uint32_t blockIndex) const
+// crypto::Hash WalletInterface::getBlockHashByIndex(uint32_t blockIndex) const
 // {
 //   assert(blockIndex < m_blockchain.size());
 //   return m_blockchain.get<BlockHeightIndex>()[blockIndex];

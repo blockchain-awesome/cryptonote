@@ -11,7 +11,7 @@
 #include "crypto/hash.h"
 #include "common/int-util.h"
 
-using namespace Crypto;
+using namespace crypto;
 using namespace Common;
 
 namespace CryptoNote {
@@ -88,6 +88,6 @@ namespace CryptoNote {
 }
 
 //--------------------------------------------------------------------------------
-bool parse_hash256(const std::string& str_hash, Crypto::Hash& hash) {
+bool parse_hash256(const std::string& str_hash, crypto::Hash& hash) {
   return Common::podFromHex(str_hash, hash);
 }

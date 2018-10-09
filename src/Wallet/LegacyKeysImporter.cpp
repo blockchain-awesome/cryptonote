@@ -19,7 +19,7 @@
 #include "WalletLegacy/WalletUserTransactionsCache.h"
 #include "Wallet/WalletErrors.h"
 
-using namespace Crypto;
+using namespace crypto;
 
 namespace {
 

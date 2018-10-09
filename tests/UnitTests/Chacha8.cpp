@@ -64,10 +64,10 @@ namespace
     std::string buf;
     buf.resize(test->text_length);
 
-    Crypto::chacha8(test->plain_text, test->text_length, test->key, test->iv, &buf[0]);
+    crypto::chacha8(test->plain_text, test->text_length, test->key, test->iv, &buf[0]);
     ASSERT_EQ(buf, std::string(reinterpret_cast<const char*>(test->cipher_text), test->text_length));
 
-    Crypto::chacha8(test->cipher_text, test->text_length, test->key, test->iv, &buf[0]);
+    crypto::chacha8(test->cipher_text, test->text_length, test->key, test->iv, &buf[0]);
     ASSERT_EQ(buf, std::string(reinterpret_cast<const char*>(test->plain_text), test->text_length));
   }
 }

@@ -184,7 +184,7 @@ bool DaemonCommandsHandler::print_block_by_height(uint32_t height)
     print_as_json(blocks.front());
   } else {
     uint32_t current_height;
-    Crypto::Hash top_id;
+    crypto::Hash top_id;
     m_core.get_blockchain_top(current_height, top_id);
     std::cout << "block wasn't found. Current block chain height: " << current_height << ", requested: " << height << std::endl;
     return false;
@@ -195,15 +195,15 @@ bool DaemonCommandsHandler::print_block_by_height(uint32_t height)
 //--------------------------------------------------------------------------------
 bool DaemonCommandsHandler::print_block_by_hash(const std::string& arg)
 {
-  Crypto::Hash block_hash;
+  crypto::Hash block_hash;
   if (!parse_hash256(arg, block_hash)) {
     return false;
   }
 
-  std::list<Crypto::Hash> block_ids;
+  std::list<crypto::Hash> block_ids;
   block_ids.push_back(block_hash);
   std::list<CryptoNote::Block> blocks;
-  std::list<Crypto::Hash> missed_ids;
+  std::list<crypto::Hash> missed_ids;
   m_core.get_blocks(block_ids, blocks, missed_ids);
 
   if (1 == blocks.size())
@@ -243,15 +243,15 @@ bool DaemonCommandsHandler::print_tx(const std::vector<std::string>& args)
   }
 
   const std::string &str_hash = args.front();
-  Crypto::Hash tx_hash;
+  crypto::Hash tx_hash;
   if (!parse_hash256(str_hash, tx_hash)) {
     return true;
   }
 
-  std::vector<Crypto::Hash> tx_ids;
+  std::vector<crypto::Hash> tx_ids;
   tx_ids.push_back(tx_hash);
   std::list<CryptoNote::Transaction> txs;
-  std::list<Crypto::Hash> missed_ids;
+  std::list<crypto::Hash> missed_ids;
   m_core.getTransactions(tx_ids, txs, missed_ids, true);
 
   if (1 == txs.size()) {

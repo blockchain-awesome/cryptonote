@@ -111,7 +111,7 @@ bool RPCTestNode::stopMining() {
   return true;
 }
 
-bool RPCTestNode::getTailBlockId(Crypto::Hash& tailBlockId) {
+bool RPCTestNode::getTailBlockId(crypto::Hash& tailBlockId) {
   LOG_DEBUG("getTailBlockId()");
 
   try {

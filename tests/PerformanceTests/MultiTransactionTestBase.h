@@ -66,6 +66,6 @@ protected:
   Logging::ConsoleLogger m_logger;
 
   std::vector<CryptoNote::TransactionSourceEntry> m_sources;
-  Crypto::PublicKey m_public_keys[ring_size];
-  const Crypto::PublicKey* m_public_key_ptrs[ring_size];
+  crypto::PublicKey m_public_keys[ring_size];
+  const crypto::PublicKey* m_public_key_ptrs[ring_size];
 };

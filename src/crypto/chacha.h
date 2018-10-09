@@ -12,7 +12,7 @@
 
 #include "hash.h"
 
-namespace Crypto {
+namespace crypto {
   extern "C" {
 #endif
     void chacha8(const void* data, size_t length, const uint8_t* key, const uint8_t* iv, char* cipher);
@@ -41,7 +41,7 @@ namespace Crypto {
     chacha8(data, length, reinterpret_cast<const uint8_t*>(&key), reinterpret_cast<const uint8_t*>(&iv), cipher);
   }
 
-  inline void generate_chacha8_key(Crypto::cn_context &context, const std::string& password, chacha8_key& key) {
+  inline void generate_chacha8_key(crypto::cn_context &context, const std::string& password, chacha8_key& key) {
     static_assert(sizeof(chacha8_key) <= sizeof(Hash), "Size of hash must be at least that of chacha8_key");
     Hash pwd_hash;
     cn_slow_hash(context, password.data(), password.size(), pwd_hash);

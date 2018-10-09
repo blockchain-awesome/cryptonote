@@ -12,7 +12,7 @@
 #include "Serialization/SerializationOverloads.h"
 #include <algorithm>
 
-using namespace Crypto;
+using namespace crypto;
 
 namespace CryptoNote {
 

@@ -82,8 +82,8 @@ private:
   virtual void synchronizationCompleted(std::error_code result) override;
 
   // ITransfersObserver
-  virtual void onTransactionUpdated(ITransfersSubscription* object, const Crypto::Hash& transactionHash) override;
-  virtual void onTransactionDeleted(ITransfersSubscription* object, const Crypto::Hash& transactionHash) override;
+  virtual void onTransactionUpdated(ITransfersSubscription* object, const crypto::Hash& transactionHash) override;
+  virtual void onTransactionDeleted(ITransfersSubscription* object, const crypto::Hash& transactionHash) override;
 
   void initSync();
   void throwIfNotInitialised();

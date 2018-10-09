@@ -11,7 +11,7 @@
 #include "Serialization/BinaryOutputStreamSerializer.h"
 #include "Serialization/BinaryInputStreamSerializer.h"
 
-using namespace Crypto;
+using namespace crypto;
 using namespace Common;
 
 namespace CryptoNote {

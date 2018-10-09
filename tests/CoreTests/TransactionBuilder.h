@@ -12,13 +12,13 @@ class TransactionBuilder {
 public:
 
   typedef std::vector<CryptoNote::AccountKeys> KeysVector;
-  typedef std::vector<Crypto::Signature> SignatureVector;
+  typedef std::vector<crypto::Signature> SignatureVector;
   typedef std::vector<SignatureVector> SignatureMultivector;
 
   struct MultisignatureSource {
     CryptoNote::MultisignatureInput input;
     KeysVector keys;
-    Crypto::PublicKey srcTxPubKey;
+    crypto::PublicKey srcTxPubKey;
     size_t srcOutputIndex;
   };
 
@@ -46,7 +46,7 @@ private:
 
   void fillInputs(CryptoNote::Transaction& tx, std::vector<CryptoNote::KeyPair>& contexts) const;
   void fillOutputs(CryptoNote::Transaction& tx) const;
-  void signSources(const Crypto::Hash& prefixHash, const std::vector<CryptoNote::KeyPair>& contexts, CryptoNote::Transaction& tx) const;
+  void signSources(const crypto::Hash& prefixHash, const std::vector<CryptoNote::KeyPair>& contexts, CryptoNote::Transaction& tx) const;
 
   struct MultisignatureDestination {
     uint64_t amount;

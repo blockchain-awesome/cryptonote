@@ -515,7 +515,7 @@ bool BaseFunctionalTests::getNodeTransactionPool(size_t nodeIndex, CryptoNote::I
   assert(nodeIndex < nodeDaemons.size() && nodeDaemons[nodeIndex].get() != nullptr);
   auto& daemon = *nodeDaemons[nodeIndex];
 
-  Crypto::Hash tailBlockId;
+  crypto::Hash tailBlockId;
   bool updateTailBlockId = true;
   while (true) {
     if (updateTailBlockId) {
@@ -529,8 +529,8 @@ bool BaseFunctionalTests::getNodeTransactionPool(size_t nodeIndex, CryptoNote::I
     std::error_code ec;
     bool isTailBlockActual;
     std::vector<std::unique_ptr<ITransactionReader>> addedTxs;
-    std::vector<Crypto::Hash> deletedTxsIds;
-    node.getPoolSymmetricDifference(std::vector<Crypto::Hash>(), tailBlockId, isTailBlockActual, addedTxs, deletedTxsIds,
+    std::vector<crypto::Hash> deletedTxsIds;
+    node.getPoolSymmetricDifference(std::vector<crypto::Hash>(), tailBlockId, isTailBlockActual, addedTxs, deletedTxsIds,
       [this, &poolReceivedEvent, &ec](std::error_code result) {
         ec = result;
         m_dispatcher.remoteSpawn([&poolReceivedEvent]() { poolReceivedEvent.set(); });

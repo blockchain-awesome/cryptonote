@@ -15,7 +15,7 @@
 #include "INode.h"
 #include <future>
 
-using namespace Crypto;
+using namespace crypto;
 
 namespace {
 
@@ -79,8 +79,8 @@ void findMyOutputs(
   }
 }
 
-std::vector<Crypto::Hash> getBlockHashes(const CryptoNote::CompleteBlock* blocks, size_t count) {
-  std::vector<Crypto::Hash> result;
+std::vector<crypto::Hash> getBlockHashes(const CryptoNote::CompleteBlock* blocks, size_t count) {
+  std::vector<crypto::Hash> result;
   result.reserve(count);
 
   for (size_t i = 0; i < count; ++i) {
@@ -133,9 +133,9 @@ void TransfersConsumer::getSubscriptions(std::vector<AccountPublicAddress>& subs
   }
 }
 
-void TransfersConsumer::initTransactionPool(const std::unordered_set<Crypto::Hash>& uncommitedTransactions) {
+void TransfersConsumer::initTransactionPool(const std::unordered_set<crypto::Hash>& uncommitedTransactions) {
   for (auto itSubscriptions = m_subscriptions.begin(); itSubscriptions != m_subscriptions.end(); ++itSubscriptions) {
-    std::vector<Crypto::Hash> unconfirmedTransactions;
+    std::vector<crypto::Hash> unconfirmedTransactions;
     itSubscriptions->second->getContainer().getUnconfirmedTransactions(unconfirmedTransactions);
 
     for (auto itTransactions = unconfirmedTransactions.begin(); itTransactions != unconfirmedTransactions.end(); ++itTransactions) {
@@ -268,7 +268,7 @@ bool TransfersConsumer::onNewBlocks(const CompleteBlock* blocks, uint32_t startH
     }
   }
 
-  std::vector<Crypto::Hash> blockHashes = getBlockHashes(blocks, count);
+  std::vector<crypto::Hash> blockHashes = getBlockHashes(blocks, count);
   if (!processingError) {
     m_observerManager.notify(&IBlockchainConsumerObserver::onBlocksAdded, this, blockHashes);
 
@@ -328,7 +328,7 @@ std::error_code TransfersConsumer::onPoolUpdated(const std::vector<std::unique_p
   return std::error_code();
 }
 
-const std::unordered_set<Crypto::Hash>& TransfersConsumer::getKnownPoolTxIds() const {
+const std::unordered_set<crypto::Hash>& TransfersConsumer::getKnownPoolTxIds() const {
   return m_poolTxs;
 }
 
@@ -341,7 +341,7 @@ std::error_code TransfersConsumer::addUnconfirmedTransaction(const ITransactionR
   return processTransaction(unconfirmedBlockInfo, transaction);
 }
 
-void TransfersConsumer::removeUnconfirmedTransaction(const Crypto::Hash& transactionHash) {
+void TransfersConsumer::removeUnconfirmedTransaction(const crypto::Hash& transactionHash) {
   m_observerManager.notify(&IBlockchainConsumerObserver::onTransactionDeleteBegin, this, transactionHash);
   for (auto& subscription : m_subscriptions) {
     subscription.second->deleteUnconfirmedTransaction(transactionHash);

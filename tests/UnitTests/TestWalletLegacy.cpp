@@ -1209,8 +1209,8 @@ TEST_F(WalletLegacyApi, checkMyMoneyInTxPool) {
 TEST_F(WalletLegacyApi, initWithKeys) {
   CryptoNote::AccountKeys accountKeys;
 
-  Crypto::generate_keys(accountKeys.address.spendPublicKey, accountKeys.spendSecretKey);
-  Crypto::generate_keys(accountKeys.address.viewPublicKey, accountKeys.viewSecretKey);
+  crypto::generate_keys(accountKeys.address.spendPublicKey, accountKeys.spendSecretKey);
+  crypto::generate_keys(accountKeys.address.viewPublicKey, accountKeys.viewSecretKey);
 
   alice->initWithKeys(accountKeys, "pass");
   ASSERT_NO_FATAL_FAILURE(WaitWalletLoad(aliceWalletObserver.get()));
@@ -1809,8 +1809,8 @@ TEST_F(WalletLegacyApi, outdatedUnconfirmedTransactionDeletedOnLoad) {
 TEST_F(WalletLegacyApi, walletLoadsNullSpendSecretKey) {
   CryptoNote::AccountKeys accountKeys;
 
-  Crypto::generate_keys(accountKeys.address.spendPublicKey, accountKeys.spendSecretKey);
-  Crypto::generate_keys(accountKeys.address.viewPublicKey, accountKeys.viewSecretKey);
+  crypto::generate_keys(accountKeys.address.spendPublicKey, accountKeys.spendSecretKey);
+  crypto::generate_keys(accountKeys.address.viewPublicKey, accountKeys.viewSecretKey);
   accountKeys.spendSecretKey = CryptoNote::NULL_SECRET_KEY;
 
   alice->initWithKeys(accountKeys, "pass");

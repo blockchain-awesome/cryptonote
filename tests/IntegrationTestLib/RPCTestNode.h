@@ -24,7 +24,7 @@ namespace Tests {
     virtual bool stopDaemon() override;
     virtual bool getBlockTemplate(const std::string& minerAddress, CryptoNote::Block& blockTemplate, uint64_t& difficulty) override;
     virtual bool submitBlock(const std::string& block) override;
-    virtual bool getTailBlockId(Crypto::Hash& tailBlockId) override;
+    virtual bool getTailBlockId(crypto::Hash& tailBlockId) override;
     virtual bool makeINode(std::unique_ptr<CryptoNote::INode>& node) override;
     virtual uint64_t getLocalHeight() override;
 

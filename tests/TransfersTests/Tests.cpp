@@ -19,7 +19,7 @@
 #include "../IntegrationTestLib/TestWalletLegacy.h"
 
 using namespace CryptoNote;
-using namespace Crypto;
+using namespace crypto;
 using namespace Tests::Common;
 
 
@@ -81,14 +81,14 @@ public:
     return true;
   }
 
-  std::error_code onPoolUpdated(const std::vector<std::unique_ptr<ITransactionReader>>& addedTransactions, const std::vector<Crypto::Hash>& deletedTransactions) override {
+  std::error_code onPoolUpdated(const std::vector<std::unique_ptr<ITransactionReader>>& addedTransactions, const std::vector<crypto::Hash>& deletedTransactions) override {
     //stub
     return std::error_code();
   }
 
-  const std::unordered_set<Crypto::Hash>& getKnownPoolTxIds() const override {
+  const std::unordered_set<crypto::Hash>& getKnownPoolTxIds() const override {
     //stub
-    static std::unordered_set<Crypto::Hash> empty;
+    static std::unordered_set<crypto::Hash> empty;
     return empty;
   }
 
@@ -96,7 +96,7 @@ public:
     throw std::runtime_error("Not implemented");
   }
 
-  void removeUnconfirmedTransaction(const Crypto::Hash& /*transactionHash*/) override {
+  void removeUnconfirmedTransaction(const crypto::Hash& /*transactionHash*/) override {
     throw std::runtime_error("Not implemented");
   }
 

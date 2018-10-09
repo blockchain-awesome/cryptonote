@@ -176,10 +176,10 @@ bool Currency::constructMinerTx(uint32_t height, size_t medianSize, uint64_t alr
 
   uint64_t summaryAmounts = 0;
   for (size_t no = 0; no < outAmounts.size(); no++) {
-    Crypto::KeyDerivation derivation = boost::value_initialized<Crypto::KeyDerivation>();
-    Crypto::PublicKey outEphemeralPubKey = boost::value_initialized<Crypto::PublicKey>();
+    crypto::KeyDerivation derivation = boost::value_initialized<crypto::KeyDerivation>();
+    crypto::PublicKey outEphemeralPubKey = boost::value_initialized<crypto::PublicKey>();
 
-    bool r = Crypto::generate_key_derivation(minerAddress.viewPublicKey, txkey.secretKey, derivation);
+    bool r = crypto::generate_key_derivation(minerAddress.viewPublicKey, txkey.secretKey, derivation);
 
     if (!(r)) {
       logger(ERROR, BRIGHT_RED)
@@ -188,7 +188,7 @@ bool Currency::constructMinerTx(uint32_t height, size_t medianSize, uint64_t alr
       return false;
     }
 
-    r = Crypto::derive_public_key(derivation, no, minerAddress.spendPublicKey, outEphemeralPubKey);
+    r = crypto::derive_public_key(derivation, no, minerAddress.spendPublicKey, outEphemeralPubKey);
 
     if (!(r)) {
       logger(ERROR, BRIGHT_RED)
@@ -409,8 +409,8 @@ difficulty_type Currency::nextDifficulty(std::vector<uint64_t> timestamps,
   return (low + timeSpan - 1) / timeSpan;
 }
 
-bool Currency::checkProofOfWork(Crypto::cn_context& context, const Block& block, difficulty_type currentDiffic,
-  Crypto::Hash& proofOfWork) const {
+bool Currency::checkProofOfWork(crypto::cn_context& context, const Block& block, difficulty_type currentDiffic,
+  crypto::Hash& proofOfWork) const {
 
   if (!get_block_longhash(context, block, proofOfWork)) {
     return false;
@@ -420,17 +420,17 @@ bool Currency::checkProofOfWork(Crypto::cn_context& context, const Block& block,
 }
 
 size_t Currency::getApproximateMaximumInputCount(size_t transactionSize, size_t outputCount, size_t mixinCount) const {
-  const size_t KEY_IMAGE_SIZE = sizeof(Crypto::KeyImage);
+  const size_t KEY_IMAGE_SIZE = sizeof(crypto::KeyImage);
   const size_t OUTPUT_KEY_SIZE = sizeof(decltype(KeyOutput::key));
   const size_t AMOUNT_SIZE = sizeof(uint64_t) + 2; //varint
   const size_t GLOBAL_INDEXES_VECTOR_SIZE_SIZE = sizeof(uint8_t);//varint
   const size_t GLOBAL_INDEXES_INITIAL_VALUE_SIZE = sizeof(uint32_t);//varint
   const size_t GLOBAL_INDEXES_DIFFERENCE_SIZE = sizeof(uint32_t);//varint
-  const size_t SIGNATURE_SIZE = sizeof(Crypto::Signature);
+  const size_t SIGNATURE_SIZE = sizeof(crypto::Signature);
   const size_t EXTRA_TAG_SIZE = sizeof(uint8_t);
   const size_t INPUT_TAG_SIZE = sizeof(uint8_t);
   const size_t OUTPUT_TAG_SIZE = sizeof(uint8_t);
-  const size_t PUBLIC_KEY_SIZE = sizeof(Crypto::PublicKey);
+  const size_t PUBLIC_KEY_SIZE = sizeof(crypto::PublicKey);
   const size_t TRANSACTION_VERSION_SIZE = sizeof(uint8_t);
   const size_t TRANSACTION_UNLOCK_TIME_SIZE = sizeof(uint64_t);
 

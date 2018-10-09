@@ -570,7 +570,7 @@ bool complex_wallet::show_payments(const std::vector<std::string> &args)
   bool payments_found = false;
   for (const std::string &arg : args)
   {
-    Crypto::Hash expectedPaymentId;
+    crypto::Hash expectedPaymentId;
     if (CryptoNote::parsePaymentId(arg, expectedPaymentId))
     {
       size_t transactionsCount = m_wallet->getTransactionCount();
@@ -584,7 +584,7 @@ bool complex_wallet::show_payments(const std::vector<std::string> &args)
         extraVec.reserve(txInfo.extra.size());
         std::for_each(txInfo.extra.begin(), txInfo.extra.end(), [&extraVec](const char el) { extraVec.push_back(el); });
 
-        Crypto::Hash paymentId;
+        crypto::Hash paymentId;
         if (CryptoNote::getPaymentIdFromTxExtra(extraVec, paymentId) && paymentId == expectedPaymentId)
         {
           payments_found = true;
