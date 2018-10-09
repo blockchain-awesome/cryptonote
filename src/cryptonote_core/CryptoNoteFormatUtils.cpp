@@ -464,13 +464,13 @@ bool get_aux_block_header_hash(const Block& b, Hash& res) {
   return getObjectHash(blob, res);
 }
 
-bool get_block_longhash(cn_context &context, const Block& b, Hash& res) {
+bool get_block_longhash(const Block& b, Hash& res) {
   BinaryArray bd;
   if (!get_block_hashing_blob(b, bd)) {
     return false;
   }
 
-  cn_slow_hash(context, bd.data(), bd.size(), res);
+  cn_slow_hash(bd.data(), bd.size(), (char *)&res, 1, 0);
   return true;
 }
 

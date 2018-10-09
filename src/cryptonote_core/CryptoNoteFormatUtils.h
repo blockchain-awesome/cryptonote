@@ -59,7 +59,7 @@ bool get_block_hashing_blob(const Block& b, BinaryArray& blob);
 bool get_aux_block_header_hash(const Block& b, crypto::Hash& res);
 bool get_block_hash(const Block& b, crypto::Hash& res);
 crypto::Hash get_block_hash(const Block& b);
-bool get_block_longhash(crypto::cn_context &context, const Block& b, crypto::Hash& res);
+bool get_block_longhash(const Block& b, crypto::Hash& res);
 bool get_inputs_money_amount(const Transaction& tx, uint64_t& money);
 uint64_t get_outs_money_amount(const Transaction& tx);
 bool check_inputs_types_supported(const TransactionPrefix& tx);

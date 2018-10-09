@@ -409,10 +409,10 @@ difficulty_type Currency::nextDifficulty(std::vector<uint64_t> timestamps,
   return (low + timeSpan - 1) / timeSpan;
 }
 
-bool Currency::checkProofOfWork(crypto::cn_context& context, const Block& block, difficulty_type currentDiffic,
+bool Currency::checkProofOfWork(const Block& block, difficulty_type currentDiffic,
   crypto::Hash& proofOfWork) const {
 
-  if (!get_block_longhash(context, block, proofOfWork)) {
+  if (!get_block_longhash(block, proofOfWork)) {
     return false;
   }
 
