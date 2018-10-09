@@ -470,7 +470,7 @@ bool get_block_longhash(const Block& b, Hash& res) {
     return false;
   }
 
-  cn_slow_hash(bd.data(), bd.size(), (char *)&res, 1, 0);
+  cn_slow_hash(bd.data(), bd.size(), res);
   return true;
 }
 
