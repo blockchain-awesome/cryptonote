@@ -16,7 +16,7 @@
 namespace CryptoNote {
 
 struct CryptoContext {
-  crypto::chacha8_key key;
+  crypto::chacha_key key;
   crypto::chacha_iv iv;
 
   void incIv();
@@ -66,7 +66,7 @@ private:
 
   uint32_t loadVersion(Common::IInputStream& source);
   void loadIv(Common::IInputStream& source, crypto::chacha_iv& iv);
-  void generateKey(const std::string& password, crypto::chacha8_key& key);
+  void generateKey(const std::string& password, crypto::chacha_key& key);
   void loadKeys(Common::IInputStream& source, CryptoContext& cryptoContext);
   void loadPublicKey(Common::IInputStream& source, CryptoContext& cryptoContext);
   void loadSecretKey(Common::IInputStream& source, CryptoContext& cryptoContext);

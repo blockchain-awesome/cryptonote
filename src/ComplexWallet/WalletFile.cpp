@@ -111,8 +111,8 @@ using namespace CryptoNote;
 
     std::string plain = plainArchive.str();
     std::string cipher;
-    crypto::chacha8_key key;
-    crypto::generate_chacha8_key(password, key);
+    crypto::chacha_key key;
+    crypto::generate_chacha_key(password, key);
 
     cipher.resize(plain.size());
 

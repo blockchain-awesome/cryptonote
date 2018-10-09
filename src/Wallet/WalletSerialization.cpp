@@ -327,7 +327,7 @@ void WalletSerializer::save(const std::string& password, Common::IOutputStream& 
 CryptoContext WalletSerializer::generateCryptoContext(const std::string& password) {
   CryptoContext context;
 
-  crypto::generate_chacha8_key(password, context.key);
+  crypto::generate_chacha_key(password, context.key);
 
   context.iv = crypto::rand<crypto::chacha_iv>();
 
@@ -615,8 +615,8 @@ void WalletSerializer::loadIv(Common::IInputStream& source, crypto::chacha_iv& i
   s.binary(static_cast<void *>(&iv.data), sizeof(iv.data), "chacha_iv");
 }
 
-void WalletSerializer::generateKey(const std::string& password, crypto::chacha8_key& key) {
-  crypto::generate_chacha8_key(password, key);
+void WalletSerializer::generateKey(const std::string& password, crypto::chacha_key& key) {
+  crypto::generate_chacha_key(password, key);
 }
 
 void WalletSerializer::loadKeys(Common::IInputStream& source, CryptoContext& cryptoContext) {

@@ -88,8 +88,8 @@ void WalletLegacySerializer::saveKeys(CryptoNote::ISerializer& serializer) {
 }
 
 crypto::chacha_iv WalletLegacySerializer::encrypt(const std::string& plain, const std::string& password, std::string& cipher) {
-  crypto::chacha8_key key;
-  crypto::generate_chacha8_key(password, key);
+  crypto::chacha_key key;
+  crypto::generate_chacha_key(password, key);
 
   cipher.resize(plain.size());
 
@@ -146,8 +146,8 @@ void WalletLegacySerializer::deserialize(std::istream& stream, const std::string
 }
 
 void WalletLegacySerializer::decrypt(const std::string& cipher, std::string& plain, crypto::chacha_iv iv, const std::string& password) {
-  crypto::chacha8_key key;
-  crypto::generate_chacha8_key(password, key);
+  crypto::chacha_key key;
+  crypto::generate_chacha_key(password, key);
 
   plain.resize(cipher.size());
 

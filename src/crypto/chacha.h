@@ -20,10 +20,10 @@ namespace crypto {
   }
 
 #pragma pack(push, 1)
-  struct chacha8_key {
+  struct chacha_key {
     uint8_t data[CHACHA8_KEY_SIZE];
 
-    ~chacha8_key()
+    ~chacha_key()
     {
       memset(data, 0, sizeof(data));
     }
@@ -35,14 +35,14 @@ namespace crypto {
   };
 #pragma pack(pop)
 
-  static_assert(sizeof(chacha8_key) == CHACHA8_KEY_SIZE && sizeof(chacha_iv) == CHACHA8_IV_SIZE, "Invalid structure size");
+  static_assert(sizeof(chacha_key) == CHACHA8_KEY_SIZE && sizeof(chacha_iv) == CHACHA8_IV_SIZE, "Invalid structure size");
 
-  inline void chacha8(const void* data, size_t length, const chacha8_key& key, const chacha_iv& iv, char* cipher) {
+  inline void chacha8(const void* data, size_t length, const chacha_key& key, const chacha_iv& iv, char* cipher) {
     chacha8(data, length, reinterpret_cast<const uint8_t*>(&key), reinterpret_cast<const uint8_t*>(&iv), cipher);
   }
 
-  inline void generate_chacha8_key(const std::string& password, chacha8_key& key) {
-    static_assert(sizeof(chacha8_key) <= sizeof(Hash), "Size of hash must be at least that of chacha8_key");
+  inline void generate_chacha_key(const std::string& password, chacha_key& key) {
+    static_assert(sizeof(chacha_key) <= sizeof(Hash), "Size of hash must be at least that of chacha_key");
     Hash pwd_hash;
     cn_slow_hash(password.data(), password.size(), (char *)&pwd_hash, 1, 0);
     memcpy(&key, &pwd_hash, sizeof(key));
