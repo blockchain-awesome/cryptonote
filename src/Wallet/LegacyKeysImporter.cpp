@@ -24,7 +24,7 @@ using namespace crypto;
 namespace {
 
 struct keys_file_data {
-  chacha8_iv iv;
+  chacha_iv iv;
   std::string account_data;
 
   void serialize(CryptoNote::ISerializer& s) {

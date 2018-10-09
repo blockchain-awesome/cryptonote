@@ -117,7 +117,7 @@ using namespace CryptoNote;
 
     cipher.resize(plain.size());
 
-    crypto::chacha8_iv iv = crypto::rand<crypto::chacha8_iv>();
+    crypto::chacha_iv iv = crypto::rand<crypto::chacha_iv>();
     crypto::chacha8(plain.data(), plain.size(), key, iv, &cipher[0]);
 
     uint32_t version = 1;
