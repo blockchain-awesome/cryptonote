@@ -86,7 +86,6 @@ void Miner::runWorkers(BlockMiningParameters blockMiningParameters, size_t threa
 void Miner::workerFunc(const Block& blockTemplate, difficulty_type difficulty, uint32_t nonceStep) {
   try {
     Block block = blockTemplate;
-    // crypto::cn_context cryptoContext;
 
     while (m_state == MiningState::MINING_IN_PROGRESS) {
       crypto::Hash hash;
