@@ -27,7 +27,7 @@ extern "C" {
   }
 
   static void slow_hash(const void *data, size_t length, char *hash) {
-    crypto::cn_slow_hash(data, length, hash, 1, 0);
+    crypto::cn_slow_hash(data, length, hash, 0, 0);
   }
 }
 
