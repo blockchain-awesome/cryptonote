@@ -97,7 +97,7 @@ public:
   bool parseAmount(const std::string& str, uint64_t& amount) const;
 
   difficulty_type nextDifficulty(std::vector<uint64_t> timestamps, std::vector<difficulty_type> cumulativeDifficulties) const;
-  bool checkProofOfWork(crypto::cn_context& context, const Block& block, difficulty_type currentDiffic, crypto::Hash& proofOfWork) const;
+  bool checkProofOfWork(const Block& block, difficulty_type currentDiffic, crypto::Hash& proofOfWork) const;
 
   size_t getApproximateMaximumInputCount(size_t transactionSize, size_t outputCount, size_t mixinCount) const;
 

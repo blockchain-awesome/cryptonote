@@ -52,8 +52,7 @@ void loadKeysFromFile(const std::string& filename, const std::string& password, 
   }
 
   chacha_key key;
-  cn_context cn_context;
-  generate_chacha_key(cn_context, password, key);
+  generate_chacha_key(password, key);
   std::string account_data;
   account_data.resize(keys_file_data.account_data.size());
   chacha8(keys_file_data.account_data.data(), keys_file_data.account_data.size(), key, keys_file_data.iv, &account_data[0]);

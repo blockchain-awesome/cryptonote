@@ -42,10 +42,11 @@ namespace crypto {
   private:
 
     void *data;
-    friend inline void cn_slow_hash(cn_context &, const void *, size_t, Hash &);
+    friend inline void cn_slow_hash(const void *, size_t, Hash &);
   };
 
-  inline void cn_slow_hash(cn_context &context, const void *data, size_t length, Hash &hash) {
+  inline void cn_slow_hash(const void *data, size_t length, Hash &hash) {
+    cn_context context;
     (*cn_slow_hash_f)(context.data, data, length, reinterpret_cast<void *>(&hash));
   }
 
