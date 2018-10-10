@@ -29,15 +29,15 @@ namespace crypto {
     }
   };
 
-  // MS VC 2012 doesn't interpret `class chacha8_iv` as POD in spite of [9.0.10], so it is a struct
-  struct chacha8_iv {
+  // MS VC 2012 doesn't interpret `class chacha_iv` as POD in spite of [9.0.10], so it is a struct
+  struct chacha_iv {
     uint8_t data[CHACHA8_IV_SIZE];
   };
 #pragma pack(pop)
 
-  static_assert(sizeof(chacha_key) == CHACHA8_KEY_SIZE && sizeof(chacha8_iv) == CHACHA8_IV_SIZE, "Invalid structure size");
+  static_assert(sizeof(chacha_key) == CHACHA8_KEY_SIZE && sizeof(chacha_iv) == CHACHA8_IV_SIZE, "Invalid structure size");
 
-  inline void chacha8(const void* data, size_t length, const chacha_key& key, const chacha8_iv& iv, char* cipher) {
+  inline void chacha8(const void* data, size_t length, const chacha_key& key, const chacha_iv& iv, char* cipher) {
     chacha8(data, length, reinterpret_cast<const uint8_t*>(&key), reinterpret_cast<const uint8_t*>(&iv), cipher);
   }
 
