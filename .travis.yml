@@ -1,6 +1,10 @@
 language: cpp
 compiler:
   - gcc
+env:
+  global:
+    - DOCKER_PACKAGES="build-essential libtool cmake autotools-dev automake pkg-config bsdmainutils curl git ca-certificates ccache"
+
 before_install:
   - pip install --user cpp-coveralls
 script:
