@@ -19,7 +19,7 @@
 #include "cryptonote_core/SwappedVector.h"
 #include "cryptonote_core/CryptoNoteFormatUtils.h"
 #include "cryptonote_core/TransactionPool.h"
-#include "cryptonote_core/BlockchainIndices.h"
+#include "cryptonote_core/blockchain/indexing/exports.h"
 
 #include "cryptonote_core/MessageQueue.h"
 #include "cryptonote_core/BlockchainMessages.h"
