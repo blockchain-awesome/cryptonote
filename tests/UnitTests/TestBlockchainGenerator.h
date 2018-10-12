@@ -10,7 +10,7 @@
 #include "cryptonote_core/Account.h"
 #include "cryptonote_core/CryptoNoteBasic.h"
 #include "cryptonote_core/Currency.h"
-#include "cryptonote_core/BlockchainIndices.h"
+#include "cryptonote_core/blockchain/indexing/exports.h"
 #include "crypto/hash.h"
 
 #include "../TestGenerator/TestGenerator.h"

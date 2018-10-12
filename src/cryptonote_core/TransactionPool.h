@@ -28,7 +28,7 @@
 #include "cryptonote_core/ITransactionValidator.h"
 #include "cryptonote_core/ITxPoolObserver.h"
 #include "cryptonote_core/VerificationContext.h"
-#include "cryptonote_core/BlockchainIndices.h"
+#include "cryptonote_core/blockchain/indexing/exports.h"
 
 #include <Logging/LoggerRef.h>
 
