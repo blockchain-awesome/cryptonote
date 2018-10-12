@@ -1,3 +1,6 @@
+sudo: required
+dist: trusty
+
 language: cpp
 compiler:
   - gcc
@@ -8,6 +11,13 @@ addons:
 
 before_install:
   - pip install --user cpp-coveralls
+install:
+  - sudo apt-get install libboost-thread1.55.0 libboost-thread1.55-dev
+  - sudo apt-get install libboost-python1.55.0 libboost-python1.55-dev
+  - sudo apt-get install libboost-regex1.55.0 libboost-regex1.55-dev
+  - sudo apt-get install libboost-system1.55.0 libboost-system1.55-dev
+  - sudo apt-get install libboost-program-options1.55.0 libboost-program-options1.55-dev
+
 script:
   - mkdir build && cd build && cmake .. && make && make check
 after_success:
