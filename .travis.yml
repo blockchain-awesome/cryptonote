@@ -9,8 +9,8 @@ addons:
     - boost-latest
     - ubuntu-toolchain-r-test
     packages:
-    - gcc-5.4
-    - g++-5.4
+    - gcc-5.0
+    - g++-5.0
     - libboost-all-dev
 
 before_install:
