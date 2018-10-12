@@ -1,17 +1,16 @@
-sudo: false
 language: cpp
 compiler:
   - gcc
-  # - clang
+env:
+  global:
+    - DOCKER_PACKAGES="build-essential libtool cmake autotools-dev automake pkg-config bsdmainutils curl git ca-certificates ccache"
+
 addons:
   apt:
-    sources:
-    - boost-latest
-    - ubuntu-toolchain-r-test
     packages:
-    - gcc-5.0
-    - g++-5.0
-    - libboost-all-dev
+      - g++-5.4
+      - gcc-5.4
+      - libboost-all-dev
 
 before_install:
   - pip install --user cpp-coveralls
