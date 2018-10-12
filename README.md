@@ -1,9 +1,27 @@
-VIG COIN是基于[CryptoNote](https://cryptonote.org) 加密币协议的币。
 
-它旨在在当前加密币的基础上：
+## VIG
 
-1. 继续完善加密币或者周边（包括去中心化，加快交易速度等）
-2. 推动加密币的实际使用场景（包括尝试构建去中心交易所等）
+[![Build Status][travis-image]][travis-url]
+[![Coverage percentage][coveralls-image]][coveralls-url]
+
+Copyright (c) 2018- The VIG Project.
+Copyright (c) 2018- The Monero Project.
+Copyright (c) 2012-2013 The Cryptonote developers.
+
+
+
+## Introduction
+
+VIG Coin is a coin based on the cryptonote cryptocurrency protocol.
+
+It's goal is too implement a coin with:
+
+1. Fast exchanging speed
+2. Anti-ASIC awareness.
+3. Decentralized exchange support
+4. A light wallet api
+5. Node with one Docker command
+6. Offlinable Web based decentralized wallet
 
 
 ## 参与
@@ -20,10 +38,6 @@ VIG COIN是一个开源，社区化的项目。非常欢迎各类开源贡献者
 ## 编译
 
 推荐 Ubuntu 16.04 平台
-
-## ComplexWallet
-
-ComplexWallet是VIG COIN特有的服务，它是为去中心化交易做准备的钱包服务。
 
 ### On *nix
 
@@ -61,3 +75,12 @@ cmake -G "Visual Studio 12 Win64" ..
 
 And then do Build.
 Good luck!
+
+## License
+
+MIT
+
+[travis-image]: https://travis-ci.org/vigcoin/coin.svg?branch=master
+[travis-url]: https://travis-ci.org/vigcoin/coin
+[coveralls-image]: https://coveralls.io/repos/github/vigcoin/coin/badge.svg?branch=master
+[coveralls-url]: https://coveralls.io/github/vigcoin/coin?branch=master
