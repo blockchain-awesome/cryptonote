@@ -4,9 +4,9 @@
 [![Build Status][travis-image]][travis-url]
 [![Coverage percentage][coveralls-image]][coveralls-url]
 
-Copyright (c) 2018- The VIG Project.
-Copyright (c) 2018- The Monero Project.
-Copyright (c) 2012-2013 The Cryptonote developers.
+Copyright (c) 2018- The VIG Project.  
+Copyright (c) 2018- The Monero Project.  
+Copyright (c) 2012-2013 The Cryptonote developers.  
 
 
 
@@ -14,7 +14,7 @@ Copyright (c) 2012-2013 The Cryptonote developers.
 
 VIG Coin is a coin based on the cryptonote cryptocurrency protocol.
 
-It's goal is too implement a coin with:
+It's goal is to implement a coin with:
 
 1. Fast exchanging speed
 2. Anti-ASIC awareness.
