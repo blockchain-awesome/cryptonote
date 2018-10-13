@@ -266,53 +266,53 @@ namespace {
   }
 }
 
-// TEST_F(TransfersApi, moveMoney) {
-//   addMinerAccount();
-//   addAccounts(2);
-//   subscribeAccounts();
+TEST_F(TransfersApi, moveMoney) {
+  addMinerAccount();
+  addAccounts(2);
+  subscribeAccounts();
 
-//   generator.generateEmptyBlocks(2 * m_currency.minedMoneyUnlockWindow());
+  generator.generateEmptyBlocks(2 * m_currency.minedMoneyUnlockWindow());
 
-//   // sendAmount is an even number
-//   uint64_t sendAmount = (get_outs_money_amount(generator.getBlockchain()[1].baseTransaction) / 4) * 2;
-//   auto fee = m_currency.minimumFee();
+  // sendAmount is an even number
+  uint64_t sendAmount = (get_outs_money_amount(generator.getBlockchain()[1].baseTransaction) / 4) * 2;
+  auto fee = m_currency.minimumFee();
 
-//   startSync();
+  startSync();
 
-//   auto& tc0 = m_subscriptions[0]->getContainer();
+  auto& tc0 = m_subscriptions[0]->getContainer();
 
-//   ASSERT_LE(sendAmount, tc0.balance(ITransfersContainer::IncludeAllUnlocked));
+  ASSERT_LE(sendAmount, tc0.balance(ITransfersContainer::IncludeAllUnlocked));
 
-//   auto tx = createMoneyTransfer(sendAmount, fee, m_accounts[0], m_accounts[1].address, tc0);
-//   submitTransaction(*tx);
+  auto tx = createMoneyTransfer(sendAmount, fee, m_accounts[0], m_accounts[1].address, tc0);
+  submitTransaction(*tx);
 
-//   refreshSync();
+  refreshSync();
 
-//   ASSERT_EQ(1, m_transferObservers[1].m_transfers.size());
-//   ASSERT_EQ(tx->getTransactionHash(), m_transferObservers[1].m_transfers[0]);
+  ASSERT_EQ(1, m_transferObservers[1].m_transfers.size());
+  ASSERT_EQ(tx->getTransactionHash(), m_transferObservers[1].m_transfers[0]);
 
-//   auto& tc1 = m_subscriptions[1]->getContainer();
+  auto& tc1 = m_subscriptions[1]->getContainer();
 
-//   ASSERT_EQ(sendAmount, tc1.balance(ITransfersContainer::IncludeAll));
-//   ASSERT_EQ(0, tc1.balance(ITransfersContainer::IncludeAllUnlocked));
+  ASSERT_EQ(sendAmount, tc1.balance(ITransfersContainer::IncludeAll));
+  ASSERT_EQ(0, tc1.balance(ITransfersContainer::IncludeAllUnlocked));
 
-//   generator.generateEmptyBlocks(m_currency.minedMoneyUnlockWindow()); // unlock money
+  generator.generateEmptyBlocks(m_currency.minedMoneyUnlockWindow()); // unlock money
 
-//   refreshSync();
+  refreshSync();
 
-//   ASSERT_EQ(sendAmount, tc1.balance(ITransfersContainer::IncludeAllUnlocked));
+  ASSERT_EQ(sendAmount, tc1.balance(ITransfersContainer::IncludeAllUnlocked));
 
-//   auto tx2 = createMoneyTransfer(sendAmount / 2, fee, m_accounts[1], m_accounts[2].address, tc1);
-//   submitTransaction(*tx2);
+  auto tx2 = createMoneyTransfer(sendAmount / 2, fee, m_accounts[1], m_accounts[2].address, tc1);
+  submitTransaction(*tx2);
 
-//   refreshSync();
+  refreshSync();
 
-//   ASSERT_EQ(2, m_transferObservers[1].m_transfers.size());
-//   ASSERT_EQ(tx2->getTransactionHash(), m_transferObservers[1].m_transfers.back());
+  ASSERT_EQ(2, m_transferObservers[1].m_transfers.size());
+  ASSERT_EQ(tx2->getTransactionHash(), m_transferObservers[1].m_transfers.back());
 
-//   ASSERT_EQ(sendAmount / 2 - fee, m_subscriptions[1]->getContainer().balance(ITransfersContainer::IncludeAll));
-//   ASSERT_EQ(sendAmount / 2, m_subscriptions[2]->getContainer().balance(ITransfersContainer::IncludeAll));
-// }
+  ASSERT_EQ(sendAmount / 2 - fee, m_subscriptions[1]->getContainer().balance(ITransfersContainer::IncludeAll));
+  ASSERT_EQ(sendAmount / 2, m_subscriptions[2]->getContainer().balance(ITransfersContainer::IncludeAll));
+}
 
 
 struct lessOutKey {

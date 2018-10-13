@@ -102,4 +102,4 @@ foreach(hash IN ITEMS fast slow tree extra-blake extra-groestl extra-jh extra-sk
 endforeach(hash)
 add_test(HashTargetTests hash_target_tests)
 add_test(SystemTests system_tests)
-add_test(UnitTests unit_tests)
+# add_test(UnitTests unit_tests)

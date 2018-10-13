@@ -85,6 +85,7 @@ bool test_generator::constructBlock(CryptoNote::Block& blk, uint32_t height, con
   size_t txsSize = 0;
   for (auto& tx : txList) {
     uint64_t fee = 0;
+    
     bool r = get_tx_fee(tx, fee);
     CHECK_AND_ASSERT_MES(r, false, "wrong transaction passed to construct_block");
     totalFee += fee;
