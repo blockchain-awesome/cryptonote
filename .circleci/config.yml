@@ -9,5 +9,14 @@ jobs:
           name: Get building tools
           command: apt update && apt install -y build-essential cmake pkg-config libboost-all-dev libssl-dev libzmq3-dev libunbound-dev libsodium-dev libunwind8-dev liblzma-dev libreadline6-dev libldns-dev libexpat1-dev doxygen graphviz libpgm-dev
       - run:
+          name: Enabling coverage
+          command: pip install --user cpp-coveralls
+      - run:
           name: Building project
           command: mkdir -p build && cd build && cmake .. && make
+      - run:
+          name: Testing project
+          command: cd build && env CTEST_OUTPUT_ON_FAILURE=1 make test
+    #   - run:
+    #       name: Sending coverall info
+    #       command: coveralls --exclude lib --exclude tests --gcov-options '\-lp'
