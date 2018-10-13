@@ -4,6 +4,8 @@
 [![Build Status][travis-image]][travis-url]
 [![Coverage percentage][coveralls-image]][coveralls-url]
 
+[![CircleCI](https://circleci.com/gh/vigcoin/coin.svg?style=svg)](https://circleci.com/gh/vigcoin/coin)
+
 Copyright (c) 2018- The VIG Project.  
 Copyright (c) 2018- The Monero Project.  
 Copyright (c) 2012-2013 The Cryptonote developers.  
