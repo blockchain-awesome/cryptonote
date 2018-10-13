@@ -1,8 +1,10 @@
 
 ## VIG
 
+[![Coverity Scan Build Status](https://scan.coverity.com/projects/16947/badge.svg)](https://scan.coverity.com/projects/vigcoin-coin)
 [![Build Status][travis-image]][travis-url]
 [![Coverage percentage][coveralls-image]][coveralls-url]
+
 
 [![CircleCI](https://circleci.com/gh/vigcoin/coin.svg?style=svg)](https://circleci.com/gh/vigcoin/coin)
 
