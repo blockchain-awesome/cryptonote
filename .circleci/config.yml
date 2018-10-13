@@ -7,7 +7,7 @@ jobs:
       - checkout
       - run:
           name: Get building tools
-          command: apt update && apt install -y build-essential cmake pkg-config libboost-all-dev libssl-dev libzmq3-dev libunbound-dev libsodium-dev libunwind8-dev liblzma-dev libreadline6-dev libldns-dev libexpat1-dev doxygen graphviz libpgm-dev
+          command: apt update && apt install -y build-essential cmake libboost-all-dev python-pip python-dev
       - run:
           name: Enabling coverage
           command: pip install --user cpp-coveralls
