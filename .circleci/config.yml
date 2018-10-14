@@ -13,7 +13,7 @@ jobs:
           command: pip install --user cpp-coveralls
       - run:
           name: Building project
-          command: mkdir -p build && cd build && cmake .. && make
+          command: mkdir -p build && cd build && cmake .. -DCMAKE_BUILD_TYPE=Debug -DENABLE_GCOV=1 && make
       - run:
           name: Testing project
           command: cd build && env CTEST_OUTPUT_ON_FAILURE=1 make test
