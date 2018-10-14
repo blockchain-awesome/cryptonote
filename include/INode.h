@@ -10,8 +10,8 @@
 #include <vector>
 
 #include "crypto/crypto.h"
-#include "cryptonote_core/CryptoNoteBasic.h"
-#include "cryptonote_protocol/CryptoNoteProtocolDefinitions.h"
+#include "cryptonote/core/CryptoNoteBasic.h"
+#include "cryptonote/protocol/CryptoNoteProtocolDefinitions.h"
 #include "Rpc/CoreRpcServerCommandsDefinitions.h"
 
 #include "BlockchainExplorerData.h"

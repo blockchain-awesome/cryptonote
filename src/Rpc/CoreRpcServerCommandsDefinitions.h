@@ -4,9 +4,9 @@
 
 #pragma once
 
-#include "cryptonote_protocol/CryptoNoteProtocolDefinitions.h"
-#include "cryptonote_core/CryptoNoteBasic.h"
-#include "cryptonote_core/Difficulty.h"
+#include "cryptonote/protocol/CryptoNoteProtocolDefinitions.h"
+#include "cryptonote/core/CryptoNoteBasic.h"
+#include "cryptonote/core/Difficulty.h"
 #include "crypto/hash.h"
 
 #include "Serialization/SerializationOverloads.h"

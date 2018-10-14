@@ -6,8 +6,8 @@
 
 #include <cstdint>
 
-#include "cryptonote_protocol/ICryptoNoteProtocolObserver.h"
-#include "cryptonote_protocol/ICryptoNoteProtocolQuery.h"
+#include "cryptonote/protocol/ICryptoNoteProtocolObserver.h"
+#include "cryptonote/protocol/ICryptoNoteProtocolQuery.h"
 
 class ICryptoNoteProtocolQueryStub: public cryptonote::ICryptoNoteProtocolQuery {
 public:

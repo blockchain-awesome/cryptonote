@@ -3,14 +3,14 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "crypto/crypto.h" //for rand()
-#include "cryptonote_core/Account.h"
-#include "cryptonote_core/CryptoNoteFormatUtils.h"
-#include "cryptonote_core/CryptoNoteTools.h"
+#include "cryptonote/core/Account.h"
+#include "cryptonote/core/CryptoNoteFormatUtils.h"
+#include "cryptonote/core/CryptoNoteTools.h"
 
 #include "WalletLegacy/WalletTransactionSender.h"
 #include "WalletLegacy/WalletUtils.h"
 
-#include "cryptonote_core/CryptoNoteBasicImpl.h"
+#include "cryptonote/core/CryptoNoteBasicImpl.h"
 
 #include <Logging/LoggerGroup.h>
 

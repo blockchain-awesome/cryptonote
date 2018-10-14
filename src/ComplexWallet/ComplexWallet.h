@@ -15,8 +15,8 @@
 #include "PasswordContainer.h"
 
 #include "common/ConsoleHandler.h"
-#include "cryptonote_core/CryptoNoteBasicImpl.h"
-#include "cryptonote_core/Currency.h"
+#include "cryptonote/core/CryptoNoteBasicImpl.h"
+#include "cryptonote/core/Currency.h"
 #include "NodeRpcProxy/NodeRpcProxy.h"
 #include "WalletLegacy/WalletHelper.h"
 

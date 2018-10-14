@@ -3,9 +3,9 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "INodeStubs.h"
-#include "cryptonote_core/CryptoNoteFormatUtils.h"
-#include "cryptonote_core/CryptoNoteTools.h"
-#include "cryptonote_core/TransactionApi.h"
+#include "cryptonote/core/CryptoNoteFormatUtils.h"
+#include "cryptonote/core/CryptoNoteTools.h"
+#include "cryptonote/core/TransactionApi.h"
 #include "Wallet/WalletErrors.h"
 
 #include <functional>

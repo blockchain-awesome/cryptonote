@@ -5,7 +5,7 @@
 #include "gtest/gtest.h"
 #include <tuple>
 
-#include "cryptonote_core/TransactionApi.h"
+#include "cryptonote/core/TransactionApi.h"
 #include "Logging/ConsoleLogger.h"
 #include "Transfers/TransfersSubscription.h"
 #include "Transfers/TypeHelpers.h"

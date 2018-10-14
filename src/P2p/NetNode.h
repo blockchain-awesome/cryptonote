@@ -17,8 +17,8 @@
 #include <System/TcpConnection.h>
 #include <System/TcpListener.h>
 
-#include "cryptonote_core/OnceInInterval.h"
-#include "cryptonote_protocol/CryptoNoteProtocolHandler.h"
+#include "cryptonote/core/OnceInInterval.h"
+#include "cryptonote/protocol/CryptoNoteProtocolHandler.h"
 #include "common/CommandLine.h"
 #include "Logging/LoggerRef.h"
 

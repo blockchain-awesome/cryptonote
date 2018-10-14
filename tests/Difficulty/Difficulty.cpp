@@ -10,8 +10,8 @@
 #include <algorithm>
 
 #include "CryptoNoteConfig.h"
-#include "cryptonote_core/Difficulty.h"
-#include "cryptonote_core/Currency.h"
+#include "cryptonote/core/Difficulty.h"
+#include "cryptonote/core/Currency.h"
 #include "Logging/ConsoleLogger.h"
 
 using namespace std;

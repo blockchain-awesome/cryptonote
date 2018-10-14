@@ -14,9 +14,9 @@
 #include "InProcessNode/InProcessNode.h"
 #include "TestBlockchainGenerator.h"
 #include "Logging/FileLogger.h"
-#include "cryptonote_core/TransactionApi.h"
-#include "cryptonote_core/CryptoNoteTools.h"
-#include "cryptonote_core/VerificationContext.h"
+#include "cryptonote/core/TransactionApi.h"
+#include "cryptonote/core/CryptoNoteTools.h"
+#include "cryptonote/core/VerificationContext.h"
 #include "common/StringTools.h"
 
 using namespace crypto;

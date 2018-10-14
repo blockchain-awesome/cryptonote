@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "cryptonote_core/CoreConfig.h"
+#include "cryptonote/core/CoreConfig.h"
 #include "GateConfiguration.h"
 #include "P2p/NetNodeConfig.h"
 #include "RpcNodeConfiguration.h"

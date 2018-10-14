@@ -5,10 +5,10 @@
 #include "TestGenerator.h"
 
 #include <common/Math.h>
-#include "cryptonote_core/Account.h"
-#include "cryptonote_core/Miner.h"
-#include "cryptonote_core/TransactionExtra.h"
-#include "cryptonote_core/CryptoNoteTools.h"
+#include "cryptonote/core/Account.h"
+#include "cryptonote/core/Miner.h"
+#include "cryptonote/core/TransactionExtra.h"
+#include "cryptonote/core/CryptoNoteTools.h"
 
 using namespace std;
 using namespace cryptonote;

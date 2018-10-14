@@ -7,7 +7,7 @@
 #include <cstdint>
 #include <vector>
 
-#include "cryptonote_core/CryptoNoteFormatUtils.h"
+#include "cryptonote/core/CryptoNoteFormatUtils.h"
 
 #define VEC_FROM_ARR(vec)                                               \
   std::vector<uint64_t> vec;                                            \

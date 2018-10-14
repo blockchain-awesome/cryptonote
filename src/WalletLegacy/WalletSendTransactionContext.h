@@ -7,7 +7,7 @@
 #include <list>
 #include <vector>
 
-#include "cryptonote_core/CryptoNoteBasic.h"
+#include "cryptonote/core/CryptoNoteBasic.h"
 #include "IWalletLegacy.h"
 #include "ITransfersContainer.h"
 

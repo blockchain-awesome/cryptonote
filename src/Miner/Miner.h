@@ -12,7 +12,7 @@
 #include <System/RemoteContext.h>
 
 #include "CryptoNote.h"
-#include "cryptonote_core/Difficulty.h"
+#include "cryptonote/core/Difficulty.h"
 
 #include "Logging/LoggerRef.h"
 

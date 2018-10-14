@@ -7,10 +7,10 @@
 #include <cstdint>
 #include <unordered_map>
 
-#include "cryptonote_core/CryptoNoteBasic.h"
-#include "cryptonote_core/ICore.h"
-#include "cryptonote_core/ICoreObserver.h"
-#include "cryptonote_protocol/CryptoNoteProtocolDefinitions.h"
+#include "cryptonote/core/CryptoNoteBasic.h"
+#include "cryptonote/core/ICore.h"
+#include "cryptonote/core/ICoreObserver.h"
+#include "cryptonote/protocol/CryptoNoteProtocolDefinitions.h"
 #include "Rpc/CoreRpcServerCommandsDefinitions.h"
 
 class ICoreStub: public cryptonote::ICore {

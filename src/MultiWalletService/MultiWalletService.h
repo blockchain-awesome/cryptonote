@@ -15,7 +15,7 @@
 
 #include "PaymentGate/NodeFactory.h"
 
-#include "cryptonote_core/Currency.h"
+#include "cryptonote/core/Currency.h"
 #include "System/Event.h"
 #include "WalletInterface.h"
 

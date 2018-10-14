@@ -6,7 +6,7 @@
 
 #include <string>
 
-#include "cryptonote_core/Currency.h"
+#include "cryptonote/core/Currency.h"
 
 namespace cryptonote {
 

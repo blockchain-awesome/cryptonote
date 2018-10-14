@@ -4,9 +4,9 @@
 
 #pragma once
 
-#include "cryptonote_core/Account.h"
-#include "cryptonote_core/CryptoNoteBasic.h"
-#include "cryptonote_core/CryptoNoteFormatUtils.h"
+#include "cryptonote/core/Account.h"
+#include "cryptonote/core/CryptoNoteBasic.h"
+#include "cryptonote/core/CryptoNoteFormatUtils.h"
 
 #include "MultiTransactionTestBase.h"
 

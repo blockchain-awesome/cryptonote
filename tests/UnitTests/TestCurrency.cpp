@@ -5,8 +5,8 @@
 #include "gtest/gtest.h"
 
 #include "crypto/crypto.h"
-#include "cryptonote_core/Currency.h"
-#include "cryptonote_core/TransactionApi.h"
+#include "cryptonote/core/Currency.h"
+#include "cryptonote/core/TransactionApi.h"
 #include "Logging/ConsoleLogger.h"
 
 #include "TransactionApiHelpers.h"

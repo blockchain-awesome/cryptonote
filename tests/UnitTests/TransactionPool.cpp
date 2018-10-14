@@ -8,12 +8,12 @@
 
 #include <boost/filesystem/operations.hpp>
 
-#include "cryptonote_core/Account.h"
-#include "cryptonote_core/CryptoNoteFormatUtils.h"
-#include "cryptonote_core/CryptoNoteTools.h"
-#include "cryptonote_core/Currency.h"
-#include "cryptonote_core/TransactionExtra.h"
-#include "cryptonote_core/TransactionPool.h"
+#include "cryptonote/core/Account.h"
+#include "cryptonote/core/CryptoNoteFormatUtils.h"
+#include "cryptonote/core/CryptoNoteTools.h"
+#include "cryptonote/core/Currency.h"
+#include "cryptonote/core/TransactionExtra.h"
+#include "cryptonote/core/TransactionPool.h"
 
 #include <Logging/ConsoleLogger.h>
 #include <Logging/LoggerGroup.h>

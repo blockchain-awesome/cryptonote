@@ -7,11 +7,11 @@
 #include <vector>
 
 #include "common/Util.h"
-#include "cryptonote_core/Account.h"
-#include "cryptonote_core/CryptoNoteFormatUtils.h"
-#include "cryptonote_core/CryptoNoteTools.h"
-#include "cryptonote_core/Currency.h"
-#include "cryptonote_core/TransactionExtra.h"
+#include "cryptonote/core/Account.h"
+#include "cryptonote/core/CryptoNoteFormatUtils.h"
+#include "cryptonote/core/CryptoNoteTools.h"
+#include "cryptonote/core/Currency.h"
+#include "cryptonote/core/TransactionExtra.h"
 #include "common/StringTools.h"
 
 #include <Logging/LoggerGroup.h>

@@ -8,12 +8,12 @@
 
 #include "crypto/crypto.h"
 #include "CryptoNoteConfig.h"
-#include "cryptonote_core/CryptoNoteStatInfo.h"
+#include "cryptonote/core/CryptoNoteStatInfo.h"
 
 // new serialization
 #include "Serialization/ISerializer.h"
 #include "Serialization/SerializationOverloads.h"
-#include "cryptonote_core/CryptoNoteSerialization.h"
+#include "cryptonote/core/CryptoNoteSerialization.h"
 
 namespace cryptonote
 {

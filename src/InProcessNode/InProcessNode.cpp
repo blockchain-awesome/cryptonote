@@ -6,14 +6,14 @@
 
 #include <functional>
 #include <boost/utility/value_init.hpp>
-#include <cryptonote_core/TransactionApi.h>
+#include <cryptonote/core/TransactionApi.h>
 
 #include "CryptoNoteConfig.h"
 #include "common/StringTools.h"
-#include "cryptonote_core/CryptoNoteTools.h"
-#include "cryptonote_core/IBlock.h"
-#include "cryptonote_core/VerificationContext.h"
-#include "cryptonote_protocol/CryptoNoteProtocolHandlerCommon.h"
+#include "cryptonote/core/CryptoNoteTools.h"
+#include "cryptonote/core/IBlock.h"
+#include "cryptonote/core/VerificationContext.h"
+#include "cryptonote/protocol/CryptoNoteProtocolHandlerCommon.h"
 #include "InProcessNodeErrors.h"
 #include "common/StringTools.h"
 

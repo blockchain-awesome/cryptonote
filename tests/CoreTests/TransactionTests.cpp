@@ -2,11 +2,11 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "cryptonote_core/CryptoNoteBasicImpl.h"
-#include "cryptonote_core/Account.h"
-#include "cryptonote_core/CryptoNoteFormatUtils.h"
-#include "cryptonote_core/CryptoNoteTools.h"
-#include "cryptonote_core/Currency.h"
+#include "cryptonote/core/CryptoNoteBasicImpl.h"
+#include "cryptonote/core/Account.h"
+#include "cryptonote/core/CryptoNoteFormatUtils.h"
+#include "cryptonote/core/CryptoNoteTools.h"
+#include "cryptonote/core/Currency.h"
 
 #include <common/Math.h>
 

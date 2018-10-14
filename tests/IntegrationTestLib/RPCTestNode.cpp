@@ -9,7 +9,7 @@
 #include <thread>
 
 #include "common/StringTools.h"
-#include "cryptonote_core/CryptoNoteTools.h"
+#include "cryptonote/core/CryptoNoteTools.h"
 #include "NodeRpcProxy/NodeRpcProxy.h"
 #include "Rpc/CoreRpcServerCommandsDefinitions.h"
 #include "Rpc/HttpClient.h"

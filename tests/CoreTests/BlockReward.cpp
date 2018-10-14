@@ -3,7 +3,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "BlockReward.h"
-#include "cryptonote_core/CryptoNoteTools.h"
+#include "cryptonote/core/CryptoNoteTools.h"
 #include <common/Math.h>
 
 using namespace cryptonote;

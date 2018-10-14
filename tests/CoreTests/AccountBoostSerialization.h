@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "cryptonote_core/Account.h"
+#include "cryptonote/core/Account.h"
 #include "CryptoNoteBoostSerialization.h"
 
 //namespace cryptonote {

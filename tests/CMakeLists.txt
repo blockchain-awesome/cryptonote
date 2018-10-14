@@ -14,7 +14,7 @@ file(GLOB_RECURSE TestGenerator TestGenerator/*)
 file(GLOB_RECURSE TransfersTests TransfersTests/*)
 file(GLOB_RECURSE UnitTests UnitTests/*)
 
-file(GLOB_RECURSE CryptoNoteProtocol ../src/cryptonote_protocol/*)
+file(GLOB_RECURSE CryptoNoteProtocol ../src/cryptonote/protocol/*)
 file(GLOB_RECURSE P2p ../src/P2p/*)
 
 source_group("" FILES ${CoreTests} ${CryptoTests} ${FunctionalTests} ${IntegrationTestLibrary} ${IntegrationTests} ${NodeRpcProxyTests} ${PerformanceTests} ${SystemTests} ${TestGenerator} ${TransfersTests} ${UnitTests})

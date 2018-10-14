@@ -6,7 +6,7 @@
 
 #include "Chaingen.h"
 
-#include "cryptonote_core/Currency.h"
+#include "cryptonote/core/Currency.h"
 #include "TransactionBuilder.h"
 #include <Logging/LoggerGroup.h>
 

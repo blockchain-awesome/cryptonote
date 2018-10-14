@@ -12,7 +12,7 @@
 #include "INodeStubs.h"
 #include "TestBlockchainGenerator.h"
 #include "TransactionApiHelpers.h"
-#include "cryptonote_core/TransactionApi.h"
+#include "cryptonote/core/TransactionApi.h"
 
 #include "WalletLegacy/WalletLegacy.h"
 

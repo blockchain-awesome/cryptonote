@@ -8,11 +8,11 @@
 #include "common/StringTools.h"
 #include "common/StdOutputStream.h"
 #include "common/Base58.h"
-#include "cryptonote_core/CryptoNoteBasicImpl.h"
-#include "cryptonote_core/Currency.h"
+#include "cryptonote/core/CryptoNoteBasicImpl.h"
+#include "cryptonote/core/Currency.h"
 
 #include "Serialization/BinaryOutputStreamSerializer.h"
-#include "cryptonote_core/CryptoNoteSerialization.h"
+#include "cryptonote/core/CryptoNoteSerialization.h"
 
 using namespace Common;
 using namespace cryptonote;

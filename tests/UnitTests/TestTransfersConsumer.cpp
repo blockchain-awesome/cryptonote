@@ -4,14 +4,14 @@
 
 #include "gtest/gtest.h"
 
-#include "cryptonote_core/TransactionApi.h"
+#include "cryptonote/core/TransactionApi.h"
 #include "Logging/ConsoleLogger.h"
 #include "Transfers/TransfersConsumer.h"
 
 #include <algorithm>
 #include <limits>
 #include <Transfers/CommonTypes.h>
-#include <cryptonote_core/TransactionApi.h>
+#include <cryptonote/core/TransactionApi.h>
 
 #include "INodeStubs.h"
 #include "TransactionApiHelpers.h"

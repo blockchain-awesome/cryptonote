@@ -7,8 +7,8 @@
 #include <time.h>
 #include <unordered_set>
 
-#include "cryptonote_core/CryptoNoteFormatUtils.h"
-#include "cryptonote_core/CryptoNoteTools.h"
+#include "cryptonote/core/CryptoNoteFormatUtils.h"
+#include "cryptonote/core/CryptoNoteTools.h"
 
 
 #include "../PerformanceTests/MultiTransactionTestBase.h"

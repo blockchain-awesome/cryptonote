@@ -7,7 +7,7 @@
 #include "WalletLegacy/WalletLegacySerialization.h"
 #include "Serialization/ISerializer.h"
 #include "Serialization/SerializationOverloads.h"
-#include "cryptonote_core/CryptoNoteSerialization.h"
+#include "cryptonote/core/CryptoNoteSerialization.h"
 
 namespace cryptonote {
 

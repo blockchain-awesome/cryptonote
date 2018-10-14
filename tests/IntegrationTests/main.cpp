@@ -13,7 +13,7 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/program_options.hpp>
 
-#include "cryptonote_core/CryptoNoteFormatUtils.h"
+#include "cryptonote/core/CryptoNoteFormatUtils.h"
 
 #include "../IntegrationTestLib/BaseFunctionalTests.h"
 #include "../IntegrationTestLib/Logger.h"

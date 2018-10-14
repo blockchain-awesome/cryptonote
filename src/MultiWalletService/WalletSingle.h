@@ -15,9 +15,9 @@
 #include "Wallet/WalletErrors.h"
 #include "Wallet/WalletAsyncContextCounter.h"
 #include "common/ObserverManager.h"
-#include "cryptonote_core/TransactionExtra.h"
-#include "cryptonote_core/CryptoNoteFormatUtils.h"
-#include "cryptonote_core/Currency.h"
+#include "cryptonote/core/TransactionExtra.h"
+#include "cryptonote/core/CryptoNoteFormatUtils.h"
+#include "cryptonote/core/Currency.h"
 #include "WalletLegacy/WalletUserTransactionsCache.h"
 #include "WalletLegacy/WalletUnconfirmedTransactions.h"
 

@@ -16,11 +16,11 @@
 #include <System/Event.h>
 #include <System/EventLock.h>
 #include <System/Timer.h>
-#include <cryptonote_core/TransactionApi.h>
+#include <cryptonote/core/TransactionApi.h>
 
 #include "common/StringTools.h"
-#include "cryptonote_core/CryptoNoteBasicImpl.h"
-#include "cryptonote_core/CryptoNoteTools.h"
+#include "cryptonote/core/CryptoNoteBasicImpl.h"
+#include "cryptonote/core/CryptoNoteTools.h"
 #include "Rpc/CoreRpcServerCommandsDefinitions.h"
 #include "Rpc/HttpClient.h"
 #include "Rpc/JsonRpc.h"

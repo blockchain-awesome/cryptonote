@@ -18,9 +18,9 @@
 
 #include "crypto/crypto.h"
 #include "CryptoNote.h"
-#include "cryptonote_core/CryptoNoteFormatUtils.h"
-#include "cryptonote_core/CryptoNoteBasicImpl.h"
-#include "cryptonote_core/TransactionExtra.h"
+#include "cryptonote/core/CryptoNoteFormatUtils.h"
+#include "cryptonote/core/CryptoNoteBasicImpl.h"
+#include "cryptonote/core/TransactionExtra.h"
 
 #include <System/EventLock.h>
 

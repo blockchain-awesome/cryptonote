@@ -7,9 +7,9 @@
 #include <numeric>
 #include <random>
 
-#include "cryptonote_core/TransactionApi.h"
-#include "cryptonote_core/CryptoNoteFormatUtils.h" // TODO: delete
-#include "cryptonote_core/Account.h"
+#include "cryptonote/core/TransactionApi.h"
+#include "cryptonote/core/CryptoNoteFormatUtils.h" // TODO: delete
+#include "cryptonote/core/Account.h"
 #include "crypto/crypto.h"
 #include "TransactionApiHelpers.h"
 

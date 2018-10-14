@@ -11,8 +11,8 @@
 #include "common/MemoryInputStream.h"
 #include "common/StdInputStream.h"
 #include "common/StdOutputStream.h"
-#include "cryptonote_core/CryptoNoteSerialization.h"
-#include "cryptonote_core/CryptoNoteTools.h"
+#include "cryptonote/core/CryptoNoteSerialization.h"
+#include "cryptonote/core/CryptoNoteTools.h"
 
 #include "Serialization/BinaryOutputStreamSerializer.h"
 #include "Serialization/BinaryInputStreamSerializer.h"

@@ -9,9 +9,9 @@
 #include "BlockchainExplorer/BlockchainExplorer.h"
 #include "ITransfersSynchronizer.h"
 
-#include <cryptonote_core/Account.h>
-#include <cryptonote_core/Blockchain.h>
-#include <cryptonote_core/Currency.h>
+#include <cryptonote/core/Account.h>
+#include <cryptonote/core/Blockchain.h>
+#include <cryptonote/core/Currency.h>
 #include <Logging/ILogger.h>
 
 namespace api
