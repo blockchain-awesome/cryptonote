@@ -11,7 +11,7 @@
 #include <system_error>
 #include "CryptoNote.h"
 
-namespace CryptoNote {
+namespace cryptonote {
 
 typedef size_t TransactionId;
 typedef size_t TransferId;

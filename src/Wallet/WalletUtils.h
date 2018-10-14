@@ -8,8 +8,8 @@
 
 #include "cryptonote_core/Currency.h"
 
-namespace CryptoNote {
+namespace cryptonote {
 
-bool validateAddress(const std::string& address, const CryptoNote::Currency& currency);
+bool validateAddress(const std::string& address, const cryptonote::Currency& currency);
 
 }

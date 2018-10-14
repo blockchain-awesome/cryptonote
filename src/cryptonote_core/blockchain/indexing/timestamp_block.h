@@ -7,7 +7,7 @@
 #include "crypto/hash.h"
 #include "CryptoNoteBasic.h"
 
-namespace CryptoNote
+namespace cryptonote
 {
 
 class ISerializer;
@@ -33,4 +33,4 @@ class TimestampBlocksIndex
   private:
     std::multimap<uint64_t, crypto::Hash> index;
 };
-} // namespace CryptoNote
+} // namespace cryptonote

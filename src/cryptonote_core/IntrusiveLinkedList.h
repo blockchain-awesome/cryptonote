@@ -4,7 +4,7 @@
 
 #pragma once
 
-namespace CryptoNote {
+namespace cryptonote {
 
 //Value must have public method IntrusiveLinkedList<Value>::hook& getHook()
 template<class Value> class IntrusiveLinkedList {

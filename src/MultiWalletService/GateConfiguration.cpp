@@ -13,7 +13,7 @@
 
 namespace po = boost::program_options;
 
-using namespace CryptoNote;
+using namespace cryptonote;
 
 namespace MultiWalletService {
 

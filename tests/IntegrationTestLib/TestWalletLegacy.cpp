@@ -7,7 +7,7 @@
 namespace Tests {
 namespace Common {
 
-using namespace CryptoNote;
+using namespace cryptonote;
 using namespace crypto;
 
 const std::string TEST_PASSWORD = "password";
@@ -18,7 +18,7 @@ TestWalletLegacy::TestWalletLegacy(System::Dispatcher& dispatcher, const Currenc
     m_someTransactionUpdated(dispatcher),
     m_currency(currency),
     m_node(node),
-    m_wallet(new CryptoNote::WalletLegacy(currency, node)),
+    m_wallet(new cryptonote::WalletLegacy(currency, node)),
     m_currentHeight(0) {
   m_wallet->addObserver(this);
 }
@@ -31,7 +31,7 @@ TestWalletLegacy::~TestWalletLegacy() {
 }
 
 std::error_code TestWalletLegacy::init() {
-  CryptoNote::AccountBase walletAccount;
+  cryptonote::AccountBase walletAccount;
   walletAccount.generate();
 
   m_wallet->initWithKeys(walletAccount.getAccountKeys(), TEST_PASSWORD);

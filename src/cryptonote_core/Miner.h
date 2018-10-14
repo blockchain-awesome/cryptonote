@@ -20,7 +20,7 @@
 
 #include "Serialization/ISerializer.h"
 
-namespace CryptoNote {
+namespace cryptonote {
   class miner {
   public:
     miner(const Currency& currency, IMinerHandler& handler, Logging::ILogger& log);

@@ -26,7 +26,7 @@ using namespace Logging;
 
 #undef ERROR
 
-namespace CryptoNote {
+namespace cryptonote {
 
   //---------------------------------------------------------------------------------
   // BlockTemplate
@@ -82,13 +82,13 @@ namespace CryptoNote {
     std::vector<crypto::Hash> m_txHashes;
   };
 
-  using CryptoNote::BlockInfo;
+  using cryptonote::BlockInfo;
 
   //---------------------------------------------------------------------------------
   tx_memory_pool::tx_memory_pool(
-    const CryptoNote::Currency& currency, 
-    CryptoNote::ITransactionValidator& validator, 
-    CryptoNote::ITimeProvider& timeProvider,
+    const cryptonote::Currency& currency, 
+    cryptonote::ITransactionValidator& validator, 
+    cryptonote::ITimeProvider& timeProvider,
     Logging::ILogger& log) :
     m_currency(currency),
     m_validator(validator), 
@@ -438,7 +438,7 @@ namespace CryptoNote {
 
 #define CURRENT_MEMPOOL_ARCHIVE_VER 1
 
-  void serialize(CryptoNote::tx_memory_pool::TransactionDetails& td, ISerializer& s) {
+  void serialize(cryptonote::tx_memory_pool::TransactionDetails& td, ISerializer& s) {
     s(td.id, "id");
     s(td.blobSize, "blobSize");
     s(td.fee, "fee");

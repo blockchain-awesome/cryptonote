@@ -17,7 +17,7 @@
 #include "BlockchainExplorerData.h"
 #include "ITransaction.h"
 
-namespace CryptoNote {
+namespace cryptonote {
 
 class INodeObserver {
 public:
@@ -47,7 +47,7 @@ struct TransactionShortInfo {
 struct BlockShortEntry {
   crypto::Hash blockHash;
   bool hasBlock;
-  CryptoNote::Block block;
+  cryptonote::Block block;
   std::vector<TransactionShortInfo> txsShortInfo;
 };
 
@@ -70,8 +70,8 @@ public:
   virtual uint64_t getLastLocalBlockTimestamp() const = 0;
 
   virtual void relayTransaction(const Transaction& transaction, const Callback& callback) = 0;
-  virtual void getRandomOutsByAmounts(std::vector<uint64_t>&& amounts, uint64_t outsCount, std::vector<CryptoNote::COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS::outs_for_amount>& result, const Callback& callback) = 0;
-  virtual void getNewBlocks(std::vector<crypto::Hash>&& knownBlockIds, std::vector<CryptoNote::block_complete_entry>& newBlocks, uint32_t& startHeight, const Callback& callback) = 0;
+  virtual void getRandomOutsByAmounts(std::vector<uint64_t>&& amounts, uint64_t outsCount, std::vector<cryptonote::COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS::outs_for_amount>& result, const Callback& callback) = 0;
+  virtual void getNewBlocks(std::vector<crypto::Hash>&& knownBlockIds, std::vector<cryptonote::block_complete_entry>& newBlocks, uint32_t& startHeight, const Callback& callback) = 0;
   virtual void getTransactionOutsGlobalIndices(const crypto::Hash& transactionHash, std::vector<uint32_t>& outsGlobalIndices, const Callback& callback) = 0;
   virtual void queryBlocks(std::vector<crypto::Hash>&& knownBlockIds, uint64_t timestamp, std::vector<BlockShortEntry>& newBlocks, uint32_t& startHeight, const Callback& callback) = 0;
   virtual void getPoolSymmetricDifference(std::vector<crypto::Hash>&& knownPoolTxIds, crypto::Hash knownBlockId, bool& isBcActual, std::vector<std::unique_ptr<ITransactionReader>>& newTxs, std::vector<crypto::Hash>& deletedTxIds, const Callback& callback) = 0;

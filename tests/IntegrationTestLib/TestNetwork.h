@@ -12,7 +12,7 @@ namespace System {
 class Dispatcher;
 }
 
-namespace CryptoNote {
+namespace cryptonote {
 class Currency;
 }
 
@@ -54,7 +54,7 @@ class TestNetwork {
 
 public:
 
-  TestNetwork(System::Dispatcher& dispatcher, const CryptoNote::Currency& currency);
+  TestNetwork(System::Dispatcher& dispatcher, const cryptonote::Currency& currency);
 
   void addNodes(const std::vector<TestNodeConfiguration>& nodes);
   void addNode(const TestNodeConfiguration& cfg);
@@ -69,7 +69,7 @@ private:
 
   std::vector<std::pair<std::unique_ptr<TestNode>, TestNodeConfiguration>> nodes;
   System::Dispatcher& m_dispatcher;
-  const CryptoNote::Currency& m_currency;
+  const cryptonote::Currency& m_currency;
   std::vector<Process> m_daemons;
 };
 

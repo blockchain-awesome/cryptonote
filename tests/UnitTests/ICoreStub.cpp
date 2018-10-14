@@ -18,7 +18,7 @@ ICoreStub::ICoreStub() :
     poolChangesResult(true) {
 }
 
-ICoreStub::ICoreStub(const CryptoNote::Block& genesisBlock) :
+ICoreStub::ICoreStub(const cryptonote::Block& genesisBlock) :
     topHeight(0),
     globalIndicesResult(false),
     randomOutsResult(false),
@@ -27,11 +27,11 @@ ICoreStub::ICoreStub(const CryptoNote::Block& genesisBlock) :
   addBlock(genesisBlock);
 }
 
-bool ICoreStub::addObserver(CryptoNote::ICoreObserver* observer) {
+bool ICoreStub::addObserver(cryptonote::ICoreObserver* observer) {
   return true;
 }
 
-bool ICoreStub::removeObserver(CryptoNote::ICoreObserver* observer) {
+bool ICoreStub::removeObserver(cryptonote::ICoreObserver* observer) {
   return true;
 }
 
@@ -55,8 +55,8 @@ std::vector<crypto::Hash> ICoreStub::findBlockchainSupplement(const std::vector<
   return result;
 }
 
-bool ICoreStub::get_random_outs_for_amounts(const CryptoNote::COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_request& req,
-    CryptoNote::COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_response& res) {
+bool ICoreStub::get_random_outs_for_amounts(const cryptonote::COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_request& req,
+    cryptonote::COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_response& res) {
   res = randomOuts;
   return randomOutsResult;
 }
@@ -66,11 +66,11 @@ bool ICoreStub::get_tx_outputs_gindexs(const crypto::Hash& tx_id, std::vector<ui
   return globalIndicesResult;
 }
 
-CryptoNote::i_cryptonote_protocol* ICoreStub::get_protocol() {
+cryptonote::i_cryptonote_protocol* ICoreStub::get_protocol() {
   return nullptr;
 }
 
-bool ICoreStub::handle_incoming_tx(CryptoNote::BinaryArray const& tx_blob, CryptoNote::tx_verification_context& tvc, bool keeped_by_block) {
+bool ICoreStub::handle_incoming_tx(cryptonote::BinaryArray const& tx_blob, cryptonote::tx_verification_context& tvc, bool keeped_by_block) {
   return true;
 }
 
@@ -85,17 +85,17 @@ void ICoreStub::set_outputs_gindexs(const std::vector<uint32_t>& indexs, bool re
   globalIndicesResult = result;
 }
 
-void ICoreStub::set_random_outs(const CryptoNote::COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_response& resp, bool result) {
+void ICoreStub::set_random_outs(const cryptonote::COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_response& resp, bool result) {
   randomOuts = resp;
   randomOutsResult = result;
 }
 
-std::vector<CryptoNote::Transaction> ICoreStub::getPoolTransactions() {
-  return std::vector<CryptoNote::Transaction>();
+std::vector<cryptonote::Transaction> ICoreStub::getPoolTransactions() {
+  return std::vector<cryptonote::Transaction>();
 }
 
 bool ICoreStub::getPoolChanges(const crypto::Hash& tailBlockId, const std::vector<crypto::Hash>& knownTxsIds,
-                               std::vector<CryptoNote::Transaction>& addedTxs, std::vector<crypto::Hash>& deletedTxsIds) {
+                               std::vector<cryptonote::Transaction>& addedTxs, std::vector<crypto::Hash>& deletedTxsIds) {
   std::unordered_set<crypto::Hash> knownSet;
   for (const crypto::Hash& txId : knownTxsIds) {
     if (transactionPool.find(txId) == transactionPool.end()) {
@@ -105,7 +105,7 @@ bool ICoreStub::getPoolChanges(const crypto::Hash& tailBlockId, const std::vecto
     knownSet.insert(txId);
   }
 
-  for (const std::pair<crypto::Hash, CryptoNote::Transaction>& poolEntry : transactionPool) {
+  for (const std::pair<crypto::Hash, cryptonote::Transaction>& poolEntry : transactionPool) {
     if (knownSet.find(poolEntry.first) == knownSet.end()) {
       addedTxs.push_back(poolEntry.second);
     }
@@ -115,12 +115,12 @@ bool ICoreStub::getPoolChanges(const crypto::Hash& tailBlockId, const std::vecto
 }
 
 bool ICoreStub::getPoolChangesLite(const crypto::Hash& tailBlockId, const std::vector<crypto::Hash>& knownTxsIds,
-        std::vector<CryptoNote::TransactionPrefixInfo>& addedTxs, std::vector<crypto::Hash>& deletedTxsIds) {
-  std::vector<CryptoNote::Transaction> added;
+        std::vector<cryptonote::TransactionPrefixInfo>& addedTxs, std::vector<crypto::Hash>& deletedTxsIds) {
+  std::vector<cryptonote::Transaction> added;
   bool returnStatus = getPoolChanges(tailBlockId, knownTxsIds, added, deletedTxsIds);
 
   for (const auto& tx : added) {
-    CryptoNote::TransactionPrefixInfo tpi;
+    cryptonote::TransactionPrefixInfo tpi;
     tpi.txPrefix = tx;
     tpi.txHash = getObjectHash(tx);
 
@@ -130,18 +130,18 @@ bool ICoreStub::getPoolChangesLite(const crypto::Hash& tailBlockId, const std::v
   return returnStatus;
 }
 
-void ICoreStub::getPoolChanges(const std::vector<crypto::Hash>& knownTxsIds, std::vector<CryptoNote::Transaction>& addedTxs,
+void ICoreStub::getPoolChanges(const std::vector<crypto::Hash>& knownTxsIds, std::vector<cryptonote::Transaction>& addedTxs,
                                std::vector<crypto::Hash>& deletedTxsIds) {
 }
 
 bool ICoreStub::queryBlocks(const std::vector<crypto::Hash>& block_ids, uint64_t timestamp,
-  uint32_t& start_height, uint32_t& current_height, uint32_t& full_offset, std::vector<CryptoNote::BlockFullInfo>& entries) {
+  uint32_t& start_height, uint32_t& current_height, uint32_t& full_offset, std::vector<cryptonote::BlockFullInfo>& entries) {
   //stub
   return true;
 }
 
 bool ICoreStub::queryBlocksLite(const std::vector<crypto::Hash>& block_ids, uint64_t timestamp,
-  uint32_t& start_height, uint32_t& current_height, uint32_t& full_offset, std::vector<CryptoNote::BlockShortInfo>& entries) {
+  uint32_t& start_height, uint32_t& current_height, uint32_t& full_offset, std::vector<cryptonote::BlockShortInfo>& entries) {
   //stub
   return true;
 }
@@ -165,12 +165,12 @@ std::vector<crypto::Hash> ICoreStub::buildSparseChain(const crypto::Hash& startB
   return result;
 }
 
-size_t ICoreStub::addChain(const std::vector<const CryptoNote::IBlock*>& chain) {
+size_t ICoreStub::addChain(const std::vector<const cryptonote::IBlock*>& chain) {
   size_t blocksCounter = 0;
-  for (const CryptoNote::IBlock* block : chain) {
+  for (const cryptonote::IBlock* block : chain) {
     for (size_t txNumber = 0; txNumber < block->getTransactionCount(); ++txNumber) {
-      const CryptoNote::Transaction& tx = block->getTransaction(txNumber);
-      crypto::Hash txHash = CryptoNote::NULL_HASH;
+      const cryptonote::Transaction& tx = block->getTransaction(txNumber);
+      crypto::Hash txHash = cryptonote::NULL_HASH;
       size_t blobSize = 0;
       getObjectHash(tx, txHash, blobSize);
       addTransaction(tx);
@@ -185,12 +185,12 @@ size_t ICoreStub::addChain(const std::vector<const CryptoNote::IBlock*>& chain) 
 crypto::Hash ICoreStub::getBlockIdByHeight(uint32_t height) {
   auto iter = blockHashByHeightIndex.find(height);
   if (iter == blockHashByHeightIndex.end()) {
-    return CryptoNote::NULL_HASH;
+    return cryptonote::NULL_HASH;
   }
   return iter->second;
 }
 
-bool ICoreStub::getBlockByHash(const crypto::Hash &h, CryptoNote::Block &blk) {
+bool ICoreStub::getBlockByHash(const crypto::Hash &h, cryptonote::Block &blk) {
   auto iter = blocks.find(h);
   if (iter == blocks.end()) {
     return false;
@@ -208,7 +208,7 @@ bool ICoreStub::getBlockHeight(const crypto::Hash& blockId, uint32_t& blockHeigh
   return true;
 }
 
-void ICoreStub::getTransactions(const std::vector<crypto::Hash>& txs_ids, std::list<CryptoNote::Transaction>& txs, std::list<crypto::Hash>& missed_txs, bool checkTxPool) {
+void ICoreStub::getTransactions(const std::vector<crypto::Hash>& txs_ids, std::list<cryptonote::Transaction>& txs, std::list<crypto::Hash>& missed_txs, bool checkTxPool) {
   for (const crypto::Hash& hash : txs_ids) {
     auto iter = transactions.find(hash);
     if (iter != transactions.end()) {
@@ -249,11 +249,11 @@ bool ICoreStub::getBlockReward(size_t medianSize, size_t currentBlockSize, uint6
   return true;
 }
 
-bool ICoreStub::scanOutputkeysForIndices(const CryptoNote::KeyInput& txInToKey, std::list<std::pair<crypto::Hash, size_t>>& outputReferences) {
+bool ICoreStub::scanOutputkeysForIndices(const cryptonote::KeyInput& txInToKey, std::list<std::pair<crypto::Hash, size_t>>& outputReferences) {
   return true;
 }
 
-bool ICoreStub::getBlockDifficulty(uint32_t height, CryptoNote::difficulty_type& difficulty) {
+bool ICoreStub::getBlockDifficulty(uint32_t height, cryptonote::difficulty_type& difficulty) {
   return true;
 }
 
@@ -267,17 +267,17 @@ bool ICoreStub::getBlockContainingTx(const crypto::Hash& txId, crypto::Hash& blo
   if (blockIter == blocks.end()) {
     return false;
   }
-  blockHeight = boost::get<CryptoNote::BaseInput>(blockIter->second.baseTransaction.inputs.front()).blockIndex;
+  blockHeight = boost::get<cryptonote::BaseInput>(blockIter->second.baseTransaction.inputs.front()).blockIndex;
   return true;
 }
 
-bool ICoreStub::getMultisigOutputReference(const CryptoNote::MultisignatureInput& txInMultisig, std::pair<crypto::Hash, size_t>& outputReference) {
+bool ICoreStub::getMultisigOutputReference(const cryptonote::MultisignatureInput& txInMultisig, std::pair<crypto::Hash, size_t>& outputReference) {
   return true;
 }
 
-void ICoreStub::addBlock(const CryptoNote::Block& block) {
-  uint32_t height = boost::get<CryptoNote::BaseInput>(block.baseTransaction.inputs.front()).blockIndex;
-  crypto::Hash hash = CryptoNote::get_block_hash(block);
+void ICoreStub::addBlock(const cryptonote::Block& block) {
+  uint32_t height = boost::get<cryptonote::BaseInput>(block.baseTransaction.inputs.front()).blockIndex;
+  crypto::Hash hash = cryptonote::get_block_hash(block);
   if (height > topHeight) {
     topHeight = height;
     topId = hash;
@@ -285,14 +285,14 @@ void ICoreStub::addBlock(const CryptoNote::Block& block) {
   blocks.emplace(std::make_pair(hash, block));
   blockHashByHeightIndex.emplace(std::make_pair(height, hash));
 
-  blockHashByTxHashIndex.emplace(std::make_pair(CryptoNote::getObjectHash(block.baseTransaction), hash));
+  blockHashByTxHashIndex.emplace(std::make_pair(cryptonote::getObjectHash(block.baseTransaction), hash));
   for (auto txHash : block.transactionHashes) {
     blockHashByTxHashIndex.emplace(std::make_pair(txHash, hash));
   }
 }
 
-void ICoreStub::addTransaction(const CryptoNote::Transaction& tx) {
-  crypto::Hash hash = CryptoNote::getObjectHash(tx);
+void ICoreStub::addTransaction(const cryptonote::Transaction& tx) {
+  crypto::Hash hash = cryptonote::getObjectHash(tx);
   transactions.emplace(std::make_pair(hash, tx));
 }
 
@@ -300,19 +300,19 @@ bool ICoreStub::getGeneratedTransactionsNumber(uint32_t height, uint64_t& genera
   return true;
 }
 
-bool ICoreStub::getOrphanBlocksByHeight(uint32_t height, std::vector<CryptoNote::Block>& blocks) {
+bool ICoreStub::getOrphanBlocksByHeight(uint32_t height, std::vector<cryptonote::Block>& blocks) {
   return true;
 }
 
-bool ICoreStub::getBlocksByTimestamp(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t blocksNumberLimit, std::vector<CryptoNote::Block>& blocks, uint32_t& blocksNumberWithinTimestamps) {
+bool ICoreStub::getBlocksByTimestamp(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t blocksNumberLimit, std::vector<cryptonote::Block>& blocks, uint32_t& blocksNumberWithinTimestamps) {
   return true;
 }
 
-bool ICoreStub::getPoolTransactionsByTimestamp(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t transactionsNumberLimit, std::vector<CryptoNote::Transaction>& transactions, uint64_t& transactionsNumberWithinTimestamps) {
+bool ICoreStub::getPoolTransactionsByTimestamp(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t transactionsNumberLimit, std::vector<cryptonote::Transaction>& transactions, uint64_t& transactionsNumberWithinTimestamps) {
   return true;
 }
 
-bool ICoreStub::getTransactionsByPaymentId(const crypto::Hash& paymentId, std::vector<CryptoNote::Transaction>& transactions) {
+bool ICoreStub::getTransactionsByPaymentId(const crypto::Hash& paymentId, std::vector<cryptonote::Transaction>& transactions) {
   return true;
 }
 
@@ -320,11 +320,11 @@ std::error_code ICoreStub::executeLocked(const std::function<std::error_code()>&
   return func();
 }
 
-std::unique_ptr<CryptoNote::IBlock> ICoreStub::getBlock(const crypto::Hash& blockId) {
-  return std::unique_ptr<CryptoNote::IBlock>(nullptr);
+std::unique_ptr<cryptonote::IBlock> ICoreStub::getBlock(const crypto::Hash& blockId) {
+  return std::unique_ptr<cryptonote::IBlock>(nullptr);
 }
 
-bool ICoreStub::handleIncomingTransaction(const CryptoNote::Transaction& tx, const crypto::Hash& txHash, size_t blobSize, CryptoNote::tx_verification_context& tvc, bool keptByBlock) {
+bool ICoreStub::handleIncomingTransaction(const cryptonote::Transaction& tx, const crypto::Hash& txHash, size_t blobSize, cryptonote::tx_verification_context& tvc, bool keptByBlock) {
   auto result = transactionPool.emplace(std::make_pair(txHash, tx));
   tvc.m_verifivation_failed = !poolTxVerificationResult;
   tvc.m_added_to_pool = true;
@@ -340,11 +340,11 @@ void ICoreStub::setPoolTxVerificationResult(bool result) {
   poolTxVerificationResult = result;
 }
 
-bool ICoreStub::addMessageQueue(CryptoNote::MessageQueue<CryptoNote::BlockchainMessage>& messageQueuePtr) {
+bool ICoreStub::addMessageQueue(cryptonote::MessageQueue<cryptonote::BlockchainMessage>& messageQueuePtr) {
   return true;
 }
 
-bool ICoreStub::removeMessageQueue(CryptoNote::MessageQueue<CryptoNote::BlockchainMessage>& messageQueuePtr) {
+bool ICoreStub::removeMessageQueue(cryptonote::MessageQueue<cryptonote::BlockchainMessage>& messageQueuePtr) {
   return true;
 }
 

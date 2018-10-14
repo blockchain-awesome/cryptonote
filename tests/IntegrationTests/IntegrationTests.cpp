@@ -11,7 +11,7 @@
 #include "WalletLegacy/WalletLegacy.h"
 #include "WalletLegacyObserver.h"
 
-using namespace CryptoNote;
+using namespace cryptonote;
 using namespace Logging;
 
 extern Tests::Common::BaseFunctionalTestsConfig baseCfg;
@@ -37,7 +37,7 @@ class IntegrationTest : public Tests::Common::BaseFunctionalTests, public ::test
 public:
 
   IntegrationTest() : 
-    currency(CryptoNote::CurrencyBuilder(log).testnet(true).currency()), 
+    currency(cryptonote::CurrencyBuilder(log).testnet(true).currency()), 
     BaseFunctionalTests(currency, dispatcher, baseCfg),
     logger(log, "IntegrationTest") {
   }
@@ -59,7 +59,7 @@ public:
 
   void makeWallets() {
     for (auto& n: inodes) {
-      std::unique_ptr<CryptoNote::IWalletLegacy> wallet(new CryptoNote::WalletLegacy(m_currency, *n));
+      std::unique_ptr<cryptonote::IWalletLegacy> wallet(new cryptonote::WalletLegacy(m_currency, *n));
       std::unique_ptr<WalletLegacyObserver> observer(new WalletLegacyObserver());
 
       wallet->initAndGenerate(walletPassword);
@@ -109,7 +109,7 @@ public:
       << "Transferring from " << wallets[srcWallet]->getAddress().substr(0, 6) 
       << " to " << wallets[dstWallet]->getAddress().substr(0, 6) << " " << currency.formatAmount(amount);
 
-    CryptoNote::WalletLegacyTransfer tr;
+    cryptonote::WalletLegacyTransfer tr;
     tr.address = wallets[dstWallet]->getAddress();
     tr.amount = amount;
     std::error_code result;
@@ -136,7 +136,7 @@ public:
 
   System::Dispatcher dispatcher;
   std::string walletPassword = "pass";
-  CryptoNote::Currency currency;
+  cryptonote::Currency currency;
   Logging::ConsoleLogger log;
   Logging::LoggerRef logger;
 
@@ -191,10 +191,10 @@ TEST_F(IntegrationTest, BlockPropagationSpeed) {
   makeINodes();
 
   {
-    std::unique_ptr<CryptoNote::INode>& localNode = inodes.front();
-    std::unique_ptr<CryptoNote::INode>& remoteNode = inodes.back();
+    std::unique_ptr<cryptonote::INode>& localNode = inodes.front();
+    std::unique_ptr<cryptonote::INode>& remoteNode = inodes.back();
 
-    std::unique_ptr<CryptoNote::IWalletLegacy> wallet;
+    std::unique_ptr<cryptonote::IWalletLegacy> wallet;
     makeWallet(wallet, localNode);
 
     NodeObserver localObserver(*localNode);

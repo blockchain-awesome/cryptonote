@@ -16,7 +16,7 @@
 
 #include "./http/errors.h"
 
-using namespace CryptoNote;
+using namespace cryptonote;
 
 using namespace Errors;
 
@@ -135,7 +135,7 @@ std::error_code MultiServiceJsonRpcServer::handleGetBalance(const GetBalance::Re
     return make_error_code(MultiWalletErrorCode::INVALID_TOKEN);
   }
 
-  CryptoNote::IWalletLegacy *wallet = m_wallet.getWallet(address);
+  cryptonote::IWalletLegacy *wallet = m_wallet.getWallet(address);
 
   if (wallet == NULL)
   {

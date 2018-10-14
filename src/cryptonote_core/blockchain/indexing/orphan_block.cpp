@@ -1,7 +1,7 @@
 #include "orphan_block.h"
 #include "CryptoNoteFormatUtils.h"
 
-namespace CryptoNote
+namespace cryptonote
 {
 
 
@@ -43,4 +43,4 @@ void OrphanBlocksIndex::clear() {
   index.clear();
 }
 
-} // namespace CryptoNote
+} // namespace cryptonote

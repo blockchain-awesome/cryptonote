@@ -4,7 +4,7 @@
 
 #include "cryptonote_core/BlockchainMessages.h"
 
-namespace CryptoNote {
+namespace cryptonote {
 
 NewBlockMessage::NewBlockMessage(const crypto::Hash& hash) : blockHash(hash) {}
 

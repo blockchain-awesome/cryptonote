@@ -8,7 +8,7 @@
 #include <cstdint>
 #include <cstddef>
 
-namespace CryptoNote {
+namespace cryptonote {
 
 class ICryptoNoteProtocolObserver {
 public:
@@ -17,4 +17,4 @@ public:
   virtual void blockchainSynchronized(uint32_t topHeight) {}
 };
 
-} //namespace CryptoNote
+} //namespace cryptonote

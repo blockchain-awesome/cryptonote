@@ -2,7 +2,7 @@
 
 #include "cryptonote_core/CryptoNoteTools.h"
 
-namespace CryptoNote
+namespace cryptonote
 {
 
 bool TimestampBlocksIndex::add(uint64_t timestamp, const crypto::Hash &hash)
@@ -56,4 +56,4 @@ void TimestampBlocksIndex::serialize(ISerializer &s)
 {
     s(index, "index");
 }
-} // namespace CryptoNote
+} // namespace cryptonote

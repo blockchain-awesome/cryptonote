@@ -84,7 +84,7 @@ bool MultiWallet::init(int argc, char **argv)
   return true;
 }
 
-const CryptoNote::Currency MultiWallet::getCurrency()
+const cryptonote::Currency MultiWallet::getCurrency()
 {
   return currencyBuilder.currency();
 }
@@ -128,7 +128,7 @@ void MultiWallet::stop()
 void MultiWallet::runRpcProxy(Logging::LoggerRef &log)
 {
   log(Logging::INFO) << "Starting Payment Gate with remote node";
-  CryptoNote::Currency currency = currencyBuilder.currency();
+  cryptonote::Currency currency = currencyBuilder.currency();
 
   log(Logging::INFO) << "daemon host " << config.remoteNodeConfig.daemonHost;
   log(Logging::INFO) << "daemon port " << config.remoteNodeConfig.daemonPort;
@@ -137,7 +137,7 @@ void MultiWallet::runRpcProxy(Logging::LoggerRef &log)
       config.remoteNodeConfig.daemonHost,
       config.remoteNodeConfig.daemonPort));
 
-  // std::unique_ptr<CryptoNote::INode> node(
+  // std::unique_ptr<cryptonote::INode> node(
   //     PaymentService::NodeFactory::createNode(
   //         config.remoteNodeConfig.daemonHost,
   //         config.remoteNodeConfig.daemonPort));
@@ -161,7 +161,7 @@ void MultiWallet::runRpcProxy(Logging::LoggerRef &log)
   log(Logging::INFO) << "Started wallet Service";
 }
 
-void MultiWallet::runWalletService(const CryptoNote::Currency &currency, CryptoNote::INode &node, Logging::LoggerRef &log)
+void MultiWallet::runWalletService(const cryptonote::Currency &currency, cryptonote::INode &node, Logging::LoggerRef &log)
 {
 
   WalletInterface *wallet = new WalletInterface(*dispatcher, currency, node, logger);

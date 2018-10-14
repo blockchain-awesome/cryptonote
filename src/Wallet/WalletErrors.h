@@ -7,7 +7,7 @@
 #include <string>
 #include <system_error>
 
-namespace CryptoNote {
+namespace cryptonote {
 namespace error {
 
 // custom error conditions enum type:
@@ -92,13 +92,13 @@ private:
 }
 }
 
-inline std::error_code make_error_code(CryptoNote::error::WalletErrorCodes e) {
-  return std::error_code(static_cast<int>(e), CryptoNote::error::WalletErrorCategory::INSTANCE);
+inline std::error_code make_error_code(cryptonote::error::WalletErrorCodes e) {
+  return std::error_code(static_cast<int>(e), cryptonote::error::WalletErrorCategory::INSTANCE);
 }
 
 namespace std {
 
 template <>
-struct is_error_code_enum<CryptoNote::error::WalletErrorCodes>: public true_type {};
+struct is_error_code_enum<cryptonote::error::WalletErrorCodes>: public true_type {};
 
 }

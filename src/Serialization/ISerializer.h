@@ -9,7 +9,7 @@
 
 #include <common/StringView.h>
 
-namespace CryptoNote {
+namespace cryptonote {
 
 class ISerializer {
 public:

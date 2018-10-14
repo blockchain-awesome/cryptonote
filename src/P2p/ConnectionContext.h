@@ -12,7 +12,7 @@
 #include "common/StringTools.h"
 #include "crypto/hash.h"
 
-namespace CryptoNote {
+namespace cryptonote {
 
 struct CryptoNoteConnectionContext {
   uint8_t version;
@@ -63,7 +63,7 @@ inline std::string get_protocol_state_string(CryptoNoteConnectionContext::state 
 }
 
 namespace std {
-inline std::ostream& operator << (std::ostream& s, const CryptoNote::CryptoNoteConnectionContext& context) {
+inline std::ostream& operator << (std::ostream& s, const cryptonote::CryptoNoteConnectionContext& context) {
   return s << "[" << Common::ipAddressToString(context.m_remote_ip) << ":" << 
     context.m_remote_port << (context.m_is_income ? " INC" : " OUT") << "] ";
 }

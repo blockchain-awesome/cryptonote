@@ -10,7 +10,7 @@
 #include "cryptonote_core/CryptoNoteBasic.h"
 
 
-namespace CryptoNote {
+namespace cryptonote {
   /************************************************************************/
   /*                                                                      */
   /************************************************************************/
@@ -31,8 +31,8 @@ namespace CryptoNote {
   bool parseAccountAddressString(uint64_t& prefix, AccountPublicAddress& adr, const std::string& str);
   bool is_coinbase(const Transaction& tx);
 
-  bool operator ==(const CryptoNote::Transaction& a, const CryptoNote::Transaction& b);
-  bool operator ==(const CryptoNote::Block& a, const CryptoNote::Block& b);
+  bool operator ==(const cryptonote::Transaction& a, const cryptonote::Transaction& b);
+  bool operator ==(const cryptonote::Block& a, const cryptonote::Block& b);
 }
 
 template <class T>

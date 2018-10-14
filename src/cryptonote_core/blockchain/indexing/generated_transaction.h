@@ -3,7 +3,7 @@
 #include <unordered_map>
 #include "CryptoNoteBasic.h"
 
-namespace CryptoNote
+namespace cryptonote
 {
 
 class ISerializer;
@@ -31,4 +31,4 @@ class GeneratedTransactionsIndex
     std::unordered_map<uint32_t, uint64_t> index;
     uint64_t lastGeneratedTxNumber;
 };
-} // namespace CryptoNote
+} // namespace cryptonote

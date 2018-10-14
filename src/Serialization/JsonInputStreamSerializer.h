@@ -10,7 +10,7 @@
 #include "../common/JsonValue.h"
 #include "JsonInputValueSerializer.h"
 
-namespace CryptoNote {
+namespace cryptonote {
 
 //deserialization
 class JsonInputStreamSerializer : public JsonInputValueSerializer {

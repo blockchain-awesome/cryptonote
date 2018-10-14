@@ -15,7 +15,7 @@
 #include "cryptonote_core/CryptoNoteSerialization.h"
 
 using namespace Common;
-using namespace CryptoNote;
+using namespace cryptonote;
 
  bool create_wallet_by_keys(std::string &wallet_file, std::string &password,
   std::string &address, std::string &spendKey, std::string &viewKey,
@@ -64,7 +64,7 @@ using namespace CryptoNote;
 
   logger(Logging::INFO) << "Addresses match!";
 
-  CryptoNote::AccountKeys keys;
+  cryptonote::AccountKeys keys;
   keys.address.spendPublicKey = sendPubKey;
   keys.address.viewPublicKey = viewPubKey;
   keys.spendSecretKey = sendSecretKey;
@@ -87,11 +87,11 @@ using namespace CryptoNote;
     }
     std::stringstream plainArchive;
     StdOutputStream plainStream(plainArchive);
-    CryptoNote::BinaryOutputStreamSerializer serializer(plainStream);
+    cryptonote::BinaryOutputStreamSerializer serializer(plainStream);
 
     // Saving Keys;
 
-    CryptoNote::KeysStorage ks;
+    cryptonote::KeysStorage ks;
 
     ks.creationTimestamp = time(NULL);
     ks.spendPublicKey = keys.address.spendPublicKey;
@@ -121,7 +121,7 @@ using namespace CryptoNote;
 
     uint32_t version = 1;
     StdOutputStream output(file);
-    CryptoNote::BinaryOutputStreamSerializer s(output);
+    cryptonote::BinaryOutputStreamSerializer s(output);
     s.beginObject("wallet");
     s(version, "version");
     s(iv, "iv");

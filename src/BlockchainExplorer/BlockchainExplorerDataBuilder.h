@@ -11,12 +11,12 @@
 #include "cryptonote_core/ICore.h"
 #include "BlockchainExplorerData.h"
 
-namespace CryptoNote {
+namespace cryptonote {
 
 class BlockchainExplorerDataBuilder
 {
 public:
-  BlockchainExplorerDataBuilder(CryptoNote::ICore& core, CryptoNote::ICryptoNoteProtocolQuery& protocol);
+  BlockchainExplorerDataBuilder(cryptonote::ICore& core, cryptonote::ICryptoNoteProtocolQuery& protocol);
 
   BlockchainExplorerDataBuilder(const BlockchainExplorerDataBuilder&) = delete;
   BlockchainExplorerDataBuilder(BlockchainExplorerDataBuilder&&) = delete;
@@ -34,7 +34,7 @@ private:
   bool fillTxExtra(const std::vector<uint8_t>& rawExtra, TransactionExtraDetails& extraDetails);
   size_t median(std::vector<size_t>& v);
 
-  CryptoNote::ICore& core;
-  CryptoNote::ICryptoNoteProtocolQuery& protocol;
+  cryptonote::ICore& core;
+  cryptonote::ICryptoNoteProtocolQuery& protocol;
 };
 }

@@ -17,13 +17,13 @@
 #include "TestBlockchainGenerator.h"
 
 using namespace PaymentService;
-using namespace CryptoNote;
+using namespace cryptonote;
 
 class PaymentGateTest : public testing::Test {
 public:
 
   PaymentGateTest() : 
-    currency(CryptoNote::CurrencyBuilder(logger).currency()), 
+    currency(cryptonote::CurrencyBuilder(logger).currency()), 
     generator(currency),
     nodeStub(generator) 
   {}
@@ -46,12 +46,12 @@ public:
 
 protected:  
   Logging::ConsoleLogger logger;
-  CryptoNote::Currency currency;
+  cryptonote::Currency currency;
   TestBlockchainGenerator generator;
   INodeTrivialRefreshStub nodeStub;
   System::Dispatcher dispatcher;
 
-  std::unique_ptr<CryptoNote::IWallet> wallet;
+  std::unique_ptr<cryptonote::IWallet> wallet;
 };
 
 

@@ -39,11 +39,11 @@
 
 using namespace Common;
 using namespace crypto;
-using namespace CryptoNote;
+using namespace cryptonote;
 
 using namespace std;
 
-using namespace CryptoNote;
+using namespace cryptonote;
 
 namespace ComplexWallet
 {
@@ -63,8 +63,8 @@ bool WalletManager::createWallet(const AccountKeys &accountKeys)
 {
 
   Logging::LoggerRef(m_logger, "inteface")(Logging::INFO) << "creating new wallet" << endl;
-  CryptoNote::IWalletLegacy *wallet = new SingleWallet(m_currency, m_node);
-  // CryptoNote::IWalletLegacy *wallet = new WalletLegacy(m_currency, m_node);
+  cryptonote::IWalletLegacy *wallet = new SingleWallet(m_currency, m_node);
+  // cryptonote::IWalletLegacy *wallet = new WalletLegacy(m_currency, m_node);
 
   // WalletHelper::InitWalletResultObserver initObserver;
   // std::future<std::error_code> f_initError = initObserver.initResult.get_future();
@@ -101,13 +101,13 @@ bool WalletManager::checkAddress(const std::string &address, AccountPublicAddres
   return true;
 }
 
-CryptoNote::IWalletLegacy *WalletManager::getWallet(const std::string address)
+cryptonote::IWalletLegacy *WalletManager::getWallet(const std::string address)
 {
   std::map<std::string, void *>::iterator it;
   it = m_wallets.find(address);
   if (it != m_wallets.end())
   {
-    return (CryptoNote::IWalletLegacy *)it->second;
+    return (cryptonote::IWalletLegacy *)it->second;
   }
   return NULL;
 }

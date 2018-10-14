@@ -4,7 +4,7 @@
 #include "crypto/hash.h"
 #include "CryptoNoteBasic.h"
 
-namespace CryptoNote
+namespace cryptonote
 {
 
 class ISerializer;
@@ -21,4 +21,4 @@ private:
   std::unordered_multimap<uint32_t, crypto::Hash> index;
 };
 
-} // namespace CryptoNote
+} // namespace cryptonote

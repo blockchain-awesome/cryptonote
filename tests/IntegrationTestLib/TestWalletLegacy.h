@@ -14,16 +14,16 @@
 namespace Tests {
 namespace Common {
 
-class TestWalletLegacy : private CryptoNote::IWalletLegacyObserver {
+class TestWalletLegacy : private cryptonote::IWalletLegacyObserver {
 public:
-  TestWalletLegacy(System::Dispatcher& dispatcher, const CryptoNote::Currency& currency, CryptoNote::INode& node);
+  TestWalletLegacy(System::Dispatcher& dispatcher, const cryptonote::Currency& currency, cryptonote::INode& node);
   ~TestWalletLegacy();
 
   std::error_code init();
   std::error_code sendTransaction(const std::string& address, uint64_t amount, crypto::Hash& txHash);
   void waitForSynchronizationToHeight(uint32_t height);
-  CryptoNote::IWalletLegacy* wallet();
-  CryptoNote::AccountPublicAddress address() const;
+  cryptonote::IWalletLegacy* wallet();
+  cryptonote::AccountPublicAddress address() const;
 
 protected:
   virtual void synchronizationCompleted(std::error_code result) override;
@@ -34,10 +34,10 @@ private:
   System::Event m_synchronizationCompleted;
   System::Event m_someTransactionUpdated;
 
-  CryptoNote::INode& m_node;
-  const CryptoNote::Currency& m_currency;
-  std::unique_ptr<CryptoNote::IWalletLegacy> m_wallet;
-  std::unique_ptr<CryptoNote::IWalletLegacyObserver> m_walletObserver;
+  cryptonote::INode& m_node;
+  const cryptonote::Currency& m_currency;
+  std::unique_ptr<cryptonote::IWalletLegacy> m_wallet;
+  std::unique_ptr<cryptonote::IWalletLegacyObserver> m_walletObserver;
   uint32_t m_currentHeight;
   uint32_t m_synchronizedHeight;
   std::error_code m_lastSynchronizationResult;

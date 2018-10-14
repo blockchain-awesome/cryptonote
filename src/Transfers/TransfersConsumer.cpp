@@ -19,7 +19,7 @@ using namespace crypto;
 
 namespace {
 
-using namespace CryptoNote;
+using namespace cryptonote;
 
 void checkOutputKey(
   const KeyDerivation& derivation,
@@ -79,7 +79,7 @@ void findMyOutputs(
   }
 }
 
-std::vector<crypto::Hash> getBlockHashes(const CryptoNote::CompleteBlock* blocks, size_t count) {
+std::vector<crypto::Hash> getBlockHashes(const cryptonote::CompleteBlock* blocks, size_t count) {
   std::vector<crypto::Hash> result;
   result.reserve(count);
 
@@ -92,9 +92,9 @@ std::vector<crypto::Hash> getBlockHashes(const CryptoNote::CompleteBlock* blocks
 
 }
 
-namespace CryptoNote {
+namespace cryptonote {
 
-TransfersConsumer::TransfersConsumer(const CryptoNote::Currency& currency, INode& node, const SecretKey& viewSecret) :
+TransfersConsumer::TransfersConsumer(const cryptonote::Currency& currency, INode& node, const SecretKey& viewSecret) :
   m_node(node), m_viewSecret(viewSecret), m_currency(currency) {
   updateSyncStart();
 }
@@ -386,8 +386,8 @@ std::error_code createTransfers(
       KeyOutput out;
       tx.getOutput(idx, out, amount);
 
-      CryptoNote::KeyPair in_ephemeral;
-      CryptoNote::generate_key_image_helper(
+      cryptonote::KeyPair in_ephemeral;
+      cryptonote::generate_key_image_helper(
         account,
         txPubKey,
         idx,

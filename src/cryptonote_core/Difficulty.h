@@ -9,7 +9,7 @@
 
 #include "crypto/hash.h"
 
-namespace CryptoNote
+namespace cryptonote
 {
     typedef std::uint64_t difficulty_type;
 

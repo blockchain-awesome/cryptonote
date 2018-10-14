@@ -7,7 +7,7 @@
 #include <boost/utility/value_init.hpp>
 #include <CryptoNote.h>
 
-namespace CryptoNote {
+namespace cryptonote {
   const crypto::Hash NULL_HASH = boost::value_initialized<crypto::Hash>();
   const crypto::PublicKey NULL_PUBLIC_KEY = boost::value_initialized<crypto::PublicKey>();
   const crypto::SecretKey NULL_SECRET_KEY = boost::value_initialized<crypto::SecretKey>();

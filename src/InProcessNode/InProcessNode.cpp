@@ -20,9 +20,9 @@
 using namespace crypto;
 using namespace Common;
 
-namespace CryptoNote {
+namespace cryptonote {
 
-InProcessNode::InProcessNode(CryptoNote::ICore& core, CryptoNote::ICryptoNoteProtocolQuery& protocol) :
+InProcessNode::InProcessNode(cryptonote::ICore& core, cryptonote::ICryptoNoteProtocolQuery& protocol) :
     state(NOT_INITIALIZED),
     core(core),
     protocol(protocol),
@@ -36,7 +36,7 @@ InProcessNode::~InProcessNode() {
 
 bool InProcessNode::addObserver(INodeObserver* observer) {
   if (state != INITIALIZED) {
-    throw std::system_error(make_error_code(CryptoNote::error::NOT_INITIALIZED));
+    throw std::system_error(make_error_code(cryptonote::error::NOT_INITIALIZED));
   }
 
   return observerManager.add(observer);
@@ -44,7 +44,7 @@ bool InProcessNode::addObserver(INodeObserver* observer) {
 
 bool InProcessNode::removeObserver(INodeObserver* observer) {
   if (state != INITIALIZED) {
-    throw std::system_error(make_error_code(CryptoNote::error::NOT_INITIALIZED));
+    throw std::system_error(make_error_code(cryptonote::error::NOT_INITIALIZED));
   }
 
   return observerManager.remove(observer);
@@ -55,7 +55,7 @@ void InProcessNode::init(const Callback& callback) {
   std::error_code ec;
 
   if (state != NOT_INITIALIZED) {
-    ec = make_error_code(CryptoNote::error::ALREADY_INITIALIZED);
+    ec = make_error_code(cryptonote::error::ALREADY_INITIALIZED);
   } else {
     protocol.addObserver(this);
     core.addObserver(this);
@@ -94,13 +94,13 @@ void InProcessNode::workerFunc() {
   ioService.run();
 }
 
-void InProcessNode::getNewBlocks(std::vector<crypto::Hash>&& knownBlockIds, std::vector<CryptoNote::block_complete_entry>& newBlocks,
+void InProcessNode::getNewBlocks(std::vector<crypto::Hash>&& knownBlockIds, std::vector<cryptonote::block_complete_entry>& newBlocks,
   uint32_t& startHeight, const Callback& callback)
 {
   std::unique_lock<std::mutex> lock(mutex);
   if (state != INITIALIZED) {
     lock.unlock();
-    callback(make_error_code(CryptoNote::error::NOT_INITIALIZED));
+    callback(make_error_code(cryptonote::error::NOT_INITIALIZED));
     return;
   }
 
@@ -115,7 +115,7 @@ void InProcessNode::getNewBlocks(std::vector<crypto::Hash>&& knownBlockIds, std:
   );
 }
 
-void InProcessNode::getNewBlocksAsync(std::vector<crypto::Hash>& knownBlockIds, std::vector<CryptoNote::block_complete_entry>& newBlocks,
+void InProcessNode::getNewBlocksAsync(std::vector<crypto::Hash>& knownBlockIds, std::vector<cryptonote::block_complete_entry>& newBlocks,
   uint32_t& startHeight, const Callback& callback)
 {
   std::error_code ec = doGetNewBlocks(std::move(knownBlockIds), newBlocks, startHeight);
@@ -123,33 +123,33 @@ void InProcessNode::getNewBlocksAsync(std::vector<crypto::Hash>& knownBlockIds, 
 }
 
 //it's always protected with mutex
-std::error_code InProcessNode::doGetNewBlocks(std::vector<crypto::Hash>&& knownBlockIds, std::vector<CryptoNote::block_complete_entry>& newBlocks, uint32_t& startHeight) {
+std::error_code InProcessNode::doGetNewBlocks(std::vector<crypto::Hash>&& knownBlockIds, std::vector<cryptonote::block_complete_entry>& newBlocks, uint32_t& startHeight) {
   {
     std::unique_lock<std::mutex> lock(mutex);
     if (state != INITIALIZED) {
-      return make_error_code(CryptoNote::error::NOT_INITIALIZED);
+      return make_error_code(cryptonote::error::NOT_INITIALIZED);
     }
   }
 
   try {
     // TODO code duplication see RpcServer::on_get_blocks()
     if (knownBlockIds.empty()) {
-      return make_error_code(CryptoNote::error::REQUEST_ERROR);
+      return make_error_code(cryptonote::error::REQUEST_ERROR);
     }
 
     if (knownBlockIds.back() != core.getBlockIdByHeight(0)) {
-      return make_error_code(CryptoNote::error::REQUEST_ERROR);
+      return make_error_code(cryptonote::error::REQUEST_ERROR);
     }
 
     uint32_t totalBlockCount;
-    std::vector<crypto::Hash> supplement = core.findBlockchainSupplement(knownBlockIds, CryptoNote::COMMAND_RPC_GET_BLOCKS_FAST_MAX_COUNT, totalBlockCount, startHeight);
+    std::vector<crypto::Hash> supplement = core.findBlockchainSupplement(knownBlockIds, cryptonote::COMMAND_RPC_GET_BLOCKS_FAST_MAX_COUNT, totalBlockCount, startHeight);
 
     for (const auto& blockId : supplement) {
       assert(core.have_block(blockId));
       auto completeBlock = core.getBlock(blockId);
       assert(completeBlock != nullptr);
 
-      CryptoNote::block_complete_entry be;
+      cryptonote::block_complete_entry be;
       be.block = asString(toBinaryArray(completeBlock->getBlock()));
 
       be.txs.reserve(completeBlock->getTransactionCount());
@@ -162,7 +162,7 @@ std::error_code InProcessNode::doGetNewBlocks(std::vector<crypto::Hash>&& knownB
   } catch (std::system_error& e) {
     return e.code();
   } catch (std::exception&) {
-    return make_error_code(CryptoNote::error::INTERNAL_NODE_ERROR);
+    return make_error_code(cryptonote::error::INTERNAL_NODE_ERROR);
   }
 
   return std::error_code();
@@ -174,7 +174,7 @@ void InProcessNode::getTransactionOutsGlobalIndices(const crypto::Hash& transact
   std::unique_lock<std::mutex> lock(mutex);
   if (state != INITIALIZED) {
     lock.unlock();
-    callback(make_error_code(CryptoNote::error::NOT_INITIALIZED));
+    callback(make_error_code(cryptonote::error::NOT_INITIALIZED));
     return;
   }
 
@@ -200,31 +200,31 @@ std::error_code InProcessNode::doGetTransactionOutsGlobalIndices(const crypto::H
   {
     std::unique_lock<std::mutex> lock(mutex);
     if (state != INITIALIZED) {
-      return make_error_code(CryptoNote::error::NOT_INITIALIZED);
+      return make_error_code(cryptonote::error::NOT_INITIALIZED);
     }
   }
 
   try {
     bool r = core.get_tx_outputs_gindexs(transactionHash, outsGlobalIndices);
     if(!r) {
-      return make_error_code(CryptoNote::error::REQUEST_ERROR);
+      return make_error_code(cryptonote::error::REQUEST_ERROR);
     }
   } catch (std::system_error& e) {
     return e.code();
   } catch (std::exception&) {
-    return make_error_code(CryptoNote::error::INTERNAL_NODE_ERROR);
+    return make_error_code(cryptonote::error::INTERNAL_NODE_ERROR);
   }
 
   return std::error_code();
 }
 
 void InProcessNode::getRandomOutsByAmounts(std::vector<uint64_t>&& amounts, uint64_t outsCount,
-    std::vector<CryptoNote::COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS::outs_for_amount>& result, const Callback& callback)
+    std::vector<cryptonote::COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS::outs_for_amount>& result, const Callback& callback)
 {
   std::unique_lock<std::mutex> lock(mutex);
   if (state != INITIALIZED) {
     lock.unlock();
-    callback(make_error_code(CryptoNote::error::NOT_INITIALIZED));
+    callback(make_error_code(cryptonote::error::NOT_INITIALIZED));
     return;
   }
 
@@ -240,48 +240,48 @@ void InProcessNode::getRandomOutsByAmounts(std::vector<uint64_t>&& amounts, uint
 }
 
 void InProcessNode::getRandomOutsByAmountsAsync(std::vector<uint64_t>& amounts, uint64_t outsCount,
-  std::vector<CryptoNote::COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS::outs_for_amount>& result, const Callback& callback)
+  std::vector<cryptonote::COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS::outs_for_amount>& result, const Callback& callback)
 {
   std::error_code ec = doGetRandomOutsByAmounts(std::move(amounts), outsCount, result);
   callback(ec);
 }
 
 //it's always protected with mutex
-std::error_code InProcessNode::doGetRandomOutsByAmounts(std::vector<uint64_t>&& amounts, uint64_t outsCount, std::vector<CryptoNote::COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS::outs_for_amount>& result) {
+std::error_code InProcessNode::doGetRandomOutsByAmounts(std::vector<uint64_t>&& amounts, uint64_t outsCount, std::vector<cryptonote::COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS::outs_for_amount>& result) {
   {
     std::unique_lock<std::mutex> lock(mutex);
     if (state != INITIALIZED) {
-      return make_error_code(CryptoNote::error::NOT_INITIALIZED);
+      return make_error_code(cryptonote::error::NOT_INITIALIZED);
     }
   }
 
   try {
-    CryptoNote::COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS::response res;
-    CryptoNote::COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS::request req;
+    cryptonote::COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS::response res;
+    cryptonote::COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS::request req;
     req.amounts = amounts;
     req.outs_count = outsCount;
 
     if(!core.get_random_outs_for_amounts(req, res)) {
-      return make_error_code(CryptoNote::error::REQUEST_ERROR);
+      return make_error_code(cryptonote::error::REQUEST_ERROR);
     }
 
     result = std::move(res.outs);
   } catch (std::system_error& e) {
     return e.code();
   } catch (std::exception&) {
-    return make_error_code(CryptoNote::error::INTERNAL_NODE_ERROR);
+    return make_error_code(cryptonote::error::INTERNAL_NODE_ERROR);
   }
 
   return std::error_code();
 }
 
 
-void InProcessNode::relayTransaction(const CryptoNote::Transaction& transaction, const Callback& callback)
+void InProcessNode::relayTransaction(const cryptonote::Transaction& transaction, const Callback& callback)
 {
   std::unique_lock<std::mutex> lock(mutex);
   if (state != INITIALIZED) {
     lock.unlock();
-    callback(make_error_code(CryptoNote::error::NOT_INITIALIZED));
+    callback(make_error_code(cryptonote::error::NOT_INITIALIZED));
     return;
   }
 
@@ -294,43 +294,43 @@ void InProcessNode::relayTransaction(const CryptoNote::Transaction& transaction,
   );
 }
 
-void InProcessNode::relayTransactionAsync(const CryptoNote::Transaction& transaction, const Callback& callback) {
+void InProcessNode::relayTransactionAsync(const cryptonote::Transaction& transaction, const Callback& callback) {
   std::error_code ec = doRelayTransaction(transaction);
   callback(ec);
 }
 
 //it's always protected with mutex
-std::error_code InProcessNode::doRelayTransaction(const CryptoNote::Transaction& transaction) {
+std::error_code InProcessNode::doRelayTransaction(const cryptonote::Transaction& transaction) {
   {
     std::unique_lock<std::mutex> lock(mutex);
     if (state != INITIALIZED) {
-      return make_error_code(CryptoNote::error::NOT_INITIALIZED);
+      return make_error_code(cryptonote::error::NOT_INITIALIZED);
     }
   }
 
   try {
-    CryptoNote::BinaryArray transactionBinaryArray = toBinaryArray(transaction);
-    CryptoNote::tx_verification_context tvc = boost::value_initialized<CryptoNote::tx_verification_context>();
+    cryptonote::BinaryArray transactionBinaryArray = toBinaryArray(transaction);
+    cryptonote::tx_verification_context tvc = boost::value_initialized<cryptonote::tx_verification_context>();
 
     if (!core.handle_incoming_tx(transactionBinaryArray, tvc, false)) {
-      return make_error_code(CryptoNote::error::REQUEST_ERROR);
+      return make_error_code(cryptonote::error::REQUEST_ERROR);
     }
 
     if(tvc.m_verifivation_failed) {
-      return make_error_code(CryptoNote::error::REQUEST_ERROR);
+      return make_error_code(cryptonote::error::REQUEST_ERROR);
     }
 
     if(!tvc.m_should_be_relayed) {
-      return make_error_code(CryptoNote::error::REQUEST_ERROR);
+      return make_error_code(cryptonote::error::REQUEST_ERROR);
     }
 
-    CryptoNote::NOTIFY_NEW_TRANSACTIONS::request r;
+    cryptonote::NOTIFY_NEW_TRANSACTIONS::request r;
     r.txs.push_back(asString(transactionBinaryArray));
     core.get_protocol()->relay_transactions(r);
   } catch (std::system_error& e) {
     return e.code();
   } catch (std::exception&) {
-    return make_error_code(CryptoNote::error::INTERNAL_NODE_ERROR);
+    return make_error_code(cryptonote::error::INTERNAL_NODE_ERROR);
   }
 
   return std::error_code();
@@ -340,7 +340,7 @@ size_t InProcessNode::getPeerCount() const {
   {
     std::unique_lock<std::mutex> lock(mutex);
     if (state != INITIALIZED) {
-      throw std::system_error(make_error_code(CryptoNote::error::NOT_INITIALIZED));
+      throw std::system_error(make_error_code(cryptonote::error::NOT_INITIALIZED));
     }
   }
 
@@ -351,7 +351,7 @@ uint32_t InProcessNode::getLocalBlockCount() const {
   {
     std::unique_lock<std::mutex> lock(mutex);
     if (state != INITIALIZED) {
-      throw std::system_error(make_error_code(CryptoNote::error::NOT_INITIALIZED));
+      throw std::system_error(make_error_code(cryptonote::error::NOT_INITIALIZED));
     }
   }
 
@@ -367,7 +367,7 @@ uint32_t InProcessNode::getKnownBlockCount() const {
   {
     std::unique_lock<std::mutex> lock(mutex);
     if (state != INITIALIZED) {
-      throw std::system_error(make_error_code(CryptoNote::error::NOT_INITIALIZED));
+      throw std::system_error(make_error_code(cryptonote::error::NOT_INITIALIZED));
     }
   }
 
@@ -378,7 +378,7 @@ uint32_t InProcessNode::getLastLocalBlockHeight() const {
   {
     std::unique_lock<std::mutex> lock(mutex);
     if (state != INITIALIZED) {
-      throw std::system_error(make_error_code(CryptoNote::error::NOT_INITIALIZED));
+      throw std::system_error(make_error_code(cryptonote::error::NOT_INITIALIZED));
     }
   }
 
@@ -394,7 +394,7 @@ uint32_t InProcessNode::getLastKnownBlockHeight() const {
   {
     std::unique_lock<std::mutex> lock(mutex);
     if (state != INITIALIZED) {
-      throw std::system_error(make_error_code(CryptoNote::error::NOT_INITIALIZED));
+      throw std::system_error(make_error_code(cryptonote::error::NOT_INITIALIZED));
     }
   }
 
@@ -404,7 +404,7 @@ uint32_t InProcessNode::getLastKnownBlockHeight() const {
 uint64_t InProcessNode::getLastLocalBlockTimestamp() const {
   std::unique_lock<std::mutex> lock(mutex);
   if (state != INITIALIZED) {
-    throw std::system_error(make_error_code(CryptoNote::error::NOT_INITIALIZED));
+    throw std::system_error(make_error_code(cryptonote::error::NOT_INITIALIZED));
   }
   lock.unlock();
 
@@ -413,9 +413,9 @@ uint64_t InProcessNode::getLastLocalBlockTimestamp() const {
 
   core.get_blockchain_top(ignore, hash);
 
-  CryptoNote::Block block;
+  cryptonote::Block block;
   if (!core.getBlockByHash(hash, block)) {
-    throw std::system_error(make_error_code(CryptoNote::error::INTERNAL_NODE_ERROR));
+    throw std::system_error(make_error_code(cryptonote::error::INTERNAL_NODE_ERROR));
   }
 
   return block.timestamp;
@@ -450,7 +450,7 @@ void InProcessNode::queryBlocks(std::vector<crypto::Hash>&& knownBlockIds, uint6
   std::unique_lock<std::mutex> lock(mutex);
   if (state != INITIALIZED) {
     lock.unlock();
-    callback(make_error_code(CryptoNote::error::NOT_INITIALIZED));
+    callback(make_error_code(cryptonote::error::NOT_INITIALIZED));
     return;
   }
 
@@ -474,10 +474,10 @@ void InProcessNode::queryBlocksLiteAsync(std::vector<crypto::Hash>& knownBlockId
 
 std::error_code InProcessNode::doQueryBlocksLite(std::vector<crypto::Hash>&& knownBlockIds, uint64_t timestamp, std::vector<BlockShortEntry>& newBlocks, uint32_t& startHeight) {
   uint32_t currentHeight, fullOffset;
-  std::vector<CryptoNote::BlockShortInfo> entries;
+  std::vector<cryptonote::BlockShortInfo> entries;
 
   if (!core.queryBlocksLite(knownBlockIds, timestamp, startHeight, currentHeight, fullOffset, entries)) {
-    return make_error_code(CryptoNote::error::INTERNAL_NODE_ERROR);
+    return make_error_code(cryptonote::error::INTERNAL_NODE_ERROR);
   }
 
   for (const auto& entry: entries) {
@@ -512,7 +512,7 @@ void InProcessNode::getPoolSymmetricDifference(std::vector<crypto::Hash>&& known
   std::unique_lock<std::mutex> lock(mutex);
   if (state != INITIALIZED) {
     lock.unlock();
-    callback(make_error_code(CryptoNote::error::NOT_INITIALIZED));
+    callback(make_error_code(cryptonote::error::NOT_INITIALIZED));
     return;
   }
 
@@ -545,7 +545,7 @@ void InProcessNode::getMultisignatureOutputByGlobalIndex(uint64_t amount, uint32
   std::unique_lock<std::mutex> lock(mutex);
   if (state != INITIALIZED) {
     lock.unlock();
-    callback(make_error_code(CryptoNote::error::NOT_INITIALIZED));
+    callback(make_error_code(cryptonote::error::NOT_INITIALIZED));
     return;
   }
 
@@ -570,7 +570,7 @@ void InProcessNode::getBlocks(const std::vector<uint32_t>& blockHeights, std::ve
   std::unique_lock<std::mutex> lock(mutex);
   if (state != INITIALIZED) {
     lock.unlock();
-    callback(make_error_code(CryptoNote::error::NOT_INITIALIZED));
+    callback(make_error_code(cryptonote::error::NOT_INITIALIZED));
     return;
   }
 
@@ -615,16 +615,16 @@ std::error_code InProcessNode::doGetBlocks(const std::vector<uint32_t>& blockHei
     core.get_blockchain_top(topHeight, topHash);
     for (const uint32_t& height : blockHeights) {
       if (height > topHeight) {
-        return make_error_code(CryptoNote::error::REQUEST_ERROR);
+        return make_error_code(cryptonote::error::REQUEST_ERROR);
       }
       crypto::Hash hash = core.getBlockIdByHeight(height);
       Block block;
       if (!core.getBlockByHash(hash, block)) {
-        return make_error_code(CryptoNote::error::INTERNAL_NODE_ERROR);
+        return make_error_code(cryptonote::error::INTERNAL_NODE_ERROR);
       }
       BlockDetails blockDetails;
       if (!blockchainExplorerDataBuilder.fillBlockDetails(block, blockDetails)) {
-        return make_error_code(CryptoNote::error::INTERNAL_NODE_ERROR);
+        return make_error_code(cryptonote::error::INTERNAL_NODE_ERROR);
       }
       std::vector<BlockDetails> blocksOnSameHeight;
       blocksOnSameHeight.push_back(std::move(blockDetails));
@@ -635,7 +635,7 @@ std::error_code InProcessNode::doGetBlocks(const std::vector<uint32_t>& blockHei
       for (const Block& orphanBlock : orphanBlocks) {
         BlockDetails orphanBlockDetails;
         if (!blockchainExplorerDataBuilder.fillBlockDetails(orphanBlock, orphanBlockDetails)) {
-          return make_error_code(CryptoNote::error::INTERNAL_NODE_ERROR);
+          return make_error_code(cryptonote::error::INTERNAL_NODE_ERROR);
         }
         blocksOnSameHeight.push_back(std::move(orphanBlockDetails));
       }
@@ -644,7 +644,7 @@ std::error_code InProcessNode::doGetBlocks(const std::vector<uint32_t>& blockHei
   } catch (std::system_error& e) {
     return e.code();
   } catch (std::exception&) {
-    return make_error_code(CryptoNote::error::INTERNAL_NODE_ERROR);
+    return make_error_code(cryptonote::error::INTERNAL_NODE_ERROR);
   }
 
   return std::error_code();
@@ -654,7 +654,7 @@ void InProcessNode::getBlocks(const std::vector<crypto::Hash>& blockHashes, std:
   std::unique_lock<std::mutex> lock(mutex);
   if (state != INITIALIZED) {
     lock.unlock();
-    callback(make_error_code(CryptoNote::error::NOT_INITIALIZED));
+    callback(make_error_code(cryptonote::error::NOT_INITIALIZED));
     return;
   }
 
@@ -697,18 +697,18 @@ std::error_code InProcessNode::doGetBlocks(const std::vector<crypto::Hash>& bloc
     for (const crypto::Hash& hash : blockHashes) {
       Block block;
       if (!core.getBlockByHash(hash, block)) {
-        return make_error_code(CryptoNote::error::REQUEST_ERROR);
+        return make_error_code(cryptonote::error::REQUEST_ERROR);
       }
       BlockDetails blockDetails;
       if (!blockchainExplorerDataBuilder.fillBlockDetails(block, blockDetails)) {
-        return make_error_code(CryptoNote::error::INTERNAL_NODE_ERROR);
+        return make_error_code(cryptonote::error::INTERNAL_NODE_ERROR);
       }
       blocks.push_back(std::move(blockDetails));
     }
   } catch (std::system_error& e) {
     return e.code();
   } catch (std::exception&) {
-    return make_error_code(CryptoNote::error::INTERNAL_NODE_ERROR);
+    return make_error_code(cryptonote::error::INTERNAL_NODE_ERROR);
   }
   return std::error_code();
 }
@@ -717,7 +717,7 @@ void InProcessNode::getBlocks(uint64_t timestampBegin, uint64_t timestampEnd, ui
   std::unique_lock<std::mutex> lock(mutex);
   if (state != INITIALIZED) {
     lock.unlock();
-    callback(make_error_code(CryptoNote::error::NOT_INITIALIZED));
+    callback(make_error_code(cryptonote::error::NOT_INITIALIZED));
     return;
   }
 
@@ -772,19 +772,19 @@ std::error_code InProcessNode::doGetBlocks(uint64_t timestampBegin, uint64_t tim
   try {
     std::vector<Block> rawBlocks;
     if (!core.getBlocksByTimestamp(timestampBegin, timestampEnd, blocksNumberLimit, rawBlocks, blocksNumberWithinTimestamps)) {
-      return make_error_code(CryptoNote::error::REQUEST_ERROR);
+      return make_error_code(cryptonote::error::REQUEST_ERROR);
     }
     for (const Block& rawBlock : rawBlocks) {
       BlockDetails block;
       if (!blockchainExplorerDataBuilder.fillBlockDetails(rawBlock, block)) {
-        return make_error_code(CryptoNote::error::INTERNAL_NODE_ERROR);
+        return make_error_code(cryptonote::error::INTERNAL_NODE_ERROR);
       }
       blocks.push_back(std::move(block));
     }
   } catch (std::system_error& e) {
     return e.code();
   } catch (std::exception&) {
-    return make_error_code(CryptoNote::error::INTERNAL_NODE_ERROR);
+    return make_error_code(cryptonote::error::INTERNAL_NODE_ERROR);
   }
   return std::error_code();
 }
@@ -793,7 +793,7 @@ void InProcessNode::getTransactions(const std::vector<crypto::Hash>& transaction
   std::unique_lock<std::mutex> lock(mutex);
   if (state != INITIALIZED) {
     lock.unlock();
-    callback(make_error_code(CryptoNote::error::NOT_INITIALIZED));
+    callback(make_error_code(cryptonote::error::NOT_INITIALIZED));
     return;
   }
 
@@ -837,19 +837,19 @@ std::error_code InProcessNode::doGetTransactions(const std::vector<crypto::Hash>
     std::list<crypto::Hash> missed_txs;
     core.getTransactions(transactionHashes, txs, missed_txs, true);
     if (missed_txs.size() > 0) {
-      return make_error_code(CryptoNote::error::REQUEST_ERROR);
+      return make_error_code(cryptonote::error::REQUEST_ERROR);
     }
     for (const Transaction& tx : txs) {
       TransactionDetails transactionDetails;
       if (!blockchainExplorerDataBuilder.fillTransactionDetails(tx, transactionDetails)) {
-        return make_error_code(CryptoNote::error::INTERNAL_NODE_ERROR);
+        return make_error_code(cryptonote::error::INTERNAL_NODE_ERROR);
       }
       transactions.push_back(std::move(transactionDetails));
     }
   } catch (std::system_error& e) {
     return e.code();
   } catch (std::exception&) {
-    return make_error_code(CryptoNote::error::INTERNAL_NODE_ERROR);
+    return make_error_code(cryptonote::error::INTERNAL_NODE_ERROR);
   }
   return std::error_code();
 }
@@ -858,7 +858,7 @@ void InProcessNode::getPoolTransactions(uint64_t timestampBegin, uint64_t timest
   std::unique_lock<std::mutex> lock(mutex);
   if (state != INITIALIZED) {
     lock.unlock();
-    callback(make_error_code(CryptoNote::error::NOT_INITIALIZED));
+    callback(make_error_code(cryptonote::error::NOT_INITIALIZED));
     return;
   }
 
@@ -896,19 +896,19 @@ std::error_code InProcessNode::doGetPoolTransactions(uint64_t timestampBegin, ui
   try {
     std::vector<Transaction> rawTransactions;
     if (!core.getPoolTransactionsByTimestamp(timestampBegin, timestampEnd, transactionsNumberLimit, rawTransactions, transactionsNumberWithinTimestamps)) {
-      return make_error_code(CryptoNote::error::REQUEST_ERROR);
+      return make_error_code(cryptonote::error::REQUEST_ERROR);
     }
     for (const Transaction& rawTransaction : rawTransactions) {
       TransactionDetails transactionDetails;
       if (!blockchainExplorerDataBuilder.fillTransactionDetails(rawTransaction, transactionDetails)) {
-        return make_error_code(CryptoNote::error::INTERNAL_NODE_ERROR);
+        return make_error_code(cryptonote::error::INTERNAL_NODE_ERROR);
       }
       transactions.push_back(std::move(transactionDetails));
     }
   } catch (std::system_error& e) {
     return e.code();
   } catch (std::exception&) {
-    return make_error_code(CryptoNote::error::INTERNAL_NODE_ERROR);
+    return make_error_code(cryptonote::error::INTERNAL_NODE_ERROR);
   }
   return std::error_code();
 }
@@ -917,7 +917,7 @@ void InProcessNode::getTransactionsByPaymentId(const crypto::Hash& paymentId, st
   std::unique_lock<std::mutex> lock(mutex);
   if (state != INITIALIZED) {
     lock.unlock();
-    callback(make_error_code(CryptoNote::error::NOT_INITIALIZED));
+    callback(make_error_code(cryptonote::error::NOT_INITIALIZED));
     return;
   }
 
@@ -949,19 +949,19 @@ std::error_code InProcessNode::doGetTransactionsByPaymentId(const crypto::Hash& 
   try {
     std::vector<Transaction> rawTransactions;
     if (!core.getTransactionsByPaymentId(paymentId, rawTransactions)) {
-      return make_error_code(CryptoNote::error::REQUEST_ERROR);
+      return make_error_code(cryptonote::error::REQUEST_ERROR);
     }
     for (const Transaction& rawTransaction : rawTransactions) {
       TransactionDetails transactionDetails;
       if (!blockchainExplorerDataBuilder.fillTransactionDetails(rawTransaction, transactionDetails)) {
-        return make_error_code(CryptoNote::error::INTERNAL_NODE_ERROR);
+        return make_error_code(cryptonote::error::INTERNAL_NODE_ERROR);
       }
       transactions.push_back(std::move(transactionDetails));
     }
   } catch (std::system_error& e) {
     return e.code();
   } catch (std::exception&) {
-    return make_error_code(CryptoNote::error::INTERNAL_NODE_ERROR);
+    return make_error_code(cryptonote::error::INTERNAL_NODE_ERROR);
   }
   return std::error_code();
 }
@@ -970,7 +970,7 @@ void InProcessNode::isSynchronized(bool& syncStatus, const Callback& callback) {
   std::unique_lock<std::mutex> lock(mutex);
   if (state != INITIALIZED) {
     lock.unlock();
-    callback(make_error_code(CryptoNote::error::NOT_INITIALIZED));
+    callback(make_error_code(cryptonote::error::NOT_INITIALIZED));
     return;
   }
 
@@ -989,4 +989,4 @@ void InProcessNode::isSynchronizedAsync(bool& syncStatus, const Callback& callba
   callback(std::error_code());
 }
 
-} //namespace CryptoNote
+} //namespace cryptonote

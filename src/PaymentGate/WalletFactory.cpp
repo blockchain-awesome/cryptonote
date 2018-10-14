@@ -21,8 +21,8 @@ WalletFactory::WalletFactory() {
 WalletFactory::~WalletFactory() {
 }
 
-CryptoNote::IWallet* WalletFactory::createWallet(const CryptoNote::Currency& currency, CryptoNote::INode& node, System::Dispatcher& dispatcher) {
-  CryptoNote::IWallet* wallet = new CryptoNote::WalletGreen(dispatcher, currency, node);
+cryptonote::IWallet* WalletFactory::createWallet(const cryptonote::Currency& currency, cryptonote::INode& node, System::Dispatcher& dispatcher) {
+  cryptonote::IWallet* wallet = new cryptonote::WalletGreen(dispatcher, currency, node);
   return wallet;
 }
 

@@ -16,7 +16,7 @@
 #include "cryptonote_core/IntrusiveLinkedList.h"
 #include "cryptonote_core/CryptoNoteTools.h"
 
-using namespace CryptoNote;
+using namespace cryptonote;
 
 class MessageQueueTest : public testing::Test {
 public:

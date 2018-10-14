@@ -8,7 +8,7 @@
 #include <functional>
 #include <cstring>
 
-namespace CryptoNote {
+namespace cryptonote {
 
 inline bool operator==(const AccountPublicAddress &_v1, const AccountPublicAddress &_v2) {
   return memcmp(&_v1, &_v2, sizeof(AccountPublicAddress)) == 0;
@@ -19,8 +19,8 @@ inline bool operator==(const AccountPublicAddress &_v1, const AccountPublicAddre
 namespace std {
 
 template<>
-struct hash < CryptoNote::AccountPublicAddress > {
-  size_t operator()(const CryptoNote::AccountPublicAddress& val) const {
+struct hash < cryptonote::AccountPublicAddress > {
+  size_t operator()(const cryptonote::AccountPublicAddress& val) const {
     size_t spend = *(reinterpret_cast<const size_t*>(&val.spendPublicKey));
     size_t view = *(reinterpret_cast<const size_t*>(&val.viewPublicKey));
     return spend ^ view;

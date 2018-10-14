@@ -9,7 +9,7 @@
 
 Logging::ConsoleLogger logger;
 System::Dispatcher globalSystem;
-CryptoNote::Currency currency = CryptoNote::CurrencyBuilder(logger).testnet(true).currency();
+cryptonote::Currency currency = cryptonote::CurrencyBuilder(logger).testnet(true).currency();
 Tests::Common::BaseFunctionalTestsConfig config;
 
 

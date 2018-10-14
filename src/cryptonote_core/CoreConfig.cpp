@@ -7,7 +7,7 @@
 #include "common/Util.h"
 #include "common/CommandLine.h"
 
-namespace CryptoNote {
+namespace cryptonote {
 
 CoreConfig::CoreConfig() {
   configFolder = Tools::getDefaultDataDirectory();
@@ -22,4 +22,4 @@ void CoreConfig::init(const boost::program_options::variables_map& options) {
 
 void CoreConfig::initOptions(boost::program_options::options_description& desc) {
 }
-} //namespace CryptoNote
+} //namespace cryptonote

@@ -3,7 +3,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #pragma once
-namespace CryptoNote
+namespace cryptonote
 {
   /************************************************************************/
   /*                                                                      */

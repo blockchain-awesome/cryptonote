@@ -28,7 +28,7 @@ using namespace Common;
 using namespace Logging;
 using namespace System;
 
-namespace CryptoNote {
+namespace cryptonote {
 
 namespace {
 
@@ -174,13 +174,13 @@ void P2pNode::serialize(ISerializer& s) {
 void P2pNode::save(std::ostream& os) {
   StdOutputStream stream(os);
   BinaryOutputStreamSerializer a(stream);
-  CryptoNote::serialize(*this, a);
+  cryptonote::serialize(*this, a);
 }
 
 void P2pNode::load(std::istream& in) {
   StdInputStream stream(in);
   BinaryInputStreamSerializer a(stream);
-  CryptoNote::serialize(*this, a);
+  cryptonote::serialize(*this, a);
 }
 
 void P2pNode::acceptLoop() {

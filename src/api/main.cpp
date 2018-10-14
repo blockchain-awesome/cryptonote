@@ -11,17 +11,17 @@
 int main(int argc, char *argv[])
 {
   Logging::LoggerManager logManager;
-  CryptoNote::Currency currency = CryptoNote::CurrencyBuilder(logManager).currency();
+  cryptonote::Currency currency = cryptonote::CurrencyBuilder(logManager).currency();
   std::unique_ptr<api::Node> node;
   std::unique_ptr<api::Account> account;
 
   auto helpHandler = [] {
-    std::cout << CryptoNote::CRYPTONOTE_NAME << " api version " << PROJECT_VERSION_LONG << std::endl;
+    std::cout << cryptonote::CRYPTONOTE_NAME << " api version " << PROJECT_VERSION_LONG << std::endl;
     std::cout << "Usage: api" << std::endl;
   };
 
   auto versionHandler = [] {
-    std::cout << CryptoNote::CRYPTONOTE_NAME << " api version " << PROJECT_VERSION_LONG << std::endl;
+    std::cout << cryptonote::CRYPTONOTE_NAME << " api version " << PROJECT_VERSION_LONG << std::endl;
   };
 
   auto parameterHandler = [&](po::variables_map &vm) {

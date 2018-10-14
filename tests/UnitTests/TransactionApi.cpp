@@ -13,7 +13,7 @@
 #include "crypto/crypto.h"
 #include "TransactionApiHelpers.h"
 
-using namespace CryptoNote;
+using namespace cryptonote;
 
 namespace {
  
@@ -64,7 +64,7 @@ namespace {
     TransactionTypes::InputKeyInfo createInputInfo(uint64_t amount) {
       TransactionTypes::InputKeyInfo info;
 
-      CryptoNote::KeyPair srcTxKeys = CryptoNote::generateKeyPair();
+      cryptonote::KeyPair srcTxKeys = cryptonote::generateKeyPair();
 
       PublicKey targetKey;
 

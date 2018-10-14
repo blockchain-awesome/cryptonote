@@ -9,23 +9,23 @@
 
 using namespace Common;
 using namespace crypto;
-using namespace CryptoNote;
+using namespace cryptonote;
 
 #define BLOCK_VALIDATION_INIT_GENERATE()                        \
   GENERATE_ACCOUNT(miner_account);                              \
   MAKE_GENESIS_BLOCK(events, blk_0, miner_account, 1338224400);
 
 namespace {
-  bool lift_up_difficulty(const CryptoNote::Currency& currency, std::vector<test_event_entry>& events,
+  bool lift_up_difficulty(const cryptonote::Currency& currency, std::vector<test_event_entry>& events,
                           std::vector<uint64_t>& timestamps,
-                          std::vector<CryptoNote::difficulty_type>& cummulative_difficulties, test_generator& generator,
-                          size_t new_block_count, const CryptoNote::Block blk_last,
-                          const CryptoNote::AccountBase& miner_account, uint8_t block_major_version) {
-    CryptoNote::difficulty_type commulative_diffic = cummulative_difficulties.empty() ? 0 : cummulative_difficulties.back();
-    CryptoNote::Block blk_prev = blk_last;
+                          std::vector<cryptonote::difficulty_type>& cummulative_difficulties, test_generator& generator,
+                          size_t new_block_count, const cryptonote::Block blk_last,
+                          const cryptonote::AccountBase& miner_account, uint8_t block_major_version) {
+    cryptonote::difficulty_type commulative_diffic = cummulative_difficulties.empty() ? 0 : cummulative_difficulties.back();
+    cryptonote::Block blk_prev = blk_last;
     for (size_t i = 0; i < new_block_count; ++i) {
-      CryptoNote::Block blk_next;
-      CryptoNote::difficulty_type diffic = currency.nextDifficulty(timestamps, cummulative_difficulties);
+      cryptonote::Block blk_next;
+      cryptonote::difficulty_type diffic = currency.nextDifficulty(timestamps, cummulative_difficulties);
       if (!generator.constructBlockManually(blk_next, blk_prev, miner_account,
         test_generator::bf_major_ver | test_generator::bf_timestamp | test_generator::bf_diffic, 
         block_major_version, 0, blk_prev.timestamp, crypto::Hash(), diffic)) {
@@ -47,7 +47,7 @@ namespace {
     return true;
   }
 
-  void clearTransaction(CryptoNote::Transaction& tx) {
+  void clearTransaction(cryptonote::Transaction& tx) {
     tx.version = 0;
     tx.unlockTime = 0;
     tx.inputs.clear();
@@ -76,7 +76,7 @@ bool TestBlockMajorVersionRejected::generate(std::vector<test_event_entry>& even
 bool TestBlockBigMinorVersion::generate(std::vector<test_event_entry>& events) const {
   BLOCK_VALIDATION_INIT_GENERATE();
 
-  CryptoNote::Block blk_1;
+  cryptonote::Block blk_1;
   generator.constructBlockManually(blk_1, blk_0, miner_account,
     test_generator::bf_major_ver | test_generator::bf_minor_ver, BLOCK_MAJOR_VERSION_1, BLOCK_MINOR_VERSION_0 + 1);
 
@@ -165,7 +165,7 @@ bool gen_block_invalid_prev_id::generate(std::vector<test_event_entry>& events) 
   return true;
 }
 
-bool gen_block_invalid_prev_id::check_block_verification_context(const CryptoNote::block_verification_context& bvc, size_t event_idx, const CryptoNote::Block& /*blk*/)
+bool gen_block_invalid_prev_id::check_block_verification_context(const cryptonote::block_verification_context& bvc, size_t event_idx, const cryptonote::Block& /*blk*/)
 {
   if (1 == event_idx)
     return bvc.m_marked_as_orphaned && !bvc.m_added_to_main_chain && !bvc.m_verifivation_failed;
@@ -567,7 +567,7 @@ bool TestBlockCumulativeSizeExceedsLimit::generate(std::vector<test_event_entry>
 
 gen_block_invalid_binary_format::gen_block_invalid_binary_format() : 
     m_corrupt_blocks_begin_idx(0) {
-  CryptoNote::CurrencyBuilder currencyBuilder(m_logger);
+  cryptonote::CurrencyBuilder currencyBuilder(m_logger);
   m_currency = currencyBuilder.currency();
 
   REGISTER_CALLBACK("check_all_blocks_purged", gen_block_invalid_binary_format::check_all_blocks_purged);
@@ -639,8 +639,8 @@ bool gen_block_invalid_binary_format::generate(std::vector<test_event_entry>& ev
   return true;
 }
 
-bool gen_block_invalid_binary_format::check_block_verification_context(const CryptoNote::block_verification_context& bvc,
-                                                                       size_t event_idx, const CryptoNote::Block& blk)
+bool gen_block_invalid_binary_format::check_block_verification_context(const cryptonote::block_verification_context& bvc,
+                                                                       size_t event_idx, const cryptonote::Block& blk)
 {
   if (0 == m_corrupt_blocks_begin_idx || event_idx < m_corrupt_blocks_begin_idx)
   {
@@ -652,13 +652,13 @@ bool gen_block_invalid_binary_format::check_block_verification_context(const Cry
   }
 }
 
-bool gen_block_invalid_binary_format::corrupt_blocks_boundary(CryptoNote::core& c, size_t ev_index, const std::vector<test_event_entry>& events)
+bool gen_block_invalid_binary_format::corrupt_blocks_boundary(cryptonote::core& c, size_t ev_index, const std::vector<test_event_entry>& events)
 {
   m_corrupt_blocks_begin_idx = ev_index + 1;
   return true;
 }
 
-bool gen_block_invalid_binary_format::check_all_blocks_purged(CryptoNote::core& c, size_t ev_index, const std::vector<test_event_entry>& events)
+bool gen_block_invalid_binary_format::check_all_blocks_purged(cryptonote::core& c, size_t ev_index, const std::vector<test_event_entry>& events)
 {
   DEFINE_TESTS_ERROR_CONTEXT("gen_block_invalid_binary_format::check_all_blocks_purged");
 

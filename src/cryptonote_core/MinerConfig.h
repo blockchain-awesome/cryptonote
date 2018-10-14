@@ -9,7 +9,7 @@
 
 #include <boost/program_options.hpp>
 
-namespace CryptoNote {
+namespace cryptonote {
 
 class MinerConfig {
 public:
@@ -23,4 +23,4 @@ public:
   uint32_t miningThreads;
 };
 
-} //namespace CryptoNote
+} //namespace cryptonote

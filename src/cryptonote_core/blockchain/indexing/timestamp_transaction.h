@@ -6,7 +6,7 @@
 
 #include "CryptoNoteBasic.h"
 
-namespace CryptoNote
+namespace cryptonote
 {
 
 class ISerializer;
@@ -32,4 +32,4 @@ public:
 private:
   std::multimap<uint64_t, crypto::Hash> index;
 };
-} // namespace CryptoNote
+} // namespace cryptonote

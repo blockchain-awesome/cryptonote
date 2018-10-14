@@ -6,7 +6,7 @@
 
 #include "cryptonote_core/CryptoNoteBasic.h"
 
-namespace CryptoNote {
+namespace cryptonote {
 
   struct BlockInfo {
     uint32_t height;
@@ -18,11 +18,11 @@ namespace CryptoNote {
 
     void clear() {
       height = 0;
-      id = CryptoNote::NULL_HASH;
+      id = cryptonote::NULL_HASH;
     }
 
     bool empty() const {
-      return id == CryptoNote::NULL_HASH;
+      return id == cryptonote::NULL_HASH;
     }
   };
 
@@ -30,9 +30,9 @@ namespace CryptoNote {
   public:
     virtual ~ITransactionValidator() {}
     
-    virtual bool checkTransactionInputs(const CryptoNote::Transaction& tx, BlockInfo& maxUsedBlock) = 0;
-    virtual bool checkTransactionInputs(const CryptoNote::Transaction& tx, BlockInfo& maxUsedBlock, BlockInfo& lastFailed) = 0;
-    virtual bool haveSpentKeyImages(const CryptoNote::Transaction& tx) = 0;
+    virtual bool checkTransactionInputs(const cryptonote::Transaction& tx, BlockInfo& maxUsedBlock) = 0;
+    virtual bool checkTransactionInputs(const cryptonote::Transaction& tx, BlockInfo& maxUsedBlock, BlockInfo& lastFailed) = 0;
+    virtual bool haveSpentKeyImages(const cryptonote::Transaction& tx) = 0;
     virtual bool checkTransactionSize(size_t blobSize) = 0;
   };
 

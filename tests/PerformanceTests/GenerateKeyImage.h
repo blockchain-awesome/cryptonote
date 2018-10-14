@@ -16,7 +16,7 @@ public:
 
   bool init()
   {
-    using namespace CryptoNote;
+    using namespace cryptonote;
 
     if (!single_tx_test_base::init())
       return false;
@@ -40,5 +40,5 @@ public:
   }
 
 private:
-  CryptoNote::KeyPair m_in_ephemeral;
+  cryptonote::KeyPair m_in_ephemeral;
 };

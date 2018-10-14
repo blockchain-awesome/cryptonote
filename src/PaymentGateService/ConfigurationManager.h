@@ -18,8 +18,8 @@ public:
 
   bool startInprocess;
   Configuration gateConfiguration;
-  CryptoNote::NetNodeConfig netNodeConfig;
-  CryptoNote::CoreConfig coreConfig;
+  cryptonote::NetNodeConfig netNodeConfig;
+  cryptonote::CoreConfig coreConfig;
   RpcNodeConfiguration remoteNodeConfig;
 };
 

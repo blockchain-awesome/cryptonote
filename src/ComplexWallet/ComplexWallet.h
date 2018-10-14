@@ -29,27 +29,27 @@
 #include "RpcServer.h"
 #include "WalletManager.h"
 
-namespace CryptoNote
+namespace cryptonote
 {
 /************************************************************************/
 /*                                                                      */
 /************************************************************************/
-class complex_wallet : public CryptoNote::INodeObserver, public CryptoNote::IWalletLegacyObserver, public CryptoNote::INodeRpcProxyObserver
+class complex_wallet : public cryptonote::INodeObserver, public cryptonote::IWalletLegacyObserver, public cryptonote::INodeRpcProxyObserver
 {
 public:
-  complex_wallet(System::Dispatcher &dispatcher, const CryptoNote::Currency &currency, Logging::LoggerManager &log);
+  complex_wallet(System::Dispatcher &dispatcher, const cryptonote::Currency &currency, Logging::LoggerManager &log);
 
   bool init(const boost::program_options::variables_map &vm);
   bool deinit();
   bool run();
   void stop();
 
-  std::unique_ptr<CryptoNote::NodeRpcProxy> &get_node();
+  std::unique_ptr<cryptonote::NodeRpcProxy> &get_node();
 
   bool process_command(const std::vector<std::string> &args);
   std::string get_commands_str();
 
-  const CryptoNote::Currency &currency() const { return m_currency; }
+  const cryptonote::Currency &currency() const { return m_currency; }
 
 private:
   Logging::LoggerMessage success_msg_writer(bool color = false)
@@ -93,7 +93,7 @@ private:
 
   //---------------- IWalletLegacyObserver -------------------------
   virtual void initCompleted(std::error_code result) override;
-  virtual void externalTransactionCreated(CryptoNote::TransactionId transactionId) override;
+  virtual void externalTransactionCreated(cryptonote::TransactionId transactionId) override;
   virtual void synchronizationCompleted(std::error_code result) override;
   virtual void synchronizationProgressUpdated(uint32_t current, uint32_t total) override;
   //----------------------------------------------------------
@@ -107,7 +107,7 @@ private:
   class refresh_progress_reporter_t
   {
   public:
-    refresh_progress_reporter_t(CryptoNote::complex_wallet &complex_wallet)
+    refresh_progress_reporter_t(cryptonote::complex_wallet &complex_wallet)
         : m_complex_wallet(complex_wallet), m_blockchain_height(0), m_blockchain_height_update_time(), m_print_time()
     {
     }
@@ -138,7 +138,7 @@ private:
     }
 
   private:
-    CryptoNote::complex_wallet &m_complex_wallet;
+    cryptonote::complex_wallet &m_complex_wallet;
     uint64_t m_blockchain_height;
     std::chrono::system_clock::time_point m_blockchain_height_update_time;
     std::chrono::system_clock::time_point m_print_time;
@@ -161,13 +161,13 @@ private:
   std::unique_ptr<std::promise<std::error_code>> m_initResultPromise;
 
   Common::ConsoleHandler m_consoleHandler;
-  const CryptoNote::Currency &m_currency;
+  const cryptonote::Currency &m_currency;
   Logging::LoggerManager &logManager;
   System::Dispatcher &m_dispatcher;
   Logging::LoggerRef logger;
 
-  std::unique_ptr<CryptoNote::NodeRpcProxy> m_node;
-  std::unique_ptr<CryptoNote::IWalletLegacy> m_wallet;
+  std::unique_ptr<cryptonote::NodeRpcProxy> m_node;
+  std::unique_ptr<cryptonote::IWalletLegacy> m_wallet;
 
   // Wallet Manager
   std::unique_ptr<ComplexWallet::WalletManager> m_wallet_manager;
@@ -181,4 +181,4 @@ private:
   std::mutex m_walletSynchronizedMutex;
   std::condition_variable m_walletSynchronizedCV;
 };
-} // namespace CryptoNote
+} // namespace cryptonote

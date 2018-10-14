@@ -96,10 +96,10 @@ protected:
 class SimpleTest : public Tests::Common::BaseFunctionalTests {
 public:
 
-  SimpleTest(const CryptoNote::Currency& currency, System::Dispatcher& system, const Tests::Common::BaseFunctionalTestsConfig& config) : 
+  SimpleTest(const cryptonote::Currency& currency, System::Dispatcher& system, const Tests::Common::BaseFunctionalTestsConfig& config) : 
     BaseFunctionalTests(currency, system, config) {}
 
-  class WaitForActualGrowObserver : public CryptoNote::IWalletLegacyObserver {
+  class WaitForActualGrowObserver : public cryptonote::IWalletLegacyObserver {
     Tests::Common::Semaphore& m_GotActual;
 
     uint64_t m_lastFunds;
@@ -115,7 +115,7 @@ public:
     }
   };
 
-  class WaitForActualDwindleObserver : public CryptoNote::IWalletLegacyObserver {
+  class WaitForActualDwindleObserver : public cryptonote::IWalletLegacyObserver {
     Tests::Common::Semaphore& m_GotActual;
 
     uint64_t m_lastFunds;
@@ -131,7 +131,7 @@ public:
     }
   };
 
-  class WaitForPendingGrowObserver : public CryptoNote::IWalletLegacyObserver {
+  class WaitForPendingGrowObserver : public cryptonote::IWalletLegacyObserver {
     Tests::Common::Semaphore& m_GotActual;
 
     uint64_t m_lastFunds;
@@ -147,7 +147,7 @@ public:
     }
   };
 
-  class WaitForConfirmationObserver : public CryptoNote::IWalletLegacyObserver {
+  class WaitForConfirmationObserver : public cryptonote::IWalletLegacyObserver {
     Tests::Common::Semaphore& m_confirmed;
 
     std::function<bool(uint64_t)> m_pred;
@@ -159,62 +159,62 @@ public:
     }
   };
 
-  class WaitForSendCompletedObserver : public CryptoNote::IWalletLegacyObserver {
+  class WaitForSendCompletedObserver : public cryptonote::IWalletLegacyObserver {
     Tests::Common::Semaphore& m_Sent;
     std::error_code& m_error;
-    CryptoNote::TransactionId& m_transactionId;
+    cryptonote::TransactionId& m_transactionId;
 
   public:
-    WaitForSendCompletedObserver(Tests::Common::Semaphore& Sent, CryptoNote::TransactionId& transactionId, std::error_code& error) : m_Sent(Sent), m_transactionId(transactionId), m_error(error) { }
-    virtual void sendTransactionCompleted(CryptoNote::TransactionId transactionId, std::error_code result) override {
+    WaitForSendCompletedObserver(Tests::Common::Semaphore& Sent, cryptonote::TransactionId& transactionId, std::error_code& error) : m_Sent(Sent), m_transactionId(transactionId), m_error(error) { }
+    virtual void sendTransactionCompleted(cryptonote::TransactionId transactionId, std::error_code result) override {
       m_error = result;
       m_transactionId = transactionId;
       m_Sent.notify();
     }
   };
 
-  class WaitForExternalTransactionObserver : public CryptoNote::IWalletLegacyObserver {
+  class WaitForExternalTransactionObserver : public cryptonote::IWalletLegacyObserver {
   public:
     WaitForExternalTransactionObserver() { }
-    std::promise<CryptoNote::TransactionId> promise;
+    std::promise<cryptonote::TransactionId> promise;
 
-    virtual void externalTransactionCreated(CryptoNote::TransactionId transactionId) override {
+    virtual void externalTransactionCreated(cryptonote::TransactionId transactionId) override {
       promise.set_value(transactionId);
     }
 
   };
 
 
-  class WaitForTransactionUpdated : public CryptoNote::IWalletLegacyObserver {
+  class WaitForTransactionUpdated : public cryptonote::IWalletLegacyObserver {
   public:
     WaitForTransactionUpdated() {}
     std::promise<void> promise;
 
-    virtual void transactionUpdated(CryptoNote::TransactionId transactionId) override {
+    virtual void transactionUpdated(cryptonote::TransactionId transactionId) override {
       if (expectindTxId == transactionId) {
         promise.set_value();
       }
     }
 
-    CryptoNote::TransactionId expectindTxId;
+    cryptonote::TransactionId expectindTxId;
   };
 
 
   bool perform1() {
     using namespace Tests::Common;
-    using namespace CryptoNote;
+    using namespace cryptonote;
     const uint64_t FEE = 1000000;
     launchTestnet(2);
     LOG_TRACE("STEP 1 PASSED");
 
-    std::unique_ptr<CryptoNote::INode> node1;
-    std::unique_ptr<CryptoNote::INode> node2;
+    std::unique_ptr<cryptonote::INode> node1;
+    std::unique_ptr<cryptonote::INode> node2;
 
     nodeDaemons.front()->makeINode(node1);
     nodeDaemons.front()->makeINode(node2);
 
-    std::unique_ptr<CryptoNote::IWalletLegacy> wallet1;
-    std::unique_ptr<CryptoNote::IWalletLegacy> wallet2;
+    std::unique_ptr<cryptonote::IWalletLegacy> wallet1;
+    std::unique_ptr<cryptonote::IWalletLegacy> wallet2;
 
     makeWallet(wallet1, node1);
     makeWallet(wallet2, node2);
@@ -247,7 +247,7 @@ public:
     auto wallet1ActualBeforeTransaction = wallet1->actualBalance();
     auto wallet2ActualBeforeTransaction = wallet2->actualBalance();
     auto wallet2PendingBeforeTransaction = wallet2->pendingBalance();
-    CryptoNote::WalletLegacyTransfer tr;
+    cryptonote::WalletLegacyTransfer tr;
     tr.address = wallet2->getAddress();
     tr.amount = wallet1ActualBeforeTransaction / 2;
     TransactionId sendTransaction;
@@ -314,7 +314,7 @@ public:
     return true;
   }
 
-  class WaitForBlockchainHeightChangeObserver : public CryptoNote::INodeObserver {
+  class WaitForBlockchainHeightChangeObserver : public cryptonote::INodeObserver {
     Tests::Common::Semaphore& m_changed;
   public:
     WaitForBlockchainHeightChangeObserver(Tests::Common::Semaphore& changed) : m_changed(changed) { }
@@ -323,7 +323,7 @@ public:
     }
   };
 
-  class CallbackHeightChangeObserver : public CryptoNote::INodeObserver {
+  class CallbackHeightChangeObserver : public cryptonote::INodeObserver {
     std::function<void(uint32_t)> m_callback;
   public:
     CallbackHeightChangeObserver(std::function<void(uint32_t)> callback) : m_callback(callback) {}
@@ -341,13 +341,13 @@ public:
     mineBlock();
     mineBlock();
     LOG_TRACE("STEP 2 PASSED");
-    std::unique_ptr<CryptoNote::INode> localNode;
-    std::unique_ptr<CryptoNote::INode> remoteNode;
+    std::unique_ptr<cryptonote::INode> localNode;
+    std::unique_ptr<cryptonote::INode> remoteNode;
 
     nodeDaemons.front()->makeINode(localNode);
     nodeDaemons.back()->makeINode(remoteNode);
     
-    std::unique_ptr<CryptoNote::IWalletLegacy> wallet;
+    std::unique_ptr<cryptonote::IWalletLegacy> wallet;
     makeWallet(wallet, localNode);
 
     LOG_TRACE("STEP 3 PASSED");
@@ -371,14 +371,14 @@ public:
   }
 
   bool perform4() {
-    using namespace CryptoNote;
+    using namespace cryptonote;
     using namespace Tests::Common;
     launchTestnet(3, Star);
     LOG_TRACE("STEP 1 PASSED");
     
-    std::unique_ptr<CryptoNote::INode> hopNode;
-    std::unique_ptr<CryptoNote::INode> localNode;
-    std::unique_ptr<CryptoNote::INode> remoteNode;
+    std::unique_ptr<cryptonote::INode> hopNode;
+    std::unique_ptr<cryptonote::INode> localNode;
+    std::unique_ptr<cryptonote::INode> remoteNode;
 
     nodeDaemons[0]->makeINode(hopNode);
     nodeDaemons[1]->makeINode(localNode);
@@ -505,12 +505,12 @@ public:
 
   bool perform5() {
     using namespace Tests::Common;
-    using namespace CryptoNote;
+    using namespace cryptonote;
     const uint64_t FEE = 1000000;
     launchTestnetWithInprocNode(2);
     
-    std::unique_ptr<CryptoNote::INode> node1;
-    std::unique_ptr<CryptoNote::INode> inprocNode;
+    std::unique_ptr<cryptonote::INode> node1;
+    std::unique_ptr<cryptonote::INode> inprocNode;
 
     nodeDaemons.front()->makeINode(node1);
     nodeDaemons.back()->makeINode(inprocNode);
@@ -522,8 +522,8 @@ public:
 
     LOG_TRACE("STEP 1 PASSED");
 
-    std::unique_ptr<CryptoNote::IWalletLegacy> wallet1;
-    std::unique_ptr<CryptoNote::IWalletLegacy> wallet2;
+    std::unique_ptr<cryptonote::IWalletLegacy> wallet1;
+    std::unique_ptr<cryptonote::IWalletLegacy> wallet2;
 
     makeWallet(wallet1, node1);
     makeWallet(wallet2, inprocNode);
@@ -562,7 +562,7 @@ public:
     auto wallet1PendingBeforeTransaction = wallet1->pendingBalance();
     auto wallet2ActualBeforeTransaction = wallet2->actualBalance();
     auto wallet2PendingBeforeTransaction = wallet2->pendingBalance();
-    CryptoNote::WalletLegacyTransfer tr;
+    cryptonote::WalletLegacyTransfer tr;
     tr.address = wallet2->getAddress();
     tr.amount = wallet1ActualBeforeTransaction / 2;
     std::error_code result;
@@ -580,7 +580,7 @@ public:
     w2GotPending.wait();
 
     wallet2->removeObserver(&poolTxWaiter);
-    CryptoNote::WalletLegacyTransaction txInfo;
+    cryptonote::WalletLegacyTransaction txInfo;
     wallet2->getTransaction(txId, txInfo);
 
     auto wallet2PendingAfterTransaction = wallet2->pendingBalance();
@@ -654,12 +654,12 @@ public:
 
   bool perform6() {
     using namespace Tests::Common;
-    using namespace CryptoNote;
+    using namespace cryptonote;
     const uint64_t FEE = 1000000;
     launchTestnetWithInprocNode(2);
 
-    std::unique_ptr<CryptoNote::INode> node1;
-    std::unique_ptr<CryptoNote::INode> inprocNode;
+    std::unique_ptr<cryptonote::INode> node1;
+    std::unique_ptr<cryptonote::INode> inprocNode;
 
     nodeDaemons.front()->makeINode(node1);
     nodeDaemons.back()->makeINode(inprocNode);
@@ -671,8 +671,8 @@ public:
 
     LOG_TRACE("STEP 1 PASSED");
 
-    std::unique_ptr<CryptoNote::IWalletLegacy> wallet1;
-    std::unique_ptr<CryptoNote::IWalletLegacy> wallet2;
+    std::unique_ptr<cryptonote::IWalletLegacy> wallet1;
+    std::unique_ptr<cryptonote::IWalletLegacy> wallet2;
 
     makeWallet(wallet1, node1);
     makeWallet(wallet2, inprocNode);
@@ -710,7 +710,7 @@ public:
     auto wallet1ActualBeforeTransaction = wallet1->actualBalance();
     auto wallet1PendingBeforeTransaction = wallet1->pendingBalance();
     auto wallet2PendingBeforeTransaction = wallet2->pendingBalance();
-    CryptoNote::WalletLegacyTransfer tr;
+    cryptonote::WalletLegacyTransfer tr;
     tr.address = wallet2->getAddress();
     tr.amount = wallet1ActualBeforeTransaction / 2;
     std::error_code result;
@@ -728,7 +728,7 @@ public:
     w2GotPending.wait();
 
     wallet2->removeObserver(&poolTxWaiter);
-    CryptoNote::WalletLegacyTransaction txInfo;
+    cryptonote::WalletLegacyTransaction txInfo;
     wallet2->getTransaction(txId, txInfo);
 
     auto wallet2PendingAfterTransaction = wallet2->pendingBalance();
@@ -782,7 +782,7 @@ public:
 };
 
 
-void testMultiVersion(const CryptoNote::Currency& currency, System::Dispatcher& d, const Tests::Common::BaseFunctionalTestsConfig& config);
+void testMultiVersion(const cryptonote::Currency& currency, System::Dispatcher& d, const Tests::Common::BaseFunctionalTestsConfig& config);
 
 
 class SimpleTestCase : public ::testing::Test {
@@ -790,13 +790,13 @@ class SimpleTestCase : public ::testing::Test {
 public:
 
   SimpleTestCase() : 
-    currency(CryptoNote::CurrencyBuilder(logger).testnet(true).currency()), 
+    currency(cryptonote::CurrencyBuilder(logger).testnet(true).currency()), 
     test(currency, dispatcher, baseCfg) {
   }
 
   System::Dispatcher dispatcher;
   Logging::ConsoleLogger logger;
-  CryptoNote::Currency currency;
+  cryptonote::Currency currency;
   SimpleTest test;
 };
 
@@ -817,7 +817,7 @@ TEST_F(SimpleTestCase, TESTPOOLANDINPROCNODE) {
 }
 
 TEST_F(SimpleTestCase, TESTPOOLDELETION) {
-  currency = CryptoNote::CurrencyBuilder(logger).testnet(true).mempoolTxLiveTime(60).currency();
+  currency = cryptonote::CurrencyBuilder(logger).testnet(true).mempoolTxLiveTime(60).currency();
   ASSERT_TRUE(test.perform6());
 }
 

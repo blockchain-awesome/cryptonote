@@ -14,7 +14,7 @@
 using namespace crypto;
 using namespace Common;
 
-namespace CryptoNote {
+namespace cryptonote {
 
 bool parseTransactionExtra(const std::vector<uint8_t> &transactionExtra, std::vector<TransactionExtraField> &transactionExtraFields) {
   transactionExtraFields.clear();
@@ -174,9 +174,9 @@ bool createTxExtraWithPaymentId(const std::string& paymentIdString, std::vector<
   }
 
   std::vector<uint8_t> extraNonce;
-  CryptoNote::setPaymentIdToTransactionExtraNonce(extraNonce, paymentIdBin);
+  cryptonote::setPaymentIdToTransactionExtraNonce(extraNonce, paymentIdBin);
 
-  if (!CryptoNote::addExtraNonceToTransactionExtra(extra, extraNonce)) {
+  if (!cryptonote::addExtraNonceToTransactionExtra(extra, extraNonce)) {
     return false;
   }
 

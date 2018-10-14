@@ -29,7 +29,7 @@
 
 #include "Logging/LoggerGroup.h"
 
-namespace CryptoNote
+namespace cryptonote
 {
 
 class SyncStarter;
@@ -40,7 +40,7 @@ class WalletSingle : public IWalletLegacy,
 {
 
 public:
-  WalletSingle(const CryptoNote::Currency &currency, INode &node, Logging::LoggerGroup &logger);
+  WalletSingle(const cryptonote::Currency &currency, INode &node, Logging::LoggerGroup &logger);
   virtual ~WalletSingle();
 
   virtual void addObserver(IWalletLegacyObserver *observer) override;
@@ -106,9 +106,9 @@ private:
 
   WalletState m_state;
   std::mutex m_cacheMutex;
-  CryptoNote::AccountBase m_account;
+  cryptonote::AccountBase m_account;
   std::string m_password;
-  const CryptoNote::Currency &m_currency;
+  const cryptonote::Currency &m_currency;
   INode &m_node;
   bool m_isStopping;
 
@@ -127,8 +127,8 @@ private:
   std::unique_ptr<WalletTransactionSender> m_sender;
 
   WalletAsyncContextCounter m_asyncContextCounter;
-  Tools::ObserverManager<CryptoNote::IWalletLegacyObserver> m_observerManager;
+  Tools::ObserverManager<cryptonote::IWalletLegacyObserver> m_observerManager;
   Logging::LoggerGroup &m_logger;
 };
 
-} //namespace CryptoNote
+} //namespace cryptonote

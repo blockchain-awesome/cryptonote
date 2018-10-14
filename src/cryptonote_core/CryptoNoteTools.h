@@ -12,7 +12,7 @@
 #include "Serialization/BinaryInputStreamSerializer.h"
 #include "CryptoNoteSerialization.h"
 
-namespace CryptoNote {
+namespace cryptonote {
 
 void getBinaryArrayHash(const BinaryArray& binaryArray, crypto::Hash& hash);
 crypto::Hash getBinaryArrayHash(const BinaryArray& binaryArray);

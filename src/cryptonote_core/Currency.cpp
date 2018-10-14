@@ -21,7 +21,7 @@
 using namespace Logging;
 using namespace Common;
 
-namespace CryptoNote {
+namespace cryptonote {
 
 const std::vector<uint64_t> Currency::PRETTY_AMOUNTS = {
   1, 2, 3, 4, 5, 6, 7, 8, 9,
@@ -298,7 +298,7 @@ std::string Currency::accountAddressAsString(const AccountPublicAddress& account
 
 bool Currency::parseAccountAddressString(const std::string& str, AccountPublicAddress& addr) const {
   uint64_t prefix;
-  if (!CryptoNote::parseAccountAddressString(prefix, addr, str)) {
+  if (!cryptonote::parseAccountAddressString(prefix, addr, str)) {
     return false;
   }
 
@@ -494,8 +494,8 @@ CurrencyBuilder::CurrencyBuilder(Logging::ILogger& log) : m_currency(log) {
 }
 
 Transaction CurrencyBuilder::generateGenesisTransaction() {
-  CryptoNote::Transaction tx;
-  CryptoNote::AccountPublicAddress ac = boost::value_initialized<CryptoNote::AccountPublicAddress>();
+  cryptonote::Transaction tx;
+  cryptonote::AccountPublicAddress ac = boost::value_initialized<cryptonote::AccountPublicAddress>();
   m_currency.constructMinerTx(0, 0, 0, 0, 0, ac, tx); // zero fee in genesis
 
   return tx;

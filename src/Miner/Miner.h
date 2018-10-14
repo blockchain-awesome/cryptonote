@@ -16,7 +16,7 @@
 
 #include "Logging/LoggerRef.h"
 
-namespace CryptoNote {
+namespace cryptonote {
 
 struct BlockMiningParameters {
   Block blockTemplate;
@@ -51,4 +51,4 @@ private:
   bool setStateBlockFound();
 };
 
-} //namespace CryptoNote
+} //namespace cryptonote

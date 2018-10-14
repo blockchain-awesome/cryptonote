@@ -39,7 +39,7 @@
 #include <crtdbg.h>
 #endif
 
-using namespace CryptoNote;
+using namespace cryptonote;
 using namespace Logging;
 using Common::JsonValue;
 
@@ -48,7 +48,7 @@ namespace po = boost::program_options;
 #define EXTENDED_LOGS_FILE "wallet_details.log"
 #undef ERROR
 
-namespace CryptoNote
+namespace cryptonote
 {
 
 const command_line::arg_descriptor<std::string> arg_wallet_file = {"wallet-file", "Use wallet <arg>", ""};
@@ -117,7 +117,7 @@ private:
   IterT m_end;
 };
 
-TransferCommand::TransferCommand(const CryptoNote::Currency &currency) : m_currency(currency), fake_outs_count(0), fee(currency.minimumFee())
+TransferCommand::TransferCommand(const cryptonote::Currency &currency) : m_currency(currency), fake_outs_count(0), fee(currency.minimumFee())
 {
 }
 
@@ -174,12 +174,12 @@ bool TransferCommand::parseArguments(LoggerRef &logger, const std::vector<std::s
       else
       {
         WalletLegacyTransfer destination;
-        CryptoNote::TransactionDestinationEntry de;
+        cryptonote::TransactionDestinationEntry de;
 
         if (!m_currency.parseAccountAddressString(arg, de.addr))
         {
           crypto::Hash paymentId;
-          if (CryptoNote::parsePaymentId(arg, paymentId))
+          if (cryptonote::parsePaymentId(arg, paymentId))
           {
             logger(ERROR, BRIGHT_RED) << "Invalid payment ID usage. Please, use -p <payment_id>. See help for details.";
           }
@@ -398,4 +398,4 @@ std::string tryToOpenWalletOrLoadKeysOrThrow(LoggerRef &logger, std::unique_ptr<
   return walletFileName;
 }
 
-} // namespace CryptoNote
+} // namespace cryptonote

@@ -11,42 +11,42 @@
 class TransactionBuilder {
 public:
 
-  typedef std::vector<CryptoNote::AccountKeys> KeysVector;
+  typedef std::vector<cryptonote::AccountKeys> KeysVector;
   typedef std::vector<crypto::Signature> SignatureVector;
   typedef std::vector<SignatureVector> SignatureMultivector;
 
   struct MultisignatureSource {
-    CryptoNote::MultisignatureInput input;
+    cryptonote::MultisignatureInput input;
     KeysVector keys;
     crypto::PublicKey srcTxPubKey;
     size_t srcOutputIndex;
   };
 
-  TransactionBuilder(const CryptoNote::Currency& currency, uint64_t unlockTime = 0);
+  TransactionBuilder(const cryptonote::Currency& currency, uint64_t unlockTime = 0);
 
   // regenerate transaction keys
   TransactionBuilder& newTxKeys();
-  TransactionBuilder& setTxKeys(const CryptoNote::KeyPair& txKeys);
+  TransactionBuilder& setTxKeys(const cryptonote::KeyPair& txKeys);
 
   // inputs
-  TransactionBuilder& setInput(const std::vector<CryptoNote::TransactionSourceEntry>& sources, const CryptoNote::AccountKeys& senderKeys);
+  TransactionBuilder& setInput(const std::vector<cryptonote::TransactionSourceEntry>& sources, const cryptonote::AccountKeys& senderKeys);
   TransactionBuilder& addMultisignatureInput(const MultisignatureSource& source);
 
   // outputs
-  TransactionBuilder& setOutput(const std::vector<CryptoNote::TransactionDestinationEntry>& destinations);
-  TransactionBuilder& addOutput(const CryptoNote::TransactionDestinationEntry& dest);
+  TransactionBuilder& setOutput(const std::vector<cryptonote::TransactionDestinationEntry>& destinations);
+  TransactionBuilder& addOutput(const cryptonote::TransactionDestinationEntry& dest);
   TransactionBuilder& addMultisignatureOut(uint64_t amount, const KeysVector& keys, uint32_t required);
 
-  CryptoNote::Transaction build() const;
+  cryptonote::Transaction build() const;
 
-  std::vector<CryptoNote::TransactionSourceEntry> m_sources;
-  std::vector<CryptoNote::TransactionDestinationEntry> m_destinations;
+  std::vector<cryptonote::TransactionSourceEntry> m_sources;
+  std::vector<cryptonote::TransactionDestinationEntry> m_destinations;
 
 private:
 
-  void fillInputs(CryptoNote::Transaction& tx, std::vector<CryptoNote::KeyPair>& contexts) const;
-  void fillOutputs(CryptoNote::Transaction& tx) const;
-  void signSources(const crypto::Hash& prefixHash, const std::vector<CryptoNote::KeyPair>& contexts, CryptoNote::Transaction& tx) const;
+  void fillInputs(cryptonote::Transaction& tx, std::vector<cryptonote::KeyPair>& contexts) const;
+  void fillOutputs(cryptonote::Transaction& tx) const;
+  void signSources(const crypto::Hash& prefixHash, const std::vector<cryptonote::KeyPair>& contexts, cryptonote::Transaction& tx) const;
 
   struct MultisignatureDestination {
     uint64_t amount;
@@ -54,13 +54,13 @@ private:
     KeysVector keys;
   };
 
-  CryptoNote::AccountKeys m_senderKeys;
+  cryptonote::AccountKeys m_senderKeys;
 
   std::vector<MultisignatureSource> m_msigSources;
   std::vector<MultisignatureDestination> m_msigDestinations;
 
   size_t m_version;
   uint64_t m_unlockTime;
-  CryptoNote::KeyPair m_txKey;
-  const CryptoNote::Currency& m_currency;
+  cryptonote::KeyPair m_txKey;
+  const cryptonote::Currency& m_currency;
 };

@@ -12,7 +12,7 @@
 
 using namespace Common;
 
-namespace CryptoNote {
+namespace cryptonote {
 
 SynchronizationState::ShortHistory SynchronizationState::getShortHistory(uint32_t localHeight) const {
   ShortHistory history;
@@ -96,17 +96,17 @@ const std::vector<crypto::Hash>& SynchronizationState::getKnownBlockHashes() con
 
 void SynchronizationState::save(std::ostream& os) {
   StdOutputStream stream(os);
-  CryptoNote::BinaryOutputStreamSerializer s(stream);
+  cryptonote::BinaryOutputStreamSerializer s(stream);
   serialize(s, "state");
 }
 
 void SynchronizationState::load(std::istream& in) {
   StdInputStream stream(in);
-  CryptoNote::BinaryInputStreamSerializer s(stream);
+  cryptonote::BinaryInputStreamSerializer s(stream);
   serialize(s, "state");
 }
 
-CryptoNote::ISerializer& SynchronizationState::serialize(CryptoNote::ISerializer& s, const std::string& name) {
+cryptonote::ISerializer& SynchronizationState::serialize(cryptonote::ISerializer& s, const std::string& name) {
   s.beginObject(name);
   s(m_blockchain, "blockchain");
   s.endObject();

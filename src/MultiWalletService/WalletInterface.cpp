@@ -44,27 +44,27 @@
 
 using namespace Common;
 using namespace crypto;
-using namespace CryptoNote;
+using namespace cryptonote;
 
 using namespace std;
 
 // namespace
 // {
 
-// CryptoNote::WalletEvent makeSyncProgressUpdatedEvent(uint32_t current, uint32_t total)
+// cryptonote::WalletEvent makeSyncProgressUpdatedEvent(uint32_t current, uint32_t total)
 // {
-//   CryptoNote::WalletEvent event;
-//   event.type = CryptoNote::WalletEventType::SYNC_PROGRESS_UPDATED;
+//   cryptonote::WalletEvent event;
+//   event.type = cryptonote::WalletEventType::SYNC_PROGRESS_UPDATED;
 //   event.synchronizationProgressUpdated.processedBlockCount = current;
 //   event.synchronizationProgressUpdated.totalBlockCount = total;
 
 //   return event;
 // }
 
-// CryptoNote::WalletEvent makeSyncCompletedEvent()
+// cryptonote::WalletEvent makeSyncCompletedEvent()
 // {
-//   CryptoNote::WalletEvent event;
-//   event.type = CryptoNote::WalletEventType::SYNC_COMPLETED;
+//   cryptonote::WalletEvent event;
+//   event.type = cryptonote::WalletEventType::SYNC_COMPLETED;
 
 //   return event;
 // }
@@ -73,7 +73,7 @@ using namespace std;
 
 namespace MultiWalletService
 {
-// class SyncStarter : public CryptoNote::IWalletLegacyObserver
+// class SyncStarter : public cryptonote::IWalletLegacyObserver
 // {
 // public:
 //   SyncStarter(BlockchainSynchronizer &sync) : m_sync(sync) {}
@@ -201,8 +201,8 @@ bool WalletInterface::createWallet(const AccountKeys &accountKeys)
 {
 
   Logging::LoggerRef(m_logger, "inteface")(Logging::INFO) << "creating new wallet" << endl;
-  CryptoNote::IWalletLegacy *wallet = new WalletSingle(m_currency, m_node, m_logger);
-  // CryptoNote::IWalletLegacy *wallet = new WalletLegacy(m_currency, m_node);
+  cryptonote::IWalletLegacy *wallet = new WalletSingle(m_currency, m_node, m_logger);
+  // cryptonote::IWalletLegacy *wallet = new WalletLegacy(m_currency, m_node);
 
 
   WalletHelper::InitWalletResultObserver initObserver;
@@ -238,13 +238,13 @@ bool WalletInterface::checkAddress(const std::string &address, AccountPublicAddr
   return true;
 }
 
-CryptoNote::IWalletLegacy *WalletInterface::getWallet(const std::string address)
+cryptonote::IWalletLegacy *WalletInterface::getWallet(const std::string address)
 {
   std::map<std::string, void *>::iterator it;
   it = m_wallets.find(address);
   if (it != m_wallets.end())
   {
-    return (CryptoNote::IWalletLegacy *)it->second;
+    return (cryptonote::IWalletLegacy *)it->second;
   }
   return NULL;
 }

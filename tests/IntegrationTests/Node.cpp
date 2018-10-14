@@ -25,9 +25,9 @@
 #include "BaseTests.h"
 
 using namespace Tests;
-using namespace CryptoNote;
+using namespace cryptonote;
 
-namespace CryptoNote {
+namespace cryptonote {
   void serialize(BlockShortEntry& v, ISerializer& s) {
     s(v.blockHash, "hash");
     
@@ -180,7 +180,7 @@ TEST_F(NodeTest, generateBlockchain) {
     ASSERT_TRUE(daemon.makeINode(mainNode));
 
     std::string password = "pass";
-    CryptoNote::WalletGreen wallet(dispatcher, currency, *mainNode);
+    cryptonote::WalletGreen wallet(dispatcher, currency, *mainNode);
 
     wallet.initialize(password);
 
@@ -228,7 +228,7 @@ TEST_F(NodeTest, addMoreBlocks) {
     auto startHeight = daemon.getLocalHeight();
 
     std::string password = "pass";
-    CryptoNote::WalletGreen wallet(dispatcher, currency, *mainNode);
+    cryptonote::WalletGreen wallet(dispatcher, currency, *mainNode);
 
     {
       std::ifstream walletFile("wallet.bin", std::ios::binary);

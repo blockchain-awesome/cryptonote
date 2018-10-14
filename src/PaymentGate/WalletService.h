@@ -27,13 +27,13 @@ struct WalletConfiguration {
   std::string walletPassword;
 };
 
-void generateNewWallet(const CryptoNote::Currency &currency, const WalletConfiguration &conf, Logging::ILogger &logger, System::Dispatcher& dispatcher);
+void generateNewWallet(const cryptonote::Currency &currency, const WalletConfiguration &conf, Logging::ILogger &logger, System::Dispatcher& dispatcher);
 
 struct TransactionsInBlockInfoFilter;
 
 class WalletService {
 public:
-  WalletService(const CryptoNote::Currency& currency, System::Dispatcher& sys, CryptoNote::INode& node, CryptoNote::IWallet& wallet, const WalletConfiguration& conf, Logging::ILogger& logger);
+  WalletService(const cryptonote::Currency& currency, System::Dispatcher& sys, cryptonote::INode& node, cryptonote::IWallet& wallet, const WalletConfiguration& conf, Logging::ILogger& logger);
   virtual ~WalletService();
 
   void init();
@@ -77,8 +77,8 @@ private:
 
   void replaceWithNewWallet(const crypto::SecretKey& viewSecretKey);
 
-  std::vector<CryptoNote::TransactionsInBlockInfo> getTransactions(const crypto::Hash& blockHash, size_t blockCount) const;
-  std::vector<CryptoNote::TransactionsInBlockInfo> getTransactions(uint32_t firstBlockIndex, size_t blockCount) const;
+  std::vector<cryptonote::TransactionsInBlockInfo> getTransactions(const crypto::Hash& blockHash, size_t blockCount) const;
+  std::vector<cryptonote::TransactionsInBlockInfo> getTransactions(uint32_t firstBlockIndex, size_t blockCount) const;
 
   std::vector<TransactionHashesInBlockRpcInfo> getRpcTransactionHashes(const crypto::Hash& blockHash, size_t blockCount, const TransactionsInBlockInfoFilter& filter) const;
   std::vector<TransactionHashesInBlockRpcInfo> getRpcTransactionHashes(uint32_t firstBlockIndex, size_t blockCount, const TransactionsInBlockInfoFilter& filter) const;
@@ -86,9 +86,9 @@ private:
   std::vector<TransactionsInBlockRpcInfo> getRpcTransactions(const crypto::Hash& blockHash, size_t blockCount, const TransactionsInBlockInfoFilter& filter) const;
   std::vector<TransactionsInBlockRpcInfo> getRpcTransactions(uint32_t firstBlockIndex, size_t blockCount, const TransactionsInBlockInfoFilter& filter) const;
 
-  const CryptoNote::Currency& currency;
-  CryptoNote::IWallet& wallet;
-  CryptoNote::INode& node;
+  const cryptonote::Currency& currency;
+  cryptonote::IWallet& wallet;
+  cryptonote::INode& node;
   const WalletConfiguration& config;
   bool inited;
   Logging::LoggerRef logger;

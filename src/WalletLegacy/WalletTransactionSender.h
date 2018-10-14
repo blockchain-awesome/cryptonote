@@ -15,7 +15,7 @@
 
 #include "ITransfersContainer.h"
 
-namespace CryptoNote {
+namespace cryptonote {
 
 class WalletTransactionSender
 {
@@ -56,4 +56,4 @@ private:
   ITransfersContainer& m_transferDetails;
 };
 
-} /* namespace CryptoNote */
+} /* namespace cryptonote */

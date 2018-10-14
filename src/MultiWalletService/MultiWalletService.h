@@ -35,7 +35,7 @@ public:
   bool init(int argc, char **argv);
 
   const MultiWalletService::ConfigurationManager &getConfig() const { return config; }
-  const CryptoNote::Currency getCurrency();
+  const cryptonote::Currency getCurrency();
 
   void run();
   void stop();
@@ -45,12 +45,12 @@ public:
 private:
   void runRpcProxy(Logging::LoggerRef &log);
 
-  void runWalletService(const CryptoNote::Currency &currency, CryptoNote::INode &node, Logging::LoggerRef &log);
+  void runWalletService(const cryptonote::Currency &currency, cryptonote::INode &node, Logging::LoggerRef &log);
 
   System::Dispatcher *dispatcher;
   System::Event *stopEvent;
   MultiWalletService::ConfigurationManager config;
-  CryptoNote::CurrencyBuilder currencyBuilder;
+  cryptonote::CurrencyBuilder currencyBuilder;
 
   Logging::LoggerGroup logger;
   ofstream fileStream;

@@ -29,15 +29,15 @@
 
 #undef ERROR
 
-namespace CryptoNote {
+namespace cryptonote {
   struct NOTIFY_REQUEST_GET_OBJECTS_request;
   struct NOTIFY_RESPONSE_GET_OBJECTS_request;
   struct COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_request;
   struct COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_response;
   struct COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_outs_for_amount;
 
-  using CryptoNote::BlockInfo;
-  class Blockchain : public CryptoNote::ITransactionValidator {
+  using cryptonote::BlockInfo;
+  class Blockchain : public cryptonote::ITransactionValidator {
   public:
     Blockchain(const Currency& currency, tx_memory_pool& tx_pool, Logging::ILogger& logger);
 
@@ -45,9 +45,9 @@ namespace CryptoNote {
     bool removeObserver(IBlockchainStorageObserver* observer);
 
     // ITransactionValidator
-    virtual bool checkTransactionInputs(const CryptoNote::Transaction& tx, BlockInfo& maxUsedBlock) override;
-    virtual bool checkTransactionInputs(const CryptoNote::Transaction& tx, BlockInfo& maxUsedBlock, BlockInfo& lastFailed) override;
-    virtual bool haveSpentKeyImages(const CryptoNote::Transaction& tx) override;
+    virtual bool checkTransactionInputs(const cryptonote::Transaction& tx, BlockInfo& maxUsedBlock) override;
+    virtual bool checkTransactionInputs(const cryptonote::Transaction& tx, BlockInfo& maxUsedBlock, BlockInfo& lastFailed) override;
+    virtual bool haveSpentKeyImages(const cryptonote::Transaction& tx) override;
     virtual bool checkTransactionSize(size_t blobSize) override;
 
     bool init() { return init(Tools::getDefaultDataDirectory(), true); }
@@ -240,7 +240,7 @@ namespace CryptoNote {
     friend class BlockchainIndicesSerializer;
 
     Blocks m_blocks;
-    CryptoNote::BlockIndex m_blockIndex;
+    cryptonote::BlockIndex m_blockIndex;
     TransactionMap m_transactionMap;
     MultisignatureOutputsContainer m_multisignatureOutputs;
 

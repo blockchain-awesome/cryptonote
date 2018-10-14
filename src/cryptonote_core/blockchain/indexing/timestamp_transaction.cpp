@@ -3,7 +3,7 @@
 #include "CryptoNoteBasic.h"
 #include "CryptoNoteTools.h"
 
-namespace CryptoNote
+namespace cryptonote
 {
 
 bool TimestampTransactionsIndex::add(uint64_t timestamp, const crypto::Hash& hash) {
@@ -48,4 +48,4 @@ void TimestampTransactionsIndex::clear() {
 void TimestampTransactionsIndex::serialize(ISerializer& s) {
   s(index, "index");
 }
-} // namespace CryptoNote
+} // namespace cryptonote

@@ -7,7 +7,7 @@
 #include "cryptonote_core/Checkpoints.h"
 #include <Logging/LoggerGroup.h>
 
-using namespace CryptoNote;
+using namespace cryptonote;
 
 TEST(checkpoints_is_alternative_block_allowed, handles_empty_checkpoins)
 {

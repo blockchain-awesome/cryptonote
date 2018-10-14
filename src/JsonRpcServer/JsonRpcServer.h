@@ -13,7 +13,7 @@
 #include "Rpc/HttpServer.h"
 
 
-namespace CryptoNote {
+namespace cryptonote {
 class HttpResponse;
 class HttpRequest;
 }
@@ -26,7 +26,7 @@ namespace System {
 class TcpConnection;
 }
 
-namespace CryptoNote {
+namespace cryptonote {
 
 class JsonRpcServer : public HttpServer {
 public:
@@ -46,11 +46,11 @@ protected:
   virtual void processJsonRpcRequest(const Common::JsonValue& req, Common::JsonValue& resp) = 0;
 
   // HttpServer
-  virtual void processRequest(const CryptoNote::HttpRequest& request, CryptoNote::HttpResponse& response) override;
+  virtual void processRequest(const cryptonote::HttpRequest& request, cryptonote::HttpResponse& response) override;
 
   System::Dispatcher& system;
   System::Event& stopEvent;
   Logging::LoggerRef logger;
 };
 
-} //namespace CryptoNote
+} //namespace cryptonote

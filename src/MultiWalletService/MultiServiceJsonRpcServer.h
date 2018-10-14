@@ -19,7 +19,7 @@
 namespace MultiWalletService
 {
 
-class MultiServiceJsonRpcServer : public CryptoNote::JsonRpcServer
+class MultiServiceJsonRpcServer : public cryptonote::JsonRpcServer
 {
 public:
   MultiServiceJsonRpcServer(System::Dispatcher &sys, System::Event &stopEvent, Logging::ILogger &loggerGroup, WalletInterface &wallet);
@@ -49,7 +49,7 @@ private:
 
       try
       {
-        CryptoNote::JsonInputValueSerializer inputSerializer(const_cast<Common::JsonValue &>(jsonRpcParams));
+        cryptonote::JsonInputValueSerializer inputSerializer(const_cast<Common::JsonValue &>(jsonRpcParams));
         serialize(request, inputSerializer);
       }
       catch (std::exception &)
@@ -65,7 +65,7 @@ private:
         return;
       }
 
-      CryptoNote::JsonOutputStreamSerializer outputSerializer;
+      cryptonote::JsonOutputStreamSerializer outputSerializer;
       serialize(response, outputSerializer);
       fillJsonResponse(outputSerializer.getValue(), jsonResponse);
     };

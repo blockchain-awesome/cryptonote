@@ -16,8 +16,8 @@ public:
 
   bool test()
   {
-    CryptoNote::KeyPair in_ephemeral;
+    cryptonote::KeyPair in_ephemeral;
     crypto::KeyImage ki;
-    return CryptoNote::generate_key_image_helper(m_bob.getAccountKeys(), m_tx_pub_key, 0, in_ephemeral, ki);
+    return cryptonote::generate_key_image_helper(m_bob.getAccountKeys(), m_tx_pub_key, 0, in_ephemeral, ki);
   }
 };

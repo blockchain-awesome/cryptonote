@@ -7,7 +7,7 @@
 
 #include <CryptoNoteConfig.h>
 
-namespace CryptoNote {
+namespace cryptonote {
 
 namespace {
 

@@ -87,8 +87,8 @@ int main(int argc, char *argv[])
 
     if (command_line::get_arg(vm, command_line::arg_help))
     {
-      CryptoNote::Currency tmp_currency = CryptoNote::CurrencyBuilder(logManager).currency();
-      CryptoNote::complex_wallet tmp_wallet(dispatcher, tmp_currency, logManager);
+      cryptonote::Currency tmp_currency = cryptonote::CurrencyBuilder(logManager).currency();
+      cryptonote::complex_wallet tmp_wallet(dispatcher, tmp_currency, logManager);
 
       std::cout << CRYPTONOTE_NAME << " wallet version " << PROJECT_VERSION_LONG << std::endl;
       std::cout << "Usage: complexwallet [--wallet-file=<file>|--generate-new-wallet=<file>] [--daemon-address=<host>:<port>] [<COMMAND>]";
@@ -123,10 +123,10 @@ int main(int argc, char *argv[])
 
   logger(INFO, BRIGHT_WHITE) << CRYPTONOTE_NAME << " wallet version " << PROJECT_VERSION_LONG;
 
-  CryptoNote::Currency currency = CryptoNote::CurrencyBuilder(logManager).testnet(command_line::get_arg(vm, arg_testnet)).currency();
+  cryptonote::Currency currency = cryptonote::CurrencyBuilder(logManager).testnet(command_line::get_arg(vm, arg_testnet)).currency();
 
   //runs wallet with console interface
-  CryptoNote::complex_wallet wal(dispatcher, currency, logManager);
+  cryptonote::complex_wallet wal(dispatcher, currency, logManager);
 
   std::string genWallet = command_line::get_arg(vm, arg_generate_wallet);
   std::string sendKey = command_line::get_arg(vm, arg_send_key);

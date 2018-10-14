@@ -11,7 +11,7 @@
 
 #include "TransactionApiHelpers.h"
 
-using namespace CryptoNote;
+using namespace cryptonote;
 
 namespace {
 const size_t TEST_FUSION_TX_MAX_SIZE = 6000;

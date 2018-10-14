@@ -10,9 +10,9 @@
 
 #include "Serialization/SerializationOverloads.h"
 
-using namespace CryptoNote;
+using namespace cryptonote;
 
-namespace CryptoNote {
+namespace cryptonote {
   template <typename T, typename Indexes>
   bool serialize(boost::multi_index_container<T, Indexes>& value, Common::StringView name, ISerializer& s) {
     if (s.type() == ISerializer::INPUT) {
@@ -80,8 +80,8 @@ void PeerlistManager::Peerlist::trim() {
 }
 
 PeerlistManager::PeerlistManager() : 
-  m_whitePeerlist(m_peers_white, CryptoNote::P2P_LOCAL_WHITE_PEERLIST_LIMIT),
-  m_grayPeerlist(m_peers_gray, CryptoNote::P2P_LOCAL_GRAY_PEERLIST_LIMIT) {}
+  m_whitePeerlist(m_peers_white, cryptonote::P2P_LOCAL_WHITE_PEERLIST_LIMIT),
+  m_grayPeerlist(m_peers_gray, cryptonote::P2P_LOCAL_GRAY_PEERLIST_LIMIT) {}
 
 //--------------------------------------------------------------------------------------------------
 bool PeerlistManager::init(bool allow_local_ip)

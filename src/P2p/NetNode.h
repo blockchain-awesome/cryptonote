@@ -34,7 +34,7 @@ namespace System {
 class TcpConnection;
 }
 
-namespace CryptoNote
+namespace cryptonote
 {
   class LevinProtocol;
   class ISerializer;
@@ -113,14 +113,14 @@ namespace CryptoNote
 
     static void init_options(boost::program_options::options_description& desc);
 
-    NodeServer(System::Dispatcher& dispatcher, CryptoNote::CryptoNoteProtocolHandler& payload_handler, Logging::ILogger& log);
+    NodeServer(System::Dispatcher& dispatcher, cryptonote::CryptoNoteProtocolHandler& payload_handler, Logging::ILogger& log);
 
     bool run();
     bool init(const NetNodeConfig& config);
     bool deinit();
     bool sendStopSignal();
     uint32_t get_this_peer_port(){return m_listeningPort;}
-    CryptoNote::CryptoNoteProtocolHandler& get_payload_object();
+    cryptonote::CryptoNoteProtocolHandler& get_payload_object();
 
     void serialize(ISerializer& s);
 
@@ -130,7 +130,7 @@ namespace CryptoNote
     virtual uint64_t get_connections_count() override;
     size_t get_outgoing_connections_count();
 
-    CryptoNote::PeerlistManager& getPeerlistManager() { return m_peerlist; }
+    cryptonote::PeerlistManager& getPeerlistManager() { return m_peerlist; }
 
   private:
 
@@ -152,7 +152,7 @@ namespace CryptoNote
     bool check_trust(const proof_of_trust& tr);
     void initUpnp();
 
-    bool handshake(CryptoNote::LevinProtocol& proto, P2pConnectionContext& context, bool just_take_peerlist = false);
+    bool handshake(cryptonote::LevinProtocol& proto, P2pConnectionContext& context, bool just_take_peerlist = false);
     bool timedSync();
     bool handleTimedSyncResponse(const BinaryArray& in, P2pConnectionContext& context);
     void forEachConnection(std::function<void(P2pConnectionContext&)> action);
@@ -163,7 +163,7 @@ namespace CryptoNote
     //----------------- i_p2p_endpoint -------------------------------------------------------------
     virtual void relay_notify_to_all(int command, const BinaryArray& data_buff, const net_connection_id* excludeConnection) override;
     virtual bool invoke_notify_to_peer(int command, const BinaryArray& req_buff, const CryptoNoteConnectionContext& context) override;
-    virtual void for_each_connection(std::function<void(CryptoNote::CryptoNoteConnectionContext&, PeerIdType)> f) override;
+    virtual void for_each_connection(std::function<void(cryptonote::CryptoNoteConnectionContext&, PeerIdType)> f) override;
     virtual void externalRelayNotifyToAll(int command, const BinaryArray& data_buff) override;
 
     //-----------------------------------------------------------------------------------------------

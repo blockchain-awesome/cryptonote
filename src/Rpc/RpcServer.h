@@ -10,7 +10,7 @@
 #include <Logging/LoggerRef.h>
 #include "CoreRpcServerCommandsDefinitions.h"
 
-namespace CryptoNote {
+namespace cryptonote {
 
 class core;
 class NodeServer;

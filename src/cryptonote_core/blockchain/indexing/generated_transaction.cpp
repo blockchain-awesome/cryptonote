@@ -1,7 +1,7 @@
 #include "generated_transaction.h"
 #include "cryptonote_core/CryptoNoteTools.h"
 
-namespace CryptoNote
+namespace cryptonote
 {
 
 class ISerializer;
@@ -80,4 +80,4 @@ void GeneratedTransactionsIndex::serialize(ISerializer &s)
   s(lastGeneratedTxNumber, "lastGeneratedTxNumber");
 }
 
-} // namespace CryptoNote
+} // namespace cryptonote

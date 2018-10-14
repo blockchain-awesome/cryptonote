@@ -7,7 +7,7 @@
 #include "cryptonote_core/CryptoNoteBasic.h"
 #include "cryptonote_core/Difficulty.h"
 
-namespace CryptoNote {
+namespace cryptonote {
   struct IMinerHandler {
     virtual bool handle_block_found(Block& b) = 0;
     virtual bool get_block_template(Block& b, const AccountPublicAddress& adr, difficulty_type& diffic, uint32_t& height, const BinaryArray& ex_nonce) = 0;

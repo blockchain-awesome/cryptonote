@@ -18,7 +18,7 @@
 
 #define TX_EXTRA_NONCE_PAYMENT_ID           0x00
 
-namespace CryptoNote {
+namespace cryptonote {
 
 struct TransactionExtraPadding {
   size_t size;

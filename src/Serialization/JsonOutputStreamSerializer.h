@@ -8,7 +8,7 @@
 #include "../common/JsonValue.h"
 #include "ISerializer.h"
 
-namespace CryptoNote {
+namespace cryptonote {
 
 class JsonOutputStreamSerializer : public ISerializer {
 public:

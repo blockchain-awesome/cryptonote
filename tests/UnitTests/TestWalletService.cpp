@@ -19,10 +19,10 @@
 #include "INodeStubs.h"
 #include "Wallet/WalletErrors.h"
 
-using namespace CryptoNote;
+using namespace cryptonote;
 using namespace PaymentService;
 
-namespace CryptoNote {
+namespace cryptonote {
 
 bool operator== (const WalletOrder& lhs, const WalletOrder& rhs) {
   return std::make_tuple(lhs.address, lhs.amount) == std::make_tuple(rhs.address, rhs.amount);
@@ -32,9 +32,9 @@ bool operator== (const DonationSettings& lhs, const DonationSettings& rhs) {
   return std::make_tuple(lhs.address, lhs.threshold) == std::make_tuple(rhs.address, rhs.threshold);
 }
 
-} //namespace CryptoNote
+} //namespace cryptonote
 
-struct IWalletBaseStub : public CryptoNote::IWallet {
+struct IWalletBaseStub : public cryptonote::IWallet {
   IWalletBaseStub(System::Dispatcher& dispatcher) : m_eventOccurred(dispatcher) {}
   virtual ~IWalletBaseStub() {}
 
@@ -119,7 +119,7 @@ protected:
 class WalletServiceTest: public ::testing::Test {
 public:
   WalletServiceTest() :
-    currency(CryptoNote::CurrencyBuilder(logger).currency()),
+    currency(cryptonote::CurrencyBuilder(logger).currency()),
     generator(currency),
     nodeStub(generator),
     walletBase(dispatcher)
@@ -135,7 +135,7 @@ protected:
   System::Dispatcher dispatcher;
   IWalletBaseStub walletBase;
 
-  std::unique_ptr<WalletService> createWalletService(CryptoNote::IWallet& wallet);
+  std::unique_ptr<WalletService> createWalletService(cryptonote::IWallet& wallet);
   std::unique_ptr<WalletService> createWalletService();
   crypto::Hash generateRandomHash();
 };
@@ -147,7 +147,7 @@ void WalletServiceTest::SetUp() {
   walletConfig.walletPassword = "test";
 }
 
-std::unique_ptr<WalletService> WalletServiceTest::createWalletService(CryptoNote::IWallet& wallet) {
+std::unique_ptr<WalletService> WalletServiceTest::createWalletService(cryptonote::IWallet& wallet) {
   return std::unique_ptr<WalletService> (new WalletService(currency, dispatcher, nodeStub, wallet, walletConfig, logger));
 }
 
@@ -190,7 +190,7 @@ TEST_F(WalletServiceTest_createAddress, invalidSecretKey) {
 
   std::string address;
   std::error_code ec = service->createAddress("wrong key", address);
-  ASSERT_EQ(make_error_code(CryptoNote::error::WalletServiceErrorCode::WRONG_KEY_FORMAT), ec);
+  ASSERT_EQ(make_error_code(cryptonote::error::WalletServiceErrorCode::WRONG_KEY_FORMAT), ec);
 }
 
 TEST_F(WalletServiceTest_createAddress, invalidPublicKey) {
@@ -198,7 +198,7 @@ TEST_F(WalletServiceTest_createAddress, invalidPublicKey) {
 
   std::string address;
   std::error_code ec = service->createTrackingAddress("wrong key", address);
-  ASSERT_EQ(make_error_code(CryptoNote::error::WalletServiceErrorCode::WRONG_KEY_FORMAT), ec);
+  ASSERT_EQ(make_error_code(cryptonote::error::WalletServiceErrorCode::WRONG_KEY_FORMAT), ec);
 }
 
 TEST_F(WalletServiceTest_createAddress, correctSecretKey) {
@@ -614,7 +614,7 @@ TEST_F(WalletServiceTest_getTransactions, invalidAddress) {
 
   std::vector<TransactionsInBlockRpcInfo> transactions;
   auto ec = service->getTransactions({"invalid address"}, 0, 1, "", transactions);
-  ASSERT_EQ(make_error_code(CryptoNote::error::BAD_ADDRESS), ec);
+  ASSERT_EQ(make_error_code(cryptonote::error::BAD_ADDRESS), ec);
 }
 
 TEST_F(WalletServiceTest_getTransactions, invalidPaymentId) {
@@ -625,7 +625,7 @@ TEST_F(WalletServiceTest_getTransactions, invalidPaymentId) {
 
   std::vector<TransactionsInBlockRpcInfo> transactions;
   auto ec = service->getTransactions({}, 0, 1, "invalid payment id", transactions);
-  ASSERT_EQ(make_error_code(CryptoNote::error::WalletServiceErrorCode::WRONG_PAYMENT_ID_FORMAT), ec);
+  ASSERT_EQ(make_error_code(cryptonote::error::WalletServiceErrorCode::WRONG_PAYMENT_ID_FORMAT), ec);
 }
 
 TEST_F(WalletServiceTest_getTransactions, blockNotFound) {
@@ -634,7 +634,7 @@ TEST_F(WalletServiceTest_getTransactions, blockNotFound) {
   std::vector<TransactionsInBlockRpcInfo> transactions;
 
   auto ec = service->getTransactions({}, 0, 1, "", transactions);
-  ASSERT_EQ(make_error_code(CryptoNote::error::WalletServiceErrorCode::OBJECT_NOT_FOUND), ec);
+  ASSERT_EQ(make_error_code(cryptonote::error::WalletServiceErrorCode::OBJECT_NOT_FOUND), ec);
 }
 
 class WalletServiceTest_getTransaction : public WalletServiceTest_getTransactions {
@@ -656,7 +656,7 @@ TEST_F(WalletServiceTest_getTransaction, wrongHash) {
 
   TransactionRpcInfo transaction;
   auto ec = service->getTransaction("wrong hash", transaction);
-  ASSERT_EQ(make_error_code(CryptoNote::error::WalletServiceErrorCode::WRONG_HASH_FORMAT), ec);
+  ASSERT_EQ(make_error_code(cryptonote::error::WalletServiceErrorCode::WRONG_HASH_FORMAT), ec);
 }
 
 TEST_F(WalletServiceTest_getTransaction, returnsCorrectFields) {
@@ -787,7 +787,7 @@ TEST_F(WalletServiceTest_sendTransaction, incorrectSourceAddress) {
 
   std::string hash;
   auto ec = service->sendTransaction(request, hash);
-  ASSERT_EQ(make_error_code(CryptoNote::error::BAD_ADDRESS), ec);
+  ASSERT_EQ(make_error_code(cryptonote::error::BAD_ADDRESS), ec);
 }
 
 TEST_F(WalletServiceTest_sendTransaction, incorrectTransferAddress) {
@@ -796,7 +796,7 @@ TEST_F(WalletServiceTest_sendTransaction, incorrectTransferAddress) {
 
   std::string hash;
   auto ec = service->sendTransaction(request, hash);
-  ASSERT_EQ(make_error_code(CryptoNote::error::BAD_ADDRESS), ec);
+  ASSERT_EQ(make_error_code(cryptonote::error::BAD_ADDRESS), ec);
 }
 
 class WalletServiceTest_createDelayedTransaction : public WalletServiceTest_getTransactions {
@@ -866,7 +866,7 @@ TEST_F(WalletServiceTest_createDelayedTransaction, incorrectSourceAddress) {
 
   std::string hash;
   auto ec = service->createDelayedTransaction(request, hash);
-  ASSERT_EQ(make_error_code(CryptoNote::error::BAD_ADDRESS), ec);
+  ASSERT_EQ(make_error_code(cryptonote::error::BAD_ADDRESS), ec);
 }
 
 TEST_F(WalletServiceTest_createDelayedTransaction, incorrectTransferAddress) {
@@ -875,7 +875,7 @@ TEST_F(WalletServiceTest_createDelayedTransaction, incorrectTransferAddress) {
 
   std::string hash;
   auto ec = service->createDelayedTransaction(request, hash);
-  ASSERT_EQ(make_error_code(CryptoNote::error::BAD_ADDRESS), ec);
+  ASSERT_EQ(make_error_code(cryptonote::error::BAD_ADDRESS), ec);
 }
 
 class WalletServiceTest_getDelayedTransactionHashes: public WalletServiceTest {
@@ -912,7 +912,7 @@ class WalletServiceTest_getUnconfirmedTransactionHashes: public WalletServiceTes
 public:
   virtual void SetUp() override;
 protected:
-  std::vector<CryptoNote::WalletTransactionWithTransfers> transactions;
+  std::vector<cryptonote::WalletTransactionWithTransfers> transactions;
 };
 
 void WalletServiceTest_getUnconfirmedTransactionHashes::SetUp() {
@@ -934,7 +934,7 @@ struct WalletGetUnconfirmedTransactionsStub : public IWalletBaseStub {
     return transactions;
   }
 
-  std::vector<CryptoNote::WalletTransactionWithTransfers> transactions;
+  std::vector<cryptonote::WalletTransactionWithTransfers> transactions;
 };
 
 TEST_F(WalletServiceTest_getUnconfirmedTransactionHashes, returnsAllHashesWithoutAddresses) {
@@ -984,5 +984,5 @@ TEST_F(WalletServiceTest_getUnconfirmedTransactionHashes, wrongAddressFilter) {
   std::vector<std::string> hashes;
   auto ec = service->getUnconfirmedTransactionHashes({"wrong address"}, hashes);
 
-  ASSERT_EQ(make_error_code(CryptoNote::error::BAD_ADDRESS), ec);
+  ASSERT_EQ(make_error_code(cryptonote::error::BAD_ADDRESS), ec);
 }

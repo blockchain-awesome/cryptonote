@@ -11,7 +11,7 @@
 #include <string>
 #include <memory>
 
-namespace CryptoNote {
+namespace cryptonote {
 class Currency;
 }
 
@@ -19,7 +19,7 @@ namespace PaymentService {
 
 class WalletFactory {
 public:
-  static CryptoNote::IWallet* createWallet(const CryptoNote::Currency& currency, CryptoNote::INode& node, System::Dispatcher& dispatcher);
+  static cryptonote::IWallet* createWallet(const cryptonote::Currency& currency, cryptonote::INode& node, System::Dispatcher& dispatcher);
 private:
   WalletFactory();
   ~WalletFactory();

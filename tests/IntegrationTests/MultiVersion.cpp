@@ -12,7 +12,7 @@
 
 #undef ERROR
 
-using namespace CryptoNote;
+using namespace cryptonote;
 using namespace Logging;
 
 inline std::string shortAddress(const std::string& addr) {
@@ -22,7 +22,7 @@ inline std::string shortAddress(const std::string& addr) {
 class MultiVersionTest : Tests::Common::BaseFunctionalTests {
 public:
 
-  MultiVersionTest(const CryptoNote::Currency& currency, System::Dispatcher& d, const Tests::Common::BaseFunctionalTestsConfig& config, Logging::ILogger& log) :
+  MultiVersionTest(const cryptonote::Currency& currency, System::Dispatcher& d, const Tests::Common::BaseFunctionalTestsConfig& config, Logging::ILogger& log) :
     BaseFunctionalTests(currency, d, config), m_config(config), m_nodeCount(config.daemons.size()), logger(log, "MultiVersion") {}
 
 
@@ -39,7 +39,7 @@ public:
     miningTest();
 
     // create some address for mining
-    CryptoNote::AccountBase stashAddress;
+    cryptonote::AccountBase stashAddress;
     stashAddress.generate();
     auto stashAddressStr = m_currency.accountAddressAsString(stashAddress);
 
@@ -57,7 +57,7 @@ public:
       auto& srcWallet = *m_wallets[i];
       for (size_t wi = 0; wi < m_nodeCount; ++wi) {
         if (i != wi) {
-          CryptoNote::WalletLegacyTransfer transfer;
+          cryptonote::WalletLegacyTransfer transfer;
           transfer.address = m_wallets[wi]->getAddress();
           transfer.amount = (i * 1000 + wi * 100) * m_currency.coin();
           logger(INFO, BRIGHT_YELLOW) << "Sending from " << shortAddress(srcWallet.getAddress()) << " to " << shortAddress(transfer.address) << " amount = " << m_currency.formatAmount(transfer.amount);
@@ -227,7 +227,7 @@ private:
 };
 
 
-void testMultiVersion(const CryptoNote::Currency& currency, System::Dispatcher& d, const Tests::Common::BaseFunctionalTestsConfig& config) {
+void testMultiVersion(const cryptonote::Currency& currency, System::Dispatcher& d, const Tests::Common::BaseFunctionalTestsConfig& config) {
   Logging::ConsoleLogger log;
   MultiVersionTest test(currency, d, config, log);
   test.run();

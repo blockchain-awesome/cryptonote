@@ -16,70 +16,70 @@
 
 namespace api
 {
-class Node : public CryptoNote::INodeObserver,
-             public CryptoNote::INodeRpcProxyObserver,
-             public CryptoNote::IBlockchainSynchronizerObserver,
-             public CryptoNote::ITransfersObserver,
-             public CryptoNote::ITransactionValidator
+class Node : public cryptonote::INodeObserver,
+             public cryptonote::INodeRpcProxyObserver,
+             public cryptonote::IBlockchainSynchronizerObserver,
+             public cryptonote::ITransfersObserver,
+             public cryptonote::ITransactionValidator
 {
 
 public:
   Node(std::string &host, uint16_t port);
-  CryptoNote::ITransfersSubscription &initAccount(CryptoNote::AccountKeys &keys);
-  bool init(CryptoNote::Currency &currency, Logging::ILogger &logger);
+  cryptonote::ITransfersSubscription &initAccount(cryptonote::AccountKeys &keys);
+  bool init(cryptonote::Currency &currency, Logging::ILogger &logger);
   void wait(size_t milliseconds = 1000);
 
   void startSync();
 
   // Get main objects
-  CryptoNote::NodeRpcProxy &getNode()
+  cryptonote::NodeRpcProxy &getNode()
   {
     return *m_node;
   }
 
   size_t getPeerCount();
 
-  // Interface CryptoNote::INodeObserver
+  // Interface cryptonote::INodeObserver
   virtual void peerCountUpdated(size_t count) override;
   virtual void localBlockchainUpdated(uint32_t height) override;
   virtual void lastKnownBlockHeightUpdated(uint32_t height) override;
   virtual void poolChanged() override;
   virtual void blockchainSynchronized(uint32_t topHeight) override;
 
-  // Interface CryptoNote::INodeRpcProxyObserver
+  // Interface cryptonote::INodeRpcProxyObserver
   virtual void connectionStatusUpdated(bool connected) override;
 
-  // Interface CryptoNote::IBlockchainSynchronizerObserver
+  // Interface cryptonote::IBlockchainSynchronizerObserver
   virtual void synchronizationProgressUpdated(uint32_t processedBlockCount, uint32_t totalBlockCount) override;
   virtual void synchronizationCompleted(std::error_code result) override;
 
-  // Interface CryptoNote::ITransfersObserver
-  virtual void onTransactionDeleted(CryptoNote::ITransfersSubscription *object, const crypto::Hash &transactionHash) override;
+  // Interface cryptonote::ITransfersObserver
+  virtual void onTransactionDeleted(cryptonote::ITransfersSubscription *object, const crypto::Hash &transactionHash) override;
 
-  virtual void onTransactionUpdated(CryptoNote::ITransfersSubscription *object, const crypto::Hash &transactionHash) override;
+  virtual void onTransactionUpdated(cryptonote::ITransfersSubscription *object, const crypto::Hash &transactionHash) override;
 
-  virtual void onError(CryptoNote::ITransfersSubscription *object,
+  virtual void onError(cryptonote::ITransfersSubscription *object,
                        uint32_t height, std::error_code ec);
 
-  // Interface CryptoNote::ITransactionValidator
+  // Interface cryptonote::ITransactionValidator
 
-  virtual bool checkTransactionInputs(const CryptoNote::Transaction &tx, CryptoNote::BlockInfo &maxUsedBlock) override;
-  virtual bool checkTransactionInputs(const CryptoNote::Transaction &tx, CryptoNote::BlockInfo &maxUsedBlock, CryptoNote::BlockInfo &lastFailed) override;
-  virtual bool haveSpentKeyImages(const CryptoNote::Transaction &tx) override;
+  virtual bool checkTransactionInputs(const cryptonote::Transaction &tx, cryptonote::BlockInfo &maxUsedBlock) override;
+  virtual bool checkTransactionInputs(const cryptonote::Transaction &tx, cryptonote::BlockInfo &maxUsedBlock, cryptonote::BlockInfo &lastFailed) override;
+  virtual bool haveSpentKeyImages(const cryptonote::Transaction &tx) override;
   virtual bool checkTransactionSize(size_t blobSize) override;
 
 private:
-  std::unique_ptr<CryptoNote::NodeRpcProxy> m_node;
+  std::unique_ptr<cryptonote::NodeRpcProxy> m_node;
   std::string m_host;
   uint16_t m_port;
 
   bool m_isBlockchainSynced = false;
-  std::unique_ptr<CryptoNote::BlockchainSynchronizer> m_blockchainSync;
-  std::unique_ptr<CryptoNote::TransfersSyncronizer> m_transfersSync;
-  std::unique_ptr<CryptoNote::BlockchainExplorer> m_blockchainExplorer;
-  std::unique_ptr<CryptoNote::Blockchain> m_blockchain;
+  std::unique_ptr<cryptonote::BlockchainSynchronizer> m_blockchainSync;
+  std::unique_ptr<cryptonote::TransfersSyncronizer> m_transfersSync;
+  std::unique_ptr<cryptonote::BlockchainExplorer> m_blockchainExplorer;
+  std::unique_ptr<cryptonote::Blockchain> m_blockchain;
 
-  std::unique_ptr<CryptoNote::Currency> m_currency;
+  std::unique_ptr<cryptonote::Currency> m_currency;
 
   bool m_connected = false;
   bool m_synced = false;

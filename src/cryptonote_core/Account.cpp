@@ -5,7 +5,7 @@
 #include "Account.h"
 #include "CryptoNoteSerialization.h"
 
-namespace CryptoNote {
+namespace cryptonote {
 //-----------------------------------------------------------------
 AccountBase::AccountBase() {
   setNull();

@@ -6,7 +6,7 @@
 #include "TestGenerator.h"
 #include "cryptonote_core/CryptoNoteTools.h"
 
-using namespace CryptoNote;
+using namespace cryptonote;
 
 namespace
 {
@@ -102,7 +102,7 @@ namespace
   };
 
   Transaction make_simple_tx_with_unlock_time(const std::vector<test_event_entry>& events,
-    const CryptoNote::Block& blk_head, const CryptoNote::AccountBase& from, const CryptoNote::AccountBase& to,
+    const cryptonote::Block& blk_head, const cryptonote::AccountBase& from, const cryptonote::AccountBase& to,
     uint64_t amount, uint64_t fee, uint64_t unlock_time)
   {
     std::vector<TransactionSourceEntry> sources;
@@ -680,7 +680,7 @@ bool GenerateTransactionWithZeroFee::generate(std::vector<test_event_entry>& eve
   MAKE_GENESIS_BLOCK(events, blk_0, alice_account, ts_start);
   REWIND_BLOCKS(events, blk_0r, blk_0, alice_account);
 
-  CryptoNote::Transaction tx;
+  cryptonote::Transaction tx;
   construct_tx_to_key(m_logger, events, tx, blk_0, alice_account, bob_account, MK_COINS(1), 0, 0);
 
   if (!m_keptByBlock) {

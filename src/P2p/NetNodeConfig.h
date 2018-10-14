@@ -11,7 +11,7 @@
 #include <boost/program_options.hpp>
 #include "P2pProtocolTypes.h"
 
-namespace CryptoNote {
+namespace cryptonote {
 
 class NetNodeConfig {
 public:

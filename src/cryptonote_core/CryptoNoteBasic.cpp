@@ -5,7 +5,7 @@
 #include "CryptoNoteBasic.h"
 #include "crypto/crypto.h"
 
-namespace CryptoNote {
+namespace cryptonote {
 
 KeyPair generateKeyPair() {
   KeyPair k;

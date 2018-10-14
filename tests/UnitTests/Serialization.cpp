@@ -11,7 +11,7 @@
 #include "Serialization/BinarySerializationTools.h"
 
 using namespace Common;
-using namespace CryptoNote;
+using namespace cryptonote;
 
 TEST(BinarySerializer, uint16) {
 
@@ -312,7 +312,7 @@ TEST(BinarySerializer, uint16) {
 //
 //TEST(Serialization, serializes_transacion_signatures_correctly)
 //{
-//  using namespace CryptoNote;
+//  using namespace cryptonote;
 //
 //  Transaction tx;
 //  Transaction tx1;

@@ -13,7 +13,7 @@
 #include "INode.h"
 #include "ITransaction.h"
 
-namespace CryptoNote {
+namespace cryptonote {
 
 struct BlockchainInterval {
   uint32_t startHeight;
@@ -22,7 +22,7 @@ struct BlockchainInterval {
 
 struct CompleteBlock {
   crypto::Hash blockHash;
-  boost::optional<CryptoNote::Block> block;
+  boost::optional<cryptonote::Block> block;
   // first transaction is always coinbase
   std::list<std::shared_ptr<ITransactionReader>> transactions;
 };

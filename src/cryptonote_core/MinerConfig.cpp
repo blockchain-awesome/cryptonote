@@ -6,7 +6,7 @@
 
 #include "common/CommandLine.h"
 
-namespace CryptoNote {
+namespace cryptonote {
 
 namespace {
 const command_line::arg_descriptor<std::string> arg_extra_messages =  {"extra-messages-file", "Specify file for extra messages to include into coinbase transactions", "", true};
@@ -38,4 +38,4 @@ void MinerConfig::init(const boost::program_options::variables_map& options) {
   }
 }
 
-} //namespace CryptoNote
+} //namespace cryptonote

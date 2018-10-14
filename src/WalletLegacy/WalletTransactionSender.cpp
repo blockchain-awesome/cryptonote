@@ -20,7 +20,7 @@ using namespace crypto;
 
 namespace {
 
-using namespace CryptoNote;
+using namespace cryptonote;
 
 uint64_t countNeededMoney(uint64_t fee, const std::vector<WalletLegacyTransfer>& transfers) {
   uint64_t needed_money = fee;
@@ -62,7 +62,7 @@ std::shared_ptr<WalletLegacyEvent> makeCompleteEvent(WalletUserTransactionsCache
 
 } //namespace
 
-namespace CryptoNote {
+namespace cryptonote {
 
 WalletTransactionSender::WalletTransactionSender(const Currency& currency, WalletUserTransactionsCache& transactionsCache, AccountKeys keys, ITransfersContainer& transfersContainer) :
   m_currency(currency),
@@ -92,7 +92,7 @@ void WalletTransactionSender::validateTransfersAddresses(const std::vector<Walle
 std::shared_ptr<WalletRequest> WalletTransactionSender::makeSendRequest(TransactionId& transactionId, std::deque<std::shared_ptr<WalletLegacyEvent>>& events,
     const std::vector<WalletLegacyTransfer>& transfers, uint64_t fee, const std::string& extra, uint64_t mixIn, uint64_t unlockTimestamp) {
 
-  using namespace CryptoNote;
+  using namespace cryptonote;
 
   throwIf(transfers.empty(), error::ZERO_DESTINATION);
   validateTransfersAddresses(transfers);
@@ -364,4 +364,4 @@ uint64_t WalletTransactionSender::selectTransfersToSend(uint64_t neededMoney, bo
 }
 
 
-} /* namespace CryptoNote */
+} /* namespace cryptonote */

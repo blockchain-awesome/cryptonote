@@ -18,7 +18,7 @@
 namespace ComplexWallet
 {
 
-class ComplexWalletServer : public CryptoNote::JsonRpcServer
+class ComplexWalletServer : public cryptonote::JsonRpcServer
 {
 public:
   ComplexWalletServer(System::Dispatcher &sys, System::Event &stopEvent, Logging::ILogger &loggerGroup, WalletManager &wallet);
@@ -53,7 +53,7 @@ private:
 
       try
       {
-        CryptoNote::JsonInputValueSerializer inputSerializer(const_cast<Common::JsonValue &>(jsonRpcParams));
+        cryptonote::JsonInputValueSerializer inputSerializer(const_cast<Common::JsonValue &>(jsonRpcParams));
         serialize(request, inputSerializer);
       }
       catch (std::exception &)
@@ -69,7 +69,7 @@ private:
         return;
       }
 
-      CryptoNote::JsonOutputStreamSerializer outputSerializer;
+      cryptonote::JsonOutputStreamSerializer outputSerializer;
       serialize(response, outputSerializer);
       fillJsonResponse(outputSerializer.getValue(), jsonResponse);
     };

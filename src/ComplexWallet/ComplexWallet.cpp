@@ -49,7 +49,7 @@
 #include <crtdbg.h>
 #endif
 
-using namespace CryptoNote;
+using namespace cryptonote;
 using namespace Logging;
 using namespace Common;
 using Common::JsonValue;
@@ -61,7 +61,7 @@ namespace po = boost::program_options;
 #define EXTENDED_LOGS_FILE "wallet_details.log"
 #undef ERROR
 
-namespace CryptoNote
+namespace cryptonote
 {
 
 std::string complex_wallet::get_commands_str()
@@ -87,7 +87,7 @@ bool complex_wallet::exit(const std::vector<std::string> &args)
   return true;
 }
 
-complex_wallet::complex_wallet(System::Dispatcher &dispatcher, const CryptoNote::Currency &currency, Logging::LoggerManager &log) : m_dispatcher(dispatcher),
+complex_wallet::complex_wallet(System::Dispatcher &dispatcher, const cryptonote::Currency &currency, Logging::LoggerManager &log) : m_dispatcher(dispatcher),
                                                                                                                                     m_daemon_port(0),
                                                                                                                                     m_currency(currency),
                                                                                                                                     logManager(log),
@@ -144,7 +144,7 @@ bool complex_wallet::set_log(const std::vector<std::string> &args)
   return true;
 }
 
-std::unique_ptr<CryptoNote::NodeRpcProxy> &complex_wallet::get_node()
+std::unique_ptr<cryptonote::NodeRpcProxy> &complex_wallet::get_node()
 {
   return m_node;
 }
@@ -270,7 +270,7 @@ bool complex_wallet::new_wallet(const std::string &wallet_file, const std::strin
 
     try
     {
-      CryptoNote::WalletHelper::storeWallet(*m_wallet, m_wallet_file);
+      cryptonote::WalletHelper::storeWallet(*m_wallet, m_wallet_file);
     }
     catch (std::exception &e)
     {
@@ -310,7 +310,7 @@ bool complex_wallet::save(const std::vector<std::string> &args)
 {
   try
   {
-    CryptoNote::WalletHelper::storeWallet(*m_wallet, m_wallet_file);
+    cryptonote::WalletHelper::storeWallet(*m_wallet, m_wallet_file);
     success_msg_writer() << "Wallet data saved";
   }
   catch (const std::exception &e)
@@ -446,7 +446,7 @@ void complex_wallet::connectionStatusUpdated(bool connected)
   }
 }
 //----------------------------------------------------------------------------------------------------
-void complex_wallet::externalTransactionCreated(CryptoNote::TransactionId transactionId)
+void complex_wallet::externalTransactionCreated(cryptonote::TransactionId transactionId)
 {
   WalletLegacyTransaction txInfo;
   m_wallet->getTransaction(transactionId, txInfo);
@@ -571,7 +571,7 @@ bool complex_wallet::show_payments(const std::vector<std::string> &args)
   for (const std::string &arg : args)
   {
     crypto::Hash expectedPaymentId;
-    if (CryptoNote::parsePaymentId(arg, expectedPaymentId))
+    if (cryptonote::parsePaymentId(arg, expectedPaymentId))
     {
       size_t transactionsCount = m_wallet->getTransactionCount();
       for (size_t trantransactionNumber = 0; trantransactionNumber < transactionsCount; ++trantransactionNumber)
@@ -585,7 +585,7 @@ bool complex_wallet::show_payments(const std::vector<std::string> &args)
         std::for_each(txInfo.extra.begin(), txInfo.extra.end(), [&extraVec](const char el) { extraVec.push_back(el); });
 
         crypto::Hash paymentId;
-        if (CryptoNote::getPaymentIdFromTxExtra(extraVec, paymentId) && paymentId == expectedPaymentId)
+        if (cryptonote::getPaymentIdFromTxExtra(extraVec, paymentId) && paymentId == expectedPaymentId)
         {
           payments_found = true;
           success_msg_writer(true) << paymentId << "\t\t" << Common::podToHex(txInfo.hash) << std::setw(8) << txInfo.blockHeight << '\t' << std::setw(21) << m_currency.formatAmount(txInfo.totalAmount); // << '\t' <<
@@ -630,14 +630,14 @@ bool complex_wallet::transfer(const std::vector<std::string> &args)
 
     if (!cmd.parseArguments(logger, args))
       return false;
-    CryptoNote::WalletHelper::SendCompleteResultObserver sent;
+    cryptonote::WalletHelper::SendCompleteResultObserver sent;
 
     std::string extraString;
     std::copy(cmd.extra.begin(), cmd.extra.end(), std::back_inserter(extraString));
 
     WalletHelper::IWalletRemoveObserverGuard removeGuard(*m_wallet, sent);
 
-    CryptoNote::TransactionId tx = m_wallet->sendTransaction(cmd.dsts, cmd.fee, extraString, cmd.fake_outs_count, 0);
+    cryptonote::TransactionId tx = m_wallet->sendTransaction(cmd.dsts, cmd.fee, extraString, cmd.fake_outs_count, 0);
     if (tx == WALLET_LEGACY_INVALID_TRANSACTION_ID)
     {
       fail_msg_writer() << "Can't send money";
@@ -653,13 +653,13 @@ bool complex_wallet::transfer(const std::vector<std::string> &args)
       return true;
     }
 
-    CryptoNote::WalletLegacyTransaction txInfo;
+    cryptonote::WalletLegacyTransaction txInfo;
     m_wallet->getTransaction(tx, txInfo);
     success_msg_writer(true) << "Money successfully sent, transaction " << Common::podToHex(txInfo.hash);
 
     try
     {
-      CryptoNote::WalletHelper::storeWallet(*m_wallet, m_wallet_file);
+      cryptonote::WalletHelper::storeWallet(*m_wallet, m_wallet_file);
     }
     catch (const std::exception &e)
     {
@@ -719,4 +719,4 @@ void complex_wallet::printConnectionError() const
   fail_msg_writer() << "wallet failed to connect to daemon (" << m_daemon_address << ").";
 }
 
-} // namespace CryptoNote
+} // namespace cryptonote

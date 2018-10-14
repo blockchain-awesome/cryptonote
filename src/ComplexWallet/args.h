@@ -17,11 +17,11 @@
 
 #include "common/CommandLine.h"
 
-using namespace CryptoNote;
+using namespace cryptonote;
 using namespace Logging;
 using Common::JsonValue;
 
-namespace CryptoNote
+namespace cryptonote
 {
 extern const command_line::arg_descriptor<std::string> arg_wallet_file;
 extern const command_line::arg_descriptor<std::string> arg_generate_new_wallet;
@@ -52,15 +52,15 @@ class TransferCommand
 {
 
 public:
-  const CryptoNote::Currency &m_currency;
+  const cryptonote::Currency &m_currency;
   size_t fake_outs_count;
-  std::vector<CryptoNote::WalletLegacyTransfer> dsts;
+  std::vector<cryptonote::WalletLegacyTransfer> dsts;
   std::vector<uint8_t> extra;
   uint64_t fee;
 
-  TransferCommand(const CryptoNote::Currency &currency);
+  TransferCommand(const cryptonote::Currency &currency);
 
   bool parseArguments(LoggerRef &logger, const std::vector<std::string> &args);
 };
 
-} // namespace CryptoNote
+} // namespace cryptonote

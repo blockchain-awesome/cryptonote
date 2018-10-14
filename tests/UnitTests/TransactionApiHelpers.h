@@ -16,7 +16,7 @@
 
 namespace {
 
-  using namespace CryptoNote;
+  using namespace cryptonote;
   using namespace crypto;
 
   inline AccountKeys accountKeysFromKeypairs(
@@ -54,8 +54,8 @@ namespace {
 
   KeyImage generateKeyImage(const AccountKeys& keys, size_t idx, const PublicKey& txPubKey) {
     KeyImage keyImage;
-    CryptoNote::KeyPair in_ephemeral;
-    CryptoNote::generate_key_image_helper(
+    cryptonote::KeyPair in_ephemeral;
+    cryptonote::generate_key_image_helper(
      keys,
       txPubKey,
       idx,
@@ -101,7 +101,7 @@ namespace {
   }
 }
 
-namespace CryptoNote {
+namespace cryptonote {
 
 class TestTransactionBuilder {
 public:
@@ -196,7 +196,7 @@ private:
 
 }
 
-namespace CryptoNote {
+namespace cryptonote {
 inline bool operator == (const AccountKeys& a, const AccountKeys& b) { 
   return memcmp(&a, &b, sizeof(a)) == 0; 
 }

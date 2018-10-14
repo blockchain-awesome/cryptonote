@@ -22,12 +22,12 @@ int main(int argc, char *argv[]) {
         return 1;
     }
     Logging::ConsoleLogger logger;
-    CryptoNote::CurrencyBuilder currencyBuilder(logger);
+    cryptonote::CurrencyBuilder currencyBuilder(logger);
     currencyBuilder.difficultyTarget(120);
     currencyBuilder.difficultyWindow(720);
     currencyBuilder.difficultyCut(60);
     currencyBuilder.difficultyLag(15);
-    CryptoNote::Currency currency = currencyBuilder.currency();
+    cryptonote::Currency currency = currencyBuilder.currency();
     vector<uint64_t> timestamps, cumulative_difficulties;
     fstream data(argv[1], fstream::in);
     data.exceptions(fstream::badbit);

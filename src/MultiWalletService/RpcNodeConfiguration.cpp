@@ -5,7 +5,7 @@
 #include "RpcNodeConfiguration.h"
 #include "CryptoNoteConfig.h"
 
-using namespace CryptoNote;
+using namespace cryptonote;
 
 namespace MultiWalletService {
 

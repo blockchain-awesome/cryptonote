@@ -20,7 +20,7 @@
 #include "TestBlockchainGenerator.h"
 #include <Logging/ConsoleLogger.h>
 
-class TrivialWalletObserver : public CryptoNote::IWalletLegacyObserver
+class TrivialWalletObserver : public cryptonote::IWalletLegacyObserver
 {
 public:
   TrivialWalletObserver() : actualBalance(0), pendingBalance(0) {}
@@ -51,7 +51,7 @@ public:
     synced.notify();
   }
 
-  virtual void sendTransactionCompleted(CryptoNote::TransactionId transactionId, std::error_code result) override {
+  virtual void sendTransactionCompleted(cryptonote::TransactionId transactionId, std::error_code result) override {
     sendResult = result;
     sent.notify();
   }
@@ -89,8 +89,8 @@ public:
   EventWaiter sent;
 };
 
-struct SaveOnInitWalletObserver: public CryptoNote::IWalletLegacyObserver {
-  SaveOnInitWalletObserver(CryptoNote::WalletLegacy* wallet) : wallet(wallet) {
+struct SaveOnInitWalletObserver: public cryptonote::IWalletLegacyObserver {
+  SaveOnInitWalletObserver(cryptonote::WalletLegacy* wallet) : wallet(wallet) {
   };
   virtual ~SaveOnInitWalletObserver() {}
 
@@ -98,14 +98,14 @@ struct SaveOnInitWalletObserver: public CryptoNote::IWalletLegacyObserver {
     wallet->save(stream, true, true);
   }
 
-  CryptoNote::WalletLegacy* wallet;
+  cryptonote::WalletLegacy* wallet;
   std::stringstream stream;
 };
 
 static const uint64_t TEST_BLOCK_REWARD = 70368744177663;
 
-CryptoNote::TransactionId TransferMoney(CryptoNote::WalletLegacy& from, CryptoNote::WalletLegacy& to, int64_t amount, uint64_t fee, uint64_t mixIn = 0, const std::string& extra = "") {
-  CryptoNote::WalletLegacyTransfer transfer;
+cryptonote::TransactionId TransferMoney(cryptonote::WalletLegacy& from, cryptonote::WalletLegacy& to, int64_t amount, uint64_t fee, uint64_t mixIn = 0, const std::string& extra = "") {
+  cryptonote::WalletLegacyTransfer transfer;
   transfer.amount = amount;
   transfer.address = to.getAddress();
 
@@ -142,7 +142,7 @@ void WaitWalletLoad(TrivialWalletObserver* observer) {
 class WalletLegacyApi : public ::testing::Test
 {
 public:
-  WalletLegacyApi() : m_currency(CryptoNote::CurrencyBuilder(m_logger).currency()), generator(m_currency) {
+  WalletLegacyApi() : m_currency(cryptonote::CurrencyBuilder(m_logger).currency()), generator(m_currency) {
   }
 
   void SetUp() override;
@@ -152,31 +152,31 @@ protected:
   void prepareBobWallet();
   void prepareCarolWallet();
 
-  void GetOneBlockReward(CryptoNote::WalletLegacy& wallet);
-  void GetOneBlockReward(CryptoNote::WalletLegacy& wallet, const CryptoNote::Currency& currency, TestBlockchainGenerator& blockchainGenerator);
-  void GetOneBlockRewardAndUnlock(CryptoNote::WalletLegacy& wallet, TrivialWalletObserver& observer, INodeTrivialRefreshStub& node,
-                                  const CryptoNote::Currency& currency, TestBlockchainGenerator& blockchainGenerator);
+  void GetOneBlockReward(cryptonote::WalletLegacy& wallet);
+  void GetOneBlockReward(cryptonote::WalletLegacy& wallet, const cryptonote::Currency& currency, TestBlockchainGenerator& blockchainGenerator);
+  void GetOneBlockRewardAndUnlock(cryptonote::WalletLegacy& wallet, TrivialWalletObserver& observer, INodeTrivialRefreshStub& node,
+                                  const cryptonote::Currency& currency, TestBlockchainGenerator& blockchainGenerator);
 
   void TestSendMoney(int64_t transferAmount, uint64_t fee, uint64_t mixIn = 0, const std::string& extra = "");
   void performTransferWithErrorTx(const std::array<int64_t, 5>& amounts, uint64_t fee);
 
 
   Logging::ConsoleLogger m_logger;
-  CryptoNote::Currency m_currency;
+  cryptonote::Currency m_currency;
 
   TestBlockchainGenerator generator;
 
   std::shared_ptr<TrivialWalletObserver> aliceWalletObserver;
   std::shared_ptr<INodeTrivialRefreshStub> aliceNode;
-  std::shared_ptr<CryptoNote::WalletLegacy> alice;
+  std::shared_ptr<cryptonote::WalletLegacy> alice;
 
   std::shared_ptr<TrivialWalletObserver> bobWalletObserver;
   std::shared_ptr<INodeTrivialRefreshStub> bobNode;
-  std::shared_ptr<CryptoNote::WalletLegacy> bob;
+  std::shared_ptr<cryptonote::WalletLegacy> bob;
 
   std::shared_ptr<TrivialWalletObserver> carolWalletObserver;
   std::shared_ptr<INodeTrivialRefreshStub> carolNode;
-  std::shared_ptr<CryptoNote::WalletLegacy> carol;
+  std::shared_ptr<cryptonote::WalletLegacy> carol;
 };
 
 void WalletLegacyApi::SetUp() {
@@ -187,7 +187,7 @@ void WalletLegacyApi::SetUp() {
 void WalletLegacyApi::prepareAliceWallet() {
   decltype(aliceNode) newNode(new INodeTrivialRefreshStub(generator));
 
-  alice.reset(new CryptoNote::WalletLegacy(m_currency, *newNode));
+  alice.reset(new cryptonote::WalletLegacy(m_currency, *newNode));
   aliceNode = newNode;
 
   aliceWalletObserver.reset(new TrivialWalletObserver());
@@ -198,7 +198,7 @@ void WalletLegacyApi::prepareBobWallet() {
   bobNode.reset(new INodeTrivialRefreshStub(generator));
   bobWalletObserver.reset(new TrivialWalletObserver());
 
-  bob.reset(new CryptoNote::WalletLegacy(m_currency, *bobNode));
+  bob.reset(new cryptonote::WalletLegacy(m_currency, *bobNode));
   bob->addObserver(bobWalletObserver.get());
 }
 
@@ -206,22 +206,22 @@ void WalletLegacyApi::prepareCarolWallet() {
   carolNode.reset(new INodeTrivialRefreshStub(generator));
   carolWalletObserver.reset(new TrivialWalletObserver());
 
-  carol.reset(new CryptoNote::WalletLegacy(m_currency, *carolNode));
+  carol.reset(new cryptonote::WalletLegacy(m_currency, *carolNode));
   carol->addObserver(carolWalletObserver.get());
 }
 
-void WalletLegacyApi::GetOneBlockReward(CryptoNote::WalletLegacy& wallet) {
+void WalletLegacyApi::GetOneBlockReward(cryptonote::WalletLegacy& wallet) {
   GetOneBlockReward(wallet, m_currency, generator);
 }
 
-void WalletLegacyApi::GetOneBlockReward(CryptoNote::WalletLegacy& wallet, const CryptoNote::Currency& currency, TestBlockchainGenerator& blockchainGenerator) {
-  CryptoNote::AccountPublicAddress address;
+void WalletLegacyApi::GetOneBlockReward(cryptonote::WalletLegacy& wallet, const cryptonote::Currency& currency, TestBlockchainGenerator& blockchainGenerator) {
+  cryptonote::AccountPublicAddress address;
   ASSERT_TRUE(currency.parseAccountAddressString(wallet.getAddress(), address));
   blockchainGenerator.getBlockRewardForAddress(address);
 }
 
-void WalletLegacyApi::GetOneBlockRewardAndUnlock(CryptoNote::WalletLegacy& wallet, TrivialWalletObserver& observer, INodeTrivialRefreshStub& node,
-                                                 const CryptoNote::Currency& currency, TestBlockchainGenerator& blockchainGenerator) {
+void WalletLegacyApi::GetOneBlockRewardAndUnlock(cryptonote::WalletLegacy& wallet, TrivialWalletObserver& observer, INodeTrivialRefreshStub& node,
+                                                 const cryptonote::Currency& currency, TestBlockchainGenerator& blockchainGenerator) {
   GetOneBlockReward(wallet, currency, blockchainGenerator);
   blockchainGenerator.generateEmptyBlocks(10);
   node.updateObservers();
@@ -229,8 +229,8 @@ void WalletLegacyApi::GetOneBlockRewardAndUnlock(CryptoNote::WalletLegacy& walle
 }
 
 void WalletLegacyApi::performTransferWithErrorTx(const std::array<int64_t, 5>& amounts, uint64_t fee) {
-  std::vector<CryptoNote::WalletLegacyTransfer> trs;
-  CryptoNote::WalletLegacyTransfer tr;
+  std::vector<cryptonote::WalletLegacyTransfer> trs;
+  cryptonote::WalletLegacyTransfer tr;
   tr.address = bob->getAddress();
   tr.amount = amounts[0];
   trs.push_back(tr);
@@ -331,7 +331,7 @@ TEST_F(WalletLegacyApi, refreshWithMoney) {
   ASSERT_EQ(alice->actualBalance(), 0);
   ASSERT_EQ(alice->pendingBalance(), 0);
 
-  CryptoNote::AccountPublicAddress address;
+  cryptonote::AccountPublicAddress address;
   ASSERT_TRUE(m_currency.parseAccountAddressString(alice->getAddress(), address));
   generator.getBlockRewardForAddress(address);
 
@@ -356,7 +356,7 @@ TEST_F(WalletLegacyApi, initWithMoney) {
   ASSERT_EQ(alice->actualBalance(), 0);
   ASSERT_EQ(alice->pendingBalance(), 0);
 
-  CryptoNote::AccountPublicAddress address;
+  cryptonote::AccountPublicAddress address;
   ASSERT_TRUE(m_currency.parseAccountAddressString(alice->getAddress(), address));
 
   alice->shutdown();
@@ -421,7 +421,7 @@ TEST_F(WalletLegacyApi, TransactionsAndTransfersAfterSend) {
 
   EXPECT_EQ(alice->getTransactionCount(), 5);
 
-  CryptoNote::WalletLegacyTransaction tx;
+  cryptonote::WalletLegacyTransaction tx;
 
   //Transaction with id = 0 is tested in getTransactionSuccess
   ASSERT_TRUE(alice->getTransaction(1, tx));
@@ -453,7 +453,7 @@ TEST_F(WalletLegacyApi, TransactionsAndTransfersAfterSend) {
   EXPECT_EQ(tx.transferCount, 1);
 
   //Now checking transfers
-  CryptoNote::WalletLegacyTransfer tr;
+  cryptonote::WalletLegacyTransfer tr;
   ASSERT_TRUE(alice->getTransfer(0, tr));
   EXPECT_EQ(tr.amount, amount1);
   EXPECT_EQ(tr.address, bob->getAddress());
@@ -503,8 +503,8 @@ TEST_F(WalletLegacyApi, saveAndLoadCacheDetails) {
   int64_t amount2 = 1020304;
   int64_t amount3 = 2030405;
 
-  std::vector<CryptoNote::WalletLegacyTransfer> trs;
-  CryptoNote::WalletLegacyTransfer tr;
+  std::vector<cryptonote::WalletLegacyTransfer> trs;
+  cryptonote::WalletLegacyTransfer tr;
   tr.address = bob->getAddress();
   tr.amount = amount1;
   trs.push_back(tr);
@@ -551,7 +551,7 @@ TEST_F(WalletLegacyApi, saveAndLoadCacheDetails) {
   EXPECT_EQ(prevActualBalance, alice->actualBalance());
   EXPECT_EQ(prevPendingBalance, alice->pendingBalance());
 
-  CryptoNote::WalletLegacyTransaction tx;
+  cryptonote::WalletLegacyTransaction tx;
   ASSERT_TRUE(alice->getTransaction(1, tx));
   EXPECT_EQ(tx.totalAmount, -static_cast<int64_t>(amount1 + amount2 + fee));
   EXPECT_EQ(tx.fee, fee);
@@ -602,12 +602,12 @@ TEST_F(WalletLegacyApi, getTransactionSuccess) {
   aliceNode->updateObservers();
   ASSERT_NO_FATAL_FAILURE(WaitWalletSync(aliceWalletObserver.get()));
 
-  CryptoNote::WalletLegacyTransaction tx;
+  cryptonote::WalletLegacyTransaction tx;
 
   ASSERT_EQ(alice->getTransactionCount(), 1);
   ASSERT_TRUE(alice->getTransaction(0, tx));
 
-  EXPECT_EQ(tx.firstTransferId, CryptoNote::WALLET_LEGACY_INVALID_TRANSFER_ID);
+  EXPECT_EQ(tx.firstTransferId, cryptonote::WALLET_LEGACY_INVALID_TRANSFER_ID);
   EXPECT_EQ(tx.transferCount, 0);
   EXPECT_EQ(tx.totalAmount, TEST_BLOCK_REWARD);
   EXPECT_EQ(tx.fee, 0);
@@ -621,7 +621,7 @@ TEST_F(WalletLegacyApi, getTransactionFailure) {
 
   ASSERT_NO_FATAL_FAILURE(WaitWalletSync(aliceWalletObserver.get()));
 
-  CryptoNote::WalletLegacyTransaction tx;
+  cryptonote::WalletLegacyTransaction tx;
 
   ASSERT_EQ(alice->getTransactionCount(), 0);
   ASSERT_FALSE(alice->getTransaction(0, tx));
@@ -641,8 +641,8 @@ TEST_F(WalletLegacyApi, useNotInitializedObject) {
 
   EXPECT_THROW(alice->findTransactionByTransferId(1), std::system_error);
 
-  CryptoNote::WalletLegacyTransaction tx;
-  CryptoNote::WalletLegacyTransfer tr;
+  cryptonote::WalletLegacyTransaction tx;
+  cryptonote::WalletLegacyTransfer tr;
   EXPECT_THROW(alice->getTransaction(1, tx), std::system_error);
   EXPECT_THROW(alice->getTransfer(2, tr), std::system_error);
 
@@ -650,7 +650,7 @@ TEST_F(WalletLegacyApi, useNotInitializedObject) {
   tr.amount = 1000000;
   EXPECT_THROW(alice->sendTransaction(tr, 300201), std::system_error);
 
-  std::vector<CryptoNote::WalletLegacyTransfer> trs;
+  std::vector<cryptonote::WalletLegacyTransfer> trs;
   trs.push_back(tr);
   EXPECT_THROW(alice->sendTransaction(trs, 329293), std::system_error);
 }
@@ -660,7 +660,7 @@ TEST_F(WalletLegacyApi, sendWrongAmount) {
 
   ASSERT_NO_FATAL_FAILURE(WaitWalletSync(aliceWalletObserver.get()));
 
-  CryptoNote::WalletLegacyTransfer tr;
+  cryptonote::WalletLegacyTransfer tr;
   tr.address = "1234567890qwertasdfgzxcvbyuiophjklnm";
   tr.amount = 1;
 
@@ -685,7 +685,7 @@ TEST_F(WalletLegacyApi, wrongPassword) {
 
   std::error_code result;
   ASSERT_NO_FATAL_FAILURE(WaitWalletLoad(aliceWalletObserver.get(), result));
-  EXPECT_EQ(result.value(), CryptoNote::error::WRONG_PASSWORD);
+  EXPECT_EQ(result.value(), cryptonote::error::WRONG_PASSWORD);
 }
 
 TEST_F(WalletLegacyApi, detachBlockchain) {
@@ -774,13 +774,13 @@ TEST_F(WalletLegacyApi, saveAndLoadErroneousTxsCacheDetails) {
   EXPECT_EQ(alice->getTransactionCount(), 2);
   EXPECT_EQ(alice->getTransferCount(), 2);
 
-  CryptoNote::WalletLegacyTransaction tx;
+  cryptonote::WalletLegacyTransaction tx;
   ASSERT_TRUE(alice->getTransaction(1, tx));
   EXPECT_EQ(tx.totalAmount, -static_cast<int64_t>(amounts[3] + amounts[4] + fee));
   EXPECT_EQ(tx.firstTransferId, 0);
   EXPECT_EQ(tx.transferCount, 2);
 
-  CryptoNote::WalletLegacyTransfer tr;
+  cryptonote::WalletLegacyTransfer tr;
   ASSERT_TRUE(alice->getTransfer(0, tr));
   EXPECT_EQ(tr.amount, amounts[3]);
   EXPECT_EQ(tr.address, bob->getAddress());
@@ -844,7 +844,7 @@ TEST_F(WalletLegacyApi, mineSaveNoCacheNoDetailsRefresh) {
 
   ASSERT_NO_FATAL_FAILURE(WaitWalletSync(aliceWalletObserver.get()));
 
-  CryptoNote::AccountPublicAddress address;
+  cryptonote::AccountPublicAddress address;
   ASSERT_TRUE(m_currency.parseAccountAddressString(alice->getAddress(), address));
   generator.getBlockRewardForAddress(address);
   generator.getBlockRewardForAddress(address);
@@ -875,7 +875,7 @@ TEST_F(WalletLegacyApi, sendMoneyToMyself) {
 
   ASSERT_NO_FATAL_FAILURE(WaitWalletSync(aliceWalletObserver.get()));
 
-  CryptoNote::AccountPublicAddress address;
+  cryptonote::AccountPublicAddress address;
   ASSERT_TRUE(m_currency.parseAccountAddressString(alice->getAddress(), address));
   generator.getBlockRewardForAddress(address);
   generator.generateEmptyBlocks(10);
@@ -883,8 +883,8 @@ TEST_F(WalletLegacyApi, sendMoneyToMyself) {
   aliceNode->updateObservers();
   ASSERT_NO_FATAL_FAILURE(WaitWalletSync(aliceWalletObserver.get()));
 
-  CryptoNote::TransactionId txId = TransferMoney(*alice, *alice, 100000000, 100);
-  ASSERT_NE(txId, CryptoNote::WALLET_LEGACY_INVALID_TRANSACTION_ID);
+  cryptonote::TransactionId txId = TransferMoney(*alice, *alice, 100000000, 100);
+  ASSERT_NE(txId, cryptonote::WALLET_LEGACY_INVALID_TRANSACTION_ID);
   ASSERT_NO_FATAL_FAILURE(WaitWalletSend(aliceWalletObserver.get()));
 
   generator.generateEmptyBlocks(10);
@@ -922,12 +922,12 @@ TEST_F(WalletLegacyApi, sendSeveralTransactions) {
   size_t transactionCount = 0;
   
   for (int i = 0; i < 10 && alice->actualBalance() > sendAmount; ++i) {
-    CryptoNote::WalletLegacyTransfer tr;
+    cryptonote::WalletLegacyTransfer tr;
     tr.address = bob->getAddress();
     tr.amount = sendAmount;
 
     auto txId = alice->sendTransaction(tr, m_currency.minimumFee(), "", 1, 0);  
-    ASSERT_NE(txId, CryptoNote::WALLET_LEGACY_INVALID_TRANSACTION_ID);
+    ASSERT_NE(txId, cryptonote::WALLET_LEGACY_INVALID_TRANSACTION_ID);
 
     std::error_code sendResult;
     ASSERT_NO_FATAL_FAILURE(WaitWalletSend(aliceWalletObserver.get(), sendResult));
@@ -973,7 +973,7 @@ TEST_F(WalletLegacyApi, balanceAfterFailedTransaction) {
   uint64_t send = 11000000;
   uint64_t fee = m_currency.minimumFee();
 
-  CryptoNote::WalletLegacyTransfer tr;
+  cryptonote::WalletLegacyTransfer tr;
   tr.address = bob->getAddress();
   tr.amount = send;
 
@@ -1007,12 +1007,12 @@ TEST_F(WalletLegacyApi, checkPendingBalance) {
   int64_t sendAmount = 304050;
   uint64_t fee = m_currency.minimumFee();
 
-  CryptoNote::WalletLegacyTransfer tr;
+  cryptonote::WalletLegacyTransfer tr;
   tr.address = bob->getAddress();
   tr.amount = sendAmount;
 
   auto txId = alice->sendTransaction(tr, fee, "", 1, 0);
-  ASSERT_NE(txId, CryptoNote::WALLET_LEGACY_INVALID_TRANSACTION_ID);
+  ASSERT_NE(txId, cryptonote::WALLET_LEGACY_INVALID_TRANSACTION_ID);
 
   std::error_code sendResult;
   ASSERT_NO_FATAL_FAILURE(WaitWalletSend(aliceWalletObserver.get(), sendResult));
@@ -1044,7 +1044,7 @@ TEST_F(WalletLegacyApi, checkChange) {
   uint64_t sendAmount = 50000;
   uint64_t fee = m_currency.minimumFee();
 
-  CryptoNote::AccountPublicAddress address;
+  cryptonote::AccountPublicAddress address;
   ASSERT_TRUE(m_currency.parseAccountAddressString(alice->getAddress(), address));
   generator.getSingleOutputTransaction(address, banknote);
   generator.generateEmptyBlocks(10);
@@ -1052,12 +1052,12 @@ TEST_F(WalletLegacyApi, checkChange) {
   aliceNode->updateObservers();
   ASSERT_NO_FATAL_FAILURE(WaitWalletSync(aliceWalletObserver.get()));
 
-  CryptoNote::WalletLegacyTransfer tr;
+  cryptonote::WalletLegacyTransfer tr;
   tr.address = bob->getAddress();
   tr.amount = sendAmount;
 
   auto txId = alice->sendTransaction(tr, fee, "", 1, 0);
-  ASSERT_NE(txId, CryptoNote::WALLET_LEGACY_INVALID_TRANSACTION_ID);
+  ASSERT_NE(txId, cryptonote::WALLET_LEGACY_INVALID_TRANSACTION_ID);
 
   std::error_code sendResult;
   ASSERT_NO_FATAL_FAILURE(WaitWalletSend(aliceWalletObserver.get(), sendResult));
@@ -1074,7 +1074,7 @@ TEST_F(WalletLegacyApi, checkBalanceAfterSend) {
 
   uint64_t banknote = 1000000000;
 
-  CryptoNote::AccountPublicAddress address;
+  cryptonote::AccountPublicAddress address;
   ASSERT_TRUE(m_currency.parseAccountAddressString(alice->getAddress(), address));
 
   //Once wallet takes outputs in random fashion we don't know for sure which outputs will be taken.
@@ -1088,8 +1088,8 @@ TEST_F(WalletLegacyApi, checkBalanceAfterSend) {
 
   const uint64_t sendAmount = 10000000;
   const uint64_t fee = 100;
-  CryptoNote::TransactionId txId = TransferMoney(*alice, *alice, sendAmount, fee);
-  ASSERT_NE(txId, CryptoNote::WALLET_LEGACY_INVALID_TRANSACTION_ID);
+  cryptonote::TransactionId txId = TransferMoney(*alice, *alice, sendAmount, fee);
+  ASSERT_NE(txId, cryptonote::WALLET_LEGACY_INVALID_TRANSACTION_ID);
   ASSERT_NO_FATAL_FAILURE(WaitWalletSend(aliceWalletObserver.get()));
 
   ASSERT_EQ(banknote, alice->actualBalance());
@@ -1108,7 +1108,7 @@ TEST_F(WalletLegacyApi, moneyInPoolDontAffectActualBalance) {
 
   uint64_t banknote = 1000000000;
 
-  CryptoNote::AccountPublicAddress address;
+  cryptonote::AccountPublicAddress address;
   ASSERT_TRUE(m_currency.parseAccountAddressString(alice->getAddress(), address));
   generator.getSingleOutputTransaction(address, banknote);
   generator.generateEmptyBlocks(10);
@@ -1119,8 +1119,8 @@ TEST_F(WalletLegacyApi, moneyInPoolDontAffectActualBalance) {
   const uint64_t sendAmount = 10000000;
   const uint64_t fee = 100;
   aliceNode->setNextTransactionToPool();
-  CryptoNote::TransactionId txId = TransferMoney(*alice, *bob, sendAmount, fee);
-  ASSERT_NE(txId, CryptoNote::WALLET_LEGACY_INVALID_TRANSACTION_ID);
+  cryptonote::TransactionId txId = TransferMoney(*alice, *bob, sendAmount, fee);
+  ASSERT_NE(txId, cryptonote::WALLET_LEGACY_INVALID_TRANSACTION_ID);
   ASSERT_NO_FATAL_FAILURE(WaitWalletSend(aliceWalletObserver.get()));
   generator.generateEmptyBlocks(10);
 
@@ -1144,7 +1144,7 @@ TEST_F(WalletLegacyApi, balanceAfterTransactionsPlacedInBlockchain) {
 
   uint64_t banknote = 1000000000;
 
-  CryptoNote::AccountPublicAddress address;
+  cryptonote::AccountPublicAddress address;
   ASSERT_TRUE(m_currency.parseAccountAddressString(alice->getAddress(), address));
   generator.getSingleOutputTransaction(address, banknote);
   generator.generateEmptyBlocks(10);
@@ -1155,8 +1155,8 @@ TEST_F(WalletLegacyApi, balanceAfterTransactionsPlacedInBlockchain) {
   const uint64_t sendAmount = 10000000;
   const uint64_t fee = 100;
   aliceNode->setNextTransactionToPool();
-  CryptoNote::TransactionId txId = TransferMoney(*alice, *bob, sendAmount, fee);
-  ASSERT_NE(txId, CryptoNote::WALLET_LEGACY_INVALID_TRANSACTION_ID);
+  cryptonote::TransactionId txId = TransferMoney(*alice, *bob, sendAmount, fee);
+  ASSERT_NE(txId, cryptonote::WALLET_LEGACY_INVALID_TRANSACTION_ID);
   ASSERT_NO_FATAL_FAILURE(WaitWalletSend(aliceWalletObserver.get()));
   generator.generateEmptyBlocks(10);
 
@@ -1192,8 +1192,8 @@ TEST_F(WalletLegacyApi, checkMyMoneyInTxPool) {
   uint64_t fee = 10000;
 
   aliceNode->setNextTransactionToPool();
-  CryptoNote::TransactionId txId = TransferMoney(*alice, *bob, sendAmount, fee);
-  ASSERT_NE(txId, CryptoNote::WALLET_LEGACY_INVALID_TRANSACTION_ID);
+  cryptonote::TransactionId txId = TransferMoney(*alice, *bob, sendAmount, fee);
+  ASSERT_NE(txId, cryptonote::WALLET_LEGACY_INVALID_TRANSACTION_ID);
   ASSERT_NO_FATAL_FAILURE(WaitWalletSend(aliceWalletObserver.get()));
 
   bobNode->updateObservers();
@@ -1207,7 +1207,7 @@ TEST_F(WalletLegacyApi, checkMyMoneyInTxPool) {
 }
 
 TEST_F(WalletLegacyApi, initWithKeys) {
-  CryptoNote::AccountKeys accountKeys;
+  cryptonote::AccountKeys accountKeys;
 
   crypto::generate_keys(accountKeys.address.spendPublicKey, accountKeys.spendSecretKey);
   crypto::generate_keys(accountKeys.address.viewPublicKey, accountKeys.viewSecretKey);
@@ -1215,7 +1215,7 @@ TEST_F(WalletLegacyApi, initWithKeys) {
   alice->initWithKeys(accountKeys, "pass");
   ASSERT_NO_FATAL_FAILURE(WaitWalletLoad(aliceWalletObserver.get()));
 
-  CryptoNote::AccountKeys keys;
+  cryptonote::AccountKeys keys;
   alice->getAccountKeys(keys);
   
   EXPECT_EQ(accountKeys.address.spendPublicKey, keys.address.spendPublicKey);
@@ -1243,8 +1243,8 @@ TEST_F(WalletLegacyApi, deleteTxFromPool) {
   uint64_t fee = 10000;
 
   aliceNode->setNextTransactionToPool();
-  CryptoNote::TransactionId txId = TransferMoney(*alice, *bob, sendAmount, fee);
-  ASSERT_NE(txId, CryptoNote::WALLET_LEGACY_INVALID_TRANSACTION_ID);
+  cryptonote::TransactionId txId = TransferMoney(*alice, *bob, sendAmount, fee);
+  ASSERT_NE(txId, cryptonote::WALLET_LEGACY_INVALID_TRANSACTION_ID);
   ASSERT_NO_FATAL_FAILURE(WaitWalletSend(aliceWalletObserver.get()));
   alice->shutdown();
 
@@ -1271,13 +1271,13 @@ TEST_F(WalletLegacyApi, sendAfterFailedTransaction) {
   aliceNode->updateObservers();
   ASSERT_NO_FATAL_FAILURE(WaitWalletSync(aliceWalletObserver.get()));
 
-  CryptoNote::WalletLegacyTransfer tr;
+  cryptonote::WalletLegacyTransfer tr;
   tr.amount = 100000;
   tr.address = "wrong_address";
 
   EXPECT_THROW(alice->sendTransaction(tr, 1000, "", 2, 0), std::system_error);
-  CryptoNote::TransactionId txId = TransferMoney(*alice, *alice, 100000, 100);
-  ASSERT_NE(txId, CryptoNote::WALLET_LEGACY_INVALID_TRANSACTION_ID);
+  cryptonote::TransactionId txId = TransferMoney(*alice, *alice, 100000, 100);
+  ASSERT_NE(txId, cryptonote::WALLET_LEGACY_INVALID_TRANSACTION_ID);
   ASSERT_NO_FATAL_FAILURE(WaitWalletSend(aliceWalletObserver.get()));
   alice->shutdown();
 }
@@ -1323,18 +1323,18 @@ TEST_F(WalletLegacyApi, DISABLED_loadingBrokenCache) {
 }
 
 TEST_F(WalletLegacyApi, outcommingExternalTransactionTotalAmount) {
-  class ExternalTxChecker : public CryptoNote::IWalletLegacyObserver {
+  class ExternalTxChecker : public cryptonote::IWalletLegacyObserver {
   public:
-    ExternalTxChecker(CryptoNote::WalletLegacy& wallet) : wallet(wallet), totalAmount(std::numeric_limits<int64_t>::max()) {
+    ExternalTxChecker(cryptonote::WalletLegacy& wallet) : wallet(wallet), totalAmount(std::numeric_limits<int64_t>::max()) {
     }
 
-    virtual void externalTransactionCreated(CryptoNote::TransactionId transactionId) override {
-      CryptoNote::WalletLegacyTransaction txInfo;
+    virtual void externalTransactionCreated(cryptonote::TransactionId transactionId) override {
+      cryptonote::WalletLegacyTransaction txInfo;
       ASSERT_TRUE(wallet.getTransaction(transactionId, txInfo));
       totalAmount = txInfo.totalAmount;
     }
 
-    CryptoNote::WalletLegacy& wallet;
+    cryptonote::WalletLegacy& wallet;
     int64_t totalAmount;
   };
 
@@ -1358,7 +1358,7 @@ TEST_F(WalletLegacyApi, outcommingExternalTransactionTotalAmount) {
   uint64_t sent = 10000000;
   uint64_t fee = 1000;
 
-  CryptoNote::WalletLegacyTransfer tr;
+  cryptonote::WalletLegacyTransfer tr;
   tr.amount = sent;
   tr.address = bob->getAddress();
 
@@ -1368,7 +1368,7 @@ TEST_F(WalletLegacyApi, outcommingExternalTransactionTotalAmount) {
   bob->shutdown();
   alice->shutdown();
 
-  CryptoNote::WalletLegacy wallet(m_currency, *aliceNode);
+  cryptonote::WalletLegacy wallet(m_currency, *aliceNode);
 
   ExternalTxChecker externalTransactionObserver(wallet);
   TrivialWalletObserver walletObserver;
@@ -1391,7 +1391,7 @@ TEST_F(WalletLegacyApi, shutdownAllowsInitializeWalletWithTheSameKeys) {
   aliceNode->updateObservers();
   ASSERT_NO_FATAL_FAILURE(WaitWalletSync(aliceWalletObserver.get()));
 
-  CryptoNote::AccountKeys accountKeys;
+  cryptonote::AccountKeys accountKeys;
   alice->getAccountKeys(accountKeys);
 
   alice->shutdown();
@@ -1425,7 +1425,7 @@ TEST_F(WalletLegacyApi, shutdownAllowsInitializeWalletWithDifferentKeys) {
 }
 
 namespace {
-class WalletSynchronizationProgressUpdatedObserver : public CryptoNote::IWalletLegacyObserver {
+class WalletSynchronizationProgressUpdatedObserver : public cryptonote::IWalletLegacyObserver {
 public:
   virtual void synchronizationProgressUpdated(uint32_t current, uint32_t /*total*/) override {
     m_current = current;
@@ -1440,7 +1440,7 @@ TEST_F(WalletLegacyApi, shutdownDoesNotRemoveObservers) {
   ASSERT_NO_FATAL_FAILURE(WaitWalletSync(aliceWalletObserver.get()));
 
   WalletSynchronizationProgressUpdatedObserver observer;
-  CryptoNote::WalletHelper::IWalletRemoveObserverGuard observerGuard(*alice, observer);
+  cryptonote::WalletHelper::IWalletRemoveObserverGuard observerGuard(*alice, observer);
 
   alice->shutdown();
   observer.m_current = 0;
@@ -1456,13 +1456,13 @@ TEST_F(WalletLegacyApi, shutdownDoesNotRemoveObservers) {
 }
 
 namespace {
-class WalletTransactionEventCounter : public CryptoNote::IWalletLegacyObserver {
+class WalletTransactionEventCounter : public cryptonote::IWalletLegacyObserver {
 public:
-  virtual void externalTransactionCreated(CryptoNote::TransactionId /*transactionId*/) override {
+  virtual void externalTransactionCreated(cryptonote::TransactionId /*transactionId*/) override {
     ++m_count;
   }
 
-  virtual void transactionUpdated(CryptoNote::TransactionId /*transactionId*/) override {
+  virtual void transactionUpdated(cryptonote::TransactionId /*transactionId*/) override {
     ++m_count;
   }
 
@@ -1475,7 +1475,7 @@ TEST_F(WalletLegacyApi, afterShutdownAndInitWalletDoesNotSendNotificationsRelate
   ASSERT_NO_FATAL_FAILURE(WaitWalletSync(aliceWalletObserver.get()));
 
   std::string aliceAddress1 = alice->getAddress();
-  CryptoNote::AccountKeys accountKeys1;
+  cryptonote::AccountKeys accountKeys1;
   alice->getAccountKeys(accountKeys1);
 
   alice->shutdown();
@@ -1489,7 +1489,7 @@ TEST_F(WalletLegacyApi, afterShutdownAndInitWalletDoesNotSendNotificationsRelate
   ASSERT_NO_FATAL_FAILURE(WaitWalletSync(aliceWalletObserver.get()));
 
   WalletTransactionEventCounter observer;
-  CryptoNote::WalletHelper::IWalletRemoveObserverGuard observerGuard(*alice, observer);
+  cryptonote::WalletHelper::IWalletRemoveObserverGuard observerGuard(*alice, observer);
 
   prepareBobWallet();
   bob->initAndGenerate("pass");
@@ -1499,7 +1499,7 @@ TEST_F(WalletLegacyApi, afterShutdownAndInitWalletDoesNotSendNotificationsRelate
   bobNode->updateObservers();
   ASSERT_NO_FATAL_FAILURE(WaitWalletSync(bobWalletObserver.get()));
 
-  std::vector<CryptoNote::WalletLegacyTransfer> transfers;
+  std::vector<cryptonote::WalletLegacyTransfer> transfers;
   transfers.push_back({ aliceAddress1, TEST_BLOCK_REWARD / 10 });
   transfers.push_back({ aliceAddress2, TEST_BLOCK_REWARD / 5 });
   bob->sendTransaction(transfers, m_currency.minimumFee());
@@ -1535,12 +1535,12 @@ TEST_F(WalletLegacyApi, resetDoesNotChangeAccountKeys) {
   alice->initAndGenerate("pass");
   ASSERT_NO_FATAL_FAILURE(WaitWalletSync(aliceWalletObserver.get()));
 
-  CryptoNote::AccountKeys expectedAccountKeys;
+  cryptonote::AccountKeys expectedAccountKeys;
   alice->getAccountKeys(expectedAccountKeys);
 
   alice->reset();
 
-  CryptoNote::AccountKeys actualAccountKeys;
+  cryptonote::AccountKeys actualAccountKeys;
   alice->getAccountKeys(actualAccountKeys);
 
   ASSERT_EQ(expectedAccountKeys.address, actualAccountKeys.address);
@@ -1555,7 +1555,7 @@ TEST_F(WalletLegacyApi, resetDoesNotRemoveObservers) {
   ASSERT_NO_FATAL_FAILURE(WaitWalletSync(aliceWalletObserver.get()));
 
   WalletSynchronizationProgressUpdatedObserver observer;
-  CryptoNote::WalletHelper::IWalletRemoveObserverGuard observerGuard(*alice, observer);
+  cryptonote::WalletHelper::IWalletRemoveObserverGuard observerGuard(*alice, observer);
 
   alice->reset();
   observer.m_current = 0;
@@ -1723,17 +1723,17 @@ TEST_F(WalletLegacyApi, resetAndSyncDoNotRestoreTransfers) {
   alice->shutdown();
 }
 
-void generateWallet(CryptoNote::IWalletLegacy& wallet, TrivialWalletObserver& observer, const std::string& pass) {
+void generateWallet(cryptonote::IWalletLegacy& wallet, TrivialWalletObserver& observer, const std::string& pass) {
   wallet.initAndGenerate(pass);
   WaitWalletSync(&observer);
 }
 
 TEST_F(WalletLegacyApi, outdatedUnconfirmedTransactionDeletedOnNewBlock) {
   const uint64_t TRANSACTION_MEMPOOL_TIME = 1;
-  CryptoNote::Currency currency(CryptoNote::CurrencyBuilder(m_logger).mempoolTxLiveTime(TRANSACTION_MEMPOOL_TIME).currency());
+  cryptonote::Currency currency(cryptonote::CurrencyBuilder(m_logger).mempoolTxLiveTime(TRANSACTION_MEMPOOL_TIME).currency());
   TestBlockchainGenerator blockchainGenerator(currency);
   INodeTrivialRefreshStub node(blockchainGenerator);
-  CryptoNote::WalletLegacy wallet(currency, node);
+  cryptonote::WalletLegacy wallet(currency, node);
   TrivialWalletObserver walletObserver;
   wallet.addObserver(&walletObserver);
 
@@ -1756,9 +1756,9 @@ TEST_F(WalletLegacyApi, outdatedUnconfirmedTransactionDeletedOnNewBlock) {
 
   ASSERT_EQ(TEST_BLOCK_REWARD, wallet.actualBalance());
 
-  CryptoNote::WalletLegacyTransaction transaction;
+  cryptonote::WalletLegacyTransaction transaction;
   ASSERT_TRUE(wallet.getTransaction(id, transaction));
-  EXPECT_EQ(CryptoNote::WalletLegacyTransactionState::Deleted, transaction.state);
+  EXPECT_EQ(cryptonote::WalletLegacyTransactionState::Deleted, transaction.state);
 
   wallet.removeObserver(&walletObserver);
   wallet.shutdown();
@@ -1766,10 +1766,10 @@ TEST_F(WalletLegacyApi, outdatedUnconfirmedTransactionDeletedOnNewBlock) {
 
 TEST_F(WalletLegacyApi, outdatedUnconfirmedTransactionDeletedOnLoad) {
   const uint64_t TRANSACTION_MEMPOOL_TIME = 1;
-  CryptoNote::Currency currency(CryptoNote::CurrencyBuilder(m_logger).mempoolTxLiveTime(TRANSACTION_MEMPOOL_TIME).currency());
+  cryptonote::Currency currency(cryptonote::CurrencyBuilder(m_logger).mempoolTxLiveTime(TRANSACTION_MEMPOOL_TIME).currency());
   TestBlockchainGenerator blockchainGenerator(currency);
   INodeTrivialRefreshStub node(blockchainGenerator);
-  CryptoNote::WalletLegacy wallet(currency, node);
+  cryptonote::WalletLegacy wallet(currency, node);
   TrivialWalletObserver walletObserver;
   wallet.addObserver(&walletObserver);
 
@@ -1798,20 +1798,20 @@ TEST_F(WalletLegacyApi, outdatedUnconfirmedTransactionDeletedOnLoad) {
 
   ASSERT_EQ(TEST_BLOCK_REWARD, wallet.actualBalance());
 
-  CryptoNote::WalletLegacyTransaction transaction;
+  cryptonote::WalletLegacyTransaction transaction;
   ASSERT_TRUE(wallet.getTransaction(id, transaction));
-  EXPECT_EQ(CryptoNote::WalletLegacyTransactionState::Deleted, transaction.state);
+  EXPECT_EQ(cryptonote::WalletLegacyTransactionState::Deleted, transaction.state);
 
   wallet.removeObserver(&walletObserver);
   wallet.shutdown();
 }
 
 TEST_F(WalletLegacyApi, walletLoadsNullSpendSecretKey) {
-  CryptoNote::AccountKeys accountKeys;
+  cryptonote::AccountKeys accountKeys;
 
   crypto::generate_keys(accountKeys.address.spendPublicKey, accountKeys.spendSecretKey);
   crypto::generate_keys(accountKeys.address.viewPublicKey, accountKeys.viewSecretKey);
-  accountKeys.spendSecretKey = CryptoNote::NULL_SECRET_KEY;
+  accountKeys.spendSecretKey = cryptonote::NULL_SECRET_KEY;
 
   alice->initWithKeys(accountKeys, "pass");
   WaitWalletSync(aliceWalletObserver.get());

@@ -17,7 +17,7 @@
 
 namespace po = boost::program_options;
 
-namespace CryptoNote {
+namespace cryptonote {
 
 namespace {
 

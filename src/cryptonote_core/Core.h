@@ -24,7 +24,7 @@
 
 #include <Logging/LoggerMessage.h>
 
-namespace CryptoNote {
+namespace cryptonote {
 
   struct core_stat_info;
   class miner;
@@ -166,7 +166,7 @@ namespace CryptoNote {
 
      const Currency& m_currency;
      Logging::LoggerRef logger;
-     CryptoNote::RealTimeProvider m_timeProvider;
+     cryptonote::RealTimeProvider m_timeProvider;
      tx_memory_pool m_mempool;
      Blockchain m_blockchain;
      i_cryptonote_protocol* m_pprotocol;

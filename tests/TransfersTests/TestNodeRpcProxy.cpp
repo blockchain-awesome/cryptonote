@@ -12,7 +12,7 @@
 #include "../IntegrationTestLib/TestWalletLegacy.h"
 
 
-using namespace CryptoNote;
+using namespace cryptonote;
 using namespace crypto;
 using namespace Tests::Common;
 
@@ -29,7 +29,7 @@ namespace {
 
   protected:
     Logging::LoggerManager m_logManager;
-    CryptoNote::Currency m_currency;
+    cryptonote::Currency m_currency;
   };
 
   class PoolChangedObserver : public INodeObserver {
@@ -59,8 +59,8 @@ namespace {
 
     launchTestnet(2, Tests::Common::BaseFunctionalTests::Line);
 
-    std::unique_ptr<CryptoNote::INode> node0;
-    std::unique_ptr<CryptoNote::INode> node1;
+    std::unique_ptr<cryptonote::INode> node0;
+    std::unique_ptr<cryptonote::INode> node1;
 
     nodeDaemons[NODE_0]->makeINode(node0);
     nodeDaemons[NODE_1]->makeINode(node1);

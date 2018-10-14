@@ -8,7 +8,7 @@
 #include <fstream>
 #include <boost/filesystem.hpp>
 
-using namespace CryptoNote;
+using namespace cryptonote;
 
 namespace {
 
@@ -19,8 +19,8 @@ void openOutputFileStream(const std::string& filename, std::ofstream& file) {
   }
 }
 
-std::error_code walletSaveWrapper(CryptoNote::IWalletLegacy& wallet, std::ofstream& file, bool saveDetailes, bool saveCache) {
-  CryptoNote::WalletHelper::SaveWalletResultObserver o;
+std::error_code walletSaveWrapper(cryptonote::IWalletLegacy& wallet, std::ofstream& file, bool saveDetailes, bool saveCache) {
+  cryptonote::WalletHelper::SaveWalletResultObserver o;
 
   std::error_code e;
   try {
@@ -52,13 +52,13 @@ void WalletHelper::prepareFileNames(const std::string& file_path, std::string& k
   }
 }
 
-void WalletHelper::SendCompleteResultObserver::sendTransactionCompleted(CryptoNote::TransactionId transactionId, std::error_code result) {
+void WalletHelper::SendCompleteResultObserver::sendTransactionCompleted(cryptonote::TransactionId transactionId, std::error_code result) {
   std::lock_guard<std::mutex> lock(m_mutex);
   m_finishedTransactions[transactionId] = result;
   m_condition.notify_one();
 }
 
-std::error_code WalletHelper::SendCompleteResultObserver::wait(CryptoNote::TransactionId transactionId) {
+std::error_code WalletHelper::SendCompleteResultObserver::wait(cryptonote::TransactionId transactionId) {
   std::unique_lock<std::mutex> lock(m_mutex);
 
   m_condition.wait(lock, [this, &transactionId] {
@@ -74,7 +74,7 @@ std::error_code WalletHelper::SendCompleteResultObserver::wait(CryptoNote::Trans
   return m_result;
 }
 
-WalletHelper::IWalletRemoveObserverGuard::IWalletRemoveObserverGuard(CryptoNote::IWalletLegacy& wallet, CryptoNote::IWalletLegacyObserver& observer) :
+WalletHelper::IWalletRemoveObserverGuard::IWalletRemoveObserverGuard(cryptonote::IWalletLegacy& wallet, cryptonote::IWalletLegacyObserver& observer) :
   m_wallet(wallet),
   m_observer(observer),
   m_removed(false) {
@@ -92,7 +92,7 @@ void WalletHelper::IWalletRemoveObserverGuard::removeObserver() {
   m_removed = true;
 }
 
-void WalletHelper::storeWallet(CryptoNote::IWalletLegacy& wallet, const std::string& walletFilename) {
+void WalletHelper::storeWallet(cryptonote::IWalletLegacy& wallet, const std::string& walletFilename) {
   boost::filesystem::path tempFile = boost::filesystem::unique_path(walletFilename + ".tmp.%%%%-%%%%");
 
   if (boost::filesystem::exists(walletFilename)) {

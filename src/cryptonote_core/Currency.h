@@ -14,7 +14,7 @@
 #include "CryptoNoteBasic.h"
 #include "Difficulty.h"
 
-namespace CryptoNote {
+namespace cryptonote {
 
 class AccountBase;
 

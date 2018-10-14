@@ -12,7 +12,7 @@
 #include "Serialization/SerializationOverloads.h"
 #include "cryptonote_core/CryptoNoteSerialization.h"
 
-namespace CryptoNote
+namespace cryptonote
 {
 
 #define BC_COMMANDS_POOL_BASE 2000

@@ -9,7 +9,7 @@
 #include <vector>
 #include "CryptoNote.h"
 
-namespace CryptoNote {
+namespace cryptonote {
 
 const size_t WALLET_INVALID_TRANSACTION_ID = std::numeric_limits<size_t>::max();
 const size_t WALLET_INVALID_TRANSFER_ID = std::numeric_limits<size_t>::max();

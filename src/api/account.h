@@ -32,7 +32,7 @@ public:
   std::string getPrivateKeys();
 
   std::string toHex();
-  CryptoNote::AccountKeys &toKeys();
+  cryptonote::AccountKeys &toKeys();
 
 private:
   std::string &toAdress();
@@ -43,7 +43,7 @@ private:
 
   SecretKeyPair m_secret_keys;
   PublicKeyPair m_public_keys;
-  CryptoNote::AccountKeys m_account_keys;
+  cryptonote::AccountKeys m_account_keys;
 };
 
 } // namespace api

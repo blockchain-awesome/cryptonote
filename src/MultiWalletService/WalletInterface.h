@@ -24,7 +24,7 @@
 // #include "WalletSingle.h"
 // #include "WalletInterface.h"
 
-using namespace CryptoNote;
+using namespace cryptonote;
 
 namespace MultiWalletService
 {
@@ -43,7 +43,7 @@ public:
 
   bool checkAddress(const std::string &address, AccountPublicAddress &keys);
 
-  CryptoNote::IWalletLegacy *getWallet(const std::string token);
+  cryptonote::IWalletLegacy *getWallet(const std::string token);
 
   std::string getAddressesByKeys(const AccountPublicAddress &keys);
 
@@ -70,7 +70,7 @@ protected:
 
   Logging::LoggerGroup &m_logger;
 
-  // CryptoNote::AccountBase m_account;
+  // cryptonote::AccountBase m_account;
 
   System::Dispatcher &m_dispatcher;
   const Currency &m_currency;

@@ -4,7 +4,7 @@
 #include "hash.h"
 #include "CryptoNoteBasic.h"
 
-namespace CryptoNote
+namespace cryptonote
 {
 
 class ISerializer;
@@ -31,4 +31,4 @@ class PaymentIdIndex
     std::unordered_multimap<crypto::Hash, crypto::Hash> index;
 };
 
-} // namespace CryptoNote
+} // namespace cryptonote

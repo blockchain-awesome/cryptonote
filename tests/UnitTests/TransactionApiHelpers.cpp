@@ -5,7 +5,7 @@
 #include "TransactionApiHelpers.h"
 #include "cryptonote_core/TransactionApi.h"
 
-using namespace CryptoNote;
+using namespace cryptonote;
 using namespace crypto;
 
 namespace {
@@ -44,7 +44,7 @@ size_t TestTransactionBuilder::addTestInput(uint64_t amount, const AccountKeys& 
   TransactionTypes::InputKeyInfo info;
   PublicKey targetKey;
 
-  CryptoNote::KeyPair srcTxKeys = CryptoNote::generateKeyPair();
+  cryptonote::KeyPair srcTxKeys = cryptonote::generateKeyPair();
   derivePublicKey(senderKeys, srcTxKeys.publicKey, 5, targetKey);
 
   TransactionTypes::GlobalOutput gout = { targetKey, 0 };
@@ -68,7 +68,7 @@ size_t TestTransactionBuilder::addTestInput(uint64_t amount, std::vector<uint32_
   TransactionTypes::InputKeyInfo info;
   PublicKey targetKey;
 
-  CryptoNote::KeyPair srcTxKeys = CryptoNote::generateKeyPair();
+  cryptonote::KeyPair srcTxKeys = cryptonote::generateKeyPair();
   derivePublicKey(senderKeys, srcTxKeys.publicKey, 5, targetKey);
 
   TransactionTypes::GlobalOutput gout = { targetKey, 0 };

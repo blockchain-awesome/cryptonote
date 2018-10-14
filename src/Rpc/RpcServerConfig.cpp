@@ -6,7 +6,7 @@
 #include "common/CommandLine.h"
 #include "CryptoNoteConfig.h"
 
-namespace CryptoNote {
+namespace cryptonote {
 
   namespace {
 

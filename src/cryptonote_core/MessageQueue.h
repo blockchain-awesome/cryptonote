@@ -11,7 +11,7 @@
 #include "System/Event.h"
 #include "System/InterruptedException.h"
 
-namespace CryptoNote {
+namespace cryptonote {
 
 template<class MessageType> class MessageQueue {
 public:

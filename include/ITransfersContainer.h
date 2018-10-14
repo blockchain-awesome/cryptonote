@@ -12,7 +12,7 @@
 #include "IObservable.h"
 #include "IStreamSerializable.h"
 
-namespace CryptoNote {
+namespace cryptonote {
 
 const uint32_t UNCONFIRMED_TRANSACTION_GLOBAL_OUTPUT_INDEX = std::numeric_limits<uint32_t>::max();
 

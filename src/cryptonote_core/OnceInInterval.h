@@ -6,7 +6,7 @@
 
 #include <time.h>
 
-namespace CryptoNote
+namespace cryptonote
 {
 
 class OnceInInterval {

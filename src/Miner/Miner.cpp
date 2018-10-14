@@ -11,7 +11,7 @@
 
 #include <System/InterruptedException.h>
 
-namespace CryptoNote {
+namespace cryptonote {
 
 Miner::Miner(System::Dispatcher& dispatcher, Logging::ILogger& logger) :
   m_dispatcher(dispatcher),
@@ -140,4 +140,4 @@ bool Miner::setStateBlockFound() {
   }
 }
 
-} //namespace CryptoNote
+} //namespace cryptonote

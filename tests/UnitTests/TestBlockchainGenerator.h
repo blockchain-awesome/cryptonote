@@ -18,23 +18,23 @@
 class TestBlockchainGenerator
 {
 public:
-  TestBlockchainGenerator(const CryptoNote::Currency& currency);
+  TestBlockchainGenerator(const cryptonote::Currency& currency);
 
   //TODO: get rid of this method
-  std::vector<CryptoNote::Block>& getBlockchain();
-  std::vector<CryptoNote::Block> getBlockchainCopy();
+  std::vector<cryptonote::Block>& getBlockchain();
+  std::vector<cryptonote::Block> getBlockchainCopy();
   void generateEmptyBlocks(size_t count);
-  bool getBlockRewardForAddress(const CryptoNote::AccountPublicAddress& address);
-  bool generateTransactionsInOneBlock(const CryptoNote::AccountPublicAddress& address, size_t n);
-  bool getSingleOutputTransaction(const CryptoNote::AccountPublicAddress& address, uint64_t amount);
-  void addTxToBlockchain(const CryptoNote::Transaction& transaction);
-  bool getTransactionByHash(const crypto::Hash& hash, CryptoNote::Transaction& tx, bool checkTxPool = false);
-  const CryptoNote::AccountBase& getMinerAccount() const;
-  bool generateFromBaseTx(const CryptoNote::AccountBase& address);
+  bool getBlockRewardForAddress(const cryptonote::AccountPublicAddress& address);
+  bool generateTransactionsInOneBlock(const cryptonote::AccountPublicAddress& address, size_t n);
+  bool getSingleOutputTransaction(const cryptonote::AccountPublicAddress& address, uint64_t amount);
+  void addTxToBlockchain(const cryptonote::Transaction& transaction);
+  bool getTransactionByHash(const crypto::Hash& hash, cryptonote::Transaction& tx, bool checkTxPool = false);
+  const cryptonote::AccountBase& getMinerAccount() const;
+  bool generateFromBaseTx(const cryptonote::AccountBase& address);
 
-  void putTxToPool(const CryptoNote::Transaction& tx);
+  void putTxToPool(const cryptonote::Transaction& tx);
   void getPoolSymmetricDifference(std::vector<crypto::Hash>&& known_pool_tx_ids, crypto::Hash known_block_id, bool& is_bc_actual,
-    std::vector<CryptoNote::Transaction>& new_txs, std::vector<crypto::Hash>& deleted_tx_ids);
+    std::vector<cryptonote::Transaction>& new_txs, std::vector<crypto::Hash>& deleted_tx_ids);
   void putTxPoolToBlockchain();
   void clearTxPool();
 
@@ -48,8 +48,8 @@ public:
   bool getTransactionIdsByPaymentId(const crypto::Hash& paymentId, std::vector<crypto::Hash>& transactionHashes);
 
   bool getTransactionGlobalIndexesByHash(const crypto::Hash& transactionHash, std::vector<uint32_t>& globalIndexes);
-  bool getMultisignatureOutputByGlobalIndex(uint64_t amount, uint32_t globalIndex, CryptoNote::MultisignatureOutput& out);
-  void setMinerAccount(const CryptoNote::AccountBase& account);
+  bool getMultisignatureOutputByGlobalIndex(uint64_t amount, uint32_t globalIndex, cryptonote::MultisignatureOutput& out);
+  void setMinerAccount(const cryptonote::AccountBase& account);
 
 private:
   struct MultisignatureOutEntry {
@@ -65,27 +65,27 @@ private:
   void addGenesisBlock();
   void addMiningBlock();
 
-  const CryptoNote::Currency& m_currency;
+  const cryptonote::Currency& m_currency;
   test_generator generator;
-  CryptoNote::AccountBase miner_acc;
-  std::vector<CryptoNote::Block> m_blockchain;
-  std::unordered_map<crypto::Hash, CryptoNote::Transaction> m_txs;
+  cryptonote::AccountBase miner_acc;
+  std::vector<cryptonote::Block> m_blockchain;
+  std::unordered_map<crypto::Hash, cryptonote::Transaction> m_txs;
   std::unordered_map<crypto::Hash, std::vector<uint32_t>> transactionGlobalOuts;
   std::unordered_map<uint64_t, std::vector<MultisignatureOutEntry>> multisignatureOutsIndex;
   std::unordered_map<uint64_t, std::vector<KeyOutEntry>> keyOutsIndex;
 
-  std::unordered_map<crypto::Hash, CryptoNote::Transaction> m_txPool;
+  std::unordered_map<crypto::Hash, cryptonote::Transaction> m_txPool;
   mutable std::mutex m_mutex;
 
-  CryptoNote::PaymentIdIndex m_paymentIdIndex;
-  CryptoNote::TimestampTransactionsIndex m_timestampIndex;
-  CryptoNote::GeneratedTransactionsIndex m_generatedTransactionsIndex;
-  CryptoNote::OrphanBlocksIndex m_orthanBlocksIndex;
+  cryptonote::PaymentIdIndex m_paymentIdIndex;
+  cryptonote::TimestampTransactionsIndex m_timestampIndex;
+  cryptonote::GeneratedTransactionsIndex m_generatedTransactionsIndex;
+  cryptonote::OrphanBlocksIndex m_orthanBlocksIndex;
 
-  void addToBlockchain(const CryptoNote::Transaction& tx);
-  void addToBlockchain(const std::vector<CryptoNote::Transaction>& txs);
-  void addToBlockchain(const std::vector<CryptoNote::Transaction>& txs, const CryptoNote::AccountBase& minerAddress);
-  void addTx(const CryptoNote::Transaction& tx);
+  void addToBlockchain(const cryptonote::Transaction& tx);
+  void addToBlockchain(const std::vector<cryptonote::Transaction>& txs);
+  void addToBlockchain(const std::vector<cryptonote::Transaction>& txs, const cryptonote::AccountBase& minerAddress);
+  void addTx(const cryptonote::Transaction& tx);
 
-  bool doGenerateTransactionsInOneBlock(CryptoNote::AccountPublicAddress const &address, size_t n);
+  bool doGenerateTransactionsInOneBlock(cryptonote::AccountPublicAddress const &address, size_t n);
 };

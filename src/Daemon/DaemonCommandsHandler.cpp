@@ -14,13 +14,13 @@
 namespace {
   template <typename T>
   static bool print_as_json(const T& obj) {
-    std::cout << CryptoNote::storeToJson(obj) << ENDL;
+    std::cout << cryptonote::storeToJson(obj) << ENDL;
     return true;
   }
 }
 
 
-DaemonCommandsHandler::DaemonCommandsHandler(CryptoNote::core& core, CryptoNote::NodeServer& srv, Logging::LoggerManager& log) :
+DaemonCommandsHandler::DaemonCommandsHandler(cryptonote::core& core, cryptonote::NodeServer& srv, Logging::LoggerManager& log) :
   m_core(core), m_srv(srv), logger(log, "daemon"), m_logManager(log) {
   m_consoleHandler.setHandler("exit", boost::bind(&DaemonCommandsHandler::exit, this, _1), "Shutdown the daemon");
   m_consoleHandler.setHandler("help", boost::bind(&DaemonCommandsHandler::help, this, _1), "Show this help");
@@ -44,7 +44,7 @@ DaemonCommandsHandler::DaemonCommandsHandler(CryptoNote::core& core, CryptoNote:
 std::string DaemonCommandsHandler::get_commands_str()
 {
   std::stringstream ss;
-  ss << CryptoNote::CRYPTONOTE_NAME << " v" << PROJECT_VERSION_LONG << ENDL;
+  ss << cryptonote::CRYPTONOTE_NAME << " v" << PROJECT_VERSION_LONG << ENDL;
   ss << "Commands: " << ENDL;
   std::string usage = m_consoleHandler.getUsage();
   boost::replace_all(usage, "\n", "\n  ");
@@ -176,7 +176,7 @@ bool DaemonCommandsHandler::set_log(const std::vector<std::string>& args)
 //--------------------------------------------------------------------------------
 bool DaemonCommandsHandler::print_block_by_height(uint32_t height)
 {
-  std::list<CryptoNote::Block> blocks;
+  std::list<cryptonote::Block> blocks;
   m_core.get_blocks(height, 1, blocks);
 
   if (1 == blocks.size()) {
@@ -202,7 +202,7 @@ bool DaemonCommandsHandler::print_block_by_hash(const std::string& arg)
 
   std::list<crypto::Hash> block_ids;
   block_ids.push_back(block_hash);
-  std::list<CryptoNote::Block> blocks;
+  std::list<cryptonote::Block> blocks;
   std::list<crypto::Hash> missed_ids;
   m_core.get_blocks(block_ids, blocks, missed_ids);
 
@@ -250,7 +250,7 @@ bool DaemonCommandsHandler::print_tx(const std::vector<std::string>& args)
 
   std::vector<crypto::Hash> tx_ids;
   tx_ids.push_back(tx_hash);
-  std::list<CryptoNote::Transaction> txs;
+  std::list<cryptonote::Transaction> txs;
   std::list<crypto::Hash> missed_ids;
   m_core.getTransactions(tx_ids, txs, missed_ids, true);
 
@@ -281,7 +281,7 @@ bool DaemonCommandsHandler::start_mining(const std::vector<std::string> &args) {
     return true;
   }
 
-  CryptoNote::AccountPublicAddress adr;
+  cryptonote::AccountPublicAddress adr;
   if (!m_core.currency().parseAccountAddressString(args.front(), adr)) {
     std::cout << "target account address has wrong format" << std::endl;
     return true;

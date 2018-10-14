@@ -12,9 +12,9 @@
 #include "RPCTestNode.h"
 
 #ifdef _WIN32
-const std::string daemonExec = std::string(CryptoNote::CRYPTONOTE_NAME) + "d.exe";
+const std::string daemonExec = std::string(cryptonote::CRYPTONOTE_NAME) + "d.exe";
 #else
-const std::string daemonExec = std::string(CryptoNote::CRYPTONOTE_NAME) + "d";
+const std::string daemonExec = std::string(cryptonote::CRYPTONOTE_NAME) + "d";
 #endif
 
 namespace {
@@ -125,7 +125,7 @@ TestNodeConfiguration TestNetworkBuilder::buildNodeConfiguration(size_t index) {
 
   cfg.daemonPath = daemonExec; // default
   cfg.testnet = testnet;
-  cfg.logFile = std::string("test_") + CryptoNote::CRYPTONOTE_NAME + "d" + std::to_string(index) + ".log";
+  cfg.logFile = std::string("test_") + cryptonote::CRYPTONOTE_NAME + "d" + std::to_string(index) + ".log";
 
   uint16_t rpcPort = static_cast<uint16_t>(rpcBasePort + index);
   uint16_t p2pPort = static_cast<uint16_t>(p2pBasePort + index);
@@ -159,7 +159,7 @@ TestNodeConfiguration TestNetworkBuilder::buildNodeConfiguration(size_t index) {
 
 }
 
-TestNetwork::TestNetwork(System::Dispatcher& dispatcher, const CryptoNote::Currency& currency) : 
+TestNetwork::TestNetwork(System::Dispatcher& dispatcher, const cryptonote::Currency& currency) : 
   m_dispatcher(dispatcher),
   m_currency(currency) {
 }

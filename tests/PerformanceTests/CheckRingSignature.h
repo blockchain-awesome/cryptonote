@@ -27,7 +27,7 @@ public:
 
   bool init()
   {
-    using namespace CryptoNote;
+    using namespace cryptonote;
 
     if (!base_class::init())
       return false;
@@ -47,12 +47,12 @@ public:
 
   bool test()
   {
-    const CryptoNote::KeyInput& txin = boost::get<CryptoNote::KeyInput>(m_tx.inputs[0]);
+    const cryptonote::KeyInput& txin = boost::get<cryptonote::KeyInput>(m_tx.inputs[0]);
     return crypto::check_ring_signature(m_tx_prefix_hash, txin.keyImage, this->m_public_key_ptrs, ring_size, m_tx.signatures[0].data());
   }
 
 private:
-  CryptoNote::AccountBase m_alice;
-  CryptoNote::Transaction m_tx;
+  cryptonote::AccountBase m_alice;
+  cryptonote::Transaction m_tx;
   crypto::Hash m_tx_prefix_hash;
 };

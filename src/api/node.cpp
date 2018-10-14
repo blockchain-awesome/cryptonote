@@ -9,12 +9,12 @@ namespace api
 {
 Node::Node(std::string &host, uint16_t port) : m_host(host), m_port(port)
 {
-  m_node.reset(new CryptoNote::NodeRpcProxy(m_host, m_port));
+  m_node.reset(new cryptonote::NodeRpcProxy(m_host, m_port));
   m_node->addObserver(static_cast<INodeRpcProxyObserver *>(this));
   m_node->addObserver(static_cast<INodeObserver *>(this));
 }
 
-// Interface CryptoNote::INodeObserver
+// Interface cryptonote::INodeObserver
 
 void Node::localBlockchainUpdated(uint32_t height)
 {
@@ -37,9 +37,9 @@ void Node::peerCountUpdated(size_t count)
   std::cout << "peer updated to :" << count << std::endl;
 }
 
-// End CryptoNote::INodeObserver
+// End cryptonote::INodeObserver
 
-// Interface CryptoNote::IBlockchainSynchronizerObserver
+// Interface cryptonote::IBlockchainSynchronizerObserver
 
 void Node::synchronizationProgressUpdated(uint32_t processedBlockCount, uint32_t totalBlockCount)
 {
@@ -62,9 +62,9 @@ void Node::synchronizationCompleted(std::error_code result)
   }
 }
 
-// End CryptoNote::IBlockchainSynchronizerObserver
+// End cryptonote::IBlockchainSynchronizerObserver
 
-// Interface CryptoNote::INodeRpcProxyObserver
+// Interface cryptonote::INodeRpcProxyObserver
 
 void Node::connectionStatusUpdated(bool connected)
 {
@@ -79,27 +79,27 @@ void Node::connectionStatusUpdated(bool connected)
   }
 }
 
-// End CryptoNote::INodeRpcProxyObserver
+// End cryptonote::INodeRpcProxyObserver
 
-void Node::onTransactionDeleted(CryptoNote::ITransfersSubscription *object, const crypto::Hash &transactionHash)
+void Node::onTransactionDeleted(cryptonote::ITransfersSubscription *object, const crypto::Hash &transactionHash)
 {
   std::cout << "onTransactionDeleted" << std::endl;
 }
 
-void Node::onTransactionUpdated(CryptoNote::ITransfersSubscription *object, const crypto::Hash &transactionHash)
+void Node::onTransactionUpdated(cryptonote::ITransfersSubscription *object, const crypto::Hash &transactionHash)
 {
   std::cout << "onTransactionUpdated" << std::endl;
 }
 
-void Node::onError(CryptoNote::ITransfersSubscription *object,
+void Node::onError(cryptonote::ITransfersSubscription *object,
                    uint32_t height, std::error_code ec)
 {
   std::cout << "onError" << std::endl;
 }
 
-CryptoNote::ITransfersSubscription &Node::initAccount(CryptoNote::AccountKeys &keys)
+cryptonote::ITransfersSubscription &Node::initAccount(cryptonote::AccountKeys &keys)
 {
-  CryptoNote::AccountSubscription sub;
+  cryptonote::AccountSubscription sub;
   sub.keys = keys;
   sub.transactionSpendableAge = 1;
   sub.syncStart.height = 0;
@@ -115,7 +115,7 @@ CryptoNote::ITransfersSubscription &Node::initAccount(CryptoNote::AccountKeys &k
   // m_sender.reset(new WalletTransactionSender(m_currency, m_transactionsCache, m_account.getAccountKeys(), *m_transferDetails));
 }
 
-bool Node::init(CryptoNote::Currency &currency, Logging::ILogger &logger)
+bool Node::init(cryptonote::Currency &currency, Logging::ILogger &logger)
 {
   if (!m_isBlockchainSynced)
   {
@@ -127,18 +127,18 @@ bool Node::init(CryptoNote::Currency &currency, Logging::ILogger &logger)
     {
       return false;
     }
-    m_blockchainSync = std::unique_ptr<CryptoNote::BlockchainSynchronizer>(new CryptoNote::BlockchainSynchronizer(*m_node, currency.genesisBlockHash()));
+    m_blockchainSync = std::unique_ptr<cryptonote::BlockchainSynchronizer>(new cryptonote::BlockchainSynchronizer(*m_node, currency.genesisBlockHash()));
     m_blockchainSync->addObserver(this);
-    m_transfersSync = std::unique_ptr<CryptoNote::TransfersSyncronizer>(new CryptoNote::TransfersSyncronizer(
+    m_transfersSync = std::unique_ptr<cryptonote::TransfersSyncronizer>(new cryptonote::TransfersSyncronizer(
         currency, *m_blockchainSync, *m_node));
-    // m_blockchainExplorer = std::unique_ptr<CryptoNote::BlockchainExplorer>(new CryptoNote::BlockchainExplorer(
+    // m_blockchainExplorer = std::unique_ptr<cryptonote::BlockchainExplorer>(new cryptonote::BlockchainExplorer(
 
     //     *m_node, logger));
 
-    CryptoNote::RealTimeProvider timeProvider;
-    CryptoNote::tx_memory_pool *mempool = new CryptoNote::tx_memory_pool(currency, *this, timeProvider, logger);
+    cryptonote::RealTimeProvider timeProvider;
+    cryptonote::tx_memory_pool *mempool = new cryptonote::tx_memory_pool(currency, *this, timeProvider, logger);
 
-    m_blockchain = std::unique_ptr<CryptoNote::Blockchain>(new CryptoNote::Blockchain(
+    m_blockchain = std::unique_ptr<cryptonote::Blockchain>(new cryptonote::Blockchain(
         currency,
         *mempool,
         logger));
@@ -177,19 +177,19 @@ void Node::wait(size_t milliseconds)
   std::cout << "end waiting" << std::endl;
 }
 
-bool Node::checkTransactionInputs(const CryptoNote::Transaction &tx, CryptoNote::BlockInfo &maxUsedBlock)
+bool Node::checkTransactionInputs(const cryptonote::Transaction &tx, cryptonote::BlockInfo &maxUsedBlock)
 {
     std::cout << "checkTransactionInputs" << std::endl;
 
   return true;
 }
-bool Node::checkTransactionInputs(const CryptoNote::Transaction &tx, CryptoNote::BlockInfo &maxUsedBlock, CryptoNote::BlockInfo &lastFailed)
+bool Node::checkTransactionInputs(const cryptonote::Transaction &tx, cryptonote::BlockInfo &maxUsedBlock, cryptonote::BlockInfo &lastFailed)
 {
     std::cout << "checkTransactionInputs" << std::endl;
 
   return true;
 }
-bool Node::haveSpentKeyImages(const CryptoNote::Transaction &tx)
+bool Node::haveSpentKeyImages(const cryptonote::Transaction &tx)
 {
     std::cout << "haveSpentKeyImages" << std::endl;
 

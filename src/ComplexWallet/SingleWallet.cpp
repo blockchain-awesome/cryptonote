@@ -29,11 +29,11 @@ void throwNotDefined()
 class ContextCounterHolder
 {
 public:
-  ContextCounterHolder(CryptoNote::WalletAsyncContextCounter &shutdowner) : m_shutdowner(shutdowner) {}
+  ContextCounterHolder(cryptonote::WalletAsyncContextCounter &shutdowner) : m_shutdowner(shutdowner) {}
   ~ContextCounterHolder() { m_shutdowner.delAsyncContext(); }
 
 private:
-  CryptoNote::WalletAsyncContextCounter &m_shutdowner;
+  cryptonote::WalletAsyncContextCounter &m_shutdowner;
 };
 
 template <typename F>
@@ -43,7 +43,7 @@ void runAtomic(std::mutex &mutex, F f)
   f();
 }
 
-class InitWaiter : public CryptoNote::IWalletLegacyObserver
+class InitWaiter : public cryptonote::IWalletLegacyObserver
 {
 public:
   InitWaiter() : future(promise.get_future()) {}
@@ -63,7 +63,7 @@ private:
   std::future<std::error_code> future;
 };
 
-class SaveWaiter : public CryptoNote::IWalletLegacyObserver
+class SaveWaiter : public cryptonote::IWalletLegacyObserver
 {
 public:
   SaveWaiter() : future(promise.get_future()) {}
@@ -88,7 +88,7 @@ private:
 namespace ComplexWallet
 {
 
-class SyncStarter : public CryptoNote::IWalletLegacyObserver
+class SyncStarter : public cryptonote::IWalletLegacyObserver
 {
 public:
   SyncStarter(BlockchainSynchronizer &sync) : m_sync(sync) {}
@@ -105,7 +105,7 @@ public:
   BlockchainSynchronizer &m_sync;
 };
 
-SingleWallet::SingleWallet(const CryptoNote::Currency &currency, INode &node) : m_state(NOT_INITIALIZED),
+SingleWallet::SingleWallet(const cryptonote::Currency &currency, INode &node) : m_state(NOT_INITIALIZED),
                                                                                 m_currency(currency),
                                                                                 m_node(node),
                                                                                 m_isStopping(false),
@@ -271,7 +271,7 @@ void SingleWallet::doLoad(std::istream &source)
   catch (std::exception &)
   {
     runAtomic(m_cacheMutex, [this]() { this->m_state = SingleWallet::NOT_INITIALIZED; });
-    m_observerManager.notify(&IWalletLegacyObserver::initCompleted, make_error_code(CryptoNote::error::INTERNAL_WALLET_ERROR));
+    m_observerManager.notify(&IWalletLegacyObserver::initCompleted, make_error_code(cryptonote::error::INTERNAL_WALLET_ERROR));
     return;
   }
 
@@ -350,14 +350,14 @@ void SingleWallet::save(std::ostream &destination, bool saveDetailed, bool saveC
 {
   if (m_isStopping)
   {
-    m_observerManager.notify(&IWalletLegacyObserver::saveCompleted, make_error_code(CryptoNote::error::OPERATION_CANCELLED));
+    m_observerManager.notify(&IWalletLegacyObserver::saveCompleted, make_error_code(cryptonote::error::OPERATION_CANCELLED));
     return;
   }
 
   {
     std::unique_lock<std::mutex> lock(m_cacheMutex);
 
-    throwIf(m_state != INITIALIZED, CryptoNote::error::WRONG_STATE);
+    throwIf(m_state != INITIALIZED, cryptonote::error::WRONG_STATE);
 
     m_state = SAVING;
   }
@@ -400,7 +400,7 @@ void SingleWallet::doSave(std::ostream &destination, bool saveDetailed, bool sav
   catch (std::exception &)
   {
     runAtomic(m_cacheMutex, [this]() { this->m_state = SingleWallet::INITIALIZED; });
-    m_observerManager.notify(&IWalletLegacyObserver::saveCompleted, make_error_code(CryptoNote::error::INTERNAL_WALLET_ERROR));
+    m_observerManager.notify(&IWalletLegacyObserver::saveCompleted, make_error_code(cryptonote::error::INTERNAL_WALLET_ERROR));
     return;
   }
 
@@ -414,7 +414,7 @@ std::error_code SingleWallet::changePassword(const std::string &oldPassword, con
   throwIfNotInitialised();
 
   if (m_password.compare(oldPassword))
-    return make_error_code(CryptoNote::error::WRONG_PASSWORD);
+    return make_error_code(cryptonote::error::WRONG_PASSWORD);
 
   //we don't let the user to change the password while saving
   m_password = newPassword;
@@ -562,7 +562,7 @@ void SingleWallet::synchronizationCallback(WalletRequest::Callback callback, std
 
 std::error_code SingleWallet::cancelTransaction(size_t transactionId)
 {
-  return make_error_code(CryptoNote::error::TX_CANCEL_IMPOSSIBLE);
+  return make_error_code(cryptonote::error::TX_CANCEL_IMPOSSIBLE);
 }
 
 void SingleWallet::synchronizationProgressUpdated(uint32_t current, uint32_t total)
@@ -639,7 +639,7 @@ void SingleWallet::throwIfNotInitialised()
 {
   if (m_state == NOT_INITIALIZED || m_state == LOADING)
   {
-    throw std::system_error(make_error_code(CryptoNote::error::NOT_INITIALIZED));
+    throw std::system_error(make_error_code(cryptonote::error::NOT_INITIALIZED));
   }
   assert(m_transferDetails);
 }
@@ -677,7 +677,7 @@ void SingleWallet::getAccountKeys(AccountKeys &keys)
 {
   if (m_state == NOT_INITIALIZED)
   {
-    throw std::system_error(make_error_code(CryptoNote::error::NOT_INITIALIZED));
+    throw std::system_error(make_error_code(cryptonote::error::NOT_INITIALIZED));
   }
 
   keys = m_account.getAccountKeys();

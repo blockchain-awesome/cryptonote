@@ -10,7 +10,7 @@
 #include "cryptonote_core/Difficulty.h"
 
 using namespace std;
-using CryptoNote::check_hash;
+using cryptonote::check_hash;
 
 int main(int argc, char *argv[]) {
   crypto::Hash h;

@@ -9,7 +9,7 @@
 #include <boost/uuid/uuid.hpp>
 #include "common/StringTools.h"
 
-namespace CryptoNote
+namespace cryptonote
 {
   typedef boost::uuids::uuid uuid;
   typedef boost::uuids::uuid net_connection_id;

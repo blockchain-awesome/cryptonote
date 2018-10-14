@@ -96,7 +96,7 @@ namespace Tests {
 
     class BaseFunctionalTests : boost::noncopyable {
     public:
-      BaseFunctionalTests(const CryptoNote::Currency& currency, System::Dispatcher& d, const BaseFunctionalTestsConfig& config) :
+      BaseFunctionalTests(const cryptonote::Currency& currency, System::Dispatcher& d, const BaseFunctionalTestsConfig& config) :
           m_dispatcher(d),
           m_currency(currency),
           m_nextTimestamp(time(nullptr) - 365 * 24 * 60 * 60),
@@ -126,7 +126,7 @@ namespace Tests {
 
       std::vector< std::unique_ptr<TestNode> > nodeDaemons;
       System::Dispatcher& m_dispatcher;
-      const CryptoNote::Currency& m_currency;
+      const cryptonote::Currency& m_currency;
 
       void launchTestnet(size_t count, Topology t = Line);
       void launchTestnetWithInprocNode(size_t count, Topology t = Line);
@@ -136,22 +136,22 @@ namespace Tests {
       void startNode(size_t index);
       void stopNode(size_t index);
 
-      bool makeWallet(std::unique_ptr<CryptoNote::IWalletLegacy> & wallet, std::unique_ptr<CryptoNote::INode>& node, const std::string& password = "pass");
-      bool mineBlocks(TestNode& node, const CryptoNote::AccountPublicAddress& address, size_t blockCount);
-      bool mineBlock(std::unique_ptr<CryptoNote::IWalletLegacy>& wallet);
+      bool makeWallet(std::unique_ptr<cryptonote::IWalletLegacy> & wallet, std::unique_ptr<cryptonote::INode>& node, const std::string& password = "pass");
+      bool mineBlocks(TestNode& node, const cryptonote::AccountPublicAddress& address, size_t blockCount);
+      bool mineBlock(std::unique_ptr<cryptonote::IWalletLegacy>& wallet);
       bool mineBlock();
       bool startMining(size_t threads);
       bool stopMining();
 
-      bool getNodeTransactionPool(size_t nodeIndex, CryptoNote::INode& node, std::vector<std::unique_ptr<CryptoNote::ITransactionReader>>& txPool);
+      bool getNodeTransactionPool(size_t nodeIndex, cryptonote::INode& node, std::vector<std::unique_ptr<cryptonote::ITransactionReader>>& txPool);
 
       bool waitDaemonsReady();
       bool waitDaemonReady(size_t nodeIndex);
-      bool waitForPeerCount(CryptoNote::INode& node, size_t expectedPeerCount);
-      bool waitForPoolSize(size_t nodeIndex, CryptoNote::INode& node, size_t expectedPoolSize,
-        std::vector<std::unique_ptr<CryptoNote::ITransactionReader>>& txPool);
+      bool waitForPeerCount(cryptonote::INode& node, size_t expectedPeerCount);
+      bool waitForPoolSize(size_t nodeIndex, cryptonote::INode& node, size_t expectedPoolSize,
+        std::vector<std::unique_ptr<cryptonote::ITransactionReader>>& txPool);
 
-      bool prepareAndSubmitBlock(TestNode& node, CryptoNote::Block&& blockTemplate);
+      bool prepareAndSubmitBlock(TestNode& node, cryptonote::Block&& blockTemplate);
 
     private:
 #ifdef __linux__
@@ -160,8 +160,8 @@ namespace Tests {
 
 
       Logging::ConsoleLogger logger;
-      std::unique_ptr<CryptoNote::INode> mainNode;
-      std::unique_ptr<CryptoNote::IWalletLegacy> workingWallet;
+      std::unique_ptr<cryptonote::INode> mainNode;
+      std::unique_ptr<cryptonote::IWalletLegacy> workingWallet;
       uint64_t m_nextTimestamp;
       Topology m_topology;
       size_t m_testnetSize;

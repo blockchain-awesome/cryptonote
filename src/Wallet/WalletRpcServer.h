@@ -19,16 +19,16 @@ namespace Tools
   /************************************************************************/
   /*                                                                      */
   /************************************************************************/
-  class wallet_rpc_server : CryptoNote::HttpServer
+  class wallet_rpc_server : cryptonote::HttpServer
   {
   public:
 
     wallet_rpc_server(
       System::Dispatcher& dispatcher, 
       Logging::ILogger& log,
-      CryptoNote::IWalletLegacy &w, 
-      CryptoNote::INode &n, 
-      CryptoNote::Currency& currency,
+      cryptonote::IWalletLegacy &w, 
+      cryptonote::INode &n, 
+      cryptonote::Currency& currency,
       const std::string& walletFilename);
 
 
@@ -43,7 +43,7 @@ namespace Tools
 
   private:
 
-    virtual void processRequest(const CryptoNote::HttpRequest& request, CryptoNote::HttpResponse& response) override;
+    virtual void processRequest(const cryptonote::HttpRequest& request, cryptonote::HttpResponse& response) override;
 
     //json_rpc
     bool on_getbalance(const wallet_rpc::COMMAND_RPC_GET_BALANCE::request& req, wallet_rpc::COMMAND_RPC_GET_BALANCE::response& res);
@@ -57,11 +57,11 @@ namespace Tools
     bool handle_command_line(const boost::program_options::variables_map& vm);
 
     Logging::LoggerRef logger;
-    CryptoNote::IWalletLegacy& m_wallet;
-    CryptoNote::INode& m_node;
+    cryptonote::IWalletLegacy& m_wallet;
+    cryptonote::INode& m_node;
     uint16_t m_port;
     std::string m_bind_ip;
-    CryptoNote::Currency& m_currency;
+    cryptonote::Currency& m_currency;
     const std::string m_walletFilename;
 
     System::Dispatcher& m_dispatcher;

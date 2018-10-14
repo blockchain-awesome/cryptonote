@@ -25,30 +25,30 @@ struct Login {
     std::string sendSecretKey;
     std::string address;
 
-    void serialize(CryptoNote::ISerializer& serializer);
+    void serialize(cryptonote::ISerializer& serializer);
   };
 
   struct Response {
     std::string token;
-    void serialize(CryptoNote::ISerializer& serializer);
+    void serialize(cryptonote::ISerializer& serializer);
   };
 };
 
 struct GetViewKey {
   struct Request {
-    void serialize(CryptoNote::ISerializer& serializer);
+    void serialize(cryptonote::ISerializer& serializer);
   };
 
   struct Response {
     std::string viewSecretKey;
 
-    void serialize(CryptoNote::ISerializer& serializer);
+    void serialize(cryptonote::ISerializer& serializer);
   };
 };
 
 struct GetStatus {
   struct Request {
-    void serialize(CryptoNote::ISerializer& serializer);
+    void serialize(cryptonote::ISerializer& serializer);
   };
 
   struct Response {
@@ -57,19 +57,19 @@ struct GetStatus {
     std::string lastBlockHash;
     uint32_t peerCount;
 
-    void serialize(CryptoNote::ISerializer& serializer);
+    void serialize(cryptonote::ISerializer& serializer);
   };
 };
 
 struct GetAddresses {
   struct Request {
-    void serialize(CryptoNote::ISerializer& serializer);
+    void serialize(cryptonote::ISerializer& serializer);
   };
 
   struct Response {
     std::vector<std::string> addresses;
 
-    void serialize(CryptoNote::ISerializer& serializer);
+    void serialize(cryptonote::ISerializer& serializer);
   };
 };
 
@@ -78,13 +78,13 @@ struct CreateAddress {
     std::string spendSecretKey;
     std::string spendPublicKey;
 
-    void serialize(CryptoNote::ISerializer& serializer);
+    void serialize(cryptonote::ISerializer& serializer);
   };
 
   struct Response {
     std::string address;
 
-    void serialize(CryptoNote::ISerializer& serializer);
+    void serialize(cryptonote::ISerializer& serializer);
   };
 };
 
@@ -92,11 +92,11 @@ struct DeleteAddress {
   struct Request {
     std::string address;
 
-    void serialize(CryptoNote::ISerializer& serializer);
+    void serialize(cryptonote::ISerializer& serializer);
   };
 
   struct Response {
-    void serialize(CryptoNote::ISerializer& serializer);
+    void serialize(cryptonote::ISerializer& serializer);
   };
 };
 
@@ -104,28 +104,28 @@ struct GetSpendKeys {
   struct Request {
     std::string address;
 
-    void serialize(CryptoNote::ISerializer& serializer);
+    void serialize(cryptonote::ISerializer& serializer);
   };
 
   struct Response {
     std::string spendSecretKey;
     std::string spendPublicKey;
 
-    void serialize(CryptoNote::ISerializer& serializer);
+    void serialize(cryptonote::ISerializer& serializer);
   };
 };
 
 struct GetBalance {
   struct Request {
     std::string token;
-    void serialize(CryptoNote::ISerializer& serializer);
+    void serialize(cryptonote::ISerializer& serializer);
   };
 
   struct Response {
     uint64_t availableBalance;
     uint64_t lockedAmount;
 
-    void serialize(CryptoNote::ISerializer& serializer);
+    void serialize(cryptonote::ISerializer& serializer);
   };
 };
 
@@ -134,13 +134,13 @@ struct GetBlockHashes {
     uint32_t firstBlockIndex;
     uint32_t blockCount;
 
-    void serialize(CryptoNote::ISerializer& serializer);
+    void serialize(cryptonote::ISerializer& serializer);
   };
 
   struct Response {
     std::vector<std::string> blockHashes;
 
-    void serialize(CryptoNote::ISerializer& serializer);
+    void serialize(cryptonote::ISerializer& serializer);
   };
 };
 
@@ -148,7 +148,7 @@ struct TransactionHashesInBlockRpcInfo {
   std::string blockHash;
   std::vector<std::string> transactionHashes;
 
-  void serialize(CryptoNote::ISerializer& serializer);
+  void serialize(cryptonote::ISerializer& serializer);
 };
 
 struct GetTransactionHashes {
@@ -159,13 +159,13 @@ struct GetTransactionHashes {
     uint32_t blockCount;
     std::string paymentId;
 
-    void serialize(CryptoNote::ISerializer& serializer);
+    void serialize(cryptonote::ISerializer& serializer);
   };
 
   struct Response {
     std::vector<TransactionHashesInBlockRpcInfo> items;
 
-    void serialize(CryptoNote::ISerializer& serializer);
+    void serialize(cryptonote::ISerializer& serializer);
   };
 };
 
@@ -174,7 +174,7 @@ struct TransferRpcInfo {
   std::string address;
   int64_t amount;
 
-  void serialize(CryptoNote::ISerializer& serializer);
+  void serialize(cryptonote::ISerializer& serializer);
 };
 
 struct TransactionRpcInfo {
@@ -190,20 +190,20 @@ struct TransactionRpcInfo {
   std::string extra;
   std::string paymentId;
 
-  void serialize(CryptoNote::ISerializer& serializer);
+  void serialize(cryptonote::ISerializer& serializer);
 };
 
 struct GetTransaction {
   struct Request {
     std::string transactionHash;
 
-    void serialize(CryptoNote::ISerializer& serializer);
+    void serialize(cryptonote::ISerializer& serializer);
   };
 
   struct Response {
     TransactionRpcInfo transaction;
 
-    void serialize(CryptoNote::ISerializer& serializer);
+    void serialize(cryptonote::ISerializer& serializer);
   };
 };
 
@@ -211,7 +211,7 @@ struct TransactionsInBlockRpcInfo {
   std::string blockHash;
   std::vector<TransactionRpcInfo> transactions;
 
-  void serialize(CryptoNote::ISerializer& serializer);
+  void serialize(cryptonote::ISerializer& serializer);
 };
 
 struct GetTransactions {
@@ -222,13 +222,13 @@ struct GetTransactions {
     uint32_t blockCount;
     std::string paymentId;
 
-    void serialize(CryptoNote::ISerializer& serializer);
+    void serialize(cryptonote::ISerializer& serializer);
   };
 
   struct Response {
     std::vector<TransactionsInBlockRpcInfo> items;
 
-    void serialize(CryptoNote::ISerializer& serializer);
+    void serialize(cryptonote::ISerializer& serializer);
   };
 };
 
@@ -236,13 +236,13 @@ struct GetUnconfirmedTransactionHashes {
   struct Request {
     std::vector<std::string> addresses;
 
-    void serialize(CryptoNote::ISerializer& serializer);
+    void serialize(cryptonote::ISerializer& serializer);
   };
 
   struct Response {
     std::vector<std::string> transactionHashes;
 
-    void serialize(CryptoNote::ISerializer& serializer);
+    void serialize(cryptonote::ISerializer& serializer);
   };
 };
 
@@ -250,7 +250,7 @@ struct WalletRpcOrder {
   std::string address;
   uint64_t amount;
 
-  void serialize(CryptoNote::ISerializer& serializer);
+  void serialize(cryptonote::ISerializer& serializer);
 };
 
 struct SendTransaction {
@@ -264,13 +264,13 @@ struct SendTransaction {
     std::string paymentId;
     uint64_t unlockTime = 0;
 
-    void serialize(CryptoNote::ISerializer& serializer);
+    void serialize(cryptonote::ISerializer& serializer);
   };
 
   struct Response {
     std::string transactionHash;
 
-    void serialize(CryptoNote::ISerializer& serializer);
+    void serialize(cryptonote::ISerializer& serializer);
   };
 };
 
@@ -285,25 +285,25 @@ struct CreateDelayedTransaction {
     std::string paymentId;
     uint64_t unlockTime = 0;
 
-    void serialize(CryptoNote::ISerializer& serializer);
+    void serialize(cryptonote::ISerializer& serializer);
   };
 
   struct Response {
     std::string transactionHash;
 
-    void serialize(CryptoNote::ISerializer& serializer);
+    void serialize(cryptonote::ISerializer& serializer);
   };
 };
 
 struct GetDelayedTransactionHashes {
   struct Request {
-    void serialize(CryptoNote::ISerializer& serializer);
+    void serialize(cryptonote::ISerializer& serializer);
   };
 
   struct Response {
     std::vector<std::string> transactionHashes;
 
-    void serialize(CryptoNote::ISerializer& serializer);
+    void serialize(cryptonote::ISerializer& serializer);
   };
 };
 
@@ -311,11 +311,11 @@ struct DeleteDelayedTransaction {
   struct Request {
     std::string transactionHash;
 
-    void serialize(CryptoNote::ISerializer& serializer);
+    void serialize(cryptonote::ISerializer& serializer);
   };
 
   struct Response {
-    void serialize(CryptoNote::ISerializer& serializer);
+    void serialize(cryptonote::ISerializer& serializer);
   };
 };
 
@@ -323,11 +323,11 @@ struct SendDelayedTransaction {
   struct Request {
     std::string transactionHash;
 
-    void serialize(CryptoNote::ISerializer& serializer);
+    void serialize(cryptonote::ISerializer& serializer);
   };
 
   struct Response {
-    void serialize(CryptoNote::ISerializer& serializer);
+    void serialize(cryptonote::ISerializer& serializer);
   };
 };
 

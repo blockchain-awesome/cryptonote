@@ -18,7 +18,7 @@
 
 #include "../IntegrationTestLib/TestWalletLegacy.h"
 
-using namespace CryptoNote;
+using namespace cryptonote;
 using namespace crypto;
 using namespace Tests::Common;
 
@@ -194,7 +194,7 @@ public:
     m_sync(sync) {}
 
   void generateAccounts(size_t count) {
-    CryptoNote::AccountBase acc;
+    cryptonote::AccountBase acc;
 
     while (count--) {
       acc.generate();
@@ -292,13 +292,13 @@ TEST_F(TransfersTest, base) {
 
   launchTestnet(2);
 
-  std::unique_ptr<CryptoNote::INode> node1;
-  std::unique_ptr<CryptoNote::INode> node2;
+  std::unique_ptr<cryptonote::INode> node1;
+  std::unique_ptr<cryptonote::INode> node2;
 
   nodeDaemons[0]->makeINode(node1);
   nodeDaemons[1]->makeINode(node2);
 
-  CryptoNote::AccountBase dstAcc;
+  cryptonote::AccountBase dstAcc;
   dstAcc.generate();
 
   AccountKeys dstKeys = reinterpret_cast<const AccountKeys&>(dstAcc.getAccountKeys());
@@ -407,7 +407,7 @@ std::unique_ptr<ITransaction> createTransferToMultisignature(
 std::error_code submitTransaction(INode& node, ITransactionReader& tx) {
   auto data = tx.getTransactionData();
 
-  CryptoNote::Transaction outTx;
+  cryptonote::Transaction outTx;
   fromBinaryArray(outTx, data);
 
 
@@ -464,8 +464,8 @@ std::unique_ptr<ITransaction> createTransferFromMultisignature(
 
 TEST_F(MultisignatureTest, createMulitisignatureTransaction) {
 
-  std::unique_ptr<CryptoNote::INode> node1;
-  std::unique_ptr<CryptoNote::INode> node2;
+  std::unique_ptr<cryptonote::INode> node1;
+  std::unique_ptr<cryptonote::INode> node2;
 
   nodeDaemons[0]->makeINode(node1);
   nodeDaemons[1]->makeINode(node2);

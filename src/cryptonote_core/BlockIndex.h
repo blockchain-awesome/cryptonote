@@ -9,7 +9,7 @@
 #include "crypto/hash.h"
 #include <vector>
 
-namespace CryptoNote
+namespace cryptonote
 {
   class ISerializer;
 

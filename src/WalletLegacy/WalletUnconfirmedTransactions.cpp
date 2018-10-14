@@ -11,7 +11,7 @@
 
 using namespace crypto;
 
-namespace CryptoNote {
+namespace cryptonote {
 
 inline TransactionOutputId getOutputId(const TransactionOutputInformation& out) {
   return std::make_pair(out.transactionPublicKey, out.outputInTransaction);
@@ -140,4 +140,4 @@ std::vector<TransactionId> WalletUnconfirmedTransactions::deleteOutdatedTransact
   return deletedTransactions;
 }
 
-} /* namespace CryptoNote */
+} /* namespace cryptonote */

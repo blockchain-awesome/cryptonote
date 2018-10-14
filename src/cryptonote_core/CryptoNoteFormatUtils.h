@@ -16,7 +16,7 @@ namespace Logging {
 class ILogger;
 }
 
-namespace CryptoNote {
+namespace cryptonote {
 
 bool parseAndValidateTransactionFromBinaryArray(const BinaryArray& transactionBinaryArray, Transaction& transaction, crypto::Hash& transactionHash, crypto::Hash& transactionPrefixHash);
 

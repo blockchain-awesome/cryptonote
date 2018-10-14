@@ -281,20 +281,20 @@ BaseFunctionalTests::~BaseFunctionalTests() {
 }
 
 namespace {
-  class WaitForCoinBaseObserver : public CryptoNote::IWalletLegacyObserver {
+  class WaitForCoinBaseObserver : public cryptonote::IWalletLegacyObserver {
     Semaphore& m_gotReward;
-    CryptoNote::IWalletLegacy& m_wallet;
+    cryptonote::IWalletLegacy& m_wallet;
   public:
-    WaitForCoinBaseObserver(Semaphore& gotReward, CryptoNote::IWalletLegacy& wallet) : m_gotReward(gotReward), m_wallet(wallet) { }
-    virtual void externalTransactionCreated(CryptoNote::TransactionId transactionId) override {
-      CryptoNote::WalletLegacyTransaction trInfo;
+    WaitForCoinBaseObserver(Semaphore& gotReward, cryptonote::IWalletLegacy& wallet) : m_gotReward(gotReward), m_wallet(wallet) { }
+    virtual void externalTransactionCreated(cryptonote::TransactionId transactionId) override {
+      cryptonote::WalletLegacyTransaction trInfo;
       m_wallet.getTransaction(transactionId, trInfo);
       if (trInfo.isCoinbase) m_gotReward.notify();
     }
   };
 }
 
-bool BaseFunctionalTests::mineBlocks(TestNode& node, const CryptoNote::AccountPublicAddress& address, size_t blockCount) {
+bool BaseFunctionalTests::mineBlocks(TestNode& node, const cryptonote::AccountPublicAddress& address, size_t blockCount) {
   for (size_t i = 0; i < blockCount; ++i) {
     Block blockTemplate;
     uint64_t difficulty;
@@ -315,15 +315,15 @@ bool BaseFunctionalTests::mineBlocks(TestNode& node, const CryptoNote::AccountPu
   return true;
 }
 
-bool BaseFunctionalTests::prepareAndSubmitBlock(TestNode& node, CryptoNote::Block&& blockTemplate) {
+bool BaseFunctionalTests::prepareAndSubmitBlock(TestNode& node, cryptonote::Block&& blockTemplate) {
   blockTemplate.timestamp = m_nextTimestamp;
   m_nextTimestamp += 2 * m_currency.difficultyTarget();
 
-  BinaryArray blockBlob = CryptoNote::toBinaryArray(blockTemplate);
+  BinaryArray blockBlob = cryptonote::toBinaryArray(blockTemplate);
   return node.submitBlock(::Common::toHex(blockBlob.data(), blockBlob.size()));
 }
 
-bool BaseFunctionalTests::mineBlock(std::unique_ptr<CryptoNote::IWalletLegacy> &wallet) {
+bool BaseFunctionalTests::mineBlock(std::unique_ptr<cryptonote::IWalletLegacy> &wallet) {
   if (nodeDaemons.empty() || !wallet)
     return false;
   if (!nodeDaemons.front()->stopMining())
@@ -356,9 +356,9 @@ bool BaseFunctionalTests::stopMining() {
   return nodeDaemons.front()->stopMining();
 }
 
-bool BaseFunctionalTests::makeWallet(std::unique_ptr<CryptoNote::IWalletLegacy> & wallet, std::unique_ptr<CryptoNote::INode>& node, const std::string& password) {
+bool BaseFunctionalTests::makeWallet(std::unique_ptr<cryptonote::IWalletLegacy> & wallet, std::unique_ptr<cryptonote::INode>& node, const std::string& password) {
   if (!node) return false;
-  wallet = std::unique_ptr<CryptoNote::IWalletLegacy>(new CryptoNote::WalletLegacy(m_currency, *node));
+  wallet = std::unique_ptr<cryptonote::IWalletLegacy>(new cryptonote::WalletLegacy(m_currency, *node));
   wallet->initAndGenerate(password);
   return true;
 }
@@ -399,7 +399,7 @@ void BaseFunctionalTests::stopTestnet() {
 }
 
 namespace {
-  struct PeerCountWaiter : CryptoNote::INodeObserver {
+  struct PeerCountWaiter : cryptonote::INodeObserver {
     System::Dispatcher& m_dispatcher;
     System::Event m_event;
     System::Timer m_timer;
@@ -443,7 +443,7 @@ namespace {
   };
 }
 
-bool BaseFunctionalTests::waitForPeerCount(CryptoNote::INode& node, size_t expectedPeerCount) {
+bool BaseFunctionalTests::waitForPeerCount(cryptonote::INode& node, size_t expectedPeerCount) {
   PeerCountWaiter peerCountWaiter(m_dispatcher);
   node.addObserver(&peerCountWaiter);
   if (node.getPeerCount() != expectedPeerCount) {
@@ -472,8 +472,8 @@ namespace {
   };
 }
 
-bool BaseFunctionalTests::waitForPoolSize(size_t nodeIndex, CryptoNote::INode& node, size_t expectedPoolSize,
-  std::vector<std::unique_ptr<CryptoNote::ITransactionReader>>& txPool) {
+bool BaseFunctionalTests::waitForPoolSize(size_t nodeIndex, cryptonote::INode& node, size_t expectedPoolSize,
+  std::vector<std::unique_ptr<cryptonote::ITransactionReader>>& txPool) {
   System::Event event(m_dispatcher);
   PoolUpdateWaiter poolUpdateWaiter(m_dispatcher, event);
   node.addObserver(&poolUpdateWaiter);
@@ -509,8 +509,8 @@ bool BaseFunctionalTests::waitForPoolSize(size_t nodeIndex, CryptoNote::INode& n
   return ok;
 }
 
-bool BaseFunctionalTests::getNodeTransactionPool(size_t nodeIndex, CryptoNote::INode& node,
-  std::vector<std::unique_ptr<CryptoNote::ITransactionReader>>& txPool) {
+bool BaseFunctionalTests::getNodeTransactionPool(size_t nodeIndex, cryptonote::INode& node,
+  std::vector<std::unique_ptr<cryptonote::ITransactionReader>>& txPool) {
 
   assert(nodeIndex < nodeDaemons.size() && nodeDaemons[nodeIndex].get() != nullptr);
   auto& daemon = *nodeDaemons[nodeIndex];
