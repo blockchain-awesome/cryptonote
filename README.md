@@ -2,10 +2,7 @@
 ## VIG
 
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/16947/badge.svg)](https://scan.coverity.com/projects/vigcoin-coin)
-[![Build Status][travis-image]][travis-url]
-[![Coverage percentage][coveralls-image]][coveralls-url]
-
-
+[![codecov](https://codecov.io/gh/vigcoin/coin/branch/master/graph/badge.svg)](https://codecov.io/gh/vigcoin/coin)
 [![CircleCI](https://circleci.com/gh/vigcoin/coin.svg?style=svg)](https://circleci.com/gh/vigcoin/coin)
 
 Copyright (c) 2018- The VIG Project.  
