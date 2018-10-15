@@ -15,6 +15,10 @@
 #include "Serialization/BinarySerializationTools.h"
 #include "CryptoNoteTools.h"
 
+#include <cryptonote/core/blockchain/defines.h>
+#include "cryptonote/core/blockchain/serializer/block_cache.hpp"
+#include "cryptonote/core/blockchain/serializer/blockchain_indices.hpp"
+
 using namespace Logging;
 using namespace Common;
 
@@ -40,14 +44,6 @@ bool operator<(const crypto::Hash& hash1, const crypto::Hash& hash2) {
 bool operator<(const crypto::KeyImage& keyImage1, const crypto::KeyImage& keyImage2) {
   return memcmp(&keyImage1, &keyImage2, 32) < 0;
 }
-}
-
-#define CURRENT_BLOCKCACHE_STORAGE_ARCHIVE_VER 1
-#define CURRENT_BLOCKCHAININDICES_STORAGE_ARCHIVE_VER 1
-
-namespace cryptonote {
-class BlockCacheSerializer;
-class BlockchainIndicesSerializer;
 }
 
 namespace cryptonote {
@@ -110,194 +106,7 @@ void serialize(Blockchain::TransactionIndex& value, ISerializer& s) {
   s(value.transaction, "tx");
 }
 
-class BlockCacheSerializer {
 
-public:
-  BlockCacheSerializer(Blockchain& bs, const crypto::Hash lastBlockHash, ILogger& logger) :
-    m_bs(bs), m_lastBlockHash(lastBlockHash), m_loaded(false), logger(logger, "BlockCacheSerializer") {
-  }
-
-  void load(const std::string& filename) {
-    try {
-      std::ifstream stdStream(filename, std::ios::binary);
-      if (!stdStream) {
-        return;
-      }
-
-      StdInputStream stream(stdStream);
-      BinaryInputStreamSerializer s(stream);
-      cryptonote::serialize(*this, s);
-    } catch (std::exception& e) {
-      logger(WARNING) << "loading failed: " << e.what();
-    }
-  }
-
-  bool save(const std::string& filename) {
-    try {
-      std::ofstream file(filename, std::ios::binary);
-      if (!file) {
-        return false;
-      }
-
-      StdOutputStream stream(file);
-      BinaryOutputStreamSerializer s(stream);
-      cryptonote::serialize(*this, s);
-    } catch (std::exception&) {
-      return false;
-    }
-
-    return true;
-  }
-
-  void serialize(ISerializer& s) {
-    auto start = std::chrono::steady_clock::now();
-
-    uint8_t version = CURRENT_BLOCKCACHE_STORAGE_ARCHIVE_VER;
-    s(version, "version");
-
-    // ignore old versions, do rebuild
-    if (version < CURRENT_BLOCKCACHE_STORAGE_ARCHIVE_VER)
-      return;
-
-    std::string operation;
-    if (s.type() == ISerializer::INPUT) {
-      operation = "- loading ";
-      crypto::Hash blockHash;
-      s(blockHash, "last_block");
-
-      if (blockHash != m_lastBlockHash) {
-        return;
-      }
-
-    } else {
-      operation = "- saving ";
-      s(m_lastBlockHash, "last_block");
-    }
-
-    logger(INFO) << operation << "block index...";
-    s(m_bs.m_blockIndex, "block_index");
-
-    logger(INFO) << operation << "transaction map...";
-    s(m_bs.m_transactionMap, "transactions");
-
-    logger(INFO) << operation << "spent keys...";
-    s(m_bs.m_spent_keys, "spent_keys");
-
-    logger(INFO) << operation << "outputs...";
-    s(m_bs.m_outputs, "outputs");
-
-    logger(INFO) << operation << "multi-signature outputs...";
-    s(m_bs.m_multisignatureOutputs, "multisig_outputs");
-
-    auto dur = std::chrono::steady_clock::now() - start;
-
-    logger(INFO) << "Serialization time: " << std::chrono::duration_cast<std::chrono::milliseconds>(dur).count() << "ms";
-
-    m_loaded = true;
-  }
-
-  bool loaded() const {
-    return m_loaded;
-  }
-
-private:
-
-  LoggerRef logger;
-  bool m_loaded;
-  Blockchain& m_bs;
-  crypto::Hash m_lastBlockHash;
-};
-
-class BlockchainIndicesSerializer {
-
-public:
-  BlockchainIndicesSerializer(Blockchain& bs, const crypto::Hash lastBlockHash, ILogger& logger) :
-    m_bs(bs), m_lastBlockHash(lastBlockHash), m_loaded(false), logger(logger, "BlockchainIndicesSerializer") {
-  }
-
-  void serialize(ISerializer& s) {
-
-    uint8_t version = CURRENT_BLOCKCHAININDICES_STORAGE_ARCHIVE_VER;
-
-    KV_MEMBER(version);
-
-    // ignore old versions, do rebuild
-    if (version != CURRENT_BLOCKCHAININDICES_STORAGE_ARCHIVE_VER)
-      return;
-
-    std::string operation;
-
-    if (s.type() == ISerializer::INPUT) {
-      operation = "- loading ";
-
-      crypto::Hash blockHash;
-      s(blockHash, "blockHash");
-
-      if (blockHash != m_lastBlockHash) {
-        return;
-      }
-
-    } else {
-      operation = "- saving ";
-      s(m_lastBlockHash, "blockHash");
-    }
-
-    logger(INFO) << operation << "paymentID index...";
-    s(m_bs.m_paymentIdIndex, "paymentIdIndex");
-
-    logger(INFO) << operation << "timestamp index...";
-    s(m_bs.m_timestampIndex, "timestampIndex");
-
-    logger(INFO) << operation << "generated transactions index...";
-    s(m_bs.m_generatedTransactionsIndex, "generatedTransactionsIndex");
-
-    m_loaded = true;
-  }
-
-  template<class Archive> void serialize(Archive& ar, unsigned int version) {
-
-    // ignore old versions, do rebuild
-    if (version < CURRENT_BLOCKCHAININDICES_STORAGE_ARCHIVE_VER)
-      return;
-
-    std::string operation;
-    if (Archive::is_loading::value) {
-      operation = "- loading ";
-      crypto::Hash blockHash;
-      ar & blockHash;
-
-      if (blockHash != m_lastBlockHash) {
-        return;
-      }
-
-    } else {
-      operation = "- saving ";
-      ar & m_lastBlockHash;
-    }
-
-    logger(INFO) << operation << "paymentID index...";
-    ar & m_bs.m_paymentIdIndex;
-
-    logger(INFO) << operation << "timestamp index...";
-    ar & m_bs.m_timestampIndex;
-
-    logger(INFO) << operation << "generated transactions index...";
-    ar & m_bs.m_generatedTransactionsIndex;
-
-    m_loaded = true;
-  }
-
-  bool loaded() const {
-    return m_loaded;
-  }
-
-private:
-
-  LoggerRef logger;
-  bool m_loaded;
-  Blockchain& m_bs;
-  crypto::Hash m_lastBlockHash;
-};
 
 
 Blockchain::Blockchain(const Currency& currency, tx_memory_pool& tx_pool, ILogger& logger) :
