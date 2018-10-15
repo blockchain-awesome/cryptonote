@@ -7,7 +7,7 @@ jobs:
       - checkout
       - run:
           name: Get building tools
-          command: apt update && apt install -y build-essential cmake libboost-all-dev libssl-dev python-pip python-dev lcov
+          command: apt update && apt install -y build-essential cmake libboost-all-dev libssl-dev libsodium-dev python-pip python-dev lcov
       - run:
           name: Building project
           command: mkdir -p build && cd build && cmake .. -DCMAKE_BUILD_TYPE=Debug -DENABLE_GCOV=1 && make
