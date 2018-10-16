@@ -45,46 +45,29 @@ VIG COIN是一个开源，社区化的项目。非常欢迎各类开源贡献者
 
 目前基于cryptonight，但是基于去中心化，反对ASIC的考虑，未来算法会不断的修改。
 
-## 编译
+## Compiling
 
-推荐 Ubuntu 16.04 平台
+Currently only Ubuntu 16.04 is officially supported.
 
-### On *nix
+1. Package installation
 
-Dependencies: GCC 4.7.3 or later, CMake 2.8.6 or later, and Boost 1.55.
-
-You may download them from:
-
-* http://gcc.gnu.org/
-* http://www.cmake.org/
-* http://www.boost.org/
-* Alternatively, it may be possible to install them using a package manager.
-
-To build, change to a directory where this file is located, and run `make`. The resulting executables can be found in `build/release/src`.
-
-**Advanced options:**
-
-* Parallel build: run `make -j<number of threads>` instead of `make`.
-* Debug build: run `make build-debug`.
-* Test suite: run `make test-release` to run tests in addition to building. Running `make test-debug` will do the same to the debug version.
-* Building with Clang: it may be possible to use Clang instead of GCC, but this may not work everywhere. To build, run `export CC=clang CXX=clang++` before running `make`.
-
-### On Windows
-Dependencies: MSVC 2013 or later, CMake 2.8.6 or later, and Boost 1.55. You may download them from:
-
-* http://www.microsoft.com/
-* http://www.cmake.org/
-* http://www.boost.org/
-
-To build, change to a directory where this file is located, and run theas commands: 
 ```
-mkdir build
-cd build
-cmake -G "Visual Studio 12 Win64" ..
+sudo apt update && sudo apt install -y build-essential cmake libboost-all-dev libssl-dev libsodium-dev python-pip python-dev lcov
+```
+2. Building
+
+```
+git clone https://github.com/vigcoin/coin.git
+cd coin
+mkdir -p build
+cmake ..
+make
 ```
 
-And then do Build.
-Good luck!
+3. testing
+```
+./build-debug.sh
+```
 
 ## License
 
