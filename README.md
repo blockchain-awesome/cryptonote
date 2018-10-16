@@ -25,11 +25,13 @@ VIG Coin is a coin based on the cryptonote cryptocurrency protocol.
 It's goal is to implement a coin with:
 
 1. Fast exchanging speed
-2. Anti-ASIC awareness.
+2. Anti-ASIC awareness
 3. Decentralized exchange support
 4. A light wallet api
 5. Node with one Docker command
 6. Offlinable Web based decentralized wallet
+7. Decentralized exchanger
+8. Anything that makes a coin better
 
 
 ## 参与
