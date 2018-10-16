@@ -17,10 +17,9 @@ jobs:
       - run:
           name: Generating Coverage info
           command: cd build && lcov --capture --directory src --output-file coverage.info && lcov --list coverage.info
+    #   - run:
+    #       name: Uploading Coverage info
+    #       command: cd build && bash <(curl -s https://codecov.io/bash) -t 2a2cf36f-81d6-43b9-abba-d5955cb0cafe        
       - run:
-          name: Uploading Coverage info
-          command: cd build && bash <(curl -s https://codecov.io/bash) -t 2a2cf36f-81d6-43b9-abba-d5955cb0cafe
-                    
-      # - run:
-      #     name: Sending coverall info
-      #     command: pip install codecov && cd build && codecov --token 2a2cf36f-81d6-43b9-abba-d5955cb0cafe --root src
+          name: Sending coverall info
+          command: pip install codecov && cd build && codecov --token 2a2cf36f-81d6-43b9-abba-d5955cb0cafe --root src
