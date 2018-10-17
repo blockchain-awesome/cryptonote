@@ -1,11 +1,12 @@
 
-## VIG - Building a decentralized, easy to use, high available coin for everyone
+# VIG Project
+
+## Building a decentralized, easy to use, high available coin for everyone
 
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/16947/badge.svg)](https://scan.coverity.com/projects/vigcoin-coin)
 [![codecov](https://codecov.io/gh/vigcoin/coin/branch/master/graph/badge.svg)](https://codecov.io/gh/vigcoin/coin)
 [![CircleCI](https://circleci.com/gh/vigcoin/coin.svg?style=svg)](https://circleci.com/gh/vigcoin/coin)
 [![LICENSE](https://img.shields.io/badge/license-mit-blue.svg?longCache=true)](https://opensource.org/licenses/MIT)
-
 
 [![Gitter Chat](https://img.shields.io/gitter/room/badges/shields.svg?logo=gitter)](https://gitter.im/vigcoin/development)
 [![Discord](https://img.shields.io/badge/discord-join%20chat-blue.svg?logo=discord)](https://discord.gg/dWWDFKb)
