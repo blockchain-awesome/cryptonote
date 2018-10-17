@@ -24,12 +24,11 @@ It's goal is to implement a coin with:
 
 1. Fast exchanging speed
 2. Anti-ASIC awareness
-3. Decentralized exchange support
-4. A light wallet api
-5. Node with one Docker command
-6. Offlinable Web based decentralized wallet
-7. Decentralized exchanger
-8. Anything that makes a coin better for everyone
+3. A light wallet api
+4. Node with one Docker command
+5. Offlinable Web based decentralized wallet
+6. Decentralized exchanger
+7. Anything that makes a coin better for everyone
 
 
 ## 参与
@@ -65,7 +64,8 @@ make
 
 ## License
 
-MIT
+GPL V3(VIG Code)
+MIT(Origin/Monero Code)
 
 [travis-image]: https://travis-ci.org/vigcoin/coin.svg?branch=master
 [travis-url]: https://travis-ci.org/vigcoin/coin
