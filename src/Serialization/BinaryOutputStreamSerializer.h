@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "common/IOutputStream.h"
+#include "stream/IOutputStream.h"
 #include "ISerializer.h"
 #include "SerializationOverloads.h"
 

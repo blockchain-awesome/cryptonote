@@ -19,8 +19,8 @@
 
 #include "common/ScopeExit.h"
 #include "common/ShuffleGenerator.h"
-#include "common/StdInputStream.h"
-#include "common/StdOutputStream.h"
+#include "stream/StdInputStream.h"
+#include "stream/StdOutputStream.h"
 #include "common/StringTools.h"
 #include "cryptonote/core/Account.h"
 #include "cryptonote/core/Currency.h"

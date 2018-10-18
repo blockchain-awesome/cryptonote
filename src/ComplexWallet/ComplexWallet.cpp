@@ -33,7 +33,7 @@
 #include "Wallet/WalletRpcServer.h"
 #include "Wallet/LegacyKeysImporter.h"
 #include "WalletLegacy/WalletHelper.h"
-#include "common/StdOutputStream.h"
+#include "stream/StdOutputStream.h"
 
 #include "version.h"
 

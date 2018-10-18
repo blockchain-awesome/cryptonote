@@ -5,8 +5,8 @@
 #pragma once
 
 #include "cryptonote.h"
-#include <common/MemoryInputStream.h>
-#include <common/VectorOutputStream.h>
+#include <stream/MemoryInputStream.h>
+#include <stream/VectorOutputStream.h>
 #include "Serialization/KVBinaryInputStreamSerializer.h"
 #include "Serialization/KVBinaryOutputStreamSerializer.h"
 

@@ -9,8 +9,8 @@
 #include <boost/foreach.hpp>
 #include "common/Math.h"
 #include "common/ShuffleGenerator.h"
-#include "common/StdInputStream.h"
-#include "common/StdOutputStream.h"
+#include "stream/StdInputStream.h"
+#include "stream/StdOutputStream.h"
 #include "Rpc/CoreRpcServerCommandsDefinitions.h"
 #include "Serialization/BinarySerializationTools.h"
 #include "CryptoNoteTools.h"

@@ -14,8 +14,8 @@
 #include <string>
 #include <vector>
 
-#include "common/StdInputStream.h"
-#include "common/StdOutputStream.h"
+#include "stream/StdInputStream.h"
+#include "stream/StdOutputStream.h"
 #include "Serialization/BinaryInputStreamSerializer.h"
 #include "Serialization/BinaryOutputStreamSerializer.h"
 

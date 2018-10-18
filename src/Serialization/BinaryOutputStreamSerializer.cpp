@@ -6,7 +6,7 @@
 
 #include <cassert>
 #include <stdexcept>
-#include "common/StreamTools.h"
+#include "stream/StreamTools.h"
 
 using namespace Common;
 

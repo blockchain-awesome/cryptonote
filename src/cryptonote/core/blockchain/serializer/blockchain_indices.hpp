@@ -3,9 +3,9 @@
 #include "crypto/hash.h"
 #include <Logging/LoggerRef.h>
 #include <Logging/ILogger.h>
-#include <common/StdInputStream.h>
+#include <stream/StdInputStream.h>
 #include <Serialization/BinaryInputStreamSerializer.h>
-#include <common/StdOutputStream.h>
+#include <stream/StdOutputStream.h>
 #include <Serialization/BinaryOutputStreamSerializer.h>
 #include <fstream>
 #include <chrono>

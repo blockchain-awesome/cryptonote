@@ -25,8 +25,8 @@
 #include <System/TcpConnector.h>
  
 #include "version.h"
-#include "common/StdInputStream.h"
-#include "common/StdOutputStream.h"
+#include "stream/StdInputStream.h"
+#include "stream/StdOutputStream.h"
 #include "common/Util.h"
 #include "crypto/crypto.h"
 

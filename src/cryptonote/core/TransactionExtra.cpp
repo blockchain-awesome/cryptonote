@@ -4,8 +4,8 @@
 
 #include "TransactionExtra.h"
 
-#include "common/MemoryInputStream.h"
-#include "common/StreamTools.h"
+#include "stream/MemoryInputStream.h"
+#include "stream/StreamTools.h"
 #include "common/StringTools.h"
 #include "CryptoNoteTools.h"
 #include "Serialization/BinaryOutputStreamSerializer.h"

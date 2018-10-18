@@ -5,7 +5,7 @@
 #pragma once
 
 #include <vector>
-#include <common/IOutputStream.h>
+#include <stream/IOutputStream.h>
 #include "ISerializer.h"
 #include "MemoryStream.h"
 
