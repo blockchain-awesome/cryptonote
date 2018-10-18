@@ -14,7 +14,7 @@
 
 #include "WalletInterface.h"
 
-#include "CryptoNote.h"
+#include "cryptonote.h"
 
 namespace MultiWalletService
 {

@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "CryptoNote.h"
+#include "cryptonote.h"
 #include "P2pProtocolTypes.h"
 
 namespace cryptonote {

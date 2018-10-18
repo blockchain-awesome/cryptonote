@@ -9,7 +9,7 @@
 #include <ostream>
 #include <string>
 #include <system_error>
-#include "CryptoNote.h"
+#include "cryptonote.h"
 
 namespace cryptonote {
 

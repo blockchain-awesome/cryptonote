@@ -14,7 +14,7 @@
 #include "WalletLegacy/WalletHelper.h"
 #include "cryptonote/core/Account.h"
 #include "cryptonote/core/Currency.h"
-#include "CryptoNote.h"
+#include "cryptonote.h"
 
 #include "INodeStubs.h"
 #include "TestBlockchainGenerator.h"

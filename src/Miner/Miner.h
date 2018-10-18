@@ -11,7 +11,7 @@
 #include <System/Event.h>
 #include <System/RemoteContext.h>
 
-#include "CryptoNote.h"
+#include "cryptonote.h"
 #include "cryptonote/core/Difficulty.h"
 
 #include "Logging/LoggerRef.h"

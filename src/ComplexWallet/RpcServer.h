@@ -12,7 +12,7 @@
 #include "Serialization/JsonInputValueSerializer.h"
 #include "Serialization/JsonOutputStreamSerializer.h"
 
-#include "CryptoNote.h"
+#include "cryptonote.h"
 #include "WalletManager.h"
 
 namespace ComplexWallet

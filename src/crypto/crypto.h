@@ -10,7 +10,7 @@
 #include <type_traits>
 #include <vector>
 
-#include <CryptoTypes.h>
+#include <crypto.h>
 
 #include "generic-ops.h"
 #include "hash.h"

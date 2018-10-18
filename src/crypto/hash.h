@@ -6,7 +6,7 @@
 
 #include <stddef.h>
 
-#include <CryptoTypes.h>
+#include <crypto.h>
 #include "generic-ops.h"
 
 namespace crypto {

@@ -6,7 +6,7 @@
 
 #include <vector>
 
-#include <CryptoNote.h>
+#include <cryptonote.h>
 
 namespace cryptonote {
 

@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "CryptoTypes.h"
+#include "crypto.h"
 
 #include <System/ContextGroup.h>
 #include <System/Dispatcher.h>

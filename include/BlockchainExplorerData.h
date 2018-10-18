@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-#include "CryptoTypes.h"
+#include "crypto.h"
 
 #include <boost/variant.hpp>
 

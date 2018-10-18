@@ -65,6 +65,7 @@ make
 ## License
 
 GPL V3(VIG Code)
+
 MIT(Origin/Monero Code)
 
 [travis-image]: https://travis-ci.org/vigcoin/coin.svg?branch=master
