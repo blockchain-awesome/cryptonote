@@ -18,7 +18,7 @@
 #include "common/PathTools.h"
 #include "common/Util.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
-#include "cryptonote/protocol/CryptoNoteProtocolHandler.h"
+#include "cryptonote/protocol/handler.h"
 #include "NodeRpcProxy/NodeRpcProxy.h"
 #include "Rpc/CoreRpcServerCommandsDefinitions.h"
 #include "Rpc/HttpClient.h"

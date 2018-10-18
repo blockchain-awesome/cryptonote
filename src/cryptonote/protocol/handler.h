@@ -10,10 +10,10 @@
 
 #include "cryptonote/core/ICore.h"
 
-#include "cryptonote/protocol/CryptoNoteProtocolDefinitions.h"
-#include "cryptonote/protocol/CryptoNoteProtocolHandlerCommon.h"
-#include "cryptonote/protocol/ICryptoNoteProtocolObserver.h"
-#include "cryptonote/protocol/ICryptoNoteProtocolQuery.h"
+#include "cryptonote/protocol/definitions.h"
+#include "cryptonote/protocol/handler_common.h"
+#include "cryptonote/protocol/i_observer.h"
+#include "cryptonote/protocol/i_query.h"
 
 #include "P2p/P2pProtocolDefinitions.h"
 #include "P2p/NetNodeCommon.h"

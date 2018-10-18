@@ -7,7 +7,7 @@
 #include <vector>
 #include <array>
 
-#include "cryptonote/protocol/ICryptoNoteProtocolQuery.h"
+#include "cryptonote/protocol/i_query.h"
 #include "cryptonote/core/ICore.h"
 #include "BlockchainExplorerData.h"
 

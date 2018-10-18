@@ -13,7 +13,7 @@
 
 #include "cryptonote/core/CoreConfig.h"
 #include "cryptonote/core/Core.h"
-#include "cryptonote/protocol/CryptoNoteProtocolHandler.h"
+#include "cryptonote/protocol/handler.h"
 #include "P2p/NetNode.h"
 #include "PaymentGate/WalletFactory.h"
 #include <System/Context.h>

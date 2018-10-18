@@ -11,7 +11,7 @@
 #include "../common/Util.h"
 #include "../common/StringTools.h"
 #include "../crypto/crypto.h"
-#include "../cryptonote/protocol/CryptoNoteProtocolDefinitions.h"
+#include "../cryptonote/protocol/definitions.h"
 #include "../Logging/LoggerRef.h"
 #include "../Rpc/CoreRpcServerCommandsDefinitions.h"
 #include "CryptoNoteFormatUtils.h"

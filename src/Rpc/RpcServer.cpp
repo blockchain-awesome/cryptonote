@@ -15,7 +15,7 @@
 #include "cryptonote/core/Miner.h"
 #include "cryptonote/core/TransactionExtra.h"
 
-#include "cryptonote/protocol/ICryptoNoteProtocolQuery.h"
+#include "cryptonote/protocol/i_query.h"
 
 #include "P2p/NetNode.h"
 

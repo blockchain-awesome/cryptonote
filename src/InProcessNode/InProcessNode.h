@@ -6,8 +6,8 @@
 
 #include "INode.h"
 #include "ITransaction.h"
-#include "cryptonote/protocol/ICryptoNoteProtocolQuery.h"
-#include "cryptonote/protocol/ICryptoNoteProtocolObserver.h"
+#include "cryptonote/protocol/i_query.h"
+#include "cryptonote/protocol/i_observer.h"
 #include "cryptonote/core/ICore.h"
 #include "cryptonote/core/ICoreObserver.h"
 #include "common/ObserverManager.h"

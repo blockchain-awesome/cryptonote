@@ -13,7 +13,7 @@
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/core/IBlock.h"
 #include "cryptonote/core/VerificationContext.h"
-#include "cryptonote/protocol/CryptoNoteProtocolHandlerCommon.h"
+#include "cryptonote/protocol/handler_common.h"
 #include "InProcessNodeErrors.h"
 #include "common/StringTools.h"
 

@@ -15,7 +15,7 @@
 namespace cryptonote
 {
 
-#define BC_COMMANDS_POOL_BASE 2000
+#define CN_COMMANDS_POOL_BASE 2000
 
   /************************************************************************/
   /*                                                                      */
@@ -83,7 +83,7 @@ namespace cryptonote
 
   struct NOTIFY_NEW_BLOCK
   {
-    const static int ID = BC_COMMANDS_POOL_BASE + 1;
+    const static int ID = CN_COMMANDS_POOL_BASE + 1;
     typedef NOTIFY_NEW_BLOCK_request request;
   };
 
@@ -102,7 +102,7 @@ namespace cryptonote
 
   struct NOTIFY_NEW_TRANSACTIONS
   {
-    const static int ID = BC_COMMANDS_POOL_BASE + 2;
+    const static int ID = CN_COMMANDS_POOL_BASE + 2;
     typedef NOTIFY_NEW_TRANSACTIONS_request request;
   };
 
@@ -122,7 +122,7 @@ namespace cryptonote
 
   struct NOTIFY_REQUEST_GET_OBJECTS
   {
-    const static int ID = BC_COMMANDS_POOL_BASE + 3;
+    const static int ID = CN_COMMANDS_POOL_BASE + 3;
     typedef NOTIFY_REQUEST_GET_OBJECTS_request request;
   };
 
@@ -144,13 +144,13 @@ namespace cryptonote
 
   struct NOTIFY_RESPONSE_GET_OBJECTS
   {
-    const static int ID = BC_COMMANDS_POOL_BASE + 4;
+    const static int ID = CN_COMMANDS_POOL_BASE + 4;
     typedef NOTIFY_RESPONSE_GET_OBJECTS_request request;
   };
 
   struct NOTIFY_REQUEST_CHAIN
   {
-    const static int ID = BC_COMMANDS_POOL_BASE + 6;
+    const static int ID = CN_COMMANDS_POOL_BASE + 6;
 
     struct request
     {
@@ -177,7 +177,7 @@ namespace cryptonote
 
   struct NOTIFY_RESPONSE_CHAIN_ENTRY
   {
-    const static int ID = BC_COMMANDS_POOL_BASE + 7;
+    const static int ID = CN_COMMANDS_POOL_BASE + 7;
     typedef NOTIFY_RESPONSE_CHAIN_ENTRY_request request;
   };
 
@@ -193,7 +193,7 @@ namespace cryptonote
   };
 
   struct NOTIFY_REQUEST_TX_POOL {
-    const static int ID = BC_COMMANDS_POOL_BASE + 8;
+    const static int ID = CN_COMMANDS_POOL_BASE + 8;
     typedef NOTIFY_REQUEST_TX_POOL_request request;
   };
 }

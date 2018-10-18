@@ -17,7 +17,7 @@
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/core/Currency.h"
 #include "cryptonote/core/MinerConfig.h"
-#include "cryptonote/protocol/CryptoNoteProtocolHandler.h"
+#include "cryptonote/protocol/handler.h"
 #include "P2p/NetNode.h"
 #include "P2p/NetNodeConfig.h"
 #include "Rpc/RpcServer.h"

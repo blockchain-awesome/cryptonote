@@ -8,7 +8,7 @@
 #include <boost/program_options/variables_map.hpp>
 
 #include "P2p/NetNodeCommon.h"
-#include "cryptonote/protocol/CryptoNoteProtocolHandlerCommon.h"
+#include "cryptonote/protocol/handler_common.h"
 #include "Currency.h"
 #include "TransactionPool.h"
 #include "Blockchain.h"
