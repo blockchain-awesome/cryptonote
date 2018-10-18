@@ -6,8 +6,8 @@
 
 #include <memory>
 
-#include <HTTP/HttpRequest.h>
-#include <HTTP/HttpResponse.h>
+#include <http/HttpRequest.h>
+#include <http/HttpResponse.h>
 #include <System/TcpConnection.h>
 #include <System/TcpStream.h>
 

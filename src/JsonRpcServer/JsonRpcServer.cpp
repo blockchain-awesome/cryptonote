@@ -9,14 +9,14 @@
 #include <system_error>
 #include <memory>
 #include <sstream>
-#include "HTTP/HttpParserErrorCodes.h"
+#include "http/HttpParserErrorCodes.h"
 
 #include <System/TcpConnection.h>
 #include <System/TcpListener.h>
 #include <System/TcpStream.h>
 #include <System/Ipv4Address.h>
-#include "HTTP/HttpParser.h"
-#include "HTTP/HttpResponse.h"
+#include "http/HttpParser.h"
+#include "http/HttpResponse.h"
 
 #include "common/JsonValue.h"
 #include "Serialization/JsonInputValueSerializer.h"
