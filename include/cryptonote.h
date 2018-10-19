@@ -10,9 +10,4 @@
 #include "cryptonote/structures/transaction.h"
 #include "cryptonote/structures/account.h"
 #include "cryptonote/structures/block.h"
-
-namespace cryptonote {
-
-using BinaryArray = std::vector<uint8_t>;
-
-}
+#include "cryptonote/structures/array.h"

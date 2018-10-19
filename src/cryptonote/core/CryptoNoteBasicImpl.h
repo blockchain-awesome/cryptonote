@@ -8,6 +8,7 @@
 #include "crypto/crypto.h"
 #include "crypto/hash.h"
 #include "cryptonote/core/key.h"
+#include "cryptonote/core/serialize.h"
 
 
 namespace cryptonote {
@@ -33,20 +34,4 @@ namespace cryptonote {
 
   bool operator ==(const cryptonote::Transaction& a, const cryptonote::Transaction& b);
   bool operator ==(const cryptonote::Block& a, const cryptonote::Block& b);
-}
-
-template <class T>
-std::ostream &print256(std::ostream &o, const T &v) {
-  return o << "<" << Common::podToHex(v) << ">";
-}
-
-bool parse_hash256(const std::string& str_hash, crypto::Hash& hash);
-
-namespace crypto {
-  inline std::ostream &operator <<(std::ostream &o, const crypto::PublicKey &v) { return print256(o, v); }
-  inline std::ostream &operator <<(std::ostream &o, const crypto::SecretKey &v) { return print256(o, v); }
-  inline std::ostream &operator <<(std::ostream &o, const crypto::KeyDerivation &v) { return print256(o, v); }
-  inline std::ostream &operator <<(std::ostream &o, const crypto::KeyImage &v) { return print256(o, v); }
-  inline std::ostream &operator <<(std::ostream &o, const crypto::Signature &v) { return print256(o, v); }
-  inline std::ostream &operator <<(std::ostream &o, const crypto::Hash &v) { return print256(o, v); }
 }
