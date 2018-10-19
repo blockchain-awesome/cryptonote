@@ -10,7 +10,7 @@
 #include <unordered_map>
 
 #include "crypto/hash.h"
-#include "cryptonote/core/CryptoNoteBasic.h"
+#include "cryptonote/core/key.h"
 #include "cryptonote/core/CryptoNoteBasicImpl.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/Currency.h"

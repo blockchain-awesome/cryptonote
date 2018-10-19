@@ -118,7 +118,9 @@ bool constructTransaction(
   tx.unlockTime = unlock_time;
 
   tx.extra = extra;
-  KeyPair txkey = generateKeyPair();
+  // KeyPair txkey = generateKeyPair();
+  KeyPair txkey = Key::generate();
+
   addTransactionPublicKeyToExtra(tx.extra, txkey.publicKey);
 
   struct input_generation_context_data {

@@ -78,7 +78,8 @@ DoubleSpendBase::DoubleSpendBase() :
   send_amount(MK_COINS(17)),
   has_invalid_tx(false)
 {
-  m_outputTxKey = generateKeyPair();
+  // m_outputTxKey = generateKeyPair();
+  m_outputTxKey = Key::generate();
   m_bob_account.generate();
   m_alice_account.generate();
 

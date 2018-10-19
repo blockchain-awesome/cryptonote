@@ -2,7 +2,7 @@
 
 #include <unordered_map>
 #include "hash.h"
-#include "cryptonote/core/CryptoNoteBasic.h"
+#include "cryptonote/core/key.h"
 
 namespace cryptonote
 {

@@ -21,7 +21,8 @@ namespace
       m_tx.version = static_cast<uint8_t>(version);
       m_tx.unlockTime = unlock_time;
 
-      m_tx_key = generateKeyPair();
+      // m_tx_key = generateKeyPair();
+      m_tx_key = Key::generate();
       addTransactionPublicKeyToExtra(m_tx.extra, m_tx_key.publicKey);
     }
 
@@ -440,7 +441,8 @@ bool gen_tx_key_image_not_derive_from_tx_key::generate(std::vector<test_event_en
   builder.step2_fill_inputs(miner_account.getAccountKeys(), sources);
 
   KeyInput& in_to_key = boost::get<KeyInput>(builder.m_tx.inputs.front());
-  KeyPair kp = generateKeyPair();
+  // KeyPair kp = generateKeyPair();
+  KeyPair kp = Key::generate();
   crypto::KeyImage another_ki;
   crypto::generate_key_image(kp.publicKey, kp.secretKey, another_ki);
   in_to_key.keyImage = another_ki;

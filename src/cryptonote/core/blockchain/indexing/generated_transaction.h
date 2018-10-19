@@ -1,7 +1,7 @@
 #pragma once
 
 #include <unordered_map>
-#include "cryptonote/core/CryptoNoteBasic.h"
+#include "cryptonote/core/key.h"
 
 namespace cryptonote
 {

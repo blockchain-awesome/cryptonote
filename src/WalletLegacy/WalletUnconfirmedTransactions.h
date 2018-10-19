@@ -12,7 +12,7 @@
 #include <time.h>
 #include <boost/functional/hash.hpp>
 
-#include "cryptonote/core/CryptoNoteBasic.h"
+#include "cryptonote/core/key.h"
 #include "crypto/crypto.h"
 
 namespace cryptonote {

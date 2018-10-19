@@ -10,7 +10,7 @@
 #include <vector>
 
 #include "crypto/crypto.h"
-#include "cryptonote/core/CryptoNoteBasic.h"
+#include "cryptonote/core/key.h"
 #include "cryptonote/protocol/definitions.h"
 #include "Rpc/CoreRpcServerCommandsDefinitions.h"
 

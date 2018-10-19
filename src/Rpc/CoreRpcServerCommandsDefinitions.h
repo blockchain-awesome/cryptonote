@@ -5,7 +5,7 @@
 #pragma once
 
 #include "cryptonote/protocol/definitions.h"
-#include "cryptonote/core/CryptoNoteBasic.h"
+#include "cryptonote/core/key.h"
 #include "cryptonote/core/Difficulty.h"
 #include "crypto/hash.h"
 

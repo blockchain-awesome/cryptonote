@@ -5,7 +5,7 @@
 #pragma once
 
 #include "cryptonote/core/Account.h"
-#include "cryptonote/core/CryptoNoteBasic.h"
+#include "cryptonote/core/key.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 
 #include "MultiTransactionTestBase.h"

@@ -21,7 +21,7 @@
 #include "common/ObserverManager.h"
 #include "crypto/hash.h"
 
-#include "cryptonote/core/CryptoNoteBasic.h"
+#include "cryptonote/core/key.h"
 #include "cryptonote/core/CryptoNoteBasicImpl.h"
 #include "cryptonote/core/Currency.h"
 #include "cryptonote/core/ITimeProvider.h"

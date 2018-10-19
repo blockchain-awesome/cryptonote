@@ -145,7 +145,8 @@ namespace cryptonote {
   }
 
   TransactionImpl::TransactionImpl() {   
-    cryptonote::KeyPair txKeys(cryptonote::generateKeyPair());
+    // cryptonote::KeyPair txKeys(cryptonote::generateKeyPair());
+    KeyPair txKeys = Key::generate();
 
     TransactionExtraPublicKey pk = { txKeys.publicKey };
     extra.set(pk);

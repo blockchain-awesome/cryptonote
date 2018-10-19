@@ -7,7 +7,7 @@
 #include <vector>
 
 #include "cryptonote/core/Account.h"
-#include "cryptonote/core/CryptoNoteBasic.h"
+#include "cryptonote/core/key.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "crypto/crypto.h"

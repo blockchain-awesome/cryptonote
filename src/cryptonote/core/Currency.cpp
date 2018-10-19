@@ -145,7 +145,8 @@ bool Currency::constructMinerTx(uint32_t height, size_t medianSize, uint64_t alr
   tx.outputs.clear();
   tx.extra.clear();
 
-  KeyPair txkey = generateKeyPair();
+  // KeyPair txkey = generateKeyPair();
+  KeyPair txkey = Key::generate();
   addTransactionPublicKeyToExtra(tx.extra, txkey.publicKey);
   if (!extraNonce.empty()) {
     if (!addExtraNonceToTransactionExtra(tx.extra, extraNonce)) {

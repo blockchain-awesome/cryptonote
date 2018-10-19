@@ -11,7 +11,7 @@
 #include "../CryptoNoteConfig.h"
 #include "../crypto/hash.h"
 #include "../Logging/LoggerRef.h"
-#include "CryptoNoteBasic.h"
+#include "key.h"
 #include "Difficulty.h"
 
 namespace cryptonote {

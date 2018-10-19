@@ -9,7 +9,7 @@
 #include <limits>
 
 #include "INode.h"
-#include "cryptonote/core/CryptoNoteBasic.h"
+#include "cryptonote/core/key.h"
 #include "TestBlockchainGenerator.h"
 #include "common/ObserverManager.h"
 #include "Wallet/WalletAsyncContextCounter.h"

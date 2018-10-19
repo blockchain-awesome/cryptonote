@@ -11,7 +11,7 @@
 #include <boost/serialization/map.hpp>
 #include <boost/foreach.hpp>
 #include <boost/serialization/is_bitwise_serializable.hpp>
-#include "cryptonote/core/CryptoNoteBasic.h"
+#include "cryptonote/core/key.h"
 #include "UnorderedContainersBoostSerialization.h"
 #include "crypto/crypto.h"
 

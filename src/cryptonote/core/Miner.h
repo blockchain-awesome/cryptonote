@@ -9,7 +9,7 @@
 #include <mutex>
 #include <thread>
 
-#include "cryptonote/core/CryptoNoteBasic.h"
+#include "cryptonote/core/key.h"
 #include "cryptonote/core/Currency.h"
 #include "cryptonote/core/Difficulty.h"
 #include "cryptonote/core/IMinerHandler.h"

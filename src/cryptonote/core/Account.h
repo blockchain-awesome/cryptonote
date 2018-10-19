@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "cryptonote/core/CryptoNoteBasic.h"
+#include "cryptonote/core/key.h"
 #include "crypto/crypto.h"
 
 namespace cryptonote {

@@ -7,7 +7,7 @@
 #include <numeric>
 #include <system_error>
 
-#include "cryptonote/core/CryptoNoteBasic.h"
+#include "cryptonote/core/key.h"
 #include "cryptonote/core/TransactionApiExtra.h"
 #include "TransactionUtils.h"
 #include "cryptonote/core/CryptoNoteTools.h"

@@ -5,7 +5,7 @@
 #pragma once
 
 #include <list>
-#include "cryptonote/core/CryptoNoteBasic.h"
+#include "cryptonote/core/key.h"
 
 // ISerializer-based serialization
 #include "Serialization/ISerializer.h"

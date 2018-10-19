@@ -247,7 +247,8 @@ void fillNonce(cryptonote::Block& blk, const difficulty_type& diffic) {
 bool constructMinerTxManually(const cryptonote::Currency& currency, uint32_t height, uint64_t alreadyGeneratedCoins,
                               const AccountPublicAddress& minerAddress, Transaction& tx, uint64_t fee,
                               KeyPair* pTxKey/* = 0*/) {
-  KeyPair txkey = generateKeyPair();
+  // KeyPair txkey = generateKeyPair();
+  KeyPair txkey = Key::generate();
   addTransactionPublicKeyToExtra(tx.extra, txkey.publicKey);
 
   if (0 != pTxKey) {

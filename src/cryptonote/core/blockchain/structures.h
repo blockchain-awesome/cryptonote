@@ -1,6 +1,6 @@
 #pragma once
 
-#include "cryptonote/core/CryptoNoteBasic.h"
+#include "cryptonote/core/key.h"
 
 namespace cryptonote
 {

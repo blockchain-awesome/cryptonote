@@ -7,7 +7,7 @@
 #include <cstdint>
 #include <unordered_map>
 
-#include "cryptonote/core/CryptoNoteBasic.h"
+#include "cryptonote/core/key.h"
 #include "cryptonote/core/ICore.h"
 #include "cryptonote/core/ICoreObserver.h"
 #include "cryptonote/protocol/definitions.h"

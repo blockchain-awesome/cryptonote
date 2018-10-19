@@ -8,7 +8,7 @@
 #include <unordered_map>
 
 #include "cryptonote/core/Account.h"
-#include "cryptonote/core/CryptoNoteBasic.h"
+#include "cryptonote/core/key.h"
 #include "cryptonote/core/Currency.h"
 #include "cryptonote/core/blockchain/indexing/exports.h"
 #include "crypto/hash.h"

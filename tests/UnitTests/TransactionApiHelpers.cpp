@@ -44,7 +44,8 @@ size_t TestTransactionBuilder::addTestInput(uint64_t amount, const AccountKeys& 
   TransactionTypes::InputKeyInfo info;
   PublicKey targetKey;
 
-  cryptonote::KeyPair srcTxKeys = cryptonote::generateKeyPair();
+  // cryptonote::KeyPair srcTxKeys = cryptonote::generateKeyPair();
+  KeyPair srcTxKeys = Key::generate();
   derivePublicKey(senderKeys, srcTxKeys.publicKey, 5, targetKey);
 
   TransactionTypes::GlobalOutput gout = { targetKey, 0 };
@@ -68,7 +69,9 @@ size_t TestTransactionBuilder::addTestInput(uint64_t amount, std::vector<uint32_
   TransactionTypes::InputKeyInfo info;
   PublicKey targetKey;
 
-  cryptonote::KeyPair srcTxKeys = cryptonote::generateKeyPair();
+  // cryptonote::KeyPair srcTxKeys = cryptonote::generateKeyPair();
+  KeyPair srcTxKeys = Key::generate();
+
   derivePublicKey(senderKeys, srcTxKeys.publicKey, 5, targetKey);
 
   TransactionTypes::GlobalOutput gout = { targetKey, 0 };

@@ -6,7 +6,7 @@
 
 #include "common/StringTools.h"
 #include "crypto/crypto.h"
-#include "cryptonote/core/CryptoNoteBasic.h"
+#include "cryptonote/core/key.h"
 
 class test_cn_slow_hash {
 public:

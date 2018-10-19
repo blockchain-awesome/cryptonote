@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "CryptoNoteBasic.h"
+#include "key.h"
 #include "crypto/chacha.h"
 #include "Serialization/ISerializer.h"
 #include "crypto/crypto.h"

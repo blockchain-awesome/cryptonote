@@ -64,7 +64,8 @@ namespace {
     TransactionTypes::InputKeyInfo createInputInfo(uint64_t amount) {
       TransactionTypes::InputKeyInfo info;
 
-      cryptonote::KeyPair srcTxKeys = cryptonote::generateKeyPair();
+      // cryptonote::KeyPair srcTxKeys = cryptonote::generateKeyPair();
+      KeyPair srcTxKeys = Key::generate();
 
       PublicKey targetKey;
 

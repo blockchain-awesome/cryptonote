@@ -15,7 +15,7 @@
 #include <boost/multi_index/ordered_index.hpp>
 
 #include "crypto/crypto.h"
-#include "cryptonote/core/CryptoNoteBasic.h"
+#include "cryptonote/core/key.h"
 #include "cryptonote/core/CryptoNoteSerialization.h"
 #include "cryptonote/core/Currency.h"
 #include "Serialization/ISerializer.h"

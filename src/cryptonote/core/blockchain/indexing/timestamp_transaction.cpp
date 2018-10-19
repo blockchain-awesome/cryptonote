@@ -1,6 +1,6 @@
 #include "timestamp_transaction.h"
 #include "crypto/hash.h"
-#include "cryptonote/core/CryptoNoteBasic.h"
+#include "cryptonote/core/key.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 
 namespace cryptonote
