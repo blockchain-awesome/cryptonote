@@ -36,4 +36,6 @@ namespace cryptonote {
     AccountKeys m_keys;
     uint64_t m_creation_timestamp;
   };
+
+  typedef AccountBase Account;
 }
