@@ -106,11 +106,6 @@ void getVariantValue(cryptonote::ISerializer& serializer, uint8_t tag, cryptonot
   }
 }
 
-template <typename T>
-bool serializePod(T& v, Common::StringView name, cryptonote::ISerializer& serializer) {
-  return serializer.binary(&v, sizeof(v), name);
-}
-
 bool serializeVarintVector(std::vector<uint32_t>& vector, cryptonote::ISerializer& serializer, Common::StringView name) {
   size_t size = vector.size();
   
@@ -127,42 +122,6 @@ bool serializeVarintVector(std::vector<uint32_t>& vector, cryptonote::ISerialize
 
   serializer.endArray();
   return true;
-}
-
-}
-
-namespace crypto {
-
-bool serialize(PublicKey& pubKey, Common::StringView name, cryptonote::ISerializer& serializer) {
-  return serializePod(pubKey, name, serializer);
-}
-
-bool serialize(SecretKey& secKey, Common::StringView name, cryptonote::ISerializer& serializer) {
-  return serializePod(secKey, name, serializer);
-}
-
-bool serialize(Hash& h, Common::StringView name, cryptonote::ISerializer& serializer) {
-  return serializePod(h, name, serializer);
-}
-
-bool serialize(KeyImage& keyImage, Common::StringView name, cryptonote::ISerializer& serializer) {
-  return serializePod(keyImage, name, serializer);
-}
-
-bool serialize(chacha_iv& chacha, Common::StringView name, cryptonote::ISerializer& serializer) {
-  return serializePod(chacha, name, serializer);
-}
-
-bool serialize(Signature& sig, Common::StringView name, cryptonote::ISerializer& serializer) {
-  return serializePod(sig, name, serializer);
-}
-
-bool serialize(EllipticCurveScalar& ecScalar, Common::StringView name, cryptonote::ISerializer& serializer) {
-  return serializePod(ecScalar, name, serializer);
-}
-
-bool serialize(EllipticCurvePoint& ecPoint, Common::StringView name, cryptonote::ISerializer& serializer) {
-  return serializePod(ecPoint, name, serializer);
 }
 
 }

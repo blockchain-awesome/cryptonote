@@ -8,19 +8,7 @@
 #include "crypto/chacha.h"
 #include "Serialization/ISerializer.h"
 #include "crypto/crypto.h"
-
-namespace crypto {
-
-bool serialize(PublicKey& pubKey, Common::StringView name, cryptonote::ISerializer& serializer);
-bool serialize(SecretKey& secKey, Common::StringView name, cryptonote::ISerializer& serializer);
-bool serialize(Hash& h, Common::StringView name, cryptonote::ISerializer& serializer);
-bool serialize(chacha_iv& chacha, Common::StringView name, cryptonote::ISerializer& serializer);
-bool serialize(KeyImage& keyImage, Common::StringView name, cryptonote::ISerializer& serializer);
-bool serialize(Signature& sig, Common::StringView name, cryptonote::ISerializer& serializer);
-bool serialize(EllipticCurveScalar& ecScalar, Common::StringView name, cryptonote::ISerializer& serializer);
-bool serialize(EllipticCurvePoint& ecPoint, Common::StringView name, cryptonote::ISerializer& serializer);
-
-}
+#include "serialize.h"
 
 namespace cryptonote {
 

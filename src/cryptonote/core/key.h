@@ -6,12 +6,10 @@
 #include <boost/utility/value_init.hpp>
 #include <cryptonote.h>
 
+using namespace crypto;
+
 namespace cryptonote
 {
-const crypto::Hash NULL_HASH = boost::value_initialized<crypto::Hash>();
-const crypto::PublicKey NULL_PUBLIC_KEY = boost::value_initialized<crypto::PublicKey>();
-const crypto::SecretKey NULL_SECRET_KEY = boost::value_initialized<crypto::SecretKey>();
-
 class Key
 {
   public:
@@ -22,5 +20,9 @@ class Key
     }
     static KeyPair generate();
 };
+
+const Hash NULL_HASH = Key::zero<Hash>();
+const PublicKey NULL_PUBLIC_KEY = Key::zero<PublicKey>();
+const SecretKey NULL_SECRET_KEY = Key::zero<SecretKey>();
 
 } // namespace cryptonote
