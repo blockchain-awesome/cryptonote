@@ -176,7 +176,7 @@ namespace cryptonote {
 
     // add to pool
     {
-      TransactionDetails txd;
+      transaction::TransactionDetails txd;
 
       txd.id = id;
       txd.blobSize = blobSize;
@@ -251,7 +251,7 @@ namespace cryptonote {
     std::lock_guard<std::recursive_mutex> lock(m_transactions_lock);
     std::unordered_set<crypto::Hash> ready_tx_ids;
     for (const auto& tx : m_transactions) {
-      TransactionCheckInfo checkInfo(tx);
+      transaction::TransactionCheckInfo checkInfo(tx);
       if (is_transaction_ready_to_go(tx.tx, checkInfo)) {
         ready_tx_ids.insert(tx.id);
       }
@@ -302,7 +302,7 @@ namespace cryptonote {
   }
 
   //---------------------------------------------------------------------------------
-  bool tx_memory_pool::is_transaction_ready_to_go(const Transaction& tx, TransactionCheckInfo& txd) const {
+  bool tx_memory_pool::is_transaction_ready_to_go(const Transaction& tx, transaction::TransactionCheckInfo& txd) const {
 
     if (!m_validator.checkTransactionInputs(tx, txd.maxUsedBlock, txd.lastFailedBlock))
       return false;
@@ -357,7 +357,7 @@ namespace cryptonote {
         continue;
       }
 
-      TransactionCheckInfo checkInfo(txd);
+      transaction::TransactionCheckInfo checkInfo(txd);
       if (is_transaction_ready_to_go(txd.tx, checkInfo) && blockTemplate.addTransaction(txd.id, txd.tx)) {
         total_size += txd.blobSize;
       }
@@ -371,11 +371,11 @@ namespace cryptonote {
         continue;
       }
 
-      TransactionCheckInfo checkInfo(txd);
+      transaction::TransactionCheckInfo checkInfo(txd);
       bool ready = is_transaction_ready_to_go(txd.tx, checkInfo);
 
       // update item state
-      m_fee_index.modify(i, [&checkInfo](TransactionCheckInfo& item) {
+      m_fee_index.modify(i, [&checkInfo](transaction::TransactionCheckInfo& item) {
         item = checkInfo;
       });
 
@@ -438,7 +438,7 @@ namespace cryptonote {
 
 #define CURRENT_MEMPOOL_ARCHIVE_VER 1
 
-  void serialize(cryptonote::tx_memory_pool::TransactionDetails& td, ISerializer& s) {
+  void serialize(transaction::TransactionDetails& td, ISerializer& s) {
     s(td.id, "id");
     s(td.blobSize, "blobSize");
     s(td.fee, "fee");
@@ -466,9 +466,9 @@ namespace cryptonote {
 
     if (s.type() == ISerializer::INPUT) {
       m_transactions.clear();
-      readSequence<TransactionDetails>(std::inserter(m_transactions, m_transactions.end()), "transactions", s);
+      readSequence<transaction::TransactionDetails>(std::inserter(m_transactions, m_transactions.end()), "transactions", s);
     } else {
-      writeSequence<TransactionDetails>(m_transactions.begin(), m_transactions.end(), "transactions", s);
+      writeSequence<transaction::TransactionDetails>(m_transactions.begin(), m_transactions.end(), "transactions", s);
     }
 
     KV_MEMBER(m_spent_key_images);

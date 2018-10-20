@@ -24,43 +24,20 @@
 #include "cryptonote/core/key.h"
 #include "cryptonote/core/CryptoNoteBasicImpl.h"
 #include "cryptonote/core/Currency.h"
-#include "cryptonote/core/ITimeProvider.h"
+// #include "cryptonote/core/ITimeProvider.h"
 #include "cryptonote/core/ITransactionValidator.h"
 #include "cryptonote/core/ITxPoolObserver.h"
 #include "cryptonote/core/VerificationContext.h"
 #include "cryptonote/core/blockchain/indexing/exports.h"
+#include "cryptonote/core/transaction/structures.h"
 
 #include <Logging/LoggerRef.h>
+
+#include "cryptonote/core/transaction/once_in_time_interval.hpp"
 
 namespace cryptonote {
 
   class ISerializer;
-
-  class OnceInTimeInterval {
-  public:
-    OnceInTimeInterval(unsigned interval, cryptonote::ITimeProvider& timeProvider)
-      : m_interval(interval), m_timeProvider(timeProvider) {
-      m_lastWorkedTime = 0;
-    }
-
-    template<class functor_t>
-    bool call(functor_t functr) {
-      time_t now = m_timeProvider.now();
-
-      if (now - m_lastWorkedTime > m_interval) {
-        bool res = functr();
-        m_lastWorkedTime = m_timeProvider.now();
-        return res;
-      }
-
-      return true;
-    }
-
-  private:
-    time_t m_lastWorkedTime;
-    unsigned m_interval;
-    cryptonote::ITimeProvider& m_timeProvider;
-  };
 
   using cryptonote::BlockInfo;
   using namespace boost::multi_index;
@@ -123,47 +100,12 @@ namespace cryptonote {
 
     void serialize(ISerializer& s);
 
-    struct TransactionCheckInfo {
-      BlockInfo maxUsedBlock;
-      BlockInfo lastFailedBlock;
-    };
-
-    struct TransactionDetails : public TransactionCheckInfo {
-      crypto::Hash id;
-      Transaction tx;
-      size_t blobSize;
-      uint64_t fee;
-      bool keptByBlock;
-      time_t receiveTime;
-    };
-
   private:
 
-    struct TransactionPriorityComparator {
-      // lhs > hrs
-      bool operator()(const TransactionDetails& lhs, const TransactionDetails& rhs) const {
-        // price(lhs) = lhs.fee / lhs.blobSize
-        // price(lhs) > price(rhs) -->
-        // lhs.fee / lhs.blobSize > rhs.fee / rhs.blobSize -->
-        // lhs.fee * rhs.blobSize > rhs.fee * lhs.blobSize
-        uint64_t lhs_hi, lhs_lo = mul128(lhs.fee, rhs.blobSize, &lhs_hi);
-        uint64_t rhs_hi, rhs_lo = mul128(rhs.fee, lhs.blobSize, &rhs_hi);
+    typedef hashed_unique<BOOST_MULTI_INDEX_MEMBER(transaction::TransactionDetails, crypto::Hash, id)> main_index_t;
+    typedef ordered_non_unique<identity<transaction::TransactionDetails>, transaction::TransactionPriorityComparator> fee_index_t;
 
-        return
-          // prefer more profitable transactions
-          (lhs_hi >  rhs_hi) ||
-          (lhs_hi == rhs_hi && lhs_lo >  rhs_lo) ||
-          // prefer smaller
-          (lhs_hi == rhs_hi && lhs_lo == rhs_lo && lhs.blobSize <  rhs.blobSize) ||
-          // prefer older
-          (lhs_hi == rhs_hi && lhs_lo == rhs_lo && lhs.blobSize == rhs.blobSize && lhs.receiveTime < rhs.receiveTime);
-      }
-    };
-
-    typedef hashed_unique<BOOST_MULTI_INDEX_MEMBER(TransactionDetails, crypto::Hash, id)> main_index_t;
-    typedef ordered_non_unique<identity<TransactionDetails>, TransactionPriorityComparator> fee_index_t;
-
-    typedef multi_index_container<TransactionDetails,
+    typedef multi_index_container<transaction::TransactionDetails,
       indexed_by<main_index_t, fee_index_t>
     > tx_container_t;
 
@@ -179,7 +121,7 @@ namespace cryptonote {
 
     tx_container_t::iterator removeTransaction(tx_container_t::iterator i);
     bool removeExpiredTransactions();
-    bool is_transaction_ready_to_go(const Transaction& tx, TransactionCheckInfo& txd) const;
+    bool is_transaction_ready_to_go(const Transaction& tx, transaction::TransactionCheckInfo& txd) const;
 
     void buildIndices();
 
