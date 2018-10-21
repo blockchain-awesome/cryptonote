@@ -6,7 +6,9 @@
 
 #include <fstream>
 #include "stream/StdInputStream.h"
+#include "stream/StdOutputStream.h"
 #include "Serialization/BinaryInputStreamSerializer.h"
+#include "Serialization/BinaryOutputStreamSerializer.h"
 #include "cryptonote/core/Account.h"
 
 using namespace cryptonote;
@@ -44,14 +46,14 @@ TEST_F(AccountTest, serialize)
   acc->generate();
 
   std::string filename = "temp.txt";
-  std::ifstream stdStream(filename, std::ios::binary);
-  if (!stdStream)
-  {
-    return;
-  }
+  std::fstream fstream;
+  fstream.open(filename, std::fstream::out);
+  std::cerr << "Failed to open file : " << errno << std::endl;
 
-  StdInputStream stream(stdStream);
-  BinaryInputStreamSerializer s(stream);
+  ASSERT_TRUE(!!fstream);
+
+  StdOutputStream stream(fstream);
+  BinaryOutputStreamSerializer s(stream);
   AccountKeys keys = acc->getAccountKeys();
   acc->serialize(s);
   ASSERT_TRUE(sizeof(keys) > 0);
@@ -59,15 +61,18 @@ TEST_F(AccountTest, serialize)
   ASSERT_TRUE(sizeof(keys.address.viewPublicKey) == 32);
   ASSERT_TRUE(sizeof(keys.spendSecretKey) == 32);
   ASSERT_TRUE(sizeof(keys.viewSecretKey) == 32);
-  stdStream.close();
-  std::ifstream file(filename, std::ios::in | std::ios::binary | std::ios::ate);
-  int size = 0;
+  fstream.close();
 
-  if (file.is_open())
-  {
-    int size = file.tellg();
-  }
+  AccountBase *acc1 = new AccountBase();
 
-  ASSERT_TRUE(size != 0);
+  std::fstream of;
+  of.open(filename, std::fstream::in);
+
+  StdInputStream inStream(of);
+  BinaryInputStreamSerializer inS(inStream);
+
+  acc1->serialize(inS);
+  AccountKeys keys1 = acc1->getAccountKeys();
+  ASSERT_TRUE(0 == memcmp(&keys, &keys1, sizeof(AccountKeys)));
 }
 } // namespace
