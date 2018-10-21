@@ -201,7 +201,7 @@ int main(int argc, char* argv[])
 
     cryptonote::Checkpoints checkpoints(logManager);
     for (const auto& cp : cryptonote::CHECKPOINTS) {
-      checkpoints.add_checkpoint(cp.height, cp.blockId);
+      checkpoints.add(cp.height, cp.blockId);
     }
 
     if (!testnet_mode) {

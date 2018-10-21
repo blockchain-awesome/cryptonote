@@ -14,11 +14,11 @@ namespace cryptonote
   public:
     Checkpoints(Logging::ILogger& log);
 
-    bool add_checkpoint(uint32_t height, const std::string& hash_str);
-    bool is_in_checkpoint_zone(uint32_t height) const;
-    bool check_block(uint32_t height, const crypto::Hash& h) const;
-    bool check_block(uint32_t height, const crypto::Hash& h, bool& is_a_checkpoint) const;
-    bool is_alternative_block_allowed(uint32_t blockchain_height, uint32_t block_height) const;
+    bool add(uint32_t height, const std::string& hash_str);
+    bool isCheckpoint(uint32_t height) const;
+    bool check(uint32_t height, const crypto::Hash& h) const;
+    bool check(uint32_t height, const crypto::Hash& h, bool& is_a_checkpoint) const;
+    bool isAllowed(uint32_t blockchain_height, uint32_t block_height) const;
 
   private:
     std::map<uint32_t, crypto::Hash> m_points;

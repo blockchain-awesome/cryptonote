@@ -733,7 +733,7 @@ bool Blockchain::handle_alternative_block(const Block& b, const crypto::Hash& id
     return false;
   }
 
-  if (!m_checkpoints.is_alternative_block_allowed(getCurrentBlockchainHeight(), block_height)) {
+  if (!m_checkpoints.isAllowed(getCurrentBlockchainHeight(), block_height)) {
     logger(TRACE) << "Block with id: " << id << std::endl <<
       " can't be accepted for alternative chain, block height: " << block_height << std::endl <<
       " blockchain height: " << getCurrentBlockchainHeight();
@@ -797,7 +797,7 @@ bool Blockchain::handle_alternative_block(const Block& b, const crypto::Hash& id
     bei.height = static_cast<uint32_t>(alt_chain.size() ? it_prev->second.height + 1 : mainPrevHeight + 1);
 
     bool is_a_checkpoint;
-    if (!m_checkpoints.check_block(bei.height, id, is_a_checkpoint)) {
+    if (!m_checkpoints.check(bei.height, id, is_a_checkpoint)) {
       logger(ERROR, BRIGHT_RED) <<
         "CHECKPOINT VALIDATION FAILED";
       bvc.m_verifivation_failed = true;
@@ -1496,8 +1496,8 @@ bool Blockchain::pushBlock(const Block& blockData, const std::vector<Transaction
 
   auto longhashTimeStart = std::chrono::steady_clock::now();
   crypto::Hash proof_of_work = NULL_HASH;
-  if (m_checkpoints.is_in_checkpoint_zone(getCurrentBlockchainHeight())) {
-    if (!m_checkpoints.check_block(getCurrentBlockchainHeight(), blockHash)) {
+  if (m_checkpoints.isCheckpoint(getCurrentBlockchainHeight())) {
+    if (!m_checkpoints.check(getCurrentBlockchainHeight(), blockHash)) {
       logger(ERROR, BRIGHT_RED) <<
         "CHECKPOINT VALIDATION FAILED";
       bvc.m_verifivation_failed = true;

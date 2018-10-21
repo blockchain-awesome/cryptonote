@@ -3529,7 +3529,7 @@ TEST_F(WalletApi, checkBaseTransaction) {
   cryptonote::AccountKeys keys{ parseAddress(alice.getAddress(0)), alice.getAddressSpendKey(0).secretKey, alice.getViewKey().secretKey };
   cryptonote::AccountBase acc;
   acc.setAccountKeys(keys);
-  acc.set_createtime(0);
+  acc.setCreatetime(0);
   generator.generateFromBaseTx(acc);
 
   node.updateObservers();

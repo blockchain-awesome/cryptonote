@@ -11,7 +11,7 @@ namespace cryptonote {
 //---------------------------------------------------------------------------
 Checkpoints::Checkpoints(Logging::ILogger &log) : logger(log, "checkpoints") {}
 //---------------------------------------------------------------------------
-bool Checkpoints::add_checkpoint(uint32_t height, const std::string &hash_str) {
+bool Checkpoints::add(uint32_t height, const std::string &hash_str) {
   crypto::Hash h = NULL_HASH;
 
   if (!Common::podFromHex(hash_str, h)) {
@@ -28,11 +28,11 @@ bool Checkpoints::add_checkpoint(uint32_t height, const std::string &hash_str) {
   return true;
 }
 //---------------------------------------------------------------------------
-bool Checkpoints::is_in_checkpoint_zone(uint32_t  height) const {
+bool Checkpoints::isCheckpoint(uint32_t  height) const {
   return !m_points.empty() && (height <= (--m_points.end())->first);
 }
 //---------------------------------------------------------------------------
-bool Checkpoints::check_block(uint32_t  height, const crypto::Hash &h,
+bool Checkpoints::check(uint32_t  height, const crypto::Hash &h,
                               bool &is_a_checkpoint) const {
   auto it = m_points.find(height);
   is_a_checkpoint = it != m_points.end();
@@ -51,12 +51,12 @@ bool Checkpoints::check_block(uint32_t  height, const crypto::Hash &h,
   }
 }
 //---------------------------------------------------------------------------
-bool Checkpoints::check_block(uint32_t  height, const crypto::Hash &h) const {
+bool Checkpoints::check(uint32_t  height, const crypto::Hash &h) const {
   bool ignored;
-  return check_block(height, h, ignored);
+  return check(height, h, ignored);
 }
 //---------------------------------------------------------------------------
-bool Checkpoints::is_alternative_block_allowed(uint32_t  blockchain_height,
+bool Checkpoints::isAllowed(uint32_t  blockchain_height,
                                                uint32_t  block_height) const {
   if (0 == block_height)
     return false;

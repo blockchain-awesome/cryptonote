@@ -78,7 +78,7 @@ void WalletLegacySerializer::saveKeys(cryptonote::ISerializer& serializer) {
   cryptonote::KeysStorage keys;
   cryptonote::AccountKeys acc = account.getAccountKeys();
 
-  keys.creationTimestamp = account.get_createtime();
+  keys.creationTimestamp = account.getCreatetime();
   keys.spendPublicKey = acc.address.spendPublicKey;
   keys.spendSecretKey = acc.spendSecretKey;
   keys.viewPublicKey = acc.address.viewPublicKey;
@@ -166,7 +166,7 @@ void WalletLegacySerializer::loadKeys(cryptonote::ISerializer& serializer) {
   acc.viewSecretKey = keys.viewSecretKey;
 
   account.setAccountKeys(acc);
-  account.set_createtime(keys.creationTimestamp);
+  account.setCreatetime(keys.creationTimestamp);
 }
 
 }

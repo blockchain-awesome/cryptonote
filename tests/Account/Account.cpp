@@ -35,7 +35,7 @@ TEST_F(AccountTest, generate)
 {
   AccountBase *acc = new AccountBase();
   acc->generate();
-  uint64_t time = acc->get_createtime();
+  uint64_t time = acc->getCreatetime();
 
   EXPECT_EQ(true, !!time);
 }
