@@ -19,13 +19,13 @@
 #include "common/ObserverManager.h"
 
 #include "System/Dispatcher.h"
-#include "cryptonote/core/MessageQueue.h"
+#include "cryptonote/core/template/MessageQueue.h"
 #include "cryptonote/core/BlockchainMessages.h"
 
 #include <Logging/LoggerMessage.h>
 
 namespace cryptonote {
-
+  class LockedBlockchainStorage;
   struct core_stat_info;
   class miner;
   class CoreConfig;

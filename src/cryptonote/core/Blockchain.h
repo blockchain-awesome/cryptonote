@@ -14,6 +14,7 @@
 #include "cryptonote/core/BlockIndex.h"
 #include "cryptonote/core/Checkpoints.h"
 #include "cryptonote/core/Currency.h"
+#include "cryptonote/core/blockchain/serializer/exports.h"
 #include "cryptonote/core/IBlockchainStorageObserver.h"
 #include "cryptonote/core/ITransactionValidator.h"
 #include "cryptonote/core/SwappedVector.h"
@@ -21,9 +22,9 @@
 #include "cryptonote/core/TransactionPool.h"
 #include "cryptonote/core/blockchain/indexing/exports.h"
 
-#include "cryptonote/core/MessageQueue.h"
+#include "cryptonote/core/template/MessageQueue.h"
 #include "cryptonote/core/BlockchainMessages.h"
-#include "cryptonote/core/IntrusiveLinkedList.h"
+#include "cryptonote/core/template/IntrusiveLinkedList.h"
 
 #include <Logging/LoggerRef.h>
 
@@ -37,6 +38,9 @@ namespace cryptonote {
   struct COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_outs_for_amount;
 
   using cryptonote::BlockInfo;
+  
+  class LockedBlockchainStorage;
+
   class Blockchain : public cryptonote::ITransactionValidator {
   public:
     Blockchain(const Currency& currency, tx_memory_pool& tx_pool, Logging::ILogger& logger);
@@ -161,58 +165,7 @@ namespace cryptonote {
     void print_blockchain_index();
     void print_blockchain_outs(const std::string& file);
 
-    struct TransactionIndex {
-      uint32_t block;
-      uint16_t transaction;
-
-      void serialize(ISerializer& s) {
-        s(block, "block");
-        s(transaction, "tx");
-      }
-    };
-
   private:
-
-    struct MultisignatureOutputUsage {
-      TransactionIndex transactionIndex;
-      uint16_t outputIndex;
-      bool isUsed;
-
-      void serialize(ISerializer& s) {
-        s(transactionIndex, "txindex");
-        s(outputIndex, "outindex");
-        s(isUsed, "used");
-      }
-    };
-
-    struct TransactionEntry {
-      Transaction tx;
-      std::vector<uint32_t> m_global_output_indexes;
-
-      void serialize(ISerializer& s) {
-        s(tx, "tx");
-        s(m_global_output_indexes, "indexes");
-      }
-    };
-
-    struct BlockEntry {
-      Block bl;
-      uint32_t height;
-      uint64_t block_cumulative_size;
-      difficulty_type cumulative_difficulty;
-      uint64_t already_generated_coins;
-      std::vector<TransactionEntry> transactions;
-
-      void serialize(ISerializer& s) {
-        s(bl, "block");
-        s(height, "height");
-        s(block_cumulative_size, "block_cumulative_size");
-        s(cumulative_difficulty, "cumulative_difficulty");
-        s(already_generated_coins, "already_generated_coins");
-        s(transactions, "transactions");
-      }
-    };
-
     typedef google::sparse_hash_set<crypto::KeyImage> key_images_container;
     typedef std::unordered_map<crypto::Hash, BlockEntry> blocks_ext_by_hash;
     typedef google::sparse_hash_map<uint64_t, std::vector<std::pair<TransactionIndex, uint16_t>>> outputs_container; //crypto::Hash - tx hash, size_t - index of out in transaction
@@ -298,21 +251,7 @@ namespace cryptonote {
     friend class LockedBlockchainStorage;
   };
 
-  class LockedBlockchainStorage: boost::noncopyable {
-  public:
 
-    LockedBlockchainStorage(Blockchain& bc)
-      : m_bc(bc), m_lock(bc.m_blockchain_lock) {}
-
-    Blockchain* operator -> () {
-      return &m_bc;
-    }
-
-  private:
-
-    Blockchain& m_bc;
-    std::lock_guard<std::recursive_mutex> m_lock;
-  };
 
   template<class visitor_t> bool Blockchain::scanOutputKeysForIndexes(const KeyInput& tx_in_to_key, visitor_t& vis, uint32_t* pmax_related_block_height) {
     std::lock_guard<std::recursive_mutex> lk(m_blockchain_lock);

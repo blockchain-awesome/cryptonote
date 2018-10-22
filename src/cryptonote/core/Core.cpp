@@ -12,6 +12,7 @@
 #include "../common/StringTools.h"
 #include "../crypto/crypto.h"
 #include "../cryptonote/protocol/definitions.h"
+#include "../cryptonote/core/blockchain/locked_storage.hpp"
 #include "../Logging/LoggerRef.h"
 #include "../Rpc/CoreRpcServerCommandsDefinitions.h"
 #include "CryptoNoteFormatUtils.h"

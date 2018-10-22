@@ -77,38 +77,6 @@ bool serialize(google::sparse_hash_set<K, Hash>& value, Common::StringView name,
   return true;
 }
 
-// custom serialization to speedup cache loading
-bool serialize(std::vector<std::pair<Blockchain::TransactionIndex, uint16_t>>& value, Common::StringView name, cryptonote::ISerializer& s) {
-  const size_t elementSize = sizeof(std::pair<Blockchain::TransactionIndex, uint16_t>);
-  size_t size = value.size() * elementSize;
-
-  if (!s.beginArray(size, name)) {
-    return false;
-  }
-
-  if (s.type() == cryptonote::ISerializer::INPUT) {
-    if (size % elementSize != 0) {
-      throw std::runtime_error("Invalid vector size");
-    }
-    value.resize(size / elementSize);
-  }
-
-  if (size) {
-    s.binary(value.data(), size, "");
-  }
-
-  s.endArray();
-  return true;
-}
-
-void serialize(Blockchain::TransactionIndex& value, ISerializer& s) {
-  s(value.block, "block");
-  s(value.transaction, "tx");
-}
-
-
-
-
 Blockchain::Blockchain(const Currency& currency, tx_memory_pool& tx_pool, ILogger& logger) :
 logger(logger, "Blockchain"),
 m_currency(currency),
@@ -1437,7 +1405,7 @@ bool Blockchain::addNewBlock(const Block& bl_, block_verification_context& bvc) 
   return add_result;
 }
 
-const Blockchain::TransactionEntry& Blockchain::transactionByIndex(TransactionIndex index) {
+const TransactionEntry& Blockchain::transactionByIndex(TransactionIndex index) {
   return m_blocks[index.block].transactions[index.transaction];
 }
 

@@ -11,9 +11,9 @@
 #include "System/Dispatcher.h"
 #include "System/Event.h"
 
-#include "cryptonote/core/MessageQueue.h"
+#include "cryptonote/core/template/MessageQueue.h"
 #include "cryptonote/core/BlockchainMessages.h"
-#include "cryptonote/core/IntrusiveLinkedList.h"
+#include "cryptonote/core/template/IntrusiveLinkedList.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 
 using namespace cryptonote;

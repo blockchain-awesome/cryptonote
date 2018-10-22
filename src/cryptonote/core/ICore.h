@@ -13,7 +13,7 @@
 #include <cryptonote.h>
 #include "cryptonote/core/Difficulty.h"
 
-#include "cryptonote/core/MessageQueue.h"
+#include "cryptonote/core/template/MessageQueue.h"
 #include "cryptonote/core/BlockchainMessages.h"
 
 namespace cryptonote {
