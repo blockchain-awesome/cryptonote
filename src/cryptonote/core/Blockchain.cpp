@@ -37,13 +37,9 @@ std::string appendPath(const std::string& path, const std::string& fileName) {
 }
 
 namespace std {
-bool operator<(const crypto::Hash& hash1, const crypto::Hash& hash2) {
-  return memcmp(&hash1, &hash2, crypto::HASH_SIZE) < 0;
-}
-
-bool operator<(const crypto::KeyImage& keyImage1, const crypto::KeyImage& keyImage2) {
-  return memcmp(&keyImage1, &keyImage2, 32) < 0;
-}
+  template <typename T> bool operator < (const T& t1, const T& t2) {
+    return memcmp(&t1, &t2, sizeof(T)) < 0;
+  }
 }
 
 namespace cryptonote {
