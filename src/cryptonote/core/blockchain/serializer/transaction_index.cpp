@@ -4,7 +4,6 @@
 #include <map>
 #include "transaction_index.h"
 
-
 namespace cryptonote
 {
 
@@ -35,11 +34,4 @@ bool serialize(std::vector<std::pair<TransactionIndex, uint16_t>> &value, Common
     s.endArray();
     return true;
 }
-
-void serialize(TransactionIndex &value, ISerializer &s)
-{
-    s(value.block, "block");
-    s(value.transaction, "tx");
-}
-
 } // namespace cryptonote

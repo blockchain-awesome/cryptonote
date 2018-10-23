@@ -16,6 +16,14 @@ Copyright (c) 2018- The VIG Project.
 Copyright (c) 2018- The Monero Project.  
 Copyright (c) 2012-2013 The Cryptonote developers.  
 
+## Participate
+
+1. Get yourself a wallet address:  
+[![wallet](https://img.shields.io/badge/vigcoin-wallet-red.svg)](https://paper-wallet.vigcoin.org/)
+
+2. Mining a coin from vig coin pools:  
+[![mining](https://img.shields.io/badge/vigcoin-mining%20pool-white.svg?colorB=ff69b4)](http://pools.vigcoin.org/)
+
 ## Introduction
 
 VIG Coin is a coin based on the cryptonote cryptocurrency protocol.
@@ -62,9 +70,15 @@ make
 ./build-debug.sh
 ```
 
+## Donation
+
+BTC:   
+1MhPwnodHSTvptYLdF6d8c5NZkfqVdhfMS  
+Monero: 4AeKZo1hZAg4MypBNesAsphdGJRwJtU2n68qbbeeNtH8QgdFRJVpQ3tNpXy6KtsKekXzRTMpGZjRWb2MKRxDc7w86rcZJZJ
+
 ## License
 
-GPL V3(VIG Code)
+GPL v3 (VIG Code)
 
 MIT(Origin/Monero Code)
 
