@@ -48,6 +48,9 @@ VIG COIN是一个开源，社区化的项目。非常欢迎各类开源贡献者
 
 ## Compiling
 
+
+### Ubuntu
+
 Currently only Ubuntu 16.04 is officially supported.
 
 1. Package installation
@@ -55,7 +58,7 @@ Currently only Ubuntu 16.04 is officially supported.
 ```
 sudo apt update && sudo apt install -y build-essential cmake libboost-all-dev libssl-dev libsodium-dev python-pip python-dev lcov
 ```
-2. Building
+2. Building & testing
 
 ```
 git clone https://github.com/vigcoin/coin.git
@@ -63,11 +66,38 @@ cd coin
 mkdir -p build
 cmake ..
 make
+make test
 ```
 
-3. testing
+3. Auto building & testing
 ```
 ./build-debug.sh
+```
+
+### Mac Os
+
+Mac Os Only support the latest version.
+
+1. Package installation
+
+```
+brew install cmake boost libsodium openssl
+```
+
+2. export variables
+``` 
+export OPENSSL_ROOT_DIR=$(brew --prefix openssl)
+```
+
+3. Building & testing
+
+```
+git clone https://github.com/vigcoin/coin.git
+cd coin
+mkdir -p build
+cmake ..
+make
+make test
 ```
 
 ## Donation

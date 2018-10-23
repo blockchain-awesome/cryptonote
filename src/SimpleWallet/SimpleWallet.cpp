@@ -1191,7 +1191,7 @@ int main(int argc, char* argv[]) {
       return 1;
     }
 
-    Tools::SignalHandler::install([&wrpc, &wallet] {
+    Tools::SignalHandler::install([&wrpc] {
       wrpc.send_stop_signal();
     });
 
