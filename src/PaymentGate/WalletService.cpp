@@ -21,6 +21,7 @@
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/CryptoNoteBasicImpl.h"
 #include "cryptonote/core/TransactionExtra.h"
+#include "cryptonote/core/Account.h"
 
 #include <System/EventLock.h>
 
@@ -30,9 +31,9 @@
 
 #include "Wallet/LegacyKeysImporter.h"
 #include "Wallet/WalletErrors.h"
-#include "Wallet/WalletUtils.h"
 #include "WalletServiceErrorCategory.h"
 
+using namespace cryptonote;
 namespace PaymentService {
 
 namespace {
@@ -292,7 +293,7 @@ std::vector<PaymentService::TransactionHashesInBlockRpcInfo> convertTransactions
 
 void validateAddresses(const std::vector<std::string>& addresses, const cryptonote::Currency& currency, Logging::LoggerRef logger) {
   for (const auto& address: addresses) {
-    if (!cryptonote::validateAddress(address, currency)) {
+    if (!Account::parseAddress(address)) {
       logger(Logging::WARNING) << "Can't validate address " << address;
       throw std::system_error(make_error_code(cryptonote::error::BAD_ADDRESS));
     }

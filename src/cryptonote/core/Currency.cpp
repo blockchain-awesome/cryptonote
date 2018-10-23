@@ -289,28 +289,6 @@ bool Currency::isAmountApplicableInFusionTransactionInput(uint64_t amount, uint6
   return true;
 }
 
-std::string Currency::accountAddressAsString(const AccountBase& account) const {
-  return getAccountAddressAsStr(m_publicAddressBase58Prefix, account.getAccountKeys().address);
-}
-
-std::string Currency::accountAddressAsString(const AccountPublicAddress& accountPublicAddress) const {
-  return getAccountAddressAsStr(m_publicAddressBase58Prefix, accountPublicAddress);
-}
-
-bool Currency::parseAccountAddressString(const std::string& str, AccountPublicAddress& addr) const {
-  uint64_t prefix;
-  if (!cryptonote::parseAccountAddressString(prefix, addr, str)) {
-    return false;
-  }
-
-  if (prefix != m_publicAddressBase58Prefix) {
-    logger(DEBUGGING) << "Wrong address prefix: " << prefix << ", expected " << m_publicAddressBase58Prefix;
-    return false;
-  }
-
-  return true;
-}
-
 std::string Currency::formatAmount(uint64_t amount) const {
   std::string s = std::to_string(amount);
   if (s.size() < m_numberOfDecimalPlaces + 1) {

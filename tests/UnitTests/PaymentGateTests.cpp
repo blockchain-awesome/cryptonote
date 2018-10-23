@@ -70,7 +70,7 @@ TEST_F(PaymentGateTest, addTransaction) {
   ASSERT_TRUE(!service->createAddress(addressStr));
 
   AccountPublicAddress address;
-  ASSERT_TRUE(currency.parseAccountAddressString(addressStr, address));
+  ASSERT_TRUE(Account::parseAddress(addressStr, address));
 
   generator.getBlockRewardForAddress(address);
   generator.getBlockRewardForAddress(address);

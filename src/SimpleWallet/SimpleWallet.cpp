@@ -182,7 +182,7 @@ struct TransferCommand {
           WalletLegacyTransfer destination;
           cryptonote::TransactionDestinationEntry de;
 
-          if (!m_currency.parseAccountAddressString(arg, de.addr)) {
+          if (!Account::parseAddress(arg, de.addr)) {
             crypto::Hash paymentId;
             if (cryptonote::parsePaymentId(arg, paymentId)) {
               logger(ERROR, BRIGHT_RED) << "Invalid payment ID usage. Please, use -p <payment_id>. See help for details.";

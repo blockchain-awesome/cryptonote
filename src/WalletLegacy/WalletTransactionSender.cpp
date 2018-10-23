@@ -78,7 +78,7 @@ void WalletTransactionSender::stop() {
 
 bool WalletTransactionSender::validateDestinationAddress(const std::string& address) {
   AccountPublicAddress ignore;
-  return m_currency.parseAccountAddressString(address, ignore);
+  return Account::parseAddress(address, ignore);
 }
 
 void WalletTransactionSender::validateTransfersAddresses(const std::vector<WalletLegacyTransfer>& transfers) {
@@ -228,7 +228,7 @@ void WalletTransactionSender::digitSplitStrategy(TransferId firstTransferId, siz
     WalletLegacyTransfer& de = m_transactionsCache.getTransfer(idx);
 
     AccountPublicAddress addr;
-    if (!m_currency.parseAccountAddressString(de.address, addr)) {
+    if (!Account::parseAddress(de.address, addr)) {
       throw std::system_error(make_error_code(error::BAD_ADDRESS));
     }
 

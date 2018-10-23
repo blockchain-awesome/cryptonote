@@ -88,7 +88,7 @@ namespace {
     ASSERT_TRUE(waitForPeerCount(*node1, 1));
 
     Hash txHash1;
-    ASSERT_FALSE(static_cast<bool>(wallet1.sendTransaction(m_currency.accountAddressAsString(minerAccount), m_currency.coin(), txHash1)));
+    ASSERT_FALSE(static_cast<bool>(wallet1.sendTransaction(minerAccount.toAddress(), m_currency.coin(), txHash1)));
 
     stopNode(NODE_1);
     // Don't start NODE_2, while NODE_1 doesn't close its connections
@@ -99,7 +99,7 @@ namespace {
     ASSERT_TRUE(waitForPeerCount(*node3, 1));
 
     Hash txHash2;
-    ASSERT_FALSE(static_cast<bool>(wallet2.sendTransaction(m_currency.accountAddressAsString(minerAccount), m_currency.coin(), txHash2)));
+    ASSERT_FALSE(static_cast<bool>(wallet2.sendTransaction(minerAccount.toAddress(), m_currency.coin(), txHash2)));
 
     startNode(NODE_1);
     ASSERT_TRUE(waitDaemonReady(NODE_1));
@@ -180,7 +180,7 @@ namespace {
     wallet1.waitForSynchronizationToHeight(static_cast<uint32_t>(m_currency.minedMoneyUnlockWindow()) + 3);
 
     Hash txHash1;
-    ASSERT_FALSE(static_cast<bool>(wallet1.sendTransaction(m_currency.accountAddressAsString(minerAccount), m_currency.coin(), txHash1)));
+    ASSERT_FALSE(static_cast<bool>(wallet1.sendTransaction(minerAccount.toAddress(), m_currency.coin(), txHash1)));
 
     stopNode(NODE_1);
     // Don't start NODE_2, while NODE_1 doesn't close its connections
@@ -194,7 +194,7 @@ namespace {
     wallet2.waitForSynchronizationToHeight(static_cast<uint32_t>(m_currency.minedMoneyUnlockWindow()) + 3);
 
     Hash txHash2;
-    ASSERT_FALSE(static_cast<bool>(wallet2.sendTransaction(m_currency.accountAddressAsString(minerAccount), m_currency.coin(), txHash2)));
+    ASSERT_FALSE(static_cast<bool>(wallet2.sendTransaction(minerAccount.toAddress(), m_currency.coin(), txHash2)));
 
     startNode(NODE_1);
     ASSERT_TRUE(waitDaemonReady(NODE_1));
@@ -275,7 +275,7 @@ namespace {
     wallet1.waitForSynchronizationToHeight(static_cast<uint32_t>(m_currency.minedMoneyUnlockWindow()) + 2);
 
     Hash txHash1;
-    ASSERT_FALSE(static_cast<bool>(wallet1.sendTransaction(m_currency.accountAddressAsString(minerAccount), m_currency.coin(), txHash1)));
+    ASSERT_FALSE(static_cast<bool>(wallet1.sendTransaction(minerAccount.toAddress(), m_currency.coin(), txHash1)));
 
     // Start nodes simultaneously due to them connect each other and decided that they are connected to network
     startNode(NODE_4);

@@ -11,6 +11,7 @@
 #include "common/StringTools.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/core/Core.h"
+#include "cryptonote/core/Account.h"
 #include "cryptonote/core/IBlock.h"
 #include "cryptonote/core/Miner.h"
 #include "cryptonote/core/TransactionExtra.h"
@@ -404,7 +405,7 @@ bool RpcServer::on_send_raw_tx(const COMMAND_RPC_SEND_RAW_TX::request& req, COMM
 
 bool RpcServer::on_start_mining(const COMMAND_RPC_START_MINING::request& req, COMMAND_RPC_START_MINING::response& res) {
   AccountPublicAddress adr;
-  if (!m_core.currency().parseAccountAddressString(req.miner_address, adr)) {
+  if (!Account::parseAddress(req.miner_address, adr)) {
     res.status = "Failed, wrong address";
     return true;
   }
@@ -489,7 +490,7 @@ bool RpcServer::on_getblocktemplate(const COMMAND_RPC_GETBLOCKTEMPLATE::request&
 
   AccountPublicAddress acc = boost::value_initialized<AccountPublicAddress>();
 
-  if (!req.wallet_address.size() || !m_core.currency().parseAccountAddressString(req.wallet_address, acc)) {
+  if (!req.wallet_address.size() || !Account::parseAddress(req.wallet_address, acc)) {
     throw JsonRpc::JsonRpcError{ CORE_RPC_ERROR_CODE_WRONG_WALLET_ADDRESS, "Failed to parse wallet address" };
   }
 

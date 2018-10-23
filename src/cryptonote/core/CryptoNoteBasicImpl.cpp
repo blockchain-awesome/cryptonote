@@ -48,13 +48,6 @@ namespace cryptonote {
     return penalizedAmountLo;
   }
   //-----------------------------------------------------------------------
-  std::string getAccountAddressAsStr(uint64_t prefix, const AccountPublicAddress& adr) {
-    BinaryArray ba;
-    bool r = toBinaryArray(adr, ba);
-    assert(r);
-    return Tools::Base58::encode_addr(prefix, Common::asString(ba));
-  }
-  //-----------------------------------------------------------------------
   bool is_coinbase(const Transaction& tx) {
     if(tx.inputs.size() != 1) {
       return false;
@@ -65,17 +58,6 @@ namespace cryptonote {
     }
 
     return true;
-  }
-  //-----------------------------------------------------------------------
-  bool parseAccountAddressString(uint64_t& prefix, AccountPublicAddress& adr, const std::string& str) {
-    std::string data;
-
-    return
-      Tools::Base58::decode_addr(str, prefix, data) &&
-      fromBinaryArray(adr, asBinaryArray(data)) &&
-      // ::serialization::parse_binary(data, adr) &&
-      check_key(adr.spendPublicKey) &&
-      check_key(adr.viewPublicKey);
   }
   //-----------------------------------------------------------------------
   bool operator ==(const cryptonote::Transaction& a, const cryptonote::Transaction& b) {

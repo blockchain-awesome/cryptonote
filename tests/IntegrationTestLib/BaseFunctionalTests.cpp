@@ -299,7 +299,7 @@ bool BaseFunctionalTests::mineBlocks(TestNode& node, const cryptonote::AccountPu
     Block blockTemplate;
     uint64_t difficulty;
 
-    if (!node.getBlockTemplate(m_currency.accountAddressAsString(address), blockTemplate, difficulty)) {
+    if (!node.getBlockTemplate(Account::getAddress(address), blockTemplate, difficulty)) {
       return false;
     }
 

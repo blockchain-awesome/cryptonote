@@ -249,7 +249,7 @@ void WalletApi::TearDown() {
 
 cryptonote::AccountPublicAddress WalletApi::parseAddress(const std::string& address) {
   cryptonote::AccountPublicAddress pubAddr;
-  if (!currency.parseAccountAddressString(address, pubAddr)) {
+  if (!Account::parseAddress(address, pubAddr)) {
     throw std::system_error(std::make_error_code(std::errc::invalid_argument));
   }
 
@@ -1068,7 +1068,7 @@ void WalletApi::testIWalletDataCompatibility(bool details, const std::string& ca
   EXPECT_EQ(1, wallet.getAddressCount());
 
   AccountPublicAddress addr;
-  currency.parseAccountAddressString(wallet.getAddress(0), addr);
+  Account::parseAddress(wallet.getAddress(0), addr);
   EXPECT_EQ(account.getAccountKeys().address.spendPublicKey, addr.spendPublicKey);
   EXPECT_EQ(account.getAccountKeys().address.viewPublicKey, addr.viewPublicKey);
   EXPECT_EQ(0, wallet.getActualBalance());

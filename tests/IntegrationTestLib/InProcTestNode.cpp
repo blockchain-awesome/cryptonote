@@ -10,6 +10,7 @@
 #include <Logging/ConsoleLogger.h>
 
 #include "cryptonote/core/Core.h"
+#include "cryptonote/core/Account.h"
 #include "cryptonote/core/CoreConfig.h"
 #include "cryptonote/core/Miner.h"
 #include "cryptonote/protocol/handler.h"
@@ -124,7 +125,7 @@ void InProcTestNode::workerThread(std::promise<std::string>& initPromise) {
 bool InProcTestNode::startMining(size_t threadsCount, const std::string &address) {
   assert(core.get());
   AccountPublicAddress addr;
-  m_currency.parseAccountAddressString(address, addr);
+  Account::parseAddress(address, addr);
   return core->get_miner().start(addr, threadsCount);
 }
 
@@ -145,7 +146,7 @@ bool InProcTestNode::stopDaemon() {
 
 bool InProcTestNode::getBlockTemplate(const std::string &minerAddress, cryptonote::Block &blockTemplate, uint64_t &difficulty) {
   AccountPublicAddress addr;
-  m_currency.parseAccountAddressString(minerAddress, addr);
+  Account::parseAddress(minerAddress, addr);
   uint32_t height = 0;
   return core->get_block_template(blockTemplate, addr, difficulty, height, BinaryArray());
 }

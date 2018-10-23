@@ -32,7 +32,6 @@
 #include "Transfers/TransfersContainer.h"
 #include "WalletSerialization.h"
 #include "WalletErrors.h"
-#include "WalletUtils.h"
 
 using namespace Common;
 using namespace crypto;
@@ -44,23 +43,24 @@ void asyncRequestCompletion(System::Event& requestFinished) {
   requestFinished.set();
 }
 
-void parseAddressString(const std::string& string, const cryptonote::Currency& currency, cryptonote::AccountPublicAddress& address) {
-  if (!currency.parseAccountAddressString(string, address)) {
+void parseAddressString(const std::string& string, cryptonote::AccountPublicAddress& address) {
+
+  if (!Account::parseAddress(string, address)) {
     throw std::system_error(make_error_code(cryptonote::error::BAD_ADDRESS));
   }
 }
 
-void validateAddresses(const std::vector<std::string>& addresses, const cryptonote::Currency& currency) {
+void validateAddresses(const std::vector<std::string>& addresses) {
   for (const auto& address: addresses) {
-    if (!cryptonote::validateAddress(address, currency)) {
+    if (!Account::parseAddress(address)) {
       throw std::system_error(make_error_code(cryptonote::error::BAD_ADDRESS));
     }
   }
 }
 
-void validateOrders(const std::vector<WalletOrder>& orders, const cryptonote::Currency& currency) {
+void validateOrders(const std::vector<WalletOrder>& orders) {
   for (const auto& order: orders) {
-    if (!cryptonote::validateAddress(order.address, currency)) {
+    if (!Account::parseAddress(order.address)) {
       throw std::system_error(make_error_code(cryptonote::error::BAD_ADDRESS));
     }
 
@@ -213,7 +213,7 @@ uint64_t pushDonationTransferIfPossible(const DonationSettings& donation, uint64
 cryptonote::AccountPublicAddress parseAccountAddressString(const std::string& addressString, const cryptonote::Currency& currency) {
   cryptonote::AccountPublicAddress address;
 
-  if (!currency.parseAccountAddressString(addressString, address)) {
+  if (!Account::parseAddress(addressString, address)) {
     throw std::system_error(make_error_code(cryptonote::error::BAD_ADDRESS));
   }
 
@@ -444,7 +444,7 @@ std::string WalletGreen::getAddress(size_t index) const {
   }
 
   const WalletRecord& wallet = m_walletsContainer.get<RandomAccessIndex>()[index];
-  return m_currency.accountAddressAsString({ wallet.spendPublicKey, m_viewPublicKey });
+  return Account::getAddress({ wallet.spendPublicKey, m_viewPublicKey });
 }
 
 KeyPair WalletGreen::getAddressSpendKey(size_t index) const {
@@ -576,7 +576,7 @@ std::string WalletGreen::addWallet(const crypto::PublicKey& spendPublicKey, cons
     getViewKeyKnownBlocks(m_viewPublicKey);
   }
 
-  return m_currency.accountAddressAsString({ spendPublicKey, m_viewPublicKey });
+  return Account::getAddress({ spendPublicKey, m_viewPublicKey });
 }
 
 void WalletGreen::deleteAddress(const std::string& address) {
@@ -746,7 +746,7 @@ void WalletGreen::prepareTransaction(std::vector<WalletOuts>&& wallets,
   if (preparedTransaction.changeAmount != 0) {
     WalletTransfer changeTransfer;
     changeTransfer.type = WalletTransferType::CHANGE;
-    changeTransfer.address = m_currency.accountAddressAsString(changeDestination);
+    changeTransfer.address = Account::getAddress(changeDestination);
     changeTransfer.amount = static_cast<int64_t>(preparedTransaction.changeAmount);
     preparedTransaction.destinations.emplace_back(std::move(changeTransfer));
 
@@ -770,7 +770,7 @@ void WalletGreen::validateTransactionParameters(const TransactionParameters& tra
     throw std::system_error(make_error_code(error::WRONG_PARAMETERS), "DonationSettings must have both address and threshold parameters filled");
   }
 
-  validateAddresses(transactionParameters.sourceAddresses, m_currency);
+  validateAddresses(transactionParameters.sourceAddresses);
 
   auto badAddr = std::find_if(transactionParameters.sourceAddresses.begin(), transactionParameters.sourceAddresses.end(), [this](const std::string& addr) {
     return !isMyAddress(addr);
@@ -779,7 +779,7 @@ void WalletGreen::validateTransactionParameters(const TransactionParameters& tra
     throw std::system_error(make_error_code(error::BAD_ADDRESS), "Source address must belong to current container: " + *badAddr);
   }
 
-  validateOrders(transactionParameters.destinations, m_currency);
+  validateOrders(transactionParameters.destinations);
 
   if (transactionParameters.changeDestination.empty()) {
     if (transactionParameters.sourceAddresses.size() > 1) {
@@ -788,7 +788,7 @@ void WalletGreen::validateTransactionParameters(const TransactionParameters& tra
       throw std::system_error(make_error_code(error::CHANGE_ADDRESS_REQUIRED), "Set change destination address");
     }
   } else {
-    if (!cryptonote::validateAddress(transactionParameters.changeDestination, m_currency)) {
+    if (!Account::parseAddress(transactionParameters.changeDestination)) {
       throw std::system_error(make_error_code(cryptonote::error::BAD_ADDRESS), "Wrong change address");
     }
 
@@ -1058,7 +1058,7 @@ bool WalletGreen::updateTransactionTransfers(size_t transactionId, const std::ve
   int64_t myOutputsAmount = 0;
   for (auto containerAmount : containerAmountsList) {
     AccountPublicAddress address{ getWalletRecord(containerAmount.container).spendPublicKey, m_viewPublicKey };
-    std::string addressString = m_currency.accountAddressAsString(address);
+    std::string addressString = Account::getAddress(address);
 
     updated |= updateAddressTransfers(transactionId, firstTransferIdx, addressString, initialTransfers[addressString].input, containerAmount.amounts.input);
     updated |= updateAddressTransfers(transactionId, firstTransferIdx, addressString, initialTransfers[addressString].output, containerAmount.amounts.output);
@@ -1482,7 +1482,7 @@ std::vector<cryptonote::WalletGreen::ReceiverAmounts> WalletGreen::splitDestinat
   std::vector<ReceiverAmounts> decomposedOutputs;
   for (const auto& destination: destinations) {
     AccountPublicAddress address;
-    parseAddressString(destination.address, currency, address);
+    parseAddressString(destination.address, address);
     decomposedOutputs.push_back(splitAmount(destination.amount, address, dustThreshold));
   }
 
@@ -2017,7 +2017,7 @@ const WalletRecord& WalletGreen::getWalletRecord(cryptonote::ITransfersContainer
 cryptonote::AccountPublicAddress WalletGreen::parseAddress(const std::string& address) const {
   cryptonote::AccountPublicAddress pubAddr;
 
-  if (!m_currency.parseAccountAddressString(address, pubAddr)) {
+  if (!Account::parseAddress(address, pubAddr)) {
     throw std::system_error(make_error_code(error::BAD_ADDRESS));
   }
 

@@ -32,7 +32,7 @@ bool test_transaction_generation_and_ring_signature()
   AccountBase miner_acc6;
   miner_acc6.generate();
 
-  std::string add_str = currency.accountAddressAsString(miner_acc3);
+  std::string add_str = miner_acc3.toAddress();
 
   AccountBase rv_acc;
   rv_acc.generate();
@@ -132,7 +132,7 @@ bool test_block_creation()
   cryptonote::Currency currency = cryptonote::CurrencyBuilder(logger).currency();
 
   AccountPublicAddress adr;
-  bool r = currency.parseAccountAddressString("272xWzbWsP4cfNFfxY5ETN5moU8x81PKfWPwynrrqsNGDBQGLmD1kCkKCvPeDUXu5XfmZkCrQ53wsWmdfvHBGLNjGcRiDcK", adr);
+  bool r = Account::parseAddress("272xWzbWsP4cfNFfxY5ETN5moU8x81PKfWPwynrrqsNGDBQGLmD1kCkKCvPeDUXu5XfmZkCrQ53wsWmdfvHBGLNjGcRiDcK", adr);
   CHECK_AND_ASSERT_MES(r, false, "failed to import");
   Block b;
   r = currency.constructMinerTx(90, Common::medianValue(szs), 3553616528562147, 33094, 10000000, adr, b.baseTransaction, BinaryArray(), 11);

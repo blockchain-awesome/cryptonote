@@ -20,6 +20,8 @@
 #include "TestBlockchainGenerator.h"
 #include <Logging/ConsoleLogger.h>
 
+using namespace cryptonote;
+
 class TrivialWalletObserver : public cryptonote::IWalletLegacyObserver
 {
 public:
@@ -216,7 +218,7 @@ void WalletLegacyApi::GetOneBlockReward(cryptonote::WalletLegacy& wallet) {
 
 void WalletLegacyApi::GetOneBlockReward(cryptonote::WalletLegacy& wallet, const cryptonote::Currency& currency, TestBlockchainGenerator& blockchainGenerator) {
   cryptonote::AccountPublicAddress address;
-  ASSERT_TRUE(currency.parseAccountAddressString(wallet.getAddress(), address));
+  ASSERT_TRUE(Account::parseAddress(wallet.getAddress(), address));
   blockchainGenerator.getBlockRewardForAddress(address);
 }
 

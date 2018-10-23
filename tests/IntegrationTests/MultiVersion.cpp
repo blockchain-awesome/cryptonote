@@ -41,7 +41,7 @@ public:
     // create some address for mining
     cryptonote::AccountBase stashAddress;
     stashAddress.generate();
-    auto stashAddressStr = m_currency.accountAddressAsString(stashAddress);
+    auto stashAddressStr = stashAddress.toAddress();
 
     unlockMoney(stashAddressStr);
 

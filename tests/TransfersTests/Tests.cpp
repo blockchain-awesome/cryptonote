@@ -206,7 +206,7 @@ public:
       sub.transactionSpendableAge = TRANSACTION_SPENDABLE_AGE;
 
       m_accounts.push_back(sub);
-      m_addresses.push_back(currency.accountAddressAsString(acc));
+      m_addresses.push_back(acc.toAddress());
     }
   }
 
@@ -331,7 +331,7 @@ TEST_F(TransfersTest, base) {
   blockSync.start();
 
   Hash txId;
-  ASSERT_FALSE(static_cast<bool>(wallet1.sendTransaction(currency.accountAddressAsString(dstAcc), TRANSFER_AMOUNT, txId)));
+  ASSERT_FALSE(static_cast<bool>(wallet1.sendTransaction(dstAcc.toAddress(), TRANSFER_AMOUNT, txId)));
   ASSERT_TRUE(mineBlocks(*nodeDaemons[0], wallet1.address(), 1));
 
   ASSERT_TRUE(waitFuture.get());
@@ -492,7 +492,7 @@ TEST_F(MultisignatureTest, createMulitisignatureTransaction) {
   blockSync.start();
 
   AccountPublicAddress senderAddress;
-  ASSERT_TRUE(currency.parseAccountAddressString(sender.m_addresses[0], senderAddress));
+  ASSERT_TRUE(Account::parseAddress(sender.m_addresses[0], senderAddress));
   ASSERT_TRUE(mineBlocks(*nodeDaemons[0], senderAddress, 1 + currency.minedMoneyUnlockWindow()));
 
   // wait for incoming transfer

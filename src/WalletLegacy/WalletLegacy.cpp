@@ -365,7 +365,7 @@ std::string WalletLegacy::getAddress() {
   std::unique_lock<std::mutex> lock(m_cacheMutex);
   throwIfNotInitialised();
 
-  return m_currency.accountAddressAsString(m_account);
+  return m_account.toAddress();
 }
 
 uint64_t WalletLegacy::actualBalance() {

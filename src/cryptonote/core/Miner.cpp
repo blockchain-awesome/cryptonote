@@ -23,6 +23,7 @@
 
 #include "CryptoNoteFormatUtils.h"
 #include "TransactionExtra.h"
+#include "cryptonote/core/Account.h"
 
 using namespace Logging;
 
@@ -168,7 +169,7 @@ namespace cryptonote
     }
 
     if(!config.startMining.empty()) {
-      if (!m_currency.parseAccountAddressString(config.startMining, m_mine_address)) {
+      if (!Account::parseAddress(config.startMining, m_mine_address)) {
         logger(ERROR) << "Target account address " << config.startMining << " has wrong format, starting daemon canceled";
         return false;
       }

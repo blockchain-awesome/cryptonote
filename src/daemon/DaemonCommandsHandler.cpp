@@ -7,9 +7,13 @@
 #include "P2p/NetNode.h"
 #include "cryptonote/core/Miner.h"
 #include "cryptonote/core/Core.h"
+#include "cryptonote/core/Account.h"
 #include "cryptonote/protocol/handler.h"
 #include "Serialization/SerializationTools.h"
 #include "version.h"
+
+
+using namespace cryptonote;
 
 namespace {
   template <typename T>
@@ -282,7 +286,7 @@ bool DaemonCommandsHandler::start_mining(const std::vector<std::string> &args) {
   }
 
   cryptonote::AccountPublicAddress adr;
-  if (!m_core.currency().parseAccountAddressString(args.front(), adr)) {
+  if (!Account::parseAddress(args.front(), adr)) {
     std::cout << "target account address has wrong format" << std::endl;
     return true;
   }

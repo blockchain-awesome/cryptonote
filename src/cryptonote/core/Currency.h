@@ -88,10 +88,6 @@ public:
   bool isAmountApplicableInFusionTransactionInput(uint64_t amount, uint64_t threshold) const;
   bool isAmountApplicableInFusionTransactionInput(uint64_t amount, uint64_t threshold, uint8_t& amountPowerOfTen) const;
 
-  std::string accountAddressAsString(const AccountBase& account) const;
-  std::string accountAddressAsString(const AccountPublicAddress& accountPublicAddress) const;
-  bool parseAccountAddressString(const std::string& str, AccountPublicAddress& addr) const;
-
   std::string formatAmount(uint64_t amount) const;
   std::string formatAmount(int64_t amount) const;
   bool parseAmount(const std::string& str, uint64_t& amount) const;

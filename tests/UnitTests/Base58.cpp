@@ -8,6 +8,7 @@
 #include <Logging/LoggerGroup.h>
 
 #include "cryptonote/core/CryptoNoteBasicImpl.h"
+#include "cryptonote/core/Account.h"
 #include "cryptonote/core/Currency.h"
 #include "cryptonote/core/CryptoNoteSerialization.h"
 
@@ -454,7 +455,7 @@ TEST(getAccountAddressAsStr, works_correctly)
   cryptonote::AccountPublicAddress addr;
 
   ASSERT_NO_THROW(cryptonote::loadFromBinary(addr, Common::asBinaryArray(test_serialized_keys)));
-  std::string addr_str = cryptonote::getAccountAddressAsStr(TEST_PUBLIC_ADDRESS_BASE58_PREFIX, addr);
+  std::string addr_str = Account::getAddress(addr, TEST_PUBLIC_ADDRESS_BASE58_PREFIX);
   ASSERT_EQ(addr_str, test_keys_addr_str);
 }
 
@@ -462,7 +463,7 @@ TEST(parseAccountAddressString, handles_valid_address)
 {
   uint64_t prefix;
   cryptonote::AccountPublicAddress addr;
-  ASSERT_TRUE(cryptonote::parseAccountAddressString(prefix, addr, test_keys_addr_str));
+  ASSERT_TRUE(Account::parseAddress(prefix, addr, test_keys_addr_str));
   ASSERT_EQ(TEST_PUBLIC_ADDRESS_BASE58_PREFIX, prefix);
 
   BinaryArray blob;
@@ -477,7 +478,7 @@ TEST(parseAccountAddressString, fails_on_invalid_address_format)
 
   uint64_t prefix;
   cryptonote::AccountPublicAddress addr;
-  ASSERT_FALSE(cryptonote::parseAccountAddressString(prefix, addr, addr_str));
+  ASSERT_FALSE(Account::parseAddress(prefix, addr, addr_str));
 }
 
 TEST(parseAccountAddressString, fails_on_invalid_address_prefix)
@@ -489,7 +490,7 @@ TEST(parseAccountAddressString, fails_on_invalid_address_prefix)
 
   cryptonote::AccountPublicAddress addr;
   
-  ASSERT_FALSE(currency.parseAccountAddressString(addr_str, addr));
+  ASSERT_FALSE(Account::parseAddress(addr_str, addr));
 }
 
 TEST(parseAccountAddressString, fails_on_invalid_address_content)
@@ -498,7 +499,7 @@ TEST(parseAccountAddressString, fails_on_invalid_address_content)
 
   uint64_t prefix;
   cryptonote::AccountPublicAddress addr;
-  ASSERT_FALSE(cryptonote::parseAccountAddressString(prefix, addr, addr_str));
+  ASSERT_FALSE(Account::parseAddress(prefix, addr, addr_str));
 }
 
 TEST(parseAccountAddressString, fails_on_invalid_address_spend_key)
@@ -509,7 +510,7 @@ TEST(parseAccountAddressString, fails_on_invalid_address_spend_key)
 
   uint64_t prefix;
   cryptonote::AccountPublicAddress addr;
-  ASSERT_FALSE(cryptonote::parseAccountAddressString(prefix, addr, addr_str));
+  ASSERT_FALSE(Account::parseAddress(prefix, addr, addr_str));
 }
 
 TEST(parseAccountAddressString, fails_on_invalid_address_view_key)
@@ -520,5 +521,5 @@ TEST(parseAccountAddressString, fails_on_invalid_address_view_key)
 
   uint64_t prefix;
   cryptonote::AccountPublicAddress addr;
-  ASSERT_FALSE(cryptonote::parseAccountAddressString(prefix, addr, addr_str));
+  ASSERT_FALSE(Account::parseAddress(prefix, addr, addr_str));
 }

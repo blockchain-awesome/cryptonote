@@ -103,7 +103,7 @@ IWalletLegacy* TestWalletLegacy::wallet() {
 AccountPublicAddress TestWalletLegacy::address() const {
   std::string addressString = m_wallet->getAddress();
   AccountPublicAddress address;
-  bool ok = m_currency.parseAccountAddressString(addressString, address);
+  bool ok = Account::parseAddress(addressString, address);
   assert(ok);
   return address;
 }
