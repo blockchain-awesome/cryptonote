@@ -12,7 +12,7 @@ namespace cryptonote
   /************************************************************************/
   /*                                                                      */
   /************************************************************************/
-  struct i_cryptonote_protocol {
+  struct ICryptonoteProtocol {
     virtual void relay_block(NOTIFY_NEW_BLOCK_request& arg) = 0;
     virtual void relay_transactions(NOTIFY_NEW_TRANSACTIONS_request& arg) = 0;
   };
@@ -20,7 +20,7 @@ namespace cryptonote
   /************************************************************************/
   /*                                                                      */
   /************************************************************************/
-  struct cryptonote_protocol_stub: public i_cryptonote_protocol {
+  struct cryptonote_protocol_stub: public ICryptonoteProtocol {
     virtual void relay_block(NOTIFY_NEW_BLOCK_request& arg) override {}
     virtual void relay_transactions(NOTIFY_NEW_TRANSACTIONS_request& arg) override {}
   };

@@ -26,8 +26,8 @@ public:
   virtual bool get_random_outs_for_amounts(const cryptonote::COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_request& req,
       cryptonote::COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_response& res) override;
   virtual bool get_tx_outputs_gindexs(const crypto::Hash& tx_id, std::vector<uint32_t>& indexs) override;
-  virtual cryptonote::i_cryptonote_protocol* get_protocol() override;
-  virtual bool handle_incoming_tx(cryptonote::BinaryArray const& tx_blob, cryptonote::tx_verification_context& tvc, bool keeped_by_block) override;
+  virtual cryptonote::ICryptonoteProtocol* get_protocol() override;
+  virtual bool handle_incoming_tx(cryptonote::BinaryArray const& tx_blob, cryptonote::TxVerificationContext& tvc, bool keeped_by_block) override;
   virtual std::vector<cryptonote::Transaction> getPoolTransactions() override;
   virtual bool getPoolChanges(const crypto::Hash& tailBlockId, const std::vector<crypto::Hash>& knownTxsIds,
                               std::vector<cryptonote::Transaction>& addedTxs, std::vector<crypto::Hash>& deletedTxsIds) override;
@@ -43,11 +43,11 @@ public:
   virtual bool have_block(const crypto::Hash& id) override;
   std::vector<crypto::Hash> buildSparseChain() override;
   std::vector<crypto::Hash> buildSparseChain(const crypto::Hash& startBlockId) override;
-  virtual bool get_stat_info(cryptonote::core_stat_info& st_inf) override { return false; }
+  virtual bool get_stat_info(cryptonote::CoreStateInfo& st_inf) override { return false; }
   virtual bool on_idle() override { return false; }
   virtual void pause_mining() override {}
   virtual void update_block_template_and_resume_mining() override {}
-  virtual bool handle_incoming_block_blob(const cryptonote::BinaryArray& block_blob, cryptonote::block_verification_context& bvc, bool control_miner, bool relay_block) override { return false; }
+  virtual bool handle_incoming_block_blob(const cryptonote::BinaryArray& block_blob, cryptonote::BlockVerificationContext& bvc, bool control_miner, bool relay_block) override { return false; }
   virtual bool handle_get_objects(cryptonote::NOTIFY_REQUEST_GET_OBJECTS::request& arg, cryptonote::NOTIFY_RESPONSE_GET_OBJECTS::request& rsp) override { return false; }
   virtual void on_synchronized() override {}
   virtual bool getOutByMSigGIndex(uint64_t amount, uint64_t gindex, cryptonote::MultisignatureOutput& out) override { return true; }
@@ -73,7 +73,7 @@ public:
   virtual bool getPoolTransactionsByTimestamp(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t transactionsNumberLimit, std::vector<cryptonote::Transaction>& transactions, uint64_t& transactionsNumberWithinTimestamps) override;
   virtual bool getTransactionsByPaymentId(const crypto::Hash& paymentId, std::vector<cryptonote::Transaction>& transactions) override;
   virtual std::unique_ptr<cryptonote::IBlock> getBlock(const crypto::Hash& blockId) override;
-  virtual bool handleIncomingTransaction(const cryptonote::Transaction& tx, const crypto::Hash& txHash, size_t blobSize, cryptonote::tx_verification_context& tvc, bool keptByBlock) override;
+  virtual bool handleIncomingTransaction(const cryptonote::Transaction& tx, const crypto::Hash& txHash, size_t blobSize, cryptonote::TxVerificationContext& tvc, bool keptByBlock) override;
   virtual std::error_code executeLocked(const std::function<std::error_code()>& func) override;
 
   virtual bool addMessageQueue(cryptonote::MessageQueue<cryptonote::BlockchainMessage>& messageQueuePtr) override;

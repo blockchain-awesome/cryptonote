@@ -26,19 +26,19 @@
 
 namespace cryptonote {
   class LockedBlockchainStorage;
-  struct core_stat_info;
+  struct CoreStateInfo;
   class miner;
   class CoreConfig;
 
   class core : public ICore, public IMinerHandler, public IBlockchainStorageObserver, public ITxPoolObserver {
    public:
-     core(const Currency& currency, i_cryptonote_protocol* pprotocol, Logging::ILogger& logger);
+     core(const Currency& currency, ICryptonoteProtocol* pprotocol, Logging::ILogger& logger);
      ~core();
 
      bool on_idle() override;
-     virtual bool handle_incoming_tx(const BinaryArray& tx_blob, tx_verification_context& tvc, bool keeped_by_block) override; //Deprecated. Should be removed with CryptoNoteProtocolHandler.
-     bool handle_incoming_block_blob(const BinaryArray& block_blob, block_verification_context& bvc, bool control_miner, bool relay_block) override;
-     virtual i_cryptonote_protocol* get_protocol() override {return m_pprotocol;}
+     virtual bool handle_incoming_tx(const BinaryArray& tx_blob, TxVerificationContext& tvc, bool keeped_by_block) override; //Deprecated. Should be removed with CryptoNoteProtocolHandler.
+     bool handle_incoming_block_blob(const BinaryArray& block_blob, BlockVerificationContext& bvc, bool control_miner, bool relay_block) override;
+     virtual ICryptonoteProtocol* get_protocol() override {return m_pprotocol;}
      const Currency& currency() const { return m_currency; }
 
      //-------------------- IMinerHandler -----------------------
@@ -73,7 +73,7 @@ namespace cryptonote {
      virtual bool getTransactionsByPaymentId(const crypto::Hash& paymentId, std::vector<Transaction>& transactions) override;
      virtual bool getOutByMSigGIndex(uint64_t amount, uint64_t gindex, MultisignatureOutput& out) override;
      virtual std::unique_ptr<IBlock> getBlock(const crypto::Hash& blocksId) override;
-     virtual bool handleIncomingTransaction(const Transaction& tx, const crypto::Hash& txHash, size_t blobSize, tx_verification_context& tvc, bool keptByBlock) override;
+     virtual bool handleIncomingTransaction(const Transaction& tx, const crypto::Hash& txHash, size_t blobSize, TxVerificationContext& tvc, bool keptByBlock) override;
      virtual std::error_code executeLocked(const std::function<std::error_code()>& func) override;
      
      virtual bool addMessageQueue(MessageQueue<BlockchainMessage>& messageQueue) override;
@@ -106,7 +106,7 @@ namespace cryptonote {
      bool get_alternative_blocks(std::list<Block>& blocks);
      size_t get_alternative_blocks_count();
 
-     void set_cryptonote_protocol(i_cryptonote_protocol* pprotocol);
+     void set_cryptonote_protocol(ICryptonoteProtocol* pprotocol);
      void set_checkpoints(Checkpoints&& chk_pts);
 
      std::vector<Transaction> getPoolTransactions() override;
@@ -115,7 +115,7 @@ namespace cryptonote {
      //bool get_outs(uint64_t amount, std::list<crypto::PublicKey>& pkeys);
      virtual std::vector<crypto::Hash> findBlockchainSupplement(const std::vector<crypto::Hash>& remoteBlockIds, size_t maxCount,
        uint32_t& totalBlockCount, uint32_t& startBlockIndex) override;
-     bool get_stat_info(core_stat_info& st_inf) override;
+     bool get_stat_info(CoreStateInfo& st_inf) override;
      
      virtual bool get_tx_outputs_gindexs(const crypto::Hash& tx_id, std::vector<uint32_t>& indexs) override;
      crypto::Hash get_tail_id();
@@ -139,10 +139,10 @@ namespace cryptonote {
      uint64_t getTotalGeneratedAmount();
 
    private:
-     bool add_new_tx(const Transaction& tx, const crypto::Hash& tx_hash, size_t blob_size, tx_verification_context& tvc, bool keeped_by_block);
+     bool add_new_tx(const Transaction& tx, const crypto::Hash& tx_hash, size_t blob_size, TxVerificationContext& tvc, bool keeped_by_block);
      bool load_state_data();
      bool parse_tx_from_blob(Transaction& tx, crypto::Hash& tx_hash, crypto::Hash& tx_prefix_hash, const BinaryArray& blob);
-     bool handle_incoming_block(const Block& b, block_verification_context& bvc, bool control_miner, bool relay_block);
+     bool handle_incoming_block(const Block& b, BlockVerificationContext& bvc, bool control_miner, bool relay_block);
 
      bool check_tx_syntax(const Transaction& tx);
      //check correct values, amounts and all lightweight checks not related with database
@@ -169,7 +169,7 @@ namespace cryptonote {
      cryptonote::RealTimeProvider m_timeProvider;
      tx_memory_pool m_mempool;
      Blockchain m_blockchain;
-     i_cryptonote_protocol* m_pprotocol;
+     ICryptonoteProtocol* m_pprotocol;
      std::unique_ptr<miner> m_miner;
      std::string m_config_folder;
      cryptonote_protocol_stub m_protocol_stub;

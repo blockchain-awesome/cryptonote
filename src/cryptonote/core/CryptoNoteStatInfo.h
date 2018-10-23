@@ -8,7 +8,7 @@
 
 namespace cryptonote
 {
-  struct core_stat_info
+  struct CoreStateInfo
   {
     uint64_t tx_pool_size;
     uint64_t blockchain_height;

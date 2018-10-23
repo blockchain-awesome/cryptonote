@@ -371,7 +371,7 @@ bool RpcServer::on_send_raw_tx(const COMMAND_RPC_SEND_RAW_TX::request& req, COMM
     return true;
   }
 
-  tx_verification_context tvc = boost::value_initialized<tx_verification_context>();
+  TxVerificationContext tvc = boost::value_initialized<TxVerificationContext>();
   if (!m_core.handle_incoming_tx(tx_blob, tvc, false))
   {
     logger(INFO) << "[on_send_raw_tx]: Failed to process tx";
@@ -545,7 +545,7 @@ bool RpcServer::on_submitblock(const COMMAND_RPC_SUBMITBLOCK::request& req, COMM
     throw JsonRpc::JsonRpcError{ CORE_RPC_ERROR_CODE_WRONG_BLOCKBLOB, "Wrong block blob" };
   }
 
-  block_verification_context bvc = boost::value_initialized<block_verification_context>();
+  BlockVerificationContext bvc = boost::value_initialized<BlockVerificationContext>();
 
   m_core.handle_incoming_block_blob(blockblob, bvc, true, true);
 

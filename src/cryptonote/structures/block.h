@@ -1,6 +1,6 @@
 #pragma once
 
-#include "transaction.h"
+#include "cryptonote/core/transaction/transaction.h"
 
 namespace cryptonote
 {

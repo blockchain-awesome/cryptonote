@@ -209,7 +209,7 @@ namespace
 
 //   test.construct(test.m_currency.minimumFee(), 1, tx);
 
-//   tx_verification_context tvc = boost::value_initialized<tx_verification_context>();
+//   TxVerificationContext tvc = boost::value_initialized<TxVerificationContext>();
   
 //   ASSERT_TRUE(test.pool.add_tx(tx, tvc, false));
 //   ASSERT_FALSE(tvc.m_verifivation_failed);
@@ -224,7 +224,7 @@ namespace
 
 //   auto txhash = getObjectHash(tx);
 
-//   tx_verification_context tvc = boost::value_initialized<tx_verification_context>();
+//   TxVerificationContext tvc = boost::value_initialized<TxVerificationContext>();
 
 //   ASSERT_TRUE(test.pool.add_tx(tx, tvc, false));
 //   ASSERT_FALSE(tvc.m_verifivation_failed);
@@ -246,7 +246,7 @@ namespace
 
 //   test.construct(test.m_currency.minimumFee(), 1, tx);
 
-//   tx_verification_context tvc = boost::value_initialized<tx_verification_context>();
+//   TxVerificationContext tvc = boost::value_initialized<TxVerificationContext>();
 
 //   ASSERT_TRUE(test.pool.add_tx(tx, tvc, false));
 //   ASSERT_FALSE(tvc.m_verifivation_failed);
@@ -276,7 +276,7 @@ namespace
 
 //     txGenerator.construct(txGenerator.m_source_amount, fee, i, tx);
 
-//     tx_verification_context tvc = boost::value_initialized<tx_verification_context>();
+//     TxVerificationContext tvc = boost::value_initialized<TxVerificationContext>();
 //     ASSERT_TRUE(pool.add_tx(tx, tvc, false));
 //     ASSERT_TRUE(tvc.m_added_to_pool);
 
@@ -335,7 +335,7 @@ namespace
 //     // interleave fee and fee*2
 //     txGenerator.construct(txGenerator.m_source_amount, fee + (fee * (i&1)), 1, tx);
 
-//     tx_verification_context tvc = boost::value_initialized<tx_verification_context>();
+//     TxVerificationContext tvc = boost::value_initialized<TxVerificationContext>();
 //     ASSERT_TRUE(pool.add_tx(tx, tvc, false));
 //     ASSERT_TRUE(tvc.m_added_to_pool);
 
@@ -383,7 +383,7 @@ namespace
 //     Transaction tx;
 //     GenerateTransaction(currency, tx, fee, 1);
 
-//     tx_verification_context tvc = boost::value_initialized<tx_verification_context>();
+//     TxVerificationContext tvc = boost::value_initialized<TxVerificationContext>();
 //     ASSERT_TRUE(pool.add_tx(tx, tvc, false)); // main chain
 //     ASSERT_TRUE(tvc.m_added_to_pool);
 
@@ -394,7 +394,7 @@ namespace
 //     Transaction tx;
 //     GenerateTransaction(currency, tx, fee, 1);
 
-//     tx_verification_context tvc = boost::value_initialized<tx_verification_context>();
+//     TxVerificationContext tvc = boost::value_initialized<TxVerificationContext>();
 //     ASSERT_TRUE(pool.add_tx(tx, tvc, true)); // alternative chain
 //     ASSERT_TRUE(tvc.m_added_to_pool);
 
@@ -425,7 +425,7 @@ namespace
 //   Transaction tx;
 //   GenerateTransaction(currency, tx, fee, 1);
 
-//   tx_verification_context tvc = boost::value_initialized<tx_verification_context>();
+//   TxVerificationContext tvc = boost::value_initialized<TxVerificationContext>();
 //   ASSERT_TRUE(pool.add_tx(tx, tvc, false)); // main chain
 //   ASSERT_TRUE(tvc.m_added_to_pool);
 
@@ -454,7 +454,7 @@ namespace
 //   Transaction tx;
 //   GenerateTransaction(currency, tx, currency.minimumFee(), 1);
 
-//   tx_verification_context tvc = boost::value_initialized<tx_verification_context>();
+//   TxVerificationContext tvc = boost::value_initialized<TxVerificationContext>();
 //   ASSERT_TRUE(pool.add_tx(tx, tvc, false));
 //   ASSERT_TRUE(tvc.m_added_to_pool);
 
@@ -481,7 +481,7 @@ namespace
 //   Transaction tx;
 //   GenerateTransaction(currency, tx, currency.minimumFee(), 1);
 
-//   tx_verification_context tvc = boost::value_initialized<tx_verification_context>();
+//   TxVerificationContext tvc = boost::value_initialized<TxVerificationContext>();
 //   ASSERT_TRUE(pool.add_tx(tx, tvc, false));
 //   ASSERT_TRUE(tvc.m_added_to_pool);
 
@@ -512,7 +512,7 @@ namespace
 //   Transaction tx;
 //   GenerateTransaction(currency, tx, currency.minimumFee(), 1);
 
-//   tx_verification_context tvc = boost::value_initialized<tx_verification_context>();
+//   TxVerificationContext tvc = boost::value_initialized<TxVerificationContext>();
 //   ASSERT_TRUE(pool.add_tx(tx, tvc, false));
 //   ASSERT_TRUE(tvc.m_added_to_pool);
 
@@ -542,7 +542,7 @@ namespace
 //   Transaction tx;
 //   GenerateTransaction(currency, tx, currency.minimumFee(), 1);
 
-//   tx_verification_context tvc = boost::value_initialized<tx_verification_context>();
+//   TxVerificationContext tvc = boost::value_initialized<TxVerificationContext>();
 //   ASSERT_TRUE(pool->add_tx(tx, tvc, false));
 //   ASSERT_TRUE(tvc.m_added_to_pool);
 
@@ -568,7 +568,7 @@ namespace
 //   Transaction tx;
 //   GenerateTransaction(currency, tx, currency.minimumFee(), 1);
 
-//   tx_verification_context tvc = boost::value_initialized<tx_verification_context>();
+//   TxVerificationContext tvc = boost::value_initialized<TxVerificationContext>();
 //   ASSERT_TRUE(pool->add_tx(tx, tvc, false));
 //   ASSERT_TRUE(tvc.m_added_to_pool);
 
@@ -607,7 +607,7 @@ namespace
 //   Transaction tx;
 //   GenerateTransaction(currency, tx, currency.minimumFee(), 1);
 
-//   tx_verification_context tvc = boost::value_initialized<tx_verification_context>();
+//   TxVerificationContext tvc = boost::value_initialized<TxVerificationContext>();
 //   ASSERT_TRUE(pool->add_tx(tx, tvc, false));
 //   ASSERT_TRUE(tvc.m_added_to_pool);
 
@@ -654,7 +654,7 @@ TEST_F(tx_pool, TxPoolAcceptsValidFusionTransaction) {
 
   FusionTransactionBuilder builder(currency, 10 * currency.defaultDustThreshold());
   auto tx = builder.buildTx();
-  tx_verification_context tvc = boost::value_initialized<tx_verification_context>();
+  TxVerificationContext tvc = boost::value_initialized<TxVerificationContext>();
 
   ASSERT_TRUE(pool->add_tx(tx, tvc, false));
   ASSERT_TRUE(tvc.m_added_to_pool);
@@ -672,7 +672,7 @@ TEST_F(tx_pool, TxPoolDoesNotAcceptInvalidFusionTransaction) {
   FusionTransactionBuilder builder(currency, 10 * currency.defaultDustThreshold());
   builder.setInputCount(currency.fusionTxMinInputCount() - 1);
   auto tx = builder.buildTx();
-  tx_verification_context tvc = boost::value_initialized<tx_verification_context>();
+  TxVerificationContext tvc = boost::value_initialized<TxVerificationContext>();
 
   ASSERT_FALSE(pool->add_tx(tx, tvc, false));
   ASSERT_FALSE(tvc.m_added_to_pool);
@@ -750,12 +750,12 @@ public:
     }
 
     for (auto pair : ordinaryTxs) {
-      tx_verification_context tvc = boost::value_initialized<tx_verification_context>();
+      TxVerificationContext tvc = boost::value_initialized<TxVerificationContext>();
       ASSERT_TRUE(pool->add_tx(pair.second, tvc, false));
     }
 
     for (auto pair : fusionTxs) {
-      tx_verification_context tvc = boost::value_initialized<tx_verification_context>();
+      TxVerificationContext tvc = boost::value_initialized<TxVerificationContext>();
       ASSERT_TRUE(pool->add_tx(pair.second, tvc, false));
     }
 

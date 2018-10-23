@@ -48,12 +48,12 @@ gen_uint_overflow_base::gen_uint_overflow_base()
   REGISTER_CALLBACK_METHOD(gen_uint_overflow_1, mark_last_valid_block);
 }
 
-bool gen_uint_overflow_base::check_tx_verification_context(const cryptonote::tx_verification_context& tvc, bool tx_added, size_t event_idx, const cryptonote::Transaction& /*tx*/)
+bool gen_uint_overflow_base::check_TxVerificationContext(const cryptonote::TxVerificationContext& tvc, bool tx_added, size_t event_idx, const cryptonote::Transaction& /*tx*/)
 {
   return m_last_valid_block_event_idx < event_idx ? !tx_added && tvc.m_verifivation_failed : tx_added && !tvc.m_verifivation_failed;
 }
 
-bool gen_uint_overflow_base::check_block_verification_context(const cryptonote::block_verification_context& bvc, size_t event_idx, const cryptonote::Block& /*block*/)
+bool gen_uint_overflow_base::check_BlockVerificationContext(const cryptonote::BlockVerificationContext& bvc, size_t event_idx, const cryptonote::Block& /*block*/)
 {
   return m_last_valid_block_event_idx < event_idx ? bvc.m_verifivation_failed | bvc.m_marked_as_orphaned : !bvc.m_verifivation_failed;
 }

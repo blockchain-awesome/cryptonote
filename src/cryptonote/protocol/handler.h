@@ -30,7 +30,7 @@ namespace cryptonote
   class Currency;
 
   class CryptoNoteProtocolHandler : 
-    public i_cryptonote_protocol, 
+    public ICryptonoteProtocol, 
     public ICryptoNoteProtocolQuery
   {
   public:
@@ -51,7 +51,7 @@ namespace cryptonote
     bool on_idle();
     void onConnectionOpened(CryptoNoteConnectionContext& context);
     void onConnectionClosed(CryptoNoteConnectionContext& context);
-    bool get_stat_info(core_stat_info& stat_inf);
+    bool get_stat_info(CoreStateInfo& stat_inf);
     bool get_payload_sync_data(CORE_SYNC_DATA& hshd);
     bool process_payload_sync_data(const CORE_SYNC_DATA& hshd, CryptoNoteConnectionContext& context, bool is_inital);
     int handleCommand(bool is_notify, int command, const BinaryArray& in_buff, BinaryArray& buff_out, CryptoNoteConnectionContext& context, bool& handled);
@@ -69,7 +69,7 @@ namespace cryptonote
     int handle_response_chain_entry(int command, NOTIFY_RESPONSE_CHAIN_ENTRY::request& arg, CryptoNoteConnectionContext& context);
     int handleRequestTxPool(int command, NOTIFY_REQUEST_TX_POOL::request& arg, CryptoNoteConnectionContext& context);
 
-    //----------------- i_cryptonote_protocol ----------------------------------
+    //----------------- ICryptonoteProtocol ----------------------------------
     virtual void relay_block(NOTIFY_NEW_BLOCK::request& arg) override;
     virtual void relay_transactions(NOTIFY_NEW_TRANSACTIONS::request& arg) override;
 

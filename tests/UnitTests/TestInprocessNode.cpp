@@ -683,7 +683,7 @@ TEST_F(InProcessNodeTests, getPoolDiffereceActualBC) {
     auto txptr = cryptonote::createTransaction();
     auto tx = ::createTx(*txptr.get());
     transactionHashes.insert(cryptonote::getObjectHash(tx));
-    cryptonote::tx_verification_context tvc = boost::value_initialized<tx_verification_context>();
+    cryptonote::TxVerificationContext tvc = boost::value_initialized<TxVerificationContext>();
     bool keptByBlock = false;
     coreStub.handleIncomingTransaction(tx, cryptonote::getObjectHash(tx), cryptonote::getObjectBinarySize(tx), tvc, keptByBlock);
     ASSERT_TRUE(tvc.m_added_to_pool);
@@ -722,7 +722,7 @@ TEST_F(InProcessNodeTests, getPoolDiffereceNotActualBC) {
     auto txptr = cryptonote::createTransaction();
     auto tx = ::createTx(*txptr.get());
     transactionHashes.insert(cryptonote::getObjectHash(tx));
-    cryptonote::tx_verification_context tvc = boost::value_initialized<tx_verification_context>();
+    cryptonote::TxVerificationContext tvc = boost::value_initialized<TxVerificationContext>();
     bool keptByBlock = false;
     coreStub.handleIncomingTransaction(tx, cryptonote::getObjectHash(tx), cryptonote::getObjectBinarySize(tx), tvc, keptByBlock);
     ASSERT_TRUE(tvc.m_added_to_pool);

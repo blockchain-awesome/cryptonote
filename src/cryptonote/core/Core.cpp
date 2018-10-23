@@ -52,7 +52,7 @@ private:
   friend class core;
 };
 
-core::core(const Currency& currency, i_cryptonote_protocol* pprotocol, Logging::ILogger& logger) :
+core::core(const Currency& currency, ICryptonoteProtocol* pprotocol, Logging::ILogger& logger) :
 m_currency(currency),
 logger(logger, "core"),
 m_mempool(currency, m_blockchain, m_timeProvider, logger),
@@ -68,7 +68,7 @@ m_starter_message_showed(false) {
   m_blockchain.removeObserver(this);
 }
 
-void core::set_cryptonote_protocol(i_cryptonote_protocol* pprotocol) {
+void core::set_cryptonote_protocol(ICryptonoteProtocol* pprotocol) {
   if (pprotocol)
     m_pprotocol = pprotocol;
   else
@@ -156,7 +156,7 @@ size_t core::addChain(const std::vector<const IBlock*>& chain) {
       crypto::Hash txHash = NULL_HASH;
       size_t blobSize = 0;
       getObjectHash(tx, txHash, blobSize);
-      tx_verification_context tvc = boost::value_initialized<tx_verification_context>();
+      TxVerificationContext tvc = boost::value_initialized<TxVerificationContext>();
 
       if (!handleIncomingTransaction(tx, txHash, blobSize, tvc, true)) {
         logger(ERROR, BRIGHT_RED) << "core::addChain() failed to handle transaction " << txHash << " from block " << blocksCounter << "/" << chain.size();
@@ -169,7 +169,7 @@ size_t core::addChain(const std::vector<const IBlock*>& chain) {
       break;
     }
 
-    block_verification_context bvc = boost::value_initialized<block_verification_context>();
+    BlockVerificationContext bvc = boost::value_initialized<BlockVerificationContext>();
     m_blockchain.addNewBlock(block->getBlock(), bvc);
     if (bvc.m_marked_as_orphaned || bvc.m_verifivation_failed) {
       logger(ERROR, BRIGHT_RED) << "core::addChain() failed to handle incoming block " << get_block_hash(block->getBlock()) <<
@@ -184,8 +184,8 @@ size_t core::addChain(const std::vector<const IBlock*>& chain) {
   return blocksCounter;
 }
 
-bool core::handle_incoming_tx(const BinaryArray& tx_blob, tx_verification_context& tvc, bool keeped_by_block) { //Deprecated. Should be removed with CryptoNoteProtocolHandler.
-  tvc = boost::value_initialized<tx_verification_context>();
+bool core::handle_incoming_tx(const BinaryArray& tx_blob, TxVerificationContext& tvc, bool keeped_by_block) { //Deprecated. Should be removed with CryptoNoteProtocolHandler.
+  tvc = boost::value_initialized<TxVerificationContext>();
   //want to process all transactions sequentially
 
   if (tx_blob.size() > m_currency.maxTxSize()) {
@@ -208,7 +208,7 @@ bool core::handle_incoming_tx(const BinaryArray& tx_blob, tx_verification_contex
   return handleIncomingTransaction(tx, tx_hash, tx_blob.size(), tvc, keeped_by_block);
 }
 
-bool core::get_stat_info(core_stat_info& st_inf) {
+bool core::get_stat_info(CoreStateInfo& st_inf) {
   st_inf.mining_speed = m_miner->get_speed();
   st_inf.alternative_blocks = m_blockchain.getAlternativeBlocksCount();
   st_inf.blockchain_height = m_blockchain.getCurrentBlockchainHeight();
@@ -283,7 +283,7 @@ size_t core::get_blockchain_total_transactions() {
 //  return m_blockchain.get_outs(amount, pkeys);
 //}
 
-bool core::add_new_tx(const Transaction& tx, const crypto::Hash& tx_hash, size_t blob_size, tx_verification_context& tvc, bool keeped_by_block) {
+bool core::add_new_tx(const Transaction& tx, const crypto::Hash& tx_hash, size_t blob_size, TxVerificationContext& tvc, bool keeped_by_block) {
   //Locking on m_mempool and m_blockchain closes possibility to add tx to memory pool which is already in blockchain 
   std::lock_guard<decltype(m_mempool)> lk(m_mempool);
   LockedBlockchainStorage lbs(m_blockchain);
@@ -424,7 +424,7 @@ void core::update_block_template_and_resume_mining() {
 }
 
 bool core::handle_block_found(Block& b) {
-  block_verification_context bvc = boost::value_initialized<block_verification_context>();
+  BlockVerificationContext bvc = boost::value_initialized<BlockVerificationContext>();
   handle_incoming_block(b, bvc, true, true);
 
   if (bvc.m_verifivation_failed) {
@@ -470,7 +470,7 @@ void core::getPoolChanges(const std::vector<crypto::Hash>& knownTxsIds, std::vec
   assert(misses.empty());
 }
 
-bool core::handle_incoming_block_blob(const BinaryArray& block_blob, block_verification_context& bvc, bool control_miner, bool relay_block) {
+bool core::handle_incoming_block_blob(const BinaryArray& block_blob, BlockVerificationContext& bvc, bool control_miner, bool relay_block) {
   if (block_blob.size() > m_currency.maxBlockBlobSize()) {
     logger(INFO) << "WRONG BLOCK BLOB, too big size " << block_blob.size() << ", rejected";
     bvc.m_verifivation_failed = true;
@@ -487,7 +487,7 @@ bool core::handle_incoming_block_blob(const BinaryArray& block_blob, block_verif
   return handle_incoming_block(b, bvc, control_miner, relay_block);
 }
 
-bool core::handle_incoming_block(const Block& b, block_verification_context& bvc, bool control_miner, bool relay_block) {
+bool core::handle_incoming_block(const Block& b, BlockVerificationContext& bvc, bool control_miner, bool relay_block) {
   if (control_miner) {
     pause_mining();
   }
@@ -927,7 +927,7 @@ uint64_t core::getTotalGeneratedAmount() {
   return m_blockchain.getCoinsInCirculation();
 }
 
-bool core::handleIncomingTransaction(const Transaction& tx, const crypto::Hash& txHash, size_t blobSize, tx_verification_context& tvc, bool keptByBlock) {
+bool core::handleIncomingTransaction(const Transaction& tx, const crypto::Hash& txHash, size_t blobSize, TxVerificationContext& tvc, bool keptByBlock) {
   if (!check_tx_syntax(tx)) {
     logger(INFO) << "WRONG TRANSACTION BLOB, Failed to check tx " << txHash << " syntax, rejected";
     tvc.m_verifivation_failed = true;

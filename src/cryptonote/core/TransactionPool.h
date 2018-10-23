@@ -61,8 +61,8 @@ namespace cryptonote {
     bool deinit();
 
     bool have_tx(const crypto::Hash &id) const;
-    bool add_tx(const Transaction &tx, const crypto::Hash &id, size_t blobSize, tx_verification_context& tvc, bool keeped_by_block);
-    bool add_tx(const Transaction &tx, tx_verification_context& tvc, bool keeped_by_block);
+    bool add_tx(const Transaction &tx, const crypto::Hash &id, size_t blobSize, TxVerificationContext& tvc, bool keeped_by_block);
+    bool add_tx(const Transaction &tx, TxVerificationContext& tvc, bool keeped_by_block);
     //gets tx and remove it from pool
     bool take_tx(const crypto::Hash &id, Transaction &tx, size_t& blobSize, uint64_t& fee);
 

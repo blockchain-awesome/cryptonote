@@ -98,7 +98,7 @@ namespace cryptonote {
     logger(log, "txpool") {
   }
   //---------------------------------------------------------------------------------
-  bool tx_memory_pool::add_tx(const Transaction &tx, /*const crypto::Hash& tx_prefix_hash,*/ const crypto::Hash &id, size_t blobSize, tx_verification_context& tvc, bool keptByBlock) {
+  bool tx_memory_pool::add_tx(const Transaction &tx, /*const crypto::Hash& tx_prefix_hash,*/ const crypto::Hash &id, size_t blobSize, TxVerificationContext& tvc, bool keptByBlock) {
     if (!check_inputs_types_supported(tx)) {
       tvc.m_verifivation_failed = true;
       return false;
@@ -211,7 +211,7 @@ namespace cryptonote {
   }
 
   //---------------------------------------------------------------------------------
-  bool tx_memory_pool::add_tx(const Transaction &tx, tx_verification_context& tvc, bool keeped_by_block) {
+  bool tx_memory_pool::add_tx(const Transaction &tx, TxVerificationContext& tvc, bool keeped_by_block) {
     crypto::Hash h = NULL_HASH;
     size_t blobSize = 0;
     getObjectHash(tx, h, blobSize);

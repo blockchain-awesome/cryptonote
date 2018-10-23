@@ -89,7 +89,7 @@ DoubleSpendBase::DoubleSpendBase() :
   REGISTER_CALLBACK_METHOD(DoubleSpendBase, check_double_spend);
 }
 
-bool DoubleSpendBase::check_tx_verification_context(const cryptonote::tx_verification_context& tvc, bool tx_added, size_t event_idx, const cryptonote::Transaction& /*tx*/)
+bool DoubleSpendBase::check_TxVerificationContext(const cryptonote::TxVerificationContext& tvc, bool tx_added, size_t event_idx, const cryptonote::Transaction& /*tx*/)
 {
   if (m_invalid_tx_index == event_idx)
     return tvc.m_verifivation_failed;
@@ -97,7 +97,7 @@ bool DoubleSpendBase::check_tx_verification_context(const cryptonote::tx_verific
     return !tvc.m_verifivation_failed && tx_added;
 }
 
-bool DoubleSpendBase::check_block_verification_context(const cryptonote::block_verification_context& bvc, size_t event_idx, const cryptonote::Block& /*block*/)
+bool DoubleSpendBase::check_BlockVerificationContext(const cryptonote::BlockVerificationContext& bvc, size_t event_idx, const cryptonote::Block& /*block*/)
 {
   if (m_invalid_block_index == event_idx)
     return bvc.m_verifivation_failed;

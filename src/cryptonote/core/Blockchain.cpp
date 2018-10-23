@@ -203,7 +203,7 @@ bool Blockchain::init(const std::string& config_folder, bool load_existing) {
   if (m_blocks.empty()) {
     logger(INFO, BRIGHT_WHITE)
       << "Blockchain not loaded, generating genesis block.";
-    block_verification_context bvc = boost::value_initialized<block_verification_context>();
+    BlockVerificationContext bvc = boost::value_initialized<BlockVerificationContext>();
     pushBlock(m_currency.genesisBlock(), bvc);
     if (bvc.m_verifivation_failed) {
       logger(ERROR, BRIGHT_RED) << "Failed to add genesis block to blockchain";
@@ -316,7 +316,7 @@ bool Blockchain::resetAndSetGenesisBlock(const Block& b) {
   m_generatedTransactionsIndex.clear();
   m_orthanBlocksIndex.clear();
 
-  block_verification_context bvc = boost::value_initialized<block_verification_context>();
+  BlockVerificationContext bvc = boost::value_initialized<BlockVerificationContext>();
   addNewBlock(b, bvc);
   return bvc.m_added_to_main_chain && !bvc.m_verifivation_failed;
 }
@@ -443,8 +443,8 @@ bool Blockchain::rollback_blockchain_switching(std::list<Block> &original_chain,
 
   // return back original chain
   for (auto &bl : original_chain) {
-    block_verification_context bvc =
-      boost::value_initialized<block_verification_context>();
+    BlockVerificationContext bvc =
+      boost::value_initialized<BlockVerificationContext>();
     bool r = pushBlock(bl, bvc);
     if (!(r && bvc.m_added_to_main_chain)) {
       logger(ERROR, BRIGHT_RED) << "PANIC!!! failed to add (again) block while "
@@ -484,7 +484,7 @@ bool Blockchain::switch_to_alternative_blockchain(std::list<blocks_ext_by_hash::
   //connecting new alternative chain
   for (auto alt_ch_iter = alt_chain.begin(); alt_ch_iter != alt_chain.end(); alt_ch_iter++) {
     auto ch_ent = *alt_ch_iter;
-    block_verification_context bvc = boost::value_initialized<block_verification_context>();
+    BlockVerificationContext bvc = boost::value_initialized<BlockVerificationContext>();
     bool r = pushBlock(ch_ent->second.bl, bvc);
     if (!r || !bvc.m_added_to_main_chain) {
       logger(INFO, BRIGHT_WHITE) << "Failed to switch to alternative blockchain";
@@ -495,7 +495,7 @@ bool Blockchain::switch_to_alternative_blockchain(std::list<blocks_ext_by_hash::
       m_alternative_chains.erase(ch_ent);
 
       for (auto alt_ch_to_orph_iter = ++alt_ch_iter; alt_ch_to_orph_iter != alt_chain.end(); alt_ch_to_orph_iter++) {
-        //block_verification_context bvc = boost::value_initialized<block_verification_context>();
+        //BlockVerificationContext bvc = boost::value_initialized<BlockVerificationContext>();
         //add_block_as_invalid((*alt_ch_iter)->second, (*alt_ch_iter)->first);
         m_orthanBlocksIndex.remove((*alt_ch_to_orph_iter)->second.bl);
         m_alternative_chains.erase(*alt_ch_to_orph_iter);
@@ -508,7 +508,7 @@ bool Blockchain::switch_to_alternative_blockchain(std::list<blocks_ext_by_hash::
   if (!discard_disconnected_chain) {
     //pushing old chain as alternative chain
     for (auto& old_ch_ent : disconnected_chain) {
-      block_verification_context bvc = boost::value_initialized<block_verification_context>();
+      BlockVerificationContext bvc = boost::value_initialized<BlockVerificationContext>();
       bool r = handle_alternative_block(old_ch_ent, get_block_hash(old_ch_ent), bvc, false);
       if (!r) {
         logger(ERROR, BRIGHT_RED) << ("Failed to push ex-main chain blocks to alternative chain ");
@@ -690,7 +690,7 @@ bool Blockchain::complete_timestamps_vector(uint64_t start_top_height, std::vect
   return true;
 }
 
-bool Blockchain::handle_alternative_block(const Block& b, const crypto::Hash& id, block_verification_context& bvc, bool sendNewAlternativeBlockMessage) {
+bool Blockchain::handle_alternative_block(const Block& b, const crypto::Hash& id, BlockVerificationContext& bvc, bool sendNewAlternativeBlockMessage) {
   std::lock_guard<decltype(m_blockchain_lock)> lk(m_blockchain_lock);
 
   auto block_height = get_block_height(b);
@@ -1362,7 +1362,7 @@ bool Blockchain::update_next_comulative_size_limit() {
   return true;
 }
 
-bool Blockchain::addNewBlock(const Block& bl_, block_verification_context& bvc) {
+bool Blockchain::addNewBlock(const Block& bl_, BlockVerificationContext& bvc) {
   //copy block here to let modify block.target
   Block bl = bl_;
   crypto::Hash id;
@@ -1409,7 +1409,7 @@ const TransactionEntry& Blockchain::transactionByIndex(TransactionIndex index) {
   return m_blocks[index.block].transactions[index.transaction];
 }
 
-bool Blockchain::pushBlock(const Block& blockData, block_verification_context& bvc) {
+bool Blockchain::pushBlock(const Block& blockData, BlockVerificationContext& bvc) {
   std::vector<Transaction> transactions;
   if (!loadTransactions(blockData, transactions)) {
     bvc.m_verifivation_failed = true;
@@ -1424,7 +1424,7 @@ bool Blockchain::pushBlock(const Block& blockData, block_verification_context& b
   return true;
 }
 
-bool Blockchain::pushBlock(const Block& blockData, const std::vector<Transaction>& transactions, block_verification_context& bvc) {
+bool Blockchain::pushBlock(const Block& blockData, const std::vector<Transaction>& transactions, BlockVerificationContext& bvc) {
   std::lock_guard<decltype(m_blockchain_lock)> lk(m_blockchain_lock);
 
   auto blockProcessingStart = std::chrono::steady_clock::now();
@@ -2002,7 +2002,7 @@ bool Blockchain::loadTransactions(const Block& block, std::vector<Transaction>& 
   uint64_t fee;
   for (size_t i = 0; i < block.transactionHashes.size(); ++i) {
     if (!m_tx_pool.take_tx(block.transactionHashes[i], transactions[i], transactionSize, fee)) {
-      tx_verification_context context;
+      TxVerificationContext context;
       for (size_t j = 0; j < i; ++j) {
         if (!m_tx_pool.add_tx(transactions[i - 1 - j], context, true)) {
           throw std::runtime_error("Blockchain::loadTransactions, failed to add transaction to pool");
@@ -2017,7 +2017,7 @@ bool Blockchain::loadTransactions(const Block& block, std::vector<Transaction>& 
 }
 
 void Blockchain::saveTransactions(const std::vector<Transaction>& transactions) {
-  tx_verification_context context;
+  TxVerificationContext context;
   for (size_t i = 0; i < transactions.size(); ++i) {
     if (!m_tx_pool.add_tx(transactions[transactions.size() - 1 - i], context, true)) {
       throw std::runtime_error("Blockchain::saveTransactions, failed to add transaction to pool");

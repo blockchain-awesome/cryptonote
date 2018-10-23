@@ -310,7 +310,7 @@ std::error_code InProcessNode::doRelayTransaction(const cryptonote::Transaction&
 
   try {
     cryptonote::BinaryArray transactionBinaryArray = toBinaryArray(transaction);
-    cryptonote::tx_verification_context tvc = boost::value_initialized<cryptonote::tx_verification_context>();
+    cryptonote::TxVerificationContext tvc = boost::value_initialized<cryptonote::TxVerificationContext>();
 
     if (!core.handle_incoming_tx(transactionBinaryArray, tvc, false)) {
       return make_error_code(cryptonote::error::REQUEST_ERROR);

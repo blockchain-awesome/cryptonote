@@ -15,14 +15,14 @@ namespace cryptonote {
   /************************************************************************/
   /*                                                                      */
   /************************************************************************/
-  template<class t_array>
-  struct array_hasher: std::unary_function<t_array&, size_t>
-  {
-    size_t operator()(const t_array& val) const
-    {
-      return boost::hash_range(&val.data[0], &val.data[sizeof(val.data)]);
-    }
-  };
+  // template<class t_array>
+  // struct array_hasher: std::unary_function<t_array&, size_t>
+  // {
+  //   size_t operator()(const t_array& val) const
+  //   {
+  //     return boost::hash_range(&val.data[0], &val.data[sizeof(val.data)]);
+  //   }
+  // };
 
   /************************************************************************/
   /* cryptonote.helper functions                                          */

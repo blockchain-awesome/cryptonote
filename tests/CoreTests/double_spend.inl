@@ -18,7 +18,7 @@ gen_double_spend_base<concrete_test>::gen_double_spend_base()
 }
 
 template<class concrete_test>
-bool gen_double_spend_base<concrete_test>::check_tx_verification_context(const cryptonote::tx_verification_context& tvc, bool tx_added, size_t event_idx, const cryptonote::Transaction& /*tx*/)
+bool gen_double_spend_base<concrete_test>::check_TxVerificationContext(const cryptonote::TxVerificationContext& tvc, bool tx_added, size_t event_idx, const cryptonote::Transaction& /*tx*/)
 {
   if (m_invalid_tx_index == event_idx)
     return tvc.m_verifivation_failed;
@@ -27,7 +27,7 @@ bool gen_double_spend_base<concrete_test>::check_tx_verification_context(const c
 }
 
 template<class concrete_test>
-bool gen_double_spend_base<concrete_test>::check_block_verification_context(const cryptonote::block_verification_context& bvc, size_t event_idx, const cryptonote::Block& /*block*/)
+bool gen_double_spend_base<concrete_test>::check_BlockVerificationContext(const cryptonote::BlockVerificationContext& bvc, size_t event_idx, const cryptonote::Block& /*block*/)
 {
   if (m_invalid_block_index == event_idx)
     return bvc.m_verifivation_failed;

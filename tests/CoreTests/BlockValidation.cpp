@@ -165,7 +165,7 @@ bool gen_block_invalid_prev_id::generate(std::vector<test_event_entry>& events) 
   return true;
 }
 
-bool gen_block_invalid_prev_id::check_block_verification_context(const cryptonote::block_verification_context& bvc, size_t event_idx, const cryptonote::Block& /*blk*/)
+bool gen_block_invalid_prev_id::check_BlockVerificationContext(const cryptonote::BlockVerificationContext& bvc, size_t event_idx, const cryptonote::Block& /*blk*/)
 {
   if (1 == event_idx)
     return bvc.m_marked_as_orphaned && !bvc.m_added_to_main_chain && !bvc.m_verifivation_failed;
@@ -639,7 +639,7 @@ bool gen_block_invalid_binary_format::generate(std::vector<test_event_entry>& ev
   return true;
 }
 
-bool gen_block_invalid_binary_format::check_block_verification_context(const cryptonote::block_verification_context& bvc,
+bool gen_block_invalid_binary_format::check_BlockVerificationContext(const cryptonote::BlockVerificationContext& bvc,
                                                                        size_t event_idx, const cryptonote::Block& blk)
 {
   if (0 == m_corrupt_blocks_begin_idx || event_idx < m_corrupt_blocks_begin_idx)

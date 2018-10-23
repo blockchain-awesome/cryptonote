@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "cryptonote/structures/transaction.h"
+#include "cryptonote/core/transaction/transaction.h"
 #include <Serialization/ISerializer.h>
 
 namespace cryptonote

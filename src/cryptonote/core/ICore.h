@@ -27,16 +27,16 @@ class Currency;
 class IBlock;
 class ICoreObserver;
 struct Block;
-struct block_verification_context;
+struct BlockVerificationContext;
 struct BlockFullInfo;
 struct BlockShortInfo;
-struct core_stat_info;
-struct i_cryptonote_protocol;
+struct CoreStateInfo;
+struct ICryptonoteProtocol;
 struct Transaction;
 struct MultisignatureInput;
 struct KeyInput;
 struct TransactionPrefixInfo;
-struct tx_verification_context;
+struct TxVerificationContext;
 
 class ICore {
 public:
@@ -48,11 +48,11 @@ public:
   virtual bool have_block(const crypto::Hash& id) = 0;
   virtual std::vector<crypto::Hash> buildSparseChain() = 0;
   virtual std::vector<crypto::Hash> buildSparseChain(const crypto::Hash& startBlockId) = 0;
-  virtual bool get_stat_info(cryptonote::core_stat_info& st_inf) = 0;
+  virtual bool get_stat_info(cryptonote::CoreStateInfo& st_inf) = 0;
   virtual bool on_idle() = 0;
   virtual void pause_mining() = 0;
   virtual void update_block_template_and_resume_mining() = 0;
-  virtual bool handle_incoming_block_blob(const cryptonote::BinaryArray& block_blob, cryptonote::block_verification_context& bvc, bool control_miner, bool relay_block) = 0;
+  virtual bool handle_incoming_block_blob(const cryptonote::BinaryArray& block_blob, cryptonote::BlockVerificationContext& bvc, bool control_miner, bool relay_block) = 0;
   virtual bool handle_get_objects(NOTIFY_REQUEST_GET_OBJECTS_request& arg, NOTIFY_RESPONSE_GET_OBJECTS_request& rsp) = 0; //Deprecated. Should be removed with CryptoNoteProtocolHandler.
   virtual void on_synchronized() = 0;
   virtual size_t addChain(const std::vector<const IBlock*>& chain) = 0;
@@ -63,8 +63,8 @@ public:
   virtual bool get_random_outs_for_amounts(const COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_request& req, COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_response& res) = 0;
   virtual bool get_tx_outputs_gindexs(const crypto::Hash& tx_id, std::vector<uint32_t>& indexs) = 0;
   virtual bool getOutByMSigGIndex(uint64_t amount, uint64_t gindex, MultisignatureOutput& out) = 0;
-  virtual i_cryptonote_protocol* get_protocol() = 0;
-  virtual bool handle_incoming_tx(const BinaryArray& tx_blob, tx_verification_context& tvc, bool keeped_by_block) = 0; //Deprecated. Should be removed with CryptoNoteProtocolHandler.
+  virtual ICryptonoteProtocol* get_protocol() = 0;
+  virtual bool handle_incoming_tx(const BinaryArray& tx_blob, TxVerificationContext& tvc, bool keeped_by_block) = 0; //Deprecated. Should be removed with CryptoNoteProtocolHandler.
   virtual std::vector<Transaction> getPoolTransactions() = 0;
   virtual bool getPoolChanges(const crypto::Hash& tailBlockId, const std::vector<crypto::Hash>& knownTxsIds,
                               std::vector<Transaction>& addedTxs, std::vector<crypto::Hash>& deletedTxsIds) = 0;
@@ -98,7 +98,7 @@ public:
   virtual bool getTransactionsByPaymentId(const crypto::Hash& paymentId, std::vector<Transaction>& transactions) = 0;
 
   virtual std::unique_ptr<IBlock> getBlock(const crypto::Hash& blocksId) = 0;
-  virtual bool handleIncomingTransaction(const Transaction& tx, const crypto::Hash& txHash, size_t blobSize, tx_verification_context& tvc, bool keptByBlock) = 0;
+  virtual bool handleIncomingTransaction(const Transaction& tx, const crypto::Hash& txHash, size_t blobSize, TxVerificationContext& tvc, bool keptByBlock) = 0;
   virtual std::error_code executeLocked(const std::function<std::error_code()>& func) = 0;
 
   virtual bool addMessageQueue(MessageQueue<BlockchainMessage>& messageQueue) = 0;

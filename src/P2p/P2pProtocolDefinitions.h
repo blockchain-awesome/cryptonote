@@ -220,7 +220,7 @@ namespace cryptonote
       std::string os_version;
       uint64_t connections_count;
       uint64_t incoming_connections_count;
-      core_stat_info payload_info;
+      CoreStateInfo payload_info;
 
       void serialize(ISerializer& s) {
         KV_MEMBER(version)
