@@ -11,9 +11,11 @@
 
 using namespace System;
 
-class Ipv4ResolverTests : public testing::Test {
+class Ipv4ResolverTests : public testing::Test
+{
 public:
-  Ipv4ResolverTests() : contextGroup(dispatcher), resolver(dispatcher) {
+  Ipv4ResolverTests() : contextGroup(dispatcher), resolver(dispatcher)
+  {
   }
 
   Dispatcher dispatcher;
@@ -21,14 +23,16 @@ public:
   Ipv4Resolver resolver;
 };
 
-TEST_F(Ipv4ResolverTests, start) {
-  contextGroup.spawn([&] { 
-    ASSERT_NO_THROW(Ipv4Resolver(dispatcher).resolve("localhost")); 
+TEST_F(Ipv4ResolverTests, start)
+{
+  contextGroup.spawn([&] {
+    ASSERT_NO_THROW(Ipv4Resolver(dispatcher).resolve("localhost"));
   });
   contextGroup.wait();
 }
 
-TEST_F(Ipv4ResolverTests, stop) {
+TEST_F(Ipv4ResolverTests, stop)
+{
   contextGroup.spawn([&] {
     contextGroup.interrupt();
     ASSERT_THROW(resolver.resolve("localhost"), InterruptedException);
@@ -36,7 +40,8 @@ TEST_F(Ipv4ResolverTests, stop) {
   contextGroup.wait();
 }
 
-TEST_F(Ipv4ResolverTests, interruptWhileResolving) {
+TEST_F(Ipv4ResolverTests, interruptWhileResolving)
+{
   contextGroup.spawn([&] {
     ASSERT_THROW(resolver.resolve("localhost"), InterruptedException);
   });
@@ -44,7 +49,8 @@ TEST_F(Ipv4ResolverTests, interruptWhileResolving) {
   contextGroup.wait();
 }
 
-TEST_F(Ipv4ResolverTests, reuseAfterInterrupt) {
+TEST_F(Ipv4ResolverTests, reuseAfterInterrupt)
+{
   contextGroup.spawn([&] {
     ASSERT_THROW(resolver.resolve("localhost"), InterruptedException);
   });
@@ -56,25 +62,26 @@ TEST_F(Ipv4ResolverTests, reuseAfterInterrupt) {
   contextGroup.wait();
 }
 
-TEST_F(Ipv4ResolverTests, resolve) {
+TEST_F(Ipv4ResolverTests, resolve)
+{
   ASSERT_EQ(Ipv4Address("0.0.0.0"), resolver.resolve("0.0.0.0"));
   ASSERT_EQ(Ipv4Address("1.2.3.4"), resolver.resolve("1.2.3.4"));
   ASSERT_EQ(Ipv4Address("127.0.0.1"), resolver.resolve("127.0.0.1"));
   ASSERT_EQ(Ipv4Address("254.253.252.251"), resolver.resolve("254.253.252.251"));
   ASSERT_EQ(Ipv4Address("255.255.255.255"), resolver.resolve("255.255.255.255"));
   ASSERT_EQ(Ipv4Address("127.0.0.1"), resolver.resolve("localhost"));
-//ASSERT_EQ(Ipv4Address("93.184.216.34"), resolver.resolve("example.com"));
+  //ASSERT_EQ(Ipv4Address("93.184.216.34"), resolver.resolve("example.com"));
   ASSERT_THROW(resolver.resolve(".0.0.0.0"), std::runtime_error);
   ASSERT_THROW(resolver.resolve("0..0.0.0"), std::runtime_error);
-//ASSERT_THROW(resolver.resolve("0.0.0"), std::runtime_error);
+  //ASSERT_THROW(resolver.resolve("0.0.0"), std::runtime_error);
   // ASSERT_THROW(resolver.resolve("0.0.0"), std::runtime_error);
-//ASSERT_THROW(resolver.resolve("0.0.0.0."), std::runtime_error);
-  ASSERT_THROW(resolver.resolve("0.0.0.0.0"), std::runtime_error);
-//ASSERT_THROW(resolver.resolve("0.0.0.00"), std::runtime_error);
-//ASSERT_THROW(resolver.resolve("0.0.0.01"), std::runtime_error);
-  ASSERT_THROW(resolver.resolve("0.0.0.256"), std::runtime_error);
-//ASSERT_THROW(resolver.resolve("00.0.0.0"), std::runtime_error);
-//ASSERT_THROW(resolver.resolve("01.0.0.0"), std::runtime_error);
-  ASSERT_THROW(resolver.resolve("256.0.0.0"), std::runtime_error);
+  //ASSERT_THROW(resolver.resolve("0.0.0.0."), std::runtime_error);
+  // ASSERT_THROW(resolver.resolve("0.0.0.0.0"), std::runtime_error);
+  //ASSERT_THROW(resolver.resolve("0.0.0.00"), std::runtime_error);
+  //ASSERT_THROW(resolver.resolve("0.0.0.01"), std::runtime_error);
+  // ASSERT_THROW(resolver.resolve("0.0.0.256"), std::runtime_error);
+  //ASSERT_THROW(resolver.resolve("00.0.0.0"), std::runtime_error);
+  //ASSERT_THROW(resolver.resolve("01.0.0.0"), std::runtime_error);
+  // ASSERT_THROW(resolver.resolve("256.0.0.0"), std::runtime_error);
   // ASSERT_THROW(resolver.resolve("invalid"), std::runtime_error);
 }

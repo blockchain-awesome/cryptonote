@@ -6,6 +6,7 @@
 
 #include <cstdint>
 #include <fstream>
+#include <iostream>
 #include <iomanip>
 #include <list>
 #include <unordered_map>
