@@ -1184,7 +1184,7 @@ int main(int argc, char* argv[]) {
       return 1;
     }
 
-    Tools::wallet_rpc_server wrpc(dispatcher, logManager, *wallet, *node, currency, walletFileName);
+    Tools::wallet_rpc_server wrpc(dispatcher, logManager, *wallet, *node, walletFileName);
 
     if (!wrpc.init(vm)) {
       logger(ERROR, BRIGHT_RED) << "Failed to initialize wallet rpc server";

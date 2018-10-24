@@ -34,7 +34,6 @@ wallet_rpc_server::wallet_rpc_server(
   Logging::ILogger& log, 
   cryptonote::IWalletLegacy&w,
   cryptonote::INode& n, 
-  cryptonote::Currency& currency, 
   const std::string& walletFile)
   : 
   HttpServer(dispatcher, log), 
@@ -43,7 +42,6 @@ wallet_rpc_server::wallet_rpc_server(
   m_stopComplete(dispatcher), 
   m_wallet(w),
   m_node(n), 
-  m_currency(currency),
   m_walletFilename(walletFile) {
 }
 //------------------------------------------------------------------------------------------------------------------------------

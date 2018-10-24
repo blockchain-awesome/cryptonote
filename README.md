@@ -48,7 +48,6 @@ VIG COIN是一个开源，社区化的项目。非常欢迎各类开源贡献者
 
 ## Compiling
 
-
 ### Ubuntu
 
 Currently only Ubuntu 16.04 is officially supported.
