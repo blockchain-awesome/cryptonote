@@ -8,8 +8,6 @@
 
 namespace Common {
 
-std::string NativePathToGeneric(const std::string& nativePath);
-
 std::string GetPathDirectory(const std::string& path);
 std::string GetPathFilename(const std::string& path);
 void SplitPath(const std::string& path, std::string& directory, std::string& filename);

@@ -4,6 +4,7 @@
 
 #include "gtest/gtest.h"
 #include "common/PathTools.h"
+#include "common/filesystem.h"
 
 TEST(PathTools, NativePathToGeneric) {
 
@@ -16,7 +17,7 @@ TEST(PathTools, NativePathToGeneric) {
 
 #endif
 
-  auto path = Common::NativePathToGeneric(input);
+  auto path = std::filesystem::path::generic_string(input);
   ASSERT_EQ(output, path);
 }
 

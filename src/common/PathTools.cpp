@@ -9,12 +9,6 @@ namespace {
 
 const char GENERIC_PATH_SEPARATOR = '/';
 
-#ifdef _WIN32
-const char NATIVE_PATH_SEPARATOR = '\\';
-#else
-const char NATIVE_PATH_SEPARATOR = '/';
-#endif
-
 
 std::string::size_type findExtensionPosition(const std::string& filename) {
   auto pos = filename.rfind('.');
@@ -32,15 +26,6 @@ std::string::size_type findExtensionPosition(const std::string& filename) {
 } // anonymous namespace
 
 namespace Common {
-
-std::string NativePathToGeneric(const std::string& nativePath) {
-  if (GENERIC_PATH_SEPARATOR == NATIVE_PATH_SEPARATOR) {
-    return nativePath;
-  }
-  std::string genericPath(nativePath);
-  std::replace(genericPath.begin(), genericPath.end(), NATIVE_PATH_SEPARATOR, GENERIC_PATH_SEPARATOR);
-  return genericPath;
-}
 
 std::string GetPathDirectory(const std::string& path) {
   auto slashPos = path.rfind(GENERIC_PATH_SEPARATOR);

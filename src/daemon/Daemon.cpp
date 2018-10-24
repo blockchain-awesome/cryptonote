@@ -11,6 +11,7 @@
 
 #include "common/SignalHandler.h"
 #include "common/PathTools.h"
+#include "common/filesystem.h"
 #include "crypto/hash.h"
 #include "cryptonote/core/Core.h"
 #include "cryptonote/core/CoreConfig.h"
@@ -156,8 +157,8 @@ int main(int argc, char* argv[])
     if (!r)
       return 1;
   
-    auto modulePath = Common::NativePathToGeneric(argv[0]);
-    auto cfgLogFile = Common::NativePathToGeneric(command_line::get_arg(vm, arg_log_file));
+    auto modulePath = std::filesystem::path::generic_string(argv[0]);
+    auto cfgLogFile = std::filesystem::path::generic_string(command_line::get_arg(vm, arg_log_file));
 
     if (cfgLogFile.empty()) {
       cfgLogFile = Common::ReplaceExtenstion(modulePath, ".log");
