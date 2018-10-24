@@ -10,7 +10,6 @@
 #include "DaemonCommandsHandler.h"
 
 #include "common/SignalHandler.h"
-#include "common/PathTools.h"
 #include "common/filesystem.h"
 #include "crypto/hash.h"
 #include "cryptonote/core/Core.h"
@@ -37,6 +36,7 @@ using namespace cryptonote;
 using namespace Logging;
 
 namespace po = boost::program_options;
+namespace fs = boost::filesystem;
 
 namespace
 {
@@ -161,10 +161,12 @@ int main(int argc, char* argv[])
     auto cfgLogFile = std::filesystem::path::generic_string(command_line::get_arg(vm, arg_log_file));
 
     if (cfgLogFile.empty()) {
-      cfgLogFile = Common::ReplaceExtenstion(modulePath, ".log");
+      cfgLogFile = fs::change_extension(modulePath, ".log").string();
     } else {
-      if (!Common::HasParentPath(cfgLogFile)) {
-        cfgLogFile = Common::CombinePath(Common::GetPathDirectory(modulePath), cfgLogFile);
+      fs::path logfile(cfgLogFile);
+      if (!logfile.parent_path().empty()) {
+        fs::path mp(modulePath);
+        cfgLogFile = mp.root_path().string() + cfgLogFile;
       }
     }
 

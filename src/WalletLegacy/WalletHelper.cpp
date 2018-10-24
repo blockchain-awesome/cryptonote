@@ -3,10 +3,10 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "WalletHelper.h"
-#include "common/PathTools.h"
 
 #include <fstream>
 #include <boost/filesystem.hpp>
+#include <boost/filesystem/convenience.hpp>
 
 using namespace cryptonote;
 
@@ -40,12 +40,12 @@ std::error_code walletSaveWrapper(cryptonote::IWalletLegacy& wallet, std::ofstre
 }
 
 void WalletHelper::prepareFileNames(const std::string& file_path, std::string& keys_file, std::string& wallet_file) {
-  if (Common::GetExtension(file_path) == ".wallet") {
-    keys_file = Common::RemoveExtension(file_path) + ".keys";
+  if (boost::filesystem::extension(file_path) == ".wallet") {
+    keys_file = boost::filesystem::change_extension(file_path, ".keys").string();
     wallet_file = file_path;
-  } else if (Common::GetExtension(file_path) == ".keys") {
+  } else if (boost::filesystem::extension(file_path) == ".keys") {
     keys_file = file_path;
-    wallet_file = Common::RemoveExtension(file_path) + ".wallet";
+    wallet_file = boost::filesystem::change_extension(file_path, ".wallet").string();
   } else {
     keys_file = file_path + ".keys";
     wallet_file = file_path + ".wallet";

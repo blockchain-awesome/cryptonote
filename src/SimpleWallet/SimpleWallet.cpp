@@ -17,11 +17,11 @@
 #include <boost/program_options.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/filesystem/convenience.hpp>
 
 #include "common/CommandLine.h"
 #include "common/SignalHandler.h"
 #include "common/StringTools.h"
-#include "common/PathTools.h"
 #include "common/Util.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/protocol/handler.h"
@@ -1117,7 +1117,7 @@ int main(int argc, char* argv[]) {
     logLevel = static_cast<Level>(command_line::get_arg(vm, arg_log_level));
   }
 
-  logManager.configure(buildLoggerConfiguration(logLevel, Common::ReplaceExtenstion(argv[0], ".log")));
+  logManager.configure(buildLoggerConfiguration(logLevel, boost::filesystem::change_extension(argv[0], ".log").string()));
 
   logger(INFO, BRIGHT_WHITE) << CRYPTONOTE_NAME << " wallet v" << PROJECT_VERSION_LONG;
 
