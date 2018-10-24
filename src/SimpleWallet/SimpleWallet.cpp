@@ -22,7 +22,6 @@
 #include "common/CommandLine.h"
 #include "common/SignalHandler.h"
 #include "common/StringTools.h"
-#include "common/Util.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/protocol/handler.h"
 #include "NodeRpcProxy/NodeRpcProxy.h"

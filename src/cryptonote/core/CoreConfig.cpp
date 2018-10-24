@@ -4,17 +4,17 @@
 
 #include "CoreConfig.h"
 
-#include "common/Util.h"
+#include "common/os.h"
 #include "common/CommandLine.h"
 
 namespace cryptonote {
 
 CoreConfig::CoreConfig() {
-  configFolder = Tools::getDefaultDataDirectory();
+  configFolder = os::appdata::path();
 }
 
 void CoreConfig::init(const boost::program_options::variables_map& options) {
-  if (options.count(command_line::arg_data_dir.name) != 0 && (!options[command_line::arg_data_dir.name].defaulted() || configFolder == Tools::getDefaultDataDirectory())) {
+  if (options.count(command_line::arg_data_dir.name) != 0 && (!options[command_line::arg_data_dir.name].defaulted() || configFolder == os::appdata::path())) {
     configFolder = command_line::get_arg(options, command_line::arg_data_dir);
     configFolderDefaulted = options[command_line::arg_data_dir.name].defaulted();
   }

@@ -6,6 +6,7 @@
 
 #include <algorithm>
 #include <fstream>
+#include <boost/filesystem.hpp>
 
 #include <boost/foreach.hpp>
 #include <boost/uuid/random_generator.hpp>
@@ -27,8 +28,8 @@
 #include "version.h"
 #include "stream/StdInputStream.h"
 #include "stream/StdOutputStream.h"
-#include "common/Util.h"
 #include "crypto/crypto.h"
+#include "common/os.h"
 
 #include "ConnectionContext.h"
 #include "LevinProtocol.h"
@@ -516,7 +517,9 @@ namespace cryptonote
   bool NodeServer::store_config()
   {
     try {
-      if (!Tools::create_directories_if_necessary(m_config_folder)) {
+      boost::filesystem::path path(m_config_folder);
+      bool exists = boost::filesystem::exists(path) ? true : boost::filesystem::create_directory(path);
+      if (!exists) {
         logger(INFO) << "Failed to create data directory: " << m_config_folder;
         return false;
       }
@@ -998,7 +1001,7 @@ namespace cryptonote
     rsp.connections_count = get_connections_count();
     rsp.incoming_connections_count = rsp.connections_count - get_outgoing_connections_count();
     rsp.version = PROJECT_VERSION_LONG;
-    rsp.os_version = Tools::get_os_version_string();
+    rsp.os_version = os::version::get();
     m_payload_handler.get_stat_info(rsp.payload_info);
     return 1;
   }

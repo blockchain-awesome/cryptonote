@@ -5,6 +5,7 @@
 #include "PaymentGateService.h"
 
 #include <future>
+#include <boost/filesystem.hpp>
 
 #include "common/SignalHandler.h"
 #include "InProcessNode/InProcessNode.h"
@@ -120,12 +121,13 @@ void PaymentGateService::stop() {
 }
 
 void PaymentGateService::runInProcess(Logging::LoggerRef& log) {
+  boost::filesystem::path path(config.coreConfig.configFolder);
   if (!config.coreConfig.configFolderDefaulted) {
-    if (!Tools::directoryExists(config.coreConfig.configFolder)) {
+    if (!boost::filesystem::exists(path)) {
       throw std::runtime_error("Directory does not exist: " + config.coreConfig.configFolder);
     }
   } else {
-    if (!Tools::create_directories_if_necessary(config.coreConfig.configFolder)) {
+    if (!boost::filesystem::exists(path) && !boost::filesystem::create_directory(path)) {
       throw std::runtime_error("Can't create directory: " + config.coreConfig.configFolder);
     }
   }

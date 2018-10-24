@@ -12,7 +12,6 @@
 #include <boost/filesystem.hpp>
 
 #include "common/int-util.h"
-#include "common/Util.h"
 #include "crypto/hash.h"
 
 #include "Serialization/SerializationTools.h"
@@ -419,7 +418,9 @@ namespace cryptonote {
   }
   //---------------------------------------------------------------------------------
   bool TxMemoryPool::deinit() {
-    if (!Tools::create_directories_if_necessary(m_config_folder)) {
+    boost::filesystem::path path(m_config_folder);
+    bool exists = boost::filesystem::exists(path) ? true : boost::filesystem::create_directory(path);
+    if (!exists) {
       logger(INFO) << "Failed to create data directory: " << m_config_folder;
       return false;
     }

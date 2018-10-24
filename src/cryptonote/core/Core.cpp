@@ -8,7 +8,6 @@
 #include <unordered_set>
 #include "../CryptoNoteConfig.h"
 #include "../common/CommandLine.h"
-#include "../common/Util.h"
 #include "../common/StringTools.h"
 #include "../crypto/crypto.h"
 #include "../cryptonote/protocol/definitions.h"

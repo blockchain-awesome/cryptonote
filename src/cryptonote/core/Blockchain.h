@@ -10,7 +10,7 @@
 #include "google/sparse_hash_map"
 
 #include "common/ObserverManager.h"
-#include "common/Util.h"
+#include "common/os.h"
 #include "cryptonote/core/BlockIndex.h"
 #include "cryptonote/core/Checkpoints.h"
 #include "cryptonote/core/Currency.h"
@@ -54,7 +54,7 @@ namespace cryptonote {
     virtual bool haveSpentKeyImages(const cryptonote::Transaction& tx) override;
     virtual bool checkTransactionSize(size_t blobSize) override;
 
-    bool init() { return init(Tools::getDefaultDataDirectory(), true); }
+    bool init() { return init(os::appdata::path(), true); }
     bool init(const std::string& config_folder, bool load_existing);
     bool deinit();
 

@@ -6,7 +6,6 @@
 
 #include <vector>
 
-#include "common/Util.h"
 #include "cryptonote/core/Account.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/CryptoNoteTools.h"

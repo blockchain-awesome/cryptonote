@@ -6,7 +6,7 @@
 
 #include <boost/utility/value_init.hpp>
 
-#include <common/Util.h>
+#include "common/os.h"
 #include "common/CommandLine.h"
 #include "common/StringTools.h"
 #include "crypto/crypto.h"
@@ -66,7 +66,7 @@ NetNodeConfig::NetNodeConfig() {
   externalPort = 0;
   allowLocalIp = false;
   hideMyPort = false;
-  configFolder = Tools::getDefaultDataDirectory();
+  configFolder = os::appdata::path();
   testnet = false;
 }
 
@@ -88,7 +88,7 @@ bool NetNodeConfig::init(const boost::program_options::variables_map& vm)
     allowLocalIp = command_line::get_arg(vm, arg_p2p_allow_local_ip);
   }
 
-  if (vm.count(command_line::arg_data_dir.name) != 0 && (!vm[command_line::arg_data_dir.name].defaulted() || configFolder == Tools::getDefaultDataDirectory())) {
+  if (vm.count(command_line::arg_data_dir.name) != 0 && (!vm[command_line::arg_data_dir.name].defaulted() || configFolder == os::appdata::path())) {
     configFolder = command_line::get_arg(vm, command_line::arg_data_dir);
   }
 

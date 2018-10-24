@@ -102,7 +102,7 @@ int main(int argc, char* argv[])
     command_line::add_arg(desc_cmd_only, command_line::arg_version);
     command_line::add_arg(desc_cmd_only, arg_os_version);
     // tools::get_default_data_dir() can't be called during static initialization
-    command_line::add_arg(desc_cmd_only, command_line::arg_data_dir, Tools::getDefaultDataDirectory());
+    command_line::add_arg(desc_cmd_only, command_line::arg_data_dir, os::appdata::path());
     command_line::add_arg(desc_cmd_only, arg_config_file);
 
     command_line::add_arg(desc_cmd_sett, arg_log_file);
@@ -219,11 +219,15 @@ int main(int argc, char* argv[])
     rpcConfig.init(vm);
 
     if (!coreConfig.configFolderDefaulted) {
-      if (!Tools::directoryExists(coreConfig.configFolder)) {
+      boost::filesystem::path path(coreConfig.configFolder);
+
+      if (!boost::filesystem::exists(coreConfig.configFolder)) {
         throw std::runtime_error("Directory does not exist: " + coreConfig.configFolder);
       }
     } else {
-      if (!Tools::create_directories_if_necessary(coreConfig.configFolder)) {
+      boost::filesystem::path path(coreConfig.configFolder);
+      bool exists = boost::filesystem::exists(path) ? true : boost::filesystem::create_directory(path);
+      if (!exists) {
         throw std::runtime_error("Can't create directory: " + coreConfig.configFolder);
       }
     }
@@ -311,7 +315,7 @@ bool command_line_preprocessor(const boost::program_options::variables_map &vm, 
     exit = true;
   }
   if (command_line::get_arg(vm, arg_os_version)) {
-    std::cout << "OS: " << Tools::get_os_version_string() << ENDL;
+    std::cout << "OS: " << os::version::get() << ENDL;
     exit = true;
   }
 

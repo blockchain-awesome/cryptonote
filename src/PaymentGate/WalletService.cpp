@@ -10,11 +10,11 @@
 #include <sstream>
 #include <unordered_set>
 
+#include <boost/filesystem.hpp>
 #include <boost/filesystem/operations.hpp>
 
 #include <System/Timer.h>
 #include <System/InterruptedException.h>
-#include "common/Util.h"
 
 #include "crypto/crypto.h"
 #include "cryptonote.h"
@@ -188,7 +188,7 @@ bool deleteFile(const std::string& filename) {
 }
 
 void replaceWalletFiles(const std::string &path, const std::string &tempFilePath) {
-  Tools::replace_file(tempFilePath, path);
+  boost::filesystem::rename(tempFilePath, path);
 }
 
 crypto::Hash parseHash(const std::string& hashString, Logging::LoggerRef logger) {
@@ -321,13 +321,12 @@ std::vector<cryptonote::WalletOrder> convertWalletRpcOrdersToWalletOrders(const 
 
   return result;
 }
-
 }
 
 void createWalletFile(std::fstream& walletFile, const std::string& filename) {
   boost::filesystem::path pathToWalletFile(filename);
   boost::filesystem::path directory = pathToWalletFile.parent_path();
-  if (!directory.empty() && !Tools::directoryExists(directory.string())) {
+  if (!directory.empty() && !boost::filesystem::exists(directory)) {
     throw std::runtime_error("Directory does not exist: " + directory.string());
   }
 

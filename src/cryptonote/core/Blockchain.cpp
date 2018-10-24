@@ -3,6 +3,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "Blockchain.h"
+#include <boost/filesystem.hpp>
 
 #include <algorithm>
 #include <cstdio>
@@ -170,7 +171,9 @@ uint32_t Blockchain::getCurrentBlockchainHeight() {
 
 bool Blockchain::init(const std::string& config_folder, bool load_existing) {
   std::lock_guard<decltype(m_blockchain_lock)> lk(m_blockchain_lock);
-  if (!config_folder.empty() && !Tools::create_directories_if_necessary(config_folder)) {
+  boost::filesystem::path path(config_folder);
+  if (!path.empty() && (boost::filesystem::exists(path) ? true : !boost::filesystem::create_directory(path))) {
+  // if (!config_folder.empty() && !Tools::create_directories_if_necessary(config_folder)) {
     logger(ERROR, BRIGHT_RED) << "Failed to create data directory: " << m_config_folder;
     return false;
   }
