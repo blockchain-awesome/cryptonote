@@ -47,18 +47,7 @@ namespace cryptonote {
 
     return penalizedAmountLo;
   }
-  //-----------------------------------------------------------------------
-  bool is_coinbase(const Transaction& tx) {
-    if(tx.inputs.size() != 1) {
-      return false;
-    }
 
-    if(tx.inputs[0].type() != typeid(BaseInput)) {
-      return false;
-    }
-
-    return true;
-  }
   //-----------------------------------------------------------------------
   bool operator ==(const cryptonote::Transaction& a, const cryptonote::Transaction& b) {
     return getObjectHash(a) == getObjectHash(b);
