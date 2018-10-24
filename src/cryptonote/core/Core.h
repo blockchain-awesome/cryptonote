@@ -10,7 +10,7 @@
 #include "P2p/NetNodeCommon.h"
 #include "cryptonote/protocol/handler_common.h"
 #include "Currency.h"
-#include "TxMemoryPool.h"
+#include "tx_memory_pool.h"
 #include "Blockchain.h"
 #include "cryptonote/core/IMinerHandler.h"
 #include "cryptonote/core/MinerConfig.h"

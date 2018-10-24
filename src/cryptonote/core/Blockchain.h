@@ -19,7 +19,7 @@
 #include "cryptonote/core/ITransactionValidator.h"
 #include "cryptonote/core/SwappedVector.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
-#include "cryptonote/core/TxMemoryPool.h"
+#include "cryptonote/core/tx_memory_pool.h"
 #include "cryptonote/core/blockchain/indexing/exports.h"
 
 #include "cryptonote/core/template/MessageQueue.h"
