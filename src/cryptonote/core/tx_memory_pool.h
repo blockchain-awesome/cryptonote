@@ -45,9 +45,9 @@ namespace cryptonote {
   /************************************************************************/
   /*                                                                      */
   /************************************************************************/
-  class tx_memory_pool: boost::noncopyable {
+  class TxMemoryPool: boost::noncopyable {
   public:
-    tx_memory_pool(
+    TxMemoryPool(
       const cryptonote::Currency& currency, 
       cryptonote::ITransactionValidator& validator,
       cryptonote::ITimeProvider& timeProvider,

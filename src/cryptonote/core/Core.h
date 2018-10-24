@@ -10,7 +10,7 @@
 #include "P2p/NetNodeCommon.h"
 #include "cryptonote/protocol/handler_common.h"
 #include "Currency.h"
-#include "TransactionPool.h"
+#include "TxMemoryPool.h"
 #include "Blockchain.h"
 #include "cryptonote/core/IMinerHandler.h"
 #include "cryptonote/core/MinerConfig.h"
@@ -167,7 +167,7 @@ namespace cryptonote {
      const Currency& m_currency;
      Logging::LoggerRef logger;
      cryptonote::RealTimeProvider m_timeProvider;
-     tx_memory_pool m_mempool;
+     TxMemoryPool m_mempool;
      Blockchain m_blockchain;
      ICryptonoteProtocol* m_pprotocol;
      std::unique_ptr<miner> m_miner;

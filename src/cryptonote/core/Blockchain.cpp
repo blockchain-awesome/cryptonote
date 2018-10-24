@@ -73,7 +73,7 @@ bool serialize(google::sparse_hash_set<K, Hash>& value, Common::StringView name,
   return true;
 }
 
-Blockchain::Blockchain(const Currency& currency, tx_memory_pool& tx_pool, ILogger& logger) :
+Blockchain::Blockchain(const Currency& currency, TxMemoryPool& tx_pool, ILogger& logger) :
 logger(logger, "Blockchain"),
 m_currency(currency),
 m_tx_pool(tx_pool),

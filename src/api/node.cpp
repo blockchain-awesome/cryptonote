@@ -136,7 +136,7 @@ bool Node::init(cryptonote::Currency &currency, Logging::ILogger &logger)
     //     *m_node, logger));
 
     cryptonote::RealTimeProvider timeProvider;
-    cryptonote::tx_memory_pool *mempool = new cryptonote::tx_memory_pool(currency, *this, timeProvider, logger);
+    cryptonote::TxMemoryPool *mempool = new cryptonote::TxMemoryPool(currency, *this, timeProvider, logger);
 
     m_blockchain = std::unique_ptr<cryptonote::Blockchain>(new cryptonote::Blockchain(
         currency,
