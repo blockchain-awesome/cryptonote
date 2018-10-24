@@ -10,7 +10,6 @@
 #include "DaemonCommandsHandler.h"
 
 #include "common/SignalHandler.h"
-#include "common/filesystem.h"
 #include "crypto/hash.h"
 #include "cryptonote/core/Core.h"
 #include "cryptonote/core/CoreConfig.h"
@@ -157,23 +156,21 @@ int main(int argc, char* argv[])
     if (!r)
       return 1;
   
-    auto modulePath = std::filesystem::path::generic_string(argv[0]);
-    auto cfgLogFile = std::filesystem::path::generic_string(command_line::get_arg(vm, arg_log_file));
+    auto modulePath = boost::filesystem::path(argv[0]);
+    auto cfgLogFile = boost::filesystem::path(command_line::get_arg(vm, arg_log_file));
 
     if (cfgLogFile.empty()) {
       cfgLogFile = fs::change_extension(modulePath, ".log").string();
     } else {
-      fs::path logfile(cfgLogFile);
-      if (!logfile.parent_path().empty()) {
-        fs::path mp(modulePath);
-        cfgLogFile = mp.root_path().string() + cfgLogFile;
+      if (!cfgLogFile.parent_path().empty()) {
+        cfgLogFile = modulePath.root_path().string() + cfgLogFile.string();
       }
     }
 
     Level cfgLogLevel = static_cast<Level>(static_cast<int>(Logging::ERROR) + command_line::get_arg(vm, arg_log_level));
 
     // configure logging
-    logManager.configure(buildLoggerConfiguration(cfgLogLevel, cfgLogFile));
+    logManager.configure(buildLoggerConfiguration(cfgLogLevel, cfgLogFile.string()));
 
     logger(INFO) << cryptonote::CRYPTONOTE_NAME << " v" << PROJECT_VERSION_LONG;
 
