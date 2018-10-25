@@ -7,3 +7,5 @@
 .ycm_extra_conf.pyc
 Release
 Debug
+conanbuild*
+conaninfo.txt

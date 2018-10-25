@@ -14,6 +14,11 @@ configure_file(${CMAKE_SOURCE_DIR}/CTestCustom.cmake ${CMAKE_BINARY_DIR})
 
 project(VIGCOIN)
 
+# Adding conan support
+
+include(${CMAKE_SOURCE_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
+
 OPTION(ENABLE_GCOV "Enable gcov (debug, Linux builds only)" OFF)
 
 IF (ENABLE_GCOV AND NOT WIN32 AND NOT APPLE)
