@@ -3,10 +3,7 @@
 
 ## Building a decentralized, easy to use, high available coin for everyone
 
-[![Coverity Scan Build Status](https://scan.coverity.com/projects/16947/badge.svg)](https://scan.coverity.com/projects/vigcoin-coin)
-[![codecov](https://codecov.io/gh/vigcoin/coin/branch/master/graph/badge.svg)](https://codecov.io/gh/vigcoin/coin)
-[![CircleCI](https://circleci.com/gh/vigcoin/coin.svg?style=svg)](https://circleci.com/gh/vigcoin/coin)
-[![LICENSE](https://img.shields.io/badge/license-GPL%20v3-blue.svg?longCache=true)](https://opensource.org/licenses/GPL-3.0)
+[![Coverity Scan Build Status](https://scan.coverity.com/projects/16947/badge.svg)](https://scan.coverity.com/projects/vigcoin-coin) [![LICENSE](https://img.shields.io/badge/license-GPL%20v3-blue.svg?longCache=true)](https://opensource.org/licenses/GPL-3.0)
 
 [![Gitter Chat](https://img.shields.io/gitter/room/badges/shields.svg?logo=gitter)](https://gitter.im/vigcoin/development)
 [![Discord](https://img.shields.io/badge/discord-join%20chat-blue.svg?logo=discord)](https://discord.gg/dWWDFKb)
@@ -14,7 +11,15 @@
 
 Copyright (c) 2018- The VIG Project.  
 Copyright (c) 2018- The Monero Project.  
-Copyright (c) 2012-2013 The Cryptonote developers.  
+Copyright (c) 2012-2013 The Cryptonote developers.
+
+
+## Status
+
+| Compiler | Platform | Status | Coverage |
+| --- | --- | --- | --- |
+| gcc5 | Ubuntu 16.04 | [![CircleCI](https://circleci.com/gh/vigcoin/coin.svg?style=svg)](https://circleci.com/gh/vigcoin/coin) | [![codecov](https://codecov.io/gh/vigcoin/coin/branch/master/graph/badge.svg)](https://codecov.io/gh/vigcoin/coin)  |
+| clang(llvm10) | Mac Os 10.14 | [![CircleCI](https://circleci.com/gh/vigcoin/coin.svg?style=svg)](https://circleci.com/gh/vigcoin/coin) | [![codecov](https://codecov.io/gh/vigcoin/coin/branch/master/graph/badge.svg)](https://codecov.io/gh/vigcoin/coin)  |
 
 ## Participate
 
