@@ -163,7 +163,8 @@ bool RpcServer::processJsonRpcRequest(const HttpRequest& request, HttpResponse& 
 }
 
 bool RpcServer::isCoreReady() {
-  return m_core.currency().isTestnet() || m_p2p.get_payload_object().isSynchronized();
+  return m_p2p.get_payload_object().isSynchronized();
+  // return m_core.currency().isTestnet() || m_p2p.get_payload_object().isSynchronized();
 }
 
 //
@@ -429,14 +430,14 @@ bool RpcServer::on_stop_mining(const COMMAND_RPC_STOP_MINING::request& req, COMM
 }
 
 bool RpcServer::on_stop_daemon(const COMMAND_RPC_STOP_DAEMON::request& req, COMMAND_RPC_STOP_DAEMON::response& res) {
-  if (m_core.currency().isTestnet()) {
-    m_p2p.sendStopSignal();
-    res.status = CORE_RPC_STATUS_OK;
-  } else {
+  // if (m_core.currency().isTestnet()) {
+  //   m_p2p.sendStopSignal();
+  //   res.status = CORE_RPC_STATUS_OK;
+  // } else {
     res.status = CORE_RPC_ERROR_CODE_INTERNAL_ERROR;
     return false;
-  }
-  return true;
+  // }
+  // return true;
 }
 
 //------------------------------------------------------------------------------------------------------------------------------

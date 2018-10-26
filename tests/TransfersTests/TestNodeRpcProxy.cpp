@@ -24,7 +24,9 @@ namespace {
   public:
     NodeRpcProxyTest() :
       BaseFunctionalTests(m_currency, globalSystem, config),
-      m_currency(CurrencyBuilder(m_logManager).testnet(true).currency()) {
+      m_currency(CurrencyBuilder(m_logManager, os::appdata::path())
+      // .testnet(true)
+      .currency()) {
     }
 
   protected:

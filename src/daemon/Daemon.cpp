@@ -53,7 +53,7 @@ bool command_line_preprocessor(const boost::program_options::variables_map& vm, 
 
 void print_genesis_tx_hex() {
   Logging::ConsoleLogger logger;
-  cryptonote::Transaction tx = cryptonote::CurrencyBuilder(logger).generateGenesisTransaction();
+  cryptonote::Transaction tx = cryptonote::CurrencyBuilder(logger, os::appdata::path()).generateGenesisTransaction();
   cryptonote::BinaryArray txb = cryptonote::toBinaryArray(tx);
   std::string tx_hex = Common::toHex(txb);
 
@@ -186,8 +186,8 @@ int main(int argc, char* argv[])
     }
 
     //create objects and link them
-    cryptonote::CurrencyBuilder currencyBuilder(logManager);
-    currencyBuilder.testnet(testnet_mode);
+    cryptonote::CurrencyBuilder currencyBuilder(logManager, os::appdata::path());
+    // currencyBuilder.testnet(testnet_mode);
 
     try {
       currencyBuilder.currency();

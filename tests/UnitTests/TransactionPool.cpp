@@ -131,11 +131,12 @@ class tx_pool : public ::testing::Test {
 public:
 
   tx_pool() : 
-    currency(cryptonote::CurrencyBuilder(logger).currency()) {}
+    currency(cryptonote::CurrencyBuilder(logger, os::appdata::path()).currency()) {}
 
 protected:
   virtual void SetUp() override {
     m_configDir = boost::filesystem::temp_directory_path() / boost::filesystem::unique_path("test_data_%%%%%%%%%%%%");
+    currency.setPath(m_configDir.string());
   }
 
   virtual void TearDown() override {
@@ -173,7 +174,7 @@ namespace
   class TxTestBase {
   public:
     TxTestBase(size_t ringSize) :
-      m_currency(cryptonote::CurrencyBuilder(m_logger).currency()),
+      m_currency(cryptonote::CurrencyBuilder(m_logger, os::appdata::path()).currency()),
       txGenerator(m_currency, ringSize),
       pool(m_currency, validator, m_time, m_logger)
     {
@@ -650,7 +651,7 @@ TEST_F(tx_pool, TxPoolAcceptsValidFusionTransaction) {
   TransactionValidator validator;
   FakeTimeProvider timeProvider;
   std::unique_ptr<TxMemoryPool> pool(new TxMemoryPool(currency, validator, timeProvider, logger));
-  ASSERT_TRUE(pool->init(m_configDir.string()));
+  ASSERT_TRUE(pool->init());
 
   FusionTransactionBuilder builder(currency, 10 * currency.defaultDustThreshold());
   auto tx = builder.buildTx();
@@ -667,7 +668,7 @@ TEST_F(tx_pool, TxPoolDoesNotAcceptInvalidFusionTransaction) {
   TransactionValidator validator;
   FakeTimeProvider timeProvider;
   std::unique_ptr<TxMemoryPool> pool(new TxMemoryPool(currency, validator, timeProvider, logger));
-  ASSERT_TRUE(pool->init(m_configDir.string()));
+  ASSERT_TRUE(pool->init());
 
   FusionTransactionBuilder builder(currency, 10 * currency.defaultDustThreshold());
   builder.setInputCount(currency.fusionTxMinInputCount() - 1);
@@ -728,14 +729,14 @@ class TxPool_FillBlockTemplate : public tx_pool {
 public:
   TxPool_FillBlockTemplate() :
     tx_pool() {
-    currency = cryptonote::CurrencyBuilder(logger).fusionTxMaxSize(TEST_FUSION_TX_MAX_SIZE).blockGrantedFullRewardZone(TEST_MEDIAN_SIZE).currency();
+    currency = cryptonote::CurrencyBuilder(logger, os::appdata::path()).fusionTxMaxSize(TEST_FUSION_TX_MAX_SIZE).blockGrantedFullRewardZone(TEST_MEDIAN_SIZE).currency();
   }
 
   void doTest(size_t poolOrdinaryTxCount, size_t poolFusionTxCount, size_t expectedBlockOrdinaryTxCount, size_t expectedBlockFusionTxCount) {
     TransactionValidator validator;
     FakeTimeProvider timeProvider;
     std::unique_ptr<TxMemoryPool> pool(new TxMemoryPool(currency, validator, timeProvider, logger));
-    ASSERT_TRUE(pool->init(m_configDir.string()));
+    ASSERT_TRUE(pool->init());
 
     std::unordered_map<crypto::Hash, Transaction> ordinaryTxs;
     for (size_t i = 0; i < poolOrdinaryTxCount; ++i) {

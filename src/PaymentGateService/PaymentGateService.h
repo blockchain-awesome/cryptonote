@@ -13,11 +13,14 @@
 
 #include "PaymentGate/NodeFactory.h"
 #include "PaymentGate/WalletService.h"
+#include "common/os.h"
 
 class PaymentGateService {
 public:
-
-  PaymentGateService() : dispatcher(nullptr), stopEvent(nullptr), config(), service(nullptr), logger(), currencyBuilder(logger) {
+  PaymentGateService() : dispatcher(nullptr), stopEvent(nullptr), config(), service(nullptr), logger(), currencyBuilder(
+    logger,
+    os::appdata::path()
+    ) {
   }
 
   bool init(int argc, char** argv);

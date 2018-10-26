@@ -155,7 +155,7 @@ class test_chain_unit_base: boost::noncopyable
 {
 public:
   test_chain_unit_base() :
-    m_currency(cryptonote::CurrencyBuilder(m_logger).currency()) {
+    m_currency(cryptonote::CurrencyBuilder(m_logger, os::appdata::path()).currency()) {
   }
 
   typedef std::function<bool (cryptonote::core& c, size_t ev_index, const std::vector<test_event_entry> &events)> verify_callback;

@@ -169,25 +169,17 @@ uint32_t Blockchain::getCurrentBlockchainHeight() {
   return static_cast<uint32_t>(m_blocks.size());
 }
 
-bool Blockchain::init(const std::string& config_folder, bool load_existing) {
+// bool Blockchain::init(const std::string& config_folder, bool load_existing) {
+bool Blockchain::init(bool load_existing) {
   std::lock_guard<decltype(m_blockchain_lock)> lk(m_blockchain_lock);
-  boost::filesystem::path path(config_folder);
-  if (!path.empty() && (boost::filesystem::exists(path) ? true : !boost::filesystem::create_directory(path))) {
-  // if (!config_folder.empty() && !Tools::create_directories_if_necessary(config_folder)) {
-    logger(ERROR, BRIGHT_RED) << "Failed to create data directory: " << m_config_folder;
-    return false;
-  }
-
-  m_config_folder = config_folder;
-
-  if (!m_blocks.open(appendPath(config_folder, m_currency.blocksFileName()), appendPath(config_folder, m_currency.blockIndexesFileName()), 1024)) {
+  if (!m_blocks.open(m_currency.blocksFileName(), m_currency.blockIndexesFileName(), 1024)) {
     return false;
   }
 
   if (load_existing && !m_blocks.empty()) {
     logger(INFO, BRIGHT_WHITE) << "Loading blockchain...";
     BlockCacheSerializer loader(*this, get_block_hash(m_blocks.back().bl), logger.getLogger());
-    loader.load(appendPath(config_folder, m_currency.blocksCacheFileName()));
+    loader.load(m_currency.blocksCacheFileName());
 
     if (!loader.loaded()) {
       logger(WARNING, BRIGHT_YELLOW) << "No actual blockchain cache found, rebuilding internal structures...";
@@ -285,7 +277,7 @@ bool Blockchain::storeCache() {
 
   logger(INFO, BRIGHT_WHITE) << "Saving blockchain...";
   BlockCacheSerializer ser(*this, getTailId(), logger.getLogger());
-  if (!ser.save(appendPath(m_config_folder, m_currency.blocksCacheFileName()))) {
+  if (!ser.save(m_currency.blocksCacheFileName())) {
     logger(ERROR, BRIGHT_RED) << "Failed to save blockchain cache";
     return false;
   }
@@ -1932,7 +1924,7 @@ bool Blockchain::storeBlockchainIndices() {
   logger(INFO, BRIGHT_WHITE) << "Saving blockchain indices...";
   BlockchainIndicesSerializer ser(*this, getTailId(), logger.getLogger());
 
-  if (!storeToBinaryFile(ser, appendPath(m_config_folder, m_currency.blockchinIndicesFileName()))) {
+  if (!storeToBinaryFile(ser, m_currency.blockchainIndexesFileName())) {
     logger(ERROR, BRIGHT_RED) << "Failed to save blockchain indices";
     return false;
   }
@@ -1946,7 +1938,7 @@ bool Blockchain::loadBlockchainIndices() {
   logger(INFO, BRIGHT_WHITE) << "Loading blockchain indices for BlockchainExplorer...";
   BlockchainIndicesSerializer loader(*this, get_block_hash(m_blocks.back().bl), logger.getLogger());
 
-  loadFromBinaryFile(loader, appendPath(m_config_folder, m_currency.blockchinIndicesFileName()));
+  loadFromBinaryFile(loader, m_currency.blockchainIndexesFileName());
 
   if (!loader.loaded()) {
     logger(WARNING, BRIGHT_YELLOW) << "No actual blockchain indices for BlockchainExplorer found, rebuilding...";

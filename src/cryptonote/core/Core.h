@@ -171,7 +171,7 @@ namespace cryptonote {
      Blockchain m_blockchain;
      ICryptonoteProtocol* m_pprotocol;
      std::unique_ptr<miner> m_miner;
-     std::string m_config_folder;
+    //  std::string m_config_folder;
      cryptonote_protocol_stub m_protocol_stub;
      friend class tx_validate_inputs;
      std::atomic<bool> m_starter_message_showed;

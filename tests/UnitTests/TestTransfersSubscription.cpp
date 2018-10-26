@@ -30,7 +30,7 @@ class TransfersSubscriptionTest : public ::testing::Test {
 public:
 
   TransfersSubscriptionTest() :
-    currency(CurrencyBuilder(m_logger).currency()),
+    currency(CurrencyBuilder(m_logger, os::appdata::path()).currency()),
     account(generateAccountKeys()),
     syncStart(SynchronizationStart{ 0, 0 }),
     sub(currency, AccountSubscription{ account, syncStart, 10 }) {

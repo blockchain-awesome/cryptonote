@@ -143,7 +143,7 @@ class WalletApi: public ::testing::Test {
 public:
   WalletApi() :
     TRANSACTION_SOFTLOCK_TIME(10),
-    currency(cryptonote::CurrencyBuilder(logger).currency()),
+    currency(cryptonote::CurrencyBuilder(logger, os::appdata::path()).currency()),
     generator(currency),
     node(generator),
     alice(dispatcher, currency, node),
@@ -740,7 +740,7 @@ TEST_F(WalletApi, transferTooBigTransaction) {
   const size_t outputSize = 32 + 1;
   const size_t bigTxOutputCount = 2 * testBlockGrantedFullRewardZone / outputSize;
 
-  cryptonote::Currency cur = cryptonote::CurrencyBuilder(logger).blockGrantedFullRewardZone(testBlockGrantedFullRewardZone).currency();
+  cryptonote::Currency cur = cryptonote::CurrencyBuilder(logger, os::appdata::path()).blockGrantedFullRewardZone(testBlockGrantedFullRewardZone).currency();
   TestBlockchainGenerator gen(cur);
   INodeTrivialRefreshStub n(gen);
 

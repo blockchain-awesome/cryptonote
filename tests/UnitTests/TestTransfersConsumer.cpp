@@ -79,7 +79,7 @@ protected:
 };
 
 TransfersConsumerTest::TransfersConsumerTest() :
-  m_currency(cryptonote::CurrencyBuilder(m_logger).currency()),
+  m_currency(cryptonote::CurrencyBuilder(m_logger, os::appdata::path()).currency()),
   m_generator(m_currency),
   m_node(m_generator, true),
   m_accountKeys(generateAccountKeys()),

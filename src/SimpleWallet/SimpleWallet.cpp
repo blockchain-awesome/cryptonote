@@ -1088,7 +1088,7 @@ int main(int argc, char* argv[]) {
     po::store(command_line::parse_command_line(argc, argv, desc_general, true), vm);
 
     if (command_line::get_arg(vm, command_line::arg_help)) {
-      cryptonote::Currency tmp_currency = cryptonote::CurrencyBuilder(logManager).currency();
+      cryptonote::Currency tmp_currency = cryptonote::CurrencyBuilder(logManager, os::appdata::path()).currency();
       cryptonote::simple_wallet tmp_wallet(dispatcher, tmp_currency, logManager);
 
       std::cout << CRYPTONOTE_NAME << " wallet v" << PROJECT_VERSION_LONG << std::endl;
@@ -1120,8 +1120,9 @@ int main(int argc, char* argv[]) {
 
   logger(INFO, BRIGHT_WHITE) << CRYPTONOTE_NAME << " wallet v" << PROJECT_VERSION_LONG;
 
-  cryptonote::Currency currency = cryptonote::CurrencyBuilder(logManager).
-    testnet(command_line::get_arg(vm, arg_testnet)).currency();
+  cryptonote::Currency currency = cryptonote::CurrencyBuilder(logManager, os::appdata::path()).
+    // testnet(command_line::get_arg(vm, arg_testnet)).currency();
+    currency();
 
   if (command_line::has_arg(vm, Tools::wallet_rpc_server::arg_rpc_bind_port)) {
     //runs wallet with rpc interface

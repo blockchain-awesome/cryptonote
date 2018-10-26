@@ -10,6 +10,7 @@
 #include <algorithm>
 
 #include "CryptoNoteConfig.h"
+#include "common/os.h"
 #include "cryptonote/core/Difficulty.h"
 #include "cryptonote/core/Currency.h"
 #include "Logging/ConsoleLogger.h"
@@ -22,7 +23,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
     Logging::ConsoleLogger logger;
-    cryptonote::CurrencyBuilder currencyBuilder(logger);
+    cryptonote::CurrencyBuilder currencyBuilder(logger, os::appdata::path());
     currencyBuilder.difficultyTarget(120);
     currencyBuilder.difficultyWindow(720);
     currencyBuilder.difficultyCut(60);

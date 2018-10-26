@@ -37,7 +37,7 @@ class TransfersApi : public ::testing::Test, public IBlockchainSynchronizerObser
 public:
 
   TransfersApi() :
-    m_currency(cryptonote::CurrencyBuilder(m_logger).currency()),
+    m_currency(cryptonote::CurrencyBuilder(m_logger, os::appdata::path()).currency()),
     generator(m_currency),
     m_node(generator),
     m_sync(m_node, m_currency.genesisBlockHash()),

@@ -56,7 +56,7 @@ namespace cryptonote {
     bool removeObserver(ITxPoolObserver* observer);
 
     // load/store operations
-    bool init(const std::string& config_folder);
+    bool init();
     bool deinit();
 
     bool have_tx(const crypto::Hash &id) const;
@@ -131,7 +131,7 @@ namespace cryptonote {
     key_images_container m_spent_key_images;
     GlobalOutputsContainer m_spentOutputs;
 
-    std::string m_config_folder;
+    // std::string m_config_folder;
     cryptonote::ITransactionValidator& m_validator;
     cryptonote::ITimeProvider& m_timeProvider;
 

@@ -17,7 +17,7 @@ public:
   {
     using namespace cryptonote;
 
-    Currency currency = CurrencyBuilder(m_nullLog).currency();
+    Currency currency = CurrencyBuilder(m_nullLog, os::appdata::path()).currency();
     m_bob.generate();
 
     if (!currency.constructMinerTx(0, 0, 0, 2, 0, m_bob.getAccountKeys().address, m_tx))

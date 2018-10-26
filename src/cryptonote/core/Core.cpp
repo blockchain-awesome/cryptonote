@@ -82,7 +82,7 @@ void core::init_options(boost::program_options::options_description& /*desc*/) {
 }
 
 bool core::handle_command_line(const boost::program_options::variables_map& vm) {
-  m_config_folder = command_line::get_arg(vm, command_line::arg_data_dir);
+  // m_config_folder = command_line::get_arg(vm, command_line::arg_data_dir);
   return true;
 }
 
@@ -115,11 +115,12 @@ size_t core::get_alternative_blocks_count() {
   }
   //-----------------------------------------------------------------------------------------------
   bool core::init(const CoreConfig& config, const MinerConfig& minerConfig, bool load_existing) {
-    m_config_folder = config.configFolder;
-    bool r = m_mempool.init(m_config_folder);
+    // m_config_folder = config.configFolder;
+    // m_currency.setPath(m_config_folder);
+    bool r = m_mempool.init();
   if (!(r)) { logger(ERROR, BRIGHT_RED) << "Failed to initialize memory pool"; return false; }
 
-  r = m_blockchain.init(m_config_folder, load_existing);
+  r = m_blockchain.init(load_existing);
   if (!(r)) { logger(ERROR, BRIGHT_RED) << "Failed to initialize blockchain storage"; return false; }
 
     r = m_miner->init(minerConfig);

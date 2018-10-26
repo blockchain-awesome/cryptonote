@@ -113,7 +113,7 @@ TEST(parseTransactionExtra, handles_pub_key_and_padding)
 TEST(parse_and_validate_tx_extra, is_valid_tx_extra_parsed)
 {
   Logging::LoggerGroup logger;
-  cryptonote::Currency currency = cryptonote::CurrencyBuilder(logger).currency();
+  cryptonote::Currency currency = cryptonote::CurrencyBuilder(logger, os::appdata::path()).currency();
   cryptonote::Transaction tx = AUTO_VAL_INIT(tx);
   cryptonote::AccountBase acc;
   acc.generate();
@@ -125,7 +125,7 @@ TEST(parse_and_validate_tx_extra, is_valid_tx_extra_parsed)
 TEST(parse_and_validate_tx_extra, fails_on_big_extra_nonce)
 {
   Logging::LoggerGroup logger;
-  cryptonote::Currency currency = cryptonote::CurrencyBuilder(logger).currency();
+  cryptonote::Currency currency = cryptonote::CurrencyBuilder(logger, os::appdata::path()).currency();
   cryptonote::Transaction tx = AUTO_VAL_INIT(tx);
   cryptonote::AccountBase acc;
   acc.generate();
@@ -144,7 +144,7 @@ TEST(parse_and_validate_tx_extra, fails_on_wrong_size_in_extra_nonce)
 TEST(validate_parse_amount_case, validate_parse_amount)
 {
   Logging::LoggerGroup logger;
-  cryptonote::Currency currency = cryptonote::CurrencyBuilder(logger).numberOfDecimalPlaces(8).currency();
+  cryptonote::Currency currency = cryptonote::CurrencyBuilder(logger, os::appdata::path()).numberOfDecimalPlaces(8).currency();
   uint64_t res = 0;
   bool r = currency.parseAmount("0.0001", res);
   ASSERT_TRUE(r);

@@ -388,18 +388,10 @@ namespace cryptonote {
     return true;
   }
   //---------------------------------------------------------------------------------
-  bool TxMemoryPool::init(const std::string& config_folder) {
+  bool TxMemoryPool::init() {
     std::lock_guard<std::recursive_mutex> lock(m_transactions_lock);
-
-    m_config_folder = config_folder;
-    std::string state_file_path = config_folder + "/" + m_currency.txPoolFileName();
-    boost::system::error_code ec;
-    if (!boost::filesystem::exists(state_file_path, ec)) {
-      return true;
-    }
-
-    if (!loadFromBinaryFile(*this, state_file_path)) {
-      logger(ERROR) << "Failed to load memory pool from file " << state_file_path;
+    if (!loadFromBinaryFile(*this, m_currency.txPoolFileName())) {
+      logger(ERROR) << "Failed to load memory pool from file " << m_currency.txPoolFileName();
 
       m_transactions.clear();
       m_spent_key_images.clear();
@@ -418,17 +410,8 @@ namespace cryptonote {
   }
   //---------------------------------------------------------------------------------
   bool TxMemoryPool::deinit() {
-    boost::filesystem::path path(m_config_folder);
-    bool exists = boost::filesystem::exists(path) ? true : boost::filesystem::create_directory(path);
-    if (!exists) {
-      logger(INFO) << "Failed to create data directory: " << m_config_folder;
-      return false;
-    }
-
-    std::string state_file_path = m_config_folder + "/" + m_currency.txPoolFileName();
-
-    if (!storeToBinaryFile(*this, state_file_path)) {
-      logger(INFO) << "Failed to serialize memory pool to file " << state_file_path;
+    if (!storeToBinaryFile(*this, m_currency.txPoolFileName())) {
+      logger(INFO) << "Failed to serialize memory pool to file " << m_currency.txPoolFileName();
     }
 
     m_paymentIdIndex.clear();

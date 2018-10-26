@@ -11,6 +11,7 @@
 #include "cryptonote/core/Account.h"
 #include "cryptonote/core/Currency.h"
 #include "cryptonote/core/CryptoNoteSerialization.h"
+#include "common/os.h"
 
 #include "Serialization/BinarySerializationTools.h"
 #include "common/Base58.cpp"
@@ -486,7 +487,8 @@ TEST(parseAccountAddressString, fails_on_invalid_address_prefix)
   std::string addr_str = Base58::encode_addr(0, test_serialized_keys);
 
   Logging::LoggerGroup logger;
-  cryptonote::Currency currency = cryptonote::CurrencyBuilder(logger).currency();
+  // cryptonote::Currency currency = cryptonote::CurrencyBuilder(logger).currency();
+  cryptonote::Currency currency = cryptonote::CurrencyBuilder(logger, os::appdata::path()).currency();
 
   cryptonote::AccountPublicAddress addr;
   
