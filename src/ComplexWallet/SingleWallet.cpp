@@ -180,7 +180,7 @@ void SingleWallet::initWithKeys(const AccountKeys &accountKeys, const std::strin
     }
 
     m_account.setAccountKeys(accountKeys);
-    m_account.set_createtime(ACCOUN_CREATE_TIME_ACCURACY);
+    m_account.setCreatetime(ACCOUN_CREATE_TIME_ACCURACY);
     m_password = password;
 
     std::cout << "inside initWithKeys" << std::endl;
@@ -216,7 +216,7 @@ void SingleWallet::initSync()
   sub.keys = reinterpret_cast<const AccountKeys &>(m_account.getAccountKeys());
   sub.transactionSpendableAge = 1;
   sub.syncStart.height = 0;
-  sub.syncStart.timestamp = m_account.get_createtime() - ACCOUN_CREATE_TIME_ACCURACY;
+  sub.syncStart.timestamp = m_account.getCreatetime() - ACCOUN_CREATE_TIME_ACCURACY;
 
   auto &subObject = m_transfersSync.addSubscription(sub);
   m_transferDetails = &subObject.getContainer();
