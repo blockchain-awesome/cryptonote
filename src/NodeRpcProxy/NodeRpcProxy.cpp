@@ -19,7 +19,6 @@
 #include <cryptonote/core/TransactionApi.h>
 
 #include "common/StringTools.h"
-#include "cryptonote/core/CryptoNoteBasicImpl.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "rpc/CoreRpcServerCommandsDefinitions.h"
 #include "rpc/HttpClient.h"

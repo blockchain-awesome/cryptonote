@@ -20,6 +20,9 @@
 namespace cryptonote {
 
 class AccountBase;
+
+uint64_t getPenalizedAmount(uint64_t amount, size_t medianSize, size_t currentBlockSize);
+
 class Currency {
 public:
   uint64_t maxBlockHeight() const { return m_maxBlockHeight; }

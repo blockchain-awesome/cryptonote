@@ -19,7 +19,6 @@
 #include "crypto/crypto.h"
 #include "cryptonote.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
-#include "cryptonote/core/CryptoNoteBasicImpl.h"
 #include "cryptonote/core/TransactionExtra.h"
 #include "cryptonote/core/Account.h"
 

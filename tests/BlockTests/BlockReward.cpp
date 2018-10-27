@@ -4,7 +4,10 @@
 
 #include "gtest/gtest.h"
 
-#include "cryptonote/core/CryptoNoteBasicImpl.h"
+#include "crypto/crypto.h"
+#include "crypto/hash.h"
+#include "cryptonote/core/key.h"
+#include "cryptonote/core/serialize.h"
 #include "cryptonote/core/Currency.h"
 #include <logging/LoggerGroup.h>
 #include "common/os.h"

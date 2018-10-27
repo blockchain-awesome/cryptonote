@@ -9,7 +9,6 @@
 #include <boost/uuid/uuid_io.hpp>
 #include <system/Dispatcher.h>
 
-#include "cryptonote/core/CryptoNoteBasicImpl.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/core/Currency.h"

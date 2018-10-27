@@ -10,8 +10,6 @@
 #include "wallet_legacy/WalletTransactionSender.h"
 #include "wallet_legacy/WalletUtils.h"
 
-#include "cryptonote/core/CryptoNoteBasicImpl.h"
-
 #include <logging/LoggerGroup.h>
 
 #include <random>

@@ -4,7 +4,11 @@
 
 #pragma once
 #include <map>
-#include "CryptoNoteBasicImpl.h"
+#include "common/StringTools.h"
+#include "crypto/crypto.h"
+#include "crypto/hash.h"
+#include "cryptonote/core/key.h"
+#include "cryptonote/core/serialize.h"
 #include <logging/LoggerRef.h>
 
 namespace cryptonote

@@ -19,11 +19,11 @@
 #include "common/int-util.h"
 #include "common/ObserverManager.h"
 #include "crypto/hash.h"
+#include "crypto/crypto.h"
+#include "cryptonote/core/serialize.h"
 
 #include "cryptonote/core/key.h"
-#include "cryptonote/core/CryptoNoteBasicImpl.h"
 #include "cryptonote/core/Currency.h"
-// #include "cryptonote/core/ITimeProvider.h"
 #include "cryptonote/core/ITransactionValidator.h"
 #include "cryptonote/core/ITxPoolObserver.h"
 #include "cryptonote/core/VerificationContext.h"
