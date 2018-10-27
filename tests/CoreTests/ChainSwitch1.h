@@ -3,9 +3,8 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #pragma once 
+#include "util.h"
 #include "Chaingen.h"
-
-bool operator ==(const cryptonote::Transaction& a, const cryptonote::Transaction& b);
 
 /************************************************************************/
 /*                                                                      */

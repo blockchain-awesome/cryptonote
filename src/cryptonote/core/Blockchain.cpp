@@ -23,20 +23,6 @@
 using namespace Logging;
 using namespace Common;
 
-namespace {
-
-std::string appendPath(const std::string& path, const std::string& fileName) {
-  std::string result = path;
-  if (!result.empty()) {
-    result += '/';
-  }
-
-  result += fileName;
-  return result;
-}
-
-}
-
 namespace std {
   template <typename T> bool operator < (const T& t1, const T& t2) {
     return memcmp(&t1, &t2, sizeof(T)) < 0;

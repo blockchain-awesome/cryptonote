@@ -47,11 +47,6 @@ namespace cryptonote {
 
     return penalizedAmountLo;
   }
-
-  //-----------------------------------------------------------------------
-  bool operator ==(const cryptonote::Block& a, const cryptonote::Block& b) {
-    return cryptonote::get_block_hash(a) == cryptonote::get_block_hash(b);
-  }
 }
 
 //--------------------------------------------------------------------------------

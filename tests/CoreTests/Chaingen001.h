@@ -4,6 +4,7 @@
 
 #pragma once 
 #include "Chaingen.h"
+#include "util.h"
 
 class gen_simple_chain_001: public test_chain_unit_base 
 {
