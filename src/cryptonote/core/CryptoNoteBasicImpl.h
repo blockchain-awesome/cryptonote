@@ -16,7 +16,5 @@ namespace cryptonote {
   /* cryptonote.helper functions                                          */
   /************************************************************************/
   uint64_t getPenalizedAmount(uint64_t amount, size_t medianSize, size_t currentBlockSize);
-
-  bool operator ==(const cryptonote::Transaction& a, const cryptonote::Transaction& b);
   bool operator ==(const cryptonote::Block& a, const cryptonote::Block& b);
 }

@@ -49,10 +49,6 @@ namespace cryptonote {
   }
 
   //-----------------------------------------------------------------------
-  bool operator ==(const cryptonote::Transaction& a, const cryptonote::Transaction& b) {
-    return getObjectHash(a) == getObjectHash(b);
-  }
-  //-----------------------------------------------------------------------
   bool operator ==(const cryptonote::Block& a, const cryptonote::Block& b) {
     return cryptonote::get_block_hash(a) == cryptonote::get_block_hash(b);
   }

@@ -5,6 +5,8 @@
 #pragma once 
 #include "Chaingen.h"
 
+bool operator ==(const cryptonote::Transaction& a, const cryptonote::Transaction& b);
+
 /************************************************************************/
 /*                                                                      */
 /************************************************************************/
