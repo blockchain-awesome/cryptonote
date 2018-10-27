@@ -12,7 +12,7 @@
 #include "cryptonote/core/key.h"
 #include "TestBlockchainGenerator.h"
 #include "common/ObserverManager.h"
-#include "Wallet/WalletAsyncContextCounter.h"
+#include "wallet/WalletAsyncContextCounter.h"
 
 
 class INodeDummyStub : public cryptonote::INode

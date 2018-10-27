@@ -13,7 +13,7 @@
 #include "ICryptoNoteProtocolQueryStub.h"
 #include "InProcessNode/InProcessNode.h"
 #include "TestBlockchainGenerator.h"
-#include "Logging/FileLogger.h"
+#include "logging/FileLogger.h"
 #include "cryptonote/core/TransactionApi.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/core/VerificationContext.h"

@@ -7,14 +7,14 @@
 #include <future>
 
 #include <common/StringTools.h>
-#include <Logging/ConsoleLogger.h>
+#include <logging/ConsoleLogger.h>
 
 #include "cryptonote/core/Core.h"
 #include "cryptonote/core/Account.h"
 #include "cryptonote/core/CoreConfig.h"
 #include "cryptonote/core/Miner.h"
 #include "cryptonote/protocol/handler.h"
-#include "P2p/NetNode.h"
+#include "p2p/NetNode.h"
 #include "InProcessNode/InProcessNode.h"
 
 using namespace cryptonote;

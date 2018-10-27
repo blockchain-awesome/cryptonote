@@ -6,7 +6,7 @@
 
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/Currency.h"
-#include <Logging/LoggerGroup.h>
+#include <logging/LoggerGroup.h>
 #include <common/os.h>
 
 using namespace cryptonote;

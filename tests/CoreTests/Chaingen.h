@@ -21,8 +21,8 @@
 #include "BoostSerializationHelper.h"
 #include "AccountBoostSerialization.h"
 
-#include <Logging/LoggerGroup.h>
-#include <Logging/ConsoleLogger.h>
+#include <logging/LoggerGroup.h>
+#include <logging/ConsoleLogger.h>
 
 
 namespace concolor

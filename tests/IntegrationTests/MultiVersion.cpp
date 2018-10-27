@@ -5,7 +5,7 @@
 #include "../IntegrationTestLib/BaseFunctionalTests.h"
 
 #include <thread>
-#include <Logging/ConsoleLogger.h>
+#include <logging/ConsoleLogger.h>
 
 #include "cryptonote/core/Account.h"
 #include "WalletLegacyObserver.h"

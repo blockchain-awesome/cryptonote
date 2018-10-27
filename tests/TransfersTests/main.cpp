@@ -5,7 +5,7 @@
 #include "gtest/gtest.h"
 #include "Globals.h"
 
-#include <Logging/ConsoleLogger.h>
+#include <logging/ConsoleLogger.h>
 
 Logging::ConsoleLogger logger;
 System::Dispatcher globalSystem;

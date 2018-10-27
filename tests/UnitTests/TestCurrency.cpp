@@ -7,7 +7,7 @@
 #include "crypto/crypto.h"
 #include "cryptonote/core/Currency.h"
 #include "cryptonote/core/TransactionApi.h"
-#include "Logging/ConsoleLogger.h"
+#include "logging/ConsoleLogger.h"
 
 #include "TransactionApiHelpers.h"
 

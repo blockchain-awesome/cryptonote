@@ -16,9 +16,9 @@
 #include "cryptonote/core/MinerConfig.h"
 #include "cryptonote/core/OnceInInterval.h"
 
-#include <Logging/LoggerRef.h>
+#include <logging/LoggerRef.h>
 
-#include "Serialization/ISerializer.h"
+#include "serialization/ISerializer.h"
 
 namespace cryptonote {
   class miner {

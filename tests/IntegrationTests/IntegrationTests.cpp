@@ -3,12 +3,12 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "gtest/gtest.h"
-#include <Logging/LoggerRef.h>
+#include <logging/LoggerRef.h>
 
 #include "../IntegrationTestLib/BaseFunctionalTests.h"
 #include "../IntegrationTestLib/NodeObserver.h"
 
-#include "WalletLegacy/WalletLegacy.h"
+#include "wallet_legacy/WalletLegacy.h"
 #include "WalletLegacyObserver.h"
 
 using namespace cryptonote;

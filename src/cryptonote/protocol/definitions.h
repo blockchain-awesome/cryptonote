@@ -8,8 +8,8 @@
 #include "cryptonote/core/key.h"
 
 // ISerializer-based serialization
-#include "Serialization/ISerializer.h"
-#include "Serialization/SerializationOverloads.h"
+#include "serialization/ISerializer.h"
+#include "serialization/SerializationOverloads.h"
 #include "cryptonote/core/CryptoNoteSerialization.h"
 
 namespace cryptonote

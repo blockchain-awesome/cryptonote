@@ -17,9 +17,9 @@
 
 #include "cryptonote/core/CryptoNoteTools.h"
 
-#include "Logging/FileLogger.h"
+#include "logging/FileLogger.h"
 
-#include "BlockchainExplorer/BlockchainExplorer.h"
+#include "blockchain_explorer/BlockchainExplorer.h"
 
 using namespace crypto;
 using namespace cryptonote;

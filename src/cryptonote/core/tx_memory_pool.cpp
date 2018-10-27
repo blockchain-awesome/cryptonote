@@ -14,8 +14,8 @@
 #include "common/int-util.h"
 #include "crypto/hash.h"
 
-#include "Serialization/SerializationTools.h"
-#include "Serialization/BinarySerializationTools.h"
+#include "serialization/SerializationTools.h"
+#include "serialization/BinarySerializationTools.h"
 
 #include "CryptoNoteFormatUtils.h"
 #include "CryptoNoteTools.h"

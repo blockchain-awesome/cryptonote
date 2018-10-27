@@ -8,7 +8,7 @@
 #include <algorithm>
 #include <boost/program_options.hpp>
 
-#include "Logging/ILogger.h"
+#include "logging/ILogger.h"
 #include "CryptoNoteConfig.h"
 
 namespace po = boost::program_options;

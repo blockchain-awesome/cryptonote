@@ -10,8 +10,8 @@
 #include "cryptonote/core/Account.h"
 #include "cryptonote/core/Currency.h"
 #include "cryptonote/core/TransactionApi.h"
-#include "Logging/ConsoleLogger.h"
-#include "Transfers/TransfersContainer.h"
+#include "logging/ConsoleLogger.h"
+#include "transfers/TransfersContainer.h"
 
 #include "TransactionApiHelpers.h"
 

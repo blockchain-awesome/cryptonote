@@ -20,17 +20,17 @@
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/protocol/handler.h"
 #include "NodeRpcProxy/NodeRpcProxy.h"
-#include "Rpc/CoreRpcServerCommandsDefinitions.h"
-#include "Rpc/HttpClient.h"
+#include "rpc/CoreRpcServerCommandsDefinitions.h"
+#include "rpc/HttpClient.h"
 
-#include "Wallet/WalletRpcServer.h"
-#include "WalletLegacy/WalletLegacy.h"
-#include "Wallet/LegacyKeysImporter.h"
-#include "WalletLegacy/WalletHelper.h"
+#include "wallet/WalletRpcServer.h"
+#include "wallet_legacy/WalletLegacy.h"
+#include "wallet/LegacyKeysImporter.h"
+#include "wallet_legacy/WalletHelper.h"
 
 #include "version.h"
 
-#include <Logging/LoggerManager.h>
+#include <logging/LoggerManager.h>
 
 #include "args.h"
 

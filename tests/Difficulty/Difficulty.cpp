@@ -13,7 +13,7 @@
 #include "common/os.h"
 #include "cryptonote/core/Difficulty.h"
 #include "cryptonote/core/Currency.h"
-#include "Logging/ConsoleLogger.h"
+#include "logging/ConsoleLogger.h"
 
 using namespace std;
 

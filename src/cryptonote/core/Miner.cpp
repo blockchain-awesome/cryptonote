@@ -19,7 +19,7 @@
 #include "crypto/crypto.h"
 #include "common/CommandLine.h"
 #include "common/StringTools.h"
-#include "Serialization/SerializationTools.h"
+#include "serialization/SerializationTools.h"
 
 #include "CryptoNoteFormatUtils.h"
 #include "TransactionExtra.h"

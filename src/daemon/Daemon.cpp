@@ -17,14 +17,14 @@
 #include "cryptonote/core/Currency.h"
 #include "cryptonote/core/MinerConfig.h"
 #include "cryptonote/protocol/handler.h"
-#include "P2p/NetNode.h"
-#include "P2p/NetNodeConfig.h"
-#include "Rpc/RpcServer.h"
-#include "Rpc/RpcServerConfig.h"
+#include "p2p/NetNode.h"
+#include "p2p/NetNodeConfig.h"
+#include "rpc/RpcServer.h"
+#include "rpc/RpcServerConfig.h"
 #include "version.h"
 
-#include "Logging/ConsoleLogger.h"
-#include <Logging/LoggerManager.h>
+#include "logging/ConsoleLogger.h"
+#include <logging/LoggerManager.h>
 
 #if defined(WIN32)
 #include <crtdbg.h>

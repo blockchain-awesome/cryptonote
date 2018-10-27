@@ -2,7 +2,7 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <System/ErrorMessage.h>
+#include <system/ErrorMessage.h>
 #include <gtest/gtest.h>
 
 using namespace System;

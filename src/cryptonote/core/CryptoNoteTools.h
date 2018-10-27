@@ -8,8 +8,8 @@
 #include "stream/MemoryInputStream.h"
 #include "common/StringTools.h"
 #include "stream/VectorOutputStream.h"
-#include "Serialization/BinaryOutputStreamSerializer.h"
-#include "Serialization/BinaryInputStreamSerializer.h"
+#include "serialization/BinaryOutputStreamSerializer.h"
+#include "serialization/BinaryInputStreamSerializer.h"
 #include "CryptoNoteSerialization.h"
 
 namespace cryptonote {

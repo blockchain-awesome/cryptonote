@@ -14,7 +14,7 @@
 
 #include "crypto/crypto.h"
 
-#include "Logging/ConsoleLogger.h"
+#include "logging/ConsoleLogger.h"
 
 template<size_t a_ring_size>
 class multi_tx_test_base

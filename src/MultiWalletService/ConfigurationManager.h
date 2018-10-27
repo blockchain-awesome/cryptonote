@@ -6,7 +6,7 @@
 
 #include "cryptonote/core/CoreConfig.h"
 #include "GateConfiguration.h"
-#include "P2p/NetNodeConfig.h"
+#include "p2p/NetNodeConfig.h"
 #include "RpcNodeConfiguration.h"
 
 namespace MultiWalletService {

@@ -11,7 +11,7 @@
 #include "cryptonote/core/ICore.h"
 #include "cryptonote/core/ICoreObserver.h"
 #include "common/ObserverManager.h"
-#include "BlockchainExplorer/BlockchainExplorerDataBuilder.h"
+#include "blockchain_explorer/BlockchainExplorerDataBuilder.h"
 
 #include <thread>
 #include <boost/asio.hpp>

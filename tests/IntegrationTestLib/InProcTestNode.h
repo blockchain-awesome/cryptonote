@@ -11,7 +11,7 @@
 #include <memory>
 #include <thread>
 
-#include <System/Dispatcher.h>
+#include <system/Dispatcher.h>
 
 
 namespace cryptonote {

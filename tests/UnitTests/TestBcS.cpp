@@ -4,14 +4,14 @@
 
 #include "gtest/gtest.h"
 
-#include "Transfers/BlockchainSynchronizer.h"
-#include "Transfers/TransfersConsumer.h"
+#include "transfers/BlockchainSynchronizer.h"
+#include "transfers/TransfersConsumer.h"
 
 #include "crypto/hash.h"
 #include "cryptonote/core/TransactionApi.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/CryptoNoteTools.h"
-#include "Logging/ConsoleLogger.h"
+#include "logging/ConsoleLogger.h"
 
 #include "INodeStubs.h"
 #include "TestBlockchainGenerator.h"

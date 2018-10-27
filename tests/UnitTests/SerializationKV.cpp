@@ -6,10 +6,10 @@
 
 #include <boost/lexical_cast.hpp>
 
-#include "Serialization/KVBinaryInputStreamSerializer.h"
-#include "Serialization/KVBinaryOutputStreamSerializer.h"
-#include "Serialization/SerializationOverloads.h"
-#include "Serialization/SerializationTools.h"
+#include "serialization/KVBinaryInputStreamSerializer.h"
+#include "serialization/KVBinaryOutputStreamSerializer.h"
+#include "serialization/SerializationOverloads.h"
+#include "serialization/SerializationTools.h"
 
 #include <array>
 

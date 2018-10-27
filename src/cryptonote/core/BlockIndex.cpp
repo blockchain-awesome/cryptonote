@@ -7,7 +7,7 @@
 #include <boost/utility/value_init.hpp>
 
 #include "CryptoNoteSerialization.h"
-#include "Serialization/SerializationOverloads.h"
+#include "serialization/SerializationOverloads.h"
 
 namespace cryptonote {
   crypto::Hash BlockIndex::getBlockId(uint32_t height) const {

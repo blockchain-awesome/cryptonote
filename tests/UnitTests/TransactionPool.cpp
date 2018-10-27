@@ -15,8 +15,8 @@
 #include "cryptonote/core/TransactionExtra.h"
 #include "cryptonote/core/tx_memory_pool.h"
 
-#include <Logging/ConsoleLogger.h>
-#include <Logging/LoggerGroup.h>
+#include <logging/ConsoleLogger.h>
+#include <logging/LoggerGroup.h>
 
 #include "TransactionApiHelpers.h"
 

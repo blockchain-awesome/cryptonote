@@ -12,8 +12,8 @@
 #include "common/ShuffleGenerator.h"
 #include "stream/StdInputStream.h"
 #include "stream/StdOutputStream.h"
-#include "Rpc/CoreRpcServerCommandsDefinitions.h"
-#include "Serialization/BinarySerializationTools.h"
+#include "rpc/CoreRpcServerCommandsDefinitions.h"
+#include "serialization/BinarySerializationTools.h"
 #include "CryptoNoteTools.h"
 
 #include <cryptonote/core/blockchain/defines.h>
@@ -169,7 +169,6 @@ uint32_t Blockchain::getCurrentBlockchainHeight() {
   return static_cast<uint32_t>(m_blocks.size());
 }
 
-// bool Blockchain::init(const std::string& config_folder, bool load_existing) {
 bool Blockchain::init(bool load_existing) {
   std::lock_guard<decltype(m_blockchain_lock)> lk(m_blockchain_lock);
   if (!m_blocks.open(m_currency.blocksFileName(), m_currency.blockIndexesFileName(), 1024)) {

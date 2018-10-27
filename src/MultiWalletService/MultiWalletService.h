@@ -9,17 +9,17 @@
 #include "ConfigurationManager.h"
 #include "GateConfiguration.h"
 
-#include "Logging/ConsoleLogger.h"
-#include "Logging/LoggerGroup.h"
-#include "Logging/StreamLogger.h"
+#include "logging/ConsoleLogger.h"
+#include "logging/LoggerGroup.h"
+#include "logging/StreamLogger.h"
 
-#include "PaymentGate/NodeFactory.h"
+#include "payment_gate/NodeFactory.h"
 
 #include "cryptonote/core/Currency.h"
-#include "System/Event.h"
+#include "system/Event.h"
 #include "WalletInterface.h"
 
-#include <System/ContextGroup.h>
+#include <system/ContextGroup.h>
 
 using namespace std;
 

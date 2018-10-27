@@ -5,7 +5,7 @@
 #pragma once
 #include <map>
 #include "CryptoNoteBasicImpl.h"
-#include <Logging/LoggerRef.h>
+#include <logging/LoggerRef.h>
 
 namespace cryptonote
 {

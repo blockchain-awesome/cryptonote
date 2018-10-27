@@ -7,7 +7,7 @@
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/variables_map.hpp>
 
-#include "P2p/NetNodeCommon.h"
+#include "p2p/NetNodeCommon.h"
 #include "cryptonote/protocol/handler_common.h"
 #include "Currency.h"
 #include "tx_memory_pool.h"
@@ -18,11 +18,11 @@
 #include "ICoreObserver.h"
 #include "common/ObserverManager.h"
 
-#include "System/Dispatcher.h"
+#include "system/Dispatcher.h"
 #include "cryptonote/core/template/MessageQueue.h"
 #include "cryptonote/core/BlockchainMessages.h"
 
-#include <Logging/LoggerMessage.h>
+#include <logging/LoggerMessage.h>
 
 namespace cryptonote {
   class LockedBlockchainStorage;

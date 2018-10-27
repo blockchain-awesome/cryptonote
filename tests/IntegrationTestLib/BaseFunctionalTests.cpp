@@ -13,15 +13,15 @@
 
 #include <boost/filesystem.hpp>
 
-#include <System/ContextGroup.h>
-#include <System/Event.h>
-#include <System/Timer.h>
-#include <System/InterruptedException.h>
+#include <system/ContextGroup.h>
+#include <system/Event.h>
+#include <system/Timer.h>
+#include <system/InterruptedException.h>
 
-#include "P2p/NetNodeConfig.h"
+#include "p2p/NetNodeConfig.h"
 #include "cryptonote/core/CoreConfig.h"
 #include "cryptonote/core/CryptoNoteTools.h"
-#include "WalletLegacy/WalletLegacy.h"
+#include "wallet_legacy/WalletLegacy.h"
 
 #include "Logger.h"
 

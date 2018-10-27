@@ -8,7 +8,7 @@
 
 #include "cryptonote/core/Currency.h"
 #include "TransactionBuilder.h"
-#include <Logging/LoggerGroup.h>
+#include <logging/LoggerGroup.h>
 
 class TestGenerator {
 public:

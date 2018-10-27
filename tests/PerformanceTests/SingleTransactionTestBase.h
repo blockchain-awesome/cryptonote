@@ -8,7 +8,7 @@
 #include "cryptonote/core/key.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 
-#include <Logging/LoggerGroup.h>
+#include <logging/LoggerGroup.h>
 
 class single_tx_test_base
 {

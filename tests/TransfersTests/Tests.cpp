@@ -8,8 +8,8 @@
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/core/TransactionApi.h"
 
-#include "Transfers/TransfersSynchronizer.h"
-#include "Transfers/BlockchainSynchronizer.h"
+#include "transfers/TransfersSynchronizer.h"
+#include "transfers/BlockchainSynchronizer.h"
 
 #include <mutex>
 #include <condition_variable>

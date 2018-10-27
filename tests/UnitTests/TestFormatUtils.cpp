@@ -13,7 +13,7 @@
 #include "cryptonote/core/TransactionExtra.h"
 #include "common/StringTools.h"
 
-#include <Logging/LoggerGroup.h>
+#include <logging/LoggerGroup.h>
 
 #define AUTO_VAL_INIT(n) boost::value_initialized<decltype(n)>()
 

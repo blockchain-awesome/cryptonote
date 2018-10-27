@@ -30,7 +30,7 @@
 #include "cryptonote/core/blockchain/indexing/exports.h"
 #include "cryptonote/core/transaction/structures.h"
 
-#include <Logging/LoggerRef.h>
+#include <logging/LoggerRef.h>
 
 #include "cryptonote/core/transaction/once_in_time_interval.hpp"
 

@@ -5,7 +5,7 @@
 #include "gtest/gtest.h"
 
 #include <cstdint>
-#include <Logging/LoggerGroup.h>
+#include <logging/LoggerGroup.h>
 
 #include "cryptonote/core/CryptoNoteBasicImpl.h"
 #include "cryptonote/core/Account.h"
@@ -13,7 +13,7 @@
 #include "cryptonote/core/CryptoNoteSerialization.h"
 #include "common/os.h"
 
-#include "Serialization/BinarySerializationTools.h"
+#include "serialization/BinarySerializationTools.h"
 #include "common/Base58.cpp"
 
 using namespace Tools;

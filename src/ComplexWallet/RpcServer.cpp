@@ -10,10 +10,10 @@
 #include "JsonRpcParameters.h"
 
 #include "common/StringTools.h"
-#include "Rpc/HttpServer.h"
+#include "rpc/HttpServer.h"
 
-#include "Serialization/JsonInputValueSerializer.h"
-#include "Serialization/JsonOutputStreamSerializer.h"
+#include "serialization/JsonInputValueSerializer.h"
+#include "serialization/JsonOutputStreamSerializer.h"
 
 #include "./http/errors.h"
 

@@ -7,8 +7,8 @@
 #include <fstream>
 #include "stream/StdInputStream.h"
 #include "stream/StdOutputStream.h"
-#include "Serialization/BinaryInputStreamSerializer.h"
-#include "Serialization/BinaryOutputStreamSerializer.h"
+#include "serialization/BinaryInputStreamSerializer.h"
+#include "serialization/BinaryOutputStreamSerializer.h"
 #include "cryptonote/core/Account.h"
 
 using namespace cryptonote;

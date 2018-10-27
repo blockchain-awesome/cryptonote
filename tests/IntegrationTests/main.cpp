@@ -18,7 +18,7 @@
 #include "../IntegrationTestLib/BaseFunctionalTests.h"
 #include "../IntegrationTestLib/Logger.h"
 
-#include "Logging/ConsoleLogger.h"
+#include "logging/ConsoleLogger.h"
 
 #ifndef CHECK_AND_ASSERT_MES
 #define CHECK_AND_ASSERT_MES(expr, fail_ret_val, message)   do{if(!(expr)) {LOG_ERROR(message); return fail_ret_val;};}while(0)

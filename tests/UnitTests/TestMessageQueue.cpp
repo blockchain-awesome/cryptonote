@@ -7,9 +7,9 @@
 #include <thread>
 #include <iostream>
 
-#include "System/ContextGroup.h"
-#include "System/Dispatcher.h"
-#include "System/Event.h"
+#include "system/ContextGroup.h"
+#include "system/Dispatcher.h"
+#include "system/Event.h"
 
 #include "cryptonote/core/template/MessageQueue.h"
 #include "cryptonote/core/BlockchainMessages.h"

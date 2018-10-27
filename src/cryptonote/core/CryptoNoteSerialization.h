@@ -6,7 +6,7 @@
 
 #include "key.h"
 #include "crypto/chacha.h"
-#include "Serialization/ISerializer.h"
+#include "serialization/ISerializer.h"
 #include "crypto/crypto.h"
 #include "serialize.h"
 

@@ -4,8 +4,8 @@
 
 #include "gtest/gtest.h"
 
-#include "Transfers/BlockchainSynchronizer.h"
-#include "Transfers/TransfersSynchronizer.h"
+#include "transfers/BlockchainSynchronizer.h"
+#include "transfers/TransfersSynchronizer.h"
 
 #include "INodeStubs.h"
 #include "TestBlockchainGenerator.h"
@@ -17,7 +17,7 @@
 #include <future>
 #include <algorithm>
 
-#include <Logging/ConsoleLogger.h>
+#include <logging/ConsoleLogger.h>
 
 using namespace cryptonote;
 

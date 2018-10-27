@@ -5,8 +5,8 @@
 #include <chrono>
 #include <thread>
 
-#include <Logging/LoggerRef.h>
-#include <Logging/ConsoleLogger.h>
+#include <logging/LoggerRef.h>
+#include <logging/ConsoleLogger.h>
 
 #include "NodeRpcProxy/NodeRpcProxy.h"
 

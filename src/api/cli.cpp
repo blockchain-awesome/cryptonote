@@ -1,6 +1,6 @@
 
 #include "cli.h"
-#include <Logging/ILogger.h>
+#include <logging/ILogger.h>
 #include "arguments.h"
 
 #include "CryptoNoteConfig.h"

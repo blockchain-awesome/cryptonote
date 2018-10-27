@@ -6,7 +6,7 @@
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/core/TransactionApi.h"
-#include "Wallet/WalletErrors.h"
+#include "wallet/WalletErrors.h"
 
 #include <functional>
 #include <thread>
@@ -18,7 +18,7 @@
 
 #include "crypto/crypto.h"
 
-#include "BlockchainExplorer/BlockchainExplorerDataBuilder.h"
+#include "blockchain_explorer/BlockchainExplorerDataBuilder.h"
 
 using namespace cryptonote;
 using namespace Common;

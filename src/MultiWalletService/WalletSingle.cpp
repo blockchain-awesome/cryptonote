@@ -7,10 +7,10 @@
 #include <string.h>
 #include <time.h>
 
-#include "WalletLegacy/WalletHelper.h"
-#include "WalletLegacy/WalletLegacySerialization.h"
-#include "WalletLegacy/WalletLegacySerializer.h"
-#include "WalletLegacy/WalletUtils.h"
+#include "wallet_legacy/WalletHelper.h"
+#include "wallet_legacy/WalletLegacySerialization.h"
+#include "wallet_legacy/WalletLegacySerializer.h"
+#include "wallet_legacy/WalletUtils.h"
 
 using namespace crypto;
 

@@ -11,7 +11,7 @@
 #include <boost/filesystem.hpp>
 #include "CryptoNoteConfig.h"
 #include "crypto/hash.h"
-#include "Logging/LoggerRef.h"
+#include "logging/LoggerRef.h"
 #include "key.h"
 #include "Difficulty.h"
 #include "coin/exports.h"

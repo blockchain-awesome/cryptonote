@@ -8,15 +8,15 @@
 
 #include <openssl/sha.h>
 
-#include "Wallet/IFusionManager.h"
-#include "Wallet/WalletIndices.h"
+#include "wallet/IFusionManager.h"
+#include "wallet/WalletIndices.h"
 
-#include <System/Dispatcher.h>
-#include <System/Event.h>
-#include "Transfers/TransfersSynchronizer.h"
-#include "Transfers/BlockchainSynchronizer.h"
+#include <system/Dispatcher.h>
+#include <system/Event.h>
+#include "transfers/TransfersSynchronizer.h"
+#include "transfers/BlockchainSynchronizer.h"
 
-#include "Logging/LoggerManager.h"
+#include "logging/LoggerManager.h"
 
 using namespace cryptonote;
 

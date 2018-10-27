@@ -25,7 +25,7 @@
 #include "cryptonote/core/BlockchainMessages.h"
 #include "cryptonote/core/template/IntrusiveLinkedList.h"
 
-#include <Logging/LoggerRef.h>
+#include <logging/LoggerRef.h>
 
 #undef ERROR
 

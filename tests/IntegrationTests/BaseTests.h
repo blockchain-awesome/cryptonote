@@ -7,8 +7,8 @@
 #include <gtest/gtest.h>
 #include <future>
 
-#include <Logging/ConsoleLogger.h>
-#include <System/Dispatcher.h>
+#include <logging/ConsoleLogger.h>
+#include <system/Dispatcher.h>
 #include "cryptonote/core/Currency.h"
 
 #include "../IntegrationTestLib/TestNetwork.h"

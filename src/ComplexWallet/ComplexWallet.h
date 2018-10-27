@@ -18,13 +18,13 @@
 #include "cryptonote/core/CryptoNoteBasicImpl.h"
 #include "cryptonote/core/Currency.h"
 #include "NodeRpcProxy/NodeRpcProxy.h"
-#include "WalletLegacy/WalletHelper.h"
+#include "wallet_legacy/WalletHelper.h"
 
-#include <Logging/LoggerRef.h>
-#include <Logging/LoggerManager.h>
+#include <logging/LoggerRef.h>
+#include <logging/LoggerManager.h>
 
-#include <System/Dispatcher.h>
-#include <System/Ipv4Address.h>
+#include <system/Dispatcher.h>
+#include <system/Ipv4Address.h>
 
 #include "RpcServer.h"
 #include "WalletManager.h"

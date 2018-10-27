@@ -14,8 +14,8 @@
 #include <boost/noncopyable.hpp>
 #include <boost/program_options.hpp>
 
-#include <System/Dispatcher.h>
-#include <Logging/ConsoleLogger.h>
+#include <system/Dispatcher.h>
+#include <logging/ConsoleLogger.h>
 
 #include "cryptonote/core/Currency.h"
 #include "IWalletLegacy.h"

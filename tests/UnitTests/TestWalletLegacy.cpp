@@ -10,15 +10,15 @@
 
 #include "EventWaiter.h"
 #include "INode.h"
-#include "WalletLegacy/WalletLegacy.h"
-#include "WalletLegacy/WalletHelper.h"
+#include "wallet_legacy/WalletLegacy.h"
+#include "wallet_legacy/WalletHelper.h"
 #include "cryptonote/core/Account.h"
 #include "cryptonote/core/Currency.h"
 #include "cryptonote.h"
 
 #include "INodeStubs.h"
 #include "TestBlockchainGenerator.h"
-#include <Logging/ConsoleLogger.h>
+#include <logging/ConsoleLogger.h>
 
 using namespace cryptonote;
 

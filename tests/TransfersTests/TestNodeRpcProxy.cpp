@@ -4,9 +4,9 @@
 
 #include "gtest/gtest.h"
 
-#include "Logging/LoggerManager.h"
-#include "System/Dispatcher.h"
-#include "System/InterruptedException.h"
+#include "logging/LoggerManager.h"
+#include "system/Dispatcher.h"
+#include "system/InterruptedException.h"
 
 #include "../IntegrationTestLib/BaseFunctionalTests.h"
 #include "../IntegrationTestLib/TestWalletLegacy.h"

@@ -9,8 +9,8 @@
 #include "key.h"
 #include "CryptoNoteSerialization.h"
 
-#include "Serialization/BinaryOutputStreamSerializer.h"
-#include "Serialization/BinaryInputStreamSerializer.h"
+#include "serialization/BinaryOutputStreamSerializer.h"
+#include "serialization/BinaryInputStreamSerializer.h"
 
 namespace Logging {
 class ILogger;

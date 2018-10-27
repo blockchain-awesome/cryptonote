@@ -6,9 +6,9 @@
 #include <tuple>
 
 #include "cryptonote/core/TransactionApi.h"
-#include "Logging/ConsoleLogger.h"
-#include "Transfers/TransfersSubscription.h"
-#include "Transfers/TypeHelpers.h"
+#include "logging/ConsoleLogger.h"
+#include "transfers/TransfersSubscription.h"
+#include "transfers/TypeHelpers.h"
 #include "ITransfersContainer.h"
 
 #include "TransactionApiHelpers.h"

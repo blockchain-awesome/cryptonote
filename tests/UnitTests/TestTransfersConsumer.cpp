@@ -5,12 +5,12 @@
 #include "gtest/gtest.h"
 
 #include "cryptonote/core/TransactionApi.h"
-#include "Logging/ConsoleLogger.h"
-#include "Transfers/TransfersConsumer.h"
+#include "logging/ConsoleLogger.h"
+#include "transfers/TransfersConsumer.h"
 
 #include <algorithm>
 #include <limits>
-#include <Transfers/CommonTypes.h>
+#include <transfers/CommonTypes.h>
 #include <cryptonote/core/TransactionApi.h>
 
 #include "INodeStubs.h"

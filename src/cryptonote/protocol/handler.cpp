@@ -7,14 +7,14 @@
 #include <future>
 #include <boost/scope_exit.hpp>
 #include <boost/uuid/uuid_io.hpp>
-#include <System/Dispatcher.h>
+#include <system/Dispatcher.h>
 
 #include "cryptonote/core/CryptoNoteBasicImpl.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/core/Currency.h"
 #include "cryptonote/core/VerificationContext.h"
-#include "P2p/LevinProtocol.h"
+#include "p2p/LevinProtocol.h"
 
 using namespace Logging;
 using namespace Common;

@@ -8,8 +8,8 @@
 #include "stream/StreamTools.h"
 #include "common/StringTools.h"
 #include "CryptoNoteTools.h"
-#include "Serialization/BinaryOutputStreamSerializer.h"
-#include "Serialization/BinaryInputStreamSerializer.h"
+#include "serialization/BinaryOutputStreamSerializer.h"
+#include "serialization/BinaryInputStreamSerializer.h"
 
 using namespace crypto;
 using namespace Common;

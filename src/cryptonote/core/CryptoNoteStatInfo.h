@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "Serialization/ISerializer.h"
+#include "serialization/ISerializer.h"
 
 namespace cryptonote
 {

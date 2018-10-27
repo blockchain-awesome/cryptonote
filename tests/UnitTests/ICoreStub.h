@@ -11,7 +11,7 @@
 #include "cryptonote/core/ICore.h"
 #include "cryptonote/core/ICoreObserver.h"
 #include "cryptonote/protocol/definitions.h"
-#include "Rpc/CoreRpcServerCommandsDefinitions.h"
+#include "rpc/CoreRpcServerCommandsDefinitions.h"
 
 class ICoreStub: public cryptonote::ICore {
 public:

@@ -26,23 +26,23 @@
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/protocol/handler.h"
 #include "NodeRpcProxy/NodeRpcProxy.h"
-#include "Rpc/CoreRpcServerCommandsDefinitions.h"
-#include "Rpc/HttpClient.h"
+#include "rpc/CoreRpcServerCommandsDefinitions.h"
+#include "rpc/HttpClient.h"
 
-#include "Wallet/WalletRpcServer.h"
-#include "Wallet/LegacyKeysImporter.h"
-#include "WalletLegacy/WalletHelper.h"
+#include "wallet/WalletRpcServer.h"
+#include "wallet/LegacyKeysImporter.h"
+#include "wallet_legacy/WalletHelper.h"
 #include "stream/StdOutputStream.h"
 
 #include "version.h"
 
-#include <Logging/LoggerManager.h>
+#include <logging/LoggerManager.h>
 
 #include "args.h"
 
 #include "SingleWallet.h"
 #include "CryptoNoteConfig.h"
-#include "WalletLegacy/KeysStorage.h"
+#include "wallet_legacy/KeysStorage.h"
 
 #if defined(WIN32)
 #include <crtdbg.h>

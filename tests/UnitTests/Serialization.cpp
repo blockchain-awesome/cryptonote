@@ -6,9 +6,9 @@
 
 #include "stream/StdInputStream.h"
 #include "stream/StdOutputStream.h"
-#include "Serialization/BinaryInputStreamSerializer.h"
-#include "Serialization/BinaryOutputStreamSerializer.h"
-#include "Serialization/BinarySerializationTools.h"
+#include "serialization/BinaryInputStreamSerializer.h"
+#include "serialization/BinaryOutputStreamSerializer.h"
+#include "serialization/BinarySerializationTools.h"
 
 using namespace Common;
 using namespace cryptonote;
@@ -51,12 +51,12 @@ TEST(BinarySerializer, uint16) {
 //#include <boost/foreach.hpp>
 //#include "cryptonote/core/key.h"
 //#include "cryptonote/core/CryptoNoteBasicImpl.h"
-//#include "Serialization/serialization.h"
-//#include "Serialization/binary_archive.h"
-//#include "Serialization/json_archive.h"
-//#include "Serialization/variant.h"
-//#include "Serialization/vector.h"
-//#include "Serialization/binary_utils.h"
+//#include "serialization/serialization.h"
+//#include "serialization/binary_archive.h"
+//#include "serialization/json_archive.h"
+//#include "serialization/variant.h"
+//#include "serialization/vector.h"
+//#include "serialization/binary_utils.h"
 //#include "gtest/gtest.h"
 //using namespace std;
 //
