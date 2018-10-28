@@ -17,7 +17,7 @@
 #include <boost/utility/value_init.hpp>
 
 #include "crypto/crypto.h"
-#include "common/CommandLine.h"
+#include "command_line/common.h"
 #include "common/StringTools.h"
 #include "serialization/SerializationTools.h"
 

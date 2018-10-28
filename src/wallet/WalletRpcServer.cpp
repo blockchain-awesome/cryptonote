@@ -6,7 +6,7 @@
 
 #include <fstream>
 
-#include "common/CommandLine.h"
+#include "command_line/common.h"
 #include "common/StringTools.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/Account.h"

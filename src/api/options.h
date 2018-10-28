@@ -1,7 +1,7 @@
 #pragma once
 
 #include <boost/variant.hpp>
-#include "common/CommandLine.h"
+#include "command_line/common.h"
 
 namespace po = boost::program_options;
 

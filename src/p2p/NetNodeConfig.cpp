@@ -7,7 +7,7 @@
 #include <boost/utility/value_init.hpp>
 
 #include "common/os.h"
-#include "common/CommandLine.h"
+#include "command_line/common.h"
 #include "common/StringTools.h"
 #include "crypto/crypto.h"
 #include "CryptoNoteConfig.h"

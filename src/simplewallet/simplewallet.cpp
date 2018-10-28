@@ -19,7 +19,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/convenience.hpp>
 
-#include "common/CommandLine.h"
+#include "command_line/common.h"
 #include "common/SignalHandler.h"
 #include "common/StringTools.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"

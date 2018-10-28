@@ -8,7 +8,7 @@
 #include <boost/program_options.hpp>
 
 #include "common/os.h"
-#include "common/CommandLine.h"
+#include "command_line/common.h"
 
 namespace PaymentService {
 

@@ -12,7 +12,7 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
 
-#include "common/CommandLine.h"
+#include "command_line/common.h"
 #include "common/SignalHandler.h"
 #include "common/StringTools.h"
 #include "common/PathTools.h"

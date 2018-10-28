@@ -6,9 +6,8 @@
 
 #include <boost/program_options.hpp>
 #include <boost/serialization/variant.hpp>
-#include "cryptonote/core/CoreConfig.h"
 
-#include "common/CommandLine.h"
+#include "command_line/common.h"
 #include "common/ConsoleTools.h"
 
 #include "cryptonote/core/Account.h"
@@ -385,7 +384,6 @@ template<class t_test_class>
 inline bool do_replay_events(std::vector<test_event_entry>& events, t_test_class& validator)
 {
   boost::program_options::options_description desc("Allowed options");
-  cryptonote::CoreConfig::initOptions(desc);
   command_line::add_arg(desc, command_line::arg_data_dir);
   boost::program_options::variables_map vm;
   bool r = command_line::handle_error_helper(desc, [&]()
@@ -398,12 +396,10 @@ inline bool do_replay_events(std::vector<test_event_entry>& events, t_test_class
     return false;
 
   Logging::ConsoleLogger logger;
-  cryptonote::CoreConfig coreConfig;
-  coreConfig.init(vm);
   cryptonote::MinerConfig emptyMinerConfig;
   cryptonote::cryptonote_protocol_stub pr; //TODO: stub only for this kind of test, make real validation of relayed objects
   cryptonote::core c(validator.currency(), &pr, logger);
-  if (!c.init(coreConfig, emptyMinerConfig, false))
+  if (!c.init(emptyMinerConfig, false))
   {
     std::cout << concolor::magenta << "Failed to init core" << concolor::normal << std::endl;
     return false;

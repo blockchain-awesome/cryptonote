@@ -5,7 +5,7 @@
 #include "CoreConfig.h"
 
 #include "common/os.h"
-#include "common/CommandLine.h"
+#include "command_line/common.h"
 
 namespace cryptonote {
 

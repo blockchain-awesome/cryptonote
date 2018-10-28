@@ -19,7 +19,7 @@
 
 #include "cryptonote/core/OnceInInterval.h"
 #include "cryptonote/protocol/handler.h"
-#include "common/CommandLine.h"
+#include "command_line/common.h"
 #include "logging/LoggerRef.h"
 
 #include "ConnectionContext.h"

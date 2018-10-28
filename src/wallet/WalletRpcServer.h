@@ -9,7 +9,7 @@
 #include <boost/program_options/variables_map.hpp>
 #include "WalletRpcServerCommandsDefinitions.h"
 #include "wallet_legacy/WalletLegacy.h"
-#include "common/CommandLine.h"
+#include "command_line/common.h"
 #include "rpc/HttpServer.h"
 
 #include <logging/LoggerRef.h>
