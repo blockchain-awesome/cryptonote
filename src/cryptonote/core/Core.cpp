@@ -77,14 +77,6 @@ void core::set_cryptonote_protocol(ICryptonoteProtocol* pprotocol) {
 void core::set_checkpoints(Checkpoints&& chk_pts) {
   m_blockchain.setCheckpoints(std::move(chk_pts));
 }
-//-----------------------------------------------------------------------------------
-void core::init_options(boost::program_options::options_description& /*desc*/) {
-}
-
-bool core::handle_command_line(const boost::program_options::variables_map& vm) {
-  // m_config_folder = command_line::get_arg(vm, command_line::arg_data_dir);
-  return true;
-}
 
 uint32_t core::get_current_blockchain_height() {
   return m_blockchain.getCurrentBlockchainHeight();
