@@ -38,18 +38,6 @@ using namespace Logging;
 
 namespace fs = boost::filesystem;
 
-void print_genesis_tx_hex() {
-  Logging::ConsoleLogger logger;
-  cryptonote::Transaction tx = cryptonote::CurrencyBuilder(logger, os::appdata::path()).generateGenesisTransaction();
-  cryptonote::BinaryArray txb = cryptonote::toBinaryArray(tx);
-  std::string tx_hex = Common::toHex(txb);
-
-  std::cout << "Insert this line into your coin configuration file as is: " << std::endl;
-  std::cout << "const char GENESIS_COINBASE_TX_HEX[] = \"" << tx_hex << "\";" << std::endl;
-
-  return;
-}
-
 JsonValue buildLoggerConfiguration(Level level, const std::string& logfile) {
   JsonValue loggerConfiguration(JsonValue::OBJECT);
   loggerConfiguration.insert("globalLevel", static_cast<int64_t>(level));
@@ -100,24 +88,6 @@ int main(int argc, char* argv[])
     po::variables_map &vm = cli.vm;
     bool r = cli.parse(argc, argv, [&]()
     {
-      if (get_arg(vm, arg_print_genesis_tx)) {
-        print_genesis_tx_hex();
-        return false;
-      }
-
-      std::string data_dir = get_arg(vm, arg_data_dir);
-      std::string config = get_arg(vm, arg_config_file);
-
-      boost::filesystem::path data_dir_path(data_dir);
-      boost::filesystem::path config_path(config);
-      if (!config_path.has_parent_path()) {
-        config_path = data_dir_path / config_path;
-      }
-
-      boost::system::error_code ec;
-      if (boost::filesystem::exists(config_path, ec)) {
-        po::store(po::parse_config_file<char>(config_path.string<std::string>().c_str(), desc_cmd_sett), vm);
-      }
       po::notify(vm);
       return true;
     });

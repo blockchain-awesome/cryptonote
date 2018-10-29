@@ -3,6 +3,7 @@ add_definitions(-DSTATICLIB)
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR} ../version)
 
 file(GLOB_RECURSE AccountTests Account/*)
+file(GLOB_RECURSE CliTests command_line/*)
 file(GLOB_RECURSE CoreTests CoreTests/*)
 file(GLOB_RECURSE CryptoTests crypto/*)
 file(GLOB_RECURSE FunctionalTests FunctionalTests/*)
@@ -26,6 +27,7 @@ add_library(IntegrationTestLibrary ${IntegrationTestLibrary})
 add_library(TestGenerator ${TestGenerator})
 
 add_executable(AccountTests ${AccountTests})
+add_executable(CliTests ${CliTests})
 add_executable(CoreTests ${CoreTests})
 add_executable(CryptoTests ${CryptoTests})
 add_executable(IntegrationTests ${IntegrationTests})
@@ -55,6 +57,7 @@ target_link_libraries(TransfersTests IntegrationTestLibrary Wallet gtest_main In
 target_link_libraries(UnitTests gtest_main PaymentGate Wallet TestGenerator InProcessNode NodeRpcProxy Rpc Http Transfers System BlockchainExplorer CryptoNoteCore  Serialization Logging Common Crypto ${Boost_LIBRARIES})
 target_link_libraries(BlockTests gtest_main PaymentGate Wallet TestGenerator InProcessNode NodeRpcProxy Rpc Http Transfers System BlockchainExplorer CryptoNoteCore  Serialization Logging Common Crypto ${Boost_LIBRARIES})
 target_link_libraries(AccountTests gtest_main PaymentGate Wallet TestGenerator InProcessNode NodeRpcProxy Rpc Http Transfers System BlockchainExplorer CryptoNoteCore  Serialization Logging Common Crypto ${Boost_LIBRARIES})
+target_link_libraries(CliTests gtest_main PaymentGate Wallet TestGenerator InProcessNode NodeRpcProxy Rpc Http Transfers System BlockchainExplorer CryptoNoteCore  Serialization Logging Common Crypto ${Boost_LIBRARIES})
 
 target_link_libraries(DifficultyTests CryptoNoteCore Serialization Crypto Logging Common ${Boost_LIBRARIES})
 target_link_libraries(HashTargetTests CryptoNoteCore Crypto)
@@ -64,14 +67,14 @@ if(NOT MSVC)
   set_property(TARGET gtest gtest_main IntegrationTestLibrary IntegrationTests TestGenerator UnitTests SystemTests HashTargetTests TransfersTests APPEND_STRING PROPERTY COMPILE_FLAGS " -Wno-undef -Wno-sign-compare")
 endif()
 
-add_custom_target(tests DEPENDS AccountTests CoreTests IntegrationTests NodeRpcProxyTests PerformanceTests SystemTests TransfersTests UnitTests BlockTests DifficultyTests HashTargetTests)
+add_custom_target(tests DEPENDS CliTests AccountTests CoreTests IntegrationTests NodeRpcProxyTests PerformanceTests SystemTests TransfersTests UnitTests BlockTests DifficultyTests HashTargetTests)
 
 set_property(TARGET
   tests
 
   IntegrationTestLibrary
   TestGenerator
-
+  CliTests
   AccountTests
   CoreTests
   CryptoTests
@@ -90,6 +93,7 @@ PROPERTY FOLDER "tests")
 
 add_dependencies(IntegrationTestLibrary version)
 
+set_property(TARGET CliTests PROPERTY OUTPUT_NAME "cli_tests")
 set_property(TARGET AccountTests PROPERTY OUTPUT_NAME "account_tests")
 set_property(TARGET CoreTests PROPERTY OUTPUT_NAME "core_tests")
 set_property(TARGET CryptoTests PROPERTY OUTPUT_NAME "crypto_tests")
@@ -107,6 +111,7 @@ set_property(TARGET HashTests PROPERTY OUTPUT_NAME "hash_tests")
 
 add_test(BlockTests block_tests)
 
+add_test(CliTests cli_tests)
 add_test(AccountTests account_tests)
 add_test(CoreTests core_tests --generate_and_play_test_data)
 add_test(CryptoTests crypto_tests ${CMAKE_CURRENT_SOURCE_DIR}/crypto/tests.txt)

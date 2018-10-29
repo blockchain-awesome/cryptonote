@@ -21,8 +21,10 @@ virtual bool innerParse();
 
 void init();
 bool checkVersion();
+void printGenesisTx();
 
 bool parseHelp();
+void parseConfigFile();
 };
 
 } // namespace command_line
