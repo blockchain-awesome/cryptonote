@@ -7,16 +7,12 @@
 #include <string>
 #include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
-#include "common.h"
+#include "options.h"
 
 namespace command_line
 {
 
 namespace po = boost::program_options;
-extern const arg_descriptor<bool> arg_print_genesis_tx;
-extern const arg_descriptor<std::string> arg_data_dir;
-extern const arg_descriptor<std::string> arg_config_file;
-
 class Daemon: public CommandParser
 {
 public:

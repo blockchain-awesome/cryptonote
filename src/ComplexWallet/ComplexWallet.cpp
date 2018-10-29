@@ -18,7 +18,7 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
 
-#include "command_line/common.h"
+#include "command_line/options.h"
 #include "common/SignalHandler.h"
 #include "common/StringTools.h"
 #include "common/PathTools.h"

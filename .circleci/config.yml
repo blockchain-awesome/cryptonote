@@ -19,7 +19,7 @@ jobs:
           command: cd build && env CTEST_OUTPUT_ON_FAILURE=1 make test
       - run:
           name: Generating Coverage info
-          command: cd build && lcov --capture --directory src --output-file temp.info && lcov --remove temp.info "/usr/include/*" "./include/*" "./tests/*" > coverage.info && lcov --list coverage.info
+          command: cd build && lcov --capture --directory src --output-file temp.info && lcov --remove temp.info "/usr/include/*" "*/include/*" "*/tests/*" > coverage.info && lcov --list coverage.info
     #   - run:
     #       name: Uploading Coverage info
     #       command: cd build && bash <(curl -s https://codecov.io/bash) -t 2a2cf36f-81d6-43b9-abba-d5955cb0cafe        

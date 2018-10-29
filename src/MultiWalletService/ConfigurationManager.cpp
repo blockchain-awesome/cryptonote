@@ -7,7 +7,7 @@
 #include <fstream>
 #include <boost/program_options.hpp>
 
-#include "command_line/common.h"
+#include "command_line/options.h"
 
 namespace MultiWalletService {
 

@@ -12,7 +12,7 @@
 #include <boost/archive/binary_iarchive.hpp>
 #include <boost/program_options.hpp>
 
-#include "command_line/common.h"
+#include "command_line/options.h"
 #include "cryptonote/core/key.h"
 #include "crypto/crypto.h"
 #include "crypto/hash.h"

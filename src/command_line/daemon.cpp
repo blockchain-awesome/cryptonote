@@ -3,7 +3,6 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "common/os.h"
-#include "command_line/common.h"
 #include "daemon.h"
 #include "logging/ConsoleLogger.h"
 #include "common/StringTools.h"

@@ -170,10 +170,6 @@ inline bool has_arg<bool, false>(const po::variables_map &vm, const arg_descript
   return get_arg<bool, false>(vm, arg);
 }
 
-extern const arg_descriptor<bool> arg_help;
-extern const arg_descriptor<bool> arg_version;
-extern const arg_descriptor<std::string> arg_data_dir;
-
 typedef struct
 {
   std::string full;

@@ -4,7 +4,7 @@
 
 #include "Chaingen.h"
 
-#include "command_line/common.h"
+#include "command_line/options.h"
 
 #include "BlockReward.h"
 #include "BlockValidation.h"

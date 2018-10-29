@@ -9,7 +9,7 @@ make || exit 1
 env CTEST_OUTPUT_ON_FAILURE=1 make test || exit 1
 
 lcov --capture --directory src --output-file temp.info || exit 1
-lcov --remove temp.info "/usr/include/*" "./include/*" "./tests/*"> coverage.info || exit 1
+lcov --remove temp.info "/usr/include/*" "*/include/*" "*/tests/*"> coverage.info || exit 1
 lcov --list coverage.info || exit 1
 genhtml coverage.info --output-directory html || exit 1
 

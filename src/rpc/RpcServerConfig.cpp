@@ -3,7 +3,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "RpcServerConfig.h"
-#include "command_line/common.h"
+#include "command_line/options.h"
 #include "CryptoNoteConfig.h"
 
 namespace cryptonote {

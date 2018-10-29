@@ -7,7 +7,6 @@
 #include <sstream>
 #include <unordered_set>
 #include "../CryptoNoteConfig.h"
-#include "../command_line/common.h"
 #include "../common/StringTools.h"
 #include "../crypto/crypto.h"
 #include "../cryptonote/protocol/definitions.h"

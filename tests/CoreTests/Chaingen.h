@@ -8,7 +8,7 @@
 #include <boost/serialization/variant.hpp>
 #include "cryptonote/core/CoreConfig.h"
 
-#include "command_line/common.h"
+#include "command_line/options.h"
 #include "common/ConsoleTools.h"
 
 #include "cryptonote/core/Account.h"

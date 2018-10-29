@@ -16,7 +16,7 @@
 #include <system/TcpConnector.h>
 #include <system/Timer.h>
 
-#include "command_line/common.h"
+#include "command_line/options.h"
 #include "common/StringTools.h"
 #include "crypto/crypto.h"
 #include "p2p/P2pProtocolDefinitions.h"
