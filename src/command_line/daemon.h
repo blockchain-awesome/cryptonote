@@ -19,6 +19,9 @@ public:
 Daemon(OptionsNames& names): CommandParser(names) {};
 virtual bool innerParse();
 
+void init();
+bool checkVersion();
+
 bool parseHelp();
 };
 

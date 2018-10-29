@@ -39,8 +39,6 @@ using namespace Logging;
 namespace po = boost::program_options;
 namespace fs = boost::filesystem;
 
-bool command_line_preprocessor(const boost::program_options::variables_map& vm, LoggerRef& logger);
-
 void print_genesis_tx_hex() {
   Logging::ConsoleLogger logger;
   cryptonote::Transaction tx = cryptonote::CurrencyBuilder(logger, os::appdata::path()).generateGenesisTransaction();
@@ -83,26 +81,14 @@ int main(int argc, char* argv[])
   LoggerManager logManager;
   LoggerRef logger(logManager, "daemon");
 
-  command_line::OptionsNames names;
+  OptionsNames names;
   names.command = "Command line options";
   names.setting = "Command line options and settings options";
   names.full = "Allowed options";
-  command_line::Daemon cli(names);
+  Daemon cli(names);
 
   try {
-
-    cli.addCommand(command_line::arg_help);
-    cli.addCommand(command_line::arg_version);
-    cli.addCommand(arg_os_version);
-    cli.addCommand(command_line::arg_data_dir, os::appdata::path());
-    cli.addCommand(arg_config_file);
-
-
-    cli.addSetting(arg_log_file);
-    cli.addSetting(arg_log_level);
-    cli.addSetting(arg_console);
-    cli.addSetting(arg_testnet_on);
-    cli.addSetting(arg_print_genesis_tx);
+    cli.init();
 
     po::options_description& desc_cmd_sett = cli.desc_cmd_sett;
     RpcServerConfig::initOptions(desc_cmd_sett);
@@ -115,13 +101,13 @@ int main(int argc, char* argv[])
     po::variables_map &vm = cli.vm;
     bool r = cli.parse(argc, argv, [&]()
     {
-      if (command_line::get_arg(vm, arg_print_genesis_tx)) {
+      if (get_arg(vm, arg_print_genesis_tx)) {
         print_genesis_tx_hex();
         return false;
       }
 
-      std::string data_dir = command_line::get_arg(vm, command_line::arg_data_dir);
-      std::string config = command_line::get_arg(vm, arg_config_file);
+      std::string data_dir = get_arg(vm, arg_data_dir);
+      std::string config = get_arg(vm, arg_config_file);
 
       boost::filesystem::path data_dir_path(data_dir);
       boost::filesystem::path config_path(config);
@@ -141,7 +127,7 @@ int main(int argc, char* argv[])
       return 1;
   
     auto modulePath = boost::filesystem::path(argv[0]);
-    auto cfgLogFile = boost::filesystem::path(command_line::get_arg(vm, arg_log_file));
+    auto cfgLogFile = boost::filesystem::path(get_arg(vm, arg_log_file));
 
     if (cfgLogFile.empty()) {
       cfgLogFile = fs::change_extension(modulePath, ".log").string();
@@ -151,20 +137,20 @@ int main(int argc, char* argv[])
       }
     }
 
-    Level cfgLogLevel = static_cast<Level>(static_cast<int>(Logging::ERROR) + command_line::get_arg(vm, arg_log_level));
+    Level cfgLogLevel = static_cast<Level>(static_cast<int>(Logging::ERROR) + get_arg(vm, arg_log_level));
 
     // configure logging
     logManager.configure(buildLoggerConfiguration(cfgLogLevel, cfgLogFile.string()));
 
     logger(INFO) << cryptonote::CRYPTONOTE_NAME << " v" << PROJECT_VERSION_LONG;
 
-    if (command_line_preprocessor(vm, logger)) {
+    if (cli.checkVersion()) {
       return 0;
     }
 
     logger(INFO) << "Module folder: " << argv[0];
 
-    bool testnet_mode = command_line::get_arg(vm, arg_testnet_on);
+    bool testnet_mode = get_arg(vm, arg_testnet_on);
     if (testnet_mode) {
       logger(INFO) << "Starting in testnet mode!";
     }
@@ -250,7 +236,7 @@ int main(int argc, char* argv[])
     logger(INFO) << "Core initialized OK";
 
     // start components
-    if (!command_line::has_arg(vm, arg_console)) {
+    if (!has_arg(vm, arg_console)) {
       dch.start_handling();
     }
 
@@ -291,21 +277,3 @@ int main(int argc, char* argv[])
   return 0;
 }
 
-bool command_line_preprocessor(const boost::program_options::variables_map &vm, LoggerRef &logger) {
-  bool exit = false;
-
-  if (command_line::get_arg(vm, command_line::arg_version)) {
-    std::cout << cryptonote::CRYPTONOTE_NAME << " v" << PROJECT_VERSION_LONG << ENDL;
-    exit = true;
-  }
-  if (command_line::get_arg(vm, arg_os_version)) {
-    std::cout << "OS: " << os::version::get() << ENDL;
-    exit = true;
-  }
-
-  if (exit) {
-    return true;
-  }
-
-  return false;
-}
