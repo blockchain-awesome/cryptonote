@@ -185,10 +185,11 @@ class CommandParser
 {
 public:
   CommandParser(OptionsNames &names) : desc_options(names.full),
-                                       desc_cmd_only(names.command), desc_cmd_sett(names.setting)
+                                       desc_cmd_only(names.command), desc_cmd_sett(names.setting){};
+  void setup()
   {
     desc_options.add(desc_cmd_only).add(desc_cmd_sett);
-  };
+  }
   virtual bool innerParse() = 0;
   template <typename T>
   void addCommand(const T &arg)

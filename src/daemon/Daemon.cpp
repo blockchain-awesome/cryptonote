@@ -12,6 +12,7 @@
 #include "common/SignalHandler.h"
 #include "crypto/hash.h"
 #include "cryptonote/core/Core.h"
+#include "command_line/daemon.h"
 #include "cryptonote/core/CoreConfig.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/core/Currency.h"
@@ -93,44 +94,38 @@ int main(int argc, char* argv[])
   LoggerManager logManager;
   LoggerRef logger(logManager, "daemon");
 
+  command_line::OptionsNames names;
+  names.command = "Command line options";
+  names.setting = "Command line options and settings options";
+  names.full = "Allowed options";
+  command_line::Daemon cli(names);
+
   try {
 
-    po::options_description desc_cmd_only("Command line options");
-    po::options_description desc_cmd_sett("Command line options and settings options");
+    cli.addCommand(command_line::arg_help);
+    cli.addCommand(command_line::arg_version);
+    cli.addCommand(arg_os_version);
+    cli.addCommand(command_line::arg_data_dir, os::appdata::path());
+    cli.addCommand(arg_config_file);
 
-    command_line::add_arg(desc_cmd_only, command_line::arg_help);
-    command_line::add_arg(desc_cmd_only, command_line::arg_version);
-    command_line::add_arg(desc_cmd_only, arg_os_version);
-    // tools::get_default_data_dir() can't be called during static initialization
-    command_line::add_arg(desc_cmd_only, command_line::arg_data_dir, os::appdata::path());
-    command_line::add_arg(desc_cmd_only, arg_config_file);
 
-    command_line::add_arg(desc_cmd_sett, arg_log_file);
-    command_line::add_arg(desc_cmd_sett, arg_log_level);
-    command_line::add_arg(desc_cmd_sett, arg_console);
-    command_line::add_arg(desc_cmd_sett, arg_testnet_on);
-    command_line::add_arg(desc_cmd_sett, arg_print_genesis_tx);
+    cli.addSetting(arg_log_file);
+    cli.addSetting(arg_log_level);
+    cli.addSetting(arg_console);
+    cli.addSetting(arg_testnet_on);
+    cli.addSetting(arg_print_genesis_tx);
 
+    po::options_description& desc_cmd_sett = cli.desc_cmd_sett;
     RpcServerConfig::initOptions(desc_cmd_sett);
     CoreConfig::initOptions(desc_cmd_sett);
     NetNodeConfig::initOptions(desc_cmd_sett);
     MinerConfig::initOptions(desc_cmd_sett);
 
-    po::options_description desc_options("Allowed options");
-    desc_options.add(desc_cmd_only).add(desc_cmd_sett);
+    cli.setup();
 
-    po::variables_map vm;
-    bool r = command_line::handle_error_helper(desc_options, [&]()
+    po::variables_map &vm = cli.vm;
+    bool r = cli.parse(argc, argv, [&]()
     {
-      po::store(po::parse_command_line(argc, argv, desc_options), vm);
-
-      if (command_line::get_arg(vm, command_line::arg_help))
-      {
-        std::cout << cryptonote::CRYPTONOTE_NAME << " v" << PROJECT_VERSION_LONG << ENDL << ENDL;
-        std::cout << desc_options << std::endl;
-        return false;
-      }
-
       if (command_line::get_arg(vm, arg_print_genesis_tx)) {
         print_genesis_tx_hex();
         return false;
