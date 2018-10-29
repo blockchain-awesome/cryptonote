@@ -36,7 +36,6 @@ using namespace command_line;
 using namespace cryptonote;
 using namespace Logging;
 
-namespace po = boost::program_options;
 namespace fs = boost::filesystem;
 
 void print_genesis_tx_hex() {
