@@ -90,7 +90,11 @@ void InProcTestNode::workerThread(std::promise<std::string>& initPromise) {
     }
 
     cryptonote::MinerConfig emptyMiner;
-    if (!core->init(emptyMiner, true)) {
+    cryptonote::CoreConfig coreConfig;
+
+    coreConfig.configFolder = m_cfg.dataDir;
+    
+    if (!core->init(coreConfig, emptyMiner, true)) {
       throw std::runtime_error("Core failed to initialize");
     }
 

@@ -23,6 +23,8 @@
 #undef ERROR
 
 using namespace Logging;
+#include "cryptonote/core/CoreConfig.h"
+
 using namespace  Common;
 
 namespace cryptonote {
@@ -104,7 +106,7 @@ size_t core::get_alternative_blocks_count() {
   return m_blockchain.getAlternativeBlocksCount();
   }
   //-----------------------------------------------------------------------------------------------
-  bool core::init(const MinerConfig& minerConfig, bool load_existing) {
+  bool core::init(const CoreConfig& config, const MinerConfig& minerConfig, bool load_existing) {
     // m_config_folder = config.configFolder;
     // m_currency.setPath(m_config_folder);
     bool r = m_mempool.init();
