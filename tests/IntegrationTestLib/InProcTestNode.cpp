@@ -11,7 +11,7 @@
 
 #include "cryptonote/core/Core.h"
 #include "cryptonote/core/Account.h"
-#include "cryptonote/core/CoreConfig.h"
+#include "command_line/CoreConfig.h"
 #include "cryptonote/core/Miner.h"
 #include "cryptonote/protocol/handler.h"
 #include "p2p/NetNode.h"

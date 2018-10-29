@@ -5,7 +5,7 @@
 #include "gtest/gtest.h"
 
 #include "cryptonote/core/Account.h"
-#include "cryptonote/core/CoreConfig.h"
+#include "command_line/CoreConfig.h"
 #include "cryptonote/core/Core.h"
 #include "cryptonote/core/Currency.h"
 #include "logging/LoggerManager.h"

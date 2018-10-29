@@ -22,7 +22,7 @@
 #undef ERROR
 
 using namespace Logging;
-#include "cryptonote/core/CoreConfig.h"
+#include "command_line/CoreConfig.h"
 
 using namespace  Common;
 

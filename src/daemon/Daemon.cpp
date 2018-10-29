@@ -13,7 +13,7 @@
 #include "crypto/hash.h"
 #include "cryptonote/core/Core.h"
 #include "command_line/daemon.h"
-#include "cryptonote/core/CoreConfig.h"
+#include "command_line/CoreConfig.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/core/Currency.h"
 #include "cryptonote/core/MinerConfig.h"

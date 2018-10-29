@@ -11,7 +11,7 @@
 #include "logging/LoggerRef.h"
 #include "MultiServiceJsonRpcServer.h"
 
-#include "cryptonote/core/CoreConfig.h"
+#include "command_line/CoreConfig.h"
 #include "cryptonote/core/Core.h"
 #include "cryptonote/protocol/handler.h"
 #include "p2p/NetNode.h"
