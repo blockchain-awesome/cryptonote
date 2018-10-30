@@ -14,7 +14,7 @@
 
 #include "crypto/crypto.h"
 
-#include "Logging/ConsoleLogger.h"
+#include "logging/ConsoleLogger.h"
 
 template<size_t a_ring_size>
 class multi_tx_test_base
@@ -29,7 +29,7 @@ public:
   {
     using namespace cryptonote;
 
-    Currency currency = CurrencyBuilder(m_logger).currency();
+    Currency currency = CurrencyBuilder(m_logger, os::appdata::path()).currency();
 
     std::vector<TransactionSourceEntry::OutputEntry> output_entries;
     for (uint32_t i = 0; i < ring_size; ++i)

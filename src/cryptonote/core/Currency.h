@@ -8,15 +8,20 @@
 #include <string>
 #include <vector>
 #include <boost/utility.hpp>
-#include "../CryptoNoteConfig.h"
-#include "../crypto/hash.h"
-#include "../Logging/LoggerRef.h"
+#include <boost/filesystem.hpp>
+#include "CryptoNoteConfig.h"
+#include "crypto/hash.h"
+#include "logging/LoggerRef.h"
 #include "key.h"
 #include "Difficulty.h"
+#include "coin/exports.h"
+#include "common/os.h"
 
 namespace cryptonote {
 
 class AccountBase;
+
+uint64_t getPenalizedAmount(uint64_t amount, size_t medianSize, size_t currentBlockSize);
 
 class Currency {
 public:
@@ -63,13 +68,40 @@ public:
   size_t fusionTxMinInputCount() const { return m_fusionTxMinInputCount; }
   size_t fusionTxMinInOutCountRatio() const { return m_fusionTxMinInOutCountRatio; }
 
-  const std::string& blocksFileName() const { return m_blocksFileName; }
-  const std::string& blocksCacheFileName() const { return m_blocksCacheFileName; }
-  const std::string& blockIndexesFileName() const { return m_blockIndexesFileName; }
-  const std::string& txPoolFileName() const { return m_txPoolFileName; }
-  const std::string& blockchinIndicesFileName() const { return m_blockchinIndicesFileName; }
+  void setFiles(coin::StorageFiles files) {
+    m_files = files;
+  }
 
-  bool isTestnet() const { return m_testnet; }
+  void setPath(std::string path) {
+    m_path = path;
+  }
+  const std::string getFiles(std::string name, bool withoutPath = false) const {
+    if (withoutPath) {
+      return name;
+    }
+    assert(!m_path.empty());
+    boost::filesystem::path path(m_path);
+    std::string value = name;
+    value = path.append(name).string();
+    return value;
+  }
+  const std::string blocksFileName(bool withoutPath = false) const {
+    return getFiles(m_files.blocks, withoutPath);
+  }
+  const std::string blocksCacheFileName(bool withoutPath = false) const { 
+    return getFiles(m_files.blocksCache, withoutPath);
+  }
+  const std::string blockIndexesFileName(bool withoutPath = false) const { 
+    return getFiles(m_files.blocksIndexes, withoutPath);
+  }
+  const std::string txPoolFileName(bool withoutPath = false) const { 
+    return getFiles(m_files.txPool, withoutPath);
+  }
+  const std::string blockchainIndexesFileName(bool withoutPath = false) const { 
+    return getFiles(m_files.blockchainIndexes, withoutPath);
+  }
+
+  // bool isTestnet() const { return m_testnet; }
 
   const Block& genesisBlock() const { return m_genesisBlock; }
   const crypto::Hash& genesisBlockHash() const { return m_genesisBlockHash; }
@@ -98,7 +130,7 @@ public:
   size_t getApproximateMaximumInputCount(size_t transactionSize, size_t outputCount, size_t mixinCount) const;
 
 private:
-  Currency(Logging::ILogger& log) : logger(log, "currency") {
+  Currency(std::string path, Logging::ILogger& log) : m_path(path), logger(log, "currency") {
   }
 
   bool init();
@@ -148,15 +180,17 @@ private:
   size_t m_fusionTxMinInputCount;
   size_t m_fusionTxMinInOutCountRatio;
 
-  std::string m_blocksFileName;
-  std::string m_blocksCacheFileName;
-  std::string m_blockIndexesFileName;
-  std::string m_txPoolFileName;
-  std::string m_blockchinIndicesFileName;
+  coin::StorageFiles m_files;
+  std::string m_path;
+  // std::string m_blocksFileName;
+  // std::string m_blocksCacheFileName;
+  // std::string m_blockIndexesFileName;
+  // std::string m_txPoolFileName;
+  // std::string m_blockchinIndicesFileName;
 
   static const std::vector<uint64_t> PRETTY_AMOUNTS;
 
-  bool m_testnet;
+  // bool m_testnet;
 
   Block m_genesisBlock;
   crypto::Hash m_genesisBlockHash;
@@ -168,7 +202,7 @@ private:
 
 class CurrencyBuilder : boost::noncopyable {
 public:
-  CurrencyBuilder(Logging::ILogger& log);
+  CurrencyBuilder(Logging::ILogger& log, std::string path/* = os::appdata::path() */);
 
   Currency currency() {
     if (!m_currency.init()) {
@@ -220,13 +254,13 @@ public:
   CurrencyBuilder& fusionTxMinInputCount(size_t val) { m_currency.m_fusionTxMinInputCount = val; return *this; }
   CurrencyBuilder& fusionTxMinInOutCountRatio(size_t val) { m_currency.m_fusionTxMinInOutCountRatio = val; return *this; }
 
-  CurrencyBuilder& blocksFileName(const std::string& val) { m_currency.m_blocksFileName = val; return *this; }
-  CurrencyBuilder& blocksCacheFileName(const std::string& val) { m_currency.m_blocksCacheFileName = val; return *this; }
-  CurrencyBuilder& blockIndexesFileName(const std::string& val) { m_currency.m_blockIndexesFileName = val; return *this; }
-  CurrencyBuilder& txPoolFileName(const std::string& val) { m_currency.m_txPoolFileName = val; return *this; }
-  CurrencyBuilder& blockchinIndicesFileName(const std::string& val) { m_currency.m_blockchinIndicesFileName = val; return *this; }
+  // CurrencyBuilder& blocksFileName(const std::string& val) { m_currency.m_blocksFileName = val; return *this; }
+  // CurrencyBuilder& blocksCacheFileName(const std::string& val) { m_currency.m_blocksCacheFileName = val; return *this; }
+  // CurrencyBuilder& blockIndexesFileName(const std::string& val) { m_currency.m_blockIndexesFileName = val; return *this; }
+  // CurrencyBuilder& txPoolFileName(const std::string& val) { m_currency.m_txPoolFileName = val; return *this; }
+  // CurrencyBuilder& blockchinIndicesFileName(const std::string& val) { m_currency.m_blockchinIndicesFileName = val; return *this; }
   
-  CurrencyBuilder& testnet(bool val) { m_currency.m_testnet = val; return *this; }
+  // CurrencyBuilder& testnet(bool val) { m_currency.m_testnet = val; return *this; }
 
 private:
   Currency m_currency;

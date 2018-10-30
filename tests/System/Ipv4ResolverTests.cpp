@@ -2,11 +2,11 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <System/Dispatcher.h>
-#include <System/ContextGroup.h>
-#include <System/InterruptedException.h>
-#include <System/Ipv4Address.h>
-#include <System/Ipv4Resolver.h>
+#include <system/Dispatcher.h>
+#include <system/ContextGroup.h>
+#include <system/InterruptedException.h>
+#include <system/Ipv4Address.h>
+#include <system/Ipv4Resolver.h>
 #include <gtest/gtest.h>
 
 using namespace System;

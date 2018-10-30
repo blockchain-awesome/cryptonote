@@ -9,9 +9,10 @@
 #include <vector>
 #include <unordered_map>
 
+#include "crypto/crypto.h"
 #include "crypto/hash.h"
 #include "cryptonote/core/key.h"
-#include "cryptonote/core/CryptoNoteBasicImpl.h"
+#include "cryptonote/core/serialize.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/Currency.h"
 #include "cryptonote/core/Difficulty.h"

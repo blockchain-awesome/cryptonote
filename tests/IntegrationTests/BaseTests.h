@@ -7,8 +7,8 @@
 #include <gtest/gtest.h>
 #include <future>
 
-#include <Logging/ConsoleLogger.h>
-#include <System/Dispatcher.h>
+#include <logging/ConsoleLogger.h>
+#include <system/Dispatcher.h>
 #include "cryptonote/core/Currency.h"
 
 #include "../IntegrationTestLib/TestNetwork.h"
@@ -19,7 +19,9 @@ class BaseTest : public testing::Test {
 public:
 
   BaseTest() :
-    currency(cryptonote::CurrencyBuilder(logger).testnet(true).currency()),
+    currency(cryptonote::CurrencyBuilder(logger, os::appdata::path())
+    // .testnet(true)
+    .currency()),
     network(dispatcher, currency) {
   }
 

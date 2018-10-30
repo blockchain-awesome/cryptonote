@@ -4,8 +4,8 @@
 
 #include "BaseTests.h"
 
-#include <System/Timer.h>
-#include "WalletLegacy/WalletLegacy.h"
+#include <system/Timer.h>
+#include "wallet_legacy/WalletLegacy.h"
 #include "WalletLegacyObserver.h"
 
 using namespace Tests;

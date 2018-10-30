@@ -5,8 +5,8 @@
 #include "gtest/gtest.h"
 
 
-#include "P2p/PeerListManager.h"
-#include "P2p/PeerListManager.cpp"
+#include "p2p/PeerListManager.h"
+#include "p2p/PeerListManager.cpp"
 
 using namespace cryptonote;
 

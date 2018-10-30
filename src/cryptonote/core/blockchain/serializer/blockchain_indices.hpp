@@ -1,12 +1,12 @@
 #pragma once
 
 #include "crypto/hash.h"
-#include <Logging/LoggerRef.h>
-#include <Logging/ILogger.h>
+#include <logging/LoggerRef.h>
+#include <logging/ILogger.h>
 #include <stream/StdInputStream.h>
-#include <Serialization/BinaryInputStreamSerializer.h>
+#include <serialization/BinaryInputStreamSerializer.h>
 #include <stream/StdOutputStream.h>
-#include <Serialization/BinaryOutputStreamSerializer.h>
+#include <serialization/BinaryOutputStreamSerializer.h>
 #include <fstream>
 #include <chrono>
 #include <cryptonote/core/blockchain/defines.h>

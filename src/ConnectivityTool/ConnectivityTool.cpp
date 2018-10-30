@@ -5,25 +5,25 @@
 #include <boost/optional.hpp>
 #include <boost/program_options.hpp>
 
-#include <System/ContextGroup.h>
-#include <System/ContextGroupTimeout.h>
-#include <System/Dispatcher.h>
-#include <System/Event.h>
-#include <System/InterruptedException.h>
-#include <System/Ipv4Address.h>
-#include <System/Ipv4Resolver.h>
-#include <System/TcpConnection.h>
-#include <System/TcpConnector.h>
-#include <System/Timer.h>
+#include <system/ContextGroup.h>
+#include <system/ContextGroupTimeout.h>
+#include <system/Dispatcher.h>
+#include <system/Event.h>
+#include <system/InterruptedException.h>
+#include <system/Ipv4Address.h>
+#include <system/Ipv4Resolver.h>
+#include <system/TcpConnection.h>
+#include <system/TcpConnector.h>
+#include <system/Timer.h>
 
-#include "common/CommandLine.h"
+#include "command_line/options.h"
 #include "common/StringTools.h"
 #include "crypto/crypto.h"
-#include "P2p/P2pProtocolDefinitions.h"
-#include "P2p/LevinProtocol.h"
-#include "Rpc/CoreRpcServerCommandsDefinitions.h"
-#include "Rpc/HttpClient.h"
-#include "Serialization/SerializationTools.h"
+#include "p2p/P2pProtocolDefinitions.h"
+#include "p2p/LevinProtocol.h"
+#include "rpc/CoreRpcServerCommandsDefinitions.h"
+#include "rpc/HttpClient.h"
+#include "serialization/SerializationTools.h"
 #include "version.h"
 
 namespace po = boost::program_options;

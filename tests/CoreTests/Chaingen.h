@@ -6,9 +6,9 @@
 
 #include <boost/program_options.hpp>
 #include <boost/serialization/variant.hpp>
-#include "cryptonote/core/CoreConfig.h"
+#include "command_line/CoreConfig.h"
 
-#include "common/CommandLine.h"
+#include "command_line/options.h"
 #include "common/ConsoleTools.h"
 
 #include "cryptonote/core/Account.h"
@@ -21,8 +21,8 @@
 #include "BoostSerializationHelper.h"
 #include "AccountBoostSerialization.h"
 
-#include <Logging/LoggerGroup.h>
-#include <Logging/ConsoleLogger.h>
+#include <logging/LoggerGroup.h>
+#include <logging/ConsoleLogger.h>
 
 
 namespace concolor
@@ -155,7 +155,7 @@ class test_chain_unit_base: boost::noncopyable
 {
 public:
   test_chain_unit_base() :
-    m_currency(cryptonote::CurrencyBuilder(m_logger).currency()) {
+    m_currency(cryptonote::CurrencyBuilder(m_logger, os::appdata::path()).currency()) {
   }
 
   typedef std::function<bool (cryptonote::core& c, size_t ev_index, const std::vector<test_event_entry> &events)> verify_callback;

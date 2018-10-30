@@ -12,7 +12,7 @@
 #include "crypto/crypto.h"
 #include "cryptonote/core/key.h"
 #include "cryptonote/protocol/definitions.h"
-#include "Rpc/CoreRpcServerCommandsDefinitions.h"
+#include "rpc/CoreRpcServerCommandsDefinitions.h"
 
 #include "BlockchainExplorerData.h"
 #include "ITransaction.h"

@@ -5,10 +5,10 @@
 #pragma once
 
 #include <stdint.h>
-#include <System/Dispatcher.h>
+#include <system/Dispatcher.h>
 #include "http/HttpRequest.h"
 #include "http/HttpResponse.h"
-#include "Rpc/HttpClient.h"
+#include "rpc/HttpClient.h"
 
 #include "TestNode.h"
 

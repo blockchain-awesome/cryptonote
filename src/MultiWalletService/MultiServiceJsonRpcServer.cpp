@@ -11,8 +11,8 @@
 
 #include "common/StringTools.h"
 
-#include "Serialization/JsonInputValueSerializer.h"
-#include "Serialization/JsonOutputStreamSerializer.h"
+#include "serialization/JsonInputValueSerializer.h"
+#include "serialization/JsonOutputStreamSerializer.h"
 
 #include "./http/errors.h"
 

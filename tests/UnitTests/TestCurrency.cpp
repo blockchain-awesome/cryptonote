@@ -7,7 +7,7 @@
 #include "crypto/crypto.h"
 #include "cryptonote/core/Currency.h"
 #include "cryptonote/core/TransactionApi.h"
-#include "Logging/ConsoleLogger.h"
+#include "logging/ConsoleLogger.h"
 
 #include "TransactionApiHelpers.h"
 
@@ -23,7 +23,7 @@ const uint64_t TEST_AMOUNT = 370 * TEST_DUST_THRESHOLD;
 class Currency_isFusionTransactionTest : public ::testing::Test {
 public:
   Currency_isFusionTransactionTest() :
-    m_currency(CurrencyBuilder(m_logger).
+    m_currency(CurrencyBuilder(m_logger, os::appdata::path()).
       defaultDustThreshold(TEST_DUST_THRESHOLD).
       fusionTxMaxSize(TEST_FUSION_TX_MAX_SIZE).
       fusionTxMinInputCount(TEST_FUSION_TX_MIN_INPUT_COUNT).

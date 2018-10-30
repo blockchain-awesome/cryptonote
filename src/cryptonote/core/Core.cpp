@@ -7,13 +7,12 @@
 #include <sstream>
 #include <unordered_set>
 #include "../CryptoNoteConfig.h"
-#include "../common/CommandLine.h"
 #include "../common/StringTools.h"
 #include "../crypto/crypto.h"
 #include "../cryptonote/protocol/definitions.h"
 #include "../cryptonote/core/blockchain/locked_storage.hpp"
-#include "../Logging/LoggerRef.h"
-#include "../Rpc/CoreRpcServerCommandsDefinitions.h"
+#include "../logging/LoggerRef.h"
+#include "../rpc/CoreRpcServerCommandsDefinitions.h"
 #include "CryptoNoteFormatUtils.h"
 #include "CryptoNoteTools.h"
 #include "CryptoNoteStatInfo.h"
@@ -23,7 +22,7 @@
 #undef ERROR
 
 using namespace Logging;
-#include "cryptonote/core/CoreConfig.h"
+#include "command_line/CoreConfig.h"
 
 using namespace  Common;
 
@@ -77,14 +76,6 @@ void core::set_cryptonote_protocol(ICryptonoteProtocol* pprotocol) {
 void core::set_checkpoints(Checkpoints&& chk_pts) {
   m_blockchain.setCheckpoints(std::move(chk_pts));
 }
-//-----------------------------------------------------------------------------------
-void core::init_options(boost::program_options::options_description& /*desc*/) {
-}
-
-bool core::handle_command_line(const boost::program_options::variables_map& vm) {
-  m_config_folder = command_line::get_arg(vm, command_line::arg_data_dir);
-  return true;
-}
 
 uint32_t core::get_current_blockchain_height() {
   return m_blockchain.getCurrentBlockchainHeight();
@@ -115,11 +106,12 @@ size_t core::get_alternative_blocks_count() {
   }
   //-----------------------------------------------------------------------------------------------
   bool core::init(const CoreConfig& config, const MinerConfig& minerConfig, bool load_existing) {
-    m_config_folder = config.configFolder;
-    bool r = m_mempool.init(m_config_folder);
+    // m_config_folder = config.configFolder;
+    // m_currency.setPath(m_config_folder);
+    bool r = m_mempool.init();
   if (!(r)) { logger(ERROR, BRIGHT_RED) << "Failed to initialize memory pool"; return false; }
 
-  r = m_blockchain.init(m_config_folder, load_existing);
+  r = m_blockchain.init(load_existing);
   if (!(r)) { logger(ERROR, BRIGHT_RED) << "Failed to initialize blockchain storage"; return false; }
 
     r = m_miner->init(minerConfig);

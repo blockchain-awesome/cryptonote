@@ -5,7 +5,7 @@
 #include "gtest/gtest.h"
 
 #include "cryptonote/core/Checkpoints.h"
-#include <Logging/LoggerGroup.h>
+#include <logging/LoggerGroup.h>
 
 using namespace cryptonote;
 

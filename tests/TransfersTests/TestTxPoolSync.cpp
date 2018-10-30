@@ -5,14 +5,14 @@
 #include "gtest/gtest.h"
 
 #include "cryptonote/core/Account.h"
-#include "cryptonote/core/CoreConfig.h"
+#include "command_line/CoreConfig.h"
 #include "cryptonote/core/Core.h"
 #include "cryptonote/core/Currency.h"
-#include "Logging/LoggerManager.h"
-#include "P2p/NetNodeConfig.h"
-#include "System/Dispatcher.h"
-#include "System/InterruptedException.h"
-#include "WalletLegacy/WalletLegacy.h"
+#include "logging/LoggerManager.h"
+#include "p2p/NetNodeConfig.h"
+#include "system/Dispatcher.h"
+#include "system/InterruptedException.h"
+#include "wallet_legacy/WalletLegacy.h"
 
 #include "../IntegrationTestLib/BaseFunctionalTests.h"
 #include "../IntegrationTestLib/TestWalletLegacy.h"
@@ -31,7 +31,9 @@ namespace {
     NodeTxPoolSyncTest() :
         BaseFunctionalTests(m_currency, globalSystem, config),
         m_dispatcher(globalSystem),
-        m_currency(CurrencyBuilder(m_logManager).testnet(true).currency()) {
+        m_currency(CurrencyBuilder(m_logManager, os::appdata::path())
+        // .testnet(true)
+        .currency()) {
     }
 
   protected:

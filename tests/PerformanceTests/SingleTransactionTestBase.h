@@ -8,7 +8,7 @@
 #include "cryptonote/core/key.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 
-#include <Logging/LoggerGroup.h>
+#include <logging/LoggerGroup.h>
 
 class single_tx_test_base
 {
@@ -17,7 +17,7 @@ public:
   {
     using namespace cryptonote;
 
-    Currency currency = CurrencyBuilder(m_nullLog).currency();
+    Currency currency = CurrencyBuilder(m_nullLog, os::appdata::path()).currency();
     m_bob.generate();
 
     if (!currency.constructMinerTx(0, 0, 0, 2, 0, m_bob.getAccountKeys().address, m_tx))

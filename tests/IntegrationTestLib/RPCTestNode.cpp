@@ -11,9 +11,9 @@
 #include "common/StringTools.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "NodeRpcProxy/NodeRpcProxy.h"
-#include "Rpc/CoreRpcServerCommandsDefinitions.h"
-#include "Rpc/HttpClient.h"
-#include "Rpc/JsonRpc.h"
+#include "rpc/CoreRpcServerCommandsDefinitions.h"
+#include "rpc/HttpClient.h"
+#include "rpc/JsonRpc.h"
 
 #include "Logger.h"
 #include "NodeCallback.h"

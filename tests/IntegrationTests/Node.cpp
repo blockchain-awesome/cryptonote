@@ -7,16 +7,16 @@
 #include <fstream>
 
 #include <common/StringTools.h>
-#include <System/Dispatcher.h>
-#include <System/Timer.h>
+#include <system/Dispatcher.h>
+#include <system/Timer.h>
 
-#include <Serialization/JsonOutputStreamSerializer.h>
-#include <Serialization/JsonInputStreamSerializer.h>
-#include <Serialization/SerializationOverloads.h>
+#include <serialization/JsonOutputStreamSerializer.h>
+#include <serialization/JsonInputStreamSerializer.h>
+#include <serialization/SerializationOverloads.h>
 
 #include "cryptonote/core/Currency.h"
 #include "cryptonote/core/CryptoNoteTools.h"
-#include "Wallet/WalletGreen.h"
+#include "wallet/WalletGreen.h"
 
 #include "../IntegrationTestLib/TestNetwork.h"
 #include "../IntegrationTestLib/NodeObserver.h"

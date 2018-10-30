@@ -13,10 +13,10 @@
 
 #include <iostream>
 
-#include <System/EventLock.h>
-#include <System/RemoteContext.h>
+#include <system/EventLock.h>
+#include <system/RemoteContext.h>
 
-#include "Logging/LoggerGroup.h"
+#include "logging/LoggerGroup.h"
 
 #include "ITransaction.h"
 
@@ -31,16 +31,16 @@
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/core/TransactionApi.h"
 #include "crypto/crypto.h"
-#include "Transfers/TransfersContainer.h"
-#include "Wallet/WalletSerialization.h"
-#include "Wallet/WalletErrors.h"
-#include "Wallet/WalletUtils.h"
-#include "WalletLegacy/WalletHelper.h"
+#include "transfers/TransfersContainer.h"
+#include "wallet/WalletSerialization.h"
+#include "wallet/WalletErrors.h"
+#include "wallet/WalletUtils.h"
+#include "wallet_legacy/WalletHelper.h"
 
 
 #include "WalletInterface.h"
 #include "WalletSingle.h"
-#include "WalletLegacy/WalletLegacy.h"
+#include "wallet_legacy/WalletLegacy.h"
 
 using namespace Common;
 using namespace crypto;

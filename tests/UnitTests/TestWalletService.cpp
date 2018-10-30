@@ -11,13 +11,13 @@
 #include <IWallet.h>
 
 #include "cryptonote/core/Currency.h"
-#include "Logging/LoggerGroup.h"
-#include "Logging/ConsoleLogger.h"
-#include <System/Event.h>
-#include "PaymentGate/WalletService.h"
-#include "PaymentGate/WalletServiceErrorCategory.h"
+#include "logging/LoggerGroup.h"
+#include "logging/ConsoleLogger.h"
+#include <system/Event.h>
+#include "payment_gate/WalletService.h"
+#include "payment_gate/WalletServiceErrorCategory.h"
 #include "INodeStubs.h"
-#include "Wallet/WalletErrors.h"
+#include "wallet/WalletErrors.h"
 
 using namespace cryptonote;
 using namespace PaymentService;
@@ -119,7 +119,7 @@ protected:
 class WalletServiceTest: public ::testing::Test {
 public:
   WalletServiceTest() :
-    currency(cryptonote::CurrencyBuilder(logger).currency()),
+    currency(cryptonote::CurrencyBuilder(logger, os::appdata::path()).currency()),
     generator(currency),
     nodeStub(generator),
     walletBase(dispatcher)

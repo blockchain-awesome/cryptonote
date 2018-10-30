@@ -5,14 +5,13 @@
 #include "CryptoNoteFormatUtils.h"
 
 #include <set>
-#include <Logging/LoggerRef.h>
+#include <logging/LoggerRef.h>
 #include <common/Varint.h>
 
-#include "Serialization/BinaryOutputStreamSerializer.h"
-#include "Serialization/BinaryInputStreamSerializer.h"
+#include "serialization/BinaryOutputStreamSerializer.h"
+#include "serialization/BinaryInputStreamSerializer.h"
 
 #include "Account.h"
-#include "CryptoNoteBasicImpl.h"
 #include "CryptoNoteSerialization.h"
 #include "TransactionExtra.h"
 #include "CryptoNoteTools.h"

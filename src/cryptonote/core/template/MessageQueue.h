@@ -8,8 +8,8 @@
 
 #include "IntrusiveLinkedList.h"
 
-#include "System/Event.h"
-#include "System/InterruptedException.h"
+#include "system/Event.h"
+#include "system/InterruptedException.h"
 
 namespace cryptonote {
 

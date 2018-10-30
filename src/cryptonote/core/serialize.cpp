@@ -1,5 +1,9 @@
 #include "serialize.h"
 
+bool parse_hash256(const std::string& str_hash, crypto::Hash& hash) {
+  return Common::podFromHex(str_hash, hash);
+}
+
 namespace crypto {
 
 bool serialize(PublicKey& pubKey, Common::StringView name, cryptonote::ISerializer& serializer) {

@@ -10,15 +10,15 @@
 
 #include "EventWaiter.h"
 #include "INode.h"
-#include "WalletLegacy/WalletLegacy.h"
-#include "WalletLegacy/WalletHelper.h"
+#include "wallet_legacy/WalletLegacy.h"
+#include "wallet_legacy/WalletHelper.h"
 #include "cryptonote/core/Account.h"
 #include "cryptonote/core/Currency.h"
 #include "cryptonote.h"
 
 #include "INodeStubs.h"
 #include "TestBlockchainGenerator.h"
-#include <Logging/ConsoleLogger.h>
+#include <logging/ConsoleLogger.h>
 
 using namespace cryptonote;
 
@@ -144,7 +144,7 @@ void WaitWalletLoad(TrivialWalletObserver* observer) {
 class WalletLegacyApi : public ::testing::Test
 {
 public:
-  WalletLegacyApi() : m_currency(cryptonote::CurrencyBuilder(m_logger).currency()), generator(m_currency) {
+  WalletLegacyApi() : m_currency(cryptonote::CurrencyBuilder(m_logger, os::appdata::path()).currency()), generator(m_currency) {
   }
 
   void SetUp() override;

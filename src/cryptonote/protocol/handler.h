@@ -15,11 +15,11 @@
 #include "cryptonote/protocol/i_observer.h"
 #include "cryptonote/protocol/i_query.h"
 
-#include "P2p/P2pProtocolDefinitions.h"
-#include "P2p/NetNodeCommon.h"
-#include "P2p/ConnectionContext.h"
+#include "p2p/P2pProtocolDefinitions.h"
+#include "p2p/NetNodeCommon.h"
+#include "p2p/ConnectionContext.h"
 
-#include <Logging/LoggerRef.h>
+#include <logging/LoggerRef.h>
 
 namespace System {
   class Dispatcher;

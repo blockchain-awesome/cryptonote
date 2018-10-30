@@ -6,12 +6,11 @@
 #include <cctype>
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/lexical_cast.hpp>
-#include "../common/Base58.h"
-#include "../common/int-util.h"
-#include "../common/StringTools.h"
+#include "common/Base58.h"
+#include "common/int-util.h"
+#include "common/StringTools.h"
 
 #include "Account.h"
-#include "CryptoNoteBasicImpl.h"
 #include "CryptoNoteFormatUtils.h"
 #include "CryptoNoteTools.h"
 #include "TransactionExtra.h"
@@ -22,7 +21,33 @@ using namespace Logging;
 using namespace Common;
 
 namespace cryptonote {
+uint64_t getPenalizedAmount(uint64_t amount, size_t medianSize, size_t currentBlockSize) {
+  static_assert(sizeof(size_t) >= sizeof(uint32_t), "size_t is too small");
+  assert(currentBlockSize <= 2 * medianSize);
+  assert(medianSize <= std::numeric_limits<uint32_t>::max());
+  assert(currentBlockSize <= std::numeric_limits<uint32_t>::max());
 
+  if (amount == 0) {
+    return 0;
+  }
+
+  if (currentBlockSize <= medianSize) {
+    return amount;
+  }
+
+  uint64_t productHi;
+  uint64_t productLo = mul128(amount, currentBlockSize * (UINT64_C(2) * medianSize - currentBlockSize), &productHi);
+
+  uint64_t penalizedAmountHi;
+  uint64_t penalizedAmountLo;
+  div128_32(productHi, productLo, static_cast<uint32_t>(medianSize), &penalizedAmountHi, &penalizedAmountLo);
+  div128_32(penalizedAmountHi, penalizedAmountLo, static_cast<uint32_t>(medianSize), &penalizedAmountHi, &penalizedAmountLo);
+
+  assert(0 == penalizedAmountHi);
+  assert(penalizedAmountLo < amount);
+
+  return penalizedAmountLo;
+}
 const std::vector<uint64_t> Currency::PRETTY_AMOUNTS = {
   1, 2, 3, 4, 5, 6, 7, 8, 9,
   10, 20, 30, 40, 50, 60, 70, 80, 90,
@@ -57,14 +82,6 @@ bool Currency::init() {
     return false;
   }
 
-  if (isTestnet()) {
-    m_blocksFileName = "testnet_" + m_blocksFileName;
-    m_blocksCacheFileName = "testnet_" + m_blocksCacheFileName;
-    m_blockIndexesFileName = "testnet_" + m_blockIndexesFileName;
-    m_txPoolFileName = "testnet_" + m_txPoolFileName;
-    m_blockchinIndicesFileName = "testnet_" + m_blockchinIndicesFileName;
-  }
-
   return true;
 }
 
@@ -88,9 +105,9 @@ bool Currency::generateGenesisBlock() {
   m_genesisBlock.minorVersion = BLOCK_MINOR_VERSION_0;
   m_genesisBlock.timestamp = 0;
   m_genesisBlock.nonce = 70;
-  if (m_testnet) {
-    ++m_genesisBlock.nonce;
-  }
+  // if (m_testnet) {
+  //   ++m_genesisBlock.nonce;
+  // }
   //miner::find_nonce_for_given_block(bl, 1, 0);
 
   return true;
@@ -421,7 +438,7 @@ size_t Currency::getApproximateMaximumInputCount(size_t transactionSize, size_t 
   return (transactionSize - headerSize - outputsSize) / inputSize;
 }
 
-CurrencyBuilder::CurrencyBuilder(Logging::ILogger& log) : m_currency(log) {
+CurrencyBuilder::CurrencyBuilder(Logging::ILogger& log, std::string path) : m_currency(path, log) {
   maxBlockNumber(parameters::CRYPTONOTE_MAX_BLOCK_NUMBER);
   maxBlockBlobSize(parameters::CRYPTONOTE_MAX_BLOCK_BLOB_SIZE);
   maxTxSize(parameters::CRYPTONOTE_MAX_TX_SIZE);
@@ -463,13 +480,14 @@ CurrencyBuilder::CurrencyBuilder(Logging::ILogger& log) : m_currency(log) {
   fusionTxMinInputCount(parameters::FUSION_TX_MIN_INPUT_COUNT);
   fusionTxMinInOutCountRatio(parameters::FUSION_TX_MIN_IN_OUT_COUNT_RATIO);
 
-  blocksFileName(parameters::CRYPTONOTE_BLOCKS_FILENAME);
-  blocksCacheFileName(parameters::CRYPTONOTE_BLOCKSCACHE_FILENAME);
-  blockIndexesFileName(parameters::CRYPTONOTE_BLOCKINDEXES_FILENAME);
-  txPoolFileName(parameters::CRYPTONOTE_POOLDATA_FILENAME);
-  blockchinIndicesFileName(parameters::CRYPTONOTE_BLOCKCHAIN_INDICES_FILENAME);
-
-  testnet(false);
+  coin::StorageFiles files;
+  files.blocks = parameters::CRYPTONOTE_BLOCKS_FILENAME;
+  files.blocksCache = parameters::CRYPTONOTE_BLOCKSCACHE_FILENAME;
+  files.blocksIndexes = parameters::CRYPTONOTE_BLOCKINDEXES_FILENAME;
+  files.txPool = parameters::CRYPTONOTE_POOLDATA_FILENAME;
+  files.blockchainIndexes = parameters::CRYPTONOTE_BLOCKCHAIN_INDICES_FILENAME;
+  m_currency.setFiles(files);
+  // testnet(false);
 }
 
 Transaction CurrencyBuilder::generateGenesisTransaction() {

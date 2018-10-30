@@ -6,7 +6,6 @@
 
 using namespace cryptonote;
 
-
 gen_chain_switch_1::gen_chain_switch_1()
 {
   REGISTER_CALLBACK("check_split_not_switched", gen_chain_switch_1::check_split_not_switched);

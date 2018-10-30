@@ -3,7 +3,7 @@
 #include "transaction_entry.hpp"
 #include "cryptonote/core/Difficulty.h"
 #include "cryptonote/structures/block.h"
-#include <Serialization/ISerializer.h>
+#include <serialization/ISerializer.h>
 
 namespace cryptonote
 {

@@ -11,16 +11,16 @@
 #include <sstream>
 #include "http/HttpParserErrorCodes.h"
 
-#include <System/TcpConnection.h>
-#include <System/TcpListener.h>
-#include <System/TcpStream.h>
-#include <System/Ipv4Address.h>
+#include <system/TcpConnection.h>
+#include <system/TcpListener.h>
+#include <system/TcpStream.h>
+#include <system/Ipv4Address.h>
 #include "http/HttpParser.h"
 #include "http/HttpResponse.h"
 
 #include "common/JsonValue.h"
-#include "Serialization/JsonInputValueSerializer.h"
-#include "Serialization/JsonOutputStreamSerializer.h"
+#include "serialization/JsonInputValueSerializer.h"
+#include "serialization/JsonOutputStreamSerializer.h"
 
 namespace cryptonote {
 

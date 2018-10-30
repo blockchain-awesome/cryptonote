@@ -8,7 +8,6 @@
 
 const size_t invalid_index_value = std::numeric_limits<size_t>::max();
 
-
 template<class concrete_test>
 class gen_double_spend_base : public test_chain_unit_base
 {

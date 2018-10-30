@@ -7,9 +7,9 @@
 #include "cryptonote/core/Currency.h"
 #include "INode.h"
 #include "IWalletLegacy.h"
-#include "System/Dispatcher.h"
-#include "System/Event.h"
-#include "WalletLegacy/WalletLegacy.h"
+#include "system/Dispatcher.h"
+#include "system/Event.h"
+#include "wallet_legacy/WalletLegacy.h"
 
 namespace Tests {
 namespace Common {

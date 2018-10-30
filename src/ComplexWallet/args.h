@@ -13,9 +13,9 @@
 #include <boost/program_options.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
-#include "WalletLegacy/WalletLegacy.h"
+#include "wallet_legacy/WalletLegacy.h"
 
-#include "common/CommandLine.h"
+#include "command_line/options.h"
 
 using namespace cryptonote;
 using namespace Logging;

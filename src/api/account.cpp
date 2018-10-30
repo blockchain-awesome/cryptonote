@@ -4,14 +4,14 @@
 
 // #include "crypto/chacha.h"
 #include "CryptoNoteConfig.h"
-// #include "WalletLegacy/KeysStorage.h"
+// #include "wallet_legacy/KeysStorage.h"
 // #include "common/StringTools.h"
 // #include "stream/StdOutputStream.h"
 #include "common/Base58.h"
 #include "cryptonote/core/CryptoNoteBasicImpl.h"
 #include "cryptonote/core/Currency.h"
 
-// #include "Serialization/BinaryOutputStreamSerializer.h"
+// #include "serialization/BinaryOutputStreamSerializer.h"
 // #include "cryptonote/core/CryptoNoteSerialization.h"
 
 // using namespace Common;

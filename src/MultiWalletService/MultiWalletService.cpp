@@ -8,15 +8,15 @@
 
 #include "common/SignalHandler.h"
 #include "InProcessNode/InProcessNode.h"
-#include "Logging/LoggerRef.h"
+#include "logging/LoggerRef.h"
 #include "MultiServiceJsonRpcServer.h"
 
-#include "cryptonote/core/CoreConfig.h"
+#include "command_line/CoreConfig.h"
 #include "cryptonote/core/Core.h"
 #include "cryptonote/protocol/handler.h"
-#include "P2p/NetNode.h"
-#include "PaymentGate/WalletFactory.h"
-#include <System/Context.h>
+#include "p2p/NetNode.h"
+#include "payment_gate/WalletFactory.h"
+#include <system/Context.h>
 #include "NodeRpcProxy/NodeRpcProxy.h"
 
 #ifdef ERROR

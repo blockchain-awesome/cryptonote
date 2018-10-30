@@ -4,15 +4,15 @@
 #include <cstdint>
 
 #include "NodeRpcProxy/NodeRpcProxy.h"
-#include "Transfers/BlockchainSynchronizer.h"
-#include "Transfers/TransfersSynchronizer.h"
-#include "BlockchainExplorer/BlockchainExplorer.h"
+#include "transfers/BlockchainSynchronizer.h"
+#include "transfers/TransfersSynchronizer.h"
+#include "blockchain_explorer/BlockchainExplorer.h"
 #include "ITransfersSynchronizer.h"
 
 #include <cryptonote/core/Account.h>
 #include <cryptonote/core/Blockchain.h>
 #include <cryptonote/core/Currency.h>
-#include <Logging/ILogger.h>
+#include <logging/ILogger.h>
 
 namespace api
 {

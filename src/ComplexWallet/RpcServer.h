@@ -9,8 +9,8 @@
 #include "common/JsonValue.h"
 #include "JsonRpcServer/JsonRpcServer.h"
 #include "JsonRpcParameters.h"
-#include "Serialization/JsonInputValueSerializer.h"
-#include "Serialization/JsonOutputStreamSerializer.h"
+#include "serialization/JsonInputValueSerializer.h"
+#include "serialization/JsonOutputStreamSerializer.h"
 
 #include "cryptonote.h"
 #include "WalletManager.h"

@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include <Logging/LoggerManager.h>
+#include <logging/LoggerManager.h>
 #include <cryptonote/core/Currency.h>
 
 #include "cli.h"

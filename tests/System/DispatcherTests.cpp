@@ -3,10 +3,10 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include <future>
-#include <System/Context.h>
-#include <System/Dispatcher.h>
-#include <System/Event.h>
-#include <System/Timer.h>
+#include <system/Context.h>
+#include <system/Dispatcher.h>
+#include <system/Event.h>
+#include <system/Timer.h>
 #include <gtest/gtest.h>
 
 using namespace System;

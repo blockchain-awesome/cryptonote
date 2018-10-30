@@ -12,20 +12,20 @@
 
 #include "IWalletLegacy.h"
 #include "INode.h"
-#include "Wallet/WalletErrors.h"
-#include "Wallet/WalletAsyncContextCounter.h"
+#include "wallet/WalletErrors.h"
+#include "wallet/WalletAsyncContextCounter.h"
 #include "common/ObserverManager.h"
 #include "cryptonote/core/TransactionExtra.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/Currency.h"
-#include "WalletLegacy/WalletUserTransactionsCache.h"
-#include "WalletLegacy/WalletUnconfirmedTransactions.h"
+#include "wallet_legacy/WalletUserTransactionsCache.h"
+#include "wallet_legacy/WalletUnconfirmedTransactions.h"
 
-#include "WalletLegacy/WalletTransactionSender.h"
-#include "WalletLegacy/WalletRequest.h"
+#include "wallet_legacy/WalletTransactionSender.h"
+#include "wallet_legacy/WalletRequest.h"
 
-#include "Transfers/BlockchainSynchronizer.h"
-#include "Transfers/TransfersSynchronizer.h"
+#include "transfers/BlockchainSynchronizer.h"
+#include "transfers/TransfersSynchronizer.h"
 
 
 using namespace cryptonote;

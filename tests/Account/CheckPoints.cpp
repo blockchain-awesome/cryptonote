@@ -7,11 +7,11 @@
 #include <fstream>
 #include "stream/StdInputStream.h"
 #include "stream/StdOutputStream.h"
-#include "Serialization/BinaryInputStreamSerializer.h"
-#include "Serialization/BinaryOutputStreamSerializer.h"
+#include "serialization/BinaryInputStreamSerializer.h"
+#include "serialization/BinaryOutputStreamSerializer.h"
 #include "cryptonote/core/Checkpoints.h"
-#include <Logging/LoggerRef.h>
-#include <Logging/LoggerManager.h>
+#include <logging/LoggerRef.h>
+#include <logging/LoggerManager.h>
 
 using namespace cryptonote;
 using namespace Common;

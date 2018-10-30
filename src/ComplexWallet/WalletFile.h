@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-#include <Logging/LoggerRef.h>
+#include <logging/LoggerRef.h>
 
 
 extern bool create_wallet_by_keys(std::string &wallet_file, std::string &password,

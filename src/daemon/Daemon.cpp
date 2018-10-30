@@ -12,56 +12,31 @@
 #include "common/SignalHandler.h"
 #include "crypto/hash.h"
 #include "cryptonote/core/Core.h"
-#include "cryptonote/core/CoreConfig.h"
+#include "command_line/daemon.h"
+#include "command_line/CoreConfig.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/core/Currency.h"
 #include "cryptonote/core/MinerConfig.h"
 #include "cryptonote/protocol/handler.h"
-#include "P2p/NetNode.h"
-#include "P2p/NetNodeConfig.h"
-#include "Rpc/RpcServer.h"
-#include "Rpc/RpcServerConfig.h"
+#include "p2p/NetNode.h"
+#include "p2p/NetNodeConfig.h"
+#include "rpc/RpcServer.h"
+#include "rpc/RpcServerConfig.h"
 #include "version.h"
 
-#include "Logging/ConsoleLogger.h"
-#include <Logging/LoggerManager.h>
+#include "logging/ConsoleLogger.h"
+#include <logging/LoggerManager.h>
 
 #if defined(WIN32)
 #include <crtdbg.h>
 #endif
 
 using Common::JsonValue;
+using namespace command_line;
 using namespace cryptonote;
 using namespace Logging;
 
-namespace po = boost::program_options;
 namespace fs = boost::filesystem;
-
-namespace
-{
-  const command_line::arg_descriptor<std::string> arg_config_file = {"config-file", "Specify configuration file", std::string(cryptonote::CRYPTONOTE_NAME) + ".conf"};
-  const command_line::arg_descriptor<bool>        arg_os_version  = {"os-version", ""};
-  const command_line::arg_descriptor<std::string> arg_log_file    = {"log-file", "", ""};
-  const command_line::arg_descriptor<int>         arg_log_level   = {"log-level", "", 2}; // info level
-  const command_line::arg_descriptor<bool>        arg_console     = {"no-console", "Disable daemon console commands"};
-  const command_line::arg_descriptor<bool>        arg_testnet_on  = {"testnet", "Used to deploy test nets. Checkpoints and hardcoded seeds are ignored, "
-    "network id is changed. Use it with --data-dir flag. The wallet must be launched with --testnet flag.", false};
-  const command_line::arg_descriptor<bool>        arg_print_genesis_tx = { "print-genesis-tx", "Prints genesis' block tx hex to insert it to config and exits" };
-}
-
-bool command_line_preprocessor(const boost::program_options::variables_map& vm, LoggerRef& logger);
-
-void print_genesis_tx_hex() {
-  Logging::ConsoleLogger logger;
-  cryptonote::Transaction tx = cryptonote::CurrencyBuilder(logger).generateGenesisTransaction();
-  cryptonote::BinaryArray txb = cryptonote::toBinaryArray(tx);
-  std::string tx_hex = Common::toHex(txb);
-
-  std::cout << "Insert this line into your coin configuration file as is: " << std::endl;
-  std::cout << "const char GENESIS_COINBASE_TX_HEX[] = \"" << tx_hex << "\";" << std::endl;
-
-  return;
-}
 
 JsonValue buildLoggerConfiguration(Level level, const std::string& logfile) {
   JsonValue loggerConfiguration(JsonValue::OBJECT);
@@ -93,62 +68,26 @@ int main(int argc, char* argv[])
   LoggerManager logManager;
   LoggerRef logger(logManager, "daemon");
 
+  OptionsNames names;
+  names.command = "Command line options";
+  names.setting = "Command line options and settings options";
+  names.full = "Allowed options";
+  Daemon cli(names);
+
   try {
+    cli.init();
 
-    po::options_description desc_cmd_only("Command line options");
-    po::options_description desc_cmd_sett("Command line options and settings options");
-
-    command_line::add_arg(desc_cmd_only, command_line::arg_help);
-    command_line::add_arg(desc_cmd_only, command_line::arg_version);
-    command_line::add_arg(desc_cmd_only, arg_os_version);
-    // tools::get_default_data_dir() can't be called during static initialization
-    command_line::add_arg(desc_cmd_only, command_line::arg_data_dir, os::appdata::path());
-    command_line::add_arg(desc_cmd_only, arg_config_file);
-
-    command_line::add_arg(desc_cmd_sett, arg_log_file);
-    command_line::add_arg(desc_cmd_sett, arg_log_level);
-    command_line::add_arg(desc_cmd_sett, arg_console);
-    command_line::add_arg(desc_cmd_sett, arg_testnet_on);
-    command_line::add_arg(desc_cmd_sett, arg_print_genesis_tx);
-
+    po::options_description& desc_cmd_sett = cli.desc_cmd_sett;
     RpcServerConfig::initOptions(desc_cmd_sett);
     CoreConfig::initOptions(desc_cmd_sett);
     NetNodeConfig::initOptions(desc_cmd_sett);
     MinerConfig::initOptions(desc_cmd_sett);
 
-    po::options_description desc_options("Allowed options");
-    desc_options.add(desc_cmd_only).add(desc_cmd_sett);
+    cli.setup();
 
-    po::variables_map vm;
-    bool r = command_line::handle_error_helper(desc_options, [&]()
+    po::variables_map &vm = cli.vm;
+    bool r = cli.parse(argc, argv, [&]()
     {
-      po::store(po::parse_command_line(argc, argv, desc_options), vm);
-
-      if (command_line::get_arg(vm, command_line::arg_help))
-      {
-        std::cout << cryptonote::CRYPTONOTE_NAME << " v" << PROJECT_VERSION_LONG << ENDL << ENDL;
-        std::cout << desc_options << std::endl;
-        return false;
-      }
-
-      if (command_line::get_arg(vm, arg_print_genesis_tx)) {
-        print_genesis_tx_hex();
-        return false;
-      }
-
-      std::string data_dir = command_line::get_arg(vm, command_line::arg_data_dir);
-      std::string config = command_line::get_arg(vm, arg_config_file);
-
-      boost::filesystem::path data_dir_path(data_dir);
-      boost::filesystem::path config_path(config);
-      if (!config_path.has_parent_path()) {
-        config_path = data_dir_path / config_path;
-      }
-
-      boost::system::error_code ec;
-      if (boost::filesystem::exists(config_path, ec)) {
-        po::store(po::parse_config_file<char>(config_path.string<std::string>().c_str(), desc_cmd_sett), vm);
-      }
       po::notify(vm);
       return true;
     });
@@ -157,7 +96,7 @@ int main(int argc, char* argv[])
       return 1;
   
     auto modulePath = boost::filesystem::path(argv[0]);
-    auto cfgLogFile = boost::filesystem::path(command_line::get_arg(vm, arg_log_file));
+    auto cfgLogFile = boost::filesystem::path(get_arg(vm, arg_log_file));
 
     if (cfgLogFile.empty()) {
       cfgLogFile = fs::change_extension(modulePath, ".log").string();
@@ -167,27 +106,27 @@ int main(int argc, char* argv[])
       }
     }
 
-    Level cfgLogLevel = static_cast<Level>(static_cast<int>(Logging::ERROR) + command_line::get_arg(vm, arg_log_level));
+    Level cfgLogLevel = static_cast<Level>(static_cast<int>(Logging::ERROR) + get_arg(vm, arg_log_level));
 
     // configure logging
     logManager.configure(buildLoggerConfiguration(cfgLogLevel, cfgLogFile.string()));
 
     logger(INFO) << cryptonote::CRYPTONOTE_NAME << " v" << PROJECT_VERSION_LONG;
 
-    if (command_line_preprocessor(vm, logger)) {
+    if (cli.checkVersion()) {
       return 0;
     }
 
     logger(INFO) << "Module folder: " << argv[0];
 
-    bool testnet_mode = command_line::get_arg(vm, arg_testnet_on);
+    bool testnet_mode = get_arg(vm, arg_testnet_on);
     if (testnet_mode) {
       logger(INFO) << "Starting in testnet mode!";
     }
 
     //create objects and link them
-    cryptonote::CurrencyBuilder currencyBuilder(logManager);
-    currencyBuilder.testnet(testnet_mode);
+    cryptonote::CurrencyBuilder currencyBuilder(logManager, os::appdata::path());
+    // currencyBuilder.testnet(testnet_mode);
 
     try {
       currencyBuilder.currency();
@@ -266,7 +205,7 @@ int main(int argc, char* argv[])
     logger(INFO) << "Core initialized OK";
 
     // start components
-    if (!command_line::has_arg(vm, arg_console)) {
+    if (!has_arg(vm, arg_console)) {
       dch.start_handling();
     }
 
@@ -307,21 +246,3 @@ int main(int argc, char* argv[])
   return 0;
 }
 
-bool command_line_preprocessor(const boost::program_options::variables_map &vm, LoggerRef &logger) {
-  bool exit = false;
-
-  if (command_line::get_arg(vm, command_line::arg_version)) {
-    std::cout << cryptonote::CRYPTONOTE_NAME << " v" << PROJECT_VERSION_LONG << ENDL;
-    exit = true;
-  }
-  if (command_line::get_arg(vm, arg_os_version)) {
-    std::cout << "OS: " << os::version::get() << ENDL;
-    exit = true;
-  }
-
-  if (exit) {
-    return true;
-  }
-
-  return false;
-}

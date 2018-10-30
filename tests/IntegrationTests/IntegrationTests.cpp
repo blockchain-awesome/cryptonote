@@ -3,12 +3,12 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "gtest/gtest.h"
-#include <Logging/LoggerRef.h>
+#include <logging/LoggerRef.h>
 
 #include "../IntegrationTestLib/BaseFunctionalTests.h"
 #include "../IntegrationTestLib/NodeObserver.h"
 
-#include "WalletLegacy/WalletLegacy.h"
+#include "wallet_legacy/WalletLegacy.h"
 #include "WalletLegacyObserver.h"
 
 using namespace cryptonote;
@@ -37,7 +37,9 @@ class IntegrationTest : public Tests::Common::BaseFunctionalTests, public ::test
 public:
 
   IntegrationTest() : 
-    currency(cryptonote::CurrencyBuilder(log).testnet(true).currency()), 
+    currency(cryptonote::CurrencyBuilder(log, os::appdata::path())
+    // .testnet(true)
+    .currency()), 
     BaseFunctionalTests(currency, dispatcher, baseCfg),
     logger(log, "IntegrationTest") {
   }

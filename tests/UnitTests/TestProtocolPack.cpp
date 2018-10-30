@@ -6,7 +6,7 @@
 
 #include "gtest/gtest.h"
 #include "cryptonote/protocol/definitions.h"
-#include "Serialization/SerializationTools.h"
+#include "serialization/SerializationTools.h"
 
 TEST(protocol_pack, protocol_pack_command) 
 {

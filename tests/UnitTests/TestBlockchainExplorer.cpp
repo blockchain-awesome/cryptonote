@@ -17,9 +17,9 @@
 
 #include "cryptonote/core/CryptoNoteTools.h"
 
-#include "Logging/FileLogger.h"
+#include "logging/FileLogger.h"
 
-#include "BlockchainExplorer/BlockchainExplorer.h"
+#include "blockchain_explorer/BlockchainExplorer.h"
 
 using namespace crypto;
 using namespace cryptonote;
@@ -86,7 +86,7 @@ private:
 class BlockchainExplorerTests : public ::testing::Test {
 public:
   BlockchainExplorerTests() :
-    currency(CurrencyBuilder(logger).currency()),
+    currency(CurrencyBuilder(logger, os::appdata::path()).currency()),
     generator(currency),
     nodeStub(generator),
     blockchainExplorer(nodeStub, logger) {

@@ -3,8 +3,8 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include <gtest/gtest.h>
-#include <System/OperationTimeout.h>
-#include <System/InterruptedException.h>
+#include <system/OperationTimeout.h>
+#include <system/InterruptedException.h>
 
 using namespace System;
 

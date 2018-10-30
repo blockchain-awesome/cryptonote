@@ -11,19 +11,18 @@
 
 #include <http/HttpRequest.h>
 #include <http/HttpResponse.h>
-#include <System/ContextGroup.h>
-#include <System/Dispatcher.h>
-#include <System/Event.h>
-#include <System/EventLock.h>
-#include <System/Timer.h>
+#include <system/ContextGroup.h>
+#include <system/Dispatcher.h>
+#include <system/Event.h>
+#include <system/EventLock.h>
+#include <system/Timer.h>
 #include <cryptonote/core/TransactionApi.h>
 
 #include "common/StringTools.h"
-#include "cryptonote/core/CryptoNoteBasicImpl.h"
 #include "cryptonote/core/CryptoNoteTools.h"
-#include "Rpc/CoreRpcServerCommandsDefinitions.h"
-#include "Rpc/HttpClient.h"
-#include "Rpc/JsonRpc.h"
+#include "rpc/CoreRpcServerCommandsDefinitions.h"
+#include "rpc/HttpClient.h"
+#include "rpc/JsonRpc.h"
 
 #ifndef AUTO_VAL_INIT
 #define AUTO_VAL_INIT(n) boost::value_initialized<decltype(n)>()

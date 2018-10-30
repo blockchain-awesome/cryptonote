@@ -3,11 +3,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #pragma once
-
-#include <boost/program_options/options_description.hpp>
-#include <boost/program_options/variables_map.hpp>
-
-#include "P2p/NetNodeCommon.h"
+#include "p2p/NetNodeCommon.h"
 #include "cryptonote/protocol/handler_common.h"
 #include "Currency.h"
 #include "tx_memory_pool.h"
@@ -18,11 +14,11 @@
 #include "ICoreObserver.h"
 #include "common/ObserverManager.h"
 
-#include "System/Dispatcher.h"
+#include "system/Dispatcher.h"
 #include "cryptonote/core/template/MessageQueue.h"
 #include "cryptonote/core/BlockchainMessages.h"
 
-#include <Logging/LoggerMessage.h>
+#include <logging/LoggerMessage.h>
 
 namespace cryptonote {
   class LockedBlockchainStorage;
@@ -49,7 +45,6 @@ namespace cryptonote {
      bool removeObserver(ICoreObserver* observer) override;
 
      miner& get_miner() { return *m_miner; }
-     static void init_options(boost::program_options::options_description& desc);
      bool init(const CoreConfig& config, const MinerConfig& minerConfig, bool load_existing);
      bool set_genesis_block(const Block& b);
      bool deinit();
@@ -154,7 +149,6 @@ namespace cryptonote {
      bool check_tx_ring_signature(const KeyInput& tx, const crypto::Hash& tx_prefix_hash, const std::vector<crypto::Signature>& sig);
      bool is_tx_spendtime_unlocked(uint64_t unlock_time);
      bool update_miner_block_template();
-     bool handle_command_line(const boost::program_options::variables_map& vm);
      bool on_update_blocktemplate_interval();
      bool check_tx_inputs_keyimages_diff(const Transaction& tx);
      virtual void blockchainUpdated() override;
@@ -171,7 +165,7 @@ namespace cryptonote {
      Blockchain m_blockchain;
      ICryptonoteProtocol* m_pprotocol;
      std::unique_ptr<miner> m_miner;
-     std::string m_config_folder;
+    //  std::string m_config_folder;
      cryptonote_protocol_stub m_protocol_stub;
      friend class tx_validate_inputs;
      std::atomic<bool> m_starter_message_showed;

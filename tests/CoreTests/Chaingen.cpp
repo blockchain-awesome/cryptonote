@@ -12,9 +12,12 @@
 #include <boost/archive/binary_iarchive.hpp>
 #include <boost/program_options.hpp>
 
-#include "common/CommandLine.h"
+#include "command_line/options.h"
 #include "cryptonote/core/key.h"
-#include "cryptonote/core/CryptoNoteBasicImpl.h"
+#include "crypto/crypto.h"
+#include "crypto/hash.h"
+#include "cryptonote/core/key.h"
+#include "cryptonote/core/serialize.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/core/Core.h"

@@ -19,18 +19,18 @@
 #include "common/int-util.h"
 #include "common/ObserverManager.h"
 #include "crypto/hash.h"
+#include "crypto/crypto.h"
+#include "cryptonote/core/serialize.h"
 
 #include "cryptonote/core/key.h"
-#include "cryptonote/core/CryptoNoteBasicImpl.h"
 #include "cryptonote/core/Currency.h"
-// #include "cryptonote/core/ITimeProvider.h"
 #include "cryptonote/core/ITransactionValidator.h"
 #include "cryptonote/core/ITxPoolObserver.h"
 #include "cryptonote/core/VerificationContext.h"
 #include "cryptonote/core/blockchain/indexing/exports.h"
 #include "cryptonote/core/transaction/structures.h"
 
-#include <Logging/LoggerRef.h>
+#include <logging/LoggerRef.h>
 
 #include "cryptonote/core/transaction/once_in_time_interval.hpp"
 
@@ -56,7 +56,7 @@ namespace cryptonote {
     bool removeObserver(ITxPoolObserver* observer);
 
     // load/store operations
-    bool init(const std::string& config_folder);
+    bool init();
     bool deinit();
 
     bool have_tx(const crypto::Hash &id) const;
@@ -131,7 +131,7 @@ namespace cryptonote {
     key_images_container m_spent_key_images;
     GlobalOutputsContainer m_spentOutputs;
 
-    std::string m_config_folder;
+    // std::string m_config_folder;
     cryptonote::ITransactionValidator& m_validator;
     cryptonote::ITimeProvider& m_timeProvider;
 

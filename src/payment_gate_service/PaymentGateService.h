@@ -1,0 +1,54 @@
+// Copyright (c) 2011-2016 The Cryptonote developers
+// Distributed under the MIT/X11 software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
+#pragma once
+
+#include "ConfigurationManager.h"
+#include "PaymentServiceConfiguration.h"
+
+#include "logging/ConsoleLogger.h"
+#include "logging/LoggerGroup.h"
+#include "logging/StreamLogger.h"
+
+#include "payment_gate/NodeFactory.h"
+#include "payment_gate/WalletService.h"
+#include "common/os.h"
+
+class PaymentGateService {
+public:
+  PaymentGateService() : dispatcher(nullptr), stopEvent(nullptr), config(), service(nullptr), logger(), currencyBuilder(
+    logger,
+    os::appdata::path()
+    ) {
+  }
+
+  bool init(int argc, char** argv);
+
+  const PaymentService::ConfigurationManager& getConfig() const { return config; }
+  PaymentService::WalletConfiguration getWalletConfig() const;
+  const cryptonote::Currency getCurrency();
+
+  void run();
+  void stop();
+  
+  Logging::ILogger& getLogger() { return logger; }
+
+private:
+
+  void runInProcess(Logging::LoggerRef& log);
+  void runRpcProxy(Logging::LoggerRef& log);
+
+  void runWalletService(const cryptonote::Currency& currency, cryptonote::INode& node);
+
+  System::Dispatcher* dispatcher;
+  System::Event* stopEvent;
+  PaymentService::ConfigurationManager config;
+  PaymentService::WalletService* service;
+  cryptonote::CurrencyBuilder currencyBuilder;
+  
+  Logging::LoggerGroup logger;
+  std::ofstream fileStream;
+  Logging::StreamLogger fileLogger;
+  Logging::ConsoleLogger consoleLogger;
+};

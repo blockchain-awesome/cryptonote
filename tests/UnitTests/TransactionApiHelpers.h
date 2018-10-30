@@ -12,7 +12,7 @@
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 
-#include "Transfers/TransfersContainer.h"
+#include "transfers/TransfersContainer.h"
 
 namespace {
 

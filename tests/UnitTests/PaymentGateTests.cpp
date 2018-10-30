@@ -5,12 +5,12 @@
 #include "gtest/gtest.h"
 #include <numeric>
 
-#include <System/Timer.h>
+#include <system/Timer.h>
 #include <common/StringTools.h>
-#include <Logging/ConsoleLogger.h>
+#include <logging/ConsoleLogger.h>
 
-#include "PaymentGate/WalletService.h"
-#include "PaymentGate/WalletFactory.h"
+#include "payment_gate/WalletService.h"
+#include "payment_gate/WalletFactory.h"
 
 // test helpers
 #include "INodeStubs.h"
@@ -23,7 +23,7 @@ class PaymentGateTest : public testing::Test {
 public:
 
   PaymentGateTest() : 
-    currency(cryptonote::CurrencyBuilder(logger).currency()), 
+    currency(cryptonote::CurrencyBuilder(logger, os::appdata::path()).currency()), 
     generator(currency),
     nodeStub(generator) 
   {}

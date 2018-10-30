@@ -2,10 +2,10 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <System/Context.h>
-#include <System/Dispatcher.h>
-#include <System/Event.h>
-#include <System/EventLock.h>
+#include <system/Context.h>
+#include <system/Dispatcher.h>
+#include <system/Event.h>
+#include <system/EventLock.h>
 #include <gtest/gtest.h>
 
 using namespace System;

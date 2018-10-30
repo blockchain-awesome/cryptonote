@@ -4,8 +4,8 @@
 
 #include "gtest/gtest.h"
 
-#include "Transfers/BlockchainSynchronizer.h"
-#include "Transfers/TransfersSynchronizer.h"
+#include "transfers/BlockchainSynchronizer.h"
+#include "transfers/TransfersSynchronizer.h"
 
 #include "INodeStubs.h"
 #include "TestBlockchainGenerator.h"
@@ -17,7 +17,7 @@
 #include <future>
 #include <algorithm>
 
-#include <Logging/ConsoleLogger.h>
+#include <logging/ConsoleLogger.h>
 
 using namespace cryptonote;
 
@@ -37,7 +37,7 @@ class TransfersApi : public ::testing::Test, public IBlockchainSynchronizerObser
 public:
 
   TransfersApi() :
-    m_currency(cryptonote::CurrencyBuilder(m_logger).currency()),
+    m_currency(cryptonote::CurrencyBuilder(m_logger, os::appdata::path()).currency()),
     generator(m_currency),
     m_node(generator),
     m_sync(m_node, m_currency.genesisBlockHash()),

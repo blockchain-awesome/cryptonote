@@ -4,14 +4,14 @@
 
 #include "gtest/gtest.h"
 
-#include "Transfers/BlockchainSynchronizer.h"
-#include "Transfers/TransfersConsumer.h"
+#include "transfers/BlockchainSynchronizer.h"
+#include "transfers/TransfersConsumer.h"
 
 #include "crypto/hash.h"
 #include "cryptonote/core/TransactionApi.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/CryptoNoteTools.h"
-#include "Logging/ConsoleLogger.h"
+#include "logging/ConsoleLogger.h"
 
 #include "INodeStubs.h"
 #include "TestBlockchainGenerator.h"
@@ -175,7 +175,7 @@ private:
 class BcSTest : public ::testing::Test, public IBlockchainSynchronizerObserver {
 public:
   BcSTest() :
-    m_currency(CurrencyBuilder(m_logger).currency()),
+    m_currency(CurrencyBuilder(m_logger, os::appdata::path()).currency()),
     generator(m_currency),
     m_node(generator),
     m_sync(m_node, m_currency.genesisBlockHash()) {

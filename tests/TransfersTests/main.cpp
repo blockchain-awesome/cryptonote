@@ -5,11 +5,13 @@
 #include "gtest/gtest.h"
 #include "Globals.h"
 
-#include <Logging/ConsoleLogger.h>
+#include <logging/ConsoleLogger.h>
 
 Logging::ConsoleLogger logger;
 System::Dispatcher globalSystem;
-cryptonote::Currency currency = cryptonote::CurrencyBuilder(logger).testnet(true).currency();
+cryptonote::Currency currency = cryptonote::CurrencyBuilder(logger, os::appdata::path())
+// .testnet(true)
+.currency();
 Tests::Common::BaseFunctionalTestsConfig config;
 
 
