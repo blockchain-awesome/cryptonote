@@ -16,7 +16,7 @@
 
 #include "IP2pNodeInternal.h"
 #include "IStreamSerializable.h"
-#include "NetNodeConfig.h"
+#include "command_line/NetNodeConfig.h"
 #include "P2pInterfaces.h"
 #include "P2pNodeConfig.h"
 #include "P2pProtocolDefinitions.h"

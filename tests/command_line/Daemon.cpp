@@ -26,10 +26,11 @@ TEST_F(DaemonTest, run)
   names.full = "Allowed options";
   Daemon cli(names);
   cli.init();
+  cli.setup();
   // bool r = cli.parse(my_argc, my_argv, [] {
   //   return true;
   // });
-  // EXPECT_EQ(false, r);
+  // EXPECT_EQ(true, r);
 }
 
 } // namespace
