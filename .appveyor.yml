@@ -1,7 +1,7 @@
 image: ubuntu1804
 install:
 - sudo apt update && sudo apt install -y build-essential curl cmake libboost-all-dev libssl-dev libsodium-dev python-pip python-dev lcov
-- sudo pip install --upgrade pip && pip install conan && conan install .
+- pip install --user --upgrade pip && pip install --user conan && conan install .
 
 build_script:
 - mkdir -p build && cd build && cmake .. -DCMAKE_BUILD_TYPE=Debug -DENABLE_GCOV=1 && make
@@ -9,4 +9,4 @@ build_script:
 test_script:
 - cd build && env CTEST_OUTPUT_ON_FAILURE=1 make test
 - cd build && lcov --capture --directory src --output-file temp.info && lcov --remove temp.info "/usr/include/*" "*/google/*" "*/include/*" "*/tests/*" > coverage.info && lcov --list coverage.info
-- pip install codecov && cd build && codecov --token 2a2cf36f-81d6-43b9-abba-d5955cb0cafe --root src
+- pip install --user codecov && cd build && codecov --token 2a2cf36f-81d6-43b9-abba-d5955cb0cafe --root src
