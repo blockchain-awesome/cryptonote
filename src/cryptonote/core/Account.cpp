@@ -5,7 +5,7 @@
 #include "Account.h"
 #include "CryptoNoteSerialization.h"
 #include "cryptonote/core/CryptoNoteTools.h"
-#include "common/Base58.h"
+#include "common/base58.h"
 #include "common/StringTools.h"
 
 namespace cryptonote

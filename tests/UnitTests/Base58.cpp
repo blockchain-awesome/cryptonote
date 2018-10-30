@@ -17,7 +17,7 @@
 #include "common/os.h"
 
 #include "serialization/BinarySerializationTools.h"
-#include "common/Base58.cpp"
+#include "common/base58.cpp"
 
 using namespace Tools;
 using namespace cryptonote;

@@ -156,19 +156,7 @@ int main(int argc, char* argv[])
     RpcServerConfig rpcConfig;
     rpcConfig.init(vm);
 
-    if (!coreConfig.configFolderDefaulted) {
-      boost::filesystem::path path(coreConfig.configFolder);
-
-      if (!boost::filesystem::exists(coreConfig.configFolder)) {
-        throw std::runtime_error("Directory does not exist: " + coreConfig.configFolder);
-      }
-    } else {
-      boost::filesystem::path path(coreConfig.configFolder);
-      bool exists = boost::filesystem::exists(path) ? true : boost::filesystem::create_directory(path);
-      if (!exists) {
-        throw std::runtime_error("Can't create directory: " + coreConfig.configFolder);
-      }
-    }
+    coreConfig.checkDataDir();
 
     System::Dispatcher dispatcher;
 

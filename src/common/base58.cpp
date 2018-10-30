@@ -2,7 +2,7 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "Base58.h"
+#include "base58.h"
 
 #include <assert.h>
 #include <string>
@@ -10,7 +10,7 @@
 
 #include "crypto/hash.h"
 #include "int-util.h"
-#include "Varint.h"
+#include "varint.h"
 
 namespace Tools
 {
@@ -84,13 +84,13 @@ namespace Tools
         uint64_t res = 0;
         switch (9 - size)
         {
-        case 1:            res |= *data++;
-        case 2: res <<= 8; res |= *data++;
-        case 3: res <<= 8; res |= *data++;
-        case 4: res <<= 8; res |= *data++;
-        case 5: res <<= 8; res |= *data++;
-        case 6: res <<= 8; res |= *data++;
-        case 7: res <<= 8; res |= *data++;
+        case 1:            res |= *data++; /* FALLTHRU */
+        case 2: res <<= 8; res |= *data++; /* FALLTHRU */
+        case 3: res <<= 8; res |= *data++; /* FALLTHRU */
+        case 4: res <<= 8; res |= *data++; /* FALLTHRU */
+        case 5: res <<= 8; res |= *data++; /* FALLTHRU */
+        case 6: res <<= 8; res |= *data++; /* FALLTHRU */
+        case 7: res <<= 8; res |= *data++; /* FALLTHRU */
         case 8: res <<= 8; res |= *data; break;
         default: assert(false);
         }
