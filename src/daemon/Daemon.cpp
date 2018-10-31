@@ -94,6 +94,17 @@ int main(int argc, char* argv[])
     if (!r)
       return 1;
 
+    CoreConfig coreConfig;
+    coreConfig.init(vm);
+    NetNodeConfig netNodeConfig;
+    netNodeConfig.init(vm);
+    MinerConfig minerConfig;
+    minerConfig.init(vm);
+    RpcServerConfig rpcConfig;
+    rpcConfig.init(vm);
+
+    coreConfig.checkDataDir();
+    cli.parseConfigFile();
 
     auto cfgLogFile = cli.getLogFile();
 
@@ -114,9 +125,10 @@ int main(int argc, char* argv[])
     if (testnet_mode) {
       logger(INFO) << "Starting in testnet mode!";
     }
+    netNodeConfig.setTestnet(testnet_mode);
 
     //create objects and link them
-    cryptonote::CurrencyBuilder currencyBuilder(logManager, os::appdata::path());
+    cryptonote::CurrencyBuilder currencyBuilder(logManager, coreConfig.configFolder);
     // currencyBuilder.testnet(testnet_mode);
 
     try {
@@ -138,18 +150,7 @@ int main(int argc, char* argv[])
       ccore.set_checkpoints(std::move(checkpoints));
     }
 
-    CoreConfig coreConfig;
-    coreConfig.init(vm);
-    NetNodeConfig netNodeConfig;
-    netNodeConfig.init(vm);
-    netNodeConfig.setTestnet(testnet_mode);
-    MinerConfig minerConfig;
-    minerConfig.init(vm);
-    RpcServerConfig rpcConfig;
-    rpcConfig.init(vm);
 
-    coreConfig.checkDataDir();
-    cli.parseConfigFile();
 
     System::Dispatcher dispatcher;
 
