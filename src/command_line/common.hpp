@@ -243,7 +243,7 @@ public:
       }
       notify();
 
-      if (f == nullptr) {
+      if (f) {
         return true;
       }
       return f();
