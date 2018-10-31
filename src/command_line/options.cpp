@@ -20,6 +20,12 @@ const arg_descriptor<bool> arg_testnet_on = {"testnet", "Used to deploy test net
                                              false};
 const arg_descriptor<bool> arg_print_genesis_tx = {"print-genesis-tx", "Prints genesis' block tx hex to insert it to config and exits"};
 
+
+const arg_descriptor<std::string> arg_extra_messages =  {"extra-messages-file", "Specify file for extra messages to include into coinbase transactions", "", true};
+const arg_descriptor<std::string> arg_start_mining =    {"start-mining", "Specify wallet address to mining for", "", true};
+const arg_descriptor<uint32_t>    arg_mining_threads =  {"mining-threads", "Specify mining threads count", 0, true};
+
+
 const std::string DEFAULT_RPC_IP = "127.0.0.1";
 const uint16_t DEFAULT_RPC_PORT = cryptonote::RPC_DEFAULT_PORT;
 

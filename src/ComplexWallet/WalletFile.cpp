@@ -7,7 +7,7 @@
 #include "wallet_legacy/KeysStorage.h"
 #include "common/StringTools.h"
 #include "stream/StdOutputStream.h"
-#include "common/Base58.h"
+#include "common/base58.h"
 #include "cryptonote/core/CryptoNoteBasicImpl.h"
 #include "cryptonote/core/Currency.h"
 

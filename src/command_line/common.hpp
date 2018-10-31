@@ -186,6 +186,25 @@ public:
   {
     desc_options.add(desc_cmd_only).add(desc_cmd_sett);
   }
+
+  template <typename T>
+  bool isDefaulted(T &t)
+  {
+    return vm[t.name].defaulted();
+  }
+
+  template <typename T>
+  bool count(T &t)
+  {
+    return vm.count(t.name);
+  }
+
+  template <typename T, bool required>
+  T get(const arg_descriptor<T, required> &arg)
+  {
+    return vm[arg.name].template as<T>();
+  }
+
   virtual bool innerParse() = 0;
   template <typename T>
   void addCommand(const T &arg)
@@ -205,6 +224,11 @@ public:
     add_arg(desc_cmd_sett, arg);
   };
 
+  void notify()
+  {
+    po::notify(vm);
+  }
+
   template <typename T>
   bool parse(int argc, char *argv[], T f)
   {
@@ -215,6 +239,7 @@ public:
       {
         return false;
       }
+      notify();
       return f();
     }
     catch (std::exception &e)

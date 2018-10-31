@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <functional>
 #include "cryptonote.h"
 #include "P2pProtocolTypes.h"
 

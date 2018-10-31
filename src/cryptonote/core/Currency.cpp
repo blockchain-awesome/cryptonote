@@ -6,7 +6,7 @@
 #include <cctype>
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/lexical_cast.hpp>
-#include "common/Base58.h"
+#include "common/base58.h"
 #include "common/int-util.h"
 #include "common/StringTools.h"
 

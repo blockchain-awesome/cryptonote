@@ -9,7 +9,7 @@
 #include "cryptonote/core/Core.h"
 #include "cryptonote/core/Currency.h"
 #include "logging/LoggerManager.h"
-#include "p2p/NetNodeConfig.h"
+#include "command_line/NetNodeConfig.h"
 #include "system/Dispatcher.h"
 #include "system/InterruptedException.h"
 #include "wallet_legacy/WalletLegacy.h"

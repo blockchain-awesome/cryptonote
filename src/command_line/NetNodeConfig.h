@@ -9,7 +9,7 @@
 #include <string>
 
 #include <boost/program_options.hpp>
-#include "P2pProtocolTypes.h"
+#include "p2p/P2pProtocolTypes.h"
 
 namespace cryptonote {
 

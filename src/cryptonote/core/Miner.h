@@ -13,7 +13,7 @@
 #include "cryptonote/core/Currency.h"
 #include "cryptonote/core/Difficulty.h"
 #include "cryptonote/core/IMinerHandler.h"
-#include "cryptonote/core/MinerConfig.h"
+#include "command_line/MinerConfig.h"
 #include "cryptonote/core/OnceInInterval.h"
 
 #include <logging/LoggerRef.h>

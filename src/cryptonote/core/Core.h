@@ -9,7 +9,7 @@
 #include "tx_memory_pool.h"
 #include "Blockchain.h"
 #include "cryptonote/core/IMinerHandler.h"
-#include "cryptonote/core/MinerConfig.h"
+#include "command_line/MinerConfig.h"
 #include "ICore.h"
 #include "ICoreObserver.h"
 #include "common/ObserverManager.h"

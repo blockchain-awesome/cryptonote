@@ -5,9 +5,9 @@
 #pragma once
 
 #include "command_line/CoreConfig.h"
-#include "PaymentServiceConfiguration.h"
-#include "p2p/NetNodeConfig.h"
-#include "RpcNodeConfiguration.h"
+#include "command_line/PaymentServiceConfiguration.h"
+#include "command_line/NetNodeConfig.h"
+#include "command_line/RpcNodeConfiguration.h"
 
 namespace PaymentService {
 

@@ -19,7 +19,7 @@ bool Daemon::innerParse()
   {
     return false;
   }
-  if (get_arg(vm, arg_print_genesis_tx))
+  if (get(arg_print_genesis_tx))
   {
     printGenesisTx();
     return false;

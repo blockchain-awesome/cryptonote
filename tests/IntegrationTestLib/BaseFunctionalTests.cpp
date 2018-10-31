@@ -18,7 +18,7 @@
 #include <system/Timer.h>
 #include <system/InterruptedException.h>
 
-#include "p2p/NetNodeConfig.h"
+#include "command_line/NetNodeConfig.h"
 #include "command_line/CoreConfig.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "wallet_legacy/WalletLegacy.h"

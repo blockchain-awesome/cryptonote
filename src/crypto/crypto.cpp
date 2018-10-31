@@ -11,7 +11,7 @@
 #include <memory>
 #include <mutex>
 
-#include "common/Varint.h"
+#include "common/varint.h"
 #include "crypto.h"
 #include "hash.h"
 
@@ -323,7 +323,8 @@ namespace crypto {
   };
 
   static inline size_t rs_comm_size(size_t pubs_count) {
-    return sizeof(rs_comm) + pubs_count * sizeof(rs_comm().ab[0]);
+    rs_comm rs;
+    return sizeof(rs_comm) + pubs_count * sizeof(rs.ab[0]);
   }
 
   void crypto_ops::generate_ring_signature(const Hash &prefix_hash, const KeyImage &image,

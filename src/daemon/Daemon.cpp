@@ -16,10 +16,10 @@
 #include "command_line/CoreConfig.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/core/Currency.h"
-#include "cryptonote/core/MinerConfig.h"
+#include "command_line/MinerConfig.h"
 #include "cryptonote/protocol/handler.h"
 #include "p2p/NetNode.h"
-#include "p2p/NetNodeConfig.h"
+#include "command_line/NetNodeConfig.h"
 #include "rpc/RpcServer.h"
 #include "rpc/RpcServerConfig.h"
 #include "version.h"
@@ -88,7 +88,6 @@ int main(int argc, char* argv[])
     po::variables_map &vm = cli.vm;
     bool r = cli.parse(argc, argv, [&]()
     {
-      po::notify(vm);
       return true;
     });
 
@@ -157,19 +156,7 @@ int main(int argc, char* argv[])
     RpcServerConfig rpcConfig;
     rpcConfig.init(vm);
 
-    if (!coreConfig.configFolderDefaulted) {
-      boost::filesystem::path path(coreConfig.configFolder);
-
-      if (!boost::filesystem::exists(coreConfig.configFolder)) {
-        throw std::runtime_error("Directory does not exist: " + coreConfig.configFolder);
-      }
-    } else {
-      boost::filesystem::path path(coreConfig.configFolder);
-      bool exists = boost::filesystem::exists(path) ? true : boost::filesystem::create_directory(path);
-      if (!exists) {
-        throw std::runtime_error("Can't create directory: " + coreConfig.configFolder);
-      }
-    }
+    coreConfig.checkDataDir();
 
     System::Dispatcher dispatcher;
 

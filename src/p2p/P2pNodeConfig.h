@@ -5,7 +5,7 @@
 #pragma once
 
 #include <chrono>
-#include "NetNodeConfig.h"
+#include "command_line/NetNodeConfig.h"
 
 namespace cryptonote {
 

@@ -6,7 +6,7 @@
 
 #include "command_line/CoreConfig.h"
 #include "GateConfiguration.h"
-#include "p2p/NetNodeConfig.h"
+#include "command_line/NetNodeConfig.h"
 #include "RpcNodeConfiguration.h"
 
 namespace MultiWalletService {

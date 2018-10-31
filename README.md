@@ -19,6 +19,7 @@ Copyright (c) 2012-2013 The Cryptonote developers.
 | Compiler | Platform | Status | Coverage |
 | --- | --- | --- | --- |
 | gcc5 | Ubuntu 16.04 | [![CircleCI](https://circleci.com/gh/vigcoin/coin.svg?style=svg)](https://circleci.com/gh/vigcoin/coin) | [![codecov](https://codecov.io/gh/vigcoin/coin/branch/master/graph/badge.svg)](https://codecov.io/gh/vigcoin/coin)  |
+| gcc7 | Ubuntu 18.04 | [![Build status](https://ci.appveyor.com/api/projects/status/7195kcha9pg0gcub?svg=true)](https://ci.appveyor.com/project/calidion/coin) | [![codecov](https://codecov.io/gh/vigcoin/coin/branch/master/graph/badge.svg)](https://codecov.io/gh/vigcoin/coin)  |
 | clang(llvm10) | Mac Os 10.14 | [![CircleCI](https://circleci.com/gh/vigcoin/coin.svg?style=svg)](https://circleci.com/gh/vigcoin/coin) | [![codecov](https://codecov.io/gh/vigcoin/coin/branch/master/graph/badge.svg)](https://codecov.io/gh/vigcoin/coin)  |
 
 ## Participate
@@ -53,7 +54,7 @@ VIG COIN是一个开源，社区化的项目。非常欢迎各类开源贡献者
 
 ## Compiling
 
-### Ubuntu
+### Ubuntu
 
 Currently only Ubuntu 16.04 is officially supported.
 

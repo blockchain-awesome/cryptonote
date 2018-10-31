@@ -5,7 +5,7 @@
 #pragma once
 
 #include "ConfigurationManager.h"
-#include "PaymentServiceConfiguration.h"
+// #include "command_line/PaymentServiceConfiguration.h"
 
 #include "logging/ConsoleLogger.h"
 #include "logging/LoggerGroup.h"
