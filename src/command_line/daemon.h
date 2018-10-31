@@ -5,7 +5,6 @@
 #pragma once
 
 #include <string>
-#include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
 #include "options.h"
 
@@ -13,6 +12,7 @@ namespace command_line
 {
 
 namespace po = boost::program_options;
+namespace fs = boost::filesystem;
 class Daemon: public CommandParser
 {
 public:
@@ -25,6 +25,8 @@ void printGenesisTx();
 
 bool parseHelp();
 void parseConfigFile();
+
+fs::path getLogFile();
 };
 
 } // namespace command_line

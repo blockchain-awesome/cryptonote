@@ -30,21 +30,39 @@ bool Daemon::innerParse()
 
 void Daemon::parseConfigFile()
 {
-  // std::string data_dir = get_arg(vm, arg_data_dir);
-  // std::string config = get_arg(vm, arg_config_file);
+  std::string data_dir = get(arg_data_dir);
+  std::string config = get(arg_config_file);
 
-  // boost::filesystem::path data_dir_path(data_dir);
-  // boost::filesystem::path config_path(config);
-  // if (!config_path.has_parent_path())
-  // {
-  //   config_path = data_dir_path / config_path;
-  // }
+  fs::path data_dir_path(data_dir);
+  fs::path config_path(config);
+  if (!config_path.has_parent_path())
+  {
+    config_path = data_dir_path.string() + fs::path::preferred_separator + config_path.string();
+  }
 
-  // boost::system::error_code ec;
-  // if (boost::filesystem::exists(config_path, ec))
-  // {
-  //   po::store(po::parse_config_file<char>(config_path.string<std::string>().c_str(), desc_cmd_sett), vm);
-  // }
+  boost::system::error_code ec;
+  if (fs::exists(config_path, ec))
+  {
+    po::store(po::parse_config_file<char>(config_path.string<std::string>().c_str(), desc_cmd_sett), vm);
+  }
+}
+
+fs::path Daemon::getLogFile()
+{
+  auto cfgLogFile = fs::path(get(arg_log_file));
+
+  if (cfgLogFile.empty())
+  {
+    cfgLogFile = fs::change_extension(exeFile, ".log").string();
+  }
+  else
+  {
+    if (!cfgLogFile.parent_path().empty())
+    {
+      cfgLogFile = exeFile.root_path().string() + cfgLogFile.string();
+    }
+  }
+  return cfgLogFile;
 }
 
 void Daemon::printGenesisTx()

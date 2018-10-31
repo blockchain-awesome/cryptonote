@@ -79,7 +79,7 @@ int main(int argc, char* argv[])
 
     po::options_description& desc_cmd_sett = cli.desc_cmd_sett;
     RpcServerConfig::initOptions(desc_cmd_sett);
-    CoreConfig::initOptions(desc_cmd_sett);
+    // CoreConfig::initOptions(desc_cmd_sett);
     NetNodeConfig::initOptions(desc_cmd_sett);
     MinerConfig::initOptions(desc_cmd_sett);
 
@@ -93,19 +93,11 @@ int main(int argc, char* argv[])
 
     if (!r)
       return 1;
-  
-    auto modulePath = boost::filesystem::path(argv[0]);
-    auto cfgLogFile = boost::filesystem::path(get_arg(vm, arg_log_file));
 
-    if (cfgLogFile.empty()) {
-      cfgLogFile = fs::change_extension(modulePath, ".log").string();
-    } else {
-      if (!cfgLogFile.parent_path().empty()) {
-        cfgLogFile = modulePath.root_path().string() + cfgLogFile.string();
-      }
-    }
 
-    Level cfgLogLevel = static_cast<Level>(static_cast<int>(Logging::ERROR) + get_arg(vm, arg_log_level));
+    auto cfgLogFile = cli.getLogFile();
+
+    Level cfgLogLevel = static_cast<Level>(static_cast<int>(Logging::ERROR) + cli.get(arg_log_level));
 
     // configure logging
     logManager.configure(buildLoggerConfiguration(cfgLogLevel, cfgLogFile.string()));
@@ -157,6 +149,7 @@ int main(int argc, char* argv[])
     rpcConfig.init(vm);
 
     coreConfig.checkDataDir();
+    cli.parseConfigFile();
 
     System::Dispatcher dispatcher;
 

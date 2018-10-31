@@ -10,6 +10,7 @@
 #include <boost/program_options/parsers.hpp>
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/variables_map.hpp>
+#include <boost/filesystem.hpp>
 
 namespace command_line
 {
@@ -230,16 +231,21 @@ public:
   }
 
   template <typename T>
-  bool parse(int argc, char *argv[], T f)
+  bool parse(int argc, char *argv[], T f = nullptr)
   {
     try
     {
+      exeFile = boost::filesystem::path(argv[0]);
       po::store(po::parse_command_line(argc, argv, desc_options), vm);
       if (!innerParse())
       {
         return false;
       }
       notify();
+
+      if (f == nullptr) {
+        return true;
+      }
       return f();
     }
     catch (std::exception &e)
@@ -260,6 +266,7 @@ public:
   po::options_description desc_cmd_only;
   po::options_description desc_options;
   po::variables_map vm;
+  boost::filesystem::path exeFile;
 };
 
 } // namespace command_line
