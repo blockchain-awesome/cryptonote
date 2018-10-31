@@ -27,15 +27,20 @@ void CoreConfig::init(const boost::program_options::variables_map &options)
 
 void CoreConfig::checkDataDir()
 {
+  std::cout << "Checking Data Dir :" << configFolder << std::endl;
   boost::filesystem::path path(configFolder);
   if (!boost::filesystem::exists(path))
   {
+    std::cout << "Dir not found!" << std::endl;
+
     if (!configFolderDefaulted)
     {
       throw std::runtime_error("Directory does not exist: " + configFolder);
     }
     else
     {
+      std::cout << "Dir defaulted!" << std::endl;
+
       if (!boost::filesystem::create_directory(path))
       {
         throw std::runtime_error("Can't create directory: " + configFolder);
