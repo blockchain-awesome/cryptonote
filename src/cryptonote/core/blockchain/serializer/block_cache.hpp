@@ -40,7 +40,7 @@ public:
 
       StdInputStream stream(stdStream);
       BinaryInputStreamSerializer s(stream);
-      cryptonote::serialize(*this, s);
+      serialize(s);
     }
     catch (std::exception &e)
     {
@@ -60,7 +60,7 @@ public:
 
       StdOutputStream stream(file);
       BinaryOutputStreamSerializer s(stream);
-      cryptonote::serialize(*this, s);
+      serialize(s);
     }
     catch (std::exception &)
     {
