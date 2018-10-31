@@ -105,10 +105,8 @@ size_t core::get_alternative_blocks_count() {
   return m_blockchain.getAlternativeBlocksCount();
   }
   //-----------------------------------------------------------------------------------------------
-  bool core::init(const CoreConfig& config, const MinerConfig& minerConfig, bool load_existing) {
-    // m_config_folder = config.configFolder;
-    // m_currency.setPath(m_config_folder);
-    bool r = m_mempool.init();
+  bool core::init(const MinerConfig& minerConfig, bool load_existing) {
+  bool r = m_mempool.init();
   if (!(r)) { logger(ERROR, BRIGHT_RED) << "Failed to initialize memory pool"; return false; }
 
   r = m_blockchain.init(load_existing);

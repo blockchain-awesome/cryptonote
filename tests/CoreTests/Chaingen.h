@@ -403,7 +403,7 @@ inline bool do_replay_events(std::vector<test_event_entry>& events, t_test_class
   cryptonote::MinerConfig emptyMinerConfig;
   cryptonote::cryptonote_protocol_stub pr; //TODO: stub only for this kind of test, make real validation of relayed objects
   cryptonote::core c(validator.currency(), &pr, logger);
-  if (!c.init(coreConfig, emptyMinerConfig, false))
+  if (!c.init(emptyMinerConfig, false))
   {
     std::cout << concolor::magenta << "Failed to init core" << concolor::normal << std::endl;
     return false;

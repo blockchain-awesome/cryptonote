@@ -45,7 +45,7 @@ namespace cryptonote {
      bool removeObserver(ICoreObserver* observer) override;
 
      miner& get_miner() { return *m_miner; }
-     bool init(const CoreConfig& config, const MinerConfig& minerConfig, bool load_existing);
+     bool init(const MinerConfig& minerConfig, bool load_existing);
      bool set_genesis_block(const Block& b);
      bool deinit();
 

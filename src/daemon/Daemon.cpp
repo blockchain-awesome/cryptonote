@@ -185,7 +185,7 @@ int main(int argc, char* argv[])
 
     // initialize core here
     logger(INFO) << "Initializing core...";
-    if (!ccore.init(coreConfig, minerConfig, true)) {
+    if (!ccore.init(minerConfig, true)) {
       logger(ERROR, BRIGHT_RED) << "Failed to initialize core";
       return 1;
     }

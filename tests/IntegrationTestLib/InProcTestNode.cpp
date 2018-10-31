@@ -94,7 +94,7 @@ void InProcTestNode::workerThread(std::promise<std::string>& initPromise) {
 
     coreConfig.configFolder = m_cfg.dataDir;
     
-    if (!core->init(coreConfig, emptyMiner, true)) {
+    if (!core->init(emptyMiner, true)) {
       throw std::runtime_error("Core failed to initialize");
     }
 
