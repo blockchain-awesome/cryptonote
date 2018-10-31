@@ -231,7 +231,7 @@ public:
   }
 
   template <typename T>
-  bool parse(int argc, char *argv[], T f = nullptr)
+  bool parse(int argc, char *argv[], T f)
   {
     try
     {
@@ -242,10 +242,6 @@ public:
         return false;
       }
       notify();
-
-      if (f) {
-        return true;
-      }
       return f();
     }
     catch (std::exception &e)
