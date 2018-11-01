@@ -4,11 +4,11 @@
 
 #pragma once
 
-#include "key.h"
+#include "cryptonote/core/key.h"
 #include "crypto/chacha.h"
 #include "serialization/ISerializer.h"
 #include "crypto/crypto.h"
-#include "serialize.h"
+#include "cryptonote/core/serialize.h"
 
 namespace cryptonote {
 

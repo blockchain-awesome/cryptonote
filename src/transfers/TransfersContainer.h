@@ -16,7 +16,7 @@
 
 #include "crypto/crypto.h"
 #include "cryptonote/core/key.h"
-#include "cryptonote/core/CryptoNoteSerialization.h"
+#include "cryptonote/core/blockchain/serializer/basics.h"
 #include "cryptonote/core/Currency.h"
 #include "serialization/ISerializer.h"
 #include "serialization/SerializationOverloads.h"

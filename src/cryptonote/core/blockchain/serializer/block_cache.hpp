@@ -77,6 +77,8 @@ public:
     uint8_t version = CURRENT_BLOCKCACHE_STORAGE_ARCHIVE_VER;
     s(version, "version");
 
+    std::cout << "Blockchain version: " << (int)version << std::endl;
+
     // ignore old versions, do rebuild
     if (version < CURRENT_BLOCKCACHE_STORAGE_ARCHIVE_VER)
       return;

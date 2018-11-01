@@ -12,7 +12,7 @@
 #include "cryptonote/core/Currency.h"
 
 #include "serialization/BinaryOutputStreamSerializer.h"
-#include "cryptonote/core/CryptoNoteSerialization.h"
+#include "cryptonote/core/blockchain/serializer/basics.h"
 
 using namespace Common;
 using namespace cryptonote;

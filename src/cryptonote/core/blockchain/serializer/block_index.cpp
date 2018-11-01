@@ -2,11 +2,11 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "BlockIndex.h"
+#include "block_index.h"
 
 #include <boost/utility/value_init.hpp>
 
-#include "CryptoNoteSerialization.h"
+#include "cryptonote/core/blockchain/serializer/basics.h"
 #include "serialization/SerializationOverloads.h"
 
 namespace cryptonote {

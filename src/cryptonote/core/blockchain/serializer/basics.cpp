@@ -2,7 +2,7 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "CryptoNoteSerialization.h"
+#include "basics.h"
 
 #include <algorithm>
 #include <sstream>
@@ -19,11 +19,12 @@
 #include "stream/StringOutputStream.h"
 #include "crypto/crypto.h"
 
-#include "Account.h"
+#include "cryptonote/core/Account.h"
+
 #include "CryptoNoteConfig.h"
-#include "CryptoNoteFormatUtils.h"
-#include "CryptoNoteTools.h"
-#include "TransactionExtra.h"
+#include "cryptonote/core/CryptoNoteFormatUtils.h"
+#include "cryptonote/core/CryptoNoteTools.h"
+#include "cryptonote/core/TransactionExtra.h"
 
 using namespace Common;
 

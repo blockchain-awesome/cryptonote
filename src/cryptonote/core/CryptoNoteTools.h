@@ -10,7 +10,7 @@
 #include "stream/VectorOutputStream.h"
 #include "serialization/BinaryOutputStreamSerializer.h"
 #include "serialization/BinaryInputStreamSerializer.h"
-#include "CryptoNoteSerialization.h"
+#include "cryptonote/core/blockchain/serializer/basics.h"
 
 namespace cryptonote {
 

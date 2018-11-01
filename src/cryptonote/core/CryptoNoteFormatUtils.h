@@ -7,7 +7,7 @@
 #include <boost/utility/value_init.hpp>
 
 #include "key.h"
-#include "CryptoNoteSerialization.h"
+#include "cryptonote/core/blockchain/serializer/basics.h"
 
 #include "serialization/BinaryOutputStreamSerializer.h"
 #include "serialization/BinaryInputStreamSerializer.h"

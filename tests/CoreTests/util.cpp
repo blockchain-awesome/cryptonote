@@ -1,7 +1,7 @@
 #include "util.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/CryptoNoteTools.h"
-#include "cryptonote/core/CryptoNoteSerialization.h"
+#include "cryptonote/core/blockchain/serializer/basics.h"
 
 
 namespace cryptonote {

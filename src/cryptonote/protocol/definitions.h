@@ -10,7 +10,7 @@
 // ISerializer-based serialization
 #include "serialization/ISerializer.h"
 #include "serialization/SerializationOverloads.h"
-#include "cryptonote/core/CryptoNoteSerialization.h"
+#include "cryptonote/core/blockchain/serializer/basics.h"
 
 namespace cryptonote
 {
