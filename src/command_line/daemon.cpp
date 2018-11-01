@@ -65,6 +65,9 @@ fs::path Daemon::getLogFile()
   return cfgLogFile;
 }
 
+/**
+ *  Generate A Genesis TX 
+ */
 void Daemon::printGenesisTx()
 {
   Logging::ConsoleLogger logger;

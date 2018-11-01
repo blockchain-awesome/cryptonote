@@ -182,15 +182,8 @@ private:
 
   coin::StorageFiles m_files;
   std::string m_path;
-  // std::string m_blocksFileName;
-  // std::string m_blocksCacheFileName;
-  // std::string m_blockIndexesFileName;
-  // std::string m_txPoolFileName;
-  // std::string m_blockchinIndicesFileName;
 
   static const std::vector<uint64_t> PRETTY_AMOUNTS;
-
-  // bool m_testnet;
 
   Block m_genesisBlock;
   crypto::Hash m_genesisBlockHash;

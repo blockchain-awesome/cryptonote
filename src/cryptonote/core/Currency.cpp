@@ -162,7 +162,6 @@ bool Currency::constructMinerTx(uint32_t height, size_t medianSize, uint64_t alr
   tx.outputs.clear();
   tx.extra.clear();
 
-  // KeyPair txkey = generateKeyPair();
   KeyPair txkey = Key::generate();
   addTransactionPublicKeyToExtra(tx.extra, txkey.publicKey);
   if (!extraNonce.empty()) {
@@ -487,14 +486,12 @@ CurrencyBuilder::CurrencyBuilder(Logging::ILogger& log, std::string path) : m_cu
   files.txPool = parameters::CRYPTONOTE_POOLDATA_FILENAME;
   files.blockchainIndexes = parameters::CRYPTONOTE_BLOCKCHAIN_INDICES_FILENAME;
   m_currency.setFiles(files);
-  // testnet(false);
 }
 
 Transaction CurrencyBuilder::generateGenesisTransaction() {
   cryptonote::Transaction tx;
   cryptonote::AccountPublicAddress ac = boost::value_initialized<cryptonote::AccountPublicAddress>();
   m_currency.constructMinerTx(0, 0, 0, 0, 0, ac, tx); // zero fee in genesis
-
   return tx;
 }
 
