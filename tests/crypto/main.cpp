@@ -187,7 +187,7 @@ int main(int argc, char *argv[]) {
     } else if (cmd == "generate_key_image") {
       crypto::public_key_t pub;
       crypto::secret_key_t sec;
-      crypto::KeyImage expected, actual;
+      crypto::key_image_t expected, actual;
       get(input, pub, sec, expected);
       generate_key_image(pub, sec, actual);
       if (expected != actual) {
@@ -195,7 +195,7 @@ int main(int argc, char *argv[]) {
       }
     } else if (cmd == "generate_ring_signature") {
       chash prefix_hash;
-      crypto::KeyImage image;
+      crypto::key_image_t image;
       vector<crypto::public_key_t> vpubs;
       vector<const crypto::public_key_t *> pubs;
       size_t pubs_count;
@@ -220,7 +220,7 @@ int main(int argc, char *argv[]) {
       }
     } else if (cmd == "check_ring_signature") {
       chash prefix_hash;
-      crypto::KeyImage image;
+      crypto::key_image_t image;
       vector<crypto::public_key_t> vpubs;
       vector<const crypto::public_key_t *> pubs;
       size_t pubs_count;

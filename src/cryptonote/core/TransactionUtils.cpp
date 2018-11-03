@@ -16,7 +16,7 @@ using namespace crypto;
 namespace cryptonote {
 
 bool checkInputsKeyimagesDiff(const cryptonote::TransactionPrefix& tx) {
-  std::unordered_set<crypto::KeyImage> ki;
+  std::unordered_set<crypto::key_image_t> ki;
   for (const auto& in : tx.inputs) {
     if (in.type() == typeid(KeyInput)) {
       if (!ki.insert(boost::get<KeyInput>(in).keyImage).second)

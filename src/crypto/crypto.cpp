@@ -296,7 +296,7 @@ namespace crypto {
     ge_tobytes(reinterpret_cast<unsigned char*>(&key), &point);
   }
   
-  void crypto_ops::generate_key_image(const public_key_t &pub, const secret_key_t &sec, KeyImage &image) {
+  void crypto_ops::generate_key_image(const public_key_t &pub, const secret_key_t &sec, key_image_t &image) {
     ge_p3 point;
     ge_p2 point2;
     assert(sc_check(reinterpret_cast<const unsigned char*>(&sec)) == 0);
@@ -327,7 +327,7 @@ namespace crypto {
     return sizeof(rs_comm) + pubs_count * sizeof(rs.ab[0]);
   }
 
-  void crypto_ops::generate_ring_signature(const Hash &prefix_hash, const KeyImage &image,
+  void crypto_ops::generate_ring_signature(const Hash &prefix_hash, const key_image_t &image,
     const public_key_t *const *pubs, size_t pubs_count,
     const secret_key_t &sec, size_t sec_index,
     signature_t *sig) {
@@ -342,7 +342,7 @@ namespace crypto {
     {
       ge_p3 t;
       public_key_t t2;
-      KeyImage t3;
+      key_image_t t3;
       assert(sc_check(reinterpret_cast<const unsigned char*>(&sec)) == 0);
       ge_scalarmult_base(&t, reinterpret_cast<const unsigned char*>(&sec));
       ge_p3_tobytes(reinterpret_cast<unsigned char*>(&t2), &t);
@@ -389,7 +389,7 @@ namespace crypto {
     sc_mulsub(reinterpret_cast<unsigned char*>(&sig[sec_index]) + 32, reinterpret_cast<unsigned char*>(&sig[sec_index]), reinterpret_cast<const unsigned char*>(&sec), reinterpret_cast<unsigned char*>(&k));
   }
 
-  bool crypto_ops::check_ring_signature(const Hash &prefix_hash, const KeyImage &image,
+  bool crypto_ops::check_ring_signature(const Hash &prefix_hash, const key_image_t &image,
     const public_key_t *const *pubs, size_t pubs_count,
     const signature_t *sig) {
     size_t i;

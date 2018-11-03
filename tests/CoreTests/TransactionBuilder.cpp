@@ -86,7 +86,7 @@ void TransactionBuilder::fillInputs(Transaction& tx, std::vector<cryptonote::Key
   for (const TransactionSourceEntry& src_entr : m_sources) {
     contexts.push_back(KeyPair());
     KeyPair& in_ephemeral = contexts.back();
-    crypto::KeyImage img;
+    crypto::key_image_t img;
     generate_key_image_helper(m_senderKeys, src_entr.realTransactionPublicKey, src_entr.realOutputIndexInTransaction, in_ephemeral, img);
 
     // put key image into tx input

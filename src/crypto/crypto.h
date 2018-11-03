@@ -67,17 +67,17 @@ struct EllipticCurveScalar {
     friend void generate_signature(const Hash &, const public_key_t &, const secret_key_t &, signature_t &);
     static bool check_signature(const Hash &, const public_key_t &, const signature_t &);
     friend bool check_signature(const Hash &, const public_key_t &, const signature_t &);
-    static void generate_key_image(const public_key_t &, const secret_key_t &, KeyImage &);
-    friend void generate_key_image(const public_key_t &, const secret_key_t &, KeyImage &);
+    static void generate_key_image(const public_key_t &, const secret_key_t &, key_image_t &);
+    friend void generate_key_image(const public_key_t &, const secret_key_t &, key_image_t &);
     static void hash_data_to_ec(const uint8_t*, std::size_t, public_key_t&);
     friend void hash_data_to_ec(const uint8_t*, std::size_t, public_key_t&);
-    static void generate_ring_signature(const Hash &, const KeyImage &,
+    static void generate_ring_signature(const Hash &, const key_image_t &,
       const public_key_t *const *, size_t, const secret_key_t &, size_t, signature_t *);
-    friend void generate_ring_signature(const Hash &, const KeyImage &,
+    friend void generate_ring_signature(const Hash &, const key_image_t &,
       const public_key_t *const *, size_t, const secret_key_t &, size_t, signature_t *);
-    static bool check_ring_signature(const Hash &, const KeyImage &,
+    static bool check_ring_signature(const Hash &, const key_image_t &,
       const public_key_t *const *, size_t, const signature_t *);
-    friend bool check_ring_signature(const Hash &, const KeyImage &,
+    friend bool check_ring_signature(const Hash &, const key_image_t &,
       const public_key_t *const *, size_t, const signature_t *);
   };
 
@@ -202,7 +202,7 @@ struct EllipticCurveScalar {
    * * Then he selects a bunch of outputs, including the one he spends, and uses them to generate a ring signature.
    * To check the signature, it is necessary to collect all the keys that were used to generate it. To detect double spends, it is necessary to check that each key image is used at most once.
    */
-  inline void generate_key_image(const public_key_t &pub, const secret_key_t &sec, KeyImage &image) {
+  inline void generate_key_image(const public_key_t &pub, const secret_key_t &sec, key_image_t &image) {
     crypto_ops::generate_key_image(pub, sec, image);
   }
 
@@ -210,13 +210,13 @@ struct EllipticCurveScalar {
     crypto_ops::hash_data_to_ec(data, len, key);
   }
 
-  inline void generate_ring_signature(const Hash &prefix_hash, const KeyImage &image,
+  inline void generate_ring_signature(const Hash &prefix_hash, const key_image_t &image,
     const public_key_t *const *pubs, std::size_t pubs_count,
     const secret_key_t &sec, std::size_t sec_index,
     signature_t *sig) {
     crypto_ops::generate_ring_signature(prefix_hash, image, pubs, pubs_count, sec, sec_index, sig);
   }
-  inline bool check_ring_signature(const Hash &prefix_hash, const KeyImage &image,
+  inline bool check_ring_signature(const Hash &prefix_hash, const key_image_t &image,
     const public_key_t *const *pubs, size_t pubs_count,
     const signature_t *sig) {
     return crypto_ops::check_ring_signature(prefix_hash, image, pubs, pubs_count, sig);
@@ -224,13 +224,13 @@ struct EllipticCurveScalar {
 
   /* Variants with vector<const public_key_t *> parameters.
    */
-  inline void generate_ring_signature(const Hash &prefix_hash, const KeyImage &image,
+  inline void generate_ring_signature(const Hash &prefix_hash, const key_image_t &image,
     const std::vector<const public_key_t *> &pubs,
     const secret_key_t &sec, size_t sec_index,
     signature_t *sig) {
     generate_ring_signature(prefix_hash, image, pubs.data(), pubs.size(), sec, sec_index, sig);
   }
-  inline bool check_ring_signature(const Hash &prefix_hash, const KeyImage &image,
+  inline bool check_ring_signature(const Hash &prefix_hash, const key_image_t &image,
     const std::vector<const public_key_t *> &pubs,
     const signature_t *sig) {
     return check_ring_signature(prefix_hash, image, pubs.data(), pubs.size(), sig);
@@ -239,6 +239,6 @@ struct EllipticCurveScalar {
 }
 
 CRYPTO_MAKE_HASHABLE(public_key_t)
-CRYPTO_MAKE_HASHABLE(KeyImage)
+CRYPTO_MAKE_HASHABLE(key_image_t)
 CRYPTO_MAKE_COMPARABLE(signature_t)
 CRYPTO_MAKE_COMPARABLE(secret_key_t)

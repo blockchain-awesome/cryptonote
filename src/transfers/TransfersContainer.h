@@ -32,10 +32,10 @@ class SpentOutputDescriptor {
 public:
   SpentOutputDescriptor();
   SpentOutputDescriptor(const TransactionOutputInformationIn& transactionInfo);
-  SpentOutputDescriptor(const crypto::KeyImage* keyImage);
+  SpentOutputDescriptor(const crypto::key_image_t* keyImage);
   SpentOutputDescriptor(uint64_t amount, uint32_t globalOutputIndex);
 
-  void assign(const crypto::KeyImage* keyImage);
+  void assign(const crypto::key_image_t* keyImage);
   void assign(uint64_t amount, uint32_t globalOutputIndex);
 
   bool isValid() const;
@@ -46,7 +46,7 @@ public:
 private:
   TransactionTypes::OutputType m_type;
   union {
-    const crypto::KeyImage* m_keyImage;
+    const crypto::key_image_t* m_keyImage;
     struct {
       uint64_t m_amount;
       uint32_t m_globalOutputIndex;
@@ -61,7 +61,7 @@ struct SpentOutputDescriptorHasher {
 };
 
 struct TransactionOutputInformationIn : public TransactionOutputInformation {
-  crypto::KeyImage keyImage;  //!< \attention Used only for TransactionTypes::OutputType::Key
+  crypto::key_image_t keyImage;  //!< \attention Used only for TransactionTypes::OutputType::Key
 };
 
 struct TransactionOutputInformationEx : public TransactionOutputInformationIn {
@@ -256,7 +256,7 @@ private:
   bool isSpendTimeUnlocked(uint64_t unlockTime) const;
   bool isIncluded(const TransactionOutputInformationEx& info, uint32_t flags) const;
   static bool isIncluded(TransactionTypes::OutputType type, uint32_t state, uint32_t flags);
-  void updateTransfersVisibility(const crypto::KeyImage& keyImage);
+  void updateTransfersVisibility(const crypto::key_image_t& keyImage);
 
   void copyToSpent(const TransactionBlockInfo& block, const ITransactionReader& tx, size_t inputIndex, const TransactionOutputInformationEx& output);
 
@@ -265,7 +265,7 @@ private:
   UnconfirmedTransfersMultiIndex m_unconfirmedTransfers;
   AvailableTransfersMultiIndex m_availableTransfers;
   SpentTransfersMultiIndex m_spentTransfers;
-  //std::unordered_map<KeyImage, KeyOutputInfo, boost::hash<KeyImage>> m_keyImages;
+  //std::unordered_map<key_image_t, KeyOutputInfo, boost::hash<key_image_t>> m_keyImages;
 
   uint32_t m_currentHeight; // current height is needed to check if a transfer is unlocked
   size_t m_transactionSpendableAge;

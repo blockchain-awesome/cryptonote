@@ -76,7 +76,7 @@ namespace cryptonote {
       return true;
     }
     
-    std::unordered_set<crypto::KeyImage> m_keyImages;
+    std::unordered_set<crypto::key_image_t> m_keyImages;
     std::set<std::pair<uint64_t, uint64_t>> m_usedOutputs;
     std::vector<crypto::Hash> m_txHashes;
   };

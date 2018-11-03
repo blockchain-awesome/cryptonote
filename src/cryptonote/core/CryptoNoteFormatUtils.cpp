@@ -34,7 +34,7 @@ bool parseAndValidateTransactionFromBinaryArray(const BinaryArray& tx_blob, Tran
   return true;
 }
 
-bool generate_key_image_helper(const AccountKeys& ack, const public_key_t& tx_public_key, size_t real_output_index, KeyPair& in_ephemeral, KeyImage& ki) {
+bool generate_key_image_helper(const AccountKeys& ack, const public_key_t& tx_public_key, size_t real_output_index, KeyPair& in_ephemeral, key_image_t& ki) {
   key_derivation_t recv_derivation;
   bool r = generate_key_derivation(tx_public_key, ack.viewSecretKey, recv_derivation);
 
@@ -138,7 +138,7 @@ bool constructTransaction(
     //KeyDerivation recv_derivation;
     in_contexts.push_back(input_generation_context_data());
     KeyPair& in_ephemeral = in_contexts.back().in_ephemeral;
-    KeyImage img;
+    key_image_t img;
     if (!generate_key_image_helper(sender_account_keys, src_entr.realTransactionPublicKey, src_entr.realOutputIndexInTransaction, in_ephemeral, img))
       return false;
 

@@ -48,12 +48,12 @@ namespace {
     return generateAccount().getAccountKeys().address;
   }
   
-  KeyImage generateKeyImage() {
-    return crypto::rand<KeyImage>();
+  key_image_t generateKeyImage() {
+    return crypto::rand<key_image_t>();
   }
 
-  KeyImage generateKeyImage(const AccountKeys& keys, size_t idx, const public_key_t& txPubKey) {
-    KeyImage keyImage;
+  key_image_t generateKeyImage(const AccountKeys& keys, size_t idx, const public_key_t& txPubKey) {
+    key_image_t keyImage;
     cryptonote::KeyPair in_ephemeral;
     cryptonote::generate_key_image_helper(
      keys,

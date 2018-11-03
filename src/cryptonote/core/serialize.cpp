@@ -18,7 +18,7 @@ bool serialize(Hash& h, Common::StringView name, cryptonote::ISerializer& serial
   return serializePod(h, name, serializer);
 }
 
-bool serialize(KeyImage& keyImage, Common::StringView name, cryptonote::ISerializer& serializer) {
+bool serialize(key_image_t& keyImage, Common::StringView name, cryptonote::ISerializer& serializer) {
   return serializePod(keyImage, name, serializer);
 }
 

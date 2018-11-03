@@ -164,7 +164,7 @@ namespace cryptonote {
     void print_blockchain_outs(const std::string& file);
 
   private:
-    typedef google::sparse_hash_set<crypto::KeyImage> key_images_container;
+    typedef google::sparse_hash_set<crypto::key_image_t> key_images_container;
     typedef std::unordered_map<crypto::Hash, BlockEntry> blocks_ext_by_hash;
     typedef google::sparse_hash_map<uint64_t, std::vector<std::pair<TransactionIndex, uint16_t>>> outputs_container; //crypto::Hash - tx hash, size_t - index of out in transaction
     typedef google::sparse_hash_map<uint64_t, std::vector<MultisignatureOutputUsage>> MultisignatureOutputsContainer;
@@ -226,7 +226,7 @@ namespace cryptonote {
     bool check_tx_input(const KeyInput& txin, const crypto::Hash& tx_prefix_hash, const std::vector<crypto::signature_t>& sig, uint32_t* pmax_related_block_height = NULL);
     bool checkTransactionInputs(const Transaction& tx, const crypto::Hash& tx_prefix_hash, uint32_t* pmax_used_block_height = NULL);
     bool checkTransactionInputs(const Transaction& tx, uint32_t* pmax_used_block_height = NULL);
-    bool have_tx_keyimg_as_spent(const crypto::KeyImage &key_im);
+    bool have_tx_keyimg_as_spent(const crypto::key_image_t &key_im);
     const TransactionEntry& transactionByIndex(TransactionIndex index);
     bool pushBlock(const block_t& blockData, BlockVerificationContext& bvc);
     bool pushBlock(const block_t& blockData, const std::vector<Transaction>& transactions, BlockVerificationContext& bvc);

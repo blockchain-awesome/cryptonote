@@ -69,7 +69,7 @@ m_is_in_checkpoint_zone(false),
 m_checkpoints(logger) {
 
   m_outputs.set_deleted_key(0);
-  crypto::KeyImage nullImage = boost::value_initialized<decltype(nullImage)>();
+  crypto::key_image_t nullImage = boost::value_initialized<decltype(nullImage)>();
   m_spent_keys.set_deleted_key(nullImage);
 }
 
@@ -145,7 +145,7 @@ bool Blockchain::haveTransaction(const crypto::Hash &id) {
   return m_transactionMap.find(id) != m_transactionMap.end();
 }
 
-bool Blockchain::have_tx_keyimg_as_spent(const crypto::KeyImage &key_im) {
+bool Blockchain::have_tx_keyimg_as_spent(const crypto::key_image_t &key_im) {
   std::lock_guard<decltype(m_blockchain_lock)> lk(m_blockchain_lock);
   return  m_spent_keys.find(key_im) != m_spent_keys.end();
 }

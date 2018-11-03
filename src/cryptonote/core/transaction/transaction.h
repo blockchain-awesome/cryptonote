@@ -16,7 +16,7 @@ struct KeyInput
 {
     uint64_t amount;
     std::vector<uint32_t> outputIndexes;
-    crypto::KeyImage keyImage;
+    crypto::key_image_t keyImage;
 };
 
 struct MultisignatureInput

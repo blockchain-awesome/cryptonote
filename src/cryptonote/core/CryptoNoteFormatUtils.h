@@ -52,7 +52,7 @@ bool lookup_acc_outs(const AccountKeys& acc, const Transaction& tx, const crypto
 bool lookup_acc_outs(const AccountKeys& acc, const Transaction& tx, std::vector<size_t>& outs, uint64_t& money_transfered);
 bool get_tx_fee(const Transaction& tx, uint64_t & fee);
 uint64_t get_tx_fee(const Transaction& tx);
-bool generate_key_image_helper(const AccountKeys& ack, const crypto::public_key_t& tx_public_key, size_t real_output_index, KeyPair& in_ephemeral, crypto::KeyImage& ki);
+bool generate_key_image_helper(const AccountKeys& ack, const crypto::public_key_t& tx_public_key, size_t real_output_index, KeyPair& in_ephemeral, crypto::key_image_t& ki);
 std::string short_hash_str(const crypto::Hash& h);
 
 bool get_block_hashing_blob(const block_t& b, BinaryArray& blob);

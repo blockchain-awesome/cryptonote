@@ -104,7 +104,7 @@ SpentOutputDescriptor::SpentOutputDescriptor(const TransactionOutputInformationI
   }
 }
 
-SpentOutputDescriptor::SpentOutputDescriptor(const KeyImage* keyImage) {
+SpentOutputDescriptor::SpentOutputDescriptor(const key_image_t* keyImage) {
   assign(keyImage);
 }
 
@@ -112,7 +112,7 @@ SpentOutputDescriptor::SpentOutputDescriptor(uint64_t amount, uint32_t globalOut
   assign(amount, globalOutputIndex);
 }
 
-void SpentOutputDescriptor::assign(const KeyImage* keyImage) {
+void SpentOutputDescriptor::assign(const key_image_t* keyImage) {
   m_type = TransactionTypes::OutputType::Key;
   m_keyImage = keyImage;
 }
@@ -442,7 +442,7 @@ void TransfersContainer::deleteTransactionTransfers(const Hash& transactionHash)
   auto unconfirmedTransfersRange = m_unconfirmedTransfers.get<ContainingTransactionIndex>().equal_range(transactionHash);
   for (auto it = unconfirmedTransfersRange.first; it != unconfirmedTransfersRange.second;) {
     if (it->type == TransactionTypes::OutputType::Key) {
-      KeyImage keyImage = it->keyImage;
+      key_image_t keyImage = it->keyImage;
       it = m_unconfirmedTransfers.get<ContainingTransactionIndex>().erase(it);
       updateTransfersVisibility(keyImage);
     } else {
@@ -454,7 +454,7 @@ void TransfersContainer::deleteTransactionTransfers(const Hash& transactionHash)
   auto transactionTransfersRange = transactionTransfersIndex.equal_range(transactionHash);
   for (auto it = transactionTransfersRange.first; it != transactionTransfersRange.second;) {
     if (it->type == TransactionTypes::OutputType::Key) {
-      KeyImage keyImage = it->keyImage;
+      key_image_t keyImage = it->keyImage;
     it = transactionTransfersIndex.erase(it);
       updateTransfersVisibility(keyImage);
     } else {
@@ -536,7 +536,7 @@ namespace {
 /**
  * \pre m_mutex is locked.
  */
-void TransfersContainer::updateTransfersVisibility(const KeyImage& keyImage) {
+void TransfersContainer::updateTransfersVisibility(const key_image_t& keyImage) {
   auto& unconfirmedIndex = m_unconfirmedTransfers.get<SpentOutputDescriptorIndex>();
   auto& availableIndex = m_availableTransfers.get<SpentOutputDescriptorIndex>();
   auto& spentIndex = m_spentTransfers.get<SpentOutputDescriptorIndex>();

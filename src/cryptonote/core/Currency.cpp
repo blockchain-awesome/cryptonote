@@ -415,7 +415,7 @@ bool Currency::checkProofOfWork(const block_t& block, difficulty_type currentDif
 }
 
 size_t Currency::getApproximateMaximumInputCount(size_t transactionSize, size_t outputCount, size_t mixinCount) const {
-  const size_t KEY_IMAGE_SIZE = sizeof(crypto::KeyImage);
+  const size_t KEY_IMAGE_SIZE = sizeof(crypto::key_image_t);
   const size_t OUTPUT_KEY_SIZE = sizeof(decltype(KeyOutput::key));
   const size_t AMOUNT_SIZE = sizeof(uint64_t) + 2; //varint
   const size_t GLOBAL_INDEXES_VECTOR_SIZE_SIZE = sizeof(uint8_t);//varint

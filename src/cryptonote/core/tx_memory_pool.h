@@ -110,7 +110,7 @@ namespace cryptonote {
 
     typedef std::pair<uint64_t, uint64_t> GlobalOutput;
     typedef std::set<GlobalOutput> GlobalOutputsContainer;
-    typedef std::unordered_map<crypto::KeyImage, std::unordered_set<crypto::Hash> > key_images_container;
+    typedef std::unordered_map<crypto::key_image_t, std::unordered_set<crypto::Hash> > key_images_container;
 
 
     // double spending checking

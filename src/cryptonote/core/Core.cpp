@@ -253,7 +253,7 @@ bool core::check_tx_semantic(const Transaction& tx, bool keeped_by_block) {
 }
 
 bool core::check_tx_inputs_keyimages_diff(const Transaction& tx) {
-  std::unordered_set<crypto::KeyImage> ki;
+  std::unordered_set<crypto::key_image_t> ki;
   for (const auto& in : tx.inputs) {
     if (in.type() == typeid(KeyInput)) {
       if (!ki.insert(boost::get<KeyInput>(in).keyImage).second)

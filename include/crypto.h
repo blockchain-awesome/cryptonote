@@ -24,7 +24,7 @@ struct key_derivation_t {
   uint8_t data[32];
 };
 
-struct KeyImage {
+struct key_image_t {
   uint8_t data[32];
 };
 

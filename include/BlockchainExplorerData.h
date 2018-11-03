@@ -49,7 +49,7 @@ struct TransactionInputGenerateDetails {
 
 struct TransactionInputToKeyDetails {
   std::vector<uint32_t> outputIndexes;
-  crypto::KeyImage keyImage;
+  crypto::key_image_t keyImage;
   uint64_t mixin;
   TransactionOutputReferenceDetails output;
 };

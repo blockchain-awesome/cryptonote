@@ -135,7 +135,7 @@ bool init_spent_output_indices(map_output_idx_t& outs, map_output_t& outs_mine, 
             output_index &oi = outs[o.first][o.second[i]];
 
             // construct key image for this output
-            crypto::KeyImage img;
+            crypto::key_image_t img;
             KeyPair in_ephemeral;
             generate_key_image_helper(from.getAccountKeys(), getTransactionPublicKeyFromExtra(oi.p_tx->extra), oi.out_no, in_ephemeral, img);
 

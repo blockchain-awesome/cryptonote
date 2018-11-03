@@ -32,7 +32,7 @@ namespace
       {
         m_in_contexts.push_back(KeyPair());
         KeyPair& in_ephemeral = m_in_contexts.back();
-        crypto::KeyImage img;
+        crypto::key_image_t img;
         generate_key_image_helper(sender_account_keys, src_entr.realTransactionPublicKey, src_entr.realOutputIndexInTransaction, in_ephemeral, img);
 
         // put key image into tx input
@@ -443,7 +443,7 @@ bool gen_tx_key_image_not_derive_from_tx_key::generate(std::vector<test_event_en
   KeyInput& in_to_key = boost::get<KeyInput>(builder.m_tx.inputs.front());
   // KeyPair kp = generateKeyPair();
   KeyPair kp = Key::generate();
-  crypto::KeyImage another_ki;
+  crypto::key_image_t another_ki;
   crypto::generate_key_image(kp.publicKey, kp.secretKey, another_ki);
   in_to_key.keyImage = another_ki;
 
