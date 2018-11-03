@@ -23,7 +23,7 @@ struct get_tx_validation_base : public test_chain_unit_base
       return !tvc.m_verifivation_failed && tx_added;
   }
 
-  bool check_BlockVerificationContext(const cryptonote::BlockVerificationContext& bvc, size_t event_idx, const cryptonote::Block& /*block*/)
+  bool check_BlockVerificationContext(const cryptonote::BlockVerificationContext& bvc, size_t event_idx, const cryptonote::block_t& /*block*/)
   {
     if (m_invalid_block_index == event_idx)
       return bvc.m_verifivation_failed;

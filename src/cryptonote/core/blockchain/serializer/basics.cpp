@@ -50,7 +50,7 @@ struct BinaryVariantTagGetter: boost::static_visitor<uint8_t> {
   uint8_t operator()(const cryptonote::KeyOutput) { return  0x2; }
   uint8_t operator()(const cryptonote::MultisignatureOutput) { return  0x3; }
   uint8_t operator()(const cryptonote::Transaction) { return  0xcc; }
-  uint8_t operator()(const cryptonote::Block) { return  0xbb; }
+  uint8_t operator()(const cryptonote::block_t) { return  0xbb; }
 };
 
 struct VariantSerializer : boost::static_visitor<> {
@@ -251,7 +251,7 @@ void serialize(MultisignatureOutput& multisignature, ISerializer& serializer) {
   serializer(multisignature.requiredSignatureCount, "required_signatures");
 }
 
-void serializeBlockHeader(BlockHeader& header, ISerializer& serializer) {
+void serializeBlockHeader(block_header_t& header, ISerializer& serializer) {
   serializer(header.majorVersion, "major_version");
   if (header.majorVersion > BLOCK_MAJOR_VERSION_1) {
     throw std::runtime_error("Wrong major version");
@@ -263,11 +263,11 @@ void serializeBlockHeader(BlockHeader& header, ISerializer& serializer) {
   serializer.binary(&header.nonce, sizeof(header.nonce), "nonce");
 }
 
-void serialize(BlockHeader& header, ISerializer& serializer) {
+void serialize(block_header_t& header, ISerializer& serializer) {
   serializeBlockHeader(header, serializer);
 }
 
-void serialize(Block& block, ISerializer& serializer) {
+void serialize(block_t& block, ISerializer& serializer) {
   serializeBlockHeader(block, serializer);
 
   serializer(block.baseTransaction, "miner_tx");

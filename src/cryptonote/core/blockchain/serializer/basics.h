@@ -28,8 +28,8 @@ void serialize(TransactionOutputTarget& output, ISerializer& serializer);
 void serialize(KeyOutput& key, ISerializer& serializer);
 void serialize(MultisignatureOutput& multisignature, ISerializer& serializer);
 
-void serialize(BlockHeader& header, ISerializer& serializer);
-void serialize(Block& block, ISerializer& serializer);
+void serialize(block_header_t& header, ISerializer& serializer);
+void serialize(block_t& block, ISerializer& serializer);
 
 void serialize(AccountPublicAddress& address, ISerializer& serializer);
 void serialize(AccountKeys& keys, ISerializer& s);

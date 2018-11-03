@@ -296,7 +296,7 @@ namespace {
 
 bool BaseFunctionalTests::mineBlocks(TestNode& node, const cryptonote::AccountPublicAddress& address, size_t blockCount) {
   for (size_t i = 0; i < blockCount; ++i) {
-    Block blockTemplate;
+    block_t blockTemplate;
     uint64_t difficulty;
 
     if (!node.getBlockTemplate(Account::getAddress(address), blockTemplate, difficulty)) {
@@ -315,7 +315,7 @@ bool BaseFunctionalTests::mineBlocks(TestNode& node, const cryptonote::AccountPu
   return true;
 }
 
-bool BaseFunctionalTests::prepareAndSubmitBlock(TestNode& node, cryptonote::Block&& blockTemplate) {
+bool BaseFunctionalTests::prepareAndSubmitBlock(TestNode& node, cryptonote::block_t&& blockTemplate) {
   blockTemplate.timestamp = m_nextTimestamp;
   m_nextTimestamp += 2 * m_currency.difficultyTarget();
 

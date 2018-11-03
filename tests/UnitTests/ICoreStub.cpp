@@ -18,7 +18,7 @@ ICoreStub::ICoreStub() :
     poolChangesResult(true) {
 }
 
-ICoreStub::ICoreStub(const cryptonote::Block& genesisBlock) :
+ICoreStub::ICoreStub(const cryptonote::block_t& genesisBlock) :
     topHeight(0),
     globalIndicesResult(false),
     randomOutsResult(false),
@@ -190,7 +190,7 @@ crypto::Hash ICoreStub::getBlockIdByHeight(uint32_t height) {
   return iter->second;
 }
 
-bool ICoreStub::getBlockByHash(const crypto::Hash &h, cryptonote::Block &blk) {
+bool ICoreStub::getBlockByHash(const crypto::Hash &h, cryptonote::block_t &blk) {
   auto iter = blocks.find(h);
   if (iter == blocks.end()) {
     return false;
@@ -275,7 +275,7 @@ bool ICoreStub::getMultisigOutputReference(const cryptonote::MultisignatureInput
   return true;
 }
 
-void ICoreStub::addBlock(const cryptonote::Block& block) {
+void ICoreStub::addBlock(const cryptonote::block_t& block) {
   uint32_t height = boost::get<cryptonote::BaseInput>(block.baseTransaction.inputs.front()).blockIndex;
   crypto::Hash hash = cryptonote::get_block_hash(block);
   if (height > topHeight) {
@@ -300,11 +300,11 @@ bool ICoreStub::getGeneratedTransactionsNumber(uint32_t height, uint64_t& genera
   return true;
 }
 
-bool ICoreStub::getOrphanBlocksByHeight(uint32_t height, std::vector<cryptonote::Block>& blocks) {
+bool ICoreStub::getOrphanBlocksByHeight(uint32_t height, std::vector<cryptonote::block_t>& blocks) {
   return true;
 }
 
-bool ICoreStub::getBlocksByTimestamp(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t blocksNumberLimit, std::vector<cryptonote::Block>& blocks, uint32_t& blocksNumberWithinTimestamps) {
+bool ICoreStub::getBlocksByTimestamp(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t blocksNumberLimit, std::vector<cryptonote::block_t>& blocks, uint32_t& blocksNumberWithinTimestamps) {
   return true;
 }
 

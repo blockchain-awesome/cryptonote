@@ -78,7 +78,7 @@ public:
     uint32_t& start_height, uint32_t& current_height, uint32_t& full_offset, std::vector<BlockShortInfo>& entries) = 0;
 
   virtual crypto::Hash getBlockIdByHeight(uint32_t height) = 0;
-  virtual bool getBlockByHash(const crypto::Hash &h, Block &blk) = 0;
+  virtual bool getBlockByHash(const crypto::Hash &h, block_t &blk) = 0;
   virtual bool getBlockHeight(const crypto::Hash& blockId, uint32_t& blockHeight) = 0;
   virtual void getTransactions(const std::vector<crypto::Hash>& txs_ids, std::list<Transaction>& txs, std::list<crypto::Hash>& missed_txs, bool checkTxPool = false) = 0;
   virtual bool getBackwardBlocksSizes(uint32_t fromHeight, std::vector<size_t>& sizes, size_t count) = 0;
@@ -92,8 +92,8 @@ public:
   virtual bool getMultisigOutputReference(const MultisignatureInput& txInMultisig, std::pair<crypto::Hash, size_t>& outputReference) = 0;
 
   virtual bool getGeneratedTransactionsNumber(uint32_t height, uint64_t& generatedTransactions) = 0;
-  virtual bool getOrphanBlocksByHeight(uint32_t height, std::vector<Block>& blocks) = 0;
-  virtual bool getBlocksByTimestamp(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t blocksNumberLimit, std::vector<Block>& blocks, uint32_t& blocksNumberWithinTimestamps) = 0;
+  virtual bool getOrphanBlocksByHeight(uint32_t height, std::vector<block_t>& blocks) = 0;
+  virtual bool getBlocksByTimestamp(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t blocksNumberLimit, std::vector<block_t>& blocks, uint32_t& blocksNumberWithinTimestamps) = 0;
   virtual bool getPoolTransactionsByTimestamp(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t transactionsNumberLimit, std::vector<Transaction>& transactions, uint64_t& transactionsNumberWithinTimestamps) = 0;
   virtual bool getTransactionsByPaymentId(const crypto::Hash& paymentId, std::vector<Transaction>& transactions) = 0;
 

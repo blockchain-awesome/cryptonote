@@ -259,7 +259,7 @@ TEST_F(InProcessNodeTests, getBlocksByHeightMany) {
   std::vector<uint32_t> blockHeights;
   std::vector<std::vector<cryptonote::BlockDetails>> actualBlocks;
 
-  std::vector<cryptonote::Block> expectedBlocks;
+  std::vector<cryptonote::block_t> expectedBlocks;
 
   coreStub.set_blockchain_top(0, boost::value_initialized<crypto::Hash>());
 
@@ -285,7 +285,7 @@ TEST_F(InProcessNodeTests, getBlocksByHeightMany) {
   ASSERT_EQ(blockHeights.size(), actualBlocks.size());
   auto range1 = boost::combine(blockHeights, expectedBlocks);
   auto range = boost::combine(range1, actualBlocks);
-  for (const boost::tuple<boost::tuple<size_t, cryptonote::Block>, std::vector<cryptonote::BlockDetails>>& sameHeight : range) {
+  for (const boost::tuple<boost::tuple<size_t, cryptonote::block_t>, std::vector<cryptonote::BlockDetails>>& sameHeight : range) {
     EXPECT_EQ(sameHeight.get<1>().size(), 1);
     for (const cryptonote::BlockDetails& block : sameHeight.get<1>()) {
       EXPECT_EQ(block.height, sameHeight.get<0>().get<0>());
@@ -308,7 +308,7 @@ TEST_F(InProcessNodeTests, getBlocksByHeightFail) {
   generator.generateEmptyBlocks(NUMBER_OF_BLOCKS);
   ASSERT_LT(generator.getBlockchain().size(), NUMBER_OF_BLOCKS * 2);
 
-  for (const cryptonote::Block& block : generator.getBlockchain()) {
+  for (const cryptonote::block_t& block : generator.getBlockchain()) {
     coreStub.addBlock(block);
   }
 
@@ -358,7 +358,7 @@ TEST_F(InProcessNodeTests, getBlocksByHashMany) {
   std::vector<crypto::Hash> blockHashes;
   std::vector<cryptonote::BlockDetails> actualBlocks;
 
-  std::vector<cryptonote::Block> expectedBlocks;
+  std::vector<cryptonote::block_t> expectedBlocks;
 
   coreStub.set_blockchain_top(0, boost::value_initialized<crypto::Hash>());
 
@@ -384,7 +384,7 @@ TEST_F(InProcessNodeTests, getBlocksByHashMany) {
   ASSERT_EQ(blockHashes.size(), actualBlocks.size());
   auto range1 = boost::combine(blockHashes, expectedBlocks);
   auto range = boost::combine(range1, actualBlocks);
-  for (const boost::tuple<boost::tuple<crypto::Hash, cryptonote::Block>, cryptonote::BlockDetails>& sameHeight : range) {
+  for (const boost::tuple<boost::tuple<crypto::Hash, cryptonote::block_t>, cryptonote::BlockDetails>& sameHeight : range) {
     crypto::Hash expectedCryptoHash = cryptonote::get_block_hash(sameHeight.get<0>().get<1>());
     EXPECT_EQ(expectedCryptoHash, sameHeight.get<0>().get<0>());
     Hash expectedHash = reinterpret_cast<const Hash&>(expectedCryptoHash);
@@ -404,7 +404,7 @@ TEST_F(InProcessNodeTests, getBlocksByHashFail) {
   generator.generateEmptyBlocks(NUMBER_OF_BLOCKS);
   ASSERT_LT(generator.getBlockchain().size(), NUMBER_OF_BLOCKS * 2);
 
-  for (const cryptonote::Block& block : generator.getBlockchain()) {
+  for (const cryptonote::block_t& block : generator.getBlockchain()) {
     coreStub.addBlock(block);
   }
 
@@ -615,7 +615,7 @@ TEST_F(InProcessNodeTests, getLastLocalBlockTimestamp) {
     virtual void get_blockchain_top(uint32_t& height, crypto::Hash& top_id) override {
     }
 
-    virtual bool getBlockByHash(const crypto::Hash &h, cryptonote::Block &blk) override {
+    virtual bool getBlockByHash(const crypto::Hash &h, cryptonote::block_t &blk) override {
       blk.timestamp = timestamp;
       return true;
     }
@@ -642,7 +642,7 @@ TEST_F(InProcessNodeTests, getLastLocalBlockTimestampError) {
     virtual void get_blockchain_top(uint32_t& height, crypto::Hash& top_id) override {
     }
 
-    virtual bool getBlockByHash(const crypto::Hash &h, cryptonote::Block &blk) override {
+    virtual bool getBlockByHash(const crypto::Hash &h, cryptonote::block_t &blk) override {
       return false;
     }
   };

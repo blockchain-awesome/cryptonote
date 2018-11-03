@@ -12,6 +12,7 @@ lcov --capture --directory src --output-file temp.info || exit 1
 lcov --remove temp.info "/usr/include/*" "*/google/*" "*/include/*" "*/tests/*"> coverage.info || exit 1
 # lcov --list coverage.info || exit 1
 genhtml coverage.info --output-directory html || exit 1
+find . -name "*.gcda" -type f -delete
 
 # codecov --token 2a2cf36f-81d6-43b9-abba-d5955cb0cafe --root src
 

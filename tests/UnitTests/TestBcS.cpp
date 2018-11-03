@@ -196,7 +196,7 @@ public:
       generator.getBlockchain().begin(),
       generator.getBlockchain().end(),
       std::back_inserter(generatorBlockchain),
-      [](const Block& b) { return get_block_hash(b); });
+      [](const block_t& b) { return get_block_hash(b); });
 
     for (const auto& consumer : m_consumers) {
       ASSERT_EQ(consumer->getBlockchain(), generatorBlockchain);

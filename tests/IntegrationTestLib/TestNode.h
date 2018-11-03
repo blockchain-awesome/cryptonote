@@ -14,7 +14,7 @@ public:
   virtual bool startMining(size_t threadsCount, const std::string& address) = 0;
   virtual bool stopMining() = 0;
   virtual bool stopDaemon() = 0;
-  virtual bool getBlockTemplate(const std::string& minerAddress, cryptonote::Block& blockTemplate, uint64_t& difficulty) = 0;
+  virtual bool getBlockTemplate(const std::string& minerAddress, cryptonote::block_t& blockTemplate, uint64_t& difficulty) = 0;
   virtual bool submitBlock(const std::string& block) = 0;
   virtual bool getTailBlockId(crypto::Hash& tailBlockId) = 0;
   virtual bool makeINode(std::unique_ptr<cryptonote::INode>& node) = 0;

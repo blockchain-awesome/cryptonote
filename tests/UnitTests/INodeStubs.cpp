@@ -67,16 +67,16 @@ void INodeTrivialRefreshStub::waitForAsyncContexts() {
 }
 
 void INodeTrivialRefreshStub::doGetNewBlocks(std::vector<crypto::Hash> knownBlockIds, std::vector<block_complete_entry>& newBlocks,
-        uint32_t& startHeight, std::vector<Block> blockchain, const Callback& callback)
+        uint32_t& startHeight, std::vector<block_t> blockchain, const Callback& callback)
 {
   ContextCounterHolder counterHolder(m_asyncCounter);
   std::unique_lock<std::mutex> lock(m_walletLock);
 
-  std::vector<Block>::iterator start = blockchain.end();
+  std::vector<block_t>::iterator start = blockchain.end();
 
   for (const auto& id : knownBlockIds) {
     start = std::find_if(blockchain.begin(), blockchain.end(), 
-      [&id](Block& block) { return get_block_hash(block) == id; });
+      [&id](block_t& block) { return get_block_hash(block) == id; });
     if (start != blockchain.end())
       break;
   }
@@ -412,7 +412,7 @@ void INodeTrivialRefreshStub::doGetBlocks(const std::vector<crypto::Hash>& block
     auto iter = std::find_if(
         m_blockchainGenerator.getBlockchain().begin(), 
         m_blockchainGenerator.getBlockchain().end(), 
-        [&hash](const Block& block) -> bool {
+        [&hash](const block_t& block) -> bool {
           return hash == get_block_hash(block);
         }
     );
@@ -473,7 +473,7 @@ void INodeTrivialRefreshStub::doGetBlocks(uint64_t timestampBegin, uint64_t time
     auto iter = std::find_if(
         m_blockchainGenerator.getBlockchain().begin(), 
         m_blockchainGenerator.getBlockchain().end(), 
-        [&hash](const Block& block) -> bool {
+        [&hash](const block_t& block) -> bool {
           return hash == get_block_hash(block);
         }
     );

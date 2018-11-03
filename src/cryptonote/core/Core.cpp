@@ -30,7 +30,7 @@ namespace cryptonote {
 
 class BlockWithTransactions : public IBlock {
 public:
-  virtual const Block& getBlock() const override {
+  virtual const block_t& getBlock() const override {
     return block;
   }
 
@@ -44,7 +44,7 @@ public:
   }
 
 private:
-  Block block;
+  block_t block;
   std::vector<Transaction> transactions;
 
   friend class core;
@@ -86,18 +86,18 @@ void core::get_blockchain_top(uint32_t& height, crypto::Hash& top_id) {
   top_id = m_blockchain.getTailId(height);
 }
 
-bool core::get_blocks(uint32_t start_offset, uint32_t count, std::list<Block>& blocks, std::list<Transaction>& txs) {
+bool core::get_blocks(uint32_t start_offset, uint32_t count, std::list<block_t>& blocks, std::list<Transaction>& txs) {
   return m_blockchain.getBlocks(start_offset, count, blocks, txs);
 }
 
-bool core::get_blocks(uint32_t start_offset, uint32_t count, std::list<Block>& blocks) {
+bool core::get_blocks(uint32_t start_offset, uint32_t count, std::list<block_t>& blocks) {
   return m_blockchain.getBlocks(start_offset, count, blocks);
 }  
 void core::getTransactions(const std::vector<crypto::Hash>& txs_ids, std::list<Transaction>& txs, std::list<crypto::Hash>& missed_txs, bool checkTxPool) {
   m_blockchain.getTransactions(txs_ids, txs, missed_txs, checkTxPool);
 }
 
-bool core::get_alternative_blocks(std::list<Block>& blocks) {
+bool core::get_alternative_blocks(std::list<block_t>& blocks) {
   return m_blockchain.getAlternativeBlocks(blocks);
 }
 
@@ -118,7 +118,7 @@ size_t core::get_alternative_blocks_count() {
   return load_state_data();
 }
 
-bool core::set_genesis_block(const Block& b) {
+bool core::set_genesis_block(const block_t& b) {
   return m_blockchain.resetAndSetGenesisBlock(b);
 }
 
@@ -290,7 +290,7 @@ bool core::add_new_tx(const Transaction& tx, const crypto::Hash& tx_hash, size_t
   return m_mempool.add_tx(tx, tx_hash, blob_size, tvc, keeped_by_block);
 }
 
-bool core::get_block_template(Block& b, const AccountPublicAddress& adr, difficulty_type& diffic, uint32_t& height, const BinaryArray& ex_nonce) {
+bool core::get_block_template(block_t& b, const AccountPublicAddress& adr, difficulty_type& diffic, uint32_t& height, const BinaryArray& ex_nonce) {
   size_t median_size;
   uint64_t already_generated_coins;
 
@@ -303,7 +303,7 @@ bool core::get_block_template(Block& b, const AccountPublicAddress& adr, difficu
       return false;
     }
 
-    b = boost::value_initialized<Block>();
+    b = boost::value_initialized<block_t>();
     b.majorVersion = BLOCK_MAJOR_VERSION_1;
     b.minorVersion = BLOCK_MINOR_VERSION_0;
 
@@ -412,7 +412,7 @@ void core::update_block_template_and_resume_mining() {
   m_miner->resume();
 }
 
-bool core::handle_block_found(Block& b) {
+bool core::handle_block_found(block_t& b) {
   BlockVerificationContext bvc = boost::value_initialized<BlockVerificationContext>();
   handle_incoming_block(b, bvc, true, true);
 
@@ -466,7 +466,7 @@ bool core::handle_incoming_block_blob(const BinaryArray& block_blob, BlockVerifi
     return false;
   }
 
-  Block b;
+  block_t b;
   if (!fromBinaryArray(b, block_blob)) {
     logger(INFO) << "Failed to parse and validate new block";
     bvc.m_verifivation_failed = true;
@@ -476,7 +476,7 @@ bool core::handle_incoming_block_blob(const BinaryArray& block_blob, BlockVerifi
   return handle_incoming_block(b, bvc, control_miner, relay_block);
 }
 
-bool core::handle_incoming_block(const Block& b, BlockVerificationContext& bvc, bool control_miner, bool relay_block) {
+bool core::handle_incoming_block(const block_t& b, BlockVerificationContext& bvc, bool control_miner, bool relay_block) {
   if (control_miner) {
     pause_mining();
   }
@@ -572,7 +572,7 @@ crypto::Hash core::getBlockIdByHeight(uint32_t height) {
   }
 }
 
-bool core::getBlockByHash(const crypto::Hash &h, Block &blk) {
+bool core::getBlockByHash(const crypto::Hash &h, block_t &blk) {
   return m_blockchain.getBlockByHash(h, blk);
 }
 
@@ -663,7 +663,7 @@ bool core::queryBlocks(const std::vector<crypto::Hash>& knownBlockIds, uint64_t 
     return true;
   }
 
-  std::list<Block> blocks;
+  std::list<block_t> blocks;
   lbs->getBlocks(startFullOffset, blocksLeft, blocks);
 
   for (auto& b : blocks) {
@@ -751,7 +751,7 @@ bool core::queryBlocksLite(const std::vector<crypto::Hash>& knownBlockIds, uint6
     return true;
   }
 
-  std::list<Block> blocks;
+  std::list<block_t> blocks;
   lbs->getBlocks(resFullOffset, blocksLeft, blocks);
 
   for (auto& b : blocks) {
@@ -832,13 +832,13 @@ bool core::getGeneratedTransactionsNumber(uint32_t height, uint64_t& generatedTr
   return m_blockchain.getGeneratedTransactionsNumber(height, generatedTransactions);
 }
 
-bool core::getOrphanBlocksByHeight(uint32_t height, std::vector<Block>& blocks) {
+bool core::getOrphanBlocksByHeight(uint32_t height, std::vector<block_t>& blocks) {
   std::vector<crypto::Hash> blockHashes;
   if (!m_blockchain.getOrphanBlockIdsByHeight(height, blockHashes)) {
     return false;
   }
   for (const crypto::Hash& hash : blockHashes) {
-    Block blk;
+    block_t blk;
     if (!getBlockByHash(hash, blk)) {
       return false;
     }
@@ -847,13 +847,13 @@ bool core::getOrphanBlocksByHeight(uint32_t height, std::vector<Block>& blocks) 
   return true;
 }
 
-bool core::getBlocksByTimestamp(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t blocksNumberLimit, std::vector<Block>& blocks, uint32_t& blocksNumberWithinTimestamps) {
+bool core::getBlocksByTimestamp(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t blocksNumberLimit, std::vector<block_t>& blocks, uint32_t& blocksNumberWithinTimestamps) {
   std::vector<crypto::Hash> blockHashes;
   if (!m_blockchain.getBlockIdsByTimestamp(timestampBegin, timestampEnd, blocksNumberLimit, blockHashes, blocksNumberWithinTimestamps)) {
     return false;
   }
   for (const crypto::Hash& hash : blockHashes) {
-    Block blk;
+    block_t blk;
     if (!getBlockByHash(hash, blk)) {
       return false;
     }

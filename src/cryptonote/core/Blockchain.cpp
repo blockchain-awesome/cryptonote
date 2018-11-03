@@ -277,7 +277,7 @@ bool Blockchain::deinit() {
   return true;
 }
 
-bool Blockchain::resetAndSetGenesisBlock(const Block& b) {
+bool Blockchain::resetAndSetGenesisBlock(const block_t& b) {
   std::lock_guard<decltype(m_blockchain_lock)> lk(m_blockchain_lock);
   m_blocks.clear();
   m_blockIndex.clear();
@@ -358,7 +358,7 @@ crypto::Hash Blockchain::getBlockIdByHeight(uint32_t height) {
   return m_blockIndex.getBlockId(height);
 }
 
-bool Blockchain::getBlockByHash(const crypto::Hash& blockHash, Block& b) {
+bool Blockchain::getBlockByHash(const crypto::Hash& blockHash, block_t& b) {
   std::lock_guard<decltype(m_blockchain_lock)> lk(m_blockchain_lock);
 
   uint32_t height = 0;
@@ -410,7 +410,7 @@ uint64_t Blockchain::getCoinsInCirculation() {
   }
 }
 
-bool Blockchain::rollback_blockchain_switching(std::list<Block> &original_chain, size_t rollback_height) {
+bool Blockchain::rollback_blockchain_switching(std::list<block_t> &original_chain, size_t rollback_height) {
   std::lock_guard<decltype(m_blockchain_lock)> lk(m_blockchain_lock);
   // remove failed subchain
   for (size_t i = m_blocks.size() - 1; i >= rollback_height; i--) {
@@ -449,9 +449,9 @@ bool Blockchain::switch_to_alternative_blockchain(std::list<blocks_ext_by_hash::
   }
 
   //disconnecting old chain
-  std::list<Block> disconnected_chain;
+  std::list<block_t> disconnected_chain;
   for (size_t i = m_blocks.size() - 1; i >= split_height; i--) {
-    Block b = m_blocks[i].bl;
+    block_t b = m_blocks[i].bl;
     popBlock(get_block_hash(b));
     //if (!(r)) { logger(ERROR, BRIGHT_RED) << "failed to remove block on chain switching"; return false; }
     disconnected_chain.push_front(b);
@@ -554,7 +554,7 @@ difficulty_type Blockchain::get_next_difficulty_for_alternative_chain(const std:
   return m_currency.nextDifficulty(timestamps, commulative_difficulties);
 }
 
-bool Blockchain::prevalidate_miner_transaction(const Block& b, uint32_t height) {
+bool Blockchain::prevalidate_miner_transaction(const block_t& b, uint32_t height) {
 
   if (!(b.baseTransaction.inputs.size() == 1)) {
     logger(ERROR, BRIGHT_RED)
@@ -590,7 +590,7 @@ bool Blockchain::prevalidate_miner_transaction(const Block& b, uint32_t height) 
   return true;
 }
 
-bool Blockchain::validate_miner_transaction(const Block& b, uint32_t height, size_t cumulativeBlockSize,
+bool Blockchain::validate_miner_transaction(const block_t& b, uint32_t height, size_t cumulativeBlockSize,
   uint64_t alreadyGeneratedCoins, uint64_t fee,
   uint64_t& reward, int64_t& emissionChange) {
   uint64_t minerReward = 0;
@@ -666,7 +666,7 @@ bool Blockchain::complete_timestamps_vector(uint64_t start_top_height, std::vect
   return true;
 }
 
-bool Blockchain::handle_alternative_block(const Block& b, const crypto::Hash& id, BlockVerificationContext& bvc, bool sendNewAlternativeBlockMessage) {
+bool Blockchain::handle_alternative_block(const block_t& b, const crypto::Hash& id, BlockVerificationContext& bvc, bool sendNewAlternativeBlockMessage) {
   std::lock_guard<decltype(m_blockchain_lock)> lk(m_blockchain_lock);
 
   auto block_height = get_block_height(b);
@@ -832,7 +832,7 @@ bool Blockchain::handle_alternative_block(const Block& b, const crypto::Hash& id
   return true;
 }
 
-bool Blockchain::getBlocks(uint32_t start_offset, uint32_t count, std::list<Block>& blocks, std::list<Transaction>& txs) {
+bool Blockchain::getBlocks(uint32_t start_offset, uint32_t count, std::list<block_t>& blocks, std::list<Transaction>& txs) {
   std::lock_guard<decltype(m_blockchain_lock)> lk(m_blockchain_lock);
   if (start_offset >= m_blocks.size())
     return false;
@@ -846,7 +846,7 @@ bool Blockchain::getBlocks(uint32_t start_offset, uint32_t count, std::list<Bloc
   return true;
 }
 
-bool Blockchain::getBlocks(uint32_t start_offset, uint32_t count, std::list<Block>& blocks) {
+bool Blockchain::getBlocks(uint32_t start_offset, uint32_t count, std::list<block_t>& blocks) {
   std::lock_guard<decltype(m_blockchain_lock)> lk(m_blockchain_lock);
   if (start_offset >= m_blocks.size()) {
     return false;
@@ -862,7 +862,7 @@ bool Blockchain::getBlocks(uint32_t start_offset, uint32_t count, std::list<Bloc
 bool Blockchain::handleGetObjects(NOTIFY_REQUEST_GET_OBJECTS::request& arg, NOTIFY_RESPONSE_GET_OBJECTS::request& rsp) { //Deprecated. Should be removed with CryptoNoteProtocolHandler.
   std::lock_guard<decltype(m_blockchain_lock)> lk(m_blockchain_lock);
   rsp.current_blockchain_height = getCurrentBlockchainHeight();
-  std::list<Block> blocks;
+  std::list<block_t> blocks;
   getBlocks(arg.blocks, blocks, rsp.missed_ids);
 
   for (const auto& bl : blocks) {
@@ -891,7 +891,7 @@ bool Blockchain::handleGetObjects(NOTIFY_REQUEST_GET_OBJECTS::request& arg, NOTI
   return true;
 }
 
-bool Blockchain::getAlternativeBlocks(std::list<Block>& blocks) {
+bool Blockchain::getAlternativeBlocks(std::list<block_t>& blocks) {
   std::lock_guard<decltype(m_blockchain_lock)> lk(m_blockchain_lock);
   for (auto& alt_bl : m_alternative_chains) {
     blocks.push_back(alt_bl.second.bl);
@@ -1265,7 +1265,7 @@ uint64_t Blockchain::get_adjusted_time() {
   return time(NULL);
 }
 
-bool Blockchain::check_block_timestamp_main(const Block& b) {
+bool Blockchain::check_block_timestamp_main(const block_t& b) {
   if (b.timestamp > get_adjusted_time() + m_currency.blockFutureTimeLimit()) {
     logger(INFO, BRIGHT_WHITE) <<
       "Timestamp of block with id: " << get_block_hash(b) << ", " << b.timestamp << ", bigger than adjusted time + 2 hours";
@@ -1281,7 +1281,7 @@ bool Blockchain::check_block_timestamp_main(const Block& b) {
   return check_block_timestamp(std::move(timestamps), b);
 }
 
-bool Blockchain::check_block_timestamp(std::vector<uint64_t> timestamps, const Block& b) {
+bool Blockchain::check_block_timestamp(std::vector<uint64_t> timestamps, const block_t& b) {
   if (timestamps.size() < m_currency.timestampCheckWindow()) {
     return true;
   }
@@ -1311,7 +1311,7 @@ bool Blockchain::checkCumulativeBlockSize(const crypto::Hash& blockId, size_t cu
 }
 
 // Returns true, if cumulativeSize is calculated precisely, else returns false.
-bool Blockchain::getBlockCumulativeSize(const Block& block, size_t& cumulativeSize) {
+bool Blockchain::getBlockCumulativeSize(const block_t& block, size_t& cumulativeSize) {
   std::vector<Transaction> blockTxs;
   std::vector<crypto::Hash> missedTxs;
   getTransactions(block.transactionHashes, blockTxs, missedTxs, true);
@@ -1338,9 +1338,9 @@ bool Blockchain::update_next_comulative_size_limit() {
   return true;
 }
 
-bool Blockchain::addNewBlock(const Block& bl_, BlockVerificationContext& bvc) {
+bool Blockchain::addNewBlock(const block_t& bl_, BlockVerificationContext& bvc) {
   //copy block here to let modify block.target
-  Block bl = bl_;
+  block_t bl = bl_;
   crypto::Hash id;
   if (!get_block_hash(bl, id)) {
     logger(ERROR, BRIGHT_RED) <<
@@ -1385,7 +1385,7 @@ const TransactionEntry& Blockchain::transactionByIndex(TransactionIndex index) {
   return m_blocks[index.block].transactions[index.transaction];
 }
 
-bool Blockchain::pushBlock(const Block& blockData, BlockVerificationContext& bvc) {
+bool Blockchain::pushBlock(const block_t& blockData, BlockVerificationContext& bvc) {
   std::vector<Transaction> transactions;
   if (!loadTransactions(blockData, transactions)) {
     bvc.m_verifivation_failed = true;
@@ -1400,7 +1400,7 @@ bool Blockchain::pushBlock(const Block& blockData, BlockVerificationContext& bvc
   return true;
 }
 
-bool Blockchain::pushBlock(const Block& blockData, const std::vector<Transaction>& transactions, BlockVerificationContext& bvc) {
+bool Blockchain::pushBlock(const block_t& blockData, const std::vector<Transaction>& transactions, BlockVerificationContext& bvc) {
   std::lock_guard<decltype(m_blockchain_lock)> lk(m_blockchain_lock);
 
   auto blockProcessingStart = std::chrono::steady_clock::now();
@@ -1972,7 +1972,7 @@ bool Blockchain::getTransactionIdsByPaymentId(const crypto::Hash& paymentId, std
   return m_paymentIdIndex.find(paymentId, transactionHashes);
 }
 
-bool Blockchain::loadTransactions(const Block& block, std::vector<Transaction>& transactions) {
+bool Blockchain::loadTransactions(const block_t& block, std::vector<Transaction>& transactions) {
   transactions.resize(block.transactionHashes.size());
   size_t transactionSize;
   uint64_t fee;

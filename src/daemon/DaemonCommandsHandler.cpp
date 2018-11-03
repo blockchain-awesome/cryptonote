@@ -180,7 +180,7 @@ bool DaemonCommandsHandler::set_log(const std::vector<std::string>& args)
 //--------------------------------------------------------------------------------
 bool DaemonCommandsHandler::print_block_by_height(uint32_t height)
 {
-  std::list<cryptonote::Block> blocks;
+  std::list<cryptonote::block_t> blocks;
   m_core.get_blocks(height, 1, blocks);
 
   if (1 == blocks.size()) {
@@ -206,7 +206,7 @@ bool DaemonCommandsHandler::print_block_by_hash(const std::string& arg)
 
   std::list<crypto::Hash> block_ids;
   block_ids.push_back(block_hash);
-  std::list<cryptonote::Block> blocks;
+  std::list<cryptonote::block_t> blocks;
   std::list<crypto::Hash> missed_ids;
   m_core.get_blocks(block_ids, blocks, missed_ids);
 

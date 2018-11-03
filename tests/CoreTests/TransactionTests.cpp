@@ -137,7 +137,7 @@ bool test_block_creation()
   AccountPublicAddress adr;
   bool r = Account::parseAddress("272xWzbWsP4cfNFfxY5ETN5moU8x81PKfWPwynrrqsNGDBQGLmD1kCkKCvPeDUXu5XfmZkCrQ53wsWmdfvHBGLNjGcRiDcK", adr);
   CHECK_AND_ASSERT_MES(r, false, "failed to import");
-  Block b;
+  block_t b;
   r = currency.constructMinerTx(90, Common::medianValue(szs), 3553616528562147, 33094, 10000000, adr, b.baseTransaction, BinaryArray(), 11);
   return r;
 }

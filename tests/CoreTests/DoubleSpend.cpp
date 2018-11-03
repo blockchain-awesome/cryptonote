@@ -46,11 +46,11 @@ bool gen_double_spend_in_different_chains::check_double_spend(cryptonote::core& 
 {
   DEFINE_TESTS_ERROR_CONTEXT("gen_double_spend_in_different_chains::check_double_spend");
 
-  std::list<Block> block_list;
+  std::list<block_t> block_list;
   bool r = c.get_blocks(0, 100 + 2 * m_currency.minedMoneyUnlockWindow(), block_list);
   CHECK_TEST_CONDITION(r);
 
-  std::vector<Block> blocks(block_list.begin(), block_list.end());
+  std::vector<block_t> blocks(block_list.begin(), block_list.end());
   CHECK_EQ(expected_blockchain_height, blocks.size());
 
   CHECK_EQ(1, c.get_pool_transactions_count());
@@ -59,7 +59,7 @@ bool gen_double_spend_in_different_chains::check_double_spend(cryptonote::core& 
   cryptonote::AccountBase bob_account = boost::get<cryptonote::AccountBase>(events[1]);
   cryptonote::AccountBase alice_account = boost::get<cryptonote::AccountBase>(events[2]);
 
-  std::vector<cryptonote::Block> chain;
+  std::vector<cryptonote::block_t> chain;
   map_hash2tx_t mtx;
   r = find_block_chain(events, chain, mtx, get_block_hash(blocks.back()));
   CHECK_TEST_CONDITION(r);
@@ -97,7 +97,7 @@ bool DoubleSpendBase::check_TxVerificationContext(const cryptonote::TxVerificati
     return !tvc.m_verifivation_failed && tx_added;
 }
 
-bool DoubleSpendBase::check_BlockVerificationContext(const cryptonote::BlockVerificationContext& bvc, size_t event_idx, const cryptonote::Block& /*block*/)
+bool DoubleSpendBase::check_BlockVerificationContext(const cryptonote::BlockVerificationContext& bvc, size_t event_idx, const cryptonote::block_t& /*block*/)
 {
   if (m_invalid_block_index == event_idx)
     return bvc.m_verifivation_failed;

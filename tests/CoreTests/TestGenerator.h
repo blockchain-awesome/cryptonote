@@ -26,7 +26,7 @@ public:
   const cryptonote::Currency& currency() const { return generator.currency(); }
 
   void makeNextBlock(const std::list<cryptonote::Transaction>& txs = std::list<cryptonote::Transaction>()) {
-    cryptonote::Block block;
+    cryptonote::block_t block;
     generator.constructBlock(block, lastBlock, minerAccount, txs);
     events.push_back(block);
     lastBlock = block;
@@ -44,7 +44,7 @@ public:
 
   void generateBlocks(size_t count, uint8_t majorVersion = cryptonote::BLOCK_MAJOR_VERSION_1) {
     while (count--) {
-      cryptonote::Block next;
+      cryptonote::block_t next;
       generator.constructBlockManually(next, lastBlock, minerAccount, test_generator::bf_major_ver, majorVersion);
       lastBlock = next;
       events.push_back(next);
@@ -103,8 +103,8 @@ public:
 
   Logging::LoggerGroup logger;
   test_generator generator;
-  cryptonote::Block genesisBlock;
-  cryptonote::Block lastBlock;
+  cryptonote::block_t genesisBlock;
+  cryptonote::block_t lastBlock;
   cryptonote::AccountBase minerAccount;
   std::vector<test_event_entry>& events;
 };

@@ -22,7 +22,7 @@ namespace Tests {
     virtual bool startMining(size_t threadsCount, const std::string& address) override;
     virtual bool stopMining() override;
     virtual bool stopDaemon() override;
-    virtual bool getBlockTemplate(const std::string& minerAddress, cryptonote::Block& blockTemplate, uint64_t& difficulty) override;
+    virtual bool getBlockTemplate(const std::string& minerAddress, cryptonote::block_t& blockTemplate, uint64_t& difficulty) override;
     virtual bool submitBlock(const std::string& block) override;
     virtual bool getTailBlockId(crypto::Hash& tailBlockId) override;
     virtual bool makeINode(std::unique_ptr<cryptonote::INode>& node) override;

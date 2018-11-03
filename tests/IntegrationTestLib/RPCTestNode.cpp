@@ -48,7 +48,7 @@ bool RPCTestNode::startMining(size_t threadsCount, const std::string& address) {
   return true;
 }
 
-bool RPCTestNode::getBlockTemplate(const std::string& minerAddress, cryptonote::Block& blockTemplate, uint64_t& difficulty) {
+bool RPCTestNode::getBlockTemplate(const std::string& minerAddress, cryptonote::block_t& blockTemplate, uint64_t& difficulty) {
   LOG_DEBUG("getBlockTemplate()");
 
   try {

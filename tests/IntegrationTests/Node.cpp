@@ -296,7 +296,7 @@ TEST_F(NodeTest, queryBlocks) {
   auto startBlockIter = std::find_if(blocks.begin(), blocks.end(), [](const BlockShortEntry& e) { return e.hasBlock; });
   ASSERT_TRUE(startBlockIter != blocks.end());
 
-  const Block& startBlock = startBlockIter->block;
+  const block_t& startBlock = startBlockIter->block;
 
   std::cout << "Starting block timestamp: " << startBlock.timestamp << std::endl;
   auto startFullIndex = std::distance(blocks.begin(), startBlockIter);

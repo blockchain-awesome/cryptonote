@@ -9,7 +9,7 @@ namespace cryptonote
 {
 struct BlockEntry
 {
-    Block bl;
+    block_t bl;
     uint32_t height;
     uint64_t block_cumulative_size;
     difficulty_type cumulative_difficulty;

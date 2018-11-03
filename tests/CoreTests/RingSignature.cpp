@@ -73,11 +73,11 @@ bool gen_ring_signature_1::check_balances_1(cryptonote::core& c, size_t ev_index
   m_bob_account = boost::get<AccountBase>(events[3]);
   m_alice_account = boost::get<AccountBase>(events[4]);
 
-  std::list<Block> blocks;
+  std::list<block_t> blocks;
   bool r = c.get_blocks(0, 100 + 2 * m_currency.minedMoneyUnlockWindow(), blocks);
   CHECK_TEST_CONDITION(r);
 
-  std::vector<cryptonote::Block> chain;
+  std::vector<cryptonote::block_t> chain;
   map_hash2tx_t mtx;
   r = find_block_chain(events, chain, mtx, get_block_hash(blocks.back()));
   CHECK_TEST_CONDITION(r);
@@ -91,11 +91,11 @@ bool gen_ring_signature_1::check_balances_2(cryptonote::core& c, size_t ev_index
 {
   DEFINE_TESTS_ERROR_CONTEXT("gen_ring_signature_1::check_balances_2");
 
-  std::list<Block> blocks;
+  std::list<block_t> blocks;
   bool r = c.get_blocks(0, 100 + 2 * m_currency.minedMoneyUnlockWindow(), blocks);
   CHECK_TEST_CONDITION(r);
 
-  std::vector<cryptonote::Block> chain;
+  std::vector<cryptonote::block_t> chain;
   map_hash2tx_t mtx;
   r = find_block_chain(events, chain, mtx, get_block_hash(blocks.back()));
   CHECK_TEST_CONDITION(r);
@@ -154,11 +154,11 @@ bool gen_ring_signature_2::check_balances_1(cryptonote::core& c, size_t ev_index
   m_bob_account = boost::get<AccountBase>(events[1]);
   m_alice_account = boost::get<AccountBase>(events[2]);
 
-  std::list<Block> blocks;
+  std::list<block_t> blocks;
   bool r = c.get_blocks(0, 100 + 2 * m_currency.minedMoneyUnlockWindow(), blocks);
   CHECK_TEST_CONDITION(r);
 
-  std::vector<cryptonote::Block> chain;
+  std::vector<cryptonote::block_t> chain;
   map_hash2tx_t mtx;
   r = find_block_chain(events, chain, mtx, get_block_hash(blocks.back()));
   CHECK_TEST_CONDITION(r);
@@ -172,11 +172,11 @@ bool gen_ring_signature_2::check_balances_2(cryptonote::core& c, size_t ev_index
 {
   DEFINE_TESTS_ERROR_CONTEXT("gen_ring_signature_2::check_balances_2");
 
-  std::list<Block> blocks;
+  std::list<block_t> blocks;
   bool r = c.get_blocks(0, 100 + 2 * m_currency.minedMoneyUnlockWindow(), blocks);
   CHECK_TEST_CONDITION(r);
 
-  std::vector<cryptonote::Block> chain;
+  std::vector<cryptonote::block_t> chain;
   map_hash2tx_t mtx;
   r = find_block_chain(events, chain, mtx, get_block_hash(blocks.back()));
   CHECK_TEST_CONDITION(r);
@@ -208,7 +208,7 @@ gen_ring_signature_big::gen_ring_signature_big()
 bool gen_ring_signature_big::generate(std::vector<test_event_entry>& events) const
 {
   std::vector<AccountBase> accounts(m_test_size);
-  std::vector<Block> blocks;
+  std::vector<block_t> blocks;
   blocks.reserve(m_test_size + m_currency.minedMoneyUnlockWindow());
 
   uint64_t ts_start = 1338224400;
@@ -228,12 +228,12 @@ bool gen_ring_signature_big::generate(std::vector<test_event_entry>& events) con
   blocks.push_back(blk_0);
   for (size_t i = blk_0r_idx; i < events.size(); ++i)
   {
-    blocks.push_back(boost::get<Block>(events[i]));
+    blocks.push_back(boost::get<block_t>(events[i]));
   }
 
   for (size_t i = 0; i < m_test_size; ++i)
   {
-    Block blk_with_unlocked_out = blocks[blocks.size() - 1 - m_currency.minedMoneyUnlockWindow()];
+    block_t blk_with_unlocked_out = blocks[blocks.size() - 1 - m_currency.minedMoneyUnlockWindow()];
     MAKE_TX_LIST_START(events, txs_blk_i, miner_account, accounts[i], m_tx_amount, blk_with_unlocked_out);
     for (size_t j = 0; j <= i; ++j)
     {
@@ -242,7 +242,7 @@ bool gen_ring_signature_big::generate(std::vector<test_event_entry>& events) con
     MAKE_NEXT_BLOCK_TX_LIST(events, blk_i, blocks.back(), miner_account, txs_blk_i);
     blocks.push_back(blk_i);
 
-    std::vector<cryptonote::Block> chain;
+    std::vector<cryptonote::block_t> chain;
     map_hash2tx_t mtx;
     bool r = find_block_chain(events, chain, mtx, get_block_hash(blk_i));
     CHECK_AND_NO_ASSERT_MES(r, false, "failed to call find_block_chain");
@@ -264,11 +264,11 @@ bool gen_ring_signature_big::check_balances_1(cryptonote::core& c, size_t ev_ind
   m_bob_account = boost::get<AccountBase>(events[1]);
   m_alice_account = boost::get<AccountBase>(events[1 + m_test_size]);
 
-  std::list<Block> blocks;
+  std::list<block_t> blocks;
   bool r = c.get_blocks(0, 2 * m_test_size + m_currency.minedMoneyUnlockWindow(), blocks);
   CHECK_TEST_CONDITION(r);
 
-  std::vector<cryptonote::Block> chain;
+  std::vector<cryptonote::block_t> chain;
   map_hash2tx_t mtx;
   r = find_block_chain(events, chain, mtx, get_block_hash(blocks.back()));
   CHECK_TEST_CONDITION(r);
@@ -289,11 +289,11 @@ bool gen_ring_signature_big::check_balances_2(cryptonote::core& c, size_t ev_ind
 {
   DEFINE_TESTS_ERROR_CONTEXT("gen_ring_signature_big::check_balances_2");
 
-  std::list<Block> blocks;
+  std::list<block_t> blocks;
   bool r = c.get_blocks(0, 2 * m_test_size + m_currency.minedMoneyUnlockWindow(), blocks);
   CHECK_TEST_CONDITION(r);
 
-  std::vector<cryptonote::Block> chain;
+  std::vector<cryptonote::block_t> chain;
   map_hash2tx_t mtx;
   r = find_block_chain(events, chain, mtx, get_block_hash(blocks.back()));
   CHECK_TEST_CONDITION(r);

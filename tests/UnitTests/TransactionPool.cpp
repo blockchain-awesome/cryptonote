@@ -193,7 +193,7 @@ namespace
     TxMemoryPool pool;
   };
 
-  void InitBlock(Block& bl, uint8_t majorVersion = BLOCK_MAJOR_VERSION_1) {
+  void InitBlock(block_t& bl, uint8_t majorVersion = BLOCK_MAJOR_VERSION_1) {
     bl.majorVersion = majorVersion;
     bl.minorVersion = 0;
     bl.nonce = 0;
@@ -284,7 +284,7 @@ namespace
 //     transactions[getObjectHash(tx)] = std::move(txptr);
 //   }
 
-//   Block bl;
+//   block_t bl;
 
 //   InitBlock(bl);
 
@@ -344,7 +344,7 @@ namespace
 //   }
 
 
-//   Block bl;
+//   block_t bl;
 
 //   InitBlock(bl);
 
@@ -760,7 +760,7 @@ public:
       ASSERT_TRUE(pool->add_tx(pair.second, tvc, false));
     }
 
-    Block block;
+    block_t block;
     size_t totalSize;
     uint64_t totalFee;
     ASSERT_TRUE(pool->fill_block_template(block, currency.blockGrantedFullRewardZone(), std::numeric_limits<size_t>::max(), 0, totalSize, totalFee));

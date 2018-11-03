@@ -86,7 +86,7 @@ bool Currency::init() {
 }
 
 bool Currency::generateGenesisBlock() {
-  m_genesisBlock = boost::value_initialized<Block>();
+  m_genesisBlock = boost::value_initialized<block_t>();
 
   // Hard code coinbase tx in genesis block, because "tru" generating tx use random, but genesis should be always the same
   std::string genesisCoinbaseTxHex = GENESIS_COINBASE_TX_HEX;
@@ -404,7 +404,7 @@ difficulty_type Currency::nextDifficulty(std::vector<uint64_t> timestamps,
   return (low + timeSpan - 1) / timeSpan;
 }
 
-bool Currency::checkProofOfWork(const Block& block, difficulty_type currentDiffic,
+bool Currency::checkProofOfWork(const block_t& block, difficulty_type currentDiffic,
   crypto::Hash& proofOfWork) const {
 
   if (!get_block_longhash(block, proofOfWork)) {

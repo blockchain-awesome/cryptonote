@@ -337,7 +337,7 @@ namespace cryptonote {
     return ss.str();
   }
   //---------------------------------------------------------------------------------
-  bool TxMemoryPool::fill_block_template(Block& bl, size_t median_size, size_t maxCumulativeSize,
+  bool TxMemoryPool::fill_block_template(block_t& bl, size_t median_size, size_t maxCumulativeSize,
                                            uint64_t already_generated_coins, size_t& total_size, uint64_t& fee) {
     std::lock_guard<std::recursive_mutex> lock(m_transactions_lock);
 

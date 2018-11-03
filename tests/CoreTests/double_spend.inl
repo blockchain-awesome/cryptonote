@@ -29,7 +29,7 @@ bool gen_double_spend_base<concrete_test>::check_TxVerificationContext(const cry
 }
 
 template<class concrete_test>
-bool gen_double_spend_base<concrete_test>::check_BlockVerificationContext(const cryptonote::BlockVerificationContext& bvc, size_t event_idx, const cryptonote::Block& /*block*/)
+bool gen_double_spend_base<concrete_test>::check_BlockVerificationContext(const cryptonote::BlockVerificationContext& bvc, size_t event_idx, const cryptonote::block_t& /*block*/)
 {
   if (m_invalid_block_index == event_idx)
     return bvc.m_verifivation_failed;
@@ -40,7 +40,7 @@ bool gen_double_spend_base<concrete_test>::check_BlockVerificationContext(const 
 template<class concrete_test>
 bool gen_double_spend_base<concrete_test>::mark_last_valid_block(cryptonote::core& c, size_t /*ev_index*/, const std::vector<test_event_entry>& /*events*/)
 {
-  std::list<cryptonote::Block> block_list;
+  std::list<cryptonote::block_t> block_list;
   bool r = c.get_blocks(c.get_current_blockchain_height() - 1, 1, block_list);
   CHECK_AND_ASSERT_MES(r, false, "core::get_blocks failed");
   m_last_valid_block = block_list.back();
@@ -72,7 +72,7 @@ bool gen_double_spend_base<concrete_test>::check_double_spend(cryptonote::core& 
   }
   CHECK_NOT_EQ(invalid_index_value, m_invalid_block_index);
 
-  std::list<cryptonote::Block> block_list;
+  std::list<cryptonote::block_t> block_list;
   bool r = c.get_blocks(0, 100 + 2 * static_cast<uint32_t>(this->m_currency.minedMoneyUnlockWindow()), block_list);
   CHECK_TEST_CONDITION(r);
   CHECK_TEST_CONDITION(m_last_valid_block == block_list.back());
@@ -82,9 +82,9 @@ bool gen_double_spend_base<concrete_test>::check_double_spend(cryptonote::core& 
   cryptonote::AccountBase bob_account = boost::get<cryptonote::AccountBase>(events[1]);
   cryptonote::AccountBase alice_account = boost::get<cryptonote::AccountBase>(events[2]);
 
-  std::vector<cryptonote::Block> chain;
+  std::vector<cryptonote::block_t> chain;
   map_hash2tx_t mtx;
-  std::vector<cryptonote::Block> blocks(block_list.begin(), block_list.end());
+  std::vector<cryptonote::block_t> blocks(block_list.begin(), block_list.end());
   r = find_block_chain(events, chain, mtx, get_block_hash(blocks.back()));
   CHECK_TEST_CONDITION(r);
   CHECK_EQ(concrete_test::expected_bob_balance, get_balance(bob_account, blocks, mtx));

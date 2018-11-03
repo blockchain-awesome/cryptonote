@@ -392,7 +392,7 @@ namespace {
     wallet2.waitForSynchronizationToHeight(blockchainLenght);
 
     // This block template doesn't contain txHash2, as it is not created yet
-    cryptonote::Block blockTemplate2;
+    cryptonote::block_t blockTemplate2;
     uint64_t difficulty2;
     ASSERT_TRUE(nodeDaemons[NODE_2]->getBlockTemplate(wallet1.wallet()->getAddress(), blockTemplate2, difficulty2));
     ASSERT_EQ(1, difficulty2);

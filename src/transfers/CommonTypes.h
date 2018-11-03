@@ -22,7 +22,7 @@ struct BlockchainInterval {
 
 struct CompleteBlock {
   crypto::Hash blockHash;
-  boost::optional<cryptonote::Block> block;
+  boost::optional<cryptonote::block_t> block;
   // first transaction is always coinbase
   std::list<std::shared_ptr<ITransactionReader>> transactions;
 };

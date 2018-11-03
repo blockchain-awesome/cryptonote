@@ -177,7 +177,7 @@ void MinerManager::stopBlockchainMonitoring() {
   m_blockchainMonitor.stop();
 }
 
-bool MinerManager::submitBlock(const Block& minedBlock, const std::string& daemonHost, uint16_t daemonPort) {
+bool MinerManager::submitBlock(const block_t& minedBlock, const std::string& daemonHost, uint16_t daemonPort) {
   try {
     HttpClient client(m_dispatcher, daemonHost, daemonPort);
 
@@ -189,7 +189,7 @@ bool MinerManager::submitBlock(const Block& minedBlock, const std::string& daemo
     System::EventLock lk(m_httpEvent);
     JsonRpc::invokeJsonRpcCommand(client, "submitblock", request, response);
 
-    m_logger(Logging::INFO) << "Block has been successfully submitted. Block hash: " << Common::podToHex(get_block_hash(minedBlock));
+    m_logger(Logging::INFO) << "Block has been successfully submitted. block_t hash: " << Common::podToHex(get_block_hash(minedBlock));
     return true;
   } catch (std::exception& e) {
     m_logger(Logging::WARNING) << "Couldn't submit block: " << Common::podToHex(get_block_hash(minedBlock)) << ", reason: " << e.what();
@@ -230,7 +230,7 @@ BlockMiningParameters MinerManager::requestMiningParameters(System::Dispatcher& 
 }
 
 
-void MinerManager::adjustBlockTemplate(cryptonote::Block& blockTemplate) const {
+void MinerManager::adjustBlockTemplate(cryptonote::block_t& blockTemplate) const {
   if (m_config.firstBlockTimestamp == 0) {
     //no need to fix timestamp
     return;

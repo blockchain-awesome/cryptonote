@@ -20,7 +20,7 @@ public:
   bool check_split_switched(cryptonote::core& c, size_t ev_index, const std::vector<test_event_entry>& events);
 
 private:
-  std::list<cryptonote::Block> m_chain_1;
+  std::list<cryptonote::block_t> m_chain_1;
 
   cryptonote::AccountBase m_recipient_account_1;
   cryptonote::AccountBase m_recipient_account_2;

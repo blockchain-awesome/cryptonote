@@ -6,7 +6,7 @@
 
 namespace cryptonote {
 
-bool operator ==(const cryptonote::Block& a, const cryptonote::Block& b) {
+bool operator ==(const cryptonote::block_t& a, const cryptonote::block_t& b) {
   return cryptonote::get_block_hash(a) == cryptonote::get_block_hash(b);
 }
 

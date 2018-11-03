@@ -55,16 +55,16 @@ TestBlockchainGenerator::TestBlockchainGenerator(const cryptonote::Currency& cur
   addMiningBlock();
 }
 
-std::vector<cryptonote::Block>& TestBlockchainGenerator::getBlockchain()
+std::vector<cryptonote::block_t>& TestBlockchainGenerator::getBlockchain()
 {
   std::unique_lock<std::mutex> lock(m_mutex);
   return m_blockchain;
 }
 
-std::vector<cryptonote::Block> TestBlockchainGenerator::getBlockchainCopy() {
+std::vector<cryptonote::block_t> TestBlockchainGenerator::getBlockchainCopy() {
   std::unique_lock<std::mutex> lock(m_mutex);
 
-  std::vector<cryptonote::Block> blockchain(m_blockchain);
+  std::vector<cryptonote::block_t> blockchain(m_blockchain);
   return blockchain;
 }
 
@@ -103,10 +103,10 @@ void TestBlockchainGenerator::addGenesisBlock() {
 }
 
 void TestBlockchainGenerator::addMiningBlock() {
-  cryptonote::Block block;
+  cryptonote::block_t block;
 
   uint64_t timestamp = time(NULL);
-  cryptonote::Block& prev_block = m_blockchain.back();
+  cryptonote::block_t& prev_block = m_blockchain.back();
   uint32_t height = boost::get<BaseInput>(prev_block.baseTransaction.inputs.front()).blockIndex + 1;
   crypto::Hash prev_id = get_block_hash(prev_block);
 
@@ -127,8 +127,8 @@ void TestBlockchainGenerator::generateEmptyBlocks(size_t count)
 
   for (size_t i = 0; i < count; ++i)
   {
-    cryptonote::Block& prev_block = m_blockchain.back();
-    cryptonote::Block block;
+    cryptonote::block_t& prev_block = m_blockchain.back();
+    cryptonote::block_t block;
     generator.constructBlock(block, prev_block, miner_acc);
     m_blockchain.push_back(block);
     addTx(block.baseTransaction);
@@ -210,8 +210,8 @@ void TestBlockchainGenerator::addToBlockchain(const std::vector<cryptonote::Tran
     m_paymentIdIndex.add(tx);
   }
 
-  cryptonote::Block& prev_block = m_blockchain.back();
-  cryptonote::Block block;
+  cryptonote::block_t& prev_block = m_blockchain.back();
+  cryptonote::block_t block;
 
   generator.constructBlock(block, prev_block, minerAddress, txsToBlock);
   m_blockchain.push_back(block);
@@ -293,7 +293,7 @@ void TestBlockchainGenerator::cutBlockchain(uint32_t height) {
 }
 
 bool TestBlockchainGenerator::addOrphan(const crypto::Hash& hash, uint32_t height) {
-  cryptonote::Block block;
+  cryptonote::block_t block;
   uint64_t timestamp = time(NULL);
   generator.constructBlock(block, miner_acc, timestamp);
   return m_orthanBlocksIndex.add(block);

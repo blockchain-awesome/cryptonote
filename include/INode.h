@@ -47,7 +47,7 @@ struct TransactionShortInfo {
 struct BlockShortEntry {
   crypto::Hash blockHash;
   bool hasBlock;
-  cryptonote::Block block;
+  cryptonote::block_t block;
   std::vector<TransactionShortInfo> txsShortInfo;
 };
 

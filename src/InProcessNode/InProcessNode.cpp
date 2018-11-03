@@ -413,7 +413,7 @@ uint64_t InProcessNode::getLastLocalBlockTimestamp() const {
 
   core.get_blockchain_top(ignore, hash);
 
-  cryptonote::Block block;
+  cryptonote::block_t block;
   if (!core.getBlockByHash(hash, block)) {
     throw std::system_error(make_error_code(cryptonote::error::INTERNAL_NODE_ERROR));
   }
@@ -618,7 +618,7 @@ std::error_code InProcessNode::doGetBlocks(const std::vector<uint32_t>& blockHei
         return make_error_code(cryptonote::error::REQUEST_ERROR);
       }
       crypto::Hash hash = core.getBlockIdByHeight(height);
-      Block block;
+      block_t block;
       if (!core.getBlockByHash(hash, block)) {
         return make_error_code(cryptonote::error::INTERNAL_NODE_ERROR);
       }
@@ -630,9 +630,9 @@ std::error_code InProcessNode::doGetBlocks(const std::vector<uint32_t>& blockHei
       blocksOnSameHeight.push_back(std::move(blockDetails));
 
       //Getting orphans
-      std::vector<Block> orphanBlocks;
+      std::vector<block_t> orphanBlocks;
       core.getOrphanBlocksByHeight(height, orphanBlocks);
-      for (const Block& orphanBlock : orphanBlocks) {
+      for (const block_t& orphanBlock : orphanBlocks) {
         BlockDetails orphanBlockDetails;
         if (!blockchainExplorerDataBuilder.fillBlockDetails(orphanBlock, orphanBlockDetails)) {
           return make_error_code(cryptonote::error::INTERNAL_NODE_ERROR);
@@ -695,7 +695,7 @@ void InProcessNode::getBlocksAsync(const std::vector<crypto::Hash>& blockHashes,
 std::error_code InProcessNode::doGetBlocks(const std::vector<crypto::Hash>& blockHashes, std::vector<BlockDetails>& blocks) {
   try {
     for (const crypto::Hash& hash : blockHashes) {
-      Block block;
+      block_t block;
       if (!core.getBlockByHash(hash, block)) {
         return make_error_code(cryptonote::error::REQUEST_ERROR);
       }
@@ -770,11 +770,11 @@ void InProcessNode::getBlocksAsync(uint64_t timestampBegin, uint64_t timestampEn
 
 std::error_code InProcessNode::doGetBlocks(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t blocksNumberLimit, std::vector<BlockDetails>& blocks, uint32_t& blocksNumberWithinTimestamps) {
   try {
-    std::vector<Block> rawBlocks;
+    std::vector<block_t> rawBlocks;
     if (!core.getBlocksByTimestamp(timestampBegin, timestampEnd, blocksNumberLimit, rawBlocks, blocksNumberWithinTimestamps)) {
       return make_error_code(cryptonote::error::REQUEST_ERROR);
     }
-    for (const Block& rawBlock : rawBlocks) {
+    for (const block_t& rawBlock : rawBlocks) {
       BlockDetails block;
       if (!blockchainExplorerDataBuilder.fillBlockDetails(rawBlock, block)) {
         return make_error_code(cryptonote::error::INTERNAL_NODE_ERROR);

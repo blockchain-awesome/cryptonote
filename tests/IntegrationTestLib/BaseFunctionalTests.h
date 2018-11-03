@@ -151,7 +151,7 @@ namespace Tests {
       bool waitForPoolSize(size_t nodeIndex, cryptonote::INode& node, size_t expectedPoolSize,
         std::vector<std::unique_ptr<cryptonote::ITransactionReader>>& txPool);
 
-      bool prepareAndSubmitBlock(TestNode& node, cryptonote::Block&& blockTemplate);
+      bool prepareAndSubmitBlock(TestNode& node, cryptonote::block_t&& blockTemplate);
 
     private:
 #ifdef __linux__

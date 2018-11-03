@@ -144,7 +144,7 @@ bool InProcTestNode::stopDaemon() {
   return true;
 }
 
-bool InProcTestNode::getBlockTemplate(const std::string &minerAddress, cryptonote::Block &blockTemplate, uint64_t &difficulty) {
+bool InProcTestNode::getBlockTemplate(const std::string &minerAddress, cryptonote::block_t &blockTemplate, uint64_t &difficulty) {
   AccountPublicAddress addr;
   Account::parseAddress(minerAddress, addr);
   uint32_t height = 0;

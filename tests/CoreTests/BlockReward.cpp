@@ -10,13 +10,13 @@ using namespace cryptonote;
 
 namespace
 {
-  bool rewind_blocks(std::vector<test_event_entry>& events, test_generator& generator, Block& blk, const Block& blk_prev,
+  bool rewind_blocks(std::vector<test_event_entry>& events, test_generator& generator, block_t& blk, const block_t& blk_prev,
     const AccountBase& miner_account, size_t block_count)
   {
     blk = blk_prev;
     for (size_t i = 0; i < block_count; ++i)
     {
-      Block blk_i;
+      block_t blk_i;
       if (!generator.constructMaxSizeBlock(blk_i, blk, miner_account))
         return false;
 
@@ -57,28 +57,28 @@ bool gen_block_reward::generate(std::vector<test_event_entry>& events) const
   MAKE_ACCOUNT(events, bob_account);
 
   // Test case 1: miner transactions without outputs (block reward == 0)
-  Block blk_0r;
+  block_t blk_0r;
   if (!rewind_blocks(events, generator, blk_0r, blk_0, miner_account, m_currency.rewardBlocksWindow())) {
     return false;
   }
 
   // Test: block reward is calculated using median of the latest m_currency.rewardBlocksWindow() blocks
   DO_CALLBACK(events, "mark_invalid_block");
-  Block blk_1_bad_1;
+  block_t blk_1_bad_1;
   if (!generator.constructMaxSizeBlock(blk_1_bad_1, blk_0r, miner_account, m_currency.rewardBlocksWindow() + 1)) {
     return false;
   }
   events.push_back(blk_1_bad_1);
 
   DO_CALLBACK(events, "mark_invalid_block");
-  Block blk_1_bad_2;
+  block_t blk_1_bad_2;
   if (!generator.constructMaxSizeBlock(blk_1_bad_2, blk_0r, miner_account, m_currency.rewardBlocksWindow() - 1)) {
     return false;
   }
   events.push_back(blk_1_bad_2);
 
   // Test 1.2: miner transactions without outputs (block reward == 0)
-  Block blk_1;
+  block_t blk_1;
   if (!generator.constructMaxSizeBlock(blk_1, blk_0r, miner_account)) {
     return false;
   }
@@ -96,7 +96,7 @@ bool gen_block_reward::generate(std::vector<test_event_entry>& events) const
   MAKE_NEXT_BLOCK(events, blk_5, blk_4, miner_account);
   DO_CALLBACK(events, "mark_checked_block");
 
-  Block blk_5r;
+  block_t blk_5r;
   if (!rewind_blocks(events, generator, blk_5r, blk_5, miner_account, m_currency.minedMoneyUnlockWindow()))
     return false;
 
@@ -133,7 +133,7 @@ bool gen_block_reward::generate(std::vector<test_event_entry>& events) const
     txs_1_hashes.push_back(getObjectHash(tx_1));
     txs_1_hashes.push_back(getObjectHash(tx_2));
 
-    Block blk_8;
+    block_t blk_8;
     generator.constructBlockManually(blk_8, blk_7, miner_account, test_generator::bf_miner_tx | test_generator::bf_tx_hashes,
       0, 0, 0, crypto::Hash(), 0, miner_tx, txs_1_hashes, txs_1_size, txs_fee);
 
@@ -146,7 +146,7 @@ bool gen_block_reward::generate(std::vector<test_event_entry>& events) const
   return true;
 }
 
-bool gen_block_reward::check_BlockVerificationContext(const cryptonote::BlockVerificationContext& bvc, size_t event_idx, const cryptonote::Block& /*blk*/)
+bool gen_block_reward::check_BlockVerificationContext(const cryptonote::BlockVerificationContext& bvc, size_t event_idx, const cryptonote::block_t& /*blk*/)
 {
   if (m_invalid_block_index == event_idx)
   {
@@ -186,17 +186,17 @@ bool gen_block_reward::check_block_rewards(cryptonote::core& /*c*/, size_t /*ev_
 
   for (size_t i = 0; i < 5; ++i)
   {
-    Block blk_i = boost::get<Block>(events[m_checked_blocks_indices[i]]);
+    block_t blk_i = boost::get<block_t>(events[m_checked_blocks_indices[i]]);
     CHECK_EQ(blk_rewards[i], get_tx_out_amount(blk_i.baseTransaction));
   }
 
-  Block blk_n1 = boost::get<Block>(events[m_checked_blocks_indices[5]]);
+  block_t blk_n1 = boost::get<block_t>(events[m_checked_blocks_indices[5]]);
   CHECK_EQ(blk_rewards[5] + 3 * m_currency.minimumFee(), get_tx_out_amount(blk_n1.baseTransaction));
 
-  Block blk_n2 = boost::get<Block>(events[m_checked_blocks_indices[6]]);
+  block_t blk_n2 = boost::get<block_t>(events[m_checked_blocks_indices[6]]);
   CHECK_EQ(blk_rewards[6] + (5 + 7) * m_currency.minimumFee(), get_tx_out_amount(blk_n2.baseTransaction));
 
-  Block blk_n3 = boost::get<Block>(events[m_checked_blocks_indices[7]]);
+  block_t blk_n3 = boost::get<block_t>(events[m_checked_blocks_indices[7]]);
   CHECK_EQ(0, get_tx_out_amount(blk_n3.baseTransaction));
 
   return true;

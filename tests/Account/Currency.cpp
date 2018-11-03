@@ -34,7 +34,7 @@ TEST_F(CurrencyTest, create)
 
   cryptonote::Transaction tx = currencyBuilder.generateGenesisTransaction();
 
-  Block b = c.genesisBlock();
+  block_t b = c.genesisBlock();
 
   std::string filename = c.txPoolFileName(true);
   std::string fullname = c.txPoolFileName();

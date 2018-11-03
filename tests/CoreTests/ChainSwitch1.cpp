@@ -99,15 +99,15 @@ bool gen_chain_switch_1::check_split_not_switched(cryptonote::core& c, size_t ev
   m_recipient_account_3 = boost::get<AccountBase>(events[3]);
   m_recipient_account_4 = boost::get<AccountBase>(events[4]);
 
-  std::list<Block> blocks;
+  std::list<block_t> blocks;
   bool r = c.get_blocks(0, 10000, blocks);
   CHECK_TEST_CONDITION(r);
   CHECK_EQ(5 + 2 * m_currency.minedMoneyUnlockWindow(), blocks.size());
-  CHECK_TEST_CONDITION(blocks.back() == boost::get<Block>(events[20 + 2 * m_currency.minedMoneyUnlockWindow()]));  // blk_4
+  CHECK_TEST_CONDITION(blocks.back() == boost::get<block_t>(events[20 + 2 * m_currency.minedMoneyUnlockWindow()]));  // blk_4
 
   CHECK_EQ(2, c.get_alternative_blocks_count());
 
-  std::vector<cryptonote::Block> chain;
+  std::vector<cryptonote::block_t> chain;
   map_hash2tx_t mtx;
   r = find_block_chain(events, chain, mtx, get_block_hash(blocks.back()));
   CHECK_TEST_CONDITION(r);
@@ -135,27 +135,27 @@ bool gen_chain_switch_1::check_split_switched(cryptonote::core& c, size_t ev_ind
 {
   DEFINE_TESTS_ERROR_CONTEXT("gen_chain_switch_1::check_split_switched");
 
-  std::list<Block> blocks;
+  std::list<block_t> blocks;
   bool r = c.get_blocks(0, 10000, blocks);
   CHECK_TEST_CONDITION(r);
   CHECK_EQ(6 + 2 * m_currency.minedMoneyUnlockWindow(), blocks.size());
   auto it = blocks.end();
   --it; --it; --it;
   CHECK_TEST_CONDITION(std::equal(blocks.begin(), it, m_chain_1.begin()));
-  CHECK_TEST_CONDITION(blocks.back() == boost::get<Block>(events[24 + 2 * m_currency.minedMoneyUnlockWindow()]));  // blk_7
+  CHECK_TEST_CONDITION(blocks.back() == boost::get<block_t>(events[24 + 2 * m_currency.minedMoneyUnlockWindow()]));  // blk_7
 
-  std::list<Block> alt_blocks;
+  std::list<block_t> alt_blocks;
   r = c.get_alternative_blocks(alt_blocks);
   CHECK_TEST_CONDITION(r);
   CHECK_EQ(2, c.get_alternative_blocks_count());
 
   // Some blocks that were in main chain are in alt chain now
-  BOOST_FOREACH(Block b, alt_blocks)
+  BOOST_FOREACH(block_t b, alt_blocks)
   {
     CHECK_TEST_CONDITION(m_chain_1.end() != std::find(m_chain_1.begin(), m_chain_1.end(), b));
   }
 
-  std::vector<cryptonote::Block> chain;
+  std::vector<cryptonote::block_t> chain;
   map_hash2tx_t mtx;
   r = find_block_chain(events, chain, mtx, get_block_hash(blocks.back()));
   CHECK_TEST_CONDITION(r);

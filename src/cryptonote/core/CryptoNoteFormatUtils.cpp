@@ -253,7 +253,7 @@ bool get_inputs_money_amount(const Transaction& tx, uint64_t& money) {
   return true;
 }
 
-uint32_t get_block_height(const Block& b) {
+uint32_t get_block_height(const block_t& b) {
   if (b.baseTransaction.inputs.size() != 1) {
     return 0;
   }
@@ -428,8 +428,8 @@ bool lookup_acc_outs(const AccountKeys& acc, const Transaction& tx, const Public
   return true;
 }
 
-bool get_block_hashing_blob(const Block& b, BinaryArray& ba) {
-  if (!toBinaryArray(static_cast<const BlockHeader&>(b), ba)) {
+bool get_block_hashing_blob(const block_t& b, BinaryArray& ba) {
+  if (!toBinaryArray(static_cast<const block_header_t&>(b), ba)) {
     return false;
   }
 
@@ -440,7 +440,7 @@ bool get_block_hashing_blob(const Block& b, BinaryArray& ba) {
   return true;
 }
 
-bool get_block_hash(const Block& b, Hash& res) {
+bool get_block_hash(const block_t& b, Hash& res) {
   BinaryArray ba;
   if (!get_block_hashing_blob(b, ba)) {
     return false;
@@ -449,13 +449,13 @@ bool get_block_hash(const Block& b, Hash& res) {
   return getObjectHash(ba, res);
 }
 
-Hash get_block_hash(const Block& b) {
+Hash get_block_hash(const block_t& b) {
   Hash p = NULL_HASH;
   get_block_hash(b, p);
   return p;
 }
 
-bool get_aux_block_header_hash(const Block& b, Hash& res) {
+bool get_aux_block_header_hash(const block_t& b, Hash& res) {
   BinaryArray blob;
   if (!get_block_hashing_blob(b, blob)) {
     return false;
@@ -464,7 +464,7 @@ bool get_aux_block_header_hash(const Block& b, Hash& res) {
   return getObjectHash(blob, res);
 }
 
-bool get_block_longhash(const Block& b, Hash& res) {
+bool get_block_longhash(const block_t& b, Hash& res) {
   BinaryArray bd;
   if (!get_block_hashing_blob(b, bd)) {
     return false;
@@ -502,7 +502,7 @@ Hash get_tx_tree_hash(const std::vector<Hash>& tx_hashes) {
   return h;
 }
 
-Hash get_tx_tree_hash(const Block& b) {
+Hash get_tx_tree_hash(const block_t& b) {
   std::vector<Hash> txs_ids;
   Hash h = NULL_HASH;
   getObjectHash(b.baseTransaction, h);

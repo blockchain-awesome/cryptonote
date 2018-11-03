@@ -37,10 +37,10 @@ struct output_index {
     size_t out_no; // index of out in transaction
     uint32_t idx;
     bool spent;
-    const cryptonote::Block *p_blk;
+    const cryptonote::block_t *p_blk;
     const cryptonote::Transaction *p_tx;
 
-    output_index(const cryptonote::TransactionOutputTarget &_out, uint64_t _a, size_t _h, size_t tno, size_t ono, const cryptonote::Block *_pb, const cryptonote::Transaction *_pt)
+    output_index(const cryptonote::TransactionOutputTarget &_out, uint64_t _a, size_t _h, size_t tno, size_t ono, const cryptonote::block_t *_pb, const cryptonote::Transaction *_pt)
         : out(_out), amount(_a), blk_height(_h), tx_no(tno), out_no(ono), idx(0), spent(false), p_blk(_pb), p_tx(_pt) { }
 
     output_index(const output_index &other)
@@ -85,9 +85,9 @@ namespace
   }
 }
 
-bool init_output_indices(map_output_idx_t& outs, std::map<uint64_t, std::vector<size_t> >& outs_mine, const std::vector<cryptonote::Block>& blockchain, const map_hash2tx_t& mtx, const cryptonote::AccountBase& from) {
+bool init_output_indices(map_output_idx_t& outs, std::map<uint64_t, std::vector<size_t> >& outs_mine, const std::vector<cryptonote::block_t>& blockchain, const map_hash2tx_t& mtx, const cryptonote::AccountBase& from) {
 
-    BOOST_FOREACH (const Block& blk, blockchain) {
+    BOOST_FOREACH (const block_t& blk, blockchain) {
         vector<const Transaction*> vtx;
         vtx.push_back(&blk.baseTransaction);
 
@@ -128,7 +128,7 @@ bool init_output_indices(map_output_idx_t& outs, std::map<uint64_t, std::vector<
     return true;
 }
 
-bool init_spent_output_indices(map_output_idx_t& outs, map_output_t& outs_mine, const std::vector<cryptonote::Block>& blockchain, const map_hash2tx_t& mtx, const cryptonote::AccountBase& from) {
+bool init_spent_output_indices(map_output_idx_t& outs, map_output_t& outs_mine, const std::vector<cryptonote::block_t>& blockchain, const map_hash2tx_t& mtx, const cryptonote::AccountBase& from) {
 
     for (const map_output_t::value_type& o: outs_mine) {
         for (size_t i = 0; i < o.second.size(); ++i) {
@@ -194,12 +194,12 @@ bool fill_output_entries(std::vector<output_index>& out_indices, size_t sender_o
 }
 
 bool fill_tx_sources(std::vector<TransactionSourceEntry>& sources, const std::vector<test_event_entry>& events,
-                     const Block& blk_head, const cryptonote::AccountBase& from, uint64_t amount, size_t nmix)
+                     const block_t& blk_head, const cryptonote::AccountBase& from, uint64_t amount, size_t nmix)
 {
     map_output_idx_t outs;
     map_output_t outs_mine;
 
-    std::vector<cryptonote::Block> blockchain;
+    std::vector<cryptonote::block_t> blockchain;
     map_hash2tx_t mtx;
     if (!find_block_chain(events, blockchain, mtx, get_block_hash(blk_head)))
         return false;
@@ -251,7 +251,7 @@ bool fill_tx_destination(TransactionDestinationEntry &de, const cryptonote::Acco
     return true;
 }
 
-void fill_tx_sources_and_destinations(const std::vector<test_event_entry>& events, const Block& blk_head,
+void fill_tx_sources_and_destinations(const std::vector<test_event_entry>& events, const block_t& blk_head,
                                       const cryptonote::AccountBase& from, const cryptonote::AccountBase& to,
                                       uint64_t amount, uint64_t fee, size_t nmix, std::vector<TransactionSourceEntry>& sources,
                                       std::vector<TransactionDestinationEntry>& destinations)
@@ -277,7 +277,7 @@ void fill_tx_sources_and_destinations(const std::vector<test_event_entry>& event
   }
 }
 
-bool construct_tx_to_key(Logging::ILogger& logger, const std::vector<test_event_entry>& events, cryptonote::Transaction& tx, const Block& blk_head,
+bool construct_tx_to_key(Logging::ILogger& logger, const std::vector<test_event_entry>& events, cryptonote::Transaction& tx, const block_t& blk_head,
                          const cryptonote::AccountBase& from, const cryptonote::AccountBase& to, uint64_t amount,
                          uint64_t fee, size_t nmix)
 {
@@ -288,7 +288,7 @@ bool construct_tx_to_key(Logging::ILogger& logger, const std::vector<test_event_
   return constructTransaction(from.getAccountKeys(), sources, destinations, std::vector<uint8_t>(), tx, 0, logger);
 }
 
-Transaction construct_tx_with_fee(Logging::ILogger& logger, std::vector<test_event_entry>& events, const Block& blk_head,
+Transaction construct_tx_with_fee(Logging::ILogger& logger, std::vector<test_event_entry>& events, const block_t& blk_head,
                                   const AccountBase& acc_from, const AccountBase& acc_to, uint64_t amount, uint64_t fee)
 {
   Transaction tx;
@@ -297,7 +297,7 @@ Transaction construct_tx_with_fee(Logging::ILogger& logger, std::vector<test_eve
   return tx;
 }
 
-uint64_t get_balance(const cryptonote::AccountBase& addr, const std::vector<cryptonote::Block>& blockchain, const map_hash2tx_t& mtx) {
+uint64_t get_balance(const cryptonote::AccountBase& addr, const std::vector<cryptonote::block_t>& blockchain, const map_hash2tx_t& mtx) {
     uint64_t res = 0;
     std::map<uint64_t, std::vector<output_index> > outs;
     std::map<uint64_t, std::vector<size_t> > outs_mine;
@@ -323,10 +323,10 @@ uint64_t get_balance(const cryptonote::AccountBase& addr, const std::vector<cryp
     return res;
 }
 
-void get_confirmed_txs(const std::vector<cryptonote::Block>& blockchain, const map_hash2tx_t& mtx, map_hash2tx_t& confirmed_txs)
+void get_confirmed_txs(const std::vector<cryptonote::block_t>& blockchain, const map_hash2tx_t& mtx, map_hash2tx_t& confirmed_txs)
 {
   std::unordered_set<crypto::Hash> confirmed_hashes;
-  for (const Block& blk : blockchain)
+  for (const block_t& blk : blockchain)
   {
     for (const crypto::Hash& tx_hash : blk.transactionHashes)
     {
@@ -343,13 +343,13 @@ void get_confirmed_txs(const std::vector<cryptonote::Block>& blockchain, const m
   }
 }
 
-bool find_block_chain(const std::vector<test_event_entry>& events, std::vector<cryptonote::Block>& blockchain, map_hash2tx_t& mtx, const crypto::Hash& head) {
-    std::unordered_map<crypto::Hash, const Block*> block_index;
+bool find_block_chain(const std::vector<test_event_entry>& events, std::vector<cryptonote::block_t>& blockchain, map_hash2tx_t& mtx, const crypto::Hash& head) {
+    std::unordered_map<crypto::Hash, const block_t*> block_index;
     BOOST_FOREACH(const test_event_entry& ev, events)
     {
-        if (typeid(Block) == ev.type())
+        if (typeid(block_t) == ev.type())
         {
-            const Block* blk = &boost::get<Block>(ev);
+            const block_t* blk = &boost::get<block_t>(ev);
             block_index[get_block_hash(*blk)] = blk;
         }
         else if (typeid(Transaction) == ev.type())

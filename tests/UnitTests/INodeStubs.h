@@ -113,7 +113,7 @@ public:
 
 protected:
   void doGetNewBlocks(std::vector<crypto::Hash> knownBlockIds, std::vector<cryptonote::block_complete_entry>& newBlocks,
-          uint32_t& startHeight, std::vector<cryptonote::Block> blockchain, const Callback& callback);
+          uint32_t& startHeight, std::vector<cryptonote::block_t> blockchain, const Callback& callback);
   void doGetTransactionOutsGlobalIndices(const crypto::Hash& transactionHash, std::vector<uint32_t>& outsGlobalIndices, const Callback& callback);
   void doRelayTransaction(const cryptonote::Transaction& transaction, const Callback& callback);
   void doGetRandomOutsByAmounts(std::vector<uint64_t> amounts, uint64_t outsCount, std::vector<cryptonote::COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS::outs_for_amount>& result, const Callback& callback);

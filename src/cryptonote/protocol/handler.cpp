@@ -325,7 +325,7 @@ int CryptoNoteProtocolHandler::handle_response_get_objects(int command, NOTIFY_R
   size_t count = 0;
   for (const block_complete_entry& block_entry : arg.blocks) {
     ++count;
-    Block b;
+    block_t b;
     if (!fromBinaryArray(b, asBinaryArray(block_entry.block))) {
       logger(Logging::ERROR) << context << "sent wrong block: failed to parse and validate block: \r\n"
         << toHex(asBinaryArray(block_entry.block)) << "\r\n dropping connection";

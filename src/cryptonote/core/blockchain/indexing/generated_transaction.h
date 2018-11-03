@@ -13,8 +13,8 @@ class GeneratedTransactionsIndex
   public:
     GeneratedTransactionsIndex();
 
-    bool add(const Block &block);
-    bool remove(const Block &block);
+    bool add(const block_t&block);
+    bool remove(const block_t&block);
     bool find(uint32_t height, uint64_t &generatedTransactions);
     void clear();
 

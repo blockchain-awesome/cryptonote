@@ -77,7 +77,7 @@ size_t BlockchainExplorerDataBuilder::median(std::vector<size_t>& v) {
 
 }
 
-bool BlockchainExplorerDataBuilder::fillBlockDetails(const Block &block, BlockDetails& blockDetails) {
+bool BlockchainExplorerDataBuilder::fillBlockDetails(const block_t&block, BlockDetails& blockDetails) {
   crypto::Hash hash = get_block_hash(block);
 
   blockDetails.majorVersion = block.majorVersion;
@@ -198,7 +198,7 @@ bool BlockchainExplorerDataBuilder::fillTransactionDetails(const Transaction& tr
     transactionDetails.blockHeight = blockHeight;
     transactionDetails.blockHash = blockHash;
     if (timestamp == 0) {
-      Block block;
+      block_t block;
       if (!core.getBlockByHash(blockHash, block)) {
         return false;
       }

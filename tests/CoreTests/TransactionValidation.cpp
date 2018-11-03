@@ -103,7 +103,7 @@ namespace
   };
 
   Transaction make_simple_tx_with_unlock_time(const std::vector<test_event_entry>& events,
-    const cryptonote::Block& blk_head, const cryptonote::AccountBase& from, const cryptonote::AccountBase& to,
+    const cryptonote::block_t& blk_head, const cryptonote::AccountBase& from, const cryptonote::AccountBase& to,
     uint64_t amount, uint64_t fee, uint64_t unlock_time)
   {
     std::vector<TransactionSourceEntry> sources;

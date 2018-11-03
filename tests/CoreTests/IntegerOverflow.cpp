@@ -53,7 +53,7 @@ bool gen_uint_overflow_base::check_TxVerificationContext(const cryptonote::TxVer
   return m_last_valid_block_event_idx < event_idx ? !tx_added && tvc.m_verifivation_failed : tx_added && !tvc.m_verifivation_failed;
 }
 
-bool gen_uint_overflow_base::check_BlockVerificationContext(const cryptonote::BlockVerificationContext& bvc, size_t event_idx, const cryptonote::Block& /*block*/)
+bool gen_uint_overflow_base::check_BlockVerificationContext(const cryptonote::BlockVerificationContext& bvc, size_t event_idx, const cryptonote::block_t& /*block*/)
 {
   return m_last_valid_block_event_idx < event_idx ? bvc.m_verifivation_failed | bvc.m_marked_as_orphaned : !bvc.m_verifivation_failed;
 }
@@ -79,7 +79,7 @@ bool gen_uint_overflow_1::generate(std::vector<test_event_entry>& events) const
   // Problem 1. Miner tx output overflow
   MAKE_MINER_TX_MANUALLY(miner_tx_0, blk_0);
   split_miner_tx_outs(miner_tx_0, m_currency.moneySupply());
-  Block blk_1;
+  block_t blk_1;
   if (!generator.constructBlockManually(blk_1, blk_0, miner_account, test_generator::bf_miner_tx, 0, 0, 0, crypto::Hash(), 0, miner_tx_0))
     return false;
   events.push_back(blk_1);
@@ -87,7 +87,7 @@ bool gen_uint_overflow_1::generate(std::vector<test_event_entry>& events) const
   // Problem 1. Miner tx outputs overflow
   MAKE_MINER_TX_MANUALLY(miner_tx_1, blk_1);
   split_miner_tx_outs(miner_tx_1, m_currency.moneySupply());
-  Block blk_2;
+  block_t blk_2;
   if (!generator.constructBlockManually(blk_2, blk_1, miner_account, test_generator::bf_miner_tx, 0, 0, 0, crypto::Hash(), 0, miner_tx_1))
     return false;
   events.push_back(blk_2);

@@ -495,7 +495,7 @@ bool RpcServer::on_getblocktemplate(const COMMAND_RPC_GETBLOCKTEMPLATE::request&
     throw JsonRpc::JsonRpcError{ CORE_RPC_ERROR_CODE_WRONG_WALLET_ADDRESS, "Failed to parse wallet address" };
   }
 
-  Block b = boost::value_initialized<Block>();
+  block_t b = boost::value_initialized<block_t>();
   cryptonote::BinaryArray blob_reserve;
   blob_reserve.resize(req.reserve_size, 0);
   if (!m_core.get_block_template(b, acc, res.difficulty, res.height, blob_reserve)) {
@@ -561,7 +561,7 @@ bool RpcServer::on_submitblock(const COMMAND_RPC_SUBMITBLOCK::request& req, COMM
 
 
 namespace {
-  uint64_t get_block_reward(const Block& blk) {
+  uint64_t get_block_reward(const block_t& blk) {
     uint64_t reward = 0;
     for (const TransactionOutput& out : blk.baseTransaction.outputs) {
       reward += out.amount;
@@ -570,7 +570,7 @@ namespace {
   }
 }
 
-void RpcServer::fill_block_header_response(const Block& blk, bool orphan_status, uint64_t height, const Hash& hash, block_header_response& responce) {
+void RpcServer::fill_block_header_response(const block_t& blk, bool orphan_status, uint64_t height, const Hash& hash, block_header_response& responce) {
   responce.major_version = blk.majorVersion;
   responce.minor_version = blk.minorVersion;
   responce.timestamp = blk.timestamp;
@@ -590,7 +590,7 @@ bool RpcServer::on_get_last_block_header(const COMMAND_RPC_GET_LAST_BLOCK_HEADER
   
   m_core.get_blockchain_top(last_block_height, last_block_hash);
 
-  Block last_block;
+  block_t last_block;
   if (!m_core.getBlockByHash(last_block_hash, last_block)) {
     throw JsonRpc::JsonRpcError{ CORE_RPC_ERROR_CODE_INTERNAL_ERROR, "Internal error: can't get last block hash." };
   }
@@ -609,7 +609,7 @@ bool RpcServer::on_get_block_header_by_hash(const COMMAND_RPC_GET_BLOCK_HEADER_B
       "Failed to parse hex representation of block hash. Hex = " + req.hash + '.' };
   }
 
-  Block blk;
+  block_t blk;
   if (!m_core.getBlockByHash(block_hash, blk)) {
     throw JsonRpc::JsonRpcError{
       CORE_RPC_ERROR_CODE_INTERNAL_ERROR,
@@ -635,7 +635,7 @@ bool RpcServer::on_get_block_header_by_height(const COMMAND_RPC_GET_BLOCK_HEADER
   }
 
   Hash block_hash = m_core.getBlockIdByHeight(static_cast<uint32_t>(req.height));
-  Block blk;
+  block_t blk;
   if (!m_core.getBlockByHash(block_hash, blk)) {
     throw JsonRpc::JsonRpcError{ CORE_RPC_ERROR_CODE_INTERNAL_ERROR,
       "Internal error: can't get block by height. Height = " + std::to_string(req.height) + '.' };

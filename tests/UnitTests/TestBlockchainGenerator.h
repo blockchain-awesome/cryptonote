@@ -21,8 +21,8 @@ public:
   TestBlockchainGenerator(const cryptonote::Currency& currency);
 
   //TODO: get rid of this method
-  std::vector<cryptonote::Block>& getBlockchain();
-  std::vector<cryptonote::Block> getBlockchainCopy();
+  std::vector<cryptonote::block_t>& getBlockchain();
+  std::vector<cryptonote::block_t> getBlockchainCopy();
   void generateEmptyBlocks(size_t count);
   bool getBlockRewardForAddress(const cryptonote::AccountPublicAddress& address);
   bool generateTransactionsInOneBlock(const cryptonote::AccountPublicAddress& address, size_t n);
@@ -68,7 +68,7 @@ private:
   const cryptonote::Currency& m_currency;
   test_generator generator;
   cryptonote::AccountBase miner_acc;
-  std::vector<cryptonote::Block> m_blockchain;
+  std::vector<cryptonote::block_t> m_blockchain;
   std::unordered_map<crypto::Hash, cryptonote::Transaction> m_txs;
   std::unordered_map<crypto::Hash, std::vector<uint32_t>> transactionGlobalOuts;
   std::unordered_map<uint64_t, std::vector<MultisignatureOutEntry>> multisignatureOutsIndex;

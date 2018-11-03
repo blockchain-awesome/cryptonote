@@ -6,7 +6,7 @@
 #include "cryptonote/core/serialize.h"
 namespace cryptonote {
 
-bool operator ==(const cryptonote::Block& a, const cryptonote::Block& b);
+bool operator ==(const cryptonote::block_t& a, const cryptonote::block_t& b);
 bool operator ==(const cryptonote::Transaction& a, const cryptonote::Transaction& b);
 
 }
