@@ -1740,7 +1740,7 @@ TEST_F(WalletApi, getAddressSpendKeyThrowsIfStopped) {
   ASSERT_ANY_THROW(alice.getAddressSpendKey(0));
 }
 
-crypto::PublicKey generatePublicKey() {
+crypto::public_key_t generatePublicKey() {
   cryptonote::KeyPair spendKeys;
   crypto::generate_keys(spendKeys.publicKey, spendKeys.secretKey);
 
@@ -1751,7 +1751,7 @@ TEST_F(WalletApi, createTrackingKeyAddressSucceeded) {
   cryptonote::WalletGreen wallet(dispatcher, currency, node);
   wallet.initialize("pass");
 
-  crypto::PublicKey publicKey = generatePublicKey();
+  crypto::public_key_t publicKey = generatePublicKey();
 
   ASSERT_NO_THROW(wallet.createAddress(publicKey));
   ASSERT_EQ(1, wallet.getAddressCount());
@@ -1761,7 +1761,7 @@ TEST_F(WalletApi, createTrackingKeyAddressSucceeded) {
 TEST_F(WalletApi, createTrackingKeyThrowsIfNotInitialized) {
   cryptonote::WalletGreen wallet(dispatcher, currency, node);
 
-  crypto::PublicKey publicKey = generatePublicKey();
+  crypto::public_key_t publicKey = generatePublicKey();
   ASSERT_ANY_THROW(wallet.createAddress(publicKey));
 }
 
@@ -1770,7 +1770,7 @@ TEST_F(WalletApi, createTrackingKeyThrowsIfStopped) {
   wallet.initialize("pass");
   wallet.stop();
 
-  crypto::PublicKey publicKey = generatePublicKey();
+  crypto::public_key_t publicKey = generatePublicKey();
   ASSERT_ANY_THROW(wallet.createAddress(publicKey));
   wallet.shutdown();
 }
@@ -1779,14 +1779,14 @@ TEST_F(WalletApi, createTrackingKeyThrowsIfKeyExists) {
   cryptonote::WalletGreen wallet(dispatcher, currency, node);
   wallet.initialize("pass");
 
-  crypto::PublicKey publicKey = generatePublicKey();
+  crypto::public_key_t publicKey = generatePublicKey();
   wallet.createAddress(publicKey);
   ASSERT_ANY_THROW(wallet.createAddress(publicKey));
   wallet.shutdown();
 }
 
 TEST_F(WalletApi, createTrackingKeyThrowsIfWalletHasNotTrackingKeys) {
-  crypto::PublicKey publicKey = generatePublicKey();
+  crypto::public_key_t publicKey = generatePublicKey();
   ASSERT_ANY_THROW(alice.createAddress(publicKey));
 }
 
@@ -1794,7 +1794,7 @@ TEST_F(WalletApi, getAddressSpendKeyForTrackingKeyReturnsNullSecretKey) {
   cryptonote::WalletGreen wallet(dispatcher, currency, node);
   wallet.initialize("pass");
 
-  crypto::PublicKey publicKey = generatePublicKey();
+  crypto::public_key_t publicKey = generatePublicKey();
   wallet.createAddress(publicKey);
 
   KeyPair spendKeys = wallet.getAddressSpendKey(0);
@@ -1809,7 +1809,7 @@ TEST_F(WalletApi, getAddressSpendKeyForTrackingKeyReturnsNullSecretKey) {
 //   cryptonote::WalletGreen bob(dispatcher, currency, node);
 //   bob.initialize("pass2");
 
-//   crypto::PublicKey publicKey = generatePublicKey();
+//   crypto::public_key_t publicKey = generatePublicKey();
 //   bob.createAddress(publicKey);
 
 //   sendMoney(bob.getAddress(0), SENT, FEE);
@@ -1838,7 +1838,7 @@ TEST_F(WalletApi, getAddressSpendKeyForTrackingKeyReturnsNullSecretKey) {
 //   cryptonote::WalletGreen bob(dispatcher, currency, node);
 //   bob.initialize("pass2");
 
-//   crypto::PublicKey publicKey = generatePublicKey();
+//   crypto::public_key_t publicKey = generatePublicKey();
 //   bob.createAddress(publicKey);
 
 //   sendMoney(bob.getAddress(0), SENT, FEE);
@@ -1856,7 +1856,7 @@ TEST_F(WalletApi, getAddressSpendKeyForTrackingKeyReturnsNullSecretKey) {
 //   cryptonote::WalletGreen bob(dispatcher, currency, node);
 //   bob.initialize("pass2");
 
-//   crypto::PublicKey publicKey = generatePublicKey();
+//   crypto::public_key_t publicKey = generatePublicKey();
 //   bob.createAddress(publicKey);
 
 //   sendMoney(bob.getAddress(0), SENT, FEE);
@@ -3382,8 +3382,8 @@ TEST_F(WalletApi, getDelayedTransactionIdsThrowsIfInTrackingMode) {
   cryptonote::WalletGreen bob(dispatcher, currency, node, TRANSACTION_SOFTLOCK_TIME);
   bob.initialize("p");
 
-  crypto::PublicKey pub;
-  crypto::SecretKey sec;
+  crypto::public_key_t pub;
+  crypto::secret_key_t sec;
   crypto::generate_keys(pub, sec);
 
   bob.createAddress(pub);

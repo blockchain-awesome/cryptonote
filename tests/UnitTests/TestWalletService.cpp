@@ -39,7 +39,7 @@ struct IWalletBaseStub : public cryptonote::IWallet {
   virtual ~IWalletBaseStub() {}
 
   virtual void initialize(const std::string& password) override { }
-  virtual void initializeWithViewKey(const crypto::SecretKey& viewSecretKey, const std::string& password) override { }
+  virtual void initializeWithViewKey(const crypto::secret_key_t& viewSecretKey, const std::string& password) override { }
   virtual void load(std::istream& source, const std::string& password) override { }
   virtual void shutdown() override { }
 
@@ -52,8 +52,8 @@ struct IWalletBaseStub : public cryptonote::IWallet {
   virtual KeyPair getAddressSpendKey(const std::string& address) const override { return KeyPair(); }
   virtual KeyPair getViewKey() const override { return KeyPair(); }
   virtual std::string createAddress() override { return ""; }
-  virtual std::string createAddress(const crypto::SecretKey& spendSecretKey) override { return ""; }
-  virtual std::string createAddress(const crypto::PublicKey& spendPublicKey) override { return ""; }
+  virtual std::string createAddress(const crypto::secret_key_t& spendSecretKey) override { return ""; }
+  virtual std::string createAddress(const crypto::public_key_t& spendPublicKey) override { return ""; }
   virtual void deleteAddress(const std::string& address) override { }
 
   virtual uint64_t getActualBalance() const override { return 0; }
@@ -168,8 +168,8 @@ struct WalletCreateAddressStub: public IWalletBaseStub {
   WalletCreateAddressStub(System::Dispatcher& d) : IWalletBaseStub(d) {}
 
   virtual std::string createAddress() override { return address; }
-  virtual std::string createAddress(const crypto::SecretKey& spendSecretKey) override { return address; }
-  virtual std::string createAddress(const crypto::PublicKey& spendPublicKey) override { return address; }
+  virtual std::string createAddress(const crypto::secret_key_t& spendSecretKey) override { return address; }
+  virtual std::string createAddress(const crypto::public_key_t& spendPublicKey) override { return address; }
 
   std::string address = "correctAddress";
 };
@@ -202,8 +202,8 @@ TEST_F(WalletServiceTest_createAddress, invalidPublicKey) {
 }
 
 TEST_F(WalletServiceTest_createAddress, correctSecretKey) {
-  crypto::PublicKey pub;
-  crypto::SecretKey sec;
+  crypto::public_key_t pub;
+  crypto::secret_key_t sec;
   crypto::generate_keys(pub, sec);
 
   WalletCreateAddressStub wallet(dispatcher);
@@ -217,8 +217,8 @@ TEST_F(WalletServiceTest_createAddress, correctSecretKey) {
 }
 
 TEST_F(WalletServiceTest_createAddress, correctPublicKey) {
-  crypto::PublicKey pub;
-  crypto::SecretKey sec;
+  crypto::public_key_t pub;
+  crypto::secret_key_t sec;
   crypto::generate_keys(pub, sec);
 
   WalletCreateAddressStub wallet(dispatcher);

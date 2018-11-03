@@ -33,8 +33,8 @@ struct keys_file_data {
   }
 };
 
-bool verify_keys(const SecretKey& sec, const PublicKey& expected_pub) {
-  PublicKey pub;
+bool verify_keys(const secret_key_t& sec, const public_key_t& expected_pub) {
+  public_key_t pub;
   bool r = secret_key_to_public_key(sec, pub);
   return r && expected_pub == pub;
 }

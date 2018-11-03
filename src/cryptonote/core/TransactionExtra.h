@@ -25,7 +25,7 @@ struct TransactionExtraPadding {
 };
 
 struct TransactionExtraPublicKey {
-  crypto::PublicKey publicKey;
+  crypto::public_key_t publicKey;
 };
 
 struct TransactionExtraNonce {
@@ -55,8 +55,8 @@ bool findTransactionExtraFieldByType(const std::vector<TransactionExtraField>& t
 bool parseTransactionExtra(const std::vector<uint8_t>& tx_extra, std::vector<TransactionExtraField>& tx_extra_fields);
 bool writeTransactionExtra(std::vector<uint8_t>& tx_extra, const std::vector<TransactionExtraField>& tx_extra_fields);
 
-crypto::PublicKey getTransactionPublicKeyFromExtra(const std::vector<uint8_t>& tx_extra);
-bool addTransactionPublicKeyToExtra(std::vector<uint8_t>& tx_extra, const crypto::PublicKey& tx_pub_key);
+crypto::public_key_t getTransactionPublicKeyFromExtra(const std::vector<uint8_t>& tx_extra);
+bool addTransactionPublicKeyToExtra(std::vector<uint8_t>& tx_extra, const crypto::public_key_t& tx_pub_key);
 bool addExtraNonceToTransactionExtra(std::vector<uint8_t>& tx_extra, const BinaryArray& extra_nonce);
 void setPaymentIdToTransactionExtraNonce(BinaryArray& extra_nonce, const crypto::Hash& payment_id);
 bool getPaymentIdFromTransactionExtraNonce(const BinaryArray& extra_nonce, crypto::Hash& payment_id);

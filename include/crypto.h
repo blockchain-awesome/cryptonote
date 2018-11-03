@@ -12,11 +12,11 @@ struct Hash {
   uint8_t data[32];
 };
 
-struct PublicKey {
+struct public_key_t {
   uint8_t data[32];
 };
 
-struct SecretKey {
+struct secret_key_t {
   uint8_t data[32];
 };
 

@@ -19,7 +19,7 @@ const uint32_t UNCONFIRMED_TRANSACTION_GLOBAL_OUTPUT_INDEX = std::numeric_limits
 struct TransactionInformation {
   // transaction info
   crypto::Hash transactionHash;
-  crypto::PublicKey publicKey;
+  crypto::public_key_t publicKey;
   uint32_t blockHeight;
   uint64_t timestamp;
   uint64_t unlockTime;
@@ -39,10 +39,10 @@ struct TransactionOutputInformation {
 
   // transaction info
   crypto::Hash transactionHash;
-  crypto::PublicKey transactionPublicKey;
+  crypto::public_key_t transactionPublicKey;
 
   union {
-    crypto::PublicKey outputKey;         // Type: Key 
+    crypto::public_key_t outputKey;         // Type: Key 
     uint32_t requiredSignatures; // Type: Multisignature
   };
 };

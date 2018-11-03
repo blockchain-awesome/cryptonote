@@ -22,7 +22,7 @@ class Key
 };
 
 const Hash NULL_HASH = Key::zero<Hash>();
-const PublicKey NULL_PUBLIC_KEY = Key::zero<PublicKey>();
-const SecretKey NULL_SECRET_KEY = Key::zero<SecretKey>();
+const public_key_t NULL_PUBLIC_KEY = Key::zero<public_key_t>();
+const secret_key_t NULL_SECRET_KEY = Key::zero<secret_key_t>();
 
 } // namespace cryptonote

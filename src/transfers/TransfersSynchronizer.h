@@ -34,10 +34,10 @@ public:
   virtual bool removeSubscription(const AccountPublicAddress& acc) override;
   virtual void getSubscriptions(std::vector<AccountPublicAddress>& subscriptions) override;
   virtual ITransfersSubscription* getSubscription(const AccountPublicAddress& acc) override;
-  virtual std::vector<crypto::Hash> getViewKeyKnownBlocks(const crypto::PublicKey& publicViewKey) override;
+  virtual std::vector<crypto::Hash> getViewKeyKnownBlocks(const crypto::public_key_t& publicViewKey) override;
 
-  void subscribeConsumerNotifications(const crypto::PublicKey& viewPublicKey, ITransfersSynchronizerObserver* observer);
-  void unsubscribeConsumerNotifications(const crypto::PublicKey& viewPublicKey, ITransfersSynchronizerObserver* observer);
+  void subscribeConsumerNotifications(const crypto::public_key_t& viewPublicKey, ITransfersSynchronizerObserver* observer);
+  void unsubscribeConsumerNotifications(const crypto::public_key_t& viewPublicKey, ITransfersSynchronizerObserver* observer);
 
   // IStreamSerializable
   virtual void save(std::ostream& os) override;
@@ -45,11 +45,11 @@ public:
 
 private:
   // map { view public key -> consumer }
-  typedef std::unordered_map<crypto::PublicKey, std::unique_ptr<TransfersConsumer>> ConsumersContainer;
+  typedef std::unordered_map<crypto::public_key_t, std::unique_ptr<TransfersConsumer>> ConsumersContainer;
   ConsumersContainer m_consumers;
 
   typedef Tools::ObserverManager<ITransfersSynchronizerObserver> SubscribersNotifier;
-  typedef std::unordered_map<crypto::PublicKey, std::unique_ptr<SubscribersNotifier>> SubscribersContainer;
+  typedef std::unordered_map<crypto::public_key_t, std::unique_ptr<SubscribersNotifier>> SubscribersContainer;
   SubscribersContainer m_subscribers;
 
   // std::unordered_map<AccountAddress, std::unique_ptr<TransfersConsumer>> m_subscriptions;
@@ -64,7 +64,7 @@ private:
   virtual void onTransactionUpdated(IBlockchainConsumer* consumer, const crypto::Hash& transactionHash,
     const std::vector<ITransfersContainer*>& containers) override;
 
-  bool findViewKeyForConsumer(IBlockchainConsumer* consumer, crypto::PublicKey& viewKey) const;
+  bool findViewKeyForConsumer(IBlockchainConsumer* consumer, crypto::public_key_t& viewKey) const;
   SubscribersContainer::const_iterator findSubscriberForConsumer(IBlockchainConsumer* consumer) const;
 };
 

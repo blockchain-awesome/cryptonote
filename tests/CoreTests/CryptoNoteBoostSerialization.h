@@ -23,14 +23,14 @@ namespace boost
 
   //---------------------------------------------------
   template <class Archive>
-  inline void serialize(Archive &a, crypto::PublicKey &x, const boost::serialization::version_type ver)
+  inline void serialize(Archive &a, crypto::public_key_t &x, const boost::serialization::version_type ver)
   {
-    a & reinterpret_cast<char (&)[sizeof(crypto::PublicKey)]>(x);
+    a & reinterpret_cast<char (&)[sizeof(crypto::public_key_t)]>(x);
   }
   template <class Archive>
-  inline void serialize(Archive &a, crypto::SecretKey &x, const boost::serialization::version_type ver)
+  inline void serialize(Archive &a, crypto::secret_key_t &x, const boost::serialization::version_type ver)
   {
-    a & reinterpret_cast<char (&)[sizeof(crypto::SecretKey)]>(x);
+    a & reinterpret_cast<char (&)[sizeof(crypto::secret_key_t)]>(x);
   }
   template <class Archive>
   inline void serialize(Archive &a, crypto::key_derivation_t &x, const boost::serialization::version_type ver)

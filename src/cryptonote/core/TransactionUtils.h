@@ -16,7 +16,7 @@ TransactionTypes::InputType getTransactionInputType(const TransactionInput& in);
 const TransactionInput& getInputChecked(const cryptonote::TransactionPrefix& transaction, size_t index);
 const TransactionInput& getInputChecked(const cryptonote::TransactionPrefix& transaction, size_t index, TransactionTypes::InputType type);
 
-bool isOutToKey(const crypto::PublicKey& spendPublicKey, const crypto::PublicKey& outKey, const crypto::key_derivation_t& derivation, size_t keyIndex);
+bool isOutToKey(const crypto::public_key_t& spendPublicKey, const crypto::public_key_t& outKey, const crypto::key_derivation_t& derivation, size_t keyIndex);
 
 // TransactionOutput helper functions
 TransactionTypes::OutputType getTransactionOutputType(const TransactionOutputTarget& out);
@@ -24,6 +24,6 @@ const TransactionOutput& getOutputChecked(const cryptonote::TransactionPrefix& t
 const TransactionOutput& getOutputChecked(const cryptonote::TransactionPrefix& transaction, size_t index, TransactionTypes::OutputType type);
 
 bool findOutputsToAccount(const cryptonote::TransactionPrefix& transaction, const AccountPublicAddress& addr,
-        const crypto::SecretKey& viewSecretKey, std::vector<uint32_t>& out, uint64_t& amount);
+        const crypto::secret_key_t& viewSecretKey, std::vector<uint32_t>& out, uint64_t& amount);
 
 } //namespace cryptonote

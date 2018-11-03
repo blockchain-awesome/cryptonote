@@ -28,7 +28,7 @@ enum class OutputType : uint8_t
 
 struct GlobalOutput
 {
-    crypto::PublicKey targetKey;
+    crypto::public_key_t targetKey;
     uint32_t outputIndex;
 };
 
@@ -36,7 +36,7 @@ typedef std::vector<GlobalOutput> GlobalOutputsContainer;
 
 struct OutputKeyInfo
 {
-    crypto::PublicKey transactionPublicKey;
+    crypto::public_key_t transactionPublicKey;
     size_t transactionIndex;
     size_t outputInTransaction;
 };

@@ -46,7 +46,7 @@ namespace cryptonote {
       fields.push_back(value);
     }
 
-    bool getPublicKey(crypto::PublicKey& pk) const {
+    bool getPublicKey(crypto::public_key_t& pk) const {
       cryptonote::TransactionExtraPublicKey extraPk;
       if (!get(extraPk)) {
         return false;

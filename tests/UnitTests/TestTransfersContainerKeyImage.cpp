@@ -123,7 +123,7 @@ namespace {
     TransfersContainer container;
     AccountKeys account;
     std::unique_ptr<ITransaction> txTemplate;
-    SecretKey txSecretKey;
+    secret_key_t txSecretKey;
   };
 
 }

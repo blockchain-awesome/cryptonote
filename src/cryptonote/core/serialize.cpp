@@ -6,11 +6,11 @@ bool parse_hash256(const std::string& str_hash, crypto::Hash& hash) {
 
 namespace crypto {
 
-bool serialize(PublicKey& pubKey, Common::StringView name, cryptonote::ISerializer& serializer) {
+bool serialize(public_key_t& pubKey, Common::StringView name, cryptonote::ISerializer& serializer) {
   return serializePod(pubKey, name, serializer);
 }
 
-bool serialize(SecretKey& secKey, Common::StringView name, cryptonote::ISerializer& serializer) {
+bool serialize(secret_key_t& secKey, Common::StringView name, cryptonote::ISerializer& serializer) {
   return serializePod(secKey, name, serializer);
 }
 

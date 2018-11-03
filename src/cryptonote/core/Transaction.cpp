@@ -20,7 +20,7 @@ namespace {
 
   using namespace cryptonote;
 
-  void derivePublicKey(const AccountPublicAddress& to, const SecretKey& txKey, size_t outputIndex, PublicKey& ephemeralKey) {
+  void derivePublicKey(const AccountPublicAddress& to, const secret_key_t& txKey, size_t outputIndex, public_key_t& ephemeralKey) {
     key_derivation_t derivation;
     generate_key_derivation(to.viewPublicKey, txKey, derivation);
     derive_public_key(derivation, outputIndex, to.spendPublicKey, ephemeralKey);
@@ -45,7 +45,7 @@ namespace cryptonote {
     // ITransactionReader
     virtual Hash getTransactionHash() const override;
     virtual Hash getTransactionPrefixHash() const override;
-    virtual PublicKey getTransactionPublicKey() const override;
+    virtual public_key_t getTransactionPublicKey() const override;
     virtual uint64_t getUnlockTime() const override;
     virtual bool getPaymentId(Hash& hash) const override;
     virtual bool getExtraNonce(BinaryArray& nonce) const override;
@@ -66,7 +66,7 @@ namespace cryptonote {
     virtual void getOutput(size_t index, MultisignatureOutput& output, uint64_t& amount) const override;
 
     virtual size_t getRequiredSignaturesCount(size_t index) const override;
-    virtual bool findOutputsToAccount(const AccountPublicAddress& addr, const SecretKey& viewSecretKey, std::vector<uint32_t>& outs, uint64_t& outputAmount) const override;
+    virtual bool findOutputsToAccount(const AccountPublicAddress& addr, const secret_key_t& viewSecretKey, std::vector<uint32_t>& outs, uint64_t& outputAmount) const override;
 
     // various checks
     virtual bool validateInputs() const override;
@@ -94,13 +94,13 @@ namespace cryptonote {
     virtual size_t addOutput(uint64_t amount, const MultisignatureOutput& out) override;
 
     virtual void signInputKey(size_t input, const TransactionTypes::InputKeyInfo& info, const KeyPair& ephKeys) override;
-    virtual void signInputMultisignature(size_t input, const PublicKey& sourceTransactionKey, size_t outputIndex, const AccountKeys& accountKeys) override;
+    virtual void signInputMultisignature(size_t input, const public_key_t& sourceTransactionKey, size_t outputIndex, const AccountKeys& accountKeys) override;
     virtual void signInputMultisignature(size_t input, const KeyPair& ephemeralKeys) override;
 
 
     // secret key
-    virtual bool getTransactionSecretKey(SecretKey& key) const override;
-    virtual void setTransactionSecretKey(const SecretKey& key) override;
+    virtual bool getTransactionSecretKey(secret_key_t& key) const override;
+    virtual void setTransactionSecretKey(const secret_key_t& key) override;
 
   private:
 
@@ -108,7 +108,7 @@ namespace cryptonote {
 
     std::vector<signature_t>& getSignatures(size_t input);
 
-    const SecretKey& txSecretKey() const {
+    const secret_key_t& txSecretKey() const {
       if (!secretKey) {
         throw std::runtime_error("Operation requires transaction secret key");
       }
@@ -122,7 +122,7 @@ namespace cryptonote {
     }
 
     cryptonote::Transaction transaction;
-    boost::optional<SecretKey> secretKey;
+    boost::optional<secret_key_t> secretKey;
     mutable boost::optional<Hash> transactionHash;
     TransactionExtra extra;
   };
@@ -189,8 +189,8 @@ namespace cryptonote {
     return getObjectHash(*static_cast<const TransactionPrefix*>(&transaction));
   }
 
-  PublicKey TransactionImpl::getTransactionPublicKey() const {
-    PublicKey pk(NULL_PUBLIC_KEY);
+  public_key_t TransactionImpl::getTransactionPublicKey() const {
+    public_key_t pk(NULL_PUBLIC_KEY);
     extra.getPublicKey(pk);
     return pk;
   }
@@ -205,18 +205,18 @@ namespace cryptonote {
     invalidateHash();
   }
 
-  bool TransactionImpl::getTransactionSecretKey(SecretKey& key) const {
+  bool TransactionImpl::getTransactionSecretKey(secret_key_t& key) const {
     if (!secretKey) {
       return false;
     }
-    key = reinterpret_cast<const SecretKey&>(secretKey.get());
+    key = reinterpret_cast<const secret_key_t&>(secretKey.get());
     return true;
   }
 
-  void TransactionImpl::setTransactionSecretKey(const SecretKey& key) {
-    const auto& sk = reinterpret_cast<const SecretKey&>(key);
-    PublicKey pk;
-    PublicKey txPubKey;
+  void TransactionImpl::setTransactionSecretKey(const secret_key_t& key) {
+    const auto& sk = reinterpret_cast<const secret_key_t&>(key);
+    public_key_t pk;
+    public_key_t txPubKey;
 
     secret_key_to_public_key(sk, pk);
     extra.getPublicKey(txPubKey);
@@ -318,10 +318,10 @@ namespace cryptonote {
     Hash prefixHash = getTransactionPrefixHash();
 
     std::vector<signature_t> signatures;
-    std::vector<const PublicKey*> keysPtrs;
+    std::vector<const public_key_t*> keysPtrs;
 
     for (const auto& o : info.outputs) {
-      keysPtrs.push_back(reinterpret_cast<const PublicKey*>(&o.targetKey));
+      keysPtrs.push_back(reinterpret_cast<const public_key_t*>(&o.targetKey));
     }
 
     signatures.resize(keysPtrs.size());
@@ -330,7 +330,7 @@ namespace cryptonote {
       reinterpret_cast<const Hash&>(prefixHash),
       reinterpret_cast<const KeyImage&>(input.keyImage),
       keysPtrs,
-      reinterpret_cast<const SecretKey&>(ephKeys.secretKey),
+      reinterpret_cast<const secret_key_t&>(ephKeys.secretKey),
       info.realOutput.transactionIndex,
       signatures.data());
 
@@ -338,20 +338,20 @@ namespace cryptonote {
     invalidateHash();
   }
 
-  void TransactionImpl::signInputMultisignature(size_t index, const PublicKey& sourceTransactionKey, size_t outputIndex, const AccountKeys& accountKeys) {
+  void TransactionImpl::signInputMultisignature(size_t index, const public_key_t& sourceTransactionKey, size_t outputIndex, const AccountKeys& accountKeys) {
     key_derivation_t derivation;
-    PublicKey ephemeralPublicKey;
-    SecretKey ephemeralSecretKey;
+    public_key_t ephemeralPublicKey;
+    secret_key_t ephemeralSecretKey;
 
     generate_key_derivation(
-      reinterpret_cast<const PublicKey&>(sourceTransactionKey),
-      reinterpret_cast<const SecretKey&>(accountKeys.viewSecretKey),
+      reinterpret_cast<const public_key_t&>(sourceTransactionKey),
+      reinterpret_cast<const secret_key_t&>(accountKeys.viewSecretKey),
       derivation);
 
     derive_public_key(derivation, outputIndex,
-      reinterpret_cast<const PublicKey&>(accountKeys.address.spendPublicKey), ephemeralPublicKey);
+      reinterpret_cast<const public_key_t&>(accountKeys.address.spendPublicKey), ephemeralPublicKey);
     derive_secret_key(derivation, outputIndex,
-      reinterpret_cast<const SecretKey&>(accountKeys.spendSecretKey), ephemeralSecretKey);
+      reinterpret_cast<const secret_key_t&>(accountKeys.spendSecretKey), ephemeralSecretKey);
 
     signature_t signature;
     auto txPrefixHash = getTransactionPrefixHash();
@@ -482,7 +482,7 @@ namespace cryptonote {
     amount = out.amount;
   }
 
-  bool TransactionImpl::findOutputsToAccount(const AccountPublicAddress& addr, const SecretKey& viewSecretKey, std::vector<uint32_t>& out, uint64_t& amount) const {
+  bool TransactionImpl::findOutputsToAccount(const AccountPublicAddress& addr, const secret_key_t& viewSecretKey, std::vector<uint32_t>& out, uint64_t& amount) const {
     return ::cryptonote::findOutputsToAccount(transaction, addr, viewSecretKey, out, amount);
   }
 

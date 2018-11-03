@@ -1211,10 +1211,10 @@ bool Blockchain::check_tx_input(const KeyInput& txin, const crypto::Hash& tx_pre
   std::lock_guard<decltype(m_blockchain_lock)> lk(m_blockchain_lock);
 
   struct outputs_visitor {
-    std::vector<const crypto::PublicKey *>& m_results_collector;
+    std::vector<const crypto::public_key_t *>& m_results_collector;
     Blockchain& m_bch;
     LoggerRef logger;
-    outputs_visitor(std::vector<const crypto::PublicKey *>& results_collector, Blockchain& bch, ILogger& logger) :m_results_collector(results_collector), m_bch(bch), logger(logger, "outputs_visitor") {
+    outputs_visitor(std::vector<const crypto::public_key_t *>& results_collector, Blockchain& bch, ILogger& logger) :m_results_collector(results_collector), m_bch(bch), logger(logger, "outputs_visitor") {
     }
 
     bool handle_output(const Transaction& tx, const TransactionOutput& out, size_t transactionOutputIndex) {
@@ -1237,7 +1237,7 @@ bool Blockchain::check_tx_input(const KeyInput& txin, const crypto::Hash& tx_pre
   };
 
   //check ring signature
-  std::vector<const crypto::PublicKey *> output_keys;
+  std::vector<const crypto::public_key_t *> output_keys;
   outputs_visitor vi(output_keys, *this, logger.getLogger());
   if (!scanOutputKeysForIndexes(txin, vi, pmax_related_block_height)) {
     logger(INFO, BRIGHT_WHITE) <<

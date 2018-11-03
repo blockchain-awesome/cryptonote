@@ -109,21 +109,21 @@ bool writeTransactionExtra(std::vector<uint8_t>& tx_extra, const std::vector<Tra
   return true;
 }
 
-PublicKey getTransactionPublicKeyFromExtra(const std::vector<uint8_t>& tx_extra) {
+public_key_t getTransactionPublicKeyFromExtra(const std::vector<uint8_t>& tx_extra) {
   std::vector<TransactionExtraField> tx_extra_fields;
   parseTransactionExtra(tx_extra, tx_extra_fields);
 
   TransactionExtraPublicKey pub_key_field;
   if (!findTransactionExtraFieldByType(tx_extra_fields, pub_key_field))
-    return boost::value_initialized<PublicKey>();
+    return boost::value_initialized<public_key_t>();
 
   return pub_key_field.publicKey;
 }
 
-bool addTransactionPublicKeyToExtra(std::vector<uint8_t>& tx_extra, const PublicKey& tx_pub_key) {
-  tx_extra.resize(tx_extra.size() + 1 + sizeof(PublicKey));
-  tx_extra[tx_extra.size() - 1 - sizeof(PublicKey)] = TX_EXTRA_TAG_PUBKEY;
-  *reinterpret_cast<PublicKey*>(&tx_extra[tx_extra.size() - sizeof(PublicKey)]) = tx_pub_key;
+bool addTransactionPublicKeyToExtra(std::vector<uint8_t>& tx_extra, const public_key_t& tx_pub_key) {
+  tx_extra.resize(tx_extra.size() + 1 + sizeof(public_key_t));
+  tx_extra[tx_extra.size() - 1 - sizeof(public_key_t)] = TX_EXTRA_TAG_PUBKEY;
+  *reinterpret_cast<public_key_t*> (&tx_extra[tx_extra.size() - sizeof(public_key_t)]) = tx_pub_key;
   return true;
 }
 

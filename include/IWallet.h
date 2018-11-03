@@ -114,7 +114,7 @@ public:
   virtual ~IWallet() {}
 
   virtual void initialize(const std::string& password) = 0;
-  virtual void initializeWithViewKey(const crypto::SecretKey& viewSecretKey, const std::string& password) = 0;
+  virtual void initializeWithViewKey(const crypto::secret_key_t& viewSecretKey, const std::string& password) = 0;
   virtual void load(std::istream& source, const std::string& password) = 0;
   virtual void shutdown() = 0;
 
@@ -127,8 +127,8 @@ public:
   virtual KeyPair getAddressSpendKey(const std::string& address) const = 0;
   virtual KeyPair getViewKey() const = 0;
   virtual std::string createAddress() = 0;
-  virtual std::string createAddress(const crypto::SecretKey& spendSecretKey) = 0;
-  virtual std::string createAddress(const crypto::PublicKey& spendPublicKey) = 0;
+  virtual std::string createAddress(const crypto::secret_key_t& spendSecretKey) = 0;
+  virtual std::string createAddress(const crypto::public_key_t& spendPublicKey) = 0;
   virtual void deleteAddress(const std::string& address) = 0;
 
   virtual uint64_t getActualBalance() const = 0;

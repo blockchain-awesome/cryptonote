@@ -21,12 +21,12 @@ TestTransactionBuilder::TestTransactionBuilder() {
   tx = createTransaction();
 }
 
-TestTransactionBuilder::TestTransactionBuilder(const BinaryArray& txTemplate, const crypto::SecretKey& secretKey) {
+TestTransactionBuilder::TestTransactionBuilder(const BinaryArray& txTemplate, const crypto::secret_key_t& secretKey) {
   tx = createTransaction(txTemplate);
   tx->setTransactionSecretKey(secretKey);
 }
 
-PublicKey TestTransactionBuilder::getTransactionPublicKey() const {
+public_key_t TestTransactionBuilder::getTransactionPublicKey() const {
   return tx->getTransactionPublicKey();
 }
 
@@ -42,7 +42,7 @@ size_t TestTransactionBuilder::addTestInput(uint64_t amount, const AccountKeys& 
   using namespace TransactionTypes;
 
   TransactionTypes::InputKeyInfo info;
-  PublicKey targetKey;
+  public_key_t targetKey;
 
   // cryptonote::KeyPair srcTxKeys = cryptonote::generateKeyPair();
   KeyPair srcTxKeys = Key::generate();
@@ -55,7 +55,7 @@ size_t TestTransactionBuilder::addTestInput(uint64_t amount, const AccountKeys& 
 
   info.realOutput.transactionIndex = 0;
   info.realOutput.outputInTransaction = 5;
-  info.realOutput.transactionPublicKey = reinterpret_cast<const PublicKey&>(srcTxKeys.publicKey);
+  info.realOutput.transactionPublicKey = reinterpret_cast<const public_key_t&>(srcTxKeys.publicKey);
 
   KeyPair ephKeys;
   size_t idx = tx->addInput(senderKeys, info, ephKeys);
@@ -67,7 +67,7 @@ size_t TestTransactionBuilder::addTestInput(uint64_t amount, std::vector<uint32_
   using namespace TransactionTypes;
 
   TransactionTypes::InputKeyInfo info;
-  PublicKey targetKey;
+  public_key_t targetKey;
 
   // cryptonote::KeyPair srcTxKeys = cryptonote::generateKeyPair();
   KeyPair srcTxKeys = Key::generate();
@@ -78,8 +78,8 @@ size_t TestTransactionBuilder::addTestInput(uint64_t amount, std::vector<uint32_
 
   info.amount = amount;
   info.outputs.push_back(gout);
-  PublicKey pk;
-  SecretKey sk;
+  public_key_t pk;
+  secret_key_t sk;
   for (auto out : gouts) {
     crypto::generate_keys(pk, sk);
     info.outputs.push_back(TransactionTypes::GlobalOutput{ pk, out });
@@ -87,7 +87,7 @@ size_t TestTransactionBuilder::addTestInput(uint64_t amount, std::vector<uint32_
 
   info.realOutput.transactionIndex = 0;
   info.realOutput.outputInTransaction = 5;
-  info.realOutput.transactionPublicKey = reinterpret_cast<const PublicKey&>(srcTxKeys.publicKey);
+  info.realOutput.transactionPublicKey = reinterpret_cast<const public_key_t&>(srcTxKeys.publicKey);
 
   KeyPair ephKeys;
   size_t idx = tx->addInput(senderKeys, info, ephKeys);
@@ -135,7 +135,7 @@ size_t TestTransactionBuilder::addFakeMultisignatureInput(uint64_t amount, uint3
     accs.push_back(generateAccount());
   }
 
-  msigInputs[idx] = MsigInfo{ crypto::rand<PublicKey>(), 0, std::move(accs) };
+  msigInputs[idx] = MsigInfo{ crypto::rand<public_key_t>(), 0, std::move(accs) };
   return idx;
 }
 

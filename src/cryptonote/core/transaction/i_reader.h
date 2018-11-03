@@ -21,8 +21,8 @@ class ITransactionReader
 
     virtual crypto::Hash getTransactionHash() const = 0;
     virtual crypto::Hash getTransactionPrefixHash() const = 0;
-    virtual crypto::PublicKey getTransactionPublicKey() const = 0;
-    virtual bool getTransactionSecretKey(crypto::SecretKey &key) const = 0;
+    virtual crypto::public_key_t getTransactionPublicKey() const = 0;
+    virtual bool getTransactionSecretKey(crypto::secret_key_t &key) const = 0;
     virtual uint64_t getUnlockTime() const = 0;
 
     // extra
@@ -46,7 +46,7 @@ class ITransactionReader
 
     // signatures
     virtual size_t getRequiredSignaturesCount(size_t inputIndex) const = 0;
-    virtual bool findOutputsToAccount(const AccountPublicAddress &addr, const crypto::SecretKey &viewSecretKey, std::vector<uint32_t> &outs, uint64_t &outputAmount) const = 0;
+    virtual bool findOutputsToAccount(const AccountPublicAddress &addr, const crypto::secret_key_t &viewSecretKey, std::vector<uint32_t> &outs, uint64_t &outputAmount) const = 0;
 
     // various checks
     virtual bool validateInputs() const = 0;

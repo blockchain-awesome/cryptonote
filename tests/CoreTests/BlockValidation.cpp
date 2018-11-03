@@ -488,7 +488,7 @@ bool gen_block_miner_tx_has_out_to_alice::generate(std::vector<test_event_entry>
   MAKE_MINER_TX_AND_KEY_MANUALLY(miner_tx, blk_0, &txkey);
 
   crypto::key_derivation_t derivation;
-  crypto::PublicKey out_eph_public_key;
+  crypto::public_key_t out_eph_public_key;
   crypto::generate_key_derivation(alice.getAccountKeys().address.viewPublicKey, txkey.secretKey, derivation);
   crypto::derive_public_key(derivation, 1, alice.getAccountKeys().address.spendPublicKey, out_eph_public_key);
 

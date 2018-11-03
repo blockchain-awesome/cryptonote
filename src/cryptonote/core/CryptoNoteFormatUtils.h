@@ -21,11 +21,11 @@ namespace cryptonote {
 bool parseAndValidateTransactionFromBinaryArray(const BinaryArray& transactionBinaryArray, Transaction& transaction, crypto::Hash& transactionHash, crypto::Hash& transactionPrefixHash);
 
 struct TransactionSourceEntry {
-  typedef std::pair<uint32_t, crypto::PublicKey> OutputEntry;
+  typedef std::pair<uint32_t, crypto::public_key_t> OutputEntry;
 
   std::vector<OutputEntry> outputs;           //index + key
   size_t realOutput;                          //index in outputs vector of real output_entry
-  crypto::PublicKey realTransactionPublicKey; //incoming real tx public key
+  crypto::public_key_t realTransactionPublicKey; //incoming real tx public key
   size_t realOutputIndexInTransaction;        //index in transaction outputs vector
   uint64_t amount;                            //money
 };
@@ -46,13 +46,13 @@ bool constructTransaction(
   std::vector<uint8_t> extra, Transaction& transaction, uint64_t unlock_time, Logging::ILogger& log);
 
 
-bool is_out_to_acc(const AccountKeys& acc, const KeyOutput& out_key, const crypto::PublicKey& tx_pub_key, size_t keyIndex);
+bool is_out_to_acc(const AccountKeys& acc, const KeyOutput& out_key, const crypto::public_key_t& tx_pub_key, size_t keyIndex);
 bool is_out_to_acc(const AccountKeys& acc, const KeyOutput& out_key, const crypto::key_derivation_t& derivation, size_t keyIndex);
-bool lookup_acc_outs(const AccountKeys& acc, const Transaction& tx, const crypto::PublicKey& tx_pub_key, std::vector<size_t>& outs, uint64_t& money_transfered);
+bool lookup_acc_outs(const AccountKeys& acc, const Transaction& tx, const crypto::public_key_t& tx_pub_key, std::vector<size_t>& outs, uint64_t& money_transfered);
 bool lookup_acc_outs(const AccountKeys& acc, const Transaction& tx, std::vector<size_t>& outs, uint64_t& money_transfered);
 bool get_tx_fee(const Transaction& tx, uint64_t & fee);
 uint64_t get_tx_fee(const Transaction& tx);
-bool generate_key_image_helper(const AccountKeys& ack, const crypto::PublicKey& tx_public_key, size_t real_output_index, KeyPair& in_ephemeral, crypto::KeyImage& ki);
+bool generate_key_image_helper(const AccountKeys& ack, const crypto::public_key_t& tx_public_key, size_t real_output_index, KeyPair& in_ephemeral, crypto::KeyImage& ki);
 std::string short_hash_str(const crypto::Hash& h);
 
 bool get_block_hashing_blob(const block_t& b, BinaryArray& blob);

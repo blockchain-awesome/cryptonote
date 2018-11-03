@@ -107,7 +107,7 @@ namespace cryptonote {
      std::vector<Transaction> getPoolTransactions() override;
      size_t get_pool_transactions_count();
      size_t get_blockchain_total_transactions();
-     //bool get_outs(uint64_t amount, std::list<crypto::PublicKey>& pkeys);
+     //bool get_outs(uint64_t amount, std::list<crypto::public_key_t>& pkeys);
      virtual std::vector<crypto::Hash> findBlockchainSupplement(const std::vector<crypto::Hash>& remoteBlockIds, size_t maxCount,
        uint32_t& totalBlockCount, uint32_t& startBlockIndex) override;
      bool get_stat_info(CoreStateInfo& st_inf) override;

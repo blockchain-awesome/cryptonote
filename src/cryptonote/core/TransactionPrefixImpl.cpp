@@ -25,7 +25,7 @@ public:
 
   virtual Hash getTransactionHash() const override;
   virtual Hash getTransactionPrefixHash() const override;
-  virtual PublicKey getTransactionPublicKey() const override;
+  virtual public_key_t getTransactionPublicKey() const override;
   virtual uint64_t getUnlockTime() const override;
 
   // extra
@@ -49,7 +49,7 @@ public:
 
   // signatures
   virtual size_t getRequiredSignaturesCount(size_t inputIndex) const override;
-  virtual bool findOutputsToAccount(const AccountPublicAddress& addr, const SecretKey& viewSecretKey, std::vector<uint32_t>& outs, uint64_t& outputAmount) const override;
+  virtual bool findOutputsToAccount(const AccountPublicAddress& addr, const secret_key_t& viewSecretKey, std::vector<uint32_t>& outs, uint64_t& outputAmount) const override;
 
   // various checks
   virtual bool validateInputs() const override;
@@ -59,7 +59,7 @@ public:
   // serialized transaction
   virtual BinaryArray getTransactionData() const override;
 
-  virtual bool getTransactionSecretKey(SecretKey& key) const override;
+  virtual bool getTransactionSecretKey(secret_key_t& key) const override;
 
 private:
   TransactionPrefix m_txPrefix;
@@ -85,8 +85,8 @@ Hash TransactionPrefixImpl::getTransactionPrefixHash() const {
   return getObjectHash(m_txPrefix);
 }
 
-PublicKey TransactionPrefixImpl::getTransactionPublicKey() const {
-  crypto::PublicKey pk(NULL_PUBLIC_KEY);
+public_key_t TransactionPrefixImpl::getTransactionPublicKey() const {
+  crypto::public_key_t pk(NULL_PUBLIC_KEY);
   m_extra.getPublicKey(pk);
   return pk;
 }
@@ -174,7 +174,7 @@ size_t TransactionPrefixImpl::getRequiredSignaturesCount(size_t inputIndex) cons
   return ::cryptonote::getRequiredSignaturesCount(getInputChecked(m_txPrefix, inputIndex));
 }
 
-bool TransactionPrefixImpl::findOutputsToAccount(const AccountPublicAddress& addr, const SecretKey& viewSecretKey, std::vector<uint32_t>& outs, uint64_t& outputAmount) const {
+bool TransactionPrefixImpl::findOutputsToAccount(const AccountPublicAddress& addr, const secret_key_t& viewSecretKey, std::vector<uint32_t>& outs, uint64_t& outputAmount) const {
   return ::cryptonote::findOutputsToAccount(m_txPrefix, addr, viewSecretKey, outs, outputAmount);
 }
 
@@ -198,7 +198,7 @@ BinaryArray TransactionPrefixImpl::getTransactionData() const {
   return toBinaryArray(m_txPrefix);
 }
 
-bool TransactionPrefixImpl::getTransactionSecretKey(SecretKey& key) const {
+bool TransactionPrefixImpl::getTransactionSecretKey(secret_key_t& key) const {
   return false;
 }
 

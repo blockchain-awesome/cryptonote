@@ -116,8 +116,8 @@ public:
   std::vector<AccountBase> m_miners;
   std::vector<Transaction> m_miner_txs;
   std::vector<TransactionSourceEntry> m_sources;
-  std::vector<crypto::PublicKey> m_public_keys;
-  std::vector<const crypto::PublicKey*> m_public_key_ptrs;
+  std::vector<crypto::public_key_t> m_public_keys;
+  std::vector<const crypto::public_key_t*> m_public_key_ptrs;
 
   Logging::LoggerGroup m_logger;
   const cryptonote::Currency& m_currency;

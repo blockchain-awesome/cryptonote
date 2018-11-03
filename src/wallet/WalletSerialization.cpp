@@ -29,8 +29,8 @@ namespace {
 
 //DO NOT CHANGE IT
 struct WalletRecordDto {
-  PublicKey spendPublicKey;
-  SecretKey spendSecretKey;
+  public_key_t spendPublicKey;
+  secret_key_t spendSecretKey;
   uint64_t pendingBalance = 0;
   uint64_t actualBalance = 0;
   uint64_t creationTimestamp = 0;
@@ -219,14 +219,14 @@ void deserializeEncrypted(Object& obj, const std::string& name, cryptonote::Cryp
   deserialize(obj, name, plain);
 }
 
-bool verifyKeys(const SecretKey& sec, const PublicKey& expected_pub) {
-  PublicKey pub;
+bool verifyKeys(const secret_key_t& sec, const public_key_t& expected_pub) {
+  public_key_t pub;
   bool r = crypto::secret_key_to_public_key(sec, pub);
 
   return r && expected_pub == pub;
 }
 
-void throwIfKeysMissmatch(const SecretKey& sec, const PublicKey& expected_pub) {
+void throwIfKeysMissmatch(const secret_key_t& sec, const public_key_t& expected_pub) {
   if (!verifyKeys(sec, expected_pub))
     throw std::system_error(make_error_code(cryptonote::error::WRONG_PASSWORD));
 }
@@ -270,8 +270,8 @@ void CryptoContext::incIv() {
 
 WalletSerializer::WalletSerializer(
   ITransfersObserver& transfersObserver,
-  PublicKey& viewPublicKey,
-  SecretKey& viewSecretKey,
+  public_key_t& viewPublicKey,
+  secret_key_t& viewSecretKey,
   uint64_t& actualBalance,
   uint64_t& pendingBalance,
   WalletsContainer& walletsContainer,
@@ -667,7 +667,7 @@ void WalletSerializer::loadWallets(Common::IInputStream& source, CryptoContext& 
     }
 
     if (dto.spendSecretKey != NULL_SECRET_KEY) {
-      crypto::PublicKey restoredPublicKey;
+      crypto::public_key_t restoredPublicKey;
       bool r = crypto::secret_key_to_public_key(dto.spendSecretKey, restoredPublicKey);
 
       if (!r || dto.spendPublicKey != restoredPublicKey) {

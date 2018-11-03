@@ -267,7 +267,7 @@ size_t core::get_blockchain_total_transactions() {
   return m_blockchain.getTotalTransactions();
 }
 
-//bool core::get_outs(uint64_t amount, std::list<crypto::PublicKey>& pkeys)
+//bool core::get_outs(uint64_t amount, std::list<crypto::public_key_t>& pkeys)
 //{
 //  return m_blockchain.get_outs(amount, pkeys);
 //}

@@ -176,7 +176,7 @@ struct COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_request {
 #pragma pack(push, 1)
 struct COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_out_entry {
   uint64_t global_amount_index;
-  crypto::PublicKey out_key;
+  crypto::public_key_t out_key;
 };
 #pragma pack(pop)
 

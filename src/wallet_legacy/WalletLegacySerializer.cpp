@@ -21,13 +21,13 @@ using namespace Common;
 
 namespace {
 
-bool verifyKeys(const crypto::SecretKey& sec, const crypto::PublicKey& expected_pub) {
-  crypto::PublicKey pub;
+bool verifyKeys(const crypto::secret_key_t& sec, const crypto::public_key_t& expected_pub) {
+  crypto::public_key_t pub;
   bool r = crypto::secret_key_to_public_key(sec, pub);
   return r && expected_pub == pub;
 }
 
-void throwIfKeysMissmatch(const crypto::SecretKey& sec, const crypto::PublicKey& expected_pub) {
+void throwIfKeysMissmatch(const crypto::secret_key_t& sec, const crypto::public_key_t& expected_pub) {
   if (!verifyKeys(sec, expected_pub))
     throw std::system_error(make_error_code(cryptonote::error::WRONG_PASSWORD));
 }

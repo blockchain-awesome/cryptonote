@@ -50,12 +50,12 @@ bool Account::init()
 
 std::string &Account::toAdress()
 {
-  char keyStore[sizeof(crypto::PublicKey) * 2];
+  char keyStore[sizeof(crypto::public_key_t) * 2];
 
-  memcpy(keyStore, &m_public_keys.spend, sizeof(crypto::PublicKey));
-  memcpy(keyStore + sizeof(crypto::PublicKey), &m_public_keys.view, sizeof(crypto::PublicKey));
+  memcpy(keyStore, &m_public_keys.spend, sizeof(crypto::public_key_t));
+  memcpy(keyStore + sizeof(crypto::public_key_t), &m_public_keys.view, sizeof(crypto::public_key_t));
   const uint64_t prefix = cryptonote::parameters::CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX;
-  m_address = Tools::Base58::encode_addr(prefix, std::string(keyStore, sizeof(crypto::PublicKey) * 2));
+  m_address = Tools::Base58::encode_addr(prefix, std::string(keyStore, sizeof(crypto::public_key_t) * 2));
   return m_address;
 }
 

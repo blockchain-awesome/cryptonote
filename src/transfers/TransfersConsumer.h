@@ -22,7 +22,7 @@ class INode;
 class TransfersConsumer: public IObservableImpl<IBlockchainConsumerObserver, IBlockchainConsumer> {
 public:
 
-  TransfersConsumer(const cryptonote::Currency& currency, INode& node, const crypto::SecretKey& viewSecret);
+  TransfersConsumer(const cryptonote::Currency& currency, INode& node, const crypto::secret_key_t& viewSecret);
 
   ITransfersSubscription& addSubscription(const AccountSubscription& subscription);
   // returns true if no subscribers left
@@ -52,7 +52,7 @@ private:
   }
 
   struct PreprocessInfo {
-    std::unordered_map<crypto::PublicKey, std::vector<TransactionOutputInformationIn>> outputs;
+    std::unordered_map<crypto::public_key_t, std::vector<TransactionOutputInformationIn>> outputs;
     std::vector<uint32_t> globalIdxs;
   };
 
@@ -67,10 +67,10 @@ private:
   void updateSyncStart();
 
   SynchronizationStart m_syncStart;
-  const crypto::SecretKey m_viewSecret;
+  const crypto::secret_key_t m_viewSecret;
   // map { spend public key -> subscription }
-  std::unordered_map<crypto::PublicKey, std::unique_ptr<TransfersSubscription>> m_subscriptions;
-  std::unordered_set<crypto::PublicKey> m_spendKeys;
+  std::unordered_map<crypto::public_key_t, std::unique_ptr<TransfersSubscription>> m_subscriptions;
+  std::unordered_set<crypto::public_key_t> m_spendKeys;
   std::unordered_set<crypto::Hash> m_poolTxs;
 
   INode& m_node;

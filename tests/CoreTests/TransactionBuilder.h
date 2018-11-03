@@ -18,7 +18,7 @@ public:
   struct MultisignatureSource {
     cryptonote::MultisignatureInput input;
     KeysVector keys;
-    crypto::PublicKey srcTxPubKey;
+    crypto::public_key_t srcTxPubKey;
     size_t srcOutputIndex;
   };
 

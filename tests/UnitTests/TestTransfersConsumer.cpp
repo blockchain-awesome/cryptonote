@@ -27,7 +27,7 @@ AccountSubscription getAccountSubscription(const AccountKeys& accountKeys) {
   return subscription;
 }
 
-AccountKeys getAccountKeysWithViewKey(const PublicKey& publicViewKey, const SecretKey& secretViewKey) {
+AccountKeys getAccountKeysWithViewKey(const public_key_t& publicViewKey, const secret_key_t& secretViewKey) {
   KeyPair viewKp;
   viewKp.publicKey = publicViewKey;
   viewKp.secretKey = secretViewKey;

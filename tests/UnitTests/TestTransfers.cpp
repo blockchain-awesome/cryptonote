@@ -317,7 +317,7 @@ namespace {
 
 struct lessOutKey {
   bool operator()(const TransactionOutputInformation& t1, const TransactionOutputInformation& t2) {
-    return std::hash<PublicKey>()(t1.outputKey) <  std::hash<PublicKey>()(t2.outputKey);
+    return std::hash<public_key_t>()(t1.outputKey) <  std::hash<public_key_t>()(t2.outputKey);
   }
 };
 

@@ -320,7 +320,7 @@ bool BlockchainExplorerDataBuilder::fillTransactionDetails(const Transaction& tr
       TransactionOutputMultisignatureDetails txOutMultisigDetails;
       MultisignatureOutput txOutMultisig = boost::get<MultisignatureOutput>(txOutput.get<0>().target);
       txOutMultisigDetails.keys.reserve(txOutMultisig.keys.size());
-      for (const crypto::PublicKey& key : txOutMultisig.keys) {
+      for (const crypto::public_key_t& key : txOutMultisig.keys) {
         txOutMultisigDetails.keys.push_back(std::move(key));
       }
       txOutMultisigDetails.requiredSignatures = txOutMultisig.requiredSignatureCount;

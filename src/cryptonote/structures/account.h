@@ -6,20 +6,20 @@ namespace cryptonote
 {
 struct AccountPublicAddress
 {
-    crypto::PublicKey spendPublicKey;
-    crypto::PublicKey viewPublicKey;
+    crypto::public_key_t spendPublicKey;
+    crypto::public_key_t viewPublicKey;
 };
 
 struct AccountKeys
 {
     AccountPublicAddress address;
-    crypto::SecretKey spendSecretKey;
-    crypto::SecretKey viewSecretKey;
+    crypto::secret_key_t spendSecretKey;
+    crypto::secret_key_t viewSecretKey;
 };
 
 struct KeyPair
 {
-    crypto::PublicKey publicKey;
-    crypto::SecretKey secretKey;
+    crypto::public_key_t publicKey;
+    crypto::secret_key_t secretKey;
 };
 } // namespace cryptonote

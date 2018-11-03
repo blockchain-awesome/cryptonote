@@ -23,13 +23,13 @@ using namespace cryptonote;
 
 void checkOutputKey(
   const key_derivation_t& derivation,
-  const PublicKey& key,
+  const public_key_t& key,
   size_t keyIndex,
   size_t outputIndex,
-  const std::unordered_set<PublicKey>& spendKeys,
-  std::unordered_map<PublicKey, std::vector<uint32_t>>& outputs) {
+  const std::unordered_set<public_key_t>& spendKeys,
+  std::unordered_map<public_key_t, std::vector<uint32_t>>& outputs) {
 
-  PublicKey spendKey;
+  public_key_t spendKey;
   underive_public_key(derivation, keyIndex, key, spendKey);
 
   if (spendKeys.find(spendKey) != spendKeys.end()) {
@@ -40,9 +40,9 @@ void checkOutputKey(
 
 void findMyOutputs(
   const ITransactionReader& tx,
-  const SecretKey& viewSecretKey,
-  const std::unordered_set<PublicKey>& spendKeys,
-  std::unordered_map<PublicKey, std::vector<uint32_t>>& outputs) {
+  const secret_key_t& viewSecretKey,
+  const std::unordered_set<public_key_t>& spendKeys,
+  std::unordered_map<public_key_t, std::vector<uint32_t>>& outputs) {
 
   auto txPublicKey = tx.getTransactionPublicKey();
   key_derivation_t derivation;
@@ -94,7 +94,7 @@ std::vector<crypto::Hash> getBlockHashes(const cryptonote::CompleteBlock* blocks
 
 namespace cryptonote {
 
-TransfersConsumer::TransfersConsumer(const cryptonote::Currency& currency, INode& node, const SecretKey& viewSecret) :
+TransfersConsumer::TransfersConsumer(const cryptonote::Currency& currency, INode& node, const secret_key_t& viewSecret) :
   m_node(node), m_viewSecret(viewSecret), m_currency(currency) {
   updateSyncStart();
 }
@@ -394,7 +394,7 @@ std::error_code createTransfers(
         in_ephemeral,
         info.keyImage);
 
-      assert(out.key == reinterpret_cast<const PublicKey&>(in_ephemeral.publicKey));
+      assert(out.key == reinterpret_cast<const public_key_t&>(in_ephemeral.publicKey));
 
       info.amount = amount;
       info.outputKey = out.key;
@@ -415,7 +415,7 @@ std::error_code createTransfers(
 }
 
 std::error_code TransfersConsumer::preprocessOutputs(const TransactionBlockInfo& blockInfo, const ITransactionReader& tx, PreprocessInfo& info) {
-  std::unordered_map<PublicKey, std::vector<uint32_t>> outputs;
+  std::unordered_map<public_key_t, std::vector<uint32_t>> outputs;
   findMyOutputs(tx, m_viewSecret, m_spendKeys, outputs);
 
   if (outputs.empty()) {

@@ -75,7 +75,7 @@ private:
   void loadWallet();
   void loadTransactionIdIndex();
 
-  void replaceWithNewWallet(const crypto::SecretKey& viewSecretKey);
+  void replaceWithNewWallet(const crypto::secret_key_t& viewSecretKey);
 
   std::vector<cryptonote::TransactionsInBlockInfo> getTransactions(const crypto::Hash& blockHash, size_t blockCount) const;
   std::vector<cryptonote::TransactionsInBlockInfo> getTransactions(uint32_t firstBlockIndex, size_t blockCount) const;

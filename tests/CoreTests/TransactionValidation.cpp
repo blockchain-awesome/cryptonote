@@ -55,7 +55,7 @@ namespace
       BOOST_FOREACH(const TransactionDestinationEntry& dst_entr, destinations)
       {
         crypto::key_derivation_t derivation;
-        crypto::PublicKey out_eph_public_key;
+        crypto::public_key_t out_eph_public_key;
         crypto::generate_key_derivation(dst_entr.addr.viewPublicKey, m_tx_key.secretKey, derivation);
         crypto::derive_public_key(derivation, output_index, dst_entr.addr.spendPublicKey, out_eph_public_key);
 
@@ -81,7 +81,7 @@ namespace
       size_t i = 0;
       BOOST_FOREACH(const TransactionSourceEntry& src_entr, sources)
       {
-        std::vector<const crypto::PublicKey*> keys_ptrs;
+        std::vector<const crypto::public_key_t*> keys_ptrs;
         BOOST_FOREACH(const TransactionSourceEntry::OutputEntry& o, src_entr.outputs)
         {
           keys_ptrs.push_back(&o.second);
@@ -119,12 +119,12 @@ namespace
     return builder.m_tx;
   };
 
-  crypto::PublicKey generate_invalid_pub_key()
+  crypto::public_key_t generate_invalid_pub_key()
   {
     for (int i = 0; i <= 0xFF; ++i)
     {
-      crypto::PublicKey key;
-      memset(&key, i, sizeof(crypto::PublicKey));
+      crypto::public_key_t key;
+      memset(&key, i, sizeof(crypto::public_key_t));
       if (!crypto::check_key(key))
       {
         return key;
@@ -132,7 +132,7 @@ namespace
     }
 
     throw std::runtime_error("invalid public key wasn't found");
-    return crypto::PublicKey();
+    return crypto::public_key_t();
   }
 }
 
@@ -478,7 +478,7 @@ bool gen_tx_key_image_is_invalid::generate(std::vector<test_event_entry>& events
   builder.step2_fill_inputs(miner_account.getAccountKeys(), sources);
 
   KeyInput& in_to_key = boost::get<KeyInput>(builder.m_tx.inputs.front());
-  crypto::PublicKey pub = generate_invalid_pub_key();
+  crypto::public_key_t pub = generate_invalid_pub_key();
   memcpy(&in_to_key.keyImage, &pub, sizeof(crypto::EllipticCurvePoint));
 
   builder.step3_fill_outputs(destinations);
@@ -773,8 +773,8 @@ bool MultiSigTx_InvalidOutputSignature::generate(std::vector<test_event_entry>& 
 
   MultisignatureOutput target;
 
-  crypto::PublicKey pk;
-  crypto::SecretKey sk;
+  crypto::public_key_t pk;
+  crypto::secret_key_t sk;
   crypto::generate_keys(pk, sk);
 
   // fill with 1 valid key

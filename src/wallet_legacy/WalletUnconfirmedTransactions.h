@@ -18,7 +18,7 @@
 namespace cryptonote {
 class ISerializer;
 
-typedef std::pair<crypto::PublicKey, size_t> TransactionOutputId;
+typedef std::pair<crypto::public_key_t, size_t> TransactionOutputId;
 }
 
 namespace std {
@@ -26,7 +26,7 @@ namespace std {
 template<> 
 struct hash<cryptonote::TransactionOutputId> {
   size_t operator()(const cryptonote::TransactionOutputId &_v) const {    
-    return hash<crypto::PublicKey>()(_v.first) ^ _v.second;
+    return hash<crypto::public_key_t>()(_v.first) ^ _v.second;
   } 
 }; 
 

@@ -31,7 +31,7 @@ public:
 
 struct OutEntry {
   uint32_t outGlobalIndex;
-  crypto::PublicKey outKey;
+  crypto::public_key_t outKey;
 };
 
 struct OutsForAmount {

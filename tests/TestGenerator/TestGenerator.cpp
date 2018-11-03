@@ -268,7 +268,7 @@ bool constructMinerTxManually(const cryptonote::Currency& currency, uint32_t hei
   }
 
   crypto::key_derivation_t derivation;
-  crypto::PublicKey outEphPublicKey;
+  crypto::public_key_t outEphPublicKey;
   crypto::generate_key_derivation(minerAddress.viewPublicKey, txkey.secretKey, derivation);
   crypto::derive_public_key(derivation, 0, minerAddress.spendPublicKey, outEphPublicKey);
 

@@ -21,11 +21,11 @@ enum class TransactionRemoveReason : uint8_t
 };
 
 struct TransactionOutputToKeyDetails {
-  crypto::PublicKey txOutKey;
+  crypto::public_key_t txOutKey;
 };
 
 struct TransactionOutputMultisignatureDetails {
-  std::vector<crypto::PublicKey> keys;
+  std::vector<crypto::public_key_t> keys;
   uint32_t requiredSignatures;
 };
 
@@ -70,7 +70,7 @@ struct TransactionInputDetails {
 
 struct TransactionExtraDetails {
   std::vector<size_t> padding;
-  std::vector<crypto::PublicKey> publicKey; 
+  std::vector<crypto::public_key_t> publicKey; 
   std::vector<std::string> nonce;
   std::vector<uint8_t> raw;
 };

@@ -28,12 +28,12 @@ struct MultisignatureInput
 
 struct KeyOutput
 {
-    crypto::PublicKey key;
+    crypto::public_key_t key;
 };
 
 struct MultisignatureOutput
 {
-    std::vector<crypto::PublicKey> keys;
+    std::vector<crypto::public_key_t> keys;
     uint8_t requiredSignatureCount;
 };
 

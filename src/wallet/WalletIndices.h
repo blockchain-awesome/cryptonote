@@ -9,7 +9,7 @@
 
 #include "ITransfersContainer.h"
 #include "IWallet.h"
-#include "IWalletLegacy.h" //TODO: make common types for all of our APIs (such as PublicKey, KeyPair, etc)
+#include "IWalletLegacy.h" //TODO: make common types for all of our APIs (such as public_key_t, KeyPair, etc)
 
 #include <boost/multi_index_container.hpp>
 #include <boost/multi_index/ordered_index.hpp>
@@ -23,8 +23,8 @@ namespace cryptonote {
 const uint64_t ACCOUNT_CREATE_TIME_ACCURACY = 60 * 60 * 24;
 
 struct WalletRecord {
-  crypto::PublicKey spendPublicKey;
-  crypto::SecretKey spendSecretKey;
+  crypto::public_key_t spendPublicKey;
+  crypto::secret_key_t spendSecretKey;
   cryptonote::ITransfersContainer* container = nullptr;
   uint64_t pendingBalance = 0;
   uint64_t actualBalance = 0;
@@ -48,7 +48,7 @@ typedef boost::multi_index_container <
   boost::multi_index::indexed_by <
     boost::multi_index::random_access < boost::multi_index::tag <RandomAccessIndex> >,
     boost::multi_index::hashed_unique < boost::multi_index::tag <KeysIndex>,
-    BOOST_MULTI_INDEX_MEMBER(WalletRecord, crypto::PublicKey, spendPublicKey)>,
+    BOOST_MULTI_INDEX_MEMBER(WalletRecord, crypto::public_key_t, spendPublicKey)>,
     boost::multi_index::hashed_unique < boost::multi_index::tag <TransfersContainerIndex>,
       BOOST_MULTI_INDEX_MEMBER(WalletRecord, cryptonote::ITransfersContainer*, container) >
   >

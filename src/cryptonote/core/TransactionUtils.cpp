@@ -103,20 +103,20 @@ const TransactionOutput& getOutputChecked(const cryptonote::TransactionPrefix& t
   return output;
 }
 
-bool isOutToKey(const crypto::PublicKey& spendPublicKey, const crypto::PublicKey& outKey, const crypto::key_derivation_t& derivation, size_t keyIndex) {
-  crypto::PublicKey pk;
+bool isOutToKey(const crypto::public_key_t& spendPublicKey, const crypto::public_key_t& outKey, const crypto::key_derivation_t& derivation, size_t keyIndex) {
+  crypto::public_key_t pk;
   derive_public_key(derivation, keyIndex, spendPublicKey, pk);
   return pk == outKey;
 }
 
 bool findOutputsToAccount(const cryptonote::TransactionPrefix& transaction, const AccountPublicAddress& addr,
-                          const SecretKey& viewSecretKey, std::vector<uint32_t>& out, uint64_t& amount) {
+                          const secret_key_t& viewSecretKey, std::vector<uint32_t>& out, uint64_t& amount) {
   AccountKeys keys;
   keys.address = addr;
   // only view secret key is used, spend key is not needed
   keys.viewSecretKey = viewSecretKey;
 
-  crypto::PublicKey txPubKey = getTransactionPublicKeyFromExtra(transaction.extra);
+  crypto::public_key_t txPubKey = getTransactionPublicKeyFromExtra(transaction.extra);
 
   amount = 0;
   size_t keyIndex = 0;

@@ -194,7 +194,7 @@ bool Currency::constructMinerTx(uint32_t height, size_t medianSize, uint64_t alr
   uint64_t summaryAmounts = 0;
   for (size_t no = 0; no < outAmounts.size(); no++) {
     crypto::key_derivation_t derivation = boost::value_initialized<crypto::key_derivation_t>();
-    crypto::PublicKey outEphemeralPubKey = boost::value_initialized<crypto::PublicKey>();
+    crypto::public_key_t outEphemeralPubKey = boost::value_initialized<crypto::public_key_t>();
 
     bool r = crypto::generate_key_derivation(minerAddress.viewPublicKey, txkey.secretKey, derivation);
 
@@ -425,7 +425,7 @@ size_t Currency::getApproximateMaximumInputCount(size_t transactionSize, size_t 
   const size_t EXTRA_TAG_SIZE = sizeof(uint8_t);
   const size_t INPUT_TAG_SIZE = sizeof(uint8_t);
   const size_t OUTPUT_TAG_SIZE = sizeof(uint8_t);
-  const size_t PUBLIC_KEY_SIZE = sizeof(crypto::PublicKey);
+  const size_t PUBLIC_KEY_SIZE = sizeof(crypto::public_key_t);
   const size_t TRANSACTION_VERSION_SIZE = sizeof(uint8_t);
   const size_t TRANSACTION_UNLOCK_TIME_SIZE = sizeof(uint64_t);
 

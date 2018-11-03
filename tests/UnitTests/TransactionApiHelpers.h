@@ -52,7 +52,7 @@ namespace {
     return crypto::rand<KeyImage>();
   }
 
-  KeyImage generateKeyImage(const AccountKeys& keys, size_t idx, const PublicKey& txPubKey) {
+  KeyImage generateKeyImage(const AccountKeys& keys, size_t idx, const public_key_t& txPubKey) {
     KeyImage keyImage;
     cryptonote::KeyPair in_ephemeral;
     cryptonote::generate_key_image_helper(
@@ -107,9 +107,9 @@ class TestTransactionBuilder {
 public:
 
   TestTransactionBuilder();
-  TestTransactionBuilder(const BinaryArray& txTemplate, const crypto::SecretKey& secretKey);
+  TestTransactionBuilder(const BinaryArray& txTemplate, const crypto::secret_key_t& secretKey);
 
-  PublicKey getTransactionPublicKey() const;
+  public_key_t getTransactionPublicKey() const;
   void appendExtra(const BinaryArray& extraData);
   void setUnlockTime(uint64_t time);
 
@@ -136,16 +136,16 @@ public:
 
 private:
 
-  void derivePublicKey(const AccountKeys& reciever, const crypto::PublicKey& srcTxKey, size_t outputIndex, PublicKey& ephemeralKey) {
+  void derivePublicKey(const AccountKeys& reciever, const crypto::public_key_t& srcTxKey, size_t outputIndex, public_key_t& ephemeralKey) {
     crypto::key_derivation_t derivation;
-    crypto::generate_key_derivation(srcTxKey, reinterpret_cast<const crypto::SecretKey&>(reciever.viewSecretKey), derivation);
+    crypto::generate_key_derivation(srcTxKey, reinterpret_cast<const crypto::secret_key_t&>(reciever.viewSecretKey), derivation);
     crypto::derive_public_key(derivation, outputIndex,
-      reinterpret_cast<const crypto::PublicKey&>(reciever.address.spendPublicKey),
-      reinterpret_cast<crypto::PublicKey&>(ephemeralKey));
+      reinterpret_cast<const crypto::public_key_t&>(reciever.address.spendPublicKey),
+      reinterpret_cast<crypto::public_key_t&>(ephemeralKey));
   }
 
   struct MsigInfo {
-    PublicKey transactionKey;
+    public_key_t transactionKey;
     size_t outputIndex;
     std::vector<AccountBase> accounts;
   };

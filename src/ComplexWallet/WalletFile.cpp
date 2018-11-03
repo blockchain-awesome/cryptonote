@@ -20,8 +20,8 @@ using namespace cryptonote;
  bool create_wallet_by_keys(std::string &wallet_file, std::string &password,
   std::string &address, std::string &spendKey, std::string &viewKey,
   Logging::LoggerRef &logger) {
-  crypto::SecretKey viewSecretKey;
-  crypto::SecretKey sendSecretKey;
+  crypto::secret_key_t viewSecretKey;
+  crypto::secret_key_t sendSecretKey;
   if (!Common::podFromHex(viewKey, viewSecretKey))
   {
     logger(Logging::ERROR) << "Cannot parse view secret key: " << viewKey;
@@ -33,8 +33,8 @@ using namespace cryptonote;
     return false;
   }
 
-  crypto::PublicKey sendPubKey;
-  crypto::PublicKey viewPubKey;
+  crypto::public_key_t sendPubKey;
+  crypto::public_key_t viewPubKey;
 
   if (!crypto::secret_key_to_public_key(sendSecretKey, sendPubKey))
   {
@@ -48,14 +48,14 @@ using namespace cryptonote;
     return false;
   }
 
-  char keyStore[sizeof(crypto::PublicKey) * 2];
+  char keyStore[sizeof(crypto::public_key_t) * 2];
 
-  memcpy(keyStore, &sendPubKey, sizeof(crypto::PublicKey));
-  memcpy(keyStore + sizeof(crypto::PublicKey), &viewPubKey, sizeof(crypto::PublicKey));
+  memcpy(keyStore, &sendPubKey, sizeof(crypto::public_key_t));
+  memcpy(keyStore + sizeof(crypto::public_key_t), &viewPubKey, sizeof(crypto::public_key_t));
 
   using namespace parameters;
   const uint64_t prefix = CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX;
-  std::string addressStr = Tools::Base58::encode_addr(prefix, std::string(keyStore, sizeof(crypto::PublicKey) * 2));
+  std::string addressStr = Tools::Base58::encode_addr(prefix, std::string(keyStore, sizeof(crypto::public_key_t) * 2));
   if (addressStr != address)
   {
     logger(Logging::ERROR) << "Addresses mismatch!" << addressStr;

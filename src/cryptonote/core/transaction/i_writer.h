@@ -41,11 +41,11 @@ class ITransactionWriter
     virtual size_t addOutput(uint64_t amount, const MultisignatureOutput &out) = 0;
 
     // transaction info
-    virtual void setTransactionSecretKey(const crypto::SecretKey &key) = 0;
+    virtual void setTransactionSecretKey(const crypto::secret_key_t &key) = 0;
 
     // signing
     virtual void signInputKey(size_t input, const TransactionTypes::InputKeyInfo &info, const KeyPair &ephKeys) = 0;
-    virtual void signInputMultisignature(size_t input, const crypto::PublicKey &sourceTransactionKey, size_t outputIndex, const AccountKeys &accountKeys) = 0;
+    virtual void signInputMultisignature(size_t input, const crypto::public_key_t &sourceTransactionKey, size_t outputIndex, const AccountKeys &accountKeys) = 0;
     virtual void signInputMultisignature(size_t input, const KeyPair &ephemeralKeys) = 0;
 };
 

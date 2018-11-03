@@ -32,5 +32,5 @@ protected:
   Logging::LoggerGroup m_nullLog;
   cryptonote::AccountBase m_bob;
   cryptonote::Transaction m_tx;
-  crypto::PublicKey m_tx_pub_key;
+  crypto::public_key_t m_tx_pub_key;
 };

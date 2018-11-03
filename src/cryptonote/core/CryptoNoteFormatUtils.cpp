@@ -34,7 +34,7 @@ bool parseAndValidateTransactionFromBinaryArray(const BinaryArray& tx_blob, Tran
   return true;
 }
 
-bool generate_key_image_helper(const AccountKeys& ack, const PublicKey& tx_public_key, size_t real_output_index, KeyPair& in_ephemeral, KeyImage& ki) {
+bool generate_key_image_helper(const AccountKeys& ack, const public_key_t& tx_public_key, size_t real_output_index, KeyPair& in_ephemeral, KeyImage& ki) {
   key_derivation_t recv_derivation;
   bool r = generate_key_derivation(tx_public_key, ack.viewSecretKey, recv_derivation);
 
@@ -177,7 +177,7 @@ bool constructTransaction(
       return false;
     }
     key_derivation_t derivation;
-    PublicKey out_eph_public_key;
+    public_key_t out_eph_public_key;
     bool r = generate_key_derivation(dst_entr.addr.viewPublicKey, txkey.secretKey, derivation);
 
     if (!(r)) {
@@ -220,7 +220,7 @@ bool constructTransaction(
 
   size_t i = 0;
   for (const TransactionSourceEntry& src_entr : sources) {
-    std::vector<const PublicKey*> keys_ptrs;
+    std::vector<const public_key_t*> keys_ptrs;
     for (const TransactionSourceEntry::OutputEntry& o : src_entr.outputs) {
       keys_ptrs.push_back(&o.second);
     }
@@ -298,7 +298,7 @@ bool check_outs_valid(const TransactionPrefix& tx, std::string* error) {
         }
         return false;
       }
-      for (const PublicKey& key : multisignatureOutput.keys) {
+      for (const public_key_t& key : multisignatureOutput.keys) {
         if (!check_key(key)) {
           if (error) {
             *error = "Multisignature output with invalid public key";
@@ -384,25 +384,25 @@ std::string short_hash_str(const Hash& h) {
 }
 
 bool is_out_to_acc(const AccountKeys& acc, const KeyOutput& out_key, const key_derivation_t& derivation, size_t keyIndex) {
-  PublicKey pk;
+  public_key_t pk;
   derive_public_key(derivation, keyIndex, acc.address.spendPublicKey, pk);
   return pk == out_key.key;
 }
 
-bool is_out_to_acc(const AccountKeys& acc, const KeyOutput& out_key, const PublicKey& tx_pub_key, size_t keyIndex) {
+bool is_out_to_acc(const AccountKeys& acc, const KeyOutput& out_key, const public_key_t& tx_pub_key, size_t keyIndex) {
   key_derivation_t derivation;
   generate_key_derivation(tx_pub_key, acc.viewSecretKey, derivation);
   return is_out_to_acc(acc, out_key, derivation, keyIndex);
 }
 
 bool lookup_acc_outs(const AccountKeys& acc, const Transaction& tx, std::vector<size_t>& outs, uint64_t& money_transfered) {
-  PublicKey transactionPublicKey = getTransactionPublicKeyFromExtra(tx.extra);
+  public_key_t transactionPublicKey = getTransactionPublicKeyFromExtra(tx.extra);
   if (transactionPublicKey == NULL_PUBLIC_KEY)
     return false;
   return lookup_acc_outs(acc, tx, transactionPublicKey, outs, money_transfered);
 }
 
-bool lookup_acc_outs(const AccountKeys& acc, const Transaction& tx, const PublicKey& tx_pub_key, std::vector<size_t>& outs, uint64_t& money_transfered) {
+bool lookup_acc_outs(const AccountKeys& acc, const Transaction& tx, const public_key_t& tx_pub_key, std::vector<size_t>& outs, uint64_t& money_transfered) {
   money_transfered = 0;
   size_t keyIndex = 0;
   size_t outputIndex = 0;

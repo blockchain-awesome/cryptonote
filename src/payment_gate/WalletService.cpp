@@ -485,13 +485,13 @@ std::error_code WalletService::replaceWithNewWallet(const std::string& viewSecre
   try {
     System::EventLock lk(readyEvent);
 
-    crypto::SecretKey viewSecretKey;
+    crypto::secret_key_t viewSecretKey;
     if (!Common::podFromHex(viewSecretKeyText, viewSecretKey)) {
       logger(Logging::WARNING) << "Cannot restore view secret key: " << viewSecretKeyText;
       return make_error_code(cryptonote::error::WalletServiceErrorCode::WRONG_KEY_FORMAT);
     }
 
-    crypto::PublicKey viewPublicKey;
+    crypto::public_key_t viewPublicKey;
     if (!crypto::secret_key_to_public_key(viewSecretKey, viewPublicKey)) {
       logger(Logging::WARNING) << "Cannot derive view public key, wrong secret key: " << viewSecretKeyText;
       return make_error_code(cryptonote::error::WalletServiceErrorCode::WRONG_KEY_FORMAT);
@@ -516,7 +516,7 @@ std::error_code WalletService::createAddress(const std::string& spendSecretKeyTe
 
     logger(Logging::DEBUGGING) << "Creating address";
 
-    crypto::SecretKey secretKey;
+    crypto::secret_key_t secretKey;
     if (!Common::podFromHex(spendSecretKeyText, secretKey)) {
       logger(Logging::WARNING) << "Wrong key format: " << spendSecretKeyText;
       return make_error_code(cryptonote::error::WalletServiceErrorCode::WRONG_KEY_FORMAT);
@@ -556,7 +556,7 @@ std::error_code WalletService::createTrackingAddress(const std::string& spendPub
 
     logger(Logging::DEBUGGING) << "Creating tracking address";
 
-    crypto::PublicKey publicKey;
+    crypto::public_key_t publicKey;
     if (!Common::podFromHex(spendPublicKeyText, publicKey)) {
       logger(Logging::WARNING) << "Wrong key format: " << spendPublicKeyText;
       return make_error_code(cryptonote::error::WalletServiceErrorCode::WRONG_KEY_FORMAT);
@@ -1034,7 +1034,7 @@ void WalletService::reset() {
   init();
 }
 
-void WalletService::replaceWithNewWallet(const crypto::SecretKey& viewSecretKey) {
+void WalletService::replaceWithNewWallet(const crypto::secret_key_t& viewSecretKey) {
   wallet.stop();
   wallet.shutdown();
   inited = false;

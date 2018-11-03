@@ -31,12 +31,12 @@ namespace {
     return a;
   }
 
-  void derivePublicKey(const AccountKeys& reciever, const crypto::PublicKey& srcTxKey, size_t outputIndex, PublicKey& ephemeralKey) {
+  void derivePublicKey(const AccountKeys& reciever, const crypto::public_key_t& srcTxKey, size_t outputIndex, public_key_t& ephemeralKey) {
     crypto::key_derivation_t derivation;
-    crypto::generate_key_derivation(srcTxKey, reinterpret_cast<const crypto::SecretKey&>(reciever.viewSecretKey), derivation);
+    crypto::generate_key_derivation(srcTxKey, reinterpret_cast<const crypto::secret_key_t&>(reciever.viewSecretKey), derivation);
     crypto::derive_public_key(derivation, outputIndex, 
-      reinterpret_cast<const crypto::PublicKey&>(reciever.address.spendPublicKey), 
-      reinterpret_cast<crypto::PublicKey&>(ephemeralKey));
+      reinterpret_cast<const crypto::public_key_t&>(reciever.address.spendPublicKey), 
+      reinterpret_cast<crypto::public_key_t&>(ephemeralKey));
   }
 
 
@@ -67,7 +67,7 @@ namespace {
       // cryptonote::KeyPair srcTxKeys = cryptonote::generateKeyPair();
       KeyPair srcTxKeys = Key::generate();
 
-      PublicKey targetKey;
+      public_key_t targetKey;
 
       derivePublicKey(sender, srcTxKeys.publicKey, 5, targetKey);
 
@@ -78,7 +78,7 @@ namespace {
 
       info.realOutput.transactionIndex = 0;
       info.realOutput.outputInTransaction = 5;
-      info.realOutput.transactionPublicKey = reinterpret_cast<const PublicKey&>(srcTxKeys.publicKey);
+      info.realOutput.transactionPublicKey = reinterpret_cast<const public_key_t&>(srcTxKeys.publicKey);
 
       return info;
     }
@@ -213,12 +213,12 @@ TEST_F(TransactionApi, secretKey) {
   auto tx2 = reloadedTx(tx);
   ASSERT_ANY_THROW(tx2->addOutput(1000, sender.address));
   // take secret key from first transaction and add to second (reloaded)
-  SecretKey txSecretKey;
+  secret_key_t txSecretKey;
   ASSERT_TRUE(tx->getTransactionSecretKey(txSecretKey));
   
   KeyPair kp1;
   crypto::generate_keys(kp1.publicKey, kp1.secretKey);
-  SecretKey sk = kp1.secretKey;
+  secret_key_t sk = kp1.secretKey;
   ASSERT_ANY_THROW(tx2->setTransactionSecretKey(sk)); // unrelated secret key should not be accepted
   
   tx2->setTransactionSecretKey(txSecretKey);
