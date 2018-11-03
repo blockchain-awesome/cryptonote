@@ -262,7 +262,7 @@ namespace cryptonote
 
       for (unsigned i = 0; i < nthreads; ++i) {
         threads[i] = std::async(std::launch::async, [&, i]() {
-          crypto::Hash h;
+          crypto::hash_t h;
 
           block_t lb(bl); // copy to local block
 
@@ -293,7 +293,7 @@ namespace cryptonote
       return found;
     } else {
       for (; bl.nonce != std::numeric_limits<uint32_t>::max(); bl.nonce++) {
-        crypto::Hash h;
+        crypto::hash_t h;
         if (!get_block_longhash(bl, h)) {
           return false;
         }
@@ -369,7 +369,7 @@ namespace cryptonote
       }
 
       b.nonce = nonce;
-      crypto::Hash h;
+      crypto::hash_t h;
       if (!m_stop && !get_block_longhash(b, h)) {
         logger(ERROR) << "Failed to get block long hash";
         m_stop = true;

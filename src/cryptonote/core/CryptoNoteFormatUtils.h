@@ -18,7 +18,7 @@ class ILogger;
 
 namespace cryptonote {
 
-bool parseAndValidateTransactionFromBinaryArray(const BinaryArray& transactionBinaryArray, Transaction& transaction, crypto::Hash& transactionHash, crypto::Hash& transactionPrefixHash);
+bool parseAndValidateTransactionFromBinaryArray(const BinaryArray& transactionBinaryArray, Transaction& transaction, crypto::hash_t& transactionHash, crypto::hash_t& transactionPrefixHash);
 
 struct TransactionSourceEntry {
   typedef std::pair<uint32_t, crypto::public_key_t> OutputEntry;
@@ -53,13 +53,13 @@ bool lookup_acc_outs(const AccountKeys& acc, const Transaction& tx, std::vector<
 bool get_tx_fee(const Transaction& tx, uint64_t & fee);
 uint64_t get_tx_fee(const Transaction& tx);
 bool generate_key_image_helper(const AccountKeys& ack, const crypto::public_key_t& tx_public_key, size_t real_output_index, KeyPair& in_ephemeral, crypto::key_image_t& ki);
-std::string short_hash_str(const crypto::Hash& h);
+std::string short_hash_str(const crypto::hash_t& h);
 
 bool get_block_hashing_blob(const block_t& b, BinaryArray& blob);
-bool get_aux_block_header_hash(const block_t& b, crypto::Hash& res);
-bool get_block_hash(const block_t& b, crypto::Hash& res);
-crypto::Hash get_block_hash(const block_t& b);
-bool get_block_longhash(const block_t& b, crypto::Hash& res);
+bool get_aux_block_header_hash(const block_t& b, crypto::hash_t& res);
+bool get_block_hash(const block_t& b, crypto::hash_t& res);
+crypto::hash_t get_block_hash(const block_t& b);
+bool get_block_longhash(const block_t& b, crypto::hash_t& res);
 bool get_inputs_money_amount(const Transaction& tx, uint64_t& money);
 uint64_t get_outs_money_amount(const Transaction& tx);
 bool check_inputs_types_supported(const TransactionPrefix& tx);
@@ -107,8 +107,8 @@ void decompose_amount_into_digits(uint64_t amount, uint64_t dust_threshold, cons
   }
 }
 
-void get_tx_tree_hash(const std::vector<crypto::Hash>& tx_hashes, crypto::Hash& h);
-crypto::Hash get_tx_tree_hash(const std::vector<crypto::Hash>& tx_hashes);
-crypto::Hash get_tx_tree_hash(const block_t& b);
+void get_tx_tree_hash(const std::vector<crypto::hash_t>& tx_hashes, crypto::hash_t& h);
+crypto::hash_t get_tx_tree_hash(const std::vector<crypto::hash_t>& tx_hashes);
+crypto::hash_t get_tx_tree_hash(const block_t& b);
 
 }

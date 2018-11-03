@@ -89,7 +89,7 @@ namespace {
     // To make sure new transaction won't be received by NODE_2 and NODE_3
     ASSERT_TRUE(waitForPeerCount(*node1, 1));
 
-    Hash txHash1;
+    hash_t txHash1;
     ASSERT_FALSE(static_cast<bool>(wallet1.sendTransaction(minerAccount.toAddress(), m_currency.coin(), txHash1)));
 
     stopNode(NODE_1);
@@ -100,7 +100,7 @@ namespace {
     ASSERT_TRUE(waitDaemonReady(NODE_2));
     ASSERT_TRUE(waitForPeerCount(*node3, 1));
 
-    Hash txHash2;
+    hash_t txHash2;
     ASSERT_FALSE(static_cast<bool>(wallet2.sendTransaction(minerAccount.toAddress(), m_currency.coin(), txHash2)));
 
     startNode(NODE_1);
@@ -113,15 +113,15 @@ namespace {
 
     //timer.stop();
 
-    std::vector<Hash> poolTxsIds1;
-    std::vector<Hash> poolTxsIds2;
+    std::vector<hash_t> poolTxsIds1;
+    std::vector<hash_t> poolTxsIds2;
 
     for (auto& tx : poolTxs1) {
-      Hash txHash = tx->getTransactionHash();
+      hash_t txHash = tx->getTransactionHash();
       poolTxsIds1.emplace_back(std::move(txHash));
     }
     for (auto& tx : poolTxs2) {
-      Hash txHash = tx->getTransactionHash();
+      hash_t txHash = tx->getTransactionHash();
       poolTxsIds2.emplace_back(std::move(txHash));
     }
 
@@ -181,7 +181,7 @@ namespace {
     ASSERT_TRUE(mineBlocks(*nodeDaemons[NODE_0], minerAccount.getAccountKeys().address, m_currency.minedMoneyUnlockWindow()));
     wallet1.waitForSynchronizationToHeight(static_cast<uint32_t>(m_currency.minedMoneyUnlockWindow()) + 3);
 
-    Hash txHash1;
+    hash_t txHash1;
     ASSERT_FALSE(static_cast<bool>(wallet1.sendTransaction(minerAccount.toAddress(), m_currency.coin(), txHash1)));
 
     stopNode(NODE_1);
@@ -195,7 +195,7 @@ namespace {
     ASSERT_TRUE(mineBlocks(*nodeDaemons[NODE_3], minerAccount.getAccountKeys().address, m_currency.minedMoneyUnlockWindow()));
     wallet2.waitForSynchronizationToHeight(static_cast<uint32_t>(m_currency.minedMoneyUnlockWindow()) + 3);
 
-    Hash txHash2;
+    hash_t txHash2;
     ASSERT_FALSE(static_cast<bool>(wallet2.sendTransaction(minerAccount.toAddress(), m_currency.coin(), txHash2)));
 
     startNode(NODE_1);
@@ -208,15 +208,15 @@ namespace {
 
     //timer.stop();
 
-    std::vector<Hash> poolTxsIds1;
-    std::vector<Hash> poolTxsIds2;
+    std::vector<hash_t> poolTxsIds1;
+    std::vector<hash_t> poolTxsIds2;
 
     for (auto& tx : poolTxs1) {
-      Hash txHash = tx->getTransactionHash();
+      hash_t txHash = tx->getTransactionHash();
       poolTxsIds1.emplace_back(std::move(txHash));
     }
     for (auto& tx : poolTxs2) {
-      Hash txHash = tx->getTransactionHash();
+      hash_t txHash = tx->getTransactionHash();
       poolTxsIds2.emplace_back(std::move(txHash));
     }
 
@@ -276,7 +276,7 @@ namespace {
     ASSERT_TRUE(mineBlocks(*nodeDaemons[NODE_0], minerAccount.getAccountKeys().address, m_currency.minedMoneyUnlockWindow()));
     wallet1.waitForSynchronizationToHeight(static_cast<uint32_t>(m_currency.minedMoneyUnlockWindow()) + 2);
 
-    Hash txHash1;
+    hash_t txHash1;
     ASSERT_FALSE(static_cast<bool>(wallet1.sendTransaction(minerAccount.toAddress(), m_currency.coin(), txHash1)));
 
     // Start nodes simultaneously due to them connect each other and decided that they are connected to network
@@ -302,9 +302,9 @@ namespace {
 
     //timer.stop();
 
-    Hash poolTxId2 = poolTxs2.front()->getTransactionHash();
-    Hash poolTxId3 = poolTxs3.front()->getTransactionHash();
-    Hash poolTxId4 = poolTxs4.front()->getTransactionHash();
+    hash_t poolTxId2 = poolTxs2.front()->getTransactionHash();
+    hash_t poolTxId3 = poolTxs3.front()->getTransactionHash();
+    hash_t poolTxId4 = poolTxs4.front()->getTransactionHash();
 
     ASSERT_EQ(txHash1, poolTxId2);
     ASSERT_EQ(txHash1, poolTxId3);
@@ -368,11 +368,11 @@ namespace {
     wallet1.waitForSynchronizationToHeight(blockchainLenght);
 
     // This transaction is valid in both alternative chains, it is just an indicator, that shows when NODE_1 and NODE_2 are synchronized
-    Hash txHash0;
+    hash_t txHash0;
     ASSERT_FALSE(static_cast<bool>(wallet0.sendTransaction(wallet0.wallet()->getAddress(), m_currency.coin(), txHash0)));
 
     // This transaction is valid only in alternative chain 1
-    Hash txHash1;
+    hash_t txHash1;
     ASSERT_FALSE(static_cast<bool>(wallet1.sendTransaction(wallet0.wallet()->getAddress(), m_currency.coin(), txHash1)));
 
     stopNode(NODE_1);
@@ -399,7 +399,7 @@ namespace {
     ASSERT_TRUE(blockTemplate2.transactionHashes.empty());
 
     // This transaction is valid only in alternative chain 2
-    Hash txHash2;
+    hash_t txHash2;
     ASSERT_FALSE(static_cast<bool>(wallet2.sendTransaction(wallet0.wallet()->getAddress(), m_currency.coin(), txHash2)));
 
     startNode(NODE_1);
@@ -410,8 +410,8 @@ namespace {
     ASSERT_TRUE(waitForPoolSize(NODE_2, *node2, 2, poolTxs2));
 
     // Now NODE_1 and NODE_2 are synchronized, but both are on its own alternative chains
-    Hash tailId1;
-    Hash tailId2;
+    hash_t tailId1;
+    hash_t tailId2;
     ASSERT_TRUE(nodeDaemons[NODE_1]->getTailBlockId(tailId1));
     ASSERT_TRUE(nodeDaemons[NODE_2]->getTailBlockId(tailId2));
     ASSERT_NE(tailId1, tailId2);
@@ -434,15 +434,15 @@ namespace {
 
     //timer.stop();
 
-    std::vector<Hash> poolTxsIds1;
-    std::vector<Hash> poolTxsIds2;
+    std::vector<hash_t> poolTxsIds1;
+    std::vector<hash_t> poolTxsIds2;
 
     for (auto& tx : poolTxs1) {
-      Hash txHash = tx->getTransactionHash();
+      hash_t txHash = tx->getTransactionHash();
       poolTxsIds1.emplace_back(std::move(txHash));
     }
     for (auto& tx : poolTxs2) {
-      Hash txHash = tx->getTransactionHash();
+      hash_t txHash = tx->getTransactionHash();
       poolTxsIds2.emplace_back(std::move(txHash));
     }
 

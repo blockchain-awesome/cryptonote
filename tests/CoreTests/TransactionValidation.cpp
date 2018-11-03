@@ -99,7 +99,7 @@ namespace
     Transaction m_tx;
     KeyPair m_tx_key;
     std::vector<KeyPair> m_in_contexts;
-    crypto::Hash m_tx_prefix_hash;
+    crypto::hash_t m_tx_prefix_hash;
   };
 
   Transaction make_simple_tx_with_unlock_time(const std::vector<test_event_entry>& events,
@@ -882,7 +882,7 @@ bool MultiSigTx_BadInputSignature::generate(std::vector<test_event_entry>& event
   const auto& sk = m_outputAccounts[0].getAccountKeys().spendSecretKey;
 
   // modify the transaction prefix hash
-  crypto::Hash badHash = builder.m_tx_prefix_hash;
+  crypto::hash_t badHash = builder.m_tx_prefix_hash;
   *reinterpret_cast<uint16_t*>(&badHash) = 0xdead;
 
   // sign the hash

@@ -28,7 +28,7 @@ TransfersSyncronizer::~TransfersSyncronizer() {
   }
 }
 
-void TransfersSyncronizer::initTransactionPool(const std::unordered_set<crypto::Hash>& uncommitedTransactions) {
+void TransfersSyncronizer::initTransactionPool(const std::unordered_set<crypto::hash_t>& uncommitedTransactions) {
   for (auto it = m_consumers.begin(); it != m_consumers.end(); ++it) {
     it->second->initTransactionPool(uncommitedTransactions);
   }
@@ -75,7 +75,7 @@ ITransfersSubscription* TransfersSyncronizer::getSubscription(const AccountPubli
   return (it == m_consumers.end()) ? nullptr : it->second->getSubscription(acc);
 }
 
-std::vector<crypto::Hash> TransfersSyncronizer::getViewKeyKnownBlocks(const crypto::public_key_t& publicViewKey) {
+std::vector<crypto::hash_t> TransfersSyncronizer::getViewKeyKnownBlocks(const crypto::public_key_t& publicViewKey) {
   auto it = m_consumers.find(publicViewKey);
   if (it == m_consumers.end()) {
     throw std::invalid_argument("Consumer not found");
@@ -84,7 +84,7 @@ std::vector<crypto::Hash> TransfersSyncronizer::getViewKeyKnownBlocks(const cryp
   return m_sync.getConsumerKnownBlocks(*it->second);
 }
 
-void TransfersSyncronizer::onBlocksAdded(IBlockchainConsumer* consumer, const std::vector<crypto::Hash>& blockHashes) {
+void TransfersSyncronizer::onBlocksAdded(IBlockchainConsumer* consumer, const std::vector<crypto::hash_t>& blockHashes) {
   auto it = findSubscriberForConsumer(consumer);
   if (it != m_subscribers.end()) {
     it->second->notify(&ITransfersSynchronizerObserver::onBlocksAdded, it->first, blockHashes);
@@ -98,21 +98,21 @@ void TransfersSyncronizer::onBlockchainDetach(IBlockchainConsumer* consumer, uin
   }
 }
 
-void TransfersSyncronizer::onTransactionDeleteBegin(IBlockchainConsumer* consumer, crypto::Hash transactionHash) {
+void TransfersSyncronizer::onTransactionDeleteBegin(IBlockchainConsumer* consumer, crypto::hash_t transactionHash) {
   auto it = findSubscriberForConsumer(consumer);
   if (it != m_subscribers.end()) {
     it->second->notify(&ITransfersSynchronizerObserver::onTransactionDeleteBegin, it->first, transactionHash);
   }
 }
 
-void TransfersSyncronizer::onTransactionDeleteEnd(IBlockchainConsumer* consumer, crypto::Hash transactionHash) {
+void TransfersSyncronizer::onTransactionDeleteEnd(IBlockchainConsumer* consumer, crypto::hash_t transactionHash) {
   auto it = findSubscriberForConsumer(consumer);
   if (it != m_subscribers.end()) {
     it->second->notify(&ITransfersSynchronizerObserver::onTransactionDeleteEnd, it->first, transactionHash);
   }
 }
 
-void TransfersSyncronizer::onTransactionUpdated(IBlockchainConsumer* consumer, const crypto::Hash& transactionHash,
+void TransfersSyncronizer::onTransactionUpdated(IBlockchainConsumer* consumer, const crypto::hash_t& transactionHash,
   const std::vector<ITransfersContainer*>& containers) {
 
   auto it = findSubscriberForConsumer(consumer);

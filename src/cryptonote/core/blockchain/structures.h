@@ -7,7 +7,7 @@ namespace cryptonote
 struct BlockInfo
 {
     uint32_t height;
-    crypto::Hash id;
+    crypto::hash_t id;
 
     BlockInfo()
     {

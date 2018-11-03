@@ -215,7 +215,7 @@ std::unique_ptr<ITransactionReader> TestTransactionBuilder::build() {
   return std::move(tx);
 }
 
-crypto::Hash TestTransactionBuilder::getTransactionHash() const {
+crypto::hash_t TestTransactionBuilder::getTransactionHash() const {
   return transactionHash;
 }
 

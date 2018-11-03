@@ -24,12 +24,12 @@ using namespace cryptonote;
 class TransfersObserver : public ITransfersObserver {
 public:
 
-  virtual void onTransactionUpdated(ITransfersSubscription* object, const Hash& transactionHash) override {
+  virtual void onTransactionUpdated(ITransfersSubscription* object, const hash_t& transactionHash) override {
     std::lock_guard<std::mutex> lk(m_mutex);
     m_transfers.emplace_back(transactionHash);
   }
 
-  std::vector<Hash> m_transfers;
+  std::vector<hash_t> m_transfers;
   std::mutex m_mutex;
 };
 

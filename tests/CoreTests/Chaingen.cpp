@@ -91,7 +91,7 @@ bool init_output_indices(map_output_idx_t& outs, std::map<uint64_t, std::vector<
         vector<const Transaction*> vtx;
         vtx.push_back(&blk.baseTransaction);
 
-        for (const crypto::Hash& h : blk.transactionHashes) {
+        for (const crypto::hash_t& h : blk.transactionHashes) {
             const map_hash2tx_t::const_iterator cit = mtx.find(h);
             if (mtx.end() == cit)
                 throw std::runtime_error("block contains an unknown tx hash");
@@ -325,10 +325,10 @@ uint64_t get_balance(const cryptonote::AccountBase& addr, const std::vector<cryp
 
 void get_confirmed_txs(const std::vector<cryptonote::block_t>& blockchain, const map_hash2tx_t& mtx, map_hash2tx_t& confirmed_txs)
 {
-  std::unordered_set<crypto::Hash> confirmed_hashes;
+  std::unordered_set<crypto::hash_t> confirmed_hashes;
   for (const block_t& blk : blockchain)
   {
-    for (const crypto::Hash& tx_hash : blk.transactionHashes)
+    for (const crypto::hash_t& tx_hash : blk.transactionHashes)
     {
       confirmed_hashes.insert(tx_hash);
     }
@@ -343,8 +343,8 @@ void get_confirmed_txs(const std::vector<cryptonote::block_t>& blockchain, const
   }
 }
 
-bool find_block_chain(const std::vector<test_event_entry>& events, std::vector<cryptonote::block_t>& blockchain, map_hash2tx_t& mtx, const crypto::Hash& head) {
-    std::unordered_map<crypto::Hash, const block_t*> block_index;
+bool find_block_chain(const std::vector<test_event_entry>& events, std::vector<cryptonote::block_t>& blockchain, map_hash2tx_t& mtx, const crypto::hash_t& head) {
+    std::unordered_map<crypto::hash_t, const block_t*> block_index;
     BOOST_FOREACH(const test_event_entry& ev, events)
     {
         if (typeid(block_t) == ev.type())
@@ -360,7 +360,7 @@ bool find_block_chain(const std::vector<test_event_entry>& events, std::vector<c
     }
 
     bool b_success = false;
-    crypto::Hash id = head;
+    crypto::hash_t id = head;
     for (auto it = block_index.find(id); block_index.end() != it; it = block_index.find(id))
     {
         blockchain.push_back(*it->second);

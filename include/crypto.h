@@ -8,7 +8,7 @@
 
 namespace crypto {
 
-struct Hash {
+struct hash_t {
   uint8_t data[32];
 };
 

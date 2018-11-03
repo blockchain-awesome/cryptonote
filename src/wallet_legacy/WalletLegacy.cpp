@@ -519,7 +519,7 @@ void WalletLegacy::synchronizationCompleted(std::error_code result) {
   notifyIfBalanceChanged();
 }
 
-void WalletLegacy::onTransactionUpdated(ITransfersSubscription* object, const Hash& transactionHash) {
+void WalletLegacy::onTransactionUpdated(ITransfersSubscription* object, const hash_t& transactionHash) {
   std::shared_ptr<WalletLegacyEvent> event;
 
   TransactionInformation txInfo;
@@ -535,7 +535,7 @@ void WalletLegacy::onTransactionUpdated(ITransfersSubscription* object, const Ha
   }
 }
 
-void WalletLegacy::onTransactionDeleted(ITransfersSubscription* object, const Hash& transactionHash) {
+void WalletLegacy::onTransactionDeleted(ITransfersSubscription* object, const hash_t& transactionHash) {
   std::shared_ptr<WalletLegacyEvent> event;
 
   {

@@ -68,7 +68,7 @@ namespace cryptonote
   struct CORE_SYNC_DATA
   {
     uint32_t current_height;
-    crypto::Hash top_id;
+    crypto::hash_t top_id;
 
     void serialize(ISerializer& s) {
       KV_MEMBER(current_height)
@@ -194,7 +194,7 @@ namespace cryptonote
     }
   };
 
-  inline crypto::Hash get_proof_of_trust_hash(const proof_of_trust& pot) {
+  inline crypto::hash_t get_proof_of_trust_hash(const proof_of_trust& pot) {
     std::string s;
     s.append(reinterpret_cast<const char*>(&pot.peer_id), sizeof(pot.peer_id));
     s.append(reinterpret_cast<const char*>(&pot.time), sizeof(pot.time));

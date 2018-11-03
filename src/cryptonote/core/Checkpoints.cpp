@@ -12,7 +12,7 @@ namespace cryptonote {
 Checkpoints::Checkpoints(Logging::ILogger &log) : logger(log, "checkpoints") {}
 //---------------------------------------------------------------------------
 bool Checkpoints::add(uint32_t height, const std::string &hash_str) {
-  crypto::Hash h = NULL_HASH;
+  crypto::hash_t h = NULL_HASH;
 
   if (!Common::podFromHex(hash_str, h)) {
     logger(ERROR) << "WRONG HASH IN CHECKPOINTS!!!";
@@ -32,7 +32,7 @@ bool Checkpoints::isCheckpoint(uint32_t  height) const {
   return !m_points.empty() && (height <= (--m_points.end())->first);
 }
 //---------------------------------------------------------------------------
-bool Checkpoints::check(uint32_t  height, const crypto::Hash &h,
+bool Checkpoints::check(uint32_t  height, const crypto::hash_t &h,
                               bool &is_a_checkpoint) const {
   auto it = m_points.find(height);
   is_a_checkpoint = it != m_points.end();
@@ -51,7 +51,7 @@ bool Checkpoints::check(uint32_t  height, const crypto::Hash &h,
   }
 }
 //---------------------------------------------------------------------------
-bool Checkpoints::check(uint32_t  height, const crypto::Hash &h) const {
+bool Checkpoints::check(uint32_t  height, const crypto::hash_t &h) const {
   bool ignored;
   return check(height, h, ignored);
 }

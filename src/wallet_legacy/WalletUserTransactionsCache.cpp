@@ -138,7 +138,7 @@ std::shared_ptr<WalletLegacyEvent> WalletUserTransactionsCache::onTransactionUpd
   return event;
 }
 
-std::shared_ptr<WalletLegacyEvent> WalletUserTransactionsCache::onTransactionDeleted(const Hash& transactionHash) {
+std::shared_ptr<WalletLegacyEvent> WalletUserTransactionsCache::onTransactionDeleted(const hash_t& transactionHash) {
   TransactionId id = cryptonote::WALLET_LEGACY_INVALID_TRANSACTION_ID;
   if (m_unconfirmedTransactions.findTransactionId(transactionHash, id)) {
     m_unconfirmedTransactions.erase(transactionHash);
@@ -208,7 +208,7 @@ TransactionId WalletUserTransactionsCache::insertTransaction(WalletLegacyTransac
   return m_transactions.size() - 1;
 }
 
-TransactionId WalletUserTransactionsCache::findTransactionByHash(const Hash& hash) {
+TransactionId WalletUserTransactionsCache::findTransactionByHash(const hash_t& hash) {
   auto it = std::find_if(m_transactions.begin(), m_transactions.end(), [&hash](const WalletLegacyTransaction& tx) { return tx.hash == hash; });
 
   if (it == m_transactions.end())

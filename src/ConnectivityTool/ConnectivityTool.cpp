@@ -254,7 +254,7 @@ bool handle_request_stat(po::variables_map& vm, PeerIdType peer_id) {
     pot.time = time(NULL);
     crypto::public_key_t pubk;
     Common::podFromHex(P2P_STAT_TRUSTED_PUB_KEY, pubk);
-    crypto::Hash h = get_proof_of_trust_hash(pot);
+    crypto::hash_t h = get_proof_of_trust_hash(pot);
     crypto::generate_signature(h, pubk, prvk, pot.sign);
 
     if (command_line::get_arg(vm, arg_request_stat_info)) {

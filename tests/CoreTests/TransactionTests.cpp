@@ -101,7 +101,7 @@ bool test_transaction_generation_and_ring_signature()
   bool r = constructTransaction(miner_acc2.getAccountKeys(), sources, destinations, std::vector<uint8_t>(), tx_rc1, 0, logger);
   CHECK_AND_ASSERT_MES(r, false, "failed to construct transaction");
 
-  crypto::Hash pref_hash = getObjectHash(*static_cast<TransactionPrefix*>(&tx_rc1));
+  crypto::hash_t pref_hash = getObjectHash(*static_cast<TransactionPrefix*>(&tx_rc1));
   std::vector<const crypto::public_key_t *> output_keys;
   output_keys.push_back(&boost::get<KeyOutput>(tx_mine_1.outputs[0].target).key);
   output_keys.push_back(&boost::get<KeyOutput>(tx_mine_2.outputs[0].target).key);

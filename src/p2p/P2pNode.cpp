@@ -103,7 +103,7 @@ void doWithTimeoutAndThrow(System::Dispatcher& dispatcher, std::chrono::nanoseco
 
 }
 
-P2pNode::P2pNode(const P2pNodeConfig& cfg, Dispatcher& dispatcher, Logging::ILogger& log, const crypto::Hash& genesisHash, PeerIdType peerId) :
+P2pNode::P2pNode(const P2pNodeConfig& cfg, Dispatcher& dispatcher, Logging::ILogger& log, const crypto::hash_t& genesisHash, PeerIdType peerId) :
   logger(log, "P2pNode:" + std::to_string(cfg.getBindPort())),
   m_stopRequested(false),
   m_cfg(cfg),

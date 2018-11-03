@@ -121,7 +121,7 @@ TEST_F(PaymentGateTest, DISABLED_sendTransaction) {
   uint64_t TEST_AMOUNT = 0;
   currency.parseAmount("100000.0", TEST_AMOUNT);
 
-  crypto::Hash paymentId;
+  crypto::hash_t paymentId;
   std::iota(reinterpret_cast<char*>(&paymentId), reinterpret_cast<char*>(&paymentId) + sizeof(paymentId), 0);
   std::string paymentIdStr = Common::podToHex(paymentId);
 

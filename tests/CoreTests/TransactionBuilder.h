@@ -46,7 +46,7 @@ private:
 
   void fillInputs(cryptonote::Transaction& tx, std::vector<cryptonote::KeyPair>& contexts) const;
   void fillOutputs(cryptonote::Transaction& tx) const;
-  void signSources(const crypto::Hash& prefixHash, const std::vector<cryptonote::KeyPair>& contexts, cryptonote::Transaction& tx) const;
+  void signSources(const crypto::hash_t& prefixHash, const std::vector<cryptonote::KeyPair>& contexts, cryptonote::Transaction& tx) const;
 
   struct MultisignatureDestination {
     uint64_t amount;

@@ -43,11 +43,11 @@ namespace cryptonote {
     TransactionImpl(const cryptonote::Transaction& tx);
   
     // ITransactionReader
-    virtual Hash getTransactionHash() const override;
-    virtual Hash getTransactionPrefixHash() const override;
+    virtual hash_t getTransactionHash() const override;
+    virtual hash_t getTransactionPrefixHash() const override;
     virtual public_key_t getTransactionPublicKey() const override;
     virtual uint64_t getUnlockTime() const override;
-    virtual bool getPaymentId(Hash& hash) const override;
+    virtual bool getPaymentId(hash_t& hash) const override;
     virtual bool getExtraNonce(BinaryArray& nonce) const override;
     virtual BinaryArray getExtra() const override;
 
@@ -79,7 +79,7 @@ namespace cryptonote {
     // ITransactionWriter
 
     virtual void setUnlockTime(uint64_t unlockTime) override;
-    virtual void setPaymentId(const Hash& hash) override;
+    virtual void setPaymentId(const hash_t& hash) override;
     virtual void setExtraNonce(const BinaryArray& nonce) override;
     virtual void appendExtra(const BinaryArray& extraData) override;
 
@@ -123,7 +123,7 @@ namespace cryptonote {
 
     cryptonote::Transaction transaction;
     boost::optional<secret_key_t> secretKey;
-    mutable boost::optional<Hash> transactionHash;
+    mutable boost::optional<hash_t> transactionHash;
     TransactionExtra extra;
   };
 
@@ -177,7 +177,7 @@ namespace cryptonote {
     }
   }
 
-  Hash TransactionImpl::getTransactionHash() const {
+  hash_t TransactionImpl::getTransactionHash() const {
     if (!transactionHash.is_initialized()) {
       transactionHash = getObjectHash(transaction);
     }
@@ -185,7 +185,7 @@ namespace cryptonote {
     return transactionHash.get();   
   }
 
-  Hash TransactionImpl::getTransactionPrefixHash() const {
+  hash_t TransactionImpl::getTransactionPrefixHash() const {
     return getObjectHash(*static_cast<const TransactionPrefix*>(&transaction));
   }
 
@@ -315,7 +315,7 @@ namespace cryptonote {
 
   void TransactionImpl::signInputKey(size_t index, const TransactionTypes::InputKeyInfo& info, const KeyPair& ephKeys) {
     const auto& input = boost::get<KeyInput>(getInputChecked(transaction, index, TransactionTypes::InputType::Key));
-    Hash prefixHash = getTransactionPrefixHash();
+    hash_t prefixHash = getTransactionPrefixHash();
 
     std::vector<signature_t> signatures;
     std::vector<const public_key_t*> keysPtrs;
@@ -327,7 +327,7 @@ namespace cryptonote {
     signatures.resize(keysPtrs.size());
 
     generate_ring_signature(
-      reinterpret_cast<const Hash&>(prefixHash),
+      reinterpret_cast<const hash_t&>(prefixHash),
       reinterpret_cast<const key_image_t&>(input.keyImage),
       keysPtrs,
       reinterpret_cast<const secret_key_t&>(ephKeys.secretKey),
@@ -356,7 +356,7 @@ namespace cryptonote {
     signature_t signature;
     auto txPrefixHash = getTransactionPrefixHash();
 
-    generate_signature(reinterpret_cast<const Hash&>(txPrefixHash),
+    generate_signature(reinterpret_cast<const hash_t&>(txPrefixHash),
       ephemeralPublicKey, ephemeralSecretKey, signature);
 
     getSignatures(index).push_back(signature);
@@ -390,19 +390,19 @@ namespace cryptonote {
     return toBinaryArray(transaction);
   }
 
-  void TransactionImpl::setPaymentId(const Hash& hash) {
+  void TransactionImpl::setPaymentId(const hash_t& hash) {
     checkIfSigning();
     BinaryArray paymentIdBlob;
-    setPaymentIdToTransactionExtraNonce(paymentIdBlob, reinterpret_cast<const Hash&>(hash));
+    setPaymentIdToTransactionExtraNonce(paymentIdBlob, reinterpret_cast<const hash_t&>(hash));
     setExtraNonce(paymentIdBlob);
   }
 
-  bool TransactionImpl::getPaymentId(Hash& hash) const {
+  bool TransactionImpl::getPaymentId(hash_t& hash) const {
     BinaryArray nonce;
     if (getExtraNonce(nonce)) {
-      Hash paymentId;
+      hash_t paymentId;
       if (getPaymentIdFromTransactionExtraNonce(nonce, paymentId)) {
-        hash = reinterpret_cast<const Hash&>(paymentId);
+        hash = reinterpret_cast<const hash_t&>(paymentId);
         return true;
       }
     }

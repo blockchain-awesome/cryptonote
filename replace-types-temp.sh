@@ -6,7 +6,7 @@
 #  ./replace-types.sh crypto::SecretKey crypto::secret_key_t
 #  ./replace-types.sh PublicKey public_key_t
 #  ./replace-types.sh crypto::PublicKey crypto::public_key_t
-./replace-types.sh KeyImage key_image_t
-./replace-types.sh crypto::KeyImage crypto::key_image_t
-#  ./replace-types.sh Hash hash_t
-#  ./replace-types.sh crypto::Hash crypto::hash_t
+# ./replace-types.sh KeyImage key_image_t
+# ./replace-types.sh crypto::KeyImage crypto::key_image_t
+ ./replace-types.sh Hash hash_t
+ ./replace-types.sh crypto::Hash crypto::hash_t

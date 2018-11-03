@@ -14,7 +14,7 @@
 #include "../Io.h"
 
 using namespace std;
-typedef crypto::Hash chash;
+typedef crypto::hash_t chash;
 
 bool operator !=(const crypto::EllipticCurveScalar &a, const crypto::EllipticCurveScalar &b) {
   return 0 != memcmp(&a, &b, sizeof(crypto::EllipticCurveScalar));

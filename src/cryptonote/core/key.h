@@ -21,7 +21,7 @@ class Key
     static KeyPair generate();
 };
 
-const Hash NULL_HASH = Key::zero<Hash>();
+const hash_t NULL_HASH = Key::zero<hash_t>();
 const public_key_t NULL_PUBLIC_KEY = Key::zero<public_key_t>();
 const secret_key_t NULL_SECRET_KEY = Key::zero<secret_key_t>();
 

@@ -37,7 +37,7 @@ namespace crypto {
   }
 
   static inline void hash_to_scalar(const void *data, size_t length, EllipticCurveScalar &res) {
-    cn_fast_hash(data, length, reinterpret_cast<Hash &>(res));
+    cn_fast_hash(data, length, reinterpret_cast<hash_t &>(res));
     sc_reduce32(reinterpret_cast<unsigned char*>(&res));
   }
 
@@ -225,12 +225,12 @@ namespace crypto {
 
 
   struct s_comm {
-    Hash h;
+    hash_t h;
     EllipticCurvePoint key;
     EllipticCurvePoint comm;
   };
 
-  void crypto_ops::generate_signature(const Hash &prefix_hash, const public_key_t &pub, const secret_key_t &sec, signature_t &sig) {
+  void crypto_ops::generate_signature(const hash_t &prefix_hash, const public_key_t &pub, const secret_key_t &sec, signature_t &sig) {
     lock_guard<mutex> lock(random_lock);
     ge_p3 tmp3;
     EllipticCurveScalar k;
@@ -254,7 +254,7 @@ namespace crypto {
     sc_mulsub(reinterpret_cast<unsigned char*>(&sig) + 32, reinterpret_cast<unsigned char*>(&sig), reinterpret_cast<const unsigned char*>(&sec), reinterpret_cast<unsigned char*>(&k));
   }
 
-  bool crypto_ops::check_signature(const Hash &prefix_hash, const public_key_t &pub, const signature_t &sig) {
+  bool crypto_ops::check_signature(const hash_t &prefix_hash, const public_key_t &pub, const signature_t &sig) {
     ge_p2 tmp2;
     ge_p3 tmp3;
     EllipticCurveScalar c;
@@ -276,7 +276,7 @@ namespace crypto {
   }
 
   static void hash_to_ec(const public_key_t &key, ge_p3 &res) {
-    Hash h;
+    hash_t h;
     ge_p2 point;
     ge_p1p1 point2;
     cn_fast_hash(std::addressof(key), sizeof(public_key_t), h);
@@ -286,7 +286,7 @@ namespace crypto {
   }
 
   void crypto_ops::hash_data_to_ec(const uint8_t* data, std::size_t len, public_key_t& key) {
-    Hash h;
+    hash_t h;
     ge_p2 point;
     ge_p1p1 point2;
     cn_fast_hash(data, len, h);
@@ -316,7 +316,7 @@ namespace crypto {
 #endif
 
   struct rs_comm {
-    Hash h;
+    hash_t h;
     struct {
       EllipticCurvePoint a, b;
     } ab[];
@@ -327,7 +327,7 @@ namespace crypto {
     return sizeof(rs_comm) + pubs_count * sizeof(rs.ab[0]);
   }
 
-  void crypto_ops::generate_ring_signature(const Hash &prefix_hash, const key_image_t &image,
+  void crypto_ops::generate_ring_signature(const hash_t &prefix_hash, const key_image_t &image,
     const public_key_t *const *pubs, size_t pubs_count,
     const secret_key_t &sec, size_t sec_index,
     signature_t *sig) {
@@ -389,7 +389,7 @@ namespace crypto {
     sc_mulsub(reinterpret_cast<unsigned char*>(&sig[sec_index]) + 32, reinterpret_cast<unsigned char*>(&sig[sec_index]), reinterpret_cast<const unsigned char*>(&sec), reinterpret_cast<unsigned char*>(&k));
   }
 
-  bool crypto_ops::check_ring_signature(const Hash &prefix_hash, const key_image_t &image,
+  bool crypto_ops::check_ring_signature(const hash_t &prefix_hash, const key_image_t &image,
     const public_key_t *const *pubs, size_t pubs_count,
     const signature_t *sig) {
     size_t i;

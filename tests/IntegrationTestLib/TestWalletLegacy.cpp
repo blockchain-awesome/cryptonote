@@ -68,7 +68,7 @@ namespace {
   };
 }
 
-std::error_code TestWalletLegacy::sendTransaction(const std::string& address, uint64_t amount, Hash& txHash) {
+std::error_code TestWalletLegacy::sendTransaction(const std::string& address, uint64_t amount, hash_t& txHash) {
   TransactionSendingWaiter transactionSendingWaiter(m_dispatcher);
   m_wallet->addObserver(&transactionSendingWaiter);
 

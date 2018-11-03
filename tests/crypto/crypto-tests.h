@@ -18,6 +18,6 @@ void setup_random(void);
 bool check_scalar(const crypto::EllipticCurveScalar &scalar);
 void random_scalar(crypto::EllipticCurveScalar &res);
 void hash_to_scalar(const void *data, size_t length, crypto::EllipticCurveScalar &res);
-void hash_to_point(const crypto::Hash &h, crypto::EllipticCurvePoint &res);
+void hash_to_point(const crypto::hash_t &h, crypto::EllipticCurvePoint &res);
 void hash_to_ec(const crypto::public_key_t &key, crypto::EllipticCurvePoint &res);
 #endif

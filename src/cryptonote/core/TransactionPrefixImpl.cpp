@@ -19,17 +19,17 @@ namespace cryptonote {
 class TransactionPrefixImpl : public ITransactionReader {
 public:
   TransactionPrefixImpl();
-  TransactionPrefixImpl(const TransactionPrefix& prefix, const Hash& transactionHash);
+  TransactionPrefixImpl(const TransactionPrefix& prefix, const hash_t& transactionHash);
 
   virtual ~TransactionPrefixImpl() { }
 
-  virtual Hash getTransactionHash() const override;
-  virtual Hash getTransactionPrefixHash() const override;
+  virtual hash_t getTransactionHash() const override;
+  virtual hash_t getTransactionPrefixHash() const override;
   virtual public_key_t getTransactionPublicKey() const override;
   virtual uint64_t getUnlockTime() const override;
 
   // extra
-  virtual bool getPaymentId(Hash& paymentId) const override;
+  virtual bool getPaymentId(hash_t& paymentId) const override;
   virtual bool getExtraNonce(BinaryArray& nonce) const override;
   virtual BinaryArray getExtra() const override;
 
@@ -64,24 +64,24 @@ public:
 private:
   TransactionPrefix m_txPrefix;
   TransactionExtra m_extra;
-  Hash m_txHash;
+  hash_t m_txHash;
 };
 
 TransactionPrefixImpl::TransactionPrefixImpl() {
 }
 
-TransactionPrefixImpl::TransactionPrefixImpl(const TransactionPrefix& prefix, const Hash& transactionHash) {
+TransactionPrefixImpl::TransactionPrefixImpl(const TransactionPrefix& prefix, const hash_t& transactionHash) {
   m_extra.parse(prefix.extra);
 
   m_txPrefix = prefix;
   m_txHash = transactionHash;
 }
 
-Hash TransactionPrefixImpl::getTransactionHash() const {
+hash_t TransactionPrefixImpl::getTransactionHash() const {
   return m_txHash;
 }
 
-Hash TransactionPrefixImpl::getTransactionPrefixHash() const {
+hash_t TransactionPrefixImpl::getTransactionPrefixHash() const {
   return getObjectHash(m_txPrefix);
 }
 
@@ -95,13 +95,13 @@ uint64_t TransactionPrefixImpl::getUnlockTime() const {
   return m_txPrefix.unlockTime;
 }
 
-bool TransactionPrefixImpl::getPaymentId(Hash& hash) const {
+bool TransactionPrefixImpl::getPaymentId(hash_t& hash) const {
   BinaryArray nonce;
 
   if (getExtraNonce(nonce)) {
-    crypto::Hash paymentId;
+    crypto::hash_t paymentId;
     if (getPaymentIdFromTransactionExtraNonce(nonce, paymentId)) {
-      hash = reinterpret_cast<const Hash&>(paymentId);
+      hash = reinterpret_cast<const hash_t&>(paymentId);
       return true;
     }
   }
@@ -203,7 +203,7 @@ bool TransactionPrefixImpl::getTransactionSecretKey(secret_key_t& key) const {
 }
 
 
-std::unique_ptr<ITransactionReader> createTransactionPrefix(const TransactionPrefix& prefix, const Hash& transactionHash) {
+std::unique_ptr<ITransactionReader> createTransactionPrefix(const TransactionPrefix& prefix, const hash_t& transactionHash) {
   return std::unique_ptr<ITransactionReader> (new TransactionPrefixImpl(prefix, transactionHash));
 }
 

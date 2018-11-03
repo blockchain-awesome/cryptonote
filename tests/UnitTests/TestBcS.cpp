@@ -35,13 +35,13 @@ public:
 
   INodeNonTrivialRefreshStub(TestBlockchainGenerator& generator) : INodeTrivialRefreshStub(generator), blocksWasQueried(false), poolWasQueried(false) {}
 
-  virtual void queryBlocks(std::vector<Hash>&& knownBlockIds, uint64_t timestamp, std::vector<BlockShortEntry>& newBlocks, uint32_t& startHeight, const Callback& callback) override {
+  virtual void queryBlocks(std::vector<hash_t>&& knownBlockIds, uint64_t timestamp, std::vector<BlockShortEntry>& newBlocks, uint32_t& startHeight, const Callback& callback) override {
     blocksWasQueried = true;
     INodeTrivialRefreshStub::queryBlocks(std::move(knownBlockIds), timestamp, newBlocks, startHeight, callback);
   }
 
-  virtual void getPoolSymmetricDifference(std::vector<Hash>&& known_pool_tx_ids, Hash known_block_id, bool& is_bc_actual,
-          std::vector<std::unique_ptr<ITransactionReader>>& new_txs, std::vector<Hash>& deleted_tx_ids, const Callback& callback) override {
+  virtual void getPoolSymmetricDifference(std::vector<hash_t>&& known_pool_tx_ids, hash_t known_block_id, bool& is_bc_actual,
+          std::vector<std::unique_ptr<ITransactionReader>>& new_txs, std::vector<hash_t>& deleted_tx_ids, const Callback& callback) override {
     poolWasQueried = true;
     INodeTrivialRefreshStub::getPoolSymmetricDifference(std::move(known_pool_tx_ids), known_block_id, is_bc_actual, new_txs, deleted_tx_ids, callback);
   }
@@ -60,26 +60,26 @@ public:
 
   INodeFunctorialStub(TestBlockchainGenerator& generator)
     : INodeNonTrivialRefreshStub(generator)
-    , queryBlocksFunctor([](const std::vector<Hash>&, uint64_t, std::vector<BlockShortEntry>&, uint32_t&, const Callback&) -> bool { return true; })
-    , getPoolSymmetricDifferenceFunctor([](const std::vector<Hash>&, Hash, bool&, std::vector<std::unique_ptr<ITransactionReader>>&, std::vector<Hash>&, const Callback&)->bool {return true; }) {
+    , queryBlocksFunctor([](const std::vector<hash_t>&, uint64_t, std::vector<BlockShortEntry>&, uint32_t&, const Callback&) -> bool { return true; })
+    , getPoolSymmetricDifferenceFunctor([](const std::vector<hash_t>&, hash_t, bool&, std::vector<std::unique_ptr<ITransactionReader>>&, std::vector<hash_t>&, const Callback&)->bool {return true; }) {
   }
 
-  virtual void queryBlocks(std::vector<Hash>&& knownBlockIds, uint64_t timestamp, std::vector<BlockShortEntry>& newBlocks,
+  virtual void queryBlocks(std::vector<hash_t>&& knownBlockIds, uint64_t timestamp, std::vector<BlockShortEntry>& newBlocks,
     uint32_t& startHeight, const Callback& callback) override {
     if (queryBlocksFunctor(knownBlockIds, timestamp, newBlocks, startHeight, callback)) {
       INodeNonTrivialRefreshStub::queryBlocks(std::move(knownBlockIds), timestamp, newBlocks, startHeight, callback);
     }
   }
 
-  virtual void getPoolSymmetricDifference(std::vector<Hash>&& known_pool_tx_ids, Hash known_block_id, bool& is_bc_actual,
-          std::vector<std::unique_ptr<ITransactionReader>>& new_txs, std::vector<Hash>& deleted_tx_ids, const Callback& callback) override {
+  virtual void getPoolSymmetricDifference(std::vector<hash_t>&& known_pool_tx_ids, hash_t known_block_id, bool& is_bc_actual,
+          std::vector<std::unique_ptr<ITransactionReader>>& new_txs, std::vector<hash_t>& deleted_tx_ids, const Callback& callback) override {
     if (getPoolSymmetricDifferenceFunctor(known_pool_tx_ids, known_block_id, is_bc_actual, new_txs, deleted_tx_ids, callback)) {
       INodeNonTrivialRefreshStub::getPoolSymmetricDifference(std::move(known_pool_tx_ids), known_block_id, is_bc_actual, new_txs, deleted_tx_ids, callback);
     }
   }
 
-  std::function<bool(const std::vector<Hash>&, uint64_t, std::vector<BlockShortEntry>&, uint32_t&, const Callback&)> queryBlocksFunctor;
-  std::function<bool(const std::vector<Hash>&, Hash, bool&, std::vector<std::unique_ptr<ITransactionReader>>&, std::vector<Hash>&, const Callback&)> getPoolSymmetricDifferenceFunctor;
+  std::function<bool(const std::vector<hash_t>&, uint64_t, std::vector<BlockShortEntry>&, uint32_t&, const Callback&)> queryBlocksFunctor;
+  std::function<bool(const std::vector<hash_t>&, hash_t, bool&, std::vector<std::unique_ptr<ITransactionReader>>&, std::vector<hash_t>&, const Callback&)> getPoolSymmetricDifferenceFunctor;
 };
 
 class IBlockchainSynchronizerTrivialObserver : public IBlockchainSynchronizerObserver {
@@ -106,11 +106,11 @@ public:
 
 class ConsumerStub : public IBlockchainConsumer {
 public:
-  ConsumerStub(const Hash& genesisBlockHash) {
+  ConsumerStub(const hash_t& genesisBlockHash) {
     m_blockchain.push_back(genesisBlockHash);
   }
 
-  void addPoolTransaction(const crypto::Hash& hash) {
+  void addPoolTransaction(const crypto::hash_t& hash) {
     m_pool.emplace(hash);
   }
 
@@ -139,15 +139,15 @@ public:
     return true;
   }
 
-  const std::vector<Hash>& getBlockchain() const {
+  const std::vector<hash_t>& getBlockchain() const {
     return m_blockchain;
   }
 
-  virtual const std::unordered_set<crypto::Hash>& getKnownPoolTxIds() const override {
+  virtual const std::unordered_set<crypto::hash_t>& getKnownPoolTxIds() const override {
     return m_pool;
   }
 
-  virtual std::error_code onPoolUpdated(const std::vector<std::unique_ptr<ITransactionReader>>& addedTransactions, const std::vector<Hash>& deletedTransactions) override {
+  virtual std::error_code onPoolUpdated(const std::vector<std::unique_ptr<ITransactionReader>>& addedTransactions, const std::vector<hash_t>& deletedTransactions) override {
     for (const auto& tx: addedTransactions) {
       m_pool.emplace(tx->getTransactionHash());
     }
@@ -163,13 +163,13 @@ public:
     throw std::runtime_error("Not implemented");
   }
 
-  void removeUnconfirmedTransaction(const crypto::Hash& /*transactionHash*/) override {
+  void removeUnconfirmedTransaction(const crypto::hash_t& /*transactionHash*/) override {
     throw std::runtime_error("Not implemented");
   }
 
 private:
-  std::unordered_set<crypto::Hash> m_pool;
-  std::vector<Hash> m_blockchain;
+  std::unordered_set<crypto::hash_t> m_pool;
+  std::vector<hash_t> m_blockchain;
 };
 
 class BcSTest : public ::testing::Test, public IBlockchainSynchronizerObserver {
@@ -191,7 +191,7 @@ public:
   }
 
   void checkSyncedBlockchains() {
-    std::vector<Hash> generatorBlockchain;
+    std::vector<hash_t> generatorBlockchain;
     std::transform(
       generator.getBlockchain().begin(),
       generator.getBlockchain().end(),
@@ -485,13 +485,13 @@ TEST_F(BcSTest, serializationCheck) {
 
 class FunctorialPoolConsumerStub : public ConsumerStub {
 public:
-  FunctorialPoolConsumerStub(const Hash& genesisBlockHash) : ConsumerStub(genesisBlockHash) {}
+  FunctorialPoolConsumerStub(const hash_t& genesisBlockHash) : ConsumerStub(genesisBlockHash) {}
 
-  virtual std::error_code onPoolUpdated(const std::vector<std::unique_ptr<ITransactionReader>>& addedTransactions, const std::vector<Hash>& deletedTransactions) override {
+  virtual std::error_code onPoolUpdated(const std::vector<std::unique_ptr<ITransactionReader>>& addedTransactions, const std::vector<hash_t>& deletedTransactions) override {
     return onPoolUpdatedFunctor(addedTransactions, deletedTransactions);
   }
 
-  std::function<std::error_code(const std::vector<std::unique_ptr<ITransactionReader>>&, const std::vector<Hash>&)> onPoolUpdatedFunctor;
+  std::function<std::error_code(const std::vector<std::unique_ptr<ITransactionReader>>&, const std::vector<hash_t>&)> onPoolUpdatedFunctor;
 };
 
 TEST_F(BcSTest, firstPoolSynchronizationCheck) {
@@ -507,12 +507,12 @@ TEST_F(BcSTest, firstPoolSynchronizationCheck) {
   auto tx2hash = getObjectHash(tx2);
   auto tx3hash = getObjectHash(tx3);
 
-  std::unordered_set<Hash> firstExpectedPool = { tx1hash, tx2hash, tx3hash };
-  std::unordered_set<Hash> secondExpectedPool = { tx2hash };
+  std::unordered_set<hash_t> firstExpectedPool = { tx1hash, tx2hash, tx3hash };
+  std::unordered_set<hash_t> secondExpectedPool = { tx2hash };
 
-  std::vector<Hash> expectedDeletedPoolAnswer = { tx3hash };
+  std::vector<hash_t> expectedDeletedPoolAnswer = { tx3hash };
   std::vector<Transaction> expectedNewPoolAnswer = { tx1 };
-  std::vector<Hash> expectedNewPoolAnswerHashes = { tx1hash };
+  std::vector<hash_t> expectedNewPoolAnswerHashes = { tx1hash };
 
   FunctorialPoolConsumerStub c1(m_currency.genesisBlockHash());
   FunctorialPoolConsumerStub c2(m_currency.genesisBlockHash());
@@ -523,26 +523,26 @@ TEST_F(BcSTest, firstPoolSynchronizationCheck) {
   c2.addPoolTransaction(tx2hash);
   c2.addPoolTransaction(tx3hash);
 
-  std::vector<Hash> c1ResponseDeletedPool;
-  std::vector<Hash> c2ResponseDeletedPool;
-  std::vector<Hash> c1ResponseNewPool;
-  std::vector<Hash> c2ResponseNewPool;
+  std::vector<hash_t> c1ResponseDeletedPool;
+  std::vector<hash_t> c2ResponseDeletedPool;
+  std::vector<hash_t> c1ResponseNewPool;
+  std::vector<hash_t> c2ResponseNewPool;
 
 
-  c1.onPoolUpdatedFunctor = [&](const std::vector<std::unique_ptr<ITransactionReader>>& new_txs, const std::vector<Hash>& deleted)->std::error_code {
+  c1.onPoolUpdatedFunctor = [&](const std::vector<std::unique_ptr<ITransactionReader>>& new_txs, const std::vector<hash_t>& deleted)->std::error_code {
     c1ResponseDeletedPool.assign(deleted.begin(), deleted.end());
     for (const auto& tx: new_txs) {
-      Hash hash = tx->getTransactionHash();
-      c1ResponseNewPool.push_back(reinterpret_cast<const Hash&>(hash));
+      hash_t hash = tx->getTransactionHash();
+      c1ResponseNewPool.push_back(reinterpret_cast<const hash_t&>(hash));
     }
     return std::error_code();
   };
 
-  c2.onPoolUpdatedFunctor = [&](const std::vector<std::unique_ptr<ITransactionReader>>& new_txs, const std::vector<Hash>& deleted)->std::error_code {
+  c2.onPoolUpdatedFunctor = [&](const std::vector<std::unique_ptr<ITransactionReader>>& new_txs, const std::vector<hash_t>& deleted)->std::error_code {
     c2ResponseDeletedPool.assign(deleted.begin(), deleted.end());
     for (const auto& tx: new_txs) {
-      Hash hash = tx->getTransactionHash();
-      c2ResponseNewPool.push_back(reinterpret_cast<const Hash&>(hash));
+      hash_t hash = tx->getTransactionHash();
+      c2ResponseNewPool.push_back(reinterpret_cast<const hash_t&>(hash));
     }
     return std::error_code();
   };
@@ -551,12 +551,12 @@ TEST_F(BcSTest, firstPoolSynchronizationCheck) {
   m_sync.addConsumer(&c2);
 
   int requestsCount = 0;
-  std::unordered_set<Hash> firstKnownPool;
-  std::unordered_set<Hash> secondKnownPool;
+  std::unordered_set<hash_t> firstKnownPool;
+  std::unordered_set<hash_t> secondKnownPool;
 
 
-  m_node.getPoolSymmetricDifferenceFunctor = [&](const std::vector<Hash>& known, Hash last, bool& is_actual,
-          std::vector<std::unique_ptr<ITransactionReader>>& new_txs, std::vector<Hash>& deleted, const INode::Callback& callback) {
+  m_node.getPoolSymmetricDifferenceFunctor = [&](const std::vector<hash_t>& known, hash_t last, bool& is_actual,
+          std::vector<std::unique_ptr<ITransactionReader>>& new_txs, std::vector<hash_t>& deleted, const INode::Callback& callback) {
     is_actual = true;
     requestsCount++;
 
@@ -603,12 +603,12 @@ TEST_F(BcSTest, firstPoolSynchronizationCheck) {
 
 TEST_F(BcSTest, firstPoolSynchronizationCheckNonActual) {
   addConsumers(2);
-  m_consumers.front()->addPoolTransaction(crypto::rand<crypto::Hash>());
+  m_consumers.front()->addPoolTransaction(crypto::rand<crypto::hash_t>());
 
   int requestsCount = 0;
 
-  m_node.getPoolSymmetricDifferenceFunctor = [&](const std::vector<Hash>& known, Hash last, bool& is_actual,
-          std::vector<std::unique_ptr<ITransactionReader>>& new_txs, std::vector<Hash>& deleted, const INode::Callback& callback) {
+  m_node.getPoolSymmetricDifferenceFunctor = [&](const std::vector<hash_t>& known, hash_t last, bool& is_actual,
+          std::vector<std::unique_ptr<ITransactionReader>>& new_txs, std::vector<hash_t>& deleted, const INode::Callback& callback) {
     is_actual = true;
     requestsCount++;
 
@@ -638,12 +638,12 @@ TEST_F(BcSTest, firstPoolSynchronizationCheckNonActual) {
 
 TEST_F(BcSTest, firstPoolSynchronizationCheckGetPoolErr) {
   addConsumers(2);
-  m_consumers.front()->addPoolTransaction(crypto::rand<crypto::Hash>());
+  m_consumers.front()->addPoolTransaction(crypto::rand<crypto::hash_t>());
 
   int requestsCount = 0;
 
-  m_node.getPoolSymmetricDifferenceFunctor = [&](const std::vector<Hash>& known, Hash last, bool& is_actual,
-          std::vector<std::unique_ptr<ITransactionReader>>& new_txs, std::vector<Hash>& deleted, const INode::Callback& callback) {
+  m_node.getPoolSymmetricDifferenceFunctor = [&](const std::vector<hash_t>& known, hash_t last, bool& is_actual,
+          std::vector<std::unique_ptr<ITransactionReader>>& new_txs, std::vector<hash_t>& deleted, const INode::Callback& callback) {
     is_actual = true;
     requestsCount++;
 
@@ -689,8 +689,8 @@ TEST_F(BcSTest, poolSynchronizationCheckActual) {
 
   int requestsCount = 0;
 
-  m_node.getPoolSymmetricDifferenceFunctor = [&](const std::vector<Hash>& known, Hash last, bool& is_actual,
-          std::vector<std::unique_ptr<ITransactionReader>>& new_txs, std::vector<Hash>& deleted, const INode::Callback& callback) {
+  m_node.getPoolSymmetricDifferenceFunctor = [&](const std::vector<hash_t>& known, hash_t last, bool& is_actual,
+          std::vector<std::unique_ptr<ITransactionReader>>& new_txs, std::vector<hash_t>& deleted, const INode::Callback& callback) {
     is_actual = true;
     requestsCount++;
 
@@ -728,8 +728,8 @@ TEST_F(BcSTest, poolSynchronizationCheckError) {
 
   int requestsCount = 0;
 
-  m_node.getPoolSymmetricDifferenceFunctor = [&](const std::vector<Hash>& known, Hash last, bool& is_actual,
-          std::vector<std::unique_ptr<ITransactionReader>>& new_txs, std::vector<Hash>& deleted, const INode::Callback& callback) {
+  m_node.getPoolSymmetricDifferenceFunctor = [&](const std::vector<hash_t>& known, hash_t last, bool& is_actual,
+          std::vector<std::unique_ptr<ITransactionReader>>& new_txs, std::vector<hash_t>& deleted, const INode::Callback& callback) {
     is_actual = true;
     requestsCount++;
 
@@ -759,7 +759,7 @@ TEST_F(BcSTest, poolSynchronizationCheckTxAdded) {
   auto tx1hash = getObjectHash(tx1);
 
   std::vector<Transaction> newPoolAnswer = { tx1 };
-  std::vector<Hash> expectedKnownPoolHashes = { tx1hash };
+  std::vector<hash_t> expectedKnownPoolHashes = { tx1hash };
 
   addConsumers(1);
 
@@ -774,10 +774,10 @@ TEST_F(BcSTest, poolSynchronizationCheckTxAdded) {
   e.wait();
 
   int requestsCount = 0;
-  std::vector<Hash> knownPool;
+  std::vector<hash_t> knownPool;
 
-  m_node.getPoolSymmetricDifferenceFunctor = [&](const std::vector<Hash>& known, Hash last, bool& is_actual,
-          std::vector<std::unique_ptr<ITransactionReader>>& new_txs, std::vector<Hash>& deleted, const INode::Callback& callback) {
+  m_node.getPoolSymmetricDifferenceFunctor = [&](const std::vector<hash_t>& known, hash_t last, bool& is_actual,
+          std::vector<std::unique_ptr<ITransactionReader>>& new_txs, std::vector<hash_t>& deleted, const INode::Callback& callback) {
     is_actual = true;
     requestsCount++;
 
@@ -815,8 +815,8 @@ TEST_F(BcSTest, poolSynchronizationCheckTxDeleted) {
   auto tx1hash = getObjectHash(tx1);
 
   std::vector<Transaction> newPoolAnswer = { tx1 };
-  std::vector<Hash> deletedPoolAnswer = { tx1hash };
-  std::vector<Hash> expectedKnownPoolHashes = {};
+  std::vector<hash_t> deletedPoolAnswer = { tx1hash };
+  std::vector<hash_t> expectedKnownPoolHashes = {};
 
 
   addConsumers(1);
@@ -832,10 +832,10 @@ TEST_F(BcSTest, poolSynchronizationCheckTxDeleted) {
   e.wait();
 
   int requestsCount = 0;
-  std::vector<Hash> knownPool;
+  std::vector<hash_t> knownPool;
 
-  m_node.getPoolSymmetricDifferenceFunctor = [&](const std::vector<Hash>& known, Hash last, bool& is_actual,
-          std::vector<std::unique_ptr<ITransactionReader>>& new_txs, std::vector<Hash>& deleted, const INode::Callback& callback) {
+  m_node.getPoolSymmetricDifferenceFunctor = [&](const std::vector<hash_t>& known, hash_t last, bool& is_actual,
+          std::vector<std::unique_ptr<ITransactionReader>>& new_txs, std::vector<hash_t>& deleted, const INode::Callback& callback) {
     is_actual = true;
     requestsCount++;
 
@@ -895,12 +895,12 @@ TEST_F(BcSTest, poolSynchronizationCheckConsumersNotififcation) {
 
   bool c1Notified = false;
   bool c2Notified = false;
-  c1.onPoolUpdatedFunctor = [&](const std::vector<std::unique_ptr<ITransactionReader>>& new_txs, const std::vector<Hash>& deleted)->std::error_code {
+  c1.onPoolUpdatedFunctor = [&](const std::vector<std::unique_ptr<ITransactionReader>>& new_txs, const std::vector<hash_t>& deleted)->std::error_code {
     c1Notified = true;
     return std::error_code();
   };
 
-  c2.onPoolUpdatedFunctor = [&](const std::vector<std::unique_ptr<ITransactionReader>>& new_txs, const std::vector<Hash>& deleted)->std::error_code {
+  c2.onPoolUpdatedFunctor = [&](const std::vector<std::unique_ptr<ITransactionReader>>& new_txs, const std::vector<hash_t>& deleted)->std::error_code {
     c2Notified = true;
     return std::error_code();
   };
@@ -930,12 +930,12 @@ TEST_F(BcSTest, poolSynchronizationCheckConsumerReturnError) {
 
   bool c1Notified = false;
   bool c2Notified = false;
-  c1.onPoolUpdatedFunctor = [&](const std::vector<std::unique_ptr<ITransactionReader>>& new_txs, const std::vector<Hash>& deleted)->std::error_code {
+  c1.onPoolUpdatedFunctor = [&](const std::vector<std::unique_ptr<ITransactionReader>>& new_txs, const std::vector<hash_t>& deleted)->std::error_code {
     c1Notified = true;
     return std::make_error_code(std::errc::invalid_argument);
   };
 
-  c2.onPoolUpdatedFunctor = [&](const std::vector<std::unique_ptr<ITransactionReader>>& new_txs, const std::vector<Hash>& deleted)->std::error_code {
+  c2.onPoolUpdatedFunctor = [&](const std::vector<std::unique_ptr<ITransactionReader>>& new_txs, const std::vector<hash_t>& deleted)->std::error_code {
     c2Notified = true;
     return std::make_error_code(std::errc::invalid_argument);
   };
@@ -964,7 +964,7 @@ TEST_F(BcSTest, poolSynchronizationCheckConsumerReturnError) {
 class FunctorialBlockhainConsumerStub : public ConsumerStub {
 public:
 
-  FunctorialBlockhainConsumerStub(const Hash& genesisBlockHash) : ConsumerStub(genesisBlockHash), onBlockchainDetachFunctor([](uint32_t) {}) {}
+  FunctorialBlockhainConsumerStub(const hash_t& genesisBlockHash) : ConsumerStub(genesisBlockHash), onBlockchainDetachFunctor([](uint32_t) {}) {}
 
   virtual bool onNewBlocks(const CompleteBlock* blocks, uint32_t startHeight, uint32_t count) override {
     return onNewBlocksFunctor(blocks, startHeight, count);
@@ -988,7 +988,7 @@ TEST_F(BcSTest, checkINodeError) {
     errc = ec;
   };
 
-  m_node.queryBlocksFunctor = [](const std::vector<Hash>& knownBlockIds, uint64_t timestamp, std::vector<BlockShortEntry>& newBlocks, uint32_t& startHeight, const INode::Callback& callback) -> bool {
+  m_node.queryBlocksFunctor = [](const std::vector<hash_t>& knownBlockIds, uint64_t timestamp, std::vector<BlockShortEntry>& newBlocks, uint32_t& startHeight, const INode::Callback& callback) -> bool {
     callback(std::make_error_code(std::errc::invalid_argument));
     return false;
   };
@@ -1212,16 +1212,16 @@ TEST_F(BcSTest, checkStatePreservingBetweenSynchronizations) {
 
   generator.generateEmptyBlocks(20);
 
-  Hash lastBlockHash = get_block_hash(generator.getBlockchain().back());
+  hash_t lastBlockHash = get_block_hash(generator.getBlockchain().back());
 
   m_sync.addObserver(&o1);
   m_sync.start();
   e.wait();
   m_sync.stop();
 
-  Hash receivedLastBlockHash;
+  hash_t receivedLastBlockHash;
 
-  m_node.queryBlocksFunctor = [&receivedLastBlockHash](const std::vector<Hash>& knownBlockIds, uint64_t timestamp, std::vector<BlockShortEntry>& newBlocks, uint32_t& startHeight, const INode::Callback& callback) -> bool {
+  m_node.queryBlocksFunctor = [&receivedLastBlockHash](const std::vector<hash_t>& knownBlockIds, uint64_t timestamp, std::vector<BlockShortEntry>& newBlocks, uint32_t& startHeight, const INode::Callback& callback) -> bool {
     receivedLastBlockHash = knownBlockIds.front();
     startHeight = 1;
     callback(std::make_error_code(std::errc::interrupted));
@@ -1251,11 +1251,11 @@ TEST_F(BcSTest, checkBlocksRerequestingOnError) {
   m_node.setGetNewBlocksLimit(10);
   
   int requestsCount = 0;
-  std::list<Hash> firstlyKnownBlockIdsTaken;
-  std::list<Hash> secondlyKnownBlockIdsTaken;
+  std::list<hash_t> firstlyKnownBlockIdsTaken;
+  std::list<hash_t> secondlyKnownBlockIdsTaken;
 
-  std::vector<Hash> firstlyReceivedBlocks;
-  std::vector<Hash> secondlyReceivedBlocks;
+  std::vector<hash_t> firstlyReceivedBlocks;
+  std::vector<hash_t> secondlyReceivedBlocks;
 
 
   c.onNewBlocksFunctor = [&](const CompleteBlock* blocks, uint32_t, size_t count) -> bool {
@@ -1277,7 +1277,7 @@ TEST_F(BcSTest, checkBlocksRerequestingOnError) {
     return true;   
   };
 
-  m_node.queryBlocksFunctor = [&](const std::vector<Hash>& knownBlockIds, uint64_t timestamp, std::vector<BlockShortEntry>& newBlocks, uint32_t& startHeight, const INode::Callback& callback) -> bool {
+  m_node.queryBlocksFunctor = [&](const std::vector<hash_t>& knownBlockIds, uint64_t timestamp, std::vector<BlockShortEntry>& newBlocks, uint32_t& startHeight, const INode::Callback& callback) -> bool {
     if (requestsCount == 1) {
       firstlyKnownBlockIdsTaken.assign(knownBlockIds.begin(), knownBlockIds.end());
     }
@@ -1341,11 +1341,11 @@ TEST_F(BcSTest, checkTxOrder) {
   bse.txsShortInfo.push_back({tx2hash, tx2});
   bse.txsShortInfo.push_back({tx3hash, tx3});
 
-  std::vector<Hash> expectedTxHashes = { getObjectHash(last_block.baseTransaction), tx1hash, tx2hash, tx3hash };
+  std::vector<hash_t> expectedTxHashes = { getObjectHash(last_block.baseTransaction), tx1hash, tx2hash, tx3hash };
 
   int requestNumber = 0;
 
-  m_node.queryBlocksFunctor = [&bse, &requestNumber](const std::vector<Hash>& knownBlockIds, uint64_t timestamp, std::vector<BlockShortEntry>& newBlocks, uint32_t& startHeight, const INode::Callback& callback) -> bool {
+  m_node.queryBlocksFunctor = [&bse, &requestNumber](const std::vector<hash_t>& knownBlockIds, uint64_t timestamp, std::vector<BlockShortEntry>& newBlocks, uint32_t& startHeight, const INode::Callback& callback) -> bool {
     startHeight = 1;
     newBlocks.push_back(bse);
     if (requestNumber > 0) {
@@ -1358,12 +1358,12 @@ TEST_F(BcSTest, checkTxOrder) {
     return false;
   };
 
-  std::vector<Hash> receivedTxHashes = {};
+  std::vector<hash_t> receivedTxHashes = {};
 
   c.onNewBlocksFunctor = [&](const CompleteBlock* blocks, uint32_t, size_t count) -> bool {
     for (auto& tx : blocks[count - 1].transactions) {
       auto hash = tx->getTransactionHash();
-      receivedTxHashes.push_back(*reinterpret_cast<Hash*>(&hash));
+      receivedTxHashes.push_back(*reinterpret_cast<hash_t*>(&hash));
     }
 
     return true;

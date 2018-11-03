@@ -56,10 +56,10 @@ public:
   virtual size_t getTransactionTransferCount(size_t transactionIndex) const override;
   virtual WalletTransfer getTransactionTransfer(size_t transactionIndex, size_t transferIndex) const override;
 
-  virtual WalletTransactionWithTransfers getTransaction(const crypto::Hash& transactionHash) const override;
-  virtual std::vector<TransactionsInBlockInfo> getTransactions(const crypto::Hash& blockHash, size_t count) const override;
+  virtual WalletTransactionWithTransfers getTransaction(const crypto::hash_t& transactionHash) const override;
+  virtual std::vector<TransactionsInBlockInfo> getTransactions(const crypto::hash_t& blockHash, size_t count) const override;
   virtual std::vector<TransactionsInBlockInfo> getTransactions(uint32_t blockIndex, size_t count) const override;
-  virtual std::vector<crypto::Hash> getBlockHashes(uint32_t blockIndex, size_t count) const override;
+  virtual std::vector<crypto::hash_t> getBlockHashes(uint32_t blockIndex, size_t count) const override;
   virtual uint32_t getBlockCount() const override;
   virtual std::vector<WalletTransactionWithTransfers> getUnconfirmedTransactions() const override;
   virtual std::vector<size_t> getDelayedTransactionIds() const override;
@@ -124,13 +124,13 @@ protected:
 
   virtual void onError(ITransfersSubscription* object, uint32_t height, std::error_code ec) override;
 
-  virtual void onTransactionUpdated(ITransfersSubscription* object, const crypto::Hash& transactionHash) override;
-  virtual void onTransactionUpdated(const crypto::public_key_t& viewPublicKey, const crypto::Hash& transactionHash,
+  virtual void onTransactionUpdated(ITransfersSubscription* object, const crypto::hash_t& transactionHash) override;
+  virtual void onTransactionUpdated(const crypto::public_key_t& viewPublicKey, const crypto::hash_t& transactionHash,
     const std::vector<ITransfersContainer*>& containers) override;
   void transactionUpdated(const TransactionInformation& transactionInfo, const std::vector<ContainerAmounts>& containerAmountsList);
 
-  virtual void onTransactionDeleted(ITransfersSubscription* object, const crypto::Hash& transactionHash) override;
-  void transactionDeleted(ITransfersSubscription* object, const crypto::Hash& transactionHash);
+  virtual void onTransactionDeleted(ITransfersSubscription* object, const crypto::hash_t& transactionHash) override;
+  void transactionDeleted(ITransfersSubscription* object, const crypto::hash_t& transactionHash);
 
   virtual void synchronizationProgressUpdated(uint32_t processedBlockCount, uint32_t totalBlockCount) override;
   virtual void synchronizationCompleted(std::error_code result) override;
@@ -138,17 +138,17 @@ protected:
   void onSynchronizationProgressUpdated(uint32_t processedBlockCount, uint32_t totalBlockCount);
   void onSynchronizationCompleted();
 
-  virtual void onBlocksAdded(const crypto::public_key_t& viewPublicKey, const std::vector<crypto::Hash>& blockHashes) override;
-  void blocksAdded(const std::vector<crypto::Hash>& blockHashes);
+  virtual void onBlocksAdded(const crypto::public_key_t& viewPublicKey, const std::vector<crypto::hash_t>& blockHashes) override;
+  void blocksAdded(const std::vector<crypto::hash_t>& blockHashes);
 
   virtual void onBlockchainDetach(const crypto::public_key_t& viewPublicKey, uint32_t blockIndex) override;
   void blocksRollback(uint32_t blockIndex);
 
-  virtual void onTransactionDeleteBegin(const crypto::public_key_t& viewPublicKey, crypto::Hash transactionHash) override;
-  void transactionDeleteBegin(crypto::Hash transactionHash);
+  virtual void onTransactionDeleteBegin(const crypto::public_key_t& viewPublicKey, crypto::hash_t transactionHash) override;
+  void transactionDeleteBegin(crypto::hash_t transactionHash);
 
-  virtual void onTransactionDeleteEnd(const crypto::public_key_t& viewPublicKey, crypto::Hash transactionHash) override;
-  void transactionDeleteEnd(crypto::Hash transactionHash);
+  virtual void onTransactionDeleteEnd(const crypto::public_key_t& viewPublicKey, crypto::hash_t transactionHash) override;
+  void transactionDeleteEnd(crypto::hash_t transactionHash);
 
   std::vector<WalletOuts> pickWalletsWithMoney() const;
   WalletOuts pickWallet(const std::string& address);
@@ -164,7 +164,7 @@ protected:
   cryptonote::AccountPublicAddress parseAddress(const std::string& address) const;
   std::string addWallet(const crypto::public_key_t& spendPublicKey, const crypto::secret_key_t& spendSecretKey, uint64_t creationTimestamp);
   AccountKeys makeAccountKeys(const WalletRecord& wallet) const;
-  size_t getTransactionId(const crypto::Hash& transactionHash) const;
+  size_t getTransactionId(const crypto::hash_t& transactionHash) const;
   void pushEvent(const WalletEvent& event);
   bool isFusionTransaction(const WalletTransaction& walletTx) const;
 
@@ -214,7 +214,7 @@ protected:
   size_t validateSaveAndSendTransaction(const ITransactionReader& transaction, const std::vector<WalletTransfer>& destinations, bool isFusion, bool send);
 
   size_t insertBlockchainTransaction(const TransactionInformation& info, int64_t txBalance);
-  size_t insertOutgoingTransactionAndPushEvent(const crypto::Hash& transactionHash, uint64_t fee, const BinaryArray& extra, uint64_t unlockTimestamp);
+  size_t insertOutgoingTransactionAndPushEvent(const crypto::hash_t& transactionHash, uint64_t fee, const BinaryArray& extra, uint64_t unlockTimestamp);
   void updateTransactionStateAndPushEvent(size_t transactionId, WalletTransactionState state);
   bool updateWalletTransactionInfo(size_t transactionId, const cryptonote::TransactionInformation& info, int64_t totalAmount);
   bool updateTransactionTransfers(size_t transactionId, const std::vector<ContainerAmounts>& containerAmountsList,
@@ -229,12 +229,12 @@ protected:
   bool eraseTransfersByAddress(size_t transactionId, size_t firstTransferIdx, const std::string& address, bool eraseOutputTransfers);
   bool eraseForeignTransfers(size_t transactionId, size_t firstTransferIdx, const std::unordered_set<std::string>& knownAddresses, bool eraseOutputTransfers);
   void pushBackOutgoingTransfers(size_t txId, const std::vector<WalletTransfer>& destinations);
-  void insertUnlockTransactionJob(const crypto::Hash& transactionHash, uint32_t blockHeight, cryptonote::ITransfersContainer* container);
-  void deleteUnlockTransactionJob(const crypto::Hash& transactionHash);
+  void insertUnlockTransactionJob(const crypto::hash_t& transactionHash, uint32_t blockHeight, cryptonote::ITransfersContainer* container);
+  void deleteUnlockTransactionJob(const crypto::hash_t& transactionHash);
   void startBlockchainSynchronizer();
   void stopBlockchainSynchronizer();
   void addUnconfirmedTransaction(const ITransactionReader& transaction);
-  void removeUnconfirmedTransaction(const crypto::Hash& transactionHash);
+  void removeUnconfirmedTransaction(const crypto::hash_t& transactionHash);
 
   void unsafeLoad(std::istream& source, const std::string& password);
   void unsafeSave(std::ostream& destination, bool saveDetails, bool saveCache);
@@ -257,7 +257,7 @@ protected:
 
   TransfersRange getTransactionTransfersRange(size_t transactionIndex) const;
   std::vector<TransactionsInBlockInfo> getTransactionsInBlocks(uint32_t blockIndex, size_t count) const;
-  crypto::Hash getBlockHashByIndex(uint32_t blockIndex) const;
+  crypto::hash_t getBlockHashByIndex(uint32_t blockIndex) const;
 
   std::vector<WalletTransfer> getTransactionTransfers(const WalletTransaction& transaction) const;
   void filterOutTransactions(WalletTransactions& transactions, WalletTransfers& transfers, std::function<bool (const WalletTransaction&)>&& pred) const;

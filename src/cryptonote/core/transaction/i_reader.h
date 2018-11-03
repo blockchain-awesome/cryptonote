@@ -19,14 +19,14 @@ class ITransactionReader
   public:
     virtual ~ITransactionReader() {}
 
-    virtual crypto::Hash getTransactionHash() const = 0;
-    virtual crypto::Hash getTransactionPrefixHash() const = 0;
+    virtual crypto::hash_t getTransactionHash() const = 0;
+    virtual crypto::hash_t getTransactionPrefixHash() const = 0;
     virtual crypto::public_key_t getTransactionPublicKey() const = 0;
     virtual bool getTransactionSecretKey(crypto::secret_key_t &key) const = 0;
     virtual uint64_t getUnlockTime() const = 0;
 
     // extra
-    virtual bool getPaymentId(crypto::Hash &paymentId) const = 0;
+    virtual bool getPaymentId(crypto::hash_t &paymentId) const = 0;
     virtual bool getExtraNonce(BinaryArray &nonce) const = 0;
     virtual BinaryArray getExtra() const = 0;
 

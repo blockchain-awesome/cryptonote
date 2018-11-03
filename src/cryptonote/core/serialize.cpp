@@ -1,6 +1,6 @@
 #include "serialize.h"
 
-bool parse_hash256(const std::string& str_hash, crypto::Hash& hash) {
+bool parse_hash256(const std::string& str_hash, crypto::hash_t& hash) {
   return Common::podFromHex(str_hash, hash);
 }
 
@@ -14,7 +14,7 @@ bool serialize(secret_key_t& secKey, Common::StringView name, cryptonote::ISeria
   return serializePod(secKey, name, serializer);
 }
 
-bool serialize(Hash& h, Common::StringView name, cryptonote::ISerializer& serializer) {
+bool serialize(hash_t& h, Common::StringView name, cryptonote::ISerializer& serializer) {
   return serializePod(h, name, serializer);
 }
 

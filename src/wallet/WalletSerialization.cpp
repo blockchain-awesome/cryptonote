@@ -39,22 +39,22 @@ struct WalletRecordDto {
 //DO NOT CHANGE IT
 struct ObsoleteSpentOutputDto {
   uint64_t amount;
-  Hash transactionHash;
+  hash_t transactionHash;
   uint32_t outputInTransaction;
   uint64_t walletIndex;
-  crypto::Hash spendingTransactionHash;
+  crypto::hash_t spendingTransactionHash;
 };
 
 //DO NOT CHANGE IT
 struct ObsoleteChangeDto {
-  Hash txHash;
+  hash_t txHash;
   uint64_t amount;
 };
 
 //DO NOT CHANGE IT
 struct UnlockTransactionJobDto {
   uint32_t blockHeight;
-  Hash transactionHash;
+  hash_t transactionHash;
   uint64_t walletIndex;
 };
 
@@ -77,7 +77,7 @@ struct WalletTransactionDto {
   cryptonote::WalletTransactionState state;
   uint64_t timestamp;
   uint32_t blockHeight;
-  Hash hash;
+  hash_t hash;
   int64_t totalAmount;
   uint64_t fee;
   uint64_t creationTime;
@@ -787,7 +787,7 @@ void WalletSerializer::loadUncommitedTransactions(Common::IInputStream& source, 
 }
 
 void WalletSerializer::initTransactionPool() {
-  std::unordered_set<crypto::Hash> uncommitedTransactionsSet;
+  std::unordered_set<crypto::hash_t> uncommitedTransactionsSet;
   std::transform(uncommitedTransactions.begin(), uncommitedTransactions.end(), std::inserter(uncommitedTransactionsSet, uncommitedTransactionsSet.end()),
     [](const UncommitedTransactions::value_type& pair) {
       return getObjectHash(pair.second);

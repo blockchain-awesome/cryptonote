@@ -26,7 +26,7 @@ class ITransactionWriter
     virtual void setUnlockTime(uint64_t unlockTime) = 0;
 
     // extra
-    virtual void setPaymentId(const crypto::Hash &paymentId) = 0;
+    virtual void setPaymentId(const crypto::hash_t &paymentId) = 0;
     virtual void setExtraNonce(const BinaryArray &nonce) = 0;
     virtual void appendExtra(const BinaryArray &extraData) = 0;
 

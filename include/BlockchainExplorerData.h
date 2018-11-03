@@ -39,7 +39,7 @@ struct TransactionOutputDetails {
 };
 
 struct TransactionOutputReferenceDetails {
-  crypto::Hash transactionHash;
+  crypto::hash_t transactionHash;
   size_t number;
 };
 
@@ -76,7 +76,7 @@ struct TransactionExtraDetails {
 };
 
 struct TransactionDetails {
-  crypto::Hash hash;
+  crypto::hash_t hash;
   uint64_t size;
   uint64_t fee;
   uint64_t totalInputsAmount;
@@ -84,9 +84,9 @@ struct TransactionDetails {
   uint64_t mixin;
   uint64_t unlockTime;
   uint64_t timestamp;
-  crypto::Hash paymentId;
+  crypto::hash_t paymentId;
   bool inBlockchain;
-  crypto::Hash blockHash;
+  crypto::hash_t blockHash;
   uint32_t blockHeight;
   TransactionExtraDetails extra;
   std::vector<std::vector<crypto::signature_t>> signatures;
@@ -98,11 +98,11 @@ struct BlockDetails {
   uint8_t majorVersion;
   uint8_t minorVersion;
   uint64_t timestamp;
-  crypto::Hash prevBlockHash;
+  crypto::hash_t prevBlockHash;
   uint32_t nonce;
   bool isOrphaned;
   uint32_t height;
-  crypto::Hash hash;
+  crypto::hash_t hash;
   uint64_t difficulty;
   uint64_t reward;
   uint64_t baseReward;

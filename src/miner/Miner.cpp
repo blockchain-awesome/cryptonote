@@ -88,7 +88,7 @@ void Miner::workerFunc(const block_t& blockTemplate, difficulty_type difficulty,
     block_t block = blockTemplate;
 
     while (m_state == MiningState::MINING_IN_PROGRESS) {
-      crypto::Hash hash;
+      crypto::hash_t hash;
       if (!get_block_longhash(block, hash)) {
         //error occured
         m_logger(Logging::DEBUGGING) << "calculating long hash error occured";

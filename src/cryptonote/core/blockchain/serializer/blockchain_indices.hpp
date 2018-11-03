@@ -24,7 +24,7 @@ class BlockchainIndicesSerializer
 {
 
   public:
-    BlockchainIndicesSerializer(Blockchain &bs, const crypto::Hash lastBlockHash, ILogger &logger) : m_bs(bs), m_lastBlockHash(lastBlockHash), m_loaded(false), logger(logger, "BlockchainIndicesSerializer")
+    BlockchainIndicesSerializer(Blockchain &bs, const crypto::hash_t lastBlockHash, ILogger &logger) : m_bs(bs), m_lastBlockHash(lastBlockHash), m_loaded(false), logger(logger, "BlockchainIndicesSerializer")
     {
     }
 
@@ -45,7 +45,7 @@ class BlockchainIndicesSerializer
         {
             operation = "- loading ";
 
-            crypto::Hash blockHash;
+            crypto::hash_t blockHash;
             s(blockHash, "blockHash");
 
             if (blockHash != m_lastBlockHash)
@@ -83,7 +83,7 @@ class BlockchainIndicesSerializer
         if (Archive::is_loading::value)
         {
             operation = "- loading ";
-            crypto::Hash blockHash;
+            crypto::hash_t blockHash;
             ar &blockHash;
 
             if (blockHash != m_lastBlockHash)
@@ -118,6 +118,6 @@ class BlockchainIndicesSerializer
     LoggerRef logger;
     bool m_loaded;
     Blockchain &m_bs;
-    crypto::Hash m_lastBlockHash;
+    crypto::hash_t m_lastBlockHash;
 };
 } // namespace cryptonote

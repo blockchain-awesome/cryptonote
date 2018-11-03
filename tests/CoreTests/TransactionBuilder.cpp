@@ -62,7 +62,7 @@ TransactionBuilder& TransactionBuilder::addMultisignatureOut(uint64_t amount, co
 }
 
 Transaction TransactionBuilder::build() const {
-  crypto::Hash prefixHash;
+  crypto::hash_t prefixHash;
 
   Transaction tx;
   addTransactionPublicKeyToExtra(tx.extra, m_txKey.publicKey);
@@ -147,7 +147,7 @@ void TransactionBuilder::fillOutputs(Transaction& tx) const {
 }
 
 
-void TransactionBuilder::signSources(const crypto::Hash& prefixHash, const std::vector<cryptonote::KeyPair>& contexts, Transaction& tx) const {
+void TransactionBuilder::signSources(const crypto::hash_t& prefixHash, const std::vector<cryptonote::KeyPair>& contexts, Transaction& tx) const {
   
   tx.signatures.clear();
 

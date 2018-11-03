@@ -16,7 +16,7 @@ struct TransactionCheckInfo
 
 struct TransactionDetails : public TransactionCheckInfo
 {
-    crypto::Hash id;
+    crypto::hash_t id;
     Transaction tx;
     size_t blobSize;
     uint64_t fee;

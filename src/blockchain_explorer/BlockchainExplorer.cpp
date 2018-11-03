@@ -217,7 +217,7 @@ bool BlockchainExplorer::getBlocks(const std::vector<uint32_t>& blockHeights, st
   return true;
 }
 
-bool BlockchainExplorer::getBlocks(const std::vector<Hash>& blockHashes, std::vector<BlockDetails>& blocks) {
+bool BlockchainExplorer::getBlocks(const std::vector<hash_t>& blockHashes, std::vector<BlockDetails>& blocks) {
   if (state.load() != INITIALIZED) {
     throw std::system_error(make_error_code(cryptonote::error::BlockchainExplorerErrorCodes::NOT_INITIALIZED));
   }
@@ -227,13 +227,13 @@ bool BlockchainExplorer::getBlocks(const std::vector<Hash>& blockHashes, std::ve
     std::bind(
       static_cast<
         void(INode::*)(
-          const std::vector<Hash>&, 
+          const std::vector<hash_t>&, 
           std::vector<BlockDetails>&, 
           const INode::Callback&
         )
       >(&INode::getBlocks), 
       std::ref(node), 
-      std::cref(reinterpret_cast<const std::vector<Hash>&>(blockHashes)), 
+      std::cref(reinterpret_cast<const std::vector<hash_t>&>(blockHashes)), 
       std::ref(blocks),
       std::placeholders::_1
     )
@@ -316,7 +316,7 @@ bool BlockchainExplorer::getBlockchainTop(BlockDetails& topBlock) {
   return true;
 }
 
-bool BlockchainExplorer::getTransactions(const std::vector<Hash>& transactionHashes, std::vector<TransactionDetails>& transactions) {
+bool BlockchainExplorer::getTransactions(const std::vector<hash_t>& transactionHashes, std::vector<TransactionDetails>& transactions) {
   if (state.load() != INITIALIZED) {
     throw std::system_error(make_error_code(cryptonote::error::BlockchainExplorerErrorCodes::NOT_INITIALIZED));
   }
@@ -326,13 +326,13 @@ bool BlockchainExplorer::getTransactions(const std::vector<Hash>& transactionHas
     std::bind(
       static_cast<
         void(INode::*)(
-          const std::vector<Hash>&, 
+          const std::vector<hash_t>&, 
           std::vector<TransactionDetails>&, 
           const INode::Callback&
         )
       >(&INode::getTransactions), 
       std::ref(node), 
-      std::cref(reinterpret_cast<const std::vector<Hash>&>(transactionHashes)), 
+      std::cref(reinterpret_cast<const std::vector<hash_t>&>(transactionHashes)), 
       std::ref(transactions),
       std::placeholders::_1
     )
@@ -371,7 +371,7 @@ bool BlockchainExplorer::getPoolTransactions(uint64_t timestampBegin, uint64_t t
   return true;
 }
 
-bool BlockchainExplorer::getTransactionsByPaymentId(const Hash& paymentId, std::vector<TransactionDetails>& transactions) {
+bool BlockchainExplorer::getTransactionsByPaymentId(const hash_t& paymentId, std::vector<TransactionDetails>& transactions) {
   if (state.load() != INITIALIZED) {
     throw std::system_error(make_error_code(cryptonote::error::BlockchainExplorerErrorCodes::NOT_INITIALIZED));
   }
@@ -381,7 +381,7 @@ bool BlockchainExplorer::getTransactionsByPaymentId(const Hash& paymentId, std::
     std::bind(
       &INode::getTransactionsByPaymentId, 
       std::ref(node), 
-      std::cref(reinterpret_cast<const Hash&>(paymentId)), 
+      std::cref(reinterpret_cast<const hash_t&>(paymentId)), 
       std::ref(transactions),
       std::placeholders::_1
     )
@@ -394,7 +394,7 @@ bool BlockchainExplorer::getTransactionsByPaymentId(const Hash& paymentId, std::
   return true;
 }
 
-bool BlockchainExplorer::getPoolState(const std::vector<Hash>& knownPoolTransactionHashes, Hash knownBlockchainTopHash, bool& isBlockchainActual, std::vector<TransactionDetails>& newTransactions, std::vector<Hash>& removedTransactions) {
+bool BlockchainExplorer::getPoolState(const std::vector<hash_t>& knownPoolTransactionHashes, hash_t knownBlockchainTopHash, bool& isBlockchainActual, std::vector<TransactionDetails>& newTransactions, std::vector<hash_t>& removedTransactions) {
   if (state.load() != INITIALIZED) {
     throw std::system_error(make_error_code(cryptonote::error::BlockchainExplorerErrorCodes::NOT_INITIALIZED));
   }
@@ -404,14 +404,14 @@ bool BlockchainExplorer::getPoolState(const std::vector<Hash>& knownPoolTransact
 
   NodeRequest request(
     [&](const INode::Callback& callback) {
-      std::vector<Hash> hashes;
-      for (Hash hash : knownPoolTransactionHashes) {
+      std::vector<hash_t> hashes;
+      for (hash_t hash : knownPoolTransactionHashes) {
         hashes.push_back(std::move(hash));
       }
 
       node.getPoolSymmetricDifference(
         std::move(hashes),
-        reinterpret_cast<Hash&>(knownBlockchainTopHash),
+        reinterpret_cast<hash_t&>(knownBlockchainTopHash),
         isBlockchainActual,
         rawNewTransactions,
         removedTransactions,
@@ -425,9 +425,9 @@ bool BlockchainExplorer::getPoolState(const std::vector<Hash>& knownPoolTransact
     throw std::system_error(ec);
   }
 
-  std::vector<Hash> newTransactionsHashes;
+  std::vector<hash_t> newTransactionsHashes;
   for (const auto& rawTransaction : rawNewTransactions) {
-    Hash transactionHash = rawTransaction->getTransactionHash();
+    hash_t transactionHash = rawTransaction->getTransactionHash();
     newTransactionsHashes.push_back(std::move(transactionHash));
   }
 
@@ -489,18 +489,18 @@ void BlockchainExplorer::poolChanged() {
   std::unique_lock<std::mutex> lock(mutex);
 
   std::shared_ptr<std::vector<std::unique_ptr<ITransactionReader>>> rawNewTransactionsPtr = std::make_shared<std::vector<std::unique_ptr<ITransactionReader>>>();
-  std::shared_ptr<std::vector<Hash>> removedTransactionsPtr = std::make_shared<std::vector<Hash>>();
+  std::shared_ptr<std::vector<hash_t>> removedTransactionsPtr = std::make_shared<std::vector<hash_t>>();
   std::shared_ptr<bool> isBlockchainActualPtr = std::make_shared<bool>(false);
 
   NodeRequest request(
     [this, rawNewTransactionsPtr, removedTransactionsPtr, isBlockchainActualPtr](const INode::Callback& callback) {
-      std::vector<Hash> hashes;
-      for (const Hash& hash : knownPoolState) {
+      std::vector<hash_t> hashes;
+      for (const hash_t& hash : knownPoolState) {
         hashes.push_back(std::move(hash));
       }
       node.getPoolSymmetricDifference(
         std::move(hashes),
-        reinterpret_cast<Hash&>(knownBlockchainTop.hash),
+        reinterpret_cast<hash_t&>(knownBlockchainTop.hash),
         *isBlockchainActualPtr,
         *rawNewTransactionsPtr,
         *removedTransactionsPtr,
@@ -520,18 +520,18 @@ void BlockchainExplorer::poolChanged() {
 
       std::unique_lock<std::mutex> lock(mutex);
 
-      std::shared_ptr<std::vector<Hash>> newTransactionsHashesPtr = std::make_shared<std::vector<Hash>>();
+      std::shared_ptr<std::vector<hash_t>> newTransactionsHashesPtr = std::make_shared<std::vector<hash_t>>();
       for (const auto& rawTransaction : *rawNewTransactionsPtr) {
         auto hash = rawTransaction->getTransactionHash();
-        Hash transactionHash = reinterpret_cast<const Hash&>(hash);
+        hash_t transactionHash = reinterpret_cast<const hash_t&>(hash);
         bool inserted = knownPoolState.emplace(transactionHash).second;
         if (inserted) {
           newTransactionsHashesPtr->push_back(std::move(transactionHash));
         }
       }
       
-      std::shared_ptr<std::vector<std::pair<Hash, TransactionRemoveReason>>> removedTransactionsHashesPtr = std::make_shared<std::vector<std::pair<Hash, TransactionRemoveReason>>>();
-      for (const Hash hash : *removedTransactionsPtr) {
+      std::shared_ptr<std::vector<std::pair<hash_t, TransactionRemoveReason>>> removedTransactionsHashesPtr = std::make_shared<std::vector<std::pair<hash_t, TransactionRemoveReason>>>();
+      for (const hash_t hash : *removedTransactionsPtr) {
         auto iter = knownPoolState.find(hash);
         if (iter != knownPoolState.end()) {
           removedTransactionsHashesPtr->push_back({
@@ -547,7 +547,7 @@ void BlockchainExplorer::poolChanged() {
         std::bind(
           static_cast<
             void(INode::*)(
-              const std::vector<Hash>&, 
+              const std::vector<hash_t>&, 
               std::vector<TransactionDetails>&, 
               const INode::Callback&
             )

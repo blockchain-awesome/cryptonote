@@ -23,7 +23,7 @@ using namespace Common;
 
 namespace cryptonote {
 
-bool parseAndValidateTransactionFromBinaryArray(const BinaryArray& tx_blob, Transaction& tx, Hash& tx_hash, Hash& tx_prefix_hash) {
+bool parseAndValidateTransactionFromBinaryArray(const BinaryArray& tx_blob, Transaction& tx, hash_t& tx_hash, hash_t& tx_prefix_hash) {
   if (!fromBinaryArray(tx, tx_blob)) {
     return false;
   }
@@ -215,7 +215,7 @@ bool constructTransaction(
   }
 
   //generate ring signatures
-  Hash tx_prefix_hash;
+  hash_t tx_prefix_hash;
   getObjectHash(*static_cast<TransactionPrefix*>(&tx), tx_prefix_hash);
 
   size_t i = 0;
@@ -372,7 +372,7 @@ uint64_t get_outs_money_amount(const Transaction& tx) {
   return outputs_amount;
 }
 
-std::string short_hash_str(const Hash& h) {
+std::string short_hash_str(const hash_t& h) {
   std::string res = Common::podToHex(h);
 
   if (res.size() == 64) {
@@ -433,14 +433,14 @@ bool get_block_hashing_blob(const block_t& b, BinaryArray& ba) {
     return false;
   }
 
-  Hash treeRootHash = get_tx_tree_hash(b);
+  hash_t treeRootHash = get_tx_tree_hash(b);
   ba.insert(ba.end(), treeRootHash.data, treeRootHash.data + 32);
   auto transactionCount = asBinaryArray(Tools::get_varint_data(b.transactionHashes.size() + 1));
   ba.insert(ba.end(), transactionCount.begin(), transactionCount.end());
   return true;
 }
 
-bool get_block_hash(const block_t& b, Hash& res) {
+bool get_block_hash(const block_t& b, hash_t& res) {
   BinaryArray ba;
   if (!get_block_hashing_blob(b, ba)) {
     return false;
@@ -449,13 +449,13 @@ bool get_block_hash(const block_t& b, Hash& res) {
   return getObjectHash(ba, res);
 }
 
-Hash get_block_hash(const block_t& b) {
-  Hash p = NULL_HASH;
+hash_t get_block_hash(const block_t& b) {
+  hash_t p = NULL_HASH;
   get_block_hash(b, p);
   return p;
 }
 
-bool get_aux_block_header_hash(const block_t& b, Hash& res) {
+bool get_aux_block_header_hash(const block_t& b, hash_t& res) {
   BinaryArray blob;
   if (!get_block_hashing_blob(b, blob)) {
     return false;
@@ -464,7 +464,7 @@ bool get_aux_block_header_hash(const block_t& b, Hash& res) {
   return getObjectHash(blob, res);
 }
 
-bool get_block_longhash(const block_t& b, Hash& res) {
+bool get_block_longhash(const block_t& b, hash_t& res) {
   BinaryArray bd;
   if (!get_block_hashing_blob(b, bd)) {
     return false;
@@ -492,19 +492,19 @@ std::vector<uint32_t> absolute_output_offsets_to_relative(const std::vector<uint
   return res;
 }
 
-void get_tx_tree_hash(const std::vector<Hash>& tx_hashes, Hash& h) {
+void get_tx_tree_hash(const std::vector<hash_t>& tx_hashes, hash_t& h) {
   tree_hash(tx_hashes.data(), tx_hashes.size(), h);
 }
 
-Hash get_tx_tree_hash(const std::vector<Hash>& tx_hashes) {
-  Hash h = NULL_HASH;
+hash_t get_tx_tree_hash(const std::vector<hash_t>& tx_hashes) {
+  hash_t h = NULL_HASH;
   get_tx_tree_hash(tx_hashes, h);
   return h;
 }
 
-Hash get_tx_tree_hash(const block_t& b) {
-  std::vector<Hash> txs_ids;
-  Hash h = NULL_HASH;
+hash_t get_tx_tree_hash(const block_t& b) {
+  std::vector<hash_t> txs_ids;
+  hash_t h = NULL_HASH;
   getObjectHash(b.baseTransaction, h);
   txs_ids.push_back(h);
   for (auto& th : b.transactionHashes) {

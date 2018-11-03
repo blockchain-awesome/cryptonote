@@ -49,9 +49,9 @@ namespace boost
     a & reinterpret_cast<char (&)[sizeof(crypto::signature_t)]>(x);
   }
   template <class Archive>
-  inline void serialize(Archive &a, crypto::Hash &x, const boost::serialization::version_type ver)
+  inline void serialize(Archive &a, crypto::hash_t &x, const boost::serialization::version_type ver)
   {
-    a & reinterpret_cast<char (&)[sizeof(crypto::Hash)]>(x);
+    a & reinterpret_cast<char (&)[sizeof(crypto::hash_t)]>(x);
   }
   
   template <class Archive> void serialize(Archive& archive, cryptonote::MultisignatureInput &output, unsigned int version) {

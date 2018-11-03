@@ -73,7 +73,7 @@ public:
     return true;
   }
 
-  bool waitForTransaction(const Hash& txHash) {
+  bool waitForTransaction(const hash_t& txHash) {
     std::unique_lock<std::mutex> lk(m_mutex);
     while (!hasTransaction(txHash)) {
       m_cv.wait_for(lk, std::chrono::seconds(1));
@@ -81,14 +81,14 @@ public:
     return true;
   }
 
-  std::error_code onPoolUpdated(const std::vector<std::unique_ptr<ITransactionReader>>& addedTransactions, const std::vector<crypto::Hash>& deletedTransactions) override {
+  std::error_code onPoolUpdated(const std::vector<std::unique_ptr<ITransactionReader>>& addedTransactions, const std::vector<crypto::hash_t>& deletedTransactions) override {
     //stub
     return std::error_code();
   }
 
-  const std::unordered_set<crypto::Hash>& getKnownPoolTxIds() const override {
+  const std::unordered_set<crypto::hash_t>& getKnownPoolTxIds() const override {
     //stub
-    static std::unordered_set<crypto::Hash> empty;
+    static std::unordered_set<crypto::hash_t> empty;
     return empty;
   }
 
@@ -96,7 +96,7 @@ public:
     throw std::runtime_error("Not implemented");
   }
 
-  void removeUnconfirmedTransaction(const crypto::Hash& /*transactionHash*/) override {
+  void removeUnconfirmedTransaction(const crypto::hash_t& /*transactionHash*/) override {
     throw std::runtime_error("Not implemented");
   }
 
@@ -110,7 +110,7 @@ public:
 
 private:
 
-  bool hasTransaction(const Hash& txHash) {
+  bool hasTransaction(const hash_t& txHash) {
     for (const auto& kv : m_transactions) {
       if (kv.second.count(txHash) > 0)
         return true;
@@ -120,13 +120,13 @@ private:
 
   std::mutex m_mutex;
   std::condition_variable m_cv;
-  std::map<uint64_t, std::unordered_set<Hash>> m_transactions;
+  std::map<uint64_t, std::unordered_set<hash_t>> m_transactions;
   SynchronizationStart syncStart;
 };
 
 class TransfersObserver : public ITransfersObserver, public IInterruptable {
 public:
-  virtual void onTransactionUpdated(ITransfersSubscription* object, const Hash& transactionHash) override {
+  virtual void onTransactionUpdated(ITransfersSubscription* object, const hash_t& transactionHash) override {
     {
       std::lock_guard<std::mutex> lk(m_mutex);
       m_transfers.push_back(transactionHash);
@@ -149,7 +149,7 @@ public:
     return true;
   }
 
-  bool waitTransactionTransfer(const Hash& transactionHash) {
+  bool waitTransactionTransfer(const hash_t& transactionHash) {
     std::unique_lock<std::mutex> lk(m_mutex);
 
     while (!m_interrupted) {
@@ -166,7 +166,7 @@ public:
   }
 
 private:
-  bool hasTransaction(const Hash& transactionHash) {
+  bool hasTransaction(const hash_t& transactionHash) {
     return std::find(m_transfers.begin(), m_transfers.end(), transactionHash) != m_transfers.end();
   }
 
@@ -179,7 +179,7 @@ private:
 private:
   std::mutex m_mutex;
   std::condition_variable m_cv;
-  std::vector<Hash> m_transfers;
+  std::vector<hash_t> m_transfers;
   bool m_interrupted = false;
 };
 
@@ -330,7 +330,7 @@ TEST_F(TransfersTest, base) {
   Interrupter transferObserverInterrupter(transferObserver);
   blockSync.start();
 
-  Hash txId;
+  hash_t txId;
   ASSERT_FALSE(static_cast<bool>(wallet1.sendTransaction(dstAcc.toAddress(), TRANSFER_AMOUNT, txId)));
   ASSERT_TRUE(mineBlocks(*nodeDaemons[0], wallet1.address(), 1));
 
@@ -428,7 +428,7 @@ std::error_code submitTransaction(INode& node, ITransactionReader& tx) {
 
 
 std::unique_ptr<ITransaction> createTransferFromMultisignature(
-  AccountGroup& consilium, const AccountPublicAddress& receiver, const Hash& txHash, uint64_t amount, uint64_t fee) {
+  AccountGroup& consilium, const AccountPublicAddress& receiver, const hash_t& txHash, uint64_t amount, uint64_t fee) {
 
   auto& tc = consilium.getTransfers(0);
 

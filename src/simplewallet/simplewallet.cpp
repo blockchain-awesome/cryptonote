@@ -182,7 +182,7 @@ struct TransferCommand {
           cryptonote::TransactionDestinationEntry de;
 
           if (!Account::parseAddress(arg, de.addr)) {
-            crypto::Hash paymentId;
+            crypto::hash_t paymentId;
             if (cryptonote::parsePaymentId(arg, paymentId)) {
               logger(ERROR, BRIGHT_RED) << "Invalid payment ID usage. Please, use -p <payment_id>. See help for details.";
             } else {
@@ -370,7 +370,7 @@ void printListTransfersHeader(LoggerRef& logger) {
 void printListTransfersItem(LoggerRef& logger, const WalletLegacyTransaction& txInfo, IWalletLegacy& wallet, const Currency& currency) {
   std::vector<uint8_t> extraVec = Common::asBinaryArray(txInfo.extra);
 
-  crypto::Hash paymentId;
+  crypto::hash_t paymentId;
   std::string paymentIdStr = (getPaymentIdFromTxExtra(extraVec, paymentId) && paymentId != NULL_HASH ? Common::podToHex(paymentId) : "");
 
   char timeString[TIMESTAMP_MAX_WIDTH + 1];
@@ -925,7 +925,7 @@ bool simple_wallet::show_payments(const std::vector<std::string> &args) {
 
   bool payments_found = false;
   for (const std::string& arg: args) {
-    crypto::Hash expectedPaymentId;
+    crypto::hash_t expectedPaymentId;
     if (cryptonote::parsePaymentId(arg, expectedPaymentId)) {
       size_t transactionsCount = m_wallet->getTransactionCount();
       for (size_t trantransactionNumber = 0; trantransactionNumber < transactionsCount; ++trantransactionNumber) {
@@ -936,7 +936,7 @@ bool simple_wallet::show_payments(const std::vector<std::string> &args) {
         extraVec.reserve(txInfo.extra.size());
         std::for_each(txInfo.extra.begin(), txInfo.extra.end(), [&extraVec](const char el) { extraVec.push_back(el); });
 
-        crypto::Hash paymentId;
+        crypto::hash_t paymentId;
         if (cryptonote::getPaymentIdFromTxExtra(extraVec, paymentId) && paymentId == expectedPaymentId) {
           payments_found = true;
           success_msg_writer(true) <<

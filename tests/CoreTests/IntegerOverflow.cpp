@@ -80,7 +80,7 @@ bool gen_uint_overflow_1::generate(std::vector<test_event_entry>& events) const
   MAKE_MINER_TX_MANUALLY(miner_tx_0, blk_0);
   split_miner_tx_outs(miner_tx_0, m_currency.moneySupply());
   block_t blk_1;
-  if (!generator.constructBlockManually(blk_1, blk_0, miner_account, test_generator::bf_miner_tx, 0, 0, 0, crypto::Hash(), 0, miner_tx_0))
+  if (!generator.constructBlockManually(blk_1, blk_0, miner_account, test_generator::bf_miner_tx, 0, 0, 0, crypto::hash_t(), 0, miner_tx_0))
     return false;
   events.push_back(blk_1);
 
@@ -88,7 +88,7 @@ bool gen_uint_overflow_1::generate(std::vector<test_event_entry>& events) const
   MAKE_MINER_TX_MANUALLY(miner_tx_1, blk_1);
   split_miner_tx_outs(miner_tx_1, m_currency.moneySupply());
   block_t blk_2;
-  if (!generator.constructBlockManually(blk_2, blk_1, miner_account, test_generator::bf_miner_tx, 0, 0, 0, crypto::Hash(), 0, miner_tx_1))
+  if (!generator.constructBlockManually(blk_2, blk_1, miner_account, test_generator::bf_miner_tx, 0, 0, 0, crypto::hash_t(), 0, miner_tx_1))
     return false;
   events.push_back(blk_2);
 

@@ -56,11 +56,11 @@ public:
 
   bool serialize(cryptonote::ISerializer& s);
 
-  bool findTransactionId(const crypto::Hash& hash, TransactionId& id);
-  void erase(const crypto::Hash& hash);
+  bool findTransactionId(const crypto::hash_t& hash, TransactionId& id);
+  void erase(const crypto::hash_t& hash);
   void add(const cryptonote::Transaction& tx, TransactionId transactionId, 
     uint64_t amount, const std::list<TransactionOutputInformation>& usedOutputs);
-  void updateTransactionId(const crypto::Hash& hash, TransactionId id);
+  void updateTransactionId(const crypto::hash_t& hash, TransactionId id);
 
   uint64_t countUnconfirmedOutsAmount() const;
   uint64_t countUnconfirmedTransactionsAmount() const;
@@ -74,7 +74,7 @@ private:
   void collectUsedOutputs();
   void deleteUsedOutputs(const std::vector<TransactionOutputId>& usedOutputs);
 
-  typedef std::unordered_map<crypto::Hash, UnconfirmedTransferDetails, boost::hash<crypto::Hash>> UnconfirmedTxsContainer;
+  typedef std::unordered_map<crypto::hash_t, UnconfirmedTransferDetails, boost::hash<crypto::hash_t>> UnconfirmedTxsContainer;
   typedef std::unordered_set<TransactionOutputId> UsedOutputsContainer;
 
   UnconfirmedTxsContainer m_unconfirmedTxs;

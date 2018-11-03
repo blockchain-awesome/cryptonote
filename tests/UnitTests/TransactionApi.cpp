@@ -96,7 +96,7 @@ namespace {
 
     AccountKeys sender;
     std::unique_ptr<ITransaction> tx;
-    Hash txHash;
+    hash_t txHash;
   };
 
 }
@@ -255,7 +255,7 @@ TEST_F(TransactionApi, findOutputs) {
 }
 
 TEST_F(TransactionApi, setGetPaymentId) {
-  Hash paymentId = crypto::rand<Hash>();
+  hash_t paymentId = crypto::rand<hash_t>();
 
   ASSERT_FALSE(tx->getPaymentId(paymentId));
 
@@ -263,13 +263,13 @@ TEST_F(TransactionApi, setGetPaymentId) {
 
   EXPECT_NO_FATAL_FAILURE(checkHashChanged());
 
-  Hash paymentId2;
+  hash_t paymentId2;
   ASSERT_TRUE(tx->getPaymentId(paymentId2));
   ASSERT_EQ(paymentId, paymentId2);
 
   auto tx2 = reloadedTx(tx);
 
-  Hash paymentId3;
+  hash_t paymentId3;
   ASSERT_TRUE(tx->getPaymentId(paymentId3));
   ASSERT_EQ(paymentId, paymentId3);
 }
@@ -352,7 +352,7 @@ TEST_F(TransactionApi, unableToModifySignedTransaction) {
   ASSERT_ANY_THROW(tx->addInput(inputMsig));
   ASSERT_ANY_THROW(tx->addOutput(500, sender.address));
 
-  Hash paymentId;
+  hash_t paymentId;
   ASSERT_ANY_THROW(tx->setPaymentId(paymentId));
   ASSERT_ANY_THROW(tx->setExtraNonce(Common::asBinaryArray("smth")));
 

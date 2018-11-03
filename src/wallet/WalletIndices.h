@@ -57,7 +57,7 @@ typedef boost::multi_index_container <
 struct UnlockTransactionJob {
   uint32_t blockHeight;
   cryptonote::ITransfersContainer* container;
-  crypto::Hash transactionHash;
+  crypto::hash_t transactionHash;
 };
 
 typedef boost::multi_index_container <
@@ -67,7 +67,7 @@ typedef boost::multi_index_container <
     BOOST_MULTI_INDEX_MEMBER(UnlockTransactionJob, uint32_t, blockHeight)
     >,
     boost::multi_index::hashed_non_unique < boost::multi_index::tag <TransactionHashIndex>,
-      BOOST_MULTI_INDEX_MEMBER(UnlockTransactionJob, crypto::Hash, transactionHash)
+      BOOST_MULTI_INDEX_MEMBER(UnlockTransactionJob, crypto::hash_t, transactionHash)
     >
   >
 > UnlockTransactionJobs;
@@ -77,7 +77,7 @@ typedef boost::multi_index_container <
   boost::multi_index::indexed_by <
     boost::multi_index::random_access < boost::multi_index::tag <RandomAccessIndex> >,
     boost::multi_index::hashed_unique < boost::multi_index::tag <TransactionIndex>,
-      boost::multi_index::member<cryptonote::WalletTransaction, crypto::Hash, &cryptonote::WalletTransaction::hash >
+      boost::multi_index::member<cryptonote::WalletTransaction, crypto::hash_t, &cryptonote::WalletTransaction::hash >
     >,
     boost::multi_index::ordered_non_unique < boost::multi_index::tag <BlockHeightIndex>,
       boost::multi_index::member<cryptonote::WalletTransaction, uint32_t, &cryptonote::WalletTransaction::blockHeight >
@@ -90,14 +90,14 @@ typedef std::vector<TransactionTransferPair> WalletTransfers;
 typedef std::map<size_t, cryptonote::Transaction> UncommitedTransactions;
 
 typedef boost::multi_index_container<
-  crypto::Hash,
+  crypto::hash_t,
   boost::multi_index::indexed_by <
     boost::multi_index::random_access<
       boost::multi_index::tag<BlockHeightIndex>
     >,
     boost::multi_index::hashed_unique<
       boost::multi_index::tag<BlockHashIndex>,
-      boost::multi_index::identity<crypto::Hash>
+      boost::multi_index::identity<crypto::hash_t>
     >
   >
 > BlockHashesContainer;

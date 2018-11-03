@@ -10,6 +10,7 @@
 #include <tuple>
 
 #include "common/StringTools.h"
+#include "crypto/hash.h"
 #include "cryptonote/core/Currency.h"
 #include "cryptonote/core/TransactionApi.h"
 #include "cryptonote/core/TransactionApiExtra.h"
@@ -2712,7 +2713,7 @@ protected:
 // }
 
 TEST_F(WalletApi, getTransactionThrowsIfTransactionNotFound) {
-  crypto::Hash hash;
+  crypto::hash_t hash;
   std::generate(std::begin(hash.data), std::end(hash.data), std::rand);
 
   ASSERT_ANY_THROW(alice.getTransaction(hash));
@@ -2721,7 +2722,7 @@ TEST_F(WalletApi, getTransactionThrowsIfTransactionNotFound) {
 TEST_F(WalletApi, getTransactionThrowsIfStopped) {
   alice.stop();
 
-  crypto::Hash hash;
+  crypto::hash_t hash;
   std::generate(std::begin(hash.data), std::end(hash.data), std::rand);
 
   ASSERT_ANY_THROW(alice.getTransaction(hash));
@@ -2730,7 +2731,7 @@ TEST_F(WalletApi, getTransactionThrowsIfStopped) {
 TEST_F(WalletApi, getTransactionThrowsIfNotInitialized) {
   WalletGreen wallet(dispatcher, currency, node);
 
-  crypto::Hash hash;
+  crypto::hash_t hash;
   std::generate(std::begin(hash.data), std::end(hash.data), std::rand);
 
   ASSERT_ANY_THROW(wallet.getTransaction(hash));
@@ -2751,7 +2752,7 @@ TEST_F(WalletApi, getTransactionThrowsIfNotInitialized) {
 //   waitForTransactionUpdated(alice, txId); //first notification comes right after inserting transaction. totalAmount at the moment is 0
 //   waitForTransactionUpdated(alice, txId); //second notification comes after processing the transaction by TransfersContainer
 
-//   crypto::Hash hash = alice.getTransaction(txId).hash;
+//   crypto::hash_t hash = alice.getTransaction(txId).hash;
 
 //   cryptonote::WalletTransactionWithTransfers tx = alice.getTransaction(hash);
 //   cryptonote::WalletTransaction transaction = tx.transaction;
@@ -2866,7 +2867,7 @@ TEST_F(WalletApi, getTransactionsReturnsEmptyArrayIfBlockIndexTooBig) {
 // }
 
 TEST_F(WalletApi, getTransactionsReturnsEmptyArrayIfBlockHashDoesntExist) {
-  crypto::Hash hash;
+  crypto::hash_t hash;
   std::generate(std::begin(hash.data), std::end(hash.data), std::rand);
 
   auto transactions = alice.getTransactions(hash, 1);
@@ -2972,7 +2973,7 @@ TEST_F(WalletApi, getTransactionsReturnsBlockWithCorrectHash) {
   node.updateObservers();
   waitForWalletEvent(alice, cryptonote::WalletEventType::SYNC_COMPLETED, std::chrono::seconds(3));
 
-  crypto::Hash lastBlockHash = get_block_hash(generator.getBlockchain().back());
+  crypto::hash_t lastBlockHash = get_block_hash(generator.getBlockchain().back());
   auto transactions = alice.getTransactions(lastBlockHash, 1);
 
   ASSERT_EQ(1, transactions.size());
@@ -2989,7 +2990,7 @@ TEST_F(WalletApi, getTransactionsReturnsBlockWithCorrectHash) {
 //   node.updateObservers();
 //   waitForWalletEvent(alice, cryptonote::WalletEventType::SYNC_COMPLETED, std::chrono::seconds(3));
 
-//   crypto::Hash lastBlockHash = get_block_hash(generator.getBlockchain().back());
+//   crypto::hash_t lastBlockHash = get_block_hash(generator.getBlockchain().back());
 //   auto transactions = alice.getTransactions(lastBlockHash, 1);
 
 //   ASSERT_TRUE(transactionWithTransfersFound(alice, transactions, transactionId));

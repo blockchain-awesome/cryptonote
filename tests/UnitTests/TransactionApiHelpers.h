@@ -7,6 +7,7 @@
 #include "crypto.h"
 #include "ITransaction.h"
 #include "crypto/crypto.h"
+#include "crypto/hash.h"
 
 #include "cryptonote/core/Account.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
@@ -132,7 +133,7 @@ public:
   std::unique_ptr<ITransactionReader> build();
 
   // get built transaction hash (call only after build)
-  crypto::Hash getTransactionHash() const;
+  crypto::hash_t getTransactionHash() const;
 
 private:
 
@@ -154,7 +155,7 @@ private:
   std::unordered_map<size_t, MsigInfo> msigInputs;
 
   std::unique_ptr<ITransaction> tx;
-  crypto::Hash transactionHash;
+  crypto::hash_t transactionHash;
 };
 
 class FusionTransactionBuilder {

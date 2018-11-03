@@ -405,7 +405,7 @@ difficulty_type Currency::nextDifficulty(std::vector<uint64_t> timestamps,
 }
 
 bool Currency::checkProofOfWork(const block_t& block, difficulty_type currentDiffic,
-  crypto::Hash& proofOfWork) const {
+  crypto::hash_t& proofOfWork) const {
 
   if (!get_block_longhash(block, proofOfWork)) {
     return false;

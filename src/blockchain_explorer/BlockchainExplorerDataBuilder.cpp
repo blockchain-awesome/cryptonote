@@ -34,7 +34,7 @@ bool BlockchainExplorerDataBuilder::getMixin(const Transaction& transaction, uin
   return true;
 }
 
-bool BlockchainExplorerDataBuilder::getPaymentId(const Transaction& transaction, crypto::Hash& paymentId) {
+bool BlockchainExplorerDataBuilder::getPaymentId(const Transaction& transaction, crypto::hash_t& paymentId) {
   std::vector<TransactionExtraField> txExtraFields;
   parseTransactionExtra(transaction.extra, txExtraFields);
   TransactionExtraNonce extraNonce;
@@ -78,7 +78,7 @@ size_t BlockchainExplorerDataBuilder::median(std::vector<size_t>& v) {
 }
 
 bool BlockchainExplorerDataBuilder::fillBlockDetails(const block_t&block, BlockDetails& blockDetails) {
-  crypto::Hash hash = get_block_hash(block);
+  crypto::hash_t hash = get_block_hash(block);
 
   blockDetails.majorVersion = block.majorVersion;
   blockDetails.minorVersion = block.minorVersion;
@@ -96,7 +96,7 @@ bool BlockchainExplorerDataBuilder::fillBlockDetails(const block_t&block, BlockD
     return false;
   blockDetails.height = boost::get<BaseInput>(block.baseTransaction.inputs.front()).blockIndex;
 
-  crypto::Hash tmpHash = core.getBlockIdByHeight(blockDetails.height);
+  crypto::hash_t tmpHash = core.getBlockIdByHeight(blockDetails.height);
   blockDetails.isOrphaned = hash != tmpHash;
 
   if (!core.getBlockDifficulty(blockDetails.height, blockDetails.difficulty)) {
@@ -162,7 +162,7 @@ bool BlockchainExplorerDataBuilder::fillBlockDetails(const block_t&block, BlockD
   blockDetails.transactions.push_back(std::move(transactionDetails));
 
   std::list<Transaction> found;
-  std::list<crypto::Hash> missed;
+  std::list<crypto::hash_t> missed;
   core.getTransactions(block.transactionHashes, found, missed, blockDetails.isOrphaned);
   if (found.size() != block.transactionHashes.size()) {
     return false;
@@ -182,17 +182,17 @@ bool BlockchainExplorerDataBuilder::fillBlockDetails(const block_t&block, BlockD
 }
 
 bool BlockchainExplorerDataBuilder::fillTransactionDetails(const Transaction& transaction, TransactionDetails& transactionDetails, uint64_t timestamp) {
-  crypto::Hash hash = getObjectHash(transaction);
+  crypto::hash_t hash = getObjectHash(transaction);
   transactionDetails.hash = hash;
 
   transactionDetails.timestamp = timestamp;
 
-  crypto::Hash blockHash;
+  crypto::hash_t blockHash;
   uint32_t blockHeight;
   if (!core.getBlockContainingTx(hash, blockHash, blockHeight)) {
     transactionDetails.inBlockchain = false;
     transactionDetails.blockHeight = boost::value_initialized<uint32_t>();
-    transactionDetails.blockHash = boost::value_initialized<crypto::Hash>();
+    transactionDetails.blockHash = boost::value_initialized<crypto::hash_t>();
   } else {
     transactionDetails.inBlockchain = true;
     transactionDetails.blockHeight = blockHeight;
@@ -233,11 +233,11 @@ bool BlockchainExplorerDataBuilder::fillTransactionDetails(const Transaction& tr
     transactionDetails.mixin = mixin;
   }
 
-  crypto::Hash paymentId;
+  crypto::hash_t paymentId;
   if (getPaymentId(transaction, paymentId)) {
     transactionDetails.paymentId = paymentId;
   } else {
-    transactionDetails.paymentId = boost::value_initialized<crypto::Hash>();
+    transactionDetails.paymentId = boost::value_initialized<crypto::hash_t>();
   }
 
   fillTxExtra(transaction.extra, transactionDetails.extra);
@@ -267,7 +267,7 @@ bool BlockchainExplorerDataBuilder::fillTransactionDetails(const Transaction& tr
     } else if (txIn.type() == typeid(KeyInput)) {
       TransactionInputToKeyDetails txInToKeyDetails;
       const KeyInput& txInToKey = boost::get<KeyInput>(txIn);
-      std::list<std::pair<crypto::Hash, size_t>> outputReferences;
+      std::list<std::pair<crypto::hash_t, size_t>> outputReferences;
       if (!core.scanOutputkeysForIndices(txInToKey, outputReferences)) {
         return false;
       }
@@ -283,7 +283,7 @@ bool BlockchainExplorerDataBuilder::fillTransactionDetails(const Transaction& tr
       const MultisignatureInput& txInMultisig = boost::get<MultisignatureInput>(txIn);
       txInDetails.amount = txInMultisig.amount;
       txInMultisigDetails.signatures = txInMultisig.signatureCount;
-      std::pair<crypto::Hash, size_t> outputReference;
+      std::pair<crypto::hash_t, size_t> outputReference;
       if (!core.getMultisigOutputReference(txInMultisig, outputReference)) {
         return false;
       }

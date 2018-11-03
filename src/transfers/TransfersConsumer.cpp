@@ -79,8 +79,8 @@ void findMyOutputs(
   }
 }
 
-std::vector<crypto::Hash> getBlockHashes(const cryptonote::CompleteBlock* blocks, size_t count) {
-  std::vector<crypto::Hash> result;
+std::vector<crypto::hash_t> getBlockHashes(const cryptonote::CompleteBlock* blocks, size_t count) {
+  std::vector<crypto::hash_t> result;
   result.reserve(count);
 
   for (size_t i = 0; i < count; ++i) {
@@ -133,9 +133,9 @@ void TransfersConsumer::getSubscriptions(std::vector<AccountPublicAddress>& subs
   }
 }
 
-void TransfersConsumer::initTransactionPool(const std::unordered_set<crypto::Hash>& uncommitedTransactions) {
+void TransfersConsumer::initTransactionPool(const std::unordered_set<crypto::hash_t>& uncommitedTransactions) {
   for (auto itSubscriptions = m_subscriptions.begin(); itSubscriptions != m_subscriptions.end(); ++itSubscriptions) {
-    std::vector<crypto::Hash> unconfirmedTransactions;
+    std::vector<crypto::hash_t> unconfirmedTransactions;
     itSubscriptions->second->getContainer().getUnconfirmedTransactions(unconfirmedTransactions);
 
     for (auto itTransactions = unconfirmedTransactions.begin(); itTransactions != unconfirmedTransactions.end(); ++itTransactions) {
@@ -268,7 +268,7 @@ bool TransfersConsumer::onNewBlocks(const CompleteBlock* blocks, uint32_t startH
     }
   }
 
-  std::vector<crypto::Hash> blockHashes = getBlockHashes(blocks, count);
+  std::vector<crypto::hash_t> blockHashes = getBlockHashes(blocks, count);
   if (!processingError) {
     m_observerManager.notify(&IBlockchainConsumerObserver::onBlocksAdded, this, blockHashes);
 
@@ -296,7 +296,7 @@ bool TransfersConsumer::onNewBlocks(const CompleteBlock* blocks, uint32_t startH
   return true;
 }
 
-std::error_code TransfersConsumer::onPoolUpdated(const std::vector<std::unique_ptr<ITransactionReader>>& addedTransactions, const std::vector<Hash>& deletedTransactions) {
+std::error_code TransfersConsumer::onPoolUpdated(const std::vector<std::unique_ptr<ITransactionReader>>& addedTransactions, const std::vector<hash_t>& deletedTransactions) {
   TransactionBlockInfo unconfirmedBlockInfo;
   unconfirmedBlockInfo.timestamp = 0; 
   unconfirmedBlockInfo.height = WALLET_UNCONFIRMED_TRANSACTION_HEIGHT;
@@ -319,7 +319,7 @@ std::error_code TransfersConsumer::onPoolUpdated(const std::vector<std::unique_p
 
     m_observerManager.notify(&IBlockchainConsumerObserver::onTransactionDeleteBegin, this, deletedTxHash);
     for (auto& sub : m_subscriptions) {
-      sub.second->deleteUnconfirmedTransaction(*reinterpret_cast<const Hash*>(&deletedTxHash));
+      sub.second->deleteUnconfirmedTransaction(*reinterpret_cast<const hash_t*>(&deletedTxHash));
     }
 
     m_observerManager.notify(&IBlockchainConsumerObserver::onTransactionDeleteEnd, this, deletedTxHash);
@@ -328,7 +328,7 @@ std::error_code TransfersConsumer::onPoolUpdated(const std::vector<std::unique_p
   return std::error_code();
 }
 
-const std::unordered_set<crypto::Hash>& TransfersConsumer::getKnownPoolTxIds() const {
+const std::unordered_set<crypto::hash_t>& TransfersConsumer::getKnownPoolTxIds() const {
   return m_poolTxs;
 }
 
@@ -341,7 +341,7 @@ std::error_code TransfersConsumer::addUnconfirmedTransaction(const ITransactionR
   return processTransaction(unconfirmedBlockInfo, transaction);
 }
 
-void TransfersConsumer::removeUnconfirmedTransaction(const crypto::Hash& transactionHash) {
+void TransfersConsumer::removeUnconfirmedTransaction(const crypto::hash_t& transactionHash) {
   m_observerManager.notify(&IBlockchainConsumerObserver::onTransactionDeleteBegin, this, transactionHash);
   for (auto& subscription : m_subscriptions) {
     subscription.second->deleteUnconfirmedTransaction(transactionHash);
@@ -425,7 +425,7 @@ std::error_code TransfersConsumer::preprocessOutputs(const TransactionBlockInfo&
   std::error_code errorCode;
   auto txHash = tx.getTransactionHash();
   if (blockInfo.height != WALLET_UNCONFIRMED_TRANSACTION_HEIGHT) {
-    errorCode = getGlobalIndices(reinterpret_cast<const Hash&>(txHash), info.globalIdxs);
+    errorCode = getGlobalIndices(reinterpret_cast<const hash_t&>(txHash), info.globalIdxs);
     if (errorCode) {
       return errorCode;
     }
@@ -499,7 +499,7 @@ void TransfersConsumer::processOutputs(const TransactionBlockInfo& blockInfo, Tr
   }
 }
 
-std::error_code TransfersConsumer::getGlobalIndices(const Hash& transactionHash, std::vector<uint32_t>& outsGlobalIndices) {  
+std::error_code TransfersConsumer::getGlobalIndices(const hash_t& transactionHash, std::vector<uint32_t>& outsGlobalIndices) {  
   std::promise<std::error_code> prom;
   std::future<std::error_code> f = prom.get_future();
 

@@ -150,7 +150,7 @@ protected:
 
 private:
 
-  crypto::Hash m_last_valid_block;
+  crypto::hash_t m_last_valid_block;
   size_t m_invalid_tx_index;
   size_t m_invalid_block_index;
 };

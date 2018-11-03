@@ -265,7 +265,7 @@ namespace
 //   TestPool<TransactionValidator, RealTimeProvider> pool(currency, logger);
 //   uint64_t fee = currency.minimumFee();
 
-//   std::unordered_map<crypto::Hash, std::unique_ptr<Transaction>> transactions;
+//   std::unordered_map<crypto::hash_t, std::unique_ptr<Transaction>> transactions;
 
 //   // generate transactions
 //   for (int i = 1; i <= 50; ++i) {
@@ -321,7 +321,7 @@ namespace
 //   const uint64_t fee = currency.minimumFee();
 //   const size_t totalTransactions = 50;
 
-//   std::unordered_map<crypto::Hash, std::unique_ptr<Transaction>> transactions;
+//   std::unordered_map<crypto::hash_t, std::unique_ptr<Transaction>> transactions;
 
 
 //   // generate transactions
@@ -738,13 +738,13 @@ public:
     std::unique_ptr<TxMemoryPool> pool(new TxMemoryPool(currency, validator, timeProvider, logger));
     ASSERT_TRUE(pool->init());
 
-    std::unordered_map<crypto::Hash, Transaction> ordinaryTxs;
+    std::unordered_map<crypto::hash_t, Transaction> ordinaryTxs;
     for (size_t i = 0; i < poolOrdinaryTxCount; ++i) {
       auto tx = createTestOrdinaryTransaction(currency);
       ordinaryTxs.emplace(getObjectHash(tx), std::move(tx));
     }
 
-    std::unordered_map<crypto::Hash, Transaction> fusionTxs;
+    std::unordered_map<crypto::hash_t, Transaction> fusionTxs;
     for (size_t i = 0; i < poolFusionTxCount; ++i) {
       auto tx = createTestFusionTransaction(currency);
       fusionTxs.emplace(getObjectHash(tx), std::move(tx));

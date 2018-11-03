@@ -30,7 +30,7 @@ bool WalletUnconfirmedTransactions::serialize(ISerializer& s) {
   return true;
 }
 
-bool WalletUnconfirmedTransactions::findTransactionId(const Hash& hash, TransactionId& id) {
+bool WalletUnconfirmedTransactions::findTransactionId(const hash_t& hash, TransactionId& id) {
   auto it = m_unconfirmedTxs.find(hash);
   if (it == m_unconfirmedTxs.end()) {
     return false;
@@ -40,7 +40,7 @@ bool WalletUnconfirmedTransactions::findTransactionId(const Hash& hash, Transact
   return true;
 }
 
-void WalletUnconfirmedTransactions::erase(const Hash& hash) {
+void WalletUnconfirmedTransactions::erase(const hash_t& hash) {
   auto it = m_unconfirmedTxs.find(hash);
   if (it == m_unconfirmedTxs.end()) {
     return;
@@ -73,7 +73,7 @@ void WalletUnconfirmedTransactions::add(const Transaction& tx, TransactionId tra
   utd.outsAmount = outsAmount;
 }
 
-void WalletUnconfirmedTransactions::updateTransactionId(const Hash& hash, TransactionId id) {
+void WalletUnconfirmedTransactions::updateTransactionId(const hash_t& hash, TransactionId id) {
   auto it = m_unconfirmedTxs.find(hash);
   if (it != m_unconfirmedTxs.end()) {
     it->second.transactionId = id;
