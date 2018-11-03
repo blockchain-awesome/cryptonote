@@ -21,7 +21,7 @@ namespace {
   using namespace cryptonote;
 
   void derivePublicKey(const AccountPublicAddress& to, const SecretKey& txKey, size_t outputIndex, PublicKey& ephemeralKey) {
-    KeyDerivation derivation;
+    key_derivation_t derivation;
     generate_key_derivation(to.viewPublicKey, txKey, derivation);
     derive_public_key(derivation, outputIndex, to.spendPublicKey, ephemeralKey);
   }
@@ -339,7 +339,7 @@ namespace cryptonote {
   }
 
   void TransactionImpl::signInputMultisignature(size_t index, const PublicKey& sourceTransactionKey, size_t outputIndex, const AccountKeys& accountKeys) {
-    KeyDerivation derivation;
+    key_derivation_t derivation;
     PublicKey ephemeralPublicKey;
     SecretKey ephemeralSecretKey;
 

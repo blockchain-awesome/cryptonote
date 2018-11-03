@@ -54,7 +54,7 @@ namespace
       size_t output_index = 0;
       BOOST_FOREACH(const TransactionDestinationEntry& dst_entr, destinations)
       {
-        crypto::KeyDerivation derivation;
+        crypto::key_derivation_t derivation;
         crypto::PublicKey out_eph_public_key;
         crypto::generate_key_derivation(dst_entr.addr.viewPublicKey, m_tx_key.secretKey, derivation);
         crypto::derive_public_key(derivation, output_index, dst_entr.addr.spendPublicKey, out_eph_public_key);

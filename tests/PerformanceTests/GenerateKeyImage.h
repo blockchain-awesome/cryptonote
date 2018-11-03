@@ -23,7 +23,7 @@ public:
 
     AccountKeys bob_keys = m_bob.getAccountKeys();
 
-    crypto::KeyDerivation recv_derivation;
+    crypto::key_derivation_t recv_derivation;
     crypto::generate_key_derivation(m_tx_pub_key, bob_keys.viewSecretKey, recv_derivation);
 
     crypto::derive_public_key(recv_derivation, 0, bob_keys.address.spendPublicKey, m_in_ephemeral.publicKey);

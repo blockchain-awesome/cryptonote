@@ -35,7 +35,7 @@ bool parseAndValidateTransactionFromBinaryArray(const BinaryArray& tx_blob, Tran
 }
 
 bool generate_key_image_helper(const AccountKeys& ack, const PublicKey& tx_public_key, size_t real_output_index, KeyPair& in_ephemeral, KeyImage& ki) {
-  KeyDerivation recv_derivation;
+  key_derivation_t recv_derivation;
   bool r = generate_key_derivation(tx_public_key, ack.viewSecretKey, recv_derivation);
 
   assert(r && "key image helper: failed to generate_key_derivation");
@@ -176,7 +176,7 @@ bool constructTransaction(
       logger(ERROR, BRIGHT_RED) << "Destination with wrong amount: " << dst_entr.amount;
       return false;
     }
-    KeyDerivation derivation;
+    key_derivation_t derivation;
     PublicKey out_eph_public_key;
     bool r = generate_key_derivation(dst_entr.addr.viewPublicKey, txkey.secretKey, derivation);
 
@@ -383,14 +383,14 @@ std::string short_hash_str(const Hash& h) {
   return res;
 }
 
-bool is_out_to_acc(const AccountKeys& acc, const KeyOutput& out_key, const KeyDerivation& derivation, size_t keyIndex) {
+bool is_out_to_acc(const AccountKeys& acc, const KeyOutput& out_key, const key_derivation_t& derivation, size_t keyIndex) {
   PublicKey pk;
   derive_public_key(derivation, keyIndex, acc.address.spendPublicKey, pk);
   return pk == out_key.key;
 }
 
 bool is_out_to_acc(const AccountKeys& acc, const KeyOutput& out_key, const PublicKey& tx_pub_key, size_t keyIndex) {
-  KeyDerivation derivation;
+  key_derivation_t derivation;
   generate_key_derivation(tx_pub_key, acc.viewSecretKey, derivation);
   return is_out_to_acc(acc, out_key, derivation, keyIndex);
 }
@@ -407,7 +407,7 @@ bool lookup_acc_outs(const AccountKeys& acc, const Transaction& tx, const Public
   size_t keyIndex = 0;
   size_t outputIndex = 0;
 
-  KeyDerivation derivation;
+  key_derivation_t derivation;
   generate_key_derivation(tx_pub_key, acc.viewSecretKey, derivation);
 
   for (const TransactionOutput& o : tx.outputs) {

@@ -22,7 +22,7 @@ namespace {
 using namespace cryptonote;
 
 void checkOutputKey(
-  const KeyDerivation& derivation,
+  const key_derivation_t& derivation,
   const PublicKey& key,
   size_t keyIndex,
   size_t outputIndex,
@@ -45,7 +45,7 @@ void findMyOutputs(
   std::unordered_map<PublicKey, std::vector<uint32_t>>& outputs) {
 
   auto txPublicKey = tx.getTransactionPublicKey();
-  KeyDerivation derivation;
+  key_derivation_t derivation;
 
   if (!generate_key_derivation( txPublicKey, viewSecretKey, derivation)) {
     return;

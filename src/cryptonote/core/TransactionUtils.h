@@ -16,7 +16,7 @@ TransactionTypes::InputType getTransactionInputType(const TransactionInput& in);
 const TransactionInput& getInputChecked(const cryptonote::TransactionPrefix& transaction, size_t index);
 const TransactionInput& getInputChecked(const cryptonote::TransactionPrefix& transaction, size_t index, TransactionTypes::InputType type);
 
-bool isOutToKey(const crypto::PublicKey& spendPublicKey, const crypto::PublicKey& outKey, const crypto::KeyDerivation& derivation, size_t keyIndex);
+bool isOutToKey(const crypto::PublicKey& spendPublicKey, const crypto::PublicKey& outKey, const crypto::key_derivation_t& derivation, size_t keyIndex);
 
 // TransactionOutput helper functions
 TransactionTypes::OutputType getTransactionOutputType(const TransactionOutputTarget& out);

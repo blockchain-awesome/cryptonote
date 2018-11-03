@@ -137,7 +137,7 @@ public:
 private:
 
   void derivePublicKey(const AccountKeys& reciever, const crypto::PublicKey& srcTxKey, size_t outputIndex, PublicKey& ephemeralKey) {
-    crypto::KeyDerivation derivation;
+    crypto::key_derivation_t derivation;
     crypto::generate_key_derivation(srcTxKey, reinterpret_cast<const crypto::SecretKey&>(reciever.viewSecretKey), derivation);
     crypto::derive_public_key(derivation, outputIndex,
       reinterpret_cast<const crypto::PublicKey&>(reciever.address.spendPublicKey),

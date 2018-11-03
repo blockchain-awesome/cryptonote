@@ -64,7 +64,7 @@ namespace crypto {
     return true;
   }
 
-  bool crypto_ops::generate_key_derivation(const PublicKey &key1, const SecretKey &key2, KeyDerivation &derivation) {
+  bool crypto_ops::generate_key_derivation(const PublicKey &key1, const SecretKey &key2, key_derivation_t &derivation) {
     ge_p3 point;
     ge_p2 point2;
     ge_p1p1 point3;
@@ -79,9 +79,9 @@ namespace crypto {
     return true;
   }
 
-  static void derivation_to_scalar(const KeyDerivation &derivation, size_t output_index, EllipticCurveScalar &res) {
+  static void derivation_to_scalar(const key_derivation_t &derivation, size_t output_index, EllipticCurveScalar &res) {
     struct {
-      KeyDerivation derivation;
+      key_derivation_t derivation;
       char output_index[(sizeof(size_t) * 8 + 6) / 7];
     } buf;
     char *end = buf.output_index;
@@ -91,10 +91,10 @@ namespace crypto {
     hash_to_scalar(&buf, end - reinterpret_cast<char *>(&buf), res);
   }
 
-  static void derivation_to_scalar(const KeyDerivation &derivation, size_t output_index, const uint8_t* suffix, size_t suffixLength, EllipticCurveScalar &res) {
+  static void derivation_to_scalar(const key_derivation_t &derivation, size_t output_index, const uint8_t* suffix, size_t suffixLength, EllipticCurveScalar &res) {
     assert(suffixLength <= 32);
     struct {
-      KeyDerivation derivation;
+      key_derivation_t derivation;
       char output_index[(sizeof(size_t) * 8 + 6) / 7 + 32];
     } buf;
     char *end = buf.output_index;
@@ -106,7 +106,7 @@ namespace crypto {
     hash_to_scalar(&buf, bufSize + suffixLength, res);
   }
 
-  bool crypto_ops::derive_public_key(const KeyDerivation &derivation, size_t output_index,
+  bool crypto_ops::derive_public_key(const key_derivation_t &derivation, size_t output_index,
     const PublicKey &base, PublicKey &derived_key) {
     EllipticCurveScalar scalar;
     ge_p3 point1;
@@ -126,7 +126,7 @@ namespace crypto {
     return true;
   }
 
-  bool crypto_ops::derive_public_key(const KeyDerivation &derivation, size_t output_index,
+  bool crypto_ops::derive_public_key(const key_derivation_t &derivation, size_t output_index,
     const PublicKey &base, const uint8_t* suffix, size_t suffixLength, PublicKey &derived_key) {
     EllipticCurveScalar scalar;
     ge_p3 point1;
@@ -146,7 +146,7 @@ namespace crypto {
     return true;
   }
 
-  bool crypto_ops::underive_public_key_and_get_scalar(const KeyDerivation &derivation, size_t output_index,
+  bool crypto_ops::underive_public_key_and_get_scalar(const key_derivation_t &derivation, size_t output_index,
     const PublicKey &derived_key, PublicKey &base, EllipticCurveScalar &hashed_derivation) {
     ge_p3 point1;
     ge_p3 point2;
@@ -165,7 +165,7 @@ namespace crypto {
     return true;
   }
 
-  void crypto_ops::derive_secret_key(const KeyDerivation &derivation, size_t output_index,
+  void crypto_ops::derive_secret_key(const key_derivation_t &derivation, size_t output_index,
     const SecretKey &base, SecretKey &derived_key) {
     EllipticCurveScalar scalar;
     assert(sc_check(reinterpret_cast<const unsigned char*>(&base)) == 0);
@@ -173,7 +173,7 @@ namespace crypto {
     sc_add(reinterpret_cast<unsigned char*>(&derived_key), reinterpret_cast<const unsigned char*>(&base), reinterpret_cast<unsigned char*>(&scalar));
   }
 
-  void crypto_ops::derive_secret_key(const KeyDerivation &derivation, size_t output_index,
+  void crypto_ops::derive_secret_key(const key_derivation_t &derivation, size_t output_index,
     const SecretKey &base, const uint8_t* suffix, size_t suffixLength, SecretKey &derived_key) {
     EllipticCurveScalar scalar;
     assert(sc_check(reinterpret_cast<const unsigned char*>(&base)) == 0);
@@ -182,7 +182,7 @@ namespace crypto {
   }
 
 
-  bool crypto_ops::underive_public_key(const KeyDerivation &derivation, size_t output_index,
+  bool crypto_ops::underive_public_key(const key_derivation_t &derivation, size_t output_index,
     const PublicKey &derived_key, PublicKey &base) {
     EllipticCurveScalar scalar;
     ge_p3 point1;
@@ -202,7 +202,7 @@ namespace crypto {
     return true;
   }
 
-  bool crypto_ops::underive_public_key(const KeyDerivation &derivation, size_t output_index,
+  bool crypto_ops::underive_public_key(const key_derivation_t &derivation, size_t output_index,
     const PublicKey &derived_key, const uint8_t* suffix, size_t suffixLength, PublicKey &base) {
     EllipticCurveScalar scalar;
     ge_p3 point1;

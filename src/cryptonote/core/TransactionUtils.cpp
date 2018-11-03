@@ -103,7 +103,7 @@ const TransactionOutput& getOutputChecked(const cryptonote::TransactionPrefix& t
   return output;
 }
 
-bool isOutToKey(const crypto::PublicKey& spendPublicKey, const crypto::PublicKey& outKey, const crypto::KeyDerivation& derivation, size_t keyIndex) {
+bool isOutToKey(const crypto::PublicKey& spendPublicKey, const crypto::PublicKey& outKey, const crypto::key_derivation_t& derivation, size_t keyIndex) {
   crypto::PublicKey pk;
   derive_public_key(derivation, keyIndex, spendPublicKey, pk);
   return pk == outKey;
@@ -122,7 +122,7 @@ bool findOutputsToAccount(const cryptonote::TransactionPrefix& transaction, cons
   size_t keyIndex = 0;
   uint32_t outputIndex = 0;
 
-  crypto::KeyDerivation derivation;
+  crypto::key_derivation_t derivation;
   generate_key_derivation(txPubKey, keys.viewSecretKey, derivation);
 
   for (const TransactionOutput& o : transaction.outputs) {

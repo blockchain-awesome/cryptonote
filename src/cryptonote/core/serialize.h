@@ -33,7 +33,7 @@ bool serialize(EllipticCurvePoint &ecPoint, Common::StringView name, cryptonote:
 
 inline std::ostream &operator<<(std::ostream &o, const crypto::PublicKey &v) { return print256(o, v); }
 inline std::ostream &operator<<(std::ostream &o, const crypto::SecretKey &v) { return print256(o, v); }
-inline std::ostream &operator<<(std::ostream &o, const crypto::KeyDerivation &v) { return print256(o, v); }
+inline std::ostream &operator<<(std::ostream &o, const crypto::key_derivation_t &v) { return print256(o, v); }
 inline std::ostream &operator<<(std::ostream &o, const crypto::KeyImage &v) { return print256(o, v); }
 inline std::ostream &operator<<(std::ostream &o, const crypto::signature_t &v) { return print256(o, v); }
 inline std::ostream &operator<<(std::ostream &o, const crypto::Hash &v) { return print256(o, v); }

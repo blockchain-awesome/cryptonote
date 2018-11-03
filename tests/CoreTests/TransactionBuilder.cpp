@@ -112,7 +112,7 @@ void TransactionBuilder::fillOutputs(Transaction& tx) const {
   size_t output_index = 0;
   
   for(const auto& dst_entr : m_destinations) {
-    crypto::KeyDerivation derivation;
+    crypto::key_derivation_t derivation;
     crypto::PublicKey out_eph_public_key;
     crypto::generate_key_derivation(dst_entr.addr.viewPublicKey, m_txKey.secretKey, derivation);
     crypto::derive_public_key(derivation, output_index, dst_entr.addr.spendPublicKey, out_eph_public_key);
@@ -133,7 +133,7 @@ void TransactionBuilder::fillOutputs(Transaction& tx) const {
     target.requiredSignatureCount = mdst.requiredSignatures;
 
     for (const auto& key : mdst.keys) {
-      crypto::KeyDerivation derivation;
+      crypto::key_derivation_t derivation;
       crypto::PublicKey ephemeralPublicKey;
       crypto::generate_key_derivation(key.address.viewPublicKey, m_txKey.secretKey, derivation);
       crypto::derive_public_key(derivation, output_index, key.address.spendPublicKey, ephemeralPublicKey);
@@ -174,7 +174,7 @@ void TransactionBuilder::signSources(const crypto::Hash& prefixHash, const std::
     auto& outsigs = tx.signatures.back();
 
     for (const auto& key : msrc.keys) {
-      crypto::KeyDerivation derivation;
+      crypto::key_derivation_t derivation;
       crypto::PublicKey ephemeralPublicKey;
       crypto::SecretKey ephemeralSecretKey;
 

@@ -20,7 +20,7 @@ struct SecretKey {
   uint8_t data[32];
 };
 
-struct KeyDerivation {
+struct key_derivation_t {
   uint8_t data[32];
 };
 

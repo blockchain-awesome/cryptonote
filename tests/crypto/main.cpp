@@ -24,8 +24,8 @@ bool operator !=(const crypto::EllipticCurvePoint &a, const crypto::EllipticCurv
   return 0 != memcmp(&a, &b, sizeof(crypto::EllipticCurvePoint));
 }
 
-bool operator !=(const crypto::KeyDerivation &a, const crypto::KeyDerivation &b) {
-  return 0 != memcmp(&a, &b, sizeof(crypto::KeyDerivation));
+bool operator !=(const crypto::key_derivation_t &a, const crypto::key_derivation_t &b) {
+  return 0 != memcmp(&a, &b, sizeof(crypto::key_derivation_t));
 }
 
 int main(int argc, char *argv[]) {
@@ -101,7 +101,7 @@ int main(int argc, char *argv[]) {
       crypto::PublicKey key1;
       crypto::SecretKey key2;
       bool expected1, actual1;
-      crypto::KeyDerivation expected2, actual2;
+      crypto::key_derivation_t expected2, actual2;
       get(input, key1, key2, expected1);
       if (expected1) {
         get(input, expected2);
@@ -111,7 +111,7 @@ int main(int argc, char *argv[]) {
         goto error;
       }
     } else if (cmd == "derive_public_key") {
-      crypto::KeyDerivation derivation;
+      crypto::key_derivation_t derivation;
       size_t output_index;
       crypto::PublicKey base;
       bool expected1, actual1;
@@ -125,7 +125,7 @@ int main(int argc, char *argv[]) {
         goto error;
       }
     } else if (cmd == "derive_secret_key") {
-      crypto::KeyDerivation derivation;
+      crypto::key_derivation_t derivation;
       size_t output_index;
       crypto::SecretKey base;
       crypto::SecretKey expected, actual;
@@ -135,7 +135,7 @@ int main(int argc, char *argv[]) {
         goto error;
       }
     } else if (cmd == "underive_public_key") {
-      crypto::KeyDerivation derivation;
+      crypto::key_derivation_t derivation;
       size_t output_index;
       crypto::PublicKey derived_key;
       bool expected1, actual1;
