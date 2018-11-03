@@ -106,7 +106,7 @@ namespace cryptonote {
 
     void invalidateHash();
 
-    std::vector<Signature>& getSignatures(size_t input);
+    std::vector<signature_t>& getSignatures(size_t input);
 
     const SecretKey& txSecretKey() const {
       if (!secretKey) {
@@ -317,7 +317,7 @@ namespace cryptonote {
     const auto& input = boost::get<KeyInput>(getInputChecked(transaction, index, TransactionTypes::InputType::Key));
     Hash prefixHash = getTransactionPrefixHash();
 
-    std::vector<Signature> signatures;
+    std::vector<signature_t> signatures;
     std::vector<const PublicKey*> keysPtrs;
 
     for (const auto& o : info.outputs) {
@@ -353,7 +353,7 @@ namespace cryptonote {
     derive_secret_key(derivation, outputIndex,
       reinterpret_cast<const SecretKey&>(accountKeys.spendSecretKey), ephemeralSecretKey);
 
-    Signature signature;
+    signature_t signature;
     auto txPrefixHash = getTransactionPrefixHash();
 
     generate_signature(reinterpret_cast<const Hash&>(txPrefixHash),
@@ -364,7 +364,7 @@ namespace cryptonote {
   }
 
   void TransactionImpl::signInputMultisignature(size_t index, const KeyPair& ephemeralKeys) {
-    Signature signature;
+    signature_t signature;
     auto txPrefixHash = getTransactionPrefixHash();
 
     generate_signature(txPrefixHash, ephemeralKeys.publicKey, ephemeralKeys.secretKey, signature);
@@ -373,7 +373,7 @@ namespace cryptonote {
     invalidateHash();
   }
 
-  std::vector<Signature>& TransactionImpl::getSignatures(size_t input) {
+  std::vector<signature_t>& TransactionImpl::getSignatures(size_t input) {
     // update signatures container size if needed
     if (transaction.signatures.size() < transaction.inputs.size()) {
       transaction.signatures.resize(transaction.inputs.size());

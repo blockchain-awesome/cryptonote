@@ -87,8 +87,8 @@ namespace
           keys_ptrs.push_back(&o.second);
         }
 
-        m_tx.signatures.push_back(std::vector<crypto::Signature>());
-        std::vector<crypto::Signature>& sigs = m_tx.signatures.back();
+        m_tx.signatures.push_back(std::vector<crypto::signature_t>());
+        std::vector<crypto::signature_t>& sigs = m_tx.signatures.back();
         sigs.resize(src_entr.outputs.size());
         generate_ring_signature(m_tx_prefix_hash, boost::get<KeyInput>(m_tx.inputs[i]).keyImage,
           keys_ptrs, m_in_contexts[i].secretKey, src_entr.realOutput, sigs.data());
@@ -453,7 +453,7 @@ bool gen_tx_key_image_not_derive_from_tx_key::generate(std::vector<test_event_en
   // Tx with invalid key image can't be subscribed, so create empty signature
   builder.m_tx.signatures.resize(1);
   builder.m_tx.signatures[0].resize(1);
-  builder.m_tx.signatures[0][0] = boost::value_initialized<crypto::Signature>();
+  builder.m_tx.signatures[0][0] = boost::value_initialized<crypto::signature_t>();
 
   DO_CALLBACK(events, "mark_invalid_tx");
   events.push_back(builder.m_tx);
@@ -487,7 +487,7 @@ bool gen_tx_key_image_is_invalid::generate(std::vector<test_event_entry>& events
   // Tx with invalid key image can't be subscribed, so create empty signature
   builder.m_tx.signatures.resize(1);
   builder.m_tx.signatures[0].resize(1);
-  builder.m_tx.signatures[0][0] = boost::value_initialized<crypto::Signature>();
+  builder.m_tx.signatures[0][0] = boost::value_initialized<crypto::signature_t>();
 
   DO_CALLBACK(events, "mark_invalid_tx");
   events.push_back(builder.m_tx);
@@ -642,13 +642,13 @@ bool gen_tx_signatures_are_invalid::generate(std::vector<test_event_entry>& even
   // Tx with nmix = 0 have a few inputs, and not enough signatures
   DO_CALLBACK(events, "mark_invalid_tx");
   sr_tx = toBinaryArray(tx_0);
-  sr_tx.resize(sr_tx.size() - sizeof(crypto::Signature));
+  sr_tx.resize(sr_tx.size() - sizeof(crypto::signature_t));
   events.push_back(serialized_transaction(sr_tx));
 
   // Tx with nmix = 0 have a few inputs, and too many signatures
   DO_CALLBACK(events, "mark_invalid_tx");
   sr_tx = toBinaryArray(tx_0);
-  sr_tx.insert(sr_tx.end(), sr_tx.end() - sizeof(crypto::Signature), sr_tx.end());
+  sr_tx.insert(sr_tx.end(), sr_tx.end() - sizeof(crypto::signature_t), sr_tx.end());
   events.push_back(serialized_transaction(sr_tx));
 
   // Tx with nmix = 1 without signatures
@@ -659,13 +659,13 @@ bool gen_tx_signatures_are_invalid::generate(std::vector<test_event_entry>& even
   // Tx with nmix = 1 have not enough signatures
   DO_CALLBACK(events, "mark_invalid_tx");
   sr_tx = toBinaryArray(tx_1);
-  sr_tx.resize(sr_tx.size() - sizeof(crypto::Signature));
+  sr_tx.resize(sr_tx.size() - sizeof(crypto::signature_t));
   events.push_back(serialized_transaction(sr_tx));
 
   // Tx with nmix = 1 have too many signatures
   DO_CALLBACK(events, "mark_invalid_tx");
   sr_tx = toBinaryArray(tx_1);
-  sr_tx.insert(sr_tx.end(), sr_tx.end() - sizeof(crypto::Signature), sr_tx.end());
+  sr_tx.insert(sr_tx.end(), sr_tx.end() - sizeof(crypto::signature_t), sr_tx.end());
   events.push_back(serialized_transaction(sr_tx));
 
   return true;
@@ -845,7 +845,7 @@ bool MultiSigTx_Input::generate(std::vector<test_event_entry>& events) const {
     const auto& pk = m_outputAccounts[i].getAccountKeys().address.spendPublicKey;
     const auto& sk = m_outputAccounts[i].getAccountKeys().spendSecretKey;
 
-    crypto::Signature sig;
+    crypto::signature_t sig;
     crypto::generate_signature(builder.m_tx_prefix_hash, pk, sk, sig);
     outsigs.push_back(sig);
   }
@@ -886,7 +886,7 @@ bool MultiSigTx_BadInputSignature::generate(std::vector<test_event_entry>& event
   *reinterpret_cast<uint16_t*>(&badHash) = 0xdead;
 
   // sign the hash
-  crypto::Signature sig;
+  crypto::signature_t sig;
   crypto::generate_signature(badHash, pk, sk, sig);
   outsigs.push_back(sig);
 

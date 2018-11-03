@@ -161,8 +161,8 @@ void TransactionBuilder::signSources(const crypto::Hash& prefixHash, const std::
       keys_ptrs.push_back(&o.second);
     }
 
-    tx.signatures.push_back(std::vector<crypto::Signature>());
-    std::vector<crypto::Signature>& sigs = tx.signatures.back();
+    tx.signatures.push_back(std::vector<crypto::signature_t>());
+    std::vector<crypto::signature_t>& sigs = tx.signatures.back();
     sigs.resize(src_entr.outputs.size());
     generate_ring_signature(prefixHash, boost::get<KeyInput>(tx.inputs[i]).keyImage, keys_ptrs, contexts[i].secretKey, src_entr.realOutput, sigs.data());
     i++;
@@ -182,7 +182,7 @@ void TransactionBuilder::signSources(const crypto::Hash& prefixHash, const std::
       crypto::derive_public_key(derivation, msrc.srcOutputIndex, key.address.spendPublicKey, ephemeralPublicKey);
       crypto::derive_secret_key(derivation, msrc.srcOutputIndex, key.spendSecretKey, ephemeralSecretKey);
 
-      crypto::Signature sig;
+      crypto::signature_t sig;
       crypto::generate_signature(prefixHash, ephemeralPublicKey, ephemeralSecretKey, sig);
       outsigs.push_back(sig);
     }

@@ -58,7 +58,7 @@ struct TransactionPrefix
 
 struct Transaction : public TransactionPrefix
 {
-    std::vector<std::vector<crypto::Signature>> signatures;
+    std::vector<std::vector<crypto::signature_t>> signatures;
 };
 
 } // namespace cryptonote

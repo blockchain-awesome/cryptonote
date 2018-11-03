@@ -152,7 +152,7 @@ int main(int argc, char *argv[]) {
       chash prefix_hash;
       crypto::PublicKey pub;
       crypto::SecretKey sec;
-      crypto::Signature expected, actual;
+      crypto::signature_t expected, actual;
       get(input, prefix_hash, pub, sec, expected);
       generate_signature(prefix_hash, pub, sec, actual);
       if (expected != actual) {
@@ -161,7 +161,7 @@ int main(int argc, char *argv[]) {
     } else if (cmd == "check_signature") {
       chash prefix_hash;
       crypto::PublicKey pub;
-      crypto::Signature sig;
+      crypto::signature_t sig;
       bool expected, actual;
       get(input, prefix_hash, pub, sig, expected);
       actual = check_signature(prefix_hash, pub, sig);
@@ -201,7 +201,7 @@ int main(int argc, char *argv[]) {
       size_t pubs_count;
       crypto::SecretKey sec;
       size_t sec_index;
-      vector<crypto::Signature> expected, actual;
+      vector<crypto::signature_t> expected, actual;
       size_t i;
       get(input, prefix_hash, image, pubs_count);
       vpubs.resize(pubs_count);
@@ -212,7 +212,7 @@ int main(int argc, char *argv[]) {
       }
       get(input, sec, sec_index);
       expected.resize(pubs_count);
-      getvar(input, pubs_count * sizeof(crypto::Signature), expected.data());
+      getvar(input, pubs_count * sizeof(crypto::signature_t), expected.data());
       actual.resize(pubs_count);
       generate_ring_signature(prefix_hash, image, pubs.data(), pubs_count, sec, sec_index, actual.data());
       if (expected != actual) {
@@ -224,7 +224,7 @@ int main(int argc, char *argv[]) {
       vector<crypto::PublicKey> vpubs;
       vector<const crypto::PublicKey *> pubs;
       size_t pubs_count;
-      vector<crypto::Signature> sigs;
+      vector<crypto::signature_t> sigs;
       bool expected, actual;
       size_t i;
       get(input, prefix_hash, image, pubs_count);
@@ -235,7 +235,7 @@ int main(int argc, char *argv[]) {
         pubs[i] = &vpubs[i];
       }
       sigs.resize(pubs_count);
-      getvar(input, pubs_count * sizeof(crypto::Signature), sigs.data());
+      getvar(input, pubs_count * sizeof(crypto::signature_t), sigs.data());
       get(input, expected);
       actual = check_ring_signature(prefix_hash, image, pubs.data(), pubs_count, sigs.data());
       if (expected != actual) {

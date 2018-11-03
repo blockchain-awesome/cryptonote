@@ -185,7 +185,7 @@ namespace cryptonote
   {
     PeerIdType peer_id;
     uint64_t    time;
-    crypto::Signature sign;
+    crypto::signature_t sign;
 
     void serialize(ISerializer& s) {
       KV_MEMBER(peer_id)

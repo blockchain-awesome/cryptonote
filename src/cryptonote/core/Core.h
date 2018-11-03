@@ -146,7 +146,7 @@ namespace cryptonote {
 
      bool is_key_image_spent(const crypto::KeyImage& key_im);
 
-     bool check_tx_ring_signature(const KeyInput& tx, const crypto::Hash& tx_prefix_hash, const std::vector<crypto::Signature>& sig);
+     bool check_tx_ring_signature(const KeyInput& tx, const crypto::Hash& tx_prefix_hash, const std::vector<crypto::signature_t>& sig);
      bool is_tx_spendtime_unlocked(uint64_t unlock_time);
      bool update_miner_block_template();
      bool on_update_blocktemplate_interval();

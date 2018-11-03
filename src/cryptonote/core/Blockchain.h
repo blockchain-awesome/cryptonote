@@ -223,7 +223,7 @@ namespace cryptonote {
     std::vector<crypto::Hash> doBuildSparseChain(const crypto::Hash& startBlockId) const;
     bool getBlockCumulativeSize(const block_t& block, size_t& cumulativeSize);
     bool update_next_comulative_size_limit();
-    bool check_tx_input(const KeyInput& txin, const crypto::Hash& tx_prefix_hash, const std::vector<crypto::Signature>& sig, uint32_t* pmax_related_block_height = NULL);
+    bool check_tx_input(const KeyInput& txin, const crypto::Hash& tx_prefix_hash, const std::vector<crypto::signature_t>& sig, uint32_t* pmax_related_block_height = NULL);
     bool checkTransactionInputs(const Transaction& tx, const crypto::Hash& tx_prefix_hash, uint32_t* pmax_used_block_height = NULL);
     bool checkTransactionInputs(const Transaction& tx, uint32_t* pmax_used_block_height = NULL);
     bool have_tx_keyimg_as_spent(const crypto::KeyImage &key_im);
@@ -235,7 +235,7 @@ namespace cryptonote {
     bool pushTransaction(BlockEntry& block, const crypto::Hash& transactionHash, TransactionIndex transactionIndex);
     void popTransaction(const Transaction& transaction, const crypto::Hash& transactionHash);
     void popTransactions(const BlockEntry& block, const crypto::Hash& minerTransactionHash);
-    bool validateInput(const MultisignatureInput& input, const crypto::Hash& transactionHash, const crypto::Hash& transactionPrefixHash, const std::vector<crypto::Signature>& transactionSignatures);
+    bool validateInput(const MultisignatureInput& input, const crypto::Hash& transactionHash, const crypto::Hash& transactionPrefixHash, const std::vector<crypto::signature_t>& transactionSignatures);
 
     bool storeBlockchainIndices();
     bool loadBlockchainIndices();

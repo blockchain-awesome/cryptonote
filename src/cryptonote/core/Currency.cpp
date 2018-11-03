@@ -421,7 +421,7 @@ size_t Currency::getApproximateMaximumInputCount(size_t transactionSize, size_t 
   const size_t GLOBAL_INDEXES_VECTOR_SIZE_SIZE = sizeof(uint8_t);//varint
   const size_t GLOBAL_INDEXES_INITIAL_VALUE_SIZE = sizeof(uint32_t);//varint
   const size_t GLOBAL_INDEXES_DIFFERENCE_SIZE = sizeof(uint32_t);//varint
-  const size_t SIGNATURE_SIZE = sizeof(crypto::Signature);
+  const size_t SIGNATURE_SIZE = sizeof(crypto::signature_t);
   const size_t EXTRA_TAG_SIZE = sizeof(uint8_t);
   const size_t INPUT_TAG_SIZE = sizeof(uint8_t);
   const size_t OUTPUT_TAG_SIZE = sizeof(uint8_t);

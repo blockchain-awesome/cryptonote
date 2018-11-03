@@ -173,13 +173,13 @@ void serialize(Transaction& tx, ISerializer& serializer) {
         throw std::runtime_error("Serialization error: unexpected signatures size");
       }
 
-      for (crypto::Signature& sig : tx.signatures[i]) {
+      for (crypto::signature_t& sig : tx.signatures[i]) {
         serializePod(sig, "", serializer);
       }
 
     } else {
-      std::vector<crypto::Signature> signatures(signatureSize);
-      for (crypto::Signature& sig : signatures) {
+      std::vector<crypto::signature_t> signatures(signatureSize);
+      for (crypto::signature_t& sig : signatures) {
         serializePod(sig, "", serializer);
       }
 

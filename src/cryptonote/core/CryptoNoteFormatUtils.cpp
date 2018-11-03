@@ -225,8 +225,8 @@ bool constructTransaction(
       keys_ptrs.push_back(&o.second);
     }
 
-    tx.signatures.push_back(std::vector<Signature>());
-    std::vector<Signature>& sigs = tx.signatures.back();
+    tx.signatures.push_back(std::vector<signature_t>());
+    std::vector<signature_t>& sigs = tx.signatures.back();
     sigs.resize(src_entr.outputs.size());
     generate_ring_signature(tx_prefix_hash, boost::get<KeyInput>(tx.inputs[i]).keyImage, keys_ptrs,
       in_contexts[i].in_ephemeral.secretKey, src_entr.realOutput, sigs.data());

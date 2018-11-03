@@ -12,7 +12,7 @@ class TransactionBuilder {
 public:
 
   typedef std::vector<cryptonote::AccountKeys> KeysVector;
-  typedef std::vector<crypto::Signature> SignatureVector;
+  typedef std::vector<crypto::signature_t> SignatureVector;
   typedef std::vector<SignatureVector> SignatureMultivector;
 
   struct MultisignatureSource {

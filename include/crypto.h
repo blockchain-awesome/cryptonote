@@ -28,7 +28,7 @@ struct KeyImage {
   uint8_t data[32];
 };
 
-struct Signature {
+struct signature_t {
   uint8_t data[64];
 };
 

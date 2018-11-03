@@ -27,7 +27,7 @@ bool serialize(SecretKey &secKey, Common::StringView name, cryptonote::ISerializ
 bool serialize(Hash &h, Common::StringView name, cryptonote::ISerializer &serializer);
 bool serialize(chacha_iv &chacha, Common::StringView name, cryptonote::ISerializer &serializer);
 bool serialize(KeyImage &keyImage, Common::StringView name, cryptonote::ISerializer &serializer);
-bool serialize(Signature &sig, Common::StringView name, cryptonote::ISerializer &serializer);
+bool serialize(signature_t &sig, Common::StringView name, cryptonote::ISerializer &serializer);
 bool serialize(EllipticCurveScalar &ecScalar, Common::StringView name, cryptonote::ISerializer &serializer);
 bool serialize(EllipticCurvePoint &ecPoint, Common::StringView name, cryptonote::ISerializer &serializer);
 
@@ -35,6 +35,6 @@ inline std::ostream &operator<<(std::ostream &o, const crypto::PublicKey &v) { r
 inline std::ostream &operator<<(std::ostream &o, const crypto::SecretKey &v) { return print256(o, v); }
 inline std::ostream &operator<<(std::ostream &o, const crypto::KeyDerivation &v) { return print256(o, v); }
 inline std::ostream &operator<<(std::ostream &o, const crypto::KeyImage &v) { return print256(o, v); }
-inline std::ostream &operator<<(std::ostream &o, const crypto::Signature &v) { return print256(o, v); }
+inline std::ostream &operator<<(std::ostream &o, const crypto::signature_t &v) { return print256(o, v); }
 inline std::ostream &operator<<(std::ostream &o, const crypto::Hash &v) { return print256(o, v); }
 } // namespace crypto

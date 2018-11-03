@@ -230,7 +230,7 @@ namespace crypto {
     EllipticCurvePoint comm;
   };
 
-  void crypto_ops::generate_signature(const Hash &prefix_hash, const PublicKey &pub, const SecretKey &sec, Signature &sig) {
+  void crypto_ops::generate_signature(const Hash &prefix_hash, const PublicKey &pub, const SecretKey &sec, signature_t &sig) {
     lock_guard<mutex> lock(random_lock);
     ge_p3 tmp3;
     EllipticCurveScalar k;
@@ -254,7 +254,7 @@ namespace crypto {
     sc_mulsub(reinterpret_cast<unsigned char*>(&sig) + 32, reinterpret_cast<unsigned char*>(&sig), reinterpret_cast<const unsigned char*>(&sec), reinterpret_cast<unsigned char*>(&k));
   }
 
-  bool crypto_ops::check_signature(const Hash &prefix_hash, const PublicKey &pub, const Signature &sig) {
+  bool crypto_ops::check_signature(const Hash &prefix_hash, const PublicKey &pub, const signature_t &sig) {
     ge_p2 tmp2;
     ge_p3 tmp3;
     EllipticCurveScalar c;
@@ -330,7 +330,7 @@ namespace crypto {
   void crypto_ops::generate_ring_signature(const Hash &prefix_hash, const KeyImage &image,
     const PublicKey *const *pubs, size_t pubs_count,
     const SecretKey &sec, size_t sec_index,
-    Signature *sig) {
+    signature_t *sig) {
     lock_guard<mutex> lock(random_lock);
     size_t i;
     ge_p3 image_unp;
@@ -391,7 +391,7 @@ namespace crypto {
 
   bool crypto_ops::check_ring_signature(const Hash &prefix_hash, const KeyImage &image,
     const PublicKey *const *pubs, size_t pubs_count,
-    const Signature *sig) {
+    const signature_t *sig) {
     size_t i;
     ge_p3 image_unp;
     ge_dsmp image_pre;

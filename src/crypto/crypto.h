@@ -63,22 +63,22 @@ struct EllipticCurveScalar {
     friend bool underive_public_key(const KeyDerivation &, size_t, const PublicKey &, PublicKey &);
     static bool underive_public_key(const KeyDerivation &, size_t, const PublicKey &, const uint8_t*, size_t, PublicKey &);
     friend bool underive_public_key(const KeyDerivation &, size_t, const PublicKey &, const uint8_t*, size_t, PublicKey &);
-    static void generate_signature(const Hash &, const PublicKey &, const SecretKey &, Signature &);
-    friend void generate_signature(const Hash &, const PublicKey &, const SecretKey &, Signature &);
-    static bool check_signature(const Hash &, const PublicKey &, const Signature &);
-    friend bool check_signature(const Hash &, const PublicKey &, const Signature &);
+    static void generate_signature(const Hash &, const PublicKey &, const SecretKey &, signature_t &);
+    friend void generate_signature(const Hash &, const PublicKey &, const SecretKey &, signature_t &);
+    static bool check_signature(const Hash &, const PublicKey &, const signature_t &);
+    friend bool check_signature(const Hash &, const PublicKey &, const signature_t &);
     static void generate_key_image(const PublicKey &, const SecretKey &, KeyImage &);
     friend void generate_key_image(const PublicKey &, const SecretKey &, KeyImage &);
     static void hash_data_to_ec(const uint8_t*, std::size_t, PublicKey&);
     friend void hash_data_to_ec(const uint8_t*, std::size_t, PublicKey&);
     static void generate_ring_signature(const Hash &, const KeyImage &,
-      const PublicKey *const *, size_t, const SecretKey &, size_t, Signature *);
+      const PublicKey *const *, size_t, const SecretKey &, size_t, signature_t *);
     friend void generate_ring_signature(const Hash &, const KeyImage &,
-      const PublicKey *const *, size_t, const SecretKey &, size_t, Signature *);
+      const PublicKey *const *, size_t, const SecretKey &, size_t, signature_t *);
     static bool check_ring_signature(const Hash &, const KeyImage &,
-      const PublicKey *const *, size_t, const Signature *);
+      const PublicKey *const *, size_t, const signature_t *);
     friend bool check_ring_signature(const Hash &, const KeyImage &,
-      const PublicKey *const *, size_t, const Signature *);
+      const PublicKey *const *, size_t, const signature_t *);
   };
 
   /* Generate a value filled with random bytes.
@@ -189,10 +189,10 @@ struct EllipticCurveScalar {
 
   /* Generation and checking of a standard signature.
    */
-  inline void generate_signature(const Hash &prefix_hash, const PublicKey &pub, const SecretKey &sec, Signature &sig) {
+  inline void generate_signature(const Hash &prefix_hash, const PublicKey &pub, const SecretKey &sec, signature_t &sig) {
     crypto_ops::generate_signature(prefix_hash, pub, sec, sig);
   }
-  inline bool check_signature(const Hash &prefix_hash, const PublicKey &pub, const Signature &sig) {
+  inline bool check_signature(const Hash &prefix_hash, const PublicKey &pub, const signature_t &sig) {
     return crypto_ops::check_signature(prefix_hash, pub, sig);
   }
 
@@ -213,12 +213,12 @@ struct EllipticCurveScalar {
   inline void generate_ring_signature(const Hash &prefix_hash, const KeyImage &image,
     const PublicKey *const *pubs, std::size_t pubs_count,
     const SecretKey &sec, std::size_t sec_index,
-    Signature *sig) {
+    signature_t *sig) {
     crypto_ops::generate_ring_signature(prefix_hash, image, pubs, pubs_count, sec, sec_index, sig);
   }
   inline bool check_ring_signature(const Hash &prefix_hash, const KeyImage &image,
     const PublicKey *const *pubs, size_t pubs_count,
-    const Signature *sig) {
+    const signature_t *sig) {
     return crypto_ops::check_ring_signature(prefix_hash, image, pubs, pubs_count, sig);
   }
 
@@ -227,12 +227,12 @@ struct EllipticCurveScalar {
   inline void generate_ring_signature(const Hash &prefix_hash, const KeyImage &image,
     const std::vector<const PublicKey *> &pubs,
     const SecretKey &sec, size_t sec_index,
-    Signature *sig) {
+    signature_t *sig) {
     generate_ring_signature(prefix_hash, image, pubs.data(), pubs.size(), sec, sec_index, sig);
   }
   inline bool check_ring_signature(const Hash &prefix_hash, const KeyImage &image,
     const std::vector<const PublicKey *> &pubs,
-    const Signature *sig) {
+    const signature_t *sig) {
     return check_ring_signature(prefix_hash, image, pubs.data(), pubs.size(), sig);
   }
 
@@ -240,5 +240,5 @@ struct EllipticCurveScalar {
 
 CRYPTO_MAKE_HASHABLE(PublicKey)
 CRYPTO_MAKE_HASHABLE(KeyImage)
-CRYPTO_MAKE_COMPARABLE(Signature)
+CRYPTO_MAKE_COMPARABLE(signature_t)
 CRYPTO_MAKE_COMPARABLE(SecretKey)

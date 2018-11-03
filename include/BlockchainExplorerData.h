@@ -89,7 +89,7 @@ struct TransactionDetails {
   crypto::Hash blockHash;
   uint32_t blockHeight;
   TransactionExtraDetails extra;
-  std::vector<std::vector<crypto::Signature>> signatures;
+  std::vector<std::vector<crypto::signature_t>> signatures;
   std::vector<TransactionInputDetails> inputs;
   std::vector<TransactionOutputDetails> outputs;
 };

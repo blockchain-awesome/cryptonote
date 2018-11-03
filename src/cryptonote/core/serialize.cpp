@@ -26,7 +26,7 @@ bool serialize(chacha_iv& chacha, Common::StringView name, cryptonote::ISerializ
   return serializePod(chacha, name, serializer);
 }
 
-bool serialize(Signature& sig, Common::StringView name, cryptonote::ISerializer& serializer) {
+bool serialize(signature_t& sig, Common::StringView name, cryptonote::ISerializer& serializer) {
   return serializePod(sig, name, serializer);
 }
 

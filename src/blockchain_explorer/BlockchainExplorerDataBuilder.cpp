@@ -243,10 +243,10 @@ bool BlockchainExplorerDataBuilder::fillTransactionDetails(const Transaction& tr
   fillTxExtra(transaction.extra, transactionDetails.extra);
 
   transactionDetails.signatures.reserve(transaction.signatures.size());
-  for (const std::vector<crypto::Signature>& signatures : transaction.signatures) {
-    std::vector<crypto::Signature> signaturesDetails;
+  for (const std::vector<crypto::signature_t>& signatures : transaction.signatures) {
+    std::vector<crypto::signature_t> signaturesDetails;
     signaturesDetails.reserve(signatures.size());
-    for (const crypto::Signature& signature : signatures) {
+    for (const crypto::signature_t& signature : signatures) {
       signaturesDetails.push_back(std::move(signature));
     }
     transactionDetails.signatures.push_back(std::move(signaturesDetails));
