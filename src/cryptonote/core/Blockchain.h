@@ -16,7 +16,7 @@
 #include "cryptonote/core/blockchain/serializer/exports.h"
 #include "cryptonote/core/IBlockchainStorageObserver.h"
 #include "cryptonote/core/ITransactionValidator.h"
-#include "cryptonote/core/SwappedVector.h"
+#include "cryptonote/core/blockchain/block.hpp"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/tx_memory_pool.h"
 #include "cryptonote/core/blockchain/indexing/exports.h"
@@ -182,7 +182,7 @@ namespace cryptonote {
     Checkpoints m_checkpoints;
     std::atomic<bool> m_is_in_checkpoint_zone;
 
-    typedef SwappedVector<BlockEntry> Blocks;
+    typedef BlockAccessor<BlockEntry> Blocks;
     typedef std::unordered_map<crypto::hash_t, uint32_t> BlockMap;
     typedef std::unordered_map<crypto::hash_t, TransactionIndex> TransactionMap;
 

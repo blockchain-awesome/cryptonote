@@ -19,7 +19,7 @@
 #include "serialization/BinaryInputStreamSerializer.h"
 #include "serialization/BinaryOutputStreamSerializer.h"
 
-template<class T> class SwappedVector {
+template<class T> class BlockAccessor {
 public:
   typedef T value_type;
 
@@ -34,7 +34,7 @@ public:
     const_iterator() {
     }
 
-    const_iterator(SwappedVector* swappedVector, size_t index) : m_swappedVector(swappedVector), m_index(index) {
+    const_iterator(BlockAccessor* swappedVector, size_t index) : m_swappedVector(swappedVector), m_index(index) {
     }
 
     bool operator!=(const const_iterator& other) const {
@@ -126,14 +126,14 @@ public:
     }
 
   private:
-    SwappedVector* m_swappedVector;
+    BlockAccessor* m_swappedVector;
     size_t m_index;
   };
 
-  SwappedVector();
-  //SwappedVector(const SwappedVector&) = delete;
-  ~SwappedVector();
-  //SwappedVector& operator=(const SwappedVector&) = delete;
+  BlockAccessor();
+  //BlockAccessor(const BlockAccessor&) = delete;
+  ~BlockAccessor();
+  //BlockAccessor& operator=(const BlockAccessor&) = delete;
 
   bool open(const std::string& itemFileName, const std::string& indexFileName, size_t poolSize);
   void close();
@@ -177,14 +177,14 @@ private:
   T* prepare(uint64_t index);
 };
 
-template<class T> SwappedVector<T>::SwappedVector() {
+template<class T> BlockAccessor<T>::BlockAccessor() {
 }
 
-template<class T> SwappedVector<T>::~SwappedVector() {
+template<class T> BlockAccessor<T>::~BlockAccessor() {
   close();
 }
 
-template<class T> bool SwappedVector<T>::open(const std::string& itemFileName, const std::string& indexFileName, size_t poolSize) {
+template<class T> bool BlockAccessor<T>::open(const std::string& itemFileName, const std::string& indexFileName, size_t poolSize) {
   if (poolSize == 0) {
     return false;
   }
@@ -238,27 +238,27 @@ template<class T> bool SwappedVector<T>::open(const std::string& itemFileName, c
   return true;
 }
 
-template<class T> void SwappedVector<T>::close() {
-  std::cout << "SwappedVector cache hits: " << m_cacheHits << ", misses: " << m_cacheMisses << " (" << std::fixed << std::setprecision(2) << static_cast<double>(m_cacheMisses) / (m_cacheHits + m_cacheMisses) * 100 << "%)" << std::endl;
+template<class T> void BlockAccessor<T>::close() {
+  std::cout << "BlockAccessor cache hits: " << m_cacheHits << ", misses: " << m_cacheMisses << " (" << std::fixed << std::setprecision(2) << static_cast<double>(m_cacheMisses) / (m_cacheHits + m_cacheMisses) * 100 << "%)" << std::endl;
 }
 
-template<class T> bool SwappedVector<T>::empty() const {
+template<class T> bool BlockAccessor<T>::empty() const {
   return m_offsets.empty();
 }
 
-template<class T> uint64_t SwappedVector<T>::size() const {
+template<class T> uint64_t BlockAccessor<T>::size() const {
   return m_offsets.size();
 }
 
-template<class T> typename SwappedVector<T>::const_iterator SwappedVector<T>::begin() {
+template<class T> typename BlockAccessor<T>::const_iterator BlockAccessor<T>::begin() {
   return const_iterator(this, 0);
 }
 
-template<class T> typename SwappedVector<T>::const_iterator SwappedVector<T>::end() {
+template<class T> typename BlockAccessor<T>::const_iterator BlockAccessor<T>::end() {
   return const_iterator(this, m_offsets.size());
 }
 
-template<class T> const T& SwappedVector<T>::operator[](uint64_t index) {
+template<class T> const T& BlockAccessor<T>::operator[](uint64_t index) {
   auto itemIter = m_items.find(index);
   if (itemIter != m_items.end()) {
     if (itemIter->second.cacheIter != --m_cache.end()) {
@@ -270,11 +270,11 @@ template<class T> const T& SwappedVector<T>::operator[](uint64_t index) {
   }
 
   if (index >= m_offsets.size()) {
-    throw std::runtime_error("SwappedVector::operator[]");
+    throw std::runtime_error("BlockAccessor::operator[]");
   }
 
   if (!m_itemsFile) {
-    throw std::runtime_error("SwappedVector::operator[]");
+    throw std::runtime_error("BlockAccessor::operator[]");
   }
 
   m_itemsFile.seekg(m_offsets[index]);
@@ -290,24 +290,24 @@ template<class T> const T& SwappedVector<T>::operator[](uint64_t index) {
   return *item;
 }
 
-template<class T> const T& SwappedVector<T>::front() {
+template<class T> const T& BlockAccessor<T>::front() {
   return operator[](0);
 }
 
-template<class T> const T& SwappedVector<T>::back() {
+template<class T> const T& BlockAccessor<T>::back() {
   return operator[](m_offsets.size() - 1);
 }
 
-template<class T> void SwappedVector<T>::clear() {
+template<class T> void BlockAccessor<T>::clear() {
   if (!m_indexesFile) {
-    throw std::runtime_error("SwappedVector::clear");
+    throw std::runtime_error("BlockAccessor::clear");
   }
 
   m_indexesFile.seekp(0);
   uint64_t count = 0;
   m_indexesFile.write(reinterpret_cast<char*>(&count), sizeof count);
   if (!m_indexesFile) {
-    throw std::runtime_error("SwappedVector::clear");
+    throw std::runtime_error("BlockAccessor::clear");
   }
 
   m_offsets.clear();
@@ -316,16 +316,16 @@ template<class T> void SwappedVector<T>::clear() {
   m_cache.clear();
 }
 
-template<class T> void SwappedVector<T>::pop_back() {
+template<class T> void BlockAccessor<T>::pop_back() {
   if (!m_indexesFile) {
-    throw std::runtime_error("SwappedVector::pop_back");
+    throw std::runtime_error("BlockAccessor::pop_back");
   }
 
   m_indexesFile.seekp(0);
   uint64_t count = m_offsets.size() - 1;
   m_indexesFile.write(reinterpret_cast<char*>(&count), sizeof count);
   if (!m_indexesFile) {
-    throw std::runtime_error("SwappedVector::pop_back");
+    throw std::runtime_error("BlockAccessor::pop_back");
   }
 
   m_itemsFileSize = m_offsets.back();
@@ -337,12 +337,12 @@ template<class T> void SwappedVector<T>::pop_back() {
   }
 }
 
-template<class T> void SwappedVector<T>::push_back(const T& item) {
+template<class T> void BlockAccessor<T>::push_back(const T& item) {
   uint64_t itemsFileSize;
 
   {
     if (!m_itemsFile) {
-      throw std::runtime_error("SwappedVector::push_back");
+      throw std::runtime_error("BlockAccessor::push_back");
     }
 
     m_itemsFile.seekp(m_itemsFileSize);
@@ -356,21 +356,21 @@ template<class T> void SwappedVector<T>::push_back(const T& item) {
 
   {
     if (!m_indexesFile) {
-      throw std::runtime_error("SwappedVector::push_back");
+      throw std::runtime_error("BlockAccessor::push_back");
     }
 
     m_indexesFile.seekp(sizeof(uint64_t) + sizeof(uint32_t) * m_offsets.size());
     uint32_t itemSize = static_cast<uint32_t>(itemsFileSize - m_itemsFileSize);
     m_indexesFile.write(reinterpret_cast<char*>(&itemSize), sizeof itemSize);
     if (!m_indexesFile) {
-      throw std::runtime_error("SwappedVector::push_back");
+      throw std::runtime_error("BlockAccessor::push_back");
     }
 
     m_indexesFile.seekp(0);
     uint64_t count = m_offsets.size() + 1;
     m_indexesFile.write(reinterpret_cast<char*>(&count), sizeof count);
     if (!m_indexesFile) {
-      throw std::runtime_error("SwappedVector::push_back");
+      throw std::runtime_error("BlockAccessor::push_back");
     }
   }
 
@@ -381,7 +381,7 @@ template<class T> void SwappedVector<T>::push_back(const T& item) {
   *newItem = item;
 }
 
-template<class T> T* SwappedVector<T>::prepare(uint64_t index) {
+template<class T> T* BlockAccessor<T>::prepare(uint64_t index) {
   if (m_items.size() == m_poolSize) {
     auto cacheIter = m_cache.begin();
     m_items.erase(cacheIter->itemIter);
