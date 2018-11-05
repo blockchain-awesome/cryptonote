@@ -13,7 +13,7 @@ namespace boost
   namespace serialization
   {
     template <class Archive>
-    inline void serialize(Archive &a, cryptonote::AccountKeys &x, const boost::serialization::version_type ver)
+    inline void serialize(Archive &a, cryptonote::account_keys_t &x, const boost::serialization::version_type ver)
     {
       a & x.address;
       a & x.spendSecretKey;
@@ -21,7 +21,7 @@ namespace boost
     }
 
     template <class Archive>
-    inline void serialize(Archive &a, cryptonote::AccountPublicAddress &x, const boost::serialization::version_type ver)
+    inline void serialize(Archive &a, cryptonote::account_public_address_t &x, const boost::serialization::version_type ver)
     {
       a & x.spendPublicKey;
       a & x.viewPublicKey;

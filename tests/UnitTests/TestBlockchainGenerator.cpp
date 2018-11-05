@@ -26,7 +26,7 @@ public:
     return base_class::init();
   }
 
-  void generate(const AccountPublicAddress& address, Transaction& tx, uint64_t unlockTime = 0)
+  void generate(const account_public_address_t& address, transaction_t& tx, uint64_t unlockTime = 0)
   {
     std::vector<cryptonote::TransactionDestinationEntry> destinations;
 
@@ -37,7 +37,7 @@ public:
     cryptonote::constructTransaction(this->m_miners[this->real_source_idx].getAccountKeys(), this->m_sources, destinations, std::vector<uint8_t>(), tx, unlockTime, m_logger);
   }
 
-  void generateSingleOutputTx(const AccountPublicAddress& address, uint64_t amount, Transaction& tx) {
+  void generateSingleOutputTx(const account_public_address_t& address, uint64_t amount, transaction_t& tx) {
     std::vector<TransactionDestinationEntry> destinations;
     destinations.push_back(TransactionDestinationEntry(amount, address));
     constructTransaction(this->m_miners[this->real_source_idx].getAccountKeys(), this->m_sources, destinations, std::vector<uint8_t>(), tx, 0, m_logger);
@@ -68,7 +68,7 @@ std::vector<cryptonote::block_t> TestBlockchainGenerator::getBlockchainCopy() {
   return blockchain;
 }
 
-bool TestBlockchainGenerator::getTransactionByHash(const crypto::hash_t& hash, cryptonote::Transaction& tx, bool checkTxPool)
+bool TestBlockchainGenerator::getTransactionByHash(const crypto::hash_t& hash, cryptonote::transaction_t& tx, bool checkTxPool)
 {
   std::unique_lock<std::mutex> lock(m_mutex);
 
@@ -107,11 +107,11 @@ void TestBlockchainGenerator::addMiningBlock() {
 
   uint64_t timestamp = time(NULL);
   cryptonote::block_t& prev_block = m_blockchain.back();
-  uint32_t height = boost::get<BaseInput>(prev_block.baseTransaction.inputs.front()).blockIndex + 1;
+  uint32_t height = boost::get<base_input_t>(prev_block.baseTransaction.inputs.front()).blockIndex + 1;
   crypto::hash_t prev_id = get_block_hash(prev_block);
 
   std::vector<size_t> block_sizes;
-  std::list<cryptonote::Transaction> tx_list;
+  std::list<cryptonote::transaction_t> tx_list;
 
   generator.constructBlock(block, height, prev_id, miner_acc, timestamp, 0, block_sizes, tx_list);
   m_blockchain.push_back(block);
@@ -138,13 +138,13 @@ void TestBlockchainGenerator::generateEmptyBlocks(size_t count)
   }
 }
 
-void TestBlockchainGenerator::addTxToBlockchain(const cryptonote::Transaction& transaction)
+void TestBlockchainGenerator::addTxToBlockchain(const cryptonote::transaction_t& transaction)
 {
   std::unique_lock<std::mutex> lock(m_mutex);
   addToBlockchain(transaction);
 }
 
-bool TestBlockchainGenerator::getBlockRewardForAddress(const cryptonote::AccountPublicAddress& address)
+bool TestBlockchainGenerator::getBlockRewardForAddress(const cryptonote::account_public_address_t& address)
 {
   std::unique_lock<std::mutex> lock(m_mutex);
 
@@ -152,22 +152,22 @@ bool TestBlockchainGenerator::getBlockRewardForAddress(const cryptonote::Account
   return true;
 }
 
-bool TestBlockchainGenerator::generateTransactionsInOneBlock(const cryptonote::AccountPublicAddress& address, size_t n) {
+bool TestBlockchainGenerator::generateTransactionsInOneBlock(const cryptonote::account_public_address_t& address, size_t n) {
   std::unique_lock<std::mutex> lock(m_mutex);
 
   return doGenerateTransactionsInOneBlock(address, n);
 }
 
-bool TestBlockchainGenerator::doGenerateTransactionsInOneBlock(const AccountPublicAddress &address, size_t n) {
+bool TestBlockchainGenerator::doGenerateTransactionsInOneBlock(const account_public_address_t &address, size_t n) {
   assert(n > 0);
 
   TransactionForAddressCreator creator;
   if (!creator.init())
     return false;
 
-  std::vector<Transaction> txs;
+  std::vector<transaction_t> txs;
   for (size_t i = 0; i < n; ++i) {
-    Transaction tx;
+    transaction_t tx;
     creator.generate(address, tx, m_blockchain.size() + 10);
     txs.push_back(tx);
   }
@@ -177,14 +177,14 @@ bool TestBlockchainGenerator::doGenerateTransactionsInOneBlock(const AccountPubl
   return true;
 }
 
-bool TestBlockchainGenerator::getSingleOutputTransaction(const cryptonote::AccountPublicAddress& address, uint64_t amount) {
+bool TestBlockchainGenerator::getSingleOutputTransaction(const cryptonote::account_public_address_t& address, uint64_t amount) {
   std::unique_lock<std::mutex> lock(m_mutex);
 
   TransactionForAddressCreator creator;
   if (!creator.init())
     return false;
 
-  cryptonote::Transaction tx;
+  cryptonote::transaction_t tx;
   creator.generateSingleOutputTx(address, amount, tx);
 
   addToBlockchain(tx);
@@ -192,16 +192,16 @@ bool TestBlockchainGenerator::getSingleOutputTransaction(const cryptonote::Accou
   return true;
 }
 
-void TestBlockchainGenerator::addToBlockchain(const cryptonote::Transaction& tx) {
-  addToBlockchain(std::vector<cryptonote::Transaction> {tx});
+void TestBlockchainGenerator::addToBlockchain(const cryptonote::transaction_t& tx) {
+  addToBlockchain(std::vector<cryptonote::transaction_t> {tx});
 }
 
-void TestBlockchainGenerator::addToBlockchain(const std::vector<cryptonote::Transaction>& txs) {
+void TestBlockchainGenerator::addToBlockchain(const std::vector<cryptonote::transaction_t>& txs) {
   addToBlockchain(txs, miner_acc);
 }
 
-void TestBlockchainGenerator::addToBlockchain(const std::vector<cryptonote::Transaction>& txs, const cryptonote::AccountBase& minerAddress) {
-  std::list<cryptonote::Transaction> txsToBlock;
+void TestBlockchainGenerator::addToBlockchain(const std::vector<cryptonote::transaction_t>& txs, const cryptonote::AccountBase& minerAddress) {
+  std::list<cryptonote::transaction_t> txsToBlock;
 
   for (const auto& tx: txs) {
     addTx(tx);
@@ -222,7 +222,7 @@ void TestBlockchainGenerator::addToBlockchain(const std::vector<cryptonote::Tran
 }
 
 void TestBlockchainGenerator::getPoolSymmetricDifference(std::vector<crypto::hash_t>&& known_pool_tx_ids, crypto::hash_t known_block_id, bool& is_bc_actual,
-  std::vector<cryptonote::Transaction>& new_txs, std::vector<crypto::hash_t>& deleted_tx_ids)
+  std::vector<cryptonote::transaction_t>& new_txs, std::vector<crypto::hash_t>& deleted_tx_ids)
 {
   std::unique_lock<std::mutex> lock(m_mutex);
 
@@ -254,7 +254,7 @@ void TestBlockchainGenerator::getPoolSymmetricDifference(std::vector<crypto::has
   deleted_tx_ids.assign(known_set.begin(), known_set.end());
 }
 
-void TestBlockchainGenerator::putTxToPool(const cryptonote::Transaction& tx) {
+void TestBlockchainGenerator::putTxToPool(const cryptonote::transaction_t& tx) {
   std::unique_lock<std::mutex> lock(m_mutex);
 
   crypto::hash_t txHash = cryptonote::getObjectHash(tx);
@@ -263,7 +263,7 @@ void TestBlockchainGenerator::putTxToPool(const cryptonote::Transaction& tx) {
 
 void TestBlockchainGenerator::putTxPoolToBlockchain() {
   std::unique_lock<std::mutex> lock(m_mutex);
-  std::vector<cryptonote::Transaction> txs;
+  std::vector<cryptonote::transaction_t> txs;
   for (auto& kv : m_txPool) {
     txs.push_back(kv.second);
   }
@@ -342,17 +342,17 @@ bool TestBlockchainGenerator::getTransactionIdsByPaymentId(const crypto::hash_t&
   return m_paymentIdIndex.find(paymentId, transactionHashes);
 }
 
-void TestBlockchainGenerator::addTx(const cryptonote::Transaction& tx) {
+void TestBlockchainGenerator::addTx(const cryptonote::transaction_t& tx) {
   crypto::hash_t txHash = getObjectHash(tx);
   m_txs[txHash] = tx;
   auto& globalIndexes = transactionGlobalOuts[txHash];
   for (uint16_t outIndex = 0; outIndex < tx.outputs.size(); ++outIndex) {
     const auto& out = tx.outputs[outIndex];
-    if (out.target.type() == typeid(KeyOutput)) {
+    if (out.target.type() == typeid(key_output_t)) {
       auto& keyOutsContainer = keyOutsIndex[out.amount];
       globalIndexes.push_back(static_cast<uint32_t>(keyOutsContainer.size()));
       keyOutsContainer.push_back({ txHash, outIndex });
-    } else if (out.target.type() == typeid(MultisignatureOutput)) {
+    } else if (out.target.type() == typeid(multi_signature_output_t)) {
       auto& msigOutsContainer = multisignatureOutsIndex[out.amount];
       globalIndexes.push_back(static_cast<uint32_t>(msigOutsContainer.size()));
       msigOutsContainer.push_back({ txHash, outIndex });
@@ -370,7 +370,7 @@ bool TestBlockchainGenerator::getTransactionGlobalIndexesByHash(const crypto::ha
   return true;
 }
 
-bool TestBlockchainGenerator::getMultisignatureOutputByGlobalIndex(uint64_t amount, uint32_t globalIndex, MultisignatureOutput& out) {
+bool TestBlockchainGenerator::getMultisignatureOutputByGlobalIndex(uint64_t amount, uint32_t globalIndex, multi_signature_output_t& out) {
   auto it = multisignatureOutsIndex.find(amount);
   if (it == multisignatureOutsIndex.end()) {
     return false;
@@ -383,8 +383,8 @@ bool TestBlockchainGenerator::getMultisignatureOutputByGlobalIndex(uint64_t amou
   MultisignatureOutEntry entry = it->second[globalIndex];
   const auto& tx = m_txs[entry.transactionHash];
   assert(tx.outputs.size() > entry.indexOut);
-  assert(tx.outputs[entry.indexOut].target.type() == typeid(MultisignatureOutput));
-  out = boost::get<MultisignatureOutput>(tx.outputs[entry.indexOut].target);
+  assert(tx.outputs[entry.indexOut].target.type() == typeid(multi_signature_output_t));
+  out = boost::get<multi_signature_output_t>(tx.outputs[entry.indexOut].target);
   return true;
 }
 

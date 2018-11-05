@@ -26,17 +26,17 @@ namespace
       addTransactionPublicKeyToExtra(m_tx.extra, m_tx_key.publicKey);
     }
 
-    void step2_fill_inputs(const AccountKeys& sender_account_keys, const std::vector<TransactionSourceEntry>& sources)
+    void step2_fill_inputs(const account_keys_t& sender_account_keys, const std::vector<TransactionSourceEntry>& sources)
     {
       BOOST_FOREACH(const TransactionSourceEntry& src_entr, sources)
       {
-        m_in_contexts.push_back(KeyPair());
-        KeyPair& in_ephemeral = m_in_contexts.back();
+        m_in_contexts.push_back(key_pair_t());
+        key_pair_t& in_ephemeral = m_in_contexts.back();
         crypto::key_image_t img;
         generate_key_image_helper(sender_account_keys, src_entr.realTransactionPublicKey, src_entr.realOutputIndexInTransaction, in_ephemeral, img);
 
         // put key image into tx input
-        KeyInput input_to_key;
+        key_input_t input_to_key;
         input_to_key.amount = src_entr.amount;
         input_to_key.keyImage = img;
 
@@ -59,9 +59,9 @@ namespace
         crypto::generate_key_derivation(dst_entr.addr.viewPublicKey, m_tx_key.secretKey, derivation);
         crypto::derive_public_key(derivation, output_index, dst_entr.addr.spendPublicKey, out_eph_public_key);
 
-        TransactionOutput out;
+        transaction_output_t out;
         out.amount = dst_entr.amount;
-        KeyOutput tk;
+        key_output_t tk;
         tk.key = out_eph_public_key;
         out.target = tk;
         m_tx.outputs.push_back(out);
@@ -71,7 +71,7 @@ namespace
 
     void step4_calc_hash()
     {
-      getObjectHash(*static_cast<TransactionPrefix*>(&m_tx), m_tx_prefix_hash);
+      getObjectHash(*static_cast<transaction_prefix_t*>(&m_tx), m_tx_prefix_hash);
     }
 
     void step5_sign(const std::vector<TransactionSourceEntry>& sources)
@@ -90,19 +90,19 @@ namespace
         m_tx.signatures.push_back(std::vector<crypto::signature_t>());
         std::vector<crypto::signature_t>& sigs = m_tx.signatures.back();
         sigs.resize(src_entr.outputs.size());
-        generate_ring_signature(m_tx_prefix_hash, boost::get<KeyInput>(m_tx.inputs[i]).keyImage,
+        generate_ring_signature(m_tx_prefix_hash, boost::get<key_input_t>(m_tx.inputs[i]).keyImage,
           keys_ptrs, m_in_contexts[i].secretKey, src_entr.realOutput, sigs.data());
         i++;
       }
     }
 
-    Transaction m_tx;
-    KeyPair m_tx_key;
-    std::vector<KeyPair> m_in_contexts;
+    transaction_t m_tx;
+    key_pair_t m_tx_key;
+    std::vector<key_pair_t> m_in_contexts;
     crypto::hash_t m_tx_prefix_hash;
   };
 
-  Transaction make_simple_tx_with_unlock_time(const std::vector<test_event_entry>& events,
+  transaction_t make_simple_tx_with_unlock_time(const std::vector<test_event_entry>& events,
     const cryptonote::block_t& blk_head, const cryptonote::AccountBase& from, const cryptonote::AccountBase& to,
     uint64_t amount, uint64_t fee, uint64_t unlock_time)
   {
@@ -173,13 +173,13 @@ bool gen_tx_unlock_time::generate(std::vector<test_event_entry>& events) const
   REWIND_BLOCKS_N(events, blk_1, blk_0, miner_account, 10);
   REWIND_BLOCKS(events, blk_1r, blk_1, miner_account);
 
-  auto make_tx_with_unlock_time = [&](uint64_t unlock_time) -> Transaction
+  auto make_tx_with_unlock_time = [&](uint64_t unlock_time) -> transaction_t
   {
     return make_simple_tx_with_unlock_time(events, blk_1, miner_account, miner_account, MK_COINS(1),
       m_currency.minimumFee(), unlock_time);
   };
 
-  std::list<Transaction> txs_0;
+  std::list<transaction_t> txs_0;
 
   txs_0.push_back(make_tx_with_unlock_time(0));
   events.push_back(txs_0.back());
@@ -312,7 +312,7 @@ bool gen_tx_in_to_key_wo_key_offsets::generate(std::vector<test_event_entry>& ev
   builder.step1_init();
   builder.step2_fill_inputs(miner_account.getAccountKeys(), sources);
   builder.step3_fill_outputs(destinations);
-  KeyInput& in_to_key = boost::get<KeyInput>(builder.m_tx.inputs.front());
+  key_input_t& in_to_key = boost::get<key_input_t>(builder.m_tx.inputs.front());
   uint32_t key_offset = in_to_key.outputIndexes.front();
   in_to_key.outputIndexes.pop_back();
   CHECK_AND_ASSERT_MES(in_to_key.outputIndexes.empty(), false, "txin contained more than one key_offset");
@@ -352,7 +352,7 @@ bool gen_tx_key_offest_points_to_foreign_key::generate(std::vector<test_event_en
   tx_builder builder;
   builder.step1_init();
   builder.step2_fill_inputs(bob_account.getAccountKeys(), sources_bob);
-  KeyInput& in_to_key = boost::get<KeyInput>(builder.m_tx.inputs.front());
+  key_input_t& in_to_key = boost::get<key_input_t>(builder.m_tx.inputs.front());
   in_to_key.outputIndexes.front() = sources_alice.front().outputs.front().first;
   builder.step3_fill_outputs(destinations_bob);
   builder.step4_calc_hash();
@@ -379,7 +379,7 @@ bool gen_tx_sender_key_offest_not_exist::generate(std::vector<test_event_entry>&
   tx_builder builder;
   builder.step1_init();
   builder.step2_fill_inputs(miner_account.getAccountKeys(), sources);
-  KeyInput& in_to_key = boost::get<KeyInput>(builder.m_tx.inputs.front());
+  key_input_t& in_to_key = boost::get<key_input_t>(builder.m_tx.inputs.front());
   in_to_key.outputIndexes.front() = std::numeric_limits<uint32_t>::max();
   builder.step3_fill_outputs(destinations);
   builder.step4_calc_hash();
@@ -440,9 +440,9 @@ bool gen_tx_key_image_not_derive_from_tx_key::generate(std::vector<test_event_en
   builder.step1_init();
   builder.step2_fill_inputs(miner_account.getAccountKeys(), sources);
 
-  KeyInput& in_to_key = boost::get<KeyInput>(builder.m_tx.inputs.front());
-  // KeyPair kp = generateKeyPair();
-  KeyPair kp = Key::generate();
+  key_input_t& in_to_key = boost::get<key_input_t>(builder.m_tx.inputs.front());
+  // key_pair_t kp = generateKeyPair();
+  key_pair_t kp = Key::generate();
   crypto::key_image_t another_ki;
   crypto::generate_key_image(kp.publicKey, kp.secretKey, another_ki);
   in_to_key.keyImage = another_ki;
@@ -477,7 +477,7 @@ bool gen_tx_key_image_is_invalid::generate(std::vector<test_event_entry>& events
   builder.step1_init();
   builder.step2_fill_inputs(miner_account.getAccountKeys(), sources);
 
-  KeyInput& in_to_key = boost::get<KeyInput>(builder.m_tx.inputs.front());
+  key_input_t& in_to_key = boost::get<key_input_t>(builder.m_tx.inputs.front());
   crypto::public_key_t pub = generate_invalid_pub_key();
   memcpy(&in_to_key.keyImage, &pub, sizeof(crypto::EllipticCurvePoint));
 
@@ -513,7 +513,7 @@ bool gen_tx_check_input_unlock_time::generate(std::vector<test_event_entry>& eve
     accounts[i] = acc;
   }
 
-  std::list<Transaction> txs_0;
+  std::list<transaction_t> txs_0;
   auto make_tx_to_acc = [&](size_t acc_idx, uint64_t unlock_time)
   {
     txs_0.push_back(make_simple_tx_with_unlock_time(events, blk_1, miner_account, accounts[acc_idx],
@@ -530,10 +530,10 @@ bool gen_tx_check_input_unlock_time::generate(std::vector<test_event_entry>& eve
   make_tx_to_acc(5, time(0) + 60 * 60);
   MAKE_NEXT_BLOCK_TX_LIST(events, blk_2, blk_1r, miner_account, txs_0);
 
-  std::list<Transaction> txs_1;
+  std::list<transaction_t> txs_1;
   auto make_tx_from_acc = [&](size_t acc_idx, bool invalid)
   {
-    Transaction tx = make_simple_tx_with_unlock_time(events, blk_2, accounts[acc_idx], miner_account, MK_COINS(1),
+    transaction_t tx = make_simple_tx_with_unlock_time(events, blk_2, accounts[acc_idx], miner_account, MK_COINS(1),
       m_currency.minimumFee(), 0);
     if (invalid)
     {
@@ -574,7 +574,7 @@ bool gen_tx_txout_to_key_has_invalid_key::generate(std::vector<test_event_entry>
   builder.step2_fill_inputs(miner_account.getAccountKeys(), sources);
   builder.step3_fill_outputs(destinations);
 
-  KeyOutput& out_to_key =  boost::get<KeyOutput>(builder.m_tx.outputs.front().target);
+  key_output_t& out_to_key =  boost::get<key_output_t>(builder.m_tx.outputs.front().target);
   out_to_key.key = generate_invalid_pub_key();
 
   builder.step4_calc_hash();
@@ -636,7 +636,7 @@ bool gen_tx_signatures_are_invalid::generate(std::vector<test_event_entry>& even
 
   // Tx with nmix = 0 without signatures
   DO_CALLBACK(events, "mark_invalid_tx");
-  BinaryArray sr_tx = toBinaryArray(static_cast<TransactionPrefix>(tx_0));
+  BinaryArray sr_tx = toBinaryArray(static_cast<transaction_prefix_t>(tx_0));
   events.push_back(serialized_transaction(sr_tx));
 
   // Tx with nmix = 0 have a few inputs, and not enough signatures
@@ -653,7 +653,7 @@ bool gen_tx_signatures_are_invalid::generate(std::vector<test_event_entry>& even
 
   // Tx with nmix = 1 without signatures
   DO_CALLBACK(events, "mark_invalid_tx");
-  sr_tx = toBinaryArray(static_cast<TransactionPrefix>(tx_1));
+  sr_tx = toBinaryArray(static_cast<transaction_prefix_t>(tx_1));
   events.push_back(serialized_transaction(sr_tx));
 
   // Tx with nmix = 1 have not enough signatures
@@ -682,7 +682,7 @@ bool GenerateTransactionWithZeroFee::generate(std::vector<test_event_entry>& eve
   MAKE_GENESIS_BLOCK(events, blk_0, alice_account, ts_start);
   REWIND_BLOCKS(events, blk_0r, blk_0, alice_account);
 
-  cryptonote::Transaction tx;
+  cryptonote::transaction_t tx;
   construct_tx_to_key(m_logger, events, tx, blk_0, alice_account, bob_account, MK_COINS(1), 0, 0);
 
   if (!m_keptByBlock) {
@@ -728,13 +728,13 @@ bool MultiSigTx_OutputSignatures::generate(TestGenerator& generator) const {
   builder.step1_init();
   builder.step2_fill_inputs(generator.minerAccount.getAccountKeys(), sources);
 
-  MultisignatureOutput target;
+  multi_signature_output_t target;
 
   for (const auto& acc : m_outputAccounts) {
     target.keys.push_back(acc.getAccountKeys().address.spendPublicKey);
   }
   target.requiredSignatureCount = m_requiredSignatures;
-  TransactionOutput txOut = { MK_COINS(1), target };
+  transaction_output_t txOut = { MK_COINS(1), target };
   builder.m_tx.outputs.push_back(txOut);
 
   builder.step4_calc_hash();
@@ -771,7 +771,7 @@ bool MultiSigTx_InvalidOutputSignature::generate(std::vector<test_event_entry>& 
   builder.step1_init();
   builder.step2_fill_inputs(miner_account.getAccountKeys(), sources);
 
-  MultisignatureOutput target;
+  multi_signature_output_t target;
 
   crypto::public_key_t pk;
   crypto::secret_key_t sk;
@@ -784,7 +784,7 @@ bool MultiSigTx_InvalidOutputSignature::generate(std::vector<test_event_entry>& 
 
   target.requiredSignatureCount = 2;
 
-  TransactionOutput txOut = { MK_COINS(1), target };
+  transaction_output_t txOut = { MK_COINS(1), target };
   builder.m_tx.outputs.push_back(txOut);
 
   builder.step4_calc_hash();
@@ -803,7 +803,7 @@ namespace
     builder.step1_init();
 
     // create input
-    MultisignatureInput input;
+    multi_signature_input_t input;
     input.amount = inputAmount;
     input.signatureCount = givenSignatures;
     input.outputIndex = 0;

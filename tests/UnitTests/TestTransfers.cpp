@@ -51,7 +51,7 @@ public:
   }
 
   void addPaymentAccounts(size_t count) {
-    KeyPair p1;
+    key_pair_t p1;
     crypto::generate_keys(p1.publicKey, p1.secretKey);
     auto viewKeys = p1;
     while (count--) {
@@ -61,7 +61,7 @@ public:
   }
 
   void addMinerAccount() {
-    m_accounts.push_back(reinterpret_cast<const AccountKeys&>(generator.getMinerAccount()));
+    m_accounts.push_back(reinterpret_cast<const account_keys_t&>(generator.getMinerAccount()));
   }
 
   AccountSubscription createSubscription(size_t acc, uint64_t timestamp = 0) {
@@ -109,12 +109,12 @@ public:
 
   void generateMoneyForAccount(size_t idx) {
     generator.getBlockRewardForAddress(
-      reinterpret_cast<const cryptonote::AccountPublicAddress&>(m_accounts[idx].address));
+      reinterpret_cast<const cryptonote::account_public_address_t&>(m_accounts[idx].address));
   }
 
   std::error_code submitTransaction(ITransactionReader& tx) {
     auto data = tx.getTransactionData();
-    Transaction outTx;
+    transaction_t outTx;
     cryptonote::fromBinaryArray(outTx, data);
 
     std::promise<std::error_code> result;
@@ -128,7 +128,7 @@ public:
 protected:
 
   boost::scoped_array<TransfersObserver> m_transferObservers;
-  std::vector<AccountKeys> m_accounts;
+  std::vector<account_keys_t> m_accounts;
   std::vector<ITransfersSubscription*> m_subscriptions;
 
   Logging::ConsoleLogger m_logger;
@@ -159,7 +159,7 @@ TEST_F(TransfersApi, testSubscriptions) {
 
   m_transfersSync.addSubscription(createSubscription(0));
 
-  std::vector<AccountPublicAddress> subscriptions;
+  std::vector<account_public_address_t> subscriptions;
 
   m_transfersSync.getSubscriptions(subscriptions);
 
@@ -211,8 +211,8 @@ namespace {
   std::unique_ptr<ITransaction> createMoneyTransfer(
     uint64_t amount,
     uint64_t fee,
-    const AccountKeys& senderKeys,
-  const AccountPublicAddress& reciever,
+    const account_keys_t& senderKeys,
+  const account_public_address_t& reciever,
   ITransfersContainer& tc) {
 
   std::vector<TransactionOutputInformation> transfers;
@@ -220,7 +220,7 @@ namespace {
 
   auto tx = createTransaction();
 
-  std::vector<std::pair<TransactionTypes::InputKeyInfo, KeyPair>> inputs;
+  std::vector<std::pair<TransactionTypes::InputKeyInfo, key_pair_t>> inputs;
 
   uint64_t foundMoney = 0;
 
@@ -238,7 +238,7 @@ namespace {
     info.realOutput.transactionIndex = 0;
     info.realOutput.transactionPublicKey = t.transactionPublicKey;
 
-    KeyPair kp;
+    key_pair_t kp;
     tx->addInput(senderKeys, info, kp);
 
     inputs.push_back(std::make_pair(info, kp));
@@ -323,7 +323,7 @@ struct lessOutKey {
 
 bool compareStates(TransfersSyncronizer& sync1, TransfersSyncronizer& sync2) {
 
-  std::vector<AccountPublicAddress> subs;
+  std::vector<account_public_address_t> subs;
   sync1.getSubscriptions(subs);
 
   for (const auto& s : subs) {

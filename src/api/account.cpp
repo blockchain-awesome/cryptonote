@@ -59,9 +59,9 @@ std::string &Account::toAdress()
   return m_address;
 }
 
-cryptonote::AccountKeys &Account::toKeys()
+cryptonote::account_keys_t &Account::toKeys()
 {
-  cryptonote::AccountKeys &keys = m_account_keys;
+  cryptonote::account_keys_t &keys = m_account_keys;
   keys.address.spendPublicKey = m_public_keys.spend;
   keys.address.viewPublicKey = m_public_keys.view;
   keys.spendSecretKey = m_secret_keys.spend;

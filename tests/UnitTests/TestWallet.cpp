@@ -156,7 +156,7 @@ public:
   virtual void TearDown() override;
 
 protected:
-  cryptonote::AccountPublicAddress parseAddress(const std::string& address);
+  cryptonote::account_public_address_t parseAddress(const std::string& address);
   void generateBlockReward();
   void generateBlockReward(const std::string& address);
   void generateAndUnlockMoney();
@@ -231,7 +231,7 @@ void WalletApi::SetUp() {
 
 void WalletApi::setMinerTo(cryptonote::WalletGreen& wallet) {
   AccountBase base;
-  AccountKeys keys;
+  account_keys_t keys;
   auto viewKey = wallet.getViewKey();
   auto spendKey = wallet.getAddressSpendKey(0);
   keys.address.spendPublicKey = spendKey.publicKey;
@@ -248,8 +248,8 @@ void WalletApi::TearDown() {
   wait(100); //ObserverManager bug workaround
 }
 
-cryptonote::AccountPublicAddress WalletApi::parseAddress(const std::string& address) {
-  cryptonote::AccountPublicAddress pubAddr;
+cryptonote::account_public_address_t WalletApi::parseAddress(const std::string& address) {
+  cryptonote::account_public_address_t pubAddr;
   if (!Account::parseAddress(address, pubAddr)) {
     throw std::system_error(std::make_error_code(std::errc::invalid_argument));
   }
@@ -276,7 +276,7 @@ void WalletApi::generateFusionOutputsAndUnlock(WalletGreen& wallet, INodeTrivial
 
   auto initialAmount = wallet.getActualBalance();
 
-  cryptonote::AccountPublicAddress publicAddress = parseAddress(wallet.getAddress(0));
+  cryptonote::account_public_address_t publicAddress = parseAddress(wallet.getAddress(0));
   const size_t POWERS_COUNT = 3;
 
   uint64_t addedAmount = 0;
@@ -1068,7 +1068,7 @@ void WalletApi::testIWalletDataCompatibility(bool details, const std::string& ca
 
   EXPECT_EQ(1, wallet.getAddressCount());
 
-  AccountPublicAddress addr;
+  account_public_address_t addr;
   Account::parseAddress(wallet.getAddress(0), addr);
   EXPECT_EQ(account.getAccountKeys().address.spendPublicKey, addr.spendPublicKey);
   EXPECT_EQ(account.getAccountKeys().address.viewPublicKey, addr.viewPublicKey);
@@ -1250,7 +1250,7 @@ const size_t TX_PUB_KEY_EXTRA_SIZE = 33;
 //   ASSERT_EQ(FEE, tx.fee);
 //   ASSERT_EQ(0, tx.unlockTime);
 //   ASSERT_FALSE(tx.isBase);
-//   ASSERT_EQ(TX_PUB_KEY_EXTRA_SIZE, tx.extra.size()); //Transaction public key only
+//   ASSERT_EQ(TX_PUB_KEY_EXTRA_SIZE, tx.extra.size()); //transaction_t public key only
 // }
 
 std::string removeTxPublicKey(const std::string& txExtra) {
@@ -1587,13 +1587,13 @@ class INodeNoRelay : public INodeTrivialRefreshStub {
 public:
   INodeNoRelay(TestBlockchainGenerator& generator) : INodeTrivialRefreshStub(generator) {}
 
-  virtual void relayTransaction(const cryptonote::Transaction& transaction, const Callback& callback) override {
+  virtual void relayTransaction(const cryptonote::transaction_t& transaction, const Callback& callback) override {
     m_asyncCounter.addAsyncContext();
     std::thread task(&INodeNoRelay::doNoRelayTransaction, this, transaction, callback);
     task.detach();
   }
 
-  void doNoRelayTransaction(const cryptonote::Transaction& transaction, const Callback& callback)
+  void doNoRelayTransaction(const cryptonote::transaction_t& transaction, const Callback& callback)
   {
     callback(std::error_code());
     m_asyncCounter.delAsyncContext();
@@ -1668,7 +1668,7 @@ TEST_F(WalletApi, transferSmallFeeTransactionThrows) {
 TEST_F(WalletApi, initializeWithKeysSucceded) {
   cryptonote::WalletGreen wallet(dispatcher, currency, node);
 
-  cryptonote::KeyPair viewKeys;
+  cryptonote::key_pair_t viewKeys;
   crypto::generate_keys(viewKeys.publicKey, viewKeys.secretKey);
   ASSERT_NO_THROW(wallet.initializeWithViewKey(viewKeys.secretKey, "pass"));
 
@@ -1676,7 +1676,7 @@ TEST_F(WalletApi, initializeWithKeysSucceded) {
 }
 
 TEST_F(WalletApi, initializeWithKeysThrowsIfAlreadInitialized) {
-  cryptonote::KeyPair viewKeys;
+  cryptonote::key_pair_t viewKeys;
   crypto::generate_keys(viewKeys.publicKey, viewKeys.secretKey);
 
   ASSERT_ANY_THROW(alice.initializeWithViewKey(viewKeys.secretKey, "pass"));
@@ -1686,7 +1686,7 @@ TEST_F(WalletApi, initializeWithKeysThrowsIfStopped) {
   cryptonote::WalletGreen wallet(dispatcher, currency, node);
   wallet.stop();
 
-  cryptonote::KeyPair viewKeys;
+  cryptonote::key_pair_t viewKeys;
   crypto::generate_keys(viewKeys.publicKey, viewKeys.secretKey);
   ASSERT_ANY_THROW(wallet.initializeWithViewKey(viewKeys.secretKey, "pass"));
 }
@@ -1694,11 +1694,11 @@ TEST_F(WalletApi, initializeWithKeysThrowsIfStopped) {
 TEST_F(WalletApi, getViewKeyReturnsProperKey) {
   cryptonote::WalletGreen wallet(dispatcher, currency, node);
 
-  cryptonote::KeyPair viewKeys;
+  cryptonote::key_pair_t viewKeys;
   crypto::generate_keys(viewKeys.publicKey, viewKeys.secretKey);
   wallet.initializeWithViewKey(viewKeys.secretKey, "pass");
 
-  cryptonote::KeyPair retrievedKeys = wallet.getViewKey();
+  cryptonote::key_pair_t retrievedKeys = wallet.getViewKey();
   ASSERT_EQ(viewKeys.publicKey, retrievedKeys.publicKey);
   ASSERT_EQ(viewKeys.secretKey, retrievedKeys.secretKey);
 
@@ -1717,12 +1717,12 @@ TEST_F(WalletApi, getViewKeyThrowsIfStopped) {
 }
 
 TEST_F(WalletApi, getAddressSpendKeyReturnsProperKey) {
-  cryptonote::KeyPair spendKeys;
+  cryptonote::key_pair_t spendKeys;
   crypto::generate_keys(spendKeys.publicKey, spendKeys.secretKey);
 
   alice.createAddress(spendKeys.secretKey);
 
-  cryptonote::KeyPair retrievedKeys = alice.getAddressSpendKey(1);
+  cryptonote::key_pair_t retrievedKeys = alice.getAddressSpendKey(1);
   ASSERT_EQ(spendKeys.publicKey, retrievedKeys.publicKey);
   ASSERT_EQ(spendKeys.secretKey, retrievedKeys.secretKey);
 }
@@ -1742,7 +1742,7 @@ TEST_F(WalletApi, getAddressSpendKeyThrowsIfStopped) {
 }
 
 crypto::public_key_t generatePublicKey() {
-  cryptonote::KeyPair spendKeys;
+  cryptonote::key_pair_t spendKeys;
   crypto::generate_keys(spendKeys.publicKey, spendKeys.secretKey);
 
   return spendKeys.publicKey;
@@ -1798,7 +1798,7 @@ TEST_F(WalletApi, getAddressSpendKeyForTrackingKeyReturnsNullSecretKey) {
   crypto::public_key_t publicKey = generatePublicKey();
   wallet.createAddress(publicKey);
 
-  KeyPair spendKeys = wallet.getAddressSpendKey(0);
+  key_pair_t spendKeys = wallet.getAddressSpendKey(0);
   ASSERT_EQ(NULL_SECRET_KEY, spendKeys.secretKey);
 
   wallet.shutdown();
@@ -1886,14 +1886,14 @@ TEST_F(WalletApi, walletGetsSyncProgressUpdatedEvent) {
 struct CatchTransactionNodeStub : public INodeTrivialRefreshStub {
   CatchTransactionNodeStub(TestBlockchainGenerator& generator): INodeTrivialRefreshStub(generator), caught(false) {}
 
-  virtual void relayTransaction(const cryptonote::Transaction& incomingTransaction, const Callback& callback) override {
+  virtual void relayTransaction(const cryptonote::transaction_t& incomingTransaction, const Callback& callback) override {
     transaction = incomingTransaction;
     caught = true;
     INodeTrivialRefreshStub::relayTransaction(incomingTransaction, callback);
   }
 
   bool caught;
-  cryptonote::Transaction transaction;
+  cryptonote::transaction_t transaction;
 };
 
 // TEST_F(WalletApi, createFusionTransactionCreatesValidFusionTransactionWithoutMixin) {
@@ -2012,7 +2012,7 @@ TEST_F(WalletApi, fusionManagerEstimateNullThreshold) {
   generateAndUnlockMoney();
 
   ASSERT_EQ(1, alice.getTransactionCount());
-  cryptonote::Transaction tx = boost::value_initialized<cryptonote::Transaction>();
+  cryptonote::transaction_t tx = boost::value_initialized<cryptonote::transaction_t>();
   ASSERT_TRUE(generator.getTransactionByHash(alice.getTransaction(0).hash, tx, false));
   ASSERT_FALSE(tx.outputs.empty());
 
@@ -2024,7 +2024,7 @@ TEST_F(WalletApi, DISABLED_fusionManagerEstimate) {
   generateAndUnlockMoney();
 
   ASSERT_EQ(1, alice.getTransactionCount());
-  cryptonote::Transaction tx = boost::value_initialized<cryptonote::Transaction>();
+  cryptonote::transaction_t tx = boost::value_initialized<cryptonote::transaction_t>();
   ASSERT_TRUE(generator.getTransactionByHash(alice.getTransaction(0).hash, tx, false));
   ASSERT_FALSE(tx.outputs.empty());
 
@@ -3527,7 +3527,7 @@ TEST_F(WalletApi, transferFailsIfNoChangeDestinationAndMultipleSourceAddressesSe
 // }
 
 TEST_F(WalletApi, checkBaseTransaction) {
-  cryptonote::AccountKeys keys{ parseAddress(alice.getAddress(0)), alice.getAddressSpendKey(0).secretKey, alice.getViewKey().secretKey };
+  cryptonote::account_keys_t keys{ parseAddress(alice.getAddress(0)), alice.getAddressSpendKey(0).secretKey, alice.getViewKey().secretKey };
   cryptonote::AccountBase acc;
   acc.setAccountKeys(keys);
   acc.setCreatetime(0);

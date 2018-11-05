@@ -36,7 +36,7 @@ namespace cryptonote {
   struct COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_response;
   struct COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_outs_for_amount;
 
-  using cryptonote::BlockInfo;
+  using cryptonote::block_info_t;
   
   class LockedBlockchainStorage;
 
@@ -48,9 +48,9 @@ namespace cryptonote {
     bool removeObserver(IBlockchainStorageObserver* observer);
 
     // ITransactionValidator
-    virtual bool checkTransactionInputs(const cryptonote::Transaction& tx, BlockInfo& maxUsedBlock) override;
-    virtual bool checkTransactionInputs(const cryptonote::Transaction& tx, BlockInfo& maxUsedBlock, BlockInfo& lastFailed) override;
-    virtual bool haveSpentKeyImages(const cryptonote::Transaction& tx) override;
+    virtual bool checkTransactionInputs(const cryptonote::transaction_t& tx, block_info_t& maxUsedBlock) override;
+    virtual bool checkTransactionInputs(const cryptonote::transaction_t& tx, block_info_t& maxUsedBlock, block_info_t& lastFailed) override;
+    virtual bool haveSpentKeyImages(const cryptonote::transaction_t& tx) override;
     virtual bool checkTransactionSize(size_t blobSize) override;
 
     bool init(bool load_existing = true);
@@ -60,7 +60,7 @@ namespace cryptonote {
     std::vector<crypto::hash_t> getBlockIds(uint32_t startHeight, uint32_t maxCount);
 
     void setCheckpoints(Checkpoints&& chk_pts) { m_checkpoints = chk_pts; }
-    bool getBlocks(uint32_t start_offset, uint32_t count, std::list<block_t>& blocks, std::list<Transaction>& txs);
+    bool getBlocks(uint32_t start_offset, uint32_t count, std::list<block_t>& blocks, std::list<transaction_t>& txs);
     bool getBlocks(uint32_t start_offset, uint32_t count, std::list<block_t>& blocks);
     bool getAlternativeBlocks(std::list<block_t>& blocks);
     uint32_t getAlternativeBlocksCount();
@@ -71,7 +71,7 @@ namespace cryptonote {
     template<class archive_t> void serialize(archive_t & ar, const unsigned int version);
 
     bool haveTransaction(const crypto::hash_t &id);
-    bool haveTransactionKeyImagesAsSpent(const Transaction &tx);
+    bool haveTransactionKeyImagesAsSpent(const transaction_t &tx);
 
     uint32_t getCurrentBlockchainHeight(); //TODO rename to getCurrentBlockchainSize
     crypto::hash_t getTailId();
@@ -91,21 +91,21 @@ namespace cryptonote {
     bool getRandomOutsByAmount(const COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_request& req, COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_response& res);
     bool getBackwardBlocksSize(size_t from_height, std::vector<size_t>& sz, size_t count);
     bool getTransactionOutputGlobalIndexes(const crypto::hash_t& tx_id, std::vector<uint32_t>& indexs);
-    bool get_out_by_msig_gindex(uint64_t amount, uint64_t gindex, MultisignatureOutput& out);
-    bool checkTransactionInputs(const Transaction& tx, uint32_t& pmax_used_block_height, crypto::hash_t& max_used_block_id, BlockInfo* tail = 0);
+    bool get_out_by_msig_gindex(uint64_t amount, uint64_t gindex, multi_signature_output_t& out);
+    bool checkTransactionInputs(const transaction_t& tx, uint32_t& pmax_used_block_height, crypto::hash_t& max_used_block_id, block_info_t* tail = 0);
     uint64_t getCurrentCumulativeBlocksizeLimit();
     uint64_t blockDifficulty(size_t i);
     bool getBlockContainingTransaction(const crypto::hash_t& txId, crypto::hash_t& blockId, uint32_t& blockHeight);
     bool getAlreadyGeneratedCoins(const crypto::hash_t& hash, uint64_t& generatedCoins);
     bool getBlockSize(const crypto::hash_t& hash, size_t& size);
-    bool getMultisigOutputReference(const MultisignatureInput& txInMultisig, std::pair<crypto::hash_t, size_t>& outputReference);
+    bool getMultisigOutputReference(const multi_signature_input_t& txInMultisig, std::pair<crypto::hash_t, size_t>& outputReference);
     bool getGeneratedTransactionsNumber(uint32_t height, uint64_t& generatedTransactions);
     bool getOrphanBlockIdsByHeight(uint32_t height, std::vector<crypto::hash_t>& blockHashes);
     bool getBlockIdsByTimestamp(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t blocksNumberLimit, std::vector<crypto::hash_t>& hashes, uint32_t& blocksNumberWithinTimestamps);
     bool getTransactionIdsByPaymentId(const crypto::hash_t& paymentId, std::vector<crypto::hash_t>& transactionHashes);
     bool isBlockInMainChain(const crypto::hash_t& blockId);
 
-    template<class visitor_t> bool scanOutputKeysForIndexes(const KeyInput& tx_in_to_key, visitor_t& vis, uint32_t* pmax_related_block_height = NULL);
+    template<class visitor_t> bool scanOutputKeysForIndexes(const key_input_t& tx_in_to_key, visitor_t& vis, uint32_t* pmax_related_block_height = NULL);
 
     bool addMessageQueue(MessageQueue<BlockchainMessage>& messageQueue);
     bool removeMessageQueue(MessageQueue<BlockchainMessage>& messageQueue);
@@ -223,32 +223,32 @@ namespace cryptonote {
     std::vector<crypto::hash_t> doBuildSparseChain(const crypto::hash_t& startBlockId) const;
     bool getBlockCumulativeSize(const block_t& block, size_t& cumulativeSize);
     bool update_next_comulative_size_limit();
-    bool check_tx_input(const KeyInput& txin, const crypto::hash_t& tx_prefix_hash, const std::vector<crypto::signature_t>& sig, uint32_t* pmax_related_block_height = NULL);
-    bool checkTransactionInputs(const Transaction& tx, const crypto::hash_t& tx_prefix_hash, uint32_t* pmax_used_block_height = NULL);
-    bool checkTransactionInputs(const Transaction& tx, uint32_t* pmax_used_block_height = NULL);
+    bool check_tx_input(const key_input_t& txin, const crypto::hash_t& tx_prefix_hash, const std::vector<crypto::signature_t>& sig, uint32_t* pmax_related_block_height = NULL);
+    bool checkTransactionInputs(const transaction_t& tx, const crypto::hash_t& tx_prefix_hash, uint32_t* pmax_used_block_height = NULL);
+    bool checkTransactionInputs(const transaction_t& tx, uint32_t* pmax_used_block_height = NULL);
     bool have_tx_keyimg_as_spent(const crypto::key_image_t &key_im);
     const TransactionEntry& transactionByIndex(TransactionIndex index);
     bool pushBlock(const block_t& blockData, BlockVerificationContext& bvc);
-    bool pushBlock(const block_t& blockData, const std::vector<Transaction>& transactions, BlockVerificationContext& bvc);
+    bool pushBlock(const block_t& blockData, const std::vector<transaction_t>& transactions, BlockVerificationContext& bvc);
     bool pushBlock(BlockEntry& block);
     void popBlock(const crypto::hash_t& blockHash);
     bool pushTransaction(BlockEntry& block, const crypto::hash_t& transactionHash, TransactionIndex transactionIndex);
-    void popTransaction(const Transaction& transaction, const crypto::hash_t& transactionHash);
+    void popTransaction(const transaction_t& transaction, const crypto::hash_t& transactionHash);
     void popTransactions(const BlockEntry& block, const crypto::hash_t& minerTransactionHash);
-    bool validateInput(const MultisignatureInput& input, const crypto::hash_t& transactionHash, const crypto::hash_t& transactionPrefixHash, const std::vector<crypto::signature_t>& transactionSignatures);
+    bool validateInput(const multi_signature_input_t& input, const crypto::hash_t& transactionHash, const crypto::hash_t& transactionPrefixHash, const std::vector<crypto::signature_t>& transactionSignatures);
 
     bool storeBlockchainIndices();
     bool loadBlockchainIndices();
 
-    bool loadTransactions(const block_t& block, std::vector<Transaction>& transactions);
-    void saveTransactions(const std::vector<Transaction>& transactions);
+    bool loadTransactions(const block_t& block, std::vector<transaction_t>& transactions);
+    void saveTransactions(const std::vector<transaction_t>& transactions);
 
     void sendMessage(const BlockchainMessage& message);
 
     friend class LockedBlockchainStorage;
   };
 
-  template<class visitor_t> bool Blockchain::scanOutputKeysForIndexes(const KeyInput& tx_in_to_key, visitor_t& vis, uint32_t* pmax_related_block_height) {
+  template<class visitor_t> bool Blockchain::scanOutputKeysForIndexes(const key_input_t& tx_in_to_key, visitor_t& vis, uint32_t* pmax_related_block_height) {
     std::lock_guard<std::recursive_mutex> lk(m_blockchain_lock);
     auto it = m_outputs.find(tx_in_to_key.amount);
     if (it == m_outputs.end() || !tx_in_to_key.outputIndexes.size())

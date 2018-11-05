@@ -5,7 +5,7 @@
 #include "crypto/crypto.h"
 #include "crypto/hash.h"
 #include "cryptonote/core/key.h"
-#include "cryptonote/core/serialize.h"
+#include "cryptonote/core/blockchain/serializer/crypto.h"
 #include "cryptonote/core/Account.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/CryptoNoteTools.h"
@@ -41,17 +41,17 @@ bool test_transaction_generation_and_ring_signature()
   rv_acc.generate();
   AccountBase rv_acc2;
   rv_acc2.generate();
-  Transaction tx_mine_1;
+  transaction_t tx_mine_1;
   currency.constructMinerTx(0, 0, 0, 10, 0, miner_acc1.getAccountKeys().address, tx_mine_1);
-  Transaction tx_mine_2;
+  transaction_t tx_mine_2;
   currency.constructMinerTx(0, 0, 0, 0, 0, miner_acc2.getAccountKeys().address, tx_mine_2);
-  Transaction tx_mine_3;
+  transaction_t tx_mine_3;
   currency.constructMinerTx(0, 0, 0, 0, 0, miner_acc3.getAccountKeys().address, tx_mine_3);
-  Transaction tx_mine_4;
+  transaction_t tx_mine_4;
   currency.constructMinerTx(0, 0, 0, 0, 0, miner_acc4.getAccountKeys().address, tx_mine_4);
-  Transaction tx_mine_5;
+  transaction_t tx_mine_5;
   currency.constructMinerTx(0, 0, 0, 0, 0, miner_acc5.getAccountKeys().address, tx_mine_5);
-  Transaction tx_mine_6;
+  transaction_t tx_mine_6;
   currency.constructMinerTx(0, 0, 0, 0, 0, miner_acc6.getAccountKeys().address, tx_mine_6);
 
   //fill inputs entry
@@ -63,27 +63,27 @@ bool test_transaction_generation_and_ring_signature()
   {
     tx_output_entry oe;
     oe.first = 0;
-    oe.second = boost::get<KeyOutput>(tx_mine_1.outputs[0].target).key;
+    oe.second = boost::get<key_output_t>(tx_mine_1.outputs[0].target).key;
     src.outputs.push_back(oe);
 
     oe.first = 1;
-    oe.second = boost::get<KeyOutput>(tx_mine_2.outputs[0].target).key;
+    oe.second = boost::get<key_output_t>(tx_mine_2.outputs[0].target).key;
     src.outputs.push_back(oe);
 
     oe.first = 2;
-    oe.second = boost::get<KeyOutput>(tx_mine_3.outputs[0].target).key;
+    oe.second = boost::get<key_output_t>(tx_mine_3.outputs[0].target).key;
     src.outputs.push_back(oe);
 
     oe.first = 3;
-    oe.second = boost::get<KeyOutput>(tx_mine_4.outputs[0].target).key;
+    oe.second = boost::get<key_output_t>(tx_mine_4.outputs[0].target).key;
     src.outputs.push_back(oe);
 
     oe.first = 4;
-    oe.second = boost::get<KeyOutput>(tx_mine_5.outputs[0].target).key;
+    oe.second = boost::get<key_output_t>(tx_mine_5.outputs[0].target).key;
     src.outputs.push_back(oe);
 
     oe.first = 5;
-    oe.second = boost::get<KeyOutput>(tx_mine_6.outputs[0].target).key;
+    oe.second = boost::get<key_output_t>(tx_mine_6.outputs[0].target).key;
     src.outputs.push_back(oe);
 
     src.realTransactionPublicKey = cryptonote::getTransactionPublicKeyFromExtra(tx_mine_2.extra);
@@ -97,19 +97,19 @@ bool test_transaction_generation_and_ring_signature()
   std::vector<TransactionDestinationEntry> destinations;
   destinations.push_back(td);
 
-  Transaction tx_rc1;
+  transaction_t tx_rc1;
   bool r = constructTransaction(miner_acc2.getAccountKeys(), sources, destinations, std::vector<uint8_t>(), tx_rc1, 0, logger);
   CHECK_AND_ASSERT_MES(r, false, "failed to construct transaction");
 
-  crypto::hash_t pref_hash = getObjectHash(*static_cast<TransactionPrefix*>(&tx_rc1));
+  crypto::hash_t pref_hash = getObjectHash(*static_cast<transaction_prefix_t*>(&tx_rc1));
   std::vector<const crypto::public_key_t *> output_keys;
-  output_keys.push_back(&boost::get<KeyOutput>(tx_mine_1.outputs[0].target).key);
-  output_keys.push_back(&boost::get<KeyOutput>(tx_mine_2.outputs[0].target).key);
-  output_keys.push_back(&boost::get<KeyOutput>(tx_mine_3.outputs[0].target).key);
-  output_keys.push_back(&boost::get<KeyOutput>(tx_mine_4.outputs[0].target).key);
-  output_keys.push_back(&boost::get<KeyOutput>(tx_mine_5.outputs[0].target).key);
-  output_keys.push_back(&boost::get<KeyOutput>(tx_mine_6.outputs[0].target).key);
-  r = crypto::check_ring_signature(pref_hash, boost::get<KeyInput>(tx_rc1.inputs[0]).keyImage,
+  output_keys.push_back(&boost::get<key_output_t>(tx_mine_1.outputs[0].target).key);
+  output_keys.push_back(&boost::get<key_output_t>(tx_mine_2.outputs[0].target).key);
+  output_keys.push_back(&boost::get<key_output_t>(tx_mine_3.outputs[0].target).key);
+  output_keys.push_back(&boost::get<key_output_t>(tx_mine_4.outputs[0].target).key);
+  output_keys.push_back(&boost::get<key_output_t>(tx_mine_5.outputs[0].target).key);
+  output_keys.push_back(&boost::get<key_output_t>(tx_mine_6.outputs[0].target).key);
+  r = crypto::check_ring_signature(pref_hash, boost::get<key_input_t>(tx_rc1.inputs[0]).keyImage,
     output_keys, &tx_rc1.signatures[0][0]);
   CHECK_AND_ASSERT_MES(r, false, "failed to check ring signature");
 
@@ -134,7 +134,7 @@ bool test_block_creation()
   std::vector<uint64_t> szs(&vszs[0], &vszs[90]);
   cryptonote::Currency currency = cryptonote::CurrencyBuilder(logger, os::appdata::path()).currency();
 
-  AccountPublicAddress adr;
+  account_public_address_t adr;
   bool r = Account::parseAddress("272xWzbWsP4cfNFfxY5ETN5moU8x81PKfWPwynrrqsNGDBQGLmD1kCkKCvPeDUXu5XfmZkCrQ53wsWmdfvHBGLNjGcRiDcK", adr);
   CHECK_AND_ASSERT_MES(r, false, "failed to import");
   block_t b;

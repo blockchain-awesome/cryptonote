@@ -314,8 +314,8 @@ TEST(BinarySerializer, uint16) {
 //{
 //  using namespace cryptonote;
 //
-//  Transaction tx;
-//  Transaction tx1;
+//  transaction_t tx;
+//  transaction_t tx1;
 //  string blob;
 //
 //  // Empty tx

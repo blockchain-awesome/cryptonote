@@ -31,9 +31,9 @@ public:
 
   // ITransfersSynchronizer
   virtual ITransfersSubscription& addSubscription(const AccountSubscription& acc) override;
-  virtual bool removeSubscription(const AccountPublicAddress& acc) override;
-  virtual void getSubscriptions(std::vector<AccountPublicAddress>& subscriptions) override;
-  virtual ITransfersSubscription* getSubscription(const AccountPublicAddress& acc) override;
+  virtual bool removeSubscription(const account_public_address_t& acc) override;
+  virtual void getSubscriptions(std::vector<account_public_address_t>& subscriptions) override;
+  virtual ITransfersSubscription* getSubscription(const account_public_address_t& acc) override;
   virtual std::vector<crypto::hash_t> getViewKeyKnownBlocks(const crypto::public_key_t& publicViewKey) override;
 
   void subscribeConsumerNotifications(const crypto::public_key_t& viewPublicKey, ITransfersSynchronizerObserver* observer);

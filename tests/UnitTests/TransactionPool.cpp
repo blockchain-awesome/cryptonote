@@ -24,15 +24,15 @@ using namespace cryptonote;
 using namespace cryptonote;
 
 class TransactionValidator : public cryptonote::ITransactionValidator {
-  virtual bool checkTransactionInputs(const cryptonote::Transaction& tx, BlockInfo& maxUsedBlock) override {
+  virtual bool checkTransactionInputs(const cryptonote::transaction_t& tx, block_info_t& maxUsedBlock) override {
     return true;
   }
 
-  virtual bool checkTransactionInputs(const cryptonote::Transaction& tx, BlockInfo& maxUsedBlock, BlockInfo& lastFailed) override {
+  virtual bool checkTransactionInputs(const cryptonote::transaction_t& tx, block_info_t& maxUsedBlock, block_info_t& lastFailed) override {
     return true;
   }
 
-  virtual bool haveSpentKeyImages(const cryptonote::Transaction& tx) override {
+  virtual bool haveSpentKeyImages(const cryptonote::transaction_t& tx) override {
     return false;
   }
 
@@ -79,7 +79,7 @@ public:
         return false;
       }
 
-      KeyOutput tx_out = boost::get<KeyOutput>(m_miner_txs[i].outputs[0].target);
+      key_output_t tx_out = boost::get<key_output_t>(m_miner_txs[i].outputs[0].target);
       output_entries.push_back(std::make_pair(i, tx_out.key));
       m_public_keys[i] = tx_out.key;
       m_public_key_ptrs[i] = &m_public_keys[i];
@@ -101,7 +101,7 @@ public:
     return true;
   }
 
-  void construct(uint64_t amount, uint64_t fee, size_t outputs, Transaction& tx) {
+  void construct(uint64_t amount, uint64_t fee, size_t outputs, transaction_t& tx) {
 
     std::vector<TransactionDestinationEntry> destinations;
     uint64_t amountPerOut = (amount - fee) / outputs;
@@ -114,7 +114,7 @@ public:
   }
 
   std::vector<AccountBase> m_miners;
-  std::vector<Transaction> m_miner_txs;
+  std::vector<transaction_t> m_miner_txs;
   std::vector<TransactionSourceEntry> m_sources;
   std::vector<crypto::public_key_t> m_public_keys;
   std::vector<const crypto::public_key_t*> m_public_key_ptrs;
@@ -122,7 +122,7 @@ public:
   Logging::LoggerGroup m_logger;
   const cryptonote::Currency& m_currency;
   const size_t m_ringSize;
-  AccountKeys m_realSenderKeys;
+  account_keys_t m_realSenderKeys;
   uint64_t m_source_amount;
   AccountBase rv_acc;
 };
@@ -154,7 +154,7 @@ namespace
 {
   static const size_t textMaxCumulativeSize = std::numeric_limits<size_t>::max();
 
-  void GenerateTransaction(const cryptonote::Currency& currency, Transaction& tx, uint64_t fee, size_t outputs) {
+  void GenerateTransaction(const cryptonote::Currency& currency, transaction_t& tx, uint64_t fee, size_t outputs) {
     TestTransactionGenerator txGenerator(currency, 1);
     txGenerator.createSources();
     txGenerator.construct(txGenerator.m_source_amount, fee, outputs, tx);
@@ -181,7 +181,7 @@ namespace
       txGenerator.createSources();
     }
 
-    void construct(uint64_t fee, size_t outputs, Transaction& tx) {
+    void construct(uint64_t fee, size_t outputs, transaction_t& tx) {
       txGenerator.construct(txGenerator.m_source_amount, fee, outputs, tx);
     }
 
@@ -206,7 +206,7 @@ namespace
 // TEST_F(tx_pool, add_one_tx)
 // {
 //   TxTestBase test(1);
-//   Transaction tx;
+//   transaction_t tx;
 
 //   test.construct(test.m_currency.minimumFee(), 1, tx);
 
@@ -219,7 +219,7 @@ namespace
 // TEST_F(tx_pool, take_tx)
 // {
 //   TxTestBase test(1);
-//   Transaction tx;
+//   transaction_t tx;
 
 //   test.construct(test.m_currency.minimumFee(), 1, tx);
 
@@ -230,7 +230,7 @@ namespace
 //   ASSERT_TRUE(test.pool.add_tx(tx, tvc, false));
 //   ASSERT_FALSE(tvc.m_verifivation_failed);
 
-//   Transaction txOut;
+//   transaction_t txOut;
 //   size_t blobSize;
 //   uint64_t fee = 0;
 
@@ -243,7 +243,7 @@ namespace
 // TEST_F(tx_pool, double_spend_tx)
 // {
 //   TxTestBase test(1);
-//   Transaction tx, tx_double;
+//   transaction_t tx, tx_double;
 
 //   test.construct(test.m_currency.minimumFee(), 1, tx);
 
@@ -265,15 +265,15 @@ namespace
 //   TestPool<TransactionValidator, RealTimeProvider> pool(currency, logger);
 //   uint64_t fee = currency.minimumFee();
 
-//   std::unordered_map<crypto::hash_t, std::unique_ptr<Transaction>> transactions;
+//   std::unordered_map<crypto::hash_t, std::unique_ptr<transaction_t>> transactions;
 
 //   // generate transactions
 //   for (int i = 1; i <= 50; ++i) {
 //     TestTransactionGenerator txGenerator(currency, 1);
 //     txGenerator.createSources();
     
-//     std::unique_ptr<Transaction> txptr(new Transaction);
-//     Transaction& tx = *txptr;
+//     std::unique_ptr<transaction_t> txptr(new transaction_t);
+//     transaction_t& tx = *txptr;
 
 //     txGenerator.construct(txGenerator.m_source_amount, fee, i, tx);
 
@@ -321,7 +321,7 @@ namespace
 //   const uint64_t fee = currency.minimumFee();
 //   const size_t totalTransactions = 50;
 
-//   std::unordered_map<crypto::hash_t, std::unique_ptr<Transaction>> transactions;
+//   std::unordered_map<crypto::hash_t, std::unique_ptr<transaction_t>> transactions;
 
 
 //   // generate transactions
@@ -330,8 +330,8 @@ namespace
 //     TestTransactionGenerator txGenerator(currency, 1);
 //     txGenerator.createSources();
 
-//     std::unique_ptr<Transaction> txptr(new Transaction);
-//     Transaction& tx = *txptr;
+//     std::unique_ptr<transaction_t> txptr(new transaction_t);
+//     transaction_t& tx = *txptr;
 
 //     // interleave fee and fee*2
 //     txGenerator.construct(txGenerator.m_source_amount, fee + (fee * (i&1)), 1, tx);
@@ -381,7 +381,7 @@ namespace
 //   time_t startTime = pool.timeProvider.now();
 
 //   for (int i = 0; i < 3; ++i) {
-//     Transaction tx;
+//     transaction_t tx;
 //     GenerateTransaction(currency, tx, fee, 1);
 
 //     TxVerificationContext tvc = boost::value_initialized<TxVerificationContext>();
@@ -392,7 +392,7 @@ namespace
 //   }
 
 //   for (int i = 0; i < 5; ++i) {
-//     Transaction tx;
+//     transaction_t tx;
 //     GenerateTransaction(currency, tx, fee, 1);
 
 //     TxVerificationContext tvc = boost::value_initialized<TxVerificationContext>();
@@ -423,7 +423,7 @@ namespace
 
 //   time_t startTime = pool.timeProvider.now();
 
-//   Transaction tx;
+//   transaction_t tx;
 //   GenerateTransaction(currency, tx, fee, 1);
 
 //   TxVerificationContext tvc = boost::value_initialized<TxVerificationContext>();
@@ -452,7 +452,7 @@ namespace
 
 //   uint64_t startTime = pool.timeProvider.now();
 
-//   Transaction tx;
+//   transaction_t tx;
 //   GenerateTransaction(currency, tx, currency.minimumFee(), 1);
 
 //   TxVerificationContext tvc = boost::value_initialized<TxVerificationContext>();
@@ -479,7 +479,7 @@ namespace
 
 //   uint64_t startTime = pool.timeProvider.now();
 
-//   Transaction tx;
+//   transaction_t tx;
 //   GenerateTransaction(currency, tx, currency.minimumFee(), 1);
 
 //   TxVerificationContext tvc = boost::value_initialized<TxVerificationContext>();
@@ -510,7 +510,7 @@ namespace
 
 //   uint64_t startTime = pool.timeProvider.now();
 
-//   Transaction tx;
+//   transaction_t tx;
 //   GenerateTransaction(currency, tx, currency.minimumFee(), 1);
 
 //   TxVerificationContext tvc = boost::value_initialized<TxVerificationContext>();
@@ -540,7 +540,7 @@ namespace
 
 //   uint64_t startTime = timeProvider.now();
 
-//   Transaction tx;
+//   transaction_t tx;
 //   GenerateTransaction(currency, tx, currency.minimumFee(), 1);
 
 //   TxVerificationContext tvc = boost::value_initialized<TxVerificationContext>();
@@ -566,7 +566,7 @@ namespace
 
 //   uint64_t startTime = timeProvider.now();
 
-//   Transaction tx;
+//   transaction_t tx;
 //   GenerateTransaction(currency, tx, currency.minimumFee(), 1);
 
 //   TxVerificationContext tvc = boost::value_initialized<TxVerificationContext>();
@@ -605,7 +605,7 @@ namespace
 
 //   uint64_t startTime = timeProvider.now();
 
-//   Transaction tx;
+//   transaction_t tx;
 //   GenerateTransaction(currency, tx, currency.minimumFee(), 1);
 
 //   TxVerificationContext tvc = boost::value_initialized<TxVerificationContext>();
@@ -692,12 +692,12 @@ const size_t TEST_FUSION_TX_MAX_SIZE = TEST_FUSION_TX_COUNT_PER_BLOCK * TEST_TRA
 const size_t TEST_MINER_TX_BLOB_RESERVED_SIZE = 600;
 const size_t TEST_MEDIAN_SIZE = TEST_TX_COUNT_UP_TO_MEDIAN * TEST_TRANSACTION_SIZE + TEST_MINER_TX_BLOB_RESERVED_SIZE;
 
-Transaction createTestFusionTransaction(const Currency& currency) {
+transaction_t createTestFusionTransaction(const Currency& currency) {
   FusionTransactionBuilder builder(currency, 30 * currency.defaultDustThreshold());
   return builder.createFusionTransactionBySize(TEST_TRANSACTION_SIZE);
 }
 
-Transaction createTestOrdinaryTransactionWithExtra(const Currency& currency, size_t extraSize) {
+transaction_t createTestOrdinaryTransactionWithExtra(const Currency& currency, size_t extraSize) {
   TestTransactionBuilder builder;
   if (extraSize != 0) {
     builder.appendExtra(BinaryArray(extraSize, 0));
@@ -708,7 +708,7 @@ Transaction createTestOrdinaryTransactionWithExtra(const Currency& currency, siz
   return convertTx(*builder.build());
 }
 
-Transaction createTestOrdinaryTransaction(const Currency& currency) {
+transaction_t createTestOrdinaryTransaction(const Currency& currency) {
   auto tx = createTestOrdinaryTransactionWithExtra(currency, 0);
   size_t realSize = getObjectBinarySize(tx);
   if (realSize < TEST_TRANSACTION_SIZE) {
@@ -738,13 +738,13 @@ public:
     std::unique_ptr<TxMemoryPool> pool(new TxMemoryPool(currency, validator, timeProvider, logger));
     ASSERT_TRUE(pool->init());
 
-    std::unordered_map<crypto::hash_t, Transaction> ordinaryTxs;
+    std::unordered_map<crypto::hash_t, transaction_t> ordinaryTxs;
     for (size_t i = 0; i < poolOrdinaryTxCount; ++i) {
       auto tx = createTestOrdinaryTransaction(currency);
       ordinaryTxs.emplace(getObjectHash(tx), std::move(tx));
     }
 
-    std::unordered_map<crypto::hash_t, Transaction> fusionTxs;
+    std::unordered_map<crypto::hash_t, transaction_t> fusionTxs;
     for (size_t i = 0; i < poolFusionTxCount; ++i) {
       auto tx = createTestFusionTransaction(currency);
       fusionTxs.emplace(getObjectHash(tx), std::move(tx));

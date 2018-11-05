@@ -121,7 +121,7 @@ namespace {
     Logging::ConsoleLogger logger;
     Currency currency;
     TransfersContainer container;
-    AccountKeys account;
+    account_keys_t account;
     std::unique_ptr<ITransaction> txTemplate;
     secret_key_t txSecretKey;
   };

@@ -64,7 +64,7 @@ using namespace cryptonote;
 
   logger(Logging::INFO) << "Addresses match!";
 
-  cryptonote::AccountKeys keys;
+  cryptonote::account_keys_t keys;
   keys.address.spendPublicKey = sendPubKey;
   keys.address.viewPublicKey = viewPubKey;
   keys.spendSecretKey = sendSecretKey;

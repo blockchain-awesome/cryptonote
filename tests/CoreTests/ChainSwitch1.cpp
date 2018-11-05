@@ -52,7 +52,7 @@ bool gen_chain_switch_1::generate(std::vector<test_event_entry>& events) const
   MAKE_TX_LIST_START(events, txs_blk_3, miner_account, recipient_account_2, MK_COINS(7), blk_2);  //  8 + 2N
   MAKE_TX_LIST_START(events, txs_blk_4, miner_account, recipient_account_3, MK_COINS(11), blk_2); //  9 + 2N
   MAKE_TX_LIST_START(events, txs_blk_5, miner_account, recipient_account_4, MK_COINS(13), blk_2); // 10 + 2N
-  std::list<Transaction> txs_blk_6;
+  std::list<transaction_t> txs_blk_6;
   txs_blk_6.push_back(txs_blk_4.front());
 
   // Transactions, that has different order in alt block chains
@@ -116,7 +116,7 @@ bool gen_chain_switch_1::check_split_not_switched(cryptonote::core& c, size_t ev
   CHECK_EQ(MK_COINS(14), get_balance(m_recipient_account_3, chain, mtx));
   CHECK_EQ(MK_COINS(3),  get_balance(m_recipient_account_4, chain, mtx));
 
-  std::vector<Transaction> tx_pool = c.getPoolTransactions();
+  std::vector<transaction_t> tx_pool = c.getPoolTransactions();
   CHECK_EQ(1, tx_pool.size());
 
   std::vector<size_t> tx_outs;
@@ -164,7 +164,7 @@ bool gen_chain_switch_1::check_split_switched(cryptonote::core& c, size_t ev_ind
   CHECK_EQ(MK_COINS(14), get_balance(m_recipient_account_3, chain, mtx));
   CHECK_EQ(MK_COINS(16), get_balance(m_recipient_account_4, chain, mtx));
 
-  std::vector<Transaction> tx_pool = c.getPoolTransactions();
+  std::vector<transaction_t> tx_pool = c.getPoolTransactions();
   CHECK_EQ(1, tx_pool.size());
   CHECK_TEST_CONDITION(!(tx_pool.front() == m_tx_pool.front()));
 

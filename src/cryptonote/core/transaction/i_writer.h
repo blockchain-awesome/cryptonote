@@ -31,22 +31,22 @@ class ITransactionWriter
     virtual void appendExtra(const BinaryArray &extraData) = 0;
 
     // Inputs/Outputs
-    virtual size_t addInput(const KeyInput &input) = 0;
-    virtual size_t addInput(const MultisignatureInput &input) = 0;
-    virtual size_t addInput(const AccountKeys &senderKeys, const TransactionTypes::InputKeyInfo &info, KeyPair &ephKeys) = 0;
+    virtual size_t addInput(const key_input_t &input) = 0;
+    virtual size_t addInput(const multi_signature_input_t &input) = 0;
+    virtual size_t addInput(const account_keys_t &senderKeys, const TransactionTypes::InputKeyInfo &info, key_pair_t &ephKeys) = 0;
 
-    virtual size_t addOutput(uint64_t amount, const AccountPublicAddress &to) = 0;
-    virtual size_t addOutput(uint64_t amount, const std::vector<AccountPublicAddress> &to, uint32_t requiredSignatures) = 0;
-    virtual size_t addOutput(uint64_t amount, const KeyOutput &out) = 0;
-    virtual size_t addOutput(uint64_t amount, const MultisignatureOutput &out) = 0;
+    virtual size_t addOutput(uint64_t amount, const account_public_address_t &to) = 0;
+    virtual size_t addOutput(uint64_t amount, const std::vector<account_public_address_t> &to, uint32_t requiredSignatures) = 0;
+    virtual size_t addOutput(uint64_t amount, const key_output_t &out) = 0;
+    virtual size_t addOutput(uint64_t amount, const multi_signature_output_t &out) = 0;
 
     // transaction info
     virtual void setTransactionSecretKey(const crypto::secret_key_t &key) = 0;
 
     // signing
-    virtual void signInputKey(size_t input, const TransactionTypes::InputKeyInfo &info, const KeyPair &ephKeys) = 0;
-    virtual void signInputMultisignature(size_t input, const crypto::public_key_t &sourceTransactionKey, size_t outputIndex, const AccountKeys &accountKeys) = 0;
-    virtual void signInputMultisignature(size_t input, const KeyPair &ephemeralKeys) = 0;
+    virtual void signInputKey(size_t input, const TransactionTypes::InputKeyInfo &info, const key_pair_t &ephKeys) = 0;
+    virtual void signInputMultisignature(size_t input, const crypto::public_key_t &sourceTransactionKey, size_t outputIndex, const account_keys_t &accountKeys) = 0;
+    virtual void signInputMultisignature(size_t input, const key_pair_t &ephemeralKeys) = 0;
 };
 
 } // namespace cryptonote

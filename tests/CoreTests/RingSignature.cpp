@@ -309,7 +309,7 @@ bool gen_ring_signature_big::check_balances_2(cryptonote::core& c, size_t ev_ind
 
   std::vector<size_t> tx_outs;
   uint64_t transfered;
-  lookup_acc_outs(m_alice_account.getAccountKeys(), boost::get<Transaction>(events[events.size() - 3]), getTransactionPublicKeyFromExtra(boost::get<Transaction>(events[events.size() - 3]).extra), tx_outs, transfered);
+  lookup_acc_outs(m_alice_account.getAccountKeys(), boost::get<transaction_t>(events[events.size() - 3]), getTransactionPublicKeyFromExtra(boost::get<transaction_t>(events[events.size() - 3]).extra), tx_outs, transfered);
   CHECK_EQ(m_tx_amount, transfered);
 
   return true;

@@ -169,7 +169,7 @@ void SingleWallet::initAndGenerate(const std::string &password)
   m_observerManager.notify(&IWalletLegacyObserver::initCompleted, std::error_code());
 }
 
-void SingleWallet::initWithKeys(const AccountKeys &accountKeys, const std::string &password)
+void SingleWallet::initWithKeys(const account_keys_t &accountKeys, const std::string &password)
 {
   {
     std::unique_lock<std::mutex> stateLock(m_cacheMutex);
@@ -213,7 +213,7 @@ void SingleWallet::initAndLoad(std::istream &source, const std::string &password
 void SingleWallet::initSync()
 {
   AccountSubscription sub;
-  sub.keys = reinterpret_cast<const AccountKeys &>(m_account.getAccountKeys());
+  sub.keys = reinterpret_cast<const account_keys_t &>(m_account.getAccountKeys());
   sub.transactionSpendableAge = 1;
   sub.syncStart.height = 0;
   sub.syncStart.timestamp = m_account.getCreatetime() - ACCOUN_CREATE_TIME_ACCURACY;
@@ -673,7 +673,7 @@ void SingleWallet::notifyIfBalanceChanged()
   }
 }
 
-void SingleWallet::getAccountKeys(AccountKeys &keys)
+void SingleWallet::getAccountKeys(account_keys_t &keys)
 {
   if (m_state == NOT_INITIALIZED)
   {

@@ -16,7 +16,7 @@ public:
   virtual ~IBlockchainObserver() {}
 
   virtual void blockchainUpdated(const std::vector<BlockDetails>& newBlocks, const std::vector<BlockDetails>& orphanedBlocks) {}
-  virtual void poolUpdated(const std::vector<TransactionDetails>& newTransactions, const std::vector<std::pair<crypto::hash_t, TransactionRemoveReason>>& removedTransactions) {}
+  virtual void poolUpdated(const std::vector<transaction_details_t>& newTransactions, const std::vector<std::pair<crypto::hash_t, TransactionRemoveReason>>& removedTransactions) {}
 
   virtual void blockchainSynchronized(const BlockDetails& topBlock) {}
 };
@@ -37,10 +37,10 @@ public:
 
   virtual bool getBlockchainTop(BlockDetails& topBlock) = 0;
 
-  virtual bool getTransactions(const std::vector<crypto::hash_t>& transactionHashes, std::vector<TransactionDetails>& transactions) = 0;
-  virtual bool getTransactionsByPaymentId(const crypto::hash_t& paymentId, std::vector<TransactionDetails>& transactions) = 0;
-  virtual bool getPoolTransactions(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t transactionsNumberLimit, std::vector<TransactionDetails>& transactions, uint64_t& transactionsNumberWithinTimestamps) = 0;
-  virtual bool getPoolState(const std::vector<crypto::hash_t>& knownPoolTransactionHashes, crypto::hash_t knownBlockchainTop, bool& isBlockchainActual, std::vector<TransactionDetails>& newTransactions, std::vector<crypto::hash_t>& removedTransactions) = 0;
+  virtual bool getTransactions(const std::vector<crypto::hash_t>& transactionHashes, std::vector<transaction_details_t>& transactions) = 0;
+  virtual bool getTransactionsByPaymentId(const crypto::hash_t& paymentId, std::vector<transaction_details_t>& transactions) = 0;
+  virtual bool getPoolTransactions(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t transactionsNumberLimit, std::vector<transaction_details_t>& transactions, uint64_t& transactionsNumberWithinTimestamps) = 0;
+  virtual bool getPoolState(const std::vector<crypto::hash_t>& knownPoolTransactionHashes, crypto::hash_t knownBlockchainTop, bool& isBlockchainActual, std::vector<transaction_details_t>& newTransactions, std::vector<crypto::hash_t>& removedTransactions) = 0;
 
   virtual uint64_t getRewardBlocksWindow() = 0;
   virtual uint64_t getFullRewardMaxBlockSize(uint8_t majorVersion) = 0;

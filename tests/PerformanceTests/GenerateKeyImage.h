@@ -21,7 +21,7 @@ public:
     if (!single_tx_test_base::init())
       return false;
 
-    AccountKeys bob_keys = m_bob.getAccountKeys();
+    account_keys_t bob_keys = m_bob.getAccountKeys();
 
     crypto::key_derivation_t recv_derivation;
     crypto::generate_key_derivation(m_tx_pub_key, bob_keys.viewSecretKey, recv_derivation);
@@ -40,5 +40,5 @@ public:
   }
 
 private:
-  cryptonote::KeyPair m_in_ephemeral;
+  cryptonote::key_pair_t m_in_ephemeral;
 };

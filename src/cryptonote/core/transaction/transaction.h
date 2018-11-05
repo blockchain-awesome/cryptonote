@@ -7,56 +7,56 @@
 namespace cryptonote
 {
 
-struct BaseInput
+struct base_input_t
 {
     uint32_t blockIndex;
 };
 
-struct KeyInput
+struct key_input_t
 {
     uint64_t amount;
     std::vector<uint32_t> outputIndexes;
     crypto::key_image_t keyImage;
 };
 
-struct MultisignatureInput
+struct multi_signature_input_t
 {
     uint64_t amount;
     uint8_t signatureCount;
     uint32_t outputIndex;
 };
 
-struct KeyOutput
+struct key_output_t
 {
     crypto::public_key_t key;
 };
 
-struct MultisignatureOutput
+struct multi_signature_output_t
 {
     std::vector<crypto::public_key_t> keys;
     uint8_t requiredSignatureCount;
 };
 
-typedef boost::variant<BaseInput, KeyInput, MultisignatureInput> TransactionInput;
+typedef boost::variant<base_input_t, key_input_t, multi_signature_input_t> transaction_input_t;
 
-typedef boost::variant<KeyOutput, MultisignatureOutput> TransactionOutputTarget;
+typedef boost::variant<key_output_t, multi_signature_output_t> transaction_output_target_t;
 
-struct TransactionOutput
+struct transaction_output_t
 {
     uint64_t amount;
-    TransactionOutputTarget target;
+    transaction_output_target_t target;
 };
 
-struct TransactionPrefix
+struct transaction_prefix_t
 {
     uint8_t version;
     uint64_t unlockTime;
-    std::vector<TransactionInput> inputs;
-    std::vector<TransactionOutput> outputs;
+    std::vector<transaction_input_t> inputs;
+    std::vector<transaction_output_t> outputs;
     std::vector<uint8_t> extra;
 };
 
-struct Transaction : public TransactionPrefix
+struct transaction_t : public transaction_prefix_t
 {
     std::vector<std::vector<crypto::signature_t>> signatures;
 };

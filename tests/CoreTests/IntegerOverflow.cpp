@@ -8,30 +8,30 @@ using namespace cryptonote;
 
 namespace
 {
-  void split_miner_tx_outs(Transaction& miner_tx, uint64_t amount_1)
+  void split_miner_tx_outs(transaction_t& miner_tx, uint64_t amount_1)
   {
     uint64_t total_amount = get_outs_money_amount(miner_tx);
     uint64_t amount_2 = total_amount - amount_1;
-    TransactionOutputTarget target = miner_tx.outputs[0].target;
+    transaction_output_target_t target = miner_tx.outputs[0].target;
 
     miner_tx.outputs.clear();
 
-    TransactionOutput out1;
+    transaction_output_t out1;
     out1.amount = amount_1;
     out1.target = target;
     miner_tx.outputs.push_back(out1);
 
-    TransactionOutput out2;
+    transaction_output_t out2;
     out2.amount = amount_2;
     out2.target = target;
     miner_tx.outputs.push_back(out2);
   }
 
-  void append_TransactionSourceEntry(std::vector<cryptonote::TransactionSourceEntry>& sources, const Transaction& tx, size_t out_idx)
+  void append_TransactionSourceEntry(std::vector<cryptonote::TransactionSourceEntry>& sources, const transaction_t& tx, size_t out_idx)
   {
     cryptonote::TransactionSourceEntry se;
     se.amount = tx.outputs[out_idx].amount;
-    se.outputs.push_back(std::make_pair(0, boost::get<cryptonote::KeyOutput>(tx.outputs[out_idx].target).key));
+    se.outputs.push_back(std::make_pair(0, boost::get<cryptonote::key_output_t>(tx.outputs[out_idx].target).key));
     se.realOutput = 0;
     se.realTransactionPublicKey = getTransactionPublicKeyFromExtra(tx.extra);
     se.realOutputIndexInTransaction = out_idx;
@@ -48,7 +48,7 @@ gen_uint_overflow_base::gen_uint_overflow_base()
   REGISTER_CALLBACK_METHOD(gen_uint_overflow_1, mark_last_valid_block);
 }
 
-bool gen_uint_overflow_base::check_TxVerificationContext(const cryptonote::TxVerificationContext& tvc, bool tx_added, size_t event_idx, const cryptonote::Transaction& /*tx*/)
+bool gen_uint_overflow_base::check_TxVerificationContext(const cryptonote::TxVerificationContext& tvc, bool tx_added, size_t event_idx, const cryptonote::transaction_t& /*tx*/)
 {
   return m_last_valid_block_event_idx < event_idx ? !tx_added && tvc.m_verifivation_failed : tx_added && !tvc.m_verifivation_failed;
 }
@@ -99,7 +99,7 @@ bool gen_uint_overflow_1::generate(std::vector<test_event_entry>& events) const
   REWIND_BLOCKS(events, blk_3r, blk_3, miner_account);
 
   // Problem 2. total_fee overflow, block_reward overflow
-  std::list<cryptonote::Transaction> txs_1;
+  std::list<cryptonote::transaction_t> txs_1;
   // Create txs with huge fee
   txs_1.push_back(construct_tx_with_fee(m_logger, events, blk_3, bob_account, alice_account, MK_COINS(1), m_currency.moneySupply() - MK_COINS(1)));
   txs_1.push_back(construct_tx_with_fee(m_logger, events, blk_3, bob_account, alice_account, MK_COINS(1), m_currency.moneySupply() - MK_COINS(1)));
@@ -137,13 +137,13 @@ bool gen_uint_overflow_2::generate(std::vector<test_event_entry>& events) const
   }
 
   std::vector<cryptonote::TransactionDestinationEntry> destinations;
-  const AccountPublicAddress& bob_addr = bob_account.getAccountKeys().address;
+  const account_public_address_t& bob_addr = bob_account.getAccountKeys().address;
   destinations.push_back(TransactionDestinationEntry(m_currency.moneySupply(), bob_addr));
   destinations.push_back(TransactionDestinationEntry(m_currency.moneySupply() - 1, bob_addr));
   // sources.front().amount = destinations[0].amount + destinations[2].amount + destinations[3].amount + m_currency.minimumFee()
   destinations.push_back(TransactionDestinationEntry(sources.front().amount - m_currency.moneySupply() - m_currency.moneySupply() + 1 - m_currency.minimumFee(), bob_addr));
 
-  cryptonote::Transaction tx_1;
+  cryptonote::transaction_t tx_1;
   if (!constructTransaction(miner_account.getAccountKeys(), sources, destinations, std::vector<uint8_t>(), tx_1, 0, m_logger))
     return false;
   events.push_back(tx_1);
@@ -169,7 +169,7 @@ bool gen_uint_overflow_2::generate(std::vector<test_event_entry>& events) const
   destinations.push_back(de);
   destinations.push_back(de);
 
-  cryptonote::Transaction tx_2;
+  cryptonote::transaction_t tx_2;
   if (!constructTransaction(bob_account.getAccountKeys(), sources, destinations, std::vector<uint8_t>(), tx_2, 0, m_logger))
     return false;
   events.push_back(tx_2);

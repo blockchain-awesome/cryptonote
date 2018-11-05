@@ -285,7 +285,7 @@ bool RpcServer::on_get_random_outs(const COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOU
 
 bool RpcServer::onGetPoolChanges(const COMMAND_RPC_GET_POOL_CHANGES::request& req, COMMAND_RPC_GET_POOL_CHANGES::response& rsp) {
   rsp.status = CORE_RPC_STATUS_OK;
-  std::vector<cryptonote::Transaction> addedTransactions;
+  std::vector<cryptonote::transaction_t> addedTransactions;
   rsp.isTailBlockActual = m_core.getPoolChanges(req.tailBlockId, req.knownTxsIds, addedTransactions, rsp.deletedTxsIds);
   for (auto& tx : addedTransactions) {
     BinaryArray txBlob;
@@ -349,7 +349,7 @@ bool RpcServer::on_get_transactions(const COMMAND_RPC_GET_TRANSACTIONS::request&
     vh.push_back(*reinterpret_cast<const hash_t*>(b.data()));
   }
   std::list<hash_t> missed_txs;
-  std::list<Transaction> txs;
+  std::list<transaction_t> txs;
   m_core.getTransactions(vh, txs, missed_txs);
 
   for (auto& tx : txs) {
@@ -405,7 +405,7 @@ bool RpcServer::on_send_raw_tx(const COMMAND_RPC_SEND_RAW_TX::request& req, COMM
 }
 
 bool RpcServer::on_start_mining(const COMMAND_RPC_START_MINING::request& req, COMMAND_RPC_START_MINING::response& res) {
-  AccountPublicAddress adr;
+  account_public_address_t adr;
   if (!Account::parseAddress(req.miner_address, adr)) {
     res.status = "Failed, wrong address";
     return true;
@@ -489,7 +489,7 @@ bool RpcServer::on_getblocktemplate(const COMMAND_RPC_GETBLOCKTEMPLATE::request&
     throw JsonRpc::JsonRpcError{ CORE_RPC_ERROR_CODE_TOO_BIG_RESERVE_SIZE, "To big reserved size, maximum 255" };
   }
 
-  AccountPublicAddress acc = boost::value_initialized<AccountPublicAddress>();
+  account_public_address_t acc = boost::value_initialized<account_public_address_t>();
 
   if (!req.wallet_address.size() || !Account::parseAddress(req.wallet_address, acc)) {
     throw JsonRpc::JsonRpcError{ CORE_RPC_ERROR_CODE_WRONG_WALLET_ADDRESS, "Failed to parse wallet address" };
@@ -563,7 +563,7 @@ bool RpcServer::on_submitblock(const COMMAND_RPC_SUBMITBLOCK::request& req, COMM
 namespace {
   uint64_t get_block_reward(const block_t& blk) {
     uint64_t reward = 0;
-    for (const TransactionOutput& out : blk.baseTransaction.outputs) {
+    for (const transaction_output_t& out : blk.baseTransaction.outputs) {
       reward += out.amount;
     }
     return reward;
@@ -616,13 +616,13 @@ bool RpcServer::on_get_block_header_by_hash(const COMMAND_RPC_GET_BLOCK_HEADER_B
       "Internal error: can't get block by hash. hash_t = " + req.hash + '.' };
   }
 
-  if (blk.baseTransaction.inputs.front().type() != typeid(BaseInput)) {
+  if (blk.baseTransaction.inputs.front().type() != typeid(base_input_t)) {
     throw JsonRpc::JsonRpcError{
       CORE_RPC_ERROR_CODE_INTERNAL_ERROR,
       "Internal error: coinbase transaction in the block has the wrong type" };
   }
 
-  uint64_t block_height = boost::get<BaseInput>(blk.baseTransaction.inputs.front()).blockIndex;
+  uint64_t block_height = boost::get<base_input_t>(blk.baseTransaction.inputs.front()).blockIndex;
   fill_block_header_response(blk, false, block_height, block_hash, res.block_header);
   res.status = CORE_RPC_STATUS_OK;
   return true;

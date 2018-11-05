@@ -14,8 +14,8 @@ class PaymentIdIndex
   public:
     PaymentIdIndex() = default;
 
-    bool add(const Transaction &transaction);
-    bool remove(const Transaction &transaction);
+    bool add(const transaction_t &transaction);
+    bool remove(const transaction_t &transaction);
     bool find(const crypto::hash_t &paymentId, std::vector<crypto::hash_t> &transactionHashes);
     void clear();
 

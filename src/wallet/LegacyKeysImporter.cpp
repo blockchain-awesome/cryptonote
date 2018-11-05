@@ -57,7 +57,7 @@ void loadKeysFromFile(const std::string& filename, const std::string& password, 
   account_data.resize(keys_file_data.account_data.size());
   chacha8(keys_file_data.account_data.data(), keys_file_data.account_data.size(), key, keys_file_data.iv, &account_data[0]);
 
-  const cryptonote::AccountKeys& keys = account.getAccountKeys();
+  const cryptonote::account_keys_t& keys = account.getAccountKeys();
 
   if (cryptonote::loadFromBinaryKeyValue(account, account_data) &&
       verify_keys(keys.viewSecretKey, keys.address.viewPublicKey) &&

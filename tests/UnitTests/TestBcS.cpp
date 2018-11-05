@@ -22,8 +22,8 @@ using namespace cryptonote;
 
 
 namespace {
-Transaction createTx(ITransactionReader& tx) {
-  Transaction outTx;
+transaction_t createTx(ITransactionReader& tx) {
+  transaction_t outTx;
   fromBinaryArray(outTx, tx.getTransactionData());
 
   return outTx;
@@ -511,7 +511,7 @@ TEST_F(BcSTest, firstPoolSynchronizationCheck) {
   std::unordered_set<hash_t> secondExpectedPool = { tx2hash };
 
   std::vector<hash_t> expectedDeletedPoolAnswer = { tx3hash };
-  std::vector<Transaction> expectedNewPoolAnswer = { tx1 };
+  std::vector<transaction_t> expectedNewPoolAnswer = { tx1 };
   std::vector<hash_t> expectedNewPoolAnswerHashes = { tx1hash };
 
   FunctorialPoolConsumerStub c1(m_currency.genesisBlockHash());
@@ -758,7 +758,7 @@ TEST_F(BcSTest, poolSynchronizationCheckTxAdded) {
   auto tx1 = ::createTx(*tx1ptr.get());
   auto tx1hash = getObjectHash(tx1);
 
-  std::vector<Transaction> newPoolAnswer = { tx1 };
+  std::vector<transaction_t> newPoolAnswer = { tx1 };
   std::vector<hash_t> expectedKnownPoolHashes = { tx1hash };
 
   addConsumers(1);
@@ -814,7 +814,7 @@ TEST_F(BcSTest, poolSynchronizationCheckTxDeleted) {
   auto tx1 = ::createTx(*tx1ptr.get());
   auto tx1hash = getObjectHash(tx1);
 
-  std::vector<Transaction> newPoolAnswer = { tx1 };
+  std::vector<transaction_t> newPoolAnswer = { tx1 };
   std::vector<hash_t> deletedPoolAnswer = { tx1hash };
   std::vector<hash_t> expectedKnownPoolHashes = {};
 

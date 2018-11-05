@@ -69,7 +69,7 @@ TEST_F(PaymentGateTest, addTransaction) {
   std::string addressStr;
   ASSERT_TRUE(!service->createAddress(addressStr));
 
-  AccountPublicAddress address;
+  account_public_address_t address;
   ASSERT_TRUE(Account::parseAddress(addressStr, address));
 
   generator.getBlockRewardForAddress(address);
@@ -101,7 +101,7 @@ TEST_F(PaymentGateTest, DISABLED_sendTransaction) {
   std::string addressStr;
   ASSERT_TRUE(!service->createAddress(addressStr));
 
-  AccountPublicAddress address;
+  account_public_address_t address;
   ASSERT_TRUE(currency.parseAccountAddressString(addressStr, address));
 
   generator.getBlockRewardForAddress(address);

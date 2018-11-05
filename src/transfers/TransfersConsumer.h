@@ -26,9 +26,9 @@ public:
 
   ITransfersSubscription& addSubscription(const AccountSubscription& subscription);
   // returns true if no subscribers left
-  bool removeSubscription(const AccountPublicAddress& address);
-  ITransfersSubscription* getSubscription(const AccountPublicAddress& acc);
-  void getSubscriptions(std::vector<AccountPublicAddress>& subscriptions);
+  bool removeSubscription(const account_public_address_t& address);
+  ITransfersSubscription* getSubscription(const account_public_address_t& acc);
+  void getSubscriptions(std::vector<account_public_address_t>& subscriptions);
 
   void initTransactionPool(const std::unordered_set<crypto::hash_t>& uncommitedTransactions);
   

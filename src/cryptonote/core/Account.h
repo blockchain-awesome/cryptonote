@@ -22,14 +22,14 @@ public:
   AccountBase(uint64_t prefix = parameters::CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX);
   void generate();
 
-  const AccountKeys &getAccountKeys() const;
-  void setAccountKeys(const AccountKeys &keys);
+  const account_keys_t &getAccountKeys() const;
+  void setAccountKeys(const account_keys_t &keys);
 
-  static bool parseAddress(uint64_t &prefix, AccountPublicAddress &adr, const std::string &str);
-  static bool parseAddress(const std::string &str, AccountPublicAddress &addr, uint64_t prefixExpected = parameters::CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX);
+  static bool parseAddress(uint64_t &prefix, account_public_address_t &adr, const std::string &str);
+  static bool parseAddress(const std::string &str, account_public_address_t &addr, uint64_t prefixExpected = parameters::CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX);
   static bool parseAddress(const std::string &str, uint64_t prefix = parameters::CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX);
 
-  static std::string getAddress(const AccountPublicAddress &adr, uint64_t prefix = parameters::CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX);
+  static std::string getAddress(const account_public_address_t &adr, uint64_t prefix = parameters::CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX);
   std::string toAddress();
 
   uint64_t getCreatetime() const { return m_creation_timestamp; }
@@ -45,7 +45,7 @@ public:
 
 private:
   void setNull();
-  AccountKeys m_keys;
+  account_keys_t m_keys;
   uint64_t m_creation_timestamp;
   uint64_t m_publicAddressBase58Prefix;
 };

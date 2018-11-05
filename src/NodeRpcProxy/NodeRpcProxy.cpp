@@ -299,7 +299,7 @@ uint64_t NodeRpcProxy::getLastLocalBlockTimestamp() const {
   return m_lastLocalBlockTimestamp;
 }
 
-void NodeRpcProxy::relayTransaction(const cryptonote::Transaction& transaction, const Callback& callback) {
+void NodeRpcProxy::relayTransaction(const cryptonote::transaction_t& transaction, const Callback& callback) {
   std::lock_guard<std::mutex> lock(m_mutex);
   if (m_state != STATE_INITIALIZED) {
     callback(make_error_code(error::NOT_INITIALIZED));
@@ -372,7 +372,7 @@ void NodeRpcProxy::getPoolSymmetricDifference(std::vector<crypto::hash_t>&& know
     return this->doGetPoolSymmetricDifference(std::move(knownPoolTxIds), knownBlockId, isBcActual, newTxs, deletedTxIds); } , callback);
 }
 
-void NodeRpcProxy::getMultisignatureOutputByGlobalIndex(uint64_t amount, uint32_t gindex, MultisignatureOutput& out, const Callback& callback) {
+void NodeRpcProxy::getMultisignatureOutputByGlobalIndex(uint64_t amount, uint32_t gindex, multi_signature_output_t& out, const Callback& callback) {
   std::lock_guard<std::mutex> lock(m_mutex);
   if (m_state != STATE_INITIALIZED) {
     callback(make_error_code(error::NOT_INITIALIZED));
@@ -416,7 +416,7 @@ void NodeRpcProxy::getBlocks(const std::vector<crypto::hash_t>& blockHashes, std
   callback(std::error_code());
 }
 
-void NodeRpcProxy::getTransactions(const std::vector<crypto::hash_t>& transactionHashes, std::vector<TransactionDetails>& transactions, const Callback& callback) {
+void NodeRpcProxy::getTransactions(const std::vector<crypto::hash_t>& transactionHashes, std::vector<transaction_details_t>& transactions, const Callback& callback) {
   std::lock_guard<std::mutex> lock(m_mutex);
   if (m_state != STATE_INITIALIZED) {
     callback(make_error_code(error::NOT_INITIALIZED));
@@ -427,7 +427,7 @@ void NodeRpcProxy::getTransactions(const std::vector<crypto::hash_t>& transactio
   callback(std::error_code());
 }
 
-void NodeRpcProxy::getPoolTransactions(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t transactionsNumberLimit, std::vector<TransactionDetails>& transactions, uint64_t& transactionsNumberWithinTimestamps, const Callback& callback) {
+void NodeRpcProxy::getPoolTransactions(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t transactionsNumberLimit, std::vector<transaction_details_t>& transactions, uint64_t& transactionsNumberWithinTimestamps, const Callback& callback) {
   std::lock_guard<std::mutex> lock(m_mutex);
   if (m_state != STATE_INITIALIZED) {
     callback(make_error_code(error::NOT_INITIALIZED));
@@ -438,7 +438,7 @@ void NodeRpcProxy::getPoolTransactions(uint64_t timestampBegin, uint64_t timesta
   callback(std::error_code());
 }
 
-void NodeRpcProxy::getTransactionsByPaymentId(const crypto::hash_t& paymentId, std::vector<TransactionDetails>& transactions, const Callback& callback) {
+void NodeRpcProxy::getTransactionsByPaymentId(const crypto::hash_t& paymentId, std::vector<transaction_details_t>& transactions, const Callback& callback) {
   std::lock_guard<std::mutex> lock(m_mutex);
   if (m_state != STATE_INITIALIZED) {
     callback(make_error_code(error::NOT_INITIALIZED));
@@ -460,7 +460,7 @@ void NodeRpcProxy::isSynchronized(bool& syncStatus, const Callback& callback) {
   callback(std::error_code());
 }
 
-std::error_code NodeRpcProxy::doRelayTransaction(const cryptonote::Transaction& transaction) {
+std::error_code NodeRpcProxy::doRelayTransaction(const cryptonote::transaction_t& transaction) {
   COMMAND_RPC_SEND_RAW_TX::request req;
   COMMAND_RPC_SEND_RAW_TX::response rsp;
   req.tx_as_hex = toHex(toBinaryArray(transaction));

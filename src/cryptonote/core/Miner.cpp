@@ -188,7 +188,7 @@ namespace cryptonote
     return !m_stop;
   }
   //-----------------------------------------------------------------------------------------------------
-  bool miner::start(const AccountPublicAddress& adr, size_t threads_count)
+  bool miner::start(const account_public_address_t& adr, size_t threads_count)
   {   
     if (is_mining()) {
       logger(ERROR) << "Starting miner but it's already started";

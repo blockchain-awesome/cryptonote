@@ -20,10 +20,10 @@ namespace {
   using namespace cryptonote;
   using namespace crypto;
 
-  inline AccountKeys accountKeysFromKeypairs(
-    const KeyPair& viewKeys, 
-    const KeyPair& spendKeys) {
-    AccountKeys ak;
+  inline account_keys_t accountKeysFromKeypairs(
+    const key_pair_t& viewKeys, 
+    const key_pair_t& spendKeys) {
+    account_keys_t ak;
     ak.address.spendPublicKey = spendKeys.publicKey;
     ak.address.viewPublicKey = viewKeys.publicKey;
     ak.spendSecretKey = spendKeys.secretKey;
@@ -31,9 +31,9 @@ namespace {
     return ak;
   }
 
-  inline AccountKeys generateAccountKeys() {
-    KeyPair p1;
-    KeyPair p2;
+  inline account_keys_t generateAccountKeys() {
+    key_pair_t p1;
+    key_pair_t p2;
     crypto::generate_keys(p2.publicKey, p2.secretKey);
     crypto::generate_keys(p1.publicKey, p1.secretKey);
     return accountKeysFromKeypairs(p1, p2);
@@ -45,7 +45,7 @@ namespace {
     return account;
   }
 
-  AccountPublicAddress generateAddress() {
+  account_public_address_t generateAddress() {
     return generateAccount().getAccountKeys().address;
   }
   
@@ -53,9 +53,9 @@ namespace {
     return crypto::rand<key_image_t>();
   }
 
-  key_image_t generateKeyImage(const AccountKeys& keys, size_t idx, const public_key_t& txPubKey) {
+  key_image_t generateKeyImage(const account_keys_t& keys, size_t idx, const public_key_t& txPubKey) {
     key_image_t keyImage;
-    cryptonote::KeyPair in_ephemeral;
+    cryptonote::key_pair_t in_ephemeral;
     cryptonote::generate_key_image_helper(
      keys,
       txPubKey,
@@ -66,7 +66,7 @@ namespace {
   }
 
   void addTestInput(ITransaction& transaction, uint64_t amount) {
-    KeyInput input;
+    key_input_t input;
     input.amount = amount;
     input.keyImage = generateKeyImage();
     input.outputIndexes.emplace_back(1);
@@ -75,12 +75,12 @@ namespace {
   }
 
   TransactionOutputInformationIn addTestKeyOutput(ITransaction& transaction, uint64_t amount,
-    uint32_t globalOutputIndex, const AccountKeys& senderKeys = generateAccountKeys()) {
+    uint32_t globalOutputIndex, const account_keys_t& senderKeys = generateAccountKeys()) {
 
     uint32_t index = static_cast<uint32_t>(transaction.addOutput(amount, senderKeys.address));
 
     uint64_t amount_;
-    KeyOutput output;
+    key_output_t output;
     transaction.getOutput(index, output, amount_);
 
     TransactionOutputInformationIn outputInfo;
@@ -95,8 +95,8 @@ namespace {
     return outputInfo;
   }
 
-  inline Transaction convertTx(ITransactionReader& tx) {
-    Transaction oldTx;
+  inline transaction_t convertTx(ITransactionReader& tx) {
+    transaction_t oldTx;
     fromBinaryArray(oldTx, tx.getTransactionData()); // ignore return code
     return oldTx;
   }
@@ -115,19 +115,19 @@ public:
   void setUnlockTime(uint64_t time);
 
   // inputs
-  size_t addTestInput(uint64_t amount, const AccountKeys& senderKeys = generateAccountKeys());
-  size_t addTestInput(uint64_t amount, std::vector<uint32_t> gouts, const AccountKeys& senderKeys = generateAccountKeys());
+  size_t addTestInput(uint64_t amount, const account_keys_t& senderKeys = generateAccountKeys());
+  size_t addTestInput(uint64_t amount, std::vector<uint32_t> gouts, const account_keys_t& senderKeys = generateAccountKeys());
   void addTestMultisignatureInput(uint64_t amount, const TransactionOutputInformation& t);
   size_t addFakeMultisignatureInput(uint64_t amount, uint32_t globalOutputIndex, size_t signatureCount);
-  void addInput(const AccountKeys& senderKeys, const TransactionOutputInformation& t);
+  void addInput(const account_keys_t& senderKeys, const TransactionOutputInformation& t);
 
   // outputs
-  TransactionOutputInformationIn addTestKeyOutput(uint64_t amount, uint32_t globalOutputIndex, const AccountKeys& senderKeys = generateAccountKeys());
+  TransactionOutputInformationIn addTestKeyOutput(uint64_t amount, uint32_t globalOutputIndex, const account_keys_t& senderKeys = generateAccountKeys());
   TransactionOutputInformationIn addTestMultisignatureOutput(uint64_t amount, uint32_t globalOutputIndex);
-  TransactionOutputInformationIn addTestMultisignatureOutput(uint64_t amount, std::vector<AccountPublicAddress>& addresses, uint32_t globalOutputIndex);
-  size_t addOutput(uint64_t amount, const AccountPublicAddress& to);
-  size_t addOutput(uint64_t amount, const KeyOutput& out);
-  size_t addOutput(uint64_t amount, const MultisignatureOutput& out);
+  TransactionOutputInformationIn addTestMultisignatureOutput(uint64_t amount, std::vector<account_public_address_t>& addresses, uint32_t globalOutputIndex);
+  size_t addOutput(uint64_t amount, const account_public_address_t& to);
+  size_t addOutput(uint64_t amount, const key_output_t& out);
+  size_t addOutput(uint64_t amount, const multi_signature_output_t& out);
 
   // final step
   std::unique_ptr<ITransactionReader> build();
@@ -137,7 +137,7 @@ public:
 
 private:
 
-  void derivePublicKey(const AccountKeys& reciever, const crypto::public_key_t& srcTxKey, size_t outputIndex, public_key_t& ephemeralKey) {
+  void derivePublicKey(const account_keys_t& reciever, const crypto::public_key_t& srcTxKey, size_t outputIndex, public_key_t& ephemeralKey) {
     crypto::key_derivation_t derivation;
     crypto::generate_key_derivation(srcTxKey, reinterpret_cast<const crypto::secret_key_t&>(reciever.viewSecretKey), derivation);
     crypto::derive_public_key(derivation, outputIndex,
@@ -151,7 +151,7 @@ private:
     std::vector<AccountBase> accounts;
   };
 
-  std::unordered_map<size_t, std::pair<TransactionTypes::InputKeyInfo, KeyPair>> keys;
+  std::unordered_map<size_t, std::pair<TransactionTypes::InputKeyInfo, key_pair_t>> keys;
   std::unordered_map<size_t, MsigInfo> msigInputs;
 
   std::unique_ptr<ITransaction> tx;
@@ -181,9 +181,9 @@ public:
   void setInputCount(size_t val);
 
   std::unique_ptr<ITransactionReader> buildReader() const;
-  Transaction buildTx() const;
+  transaction_t buildTx() const;
 
-  Transaction createFusionTransactionBySize(size_t targetSize);
+  transaction_t createFusionTransactionBySize(size_t targetSize);
 
 private:
   const Currency& m_currency;
@@ -198,7 +198,7 @@ private:
 }
 
 namespace cryptonote {
-inline bool operator == (const AccountKeys& a, const AccountKeys& b) { 
+inline bool operator == (const account_keys_t& a, const account_keys_t& b) { 
   return memcmp(&a, &b, sizeof(a)) == 0; 
 }
 }

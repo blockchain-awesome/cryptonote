@@ -72,7 +72,7 @@ public:
 
   virtual void initAndGenerate(const std::string& password) = 0;
   virtual void initAndLoad(std::istream& source, const std::string& password) = 0;
-  virtual void initWithKeys(const AccountKeys& accountKeys, const std::string& password) = 0;
+  virtual void initWithKeys(const account_keys_t& accountKeys, const std::string& password) = 0;
   virtual void shutdown() = 0;
   virtual void reset() = 0;
 
@@ -97,7 +97,7 @@ public:
   virtual TransactionId sendTransaction(const std::vector<WalletLegacyTransfer>& transfers, uint64_t fee, const std::string& extra = "", uint64_t mixIn = 0, uint64_t unlockTimestamp = 0) = 0;
   virtual std::error_code cancelTransaction(size_t transferId) = 0;
 
-  virtual void getAccountKeys(AccountKeys& keys) = 0;
+  virtual void getAccountKeys(account_keys_t& keys) = 0;
 };
 
 }

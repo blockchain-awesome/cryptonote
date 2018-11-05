@@ -38,14 +38,14 @@ void TestTransactionBuilder::setUnlockTime(uint64_t time) {
   tx->setUnlockTime(time);
 }
 
-size_t TestTransactionBuilder::addTestInput(uint64_t amount, const AccountKeys& senderKeys) {
+size_t TestTransactionBuilder::addTestInput(uint64_t amount, const account_keys_t& senderKeys) {
   using namespace TransactionTypes;
 
   TransactionTypes::InputKeyInfo info;
   public_key_t targetKey;
 
-  // cryptonote::KeyPair srcTxKeys = cryptonote::generateKeyPair();
-  KeyPair srcTxKeys = Key::generate();
+  // cryptonote::key_pair_t srcTxKeys = cryptonote::generateKeyPair();
+  key_pair_t srcTxKeys = Key::generate();
   derivePublicKey(senderKeys, srcTxKeys.publicKey, 5, targetKey);
 
   TransactionTypes::GlobalOutput gout = { targetKey, 0 };
@@ -57,20 +57,20 @@ size_t TestTransactionBuilder::addTestInput(uint64_t amount, const AccountKeys& 
   info.realOutput.outputInTransaction = 5;
   info.realOutput.transactionPublicKey = reinterpret_cast<const public_key_t&>(srcTxKeys.publicKey);
 
-  KeyPair ephKeys;
+  key_pair_t ephKeys;
   size_t idx = tx->addInput(senderKeys, info, ephKeys);
   keys[idx] = std::make_pair(info, ephKeys);
   return idx;
 }
 
-size_t TestTransactionBuilder::addTestInput(uint64_t amount, std::vector<uint32_t> gouts, const AccountKeys& senderKeys) {
+size_t TestTransactionBuilder::addTestInput(uint64_t amount, std::vector<uint32_t> gouts, const account_keys_t& senderKeys) {
   using namespace TransactionTypes;
 
   TransactionTypes::InputKeyInfo info;
   public_key_t targetKey;
 
-  // cryptonote::KeyPair srcTxKeys = cryptonote::generateKeyPair();
-  KeyPair srcTxKeys = Key::generate();
+  // cryptonote::key_pair_t srcTxKeys = cryptonote::generateKeyPair();
+  key_pair_t srcTxKeys = Key::generate();
 
   derivePublicKey(senderKeys, srcTxKeys.publicKey, 5, targetKey);
 
@@ -89,13 +89,13 @@ size_t TestTransactionBuilder::addTestInput(uint64_t amount, std::vector<uint32_
   info.realOutput.outputInTransaction = 5;
   info.realOutput.transactionPublicKey = reinterpret_cast<const public_key_t&>(srcTxKeys.publicKey);
 
-  KeyPair ephKeys;
+  key_pair_t ephKeys;
   size_t idx = tx->addInput(senderKeys, info, ephKeys);
   keys[idx] = std::make_pair(info, ephKeys);
   return idx;
 }
 
-void TestTransactionBuilder::addInput(const AccountKeys& senderKeys, const TransactionOutputInformation& t) {
+void TestTransactionBuilder::addInput(const account_keys_t& senderKeys, const TransactionOutputInformation& t) {
   TransactionTypes::InputKeyInfo info;
   info.amount = t.amount;
 
@@ -108,13 +108,13 @@ void TestTransactionBuilder::addInput(const AccountKeys& senderKeys, const Trans
   info.realOutput.transactionIndex = 0;
   info.realOutput.transactionPublicKey = t.transactionPublicKey;
 
-  KeyPair ephKeys;
+  key_pair_t ephKeys;
   size_t idx = tx->addInput(senderKeys, info, ephKeys);
   keys[idx] = std::make_pair(info, ephKeys);
 }
 
 void TestTransactionBuilder::addTestMultisignatureInput(uint64_t amount, const TransactionOutputInformation& t) {
-  MultisignatureInput input;
+  multi_signature_input_t input;
   input.amount = amount;
   input.outputIndex = t.globalOutputIndex;
   input.signatureCount = t.requiredSignatures;
@@ -124,7 +124,7 @@ void TestTransactionBuilder::addTestMultisignatureInput(uint64_t amount, const T
 }
 
 size_t TestTransactionBuilder::addFakeMultisignatureInput(uint64_t amount, uint32_t globalOutputIndex, size_t signatureCount) {
-  MultisignatureInput input;
+  multi_signature_input_t input;
   input.amount = amount;
   input.outputIndex = globalOutputIndex;
   input.signatureCount = static_cast<uint8_t>(signatureCount);
@@ -139,11 +139,11 @@ size_t TestTransactionBuilder::addFakeMultisignatureInput(uint64_t amount, uint3
   return idx;
 }
 
-TransactionOutputInformationIn TestTransactionBuilder::addTestKeyOutput(uint64_t amount, uint32_t globalOutputIndex, const AccountKeys& senderKeys) {
+TransactionOutputInformationIn TestTransactionBuilder::addTestKeyOutput(uint64_t amount, uint32_t globalOutputIndex, const account_keys_t& senderKeys) {
   uint32_t index = static_cast<uint32_t>(tx->addOutput(amount, senderKeys.address));
 
   uint64_t amount_;
-  KeyOutput output;
+  key_output_t output;
   tx->getOutput(index, output, amount_);
 
   TransactionOutputInformationIn outputInfo;
@@ -158,11 +158,11 @@ TransactionOutputInformationIn TestTransactionBuilder::addTestKeyOutput(uint64_t
   return outputInfo;
 }
 
-TransactionOutputInformationIn TestTransactionBuilder::addTestMultisignatureOutput(uint64_t amount, std::vector<AccountPublicAddress>& addresses, uint32_t globalOutputIndex) {
+TransactionOutputInformationIn TestTransactionBuilder::addTestMultisignatureOutput(uint64_t amount, std::vector<account_public_address_t>& addresses, uint32_t globalOutputIndex) {
   uint32_t index = static_cast<uint32_t>(tx->addOutput(amount, addresses, static_cast<uint32_t>(addresses.size())));
 
   uint64_t _amount;
-  MultisignatureOutput output;
+  multi_signature_output_t output;
   tx->getOutput(index, output, _amount);
 
   TransactionOutputInformationIn outputInfo;
@@ -178,7 +178,7 @@ TransactionOutputInformationIn TestTransactionBuilder::addTestMultisignatureOutp
 }
 
 TransactionOutputInformationIn TestTransactionBuilder::addTestMultisignatureOutput(uint64_t amount, uint32_t globalOutputIndex) {
-  std::vector<AccountPublicAddress> multisigAddresses;
+  std::vector<account_public_address_t> multisigAddresses;
   for (const auto& acc : getMsigAccounts()) {
     multisigAddresses.push_back(acc.getAccountKeys().address);
   }
@@ -186,15 +186,15 @@ TransactionOutputInformationIn TestTransactionBuilder::addTestMultisignatureOutp
   return addTestMultisignatureOutput(amount, multisigAddresses, globalOutputIndex);
 }
 
-size_t TestTransactionBuilder::addOutput(uint64_t amount, const AccountPublicAddress& to) {
+size_t TestTransactionBuilder::addOutput(uint64_t amount, const account_public_address_t& to) {
   return tx->addOutput(amount, to);
 }
 
-size_t TestTransactionBuilder::addOutput(uint64_t amount, const KeyOutput& out) {
+size_t TestTransactionBuilder::addOutput(uint64_t amount, const key_output_t& out) {
   return tx->addOutput(amount, out);
 }
 
-size_t TestTransactionBuilder::addOutput(uint64_t amount, const MultisignatureOutput& out) {
+size_t TestTransactionBuilder::addOutput(uint64_t amount, const multi_signature_output_t& out) {
   return tx->addOutput(amount, out);
 }
 
@@ -299,7 +299,7 @@ std::unique_ptr<ITransactionReader> FusionTransactionBuilder::buildReader() cons
     }
   }
 
-  AccountPublicAddress address = generateAddress();
+  account_public_address_t address = generateAddress();
   std::vector<uint64_t> outputAmounts;
   assert(m_amount >= m_firstOutput + m_fee);
   decomposeAmount(m_amount - m_firstOutput - m_fee, m_currency.defaultDustThreshold(), outputAmounts);
@@ -316,11 +316,11 @@ std::unique_ptr<ITransactionReader> FusionTransactionBuilder::buildReader() cons
   return builder.build();
 }
 
-Transaction FusionTransactionBuilder::buildTx() const {
+transaction_t FusionTransactionBuilder::buildTx() const {
   return convertTx(*buildReader());
 }
 
-Transaction FusionTransactionBuilder::createFusionTransactionBySize(size_t targetSize) {
+transaction_t FusionTransactionBuilder::createFusionTransactionBySize(size_t targetSize) {
   auto tx = buildReader();
 
   size_t realSize = tx->getTransactionData().size();

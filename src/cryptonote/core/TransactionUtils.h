@@ -7,23 +7,23 @@
 
 namespace cryptonote {
 
-bool checkInputsKeyimagesDiff(const cryptonote::TransactionPrefix& tx);
+bool checkInputsKeyimagesDiff(const cryptonote::transaction_prefix_t& tx);
 
-// TransactionInput helper functions
-size_t getRequiredSignaturesCount(const TransactionInput& in);
-uint64_t getTransactionInputAmount(const TransactionInput& in);
-TransactionTypes::InputType getTransactionInputType(const TransactionInput& in);
-const TransactionInput& getInputChecked(const cryptonote::TransactionPrefix& transaction, size_t index);
-const TransactionInput& getInputChecked(const cryptonote::TransactionPrefix& transaction, size_t index, TransactionTypes::InputType type);
+// transaction_input_t helper functions
+size_t getRequiredSignaturesCount(const transaction_input_t& in);
+uint64_t getTransactionInputAmount(const transaction_input_t& in);
+TransactionTypes::InputType getTransactionInputType(const transaction_input_t& in);
+const transaction_input_t& getInputChecked(const cryptonote::transaction_prefix_t& transaction, size_t index);
+const transaction_input_t& getInputChecked(const cryptonote::transaction_prefix_t& transaction, size_t index, TransactionTypes::InputType type);
 
 bool isOutToKey(const crypto::public_key_t& spendPublicKey, const crypto::public_key_t& outKey, const crypto::key_derivation_t& derivation, size_t keyIndex);
 
-// TransactionOutput helper functions
-TransactionTypes::OutputType getTransactionOutputType(const TransactionOutputTarget& out);
-const TransactionOutput& getOutputChecked(const cryptonote::TransactionPrefix& transaction, size_t index);
-const TransactionOutput& getOutputChecked(const cryptonote::TransactionPrefix& transaction, size_t index, TransactionTypes::OutputType type);
+// transaction_output_t helper functions
+TransactionTypes::OutputType getTransactionOutputType(const transaction_output_target_t& out);
+const transaction_output_t& getOutputChecked(const cryptonote::transaction_prefix_t& transaction, size_t index);
+const transaction_output_t& getOutputChecked(const cryptonote::transaction_prefix_t& transaction, size_t index, TransactionTypes::OutputType type);
 
-bool findOutputsToAccount(const cryptonote::TransactionPrefix& transaction, const AccountPublicAddress& addr,
+bool findOutputsToAccount(const cryptonote::transaction_prefix_t& transaction, const account_public_address_t& addr,
         const crypto::secret_key_t& viewSecretKey, std::vector<uint32_t>& out, uint64_t& amount);
 
 } //namespace cryptonote

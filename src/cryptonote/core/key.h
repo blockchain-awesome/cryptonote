@@ -18,7 +18,7 @@ class Key
     {
         return boost::value_initialized<T>();
     }
-    static KeyPair generate();
+    static key_pair_t generate();
 };
 
 const hash_t NULL_HASH = Key::zero<hash_t>();

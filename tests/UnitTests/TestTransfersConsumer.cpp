@@ -20,20 +20,20 @@
 
 using namespace cryptonote;
 
-AccountSubscription getAccountSubscription(const AccountKeys& accountKeys) {
+AccountSubscription getAccountSubscription(const account_keys_t& accountKeys) {
   AccountSubscription subscription;
   subscription.keys = accountKeys;
 
   return subscription;
 }
 
-AccountKeys getAccountKeysWithViewKey(const public_key_t& publicViewKey, const secret_key_t& secretViewKey) {
-  KeyPair viewKp;
+account_keys_t getAccountKeysWithViewKey(const public_key_t& publicViewKey, const secret_key_t& secretViewKey) {
+  key_pair_t viewKp;
   viewKp.publicKey = publicViewKey;
   viewKp.secretKey = secretViewKey;
-  KeyPair p1;
+  key_pair_t p1;
   crypto::generate_keys(p1.publicKey, p1.secretKey);
-  AccountKeys accountKeys = accountKeysFromKeypairs(viewKp, p1);
+  account_keys_t accountKeys = accountKeysFromKeypairs(viewKp, p1);
 
   return accountKeys;
 }
@@ -44,7 +44,7 @@ public:
 
 protected:
 
-  ITransfersSubscription& addSubscription(TransfersConsumer& consumer, const AccountKeys& acc, uint64_t height = 0,
+  ITransfersSubscription& addSubscription(TransfersConsumer& consumer, const account_keys_t& acc, uint64_t height = 0,
     uint64_t timestamp = 0, size_t age = 0)
   {
     AccountSubscription subscription = getAccountSubscription(acc);
@@ -54,7 +54,7 @@ protected:
     return consumer.addSubscription(subscription);
   }
 
-  ITransfersSubscription& addSubscription(const AccountKeys& acc, uint64_t height = 0, uint64_t timestamp = 0, size_t age = 0) {
+  ITransfersSubscription& addSubscription(const account_keys_t& acc, uint64_t height = 0, uint64_t timestamp = 0, size_t age = 0) {
     return addSubscription(m_consumer, acc, height, timestamp, age);
   }
 
@@ -66,7 +66,7 @@ protected:
     return addSubscription(consumer, m_accountKeys, height, timestamp, age);
   }
 
-  AccountKeys generateAccount() {
+  account_keys_t generateAccount() {
     return getAccountKeysWithViewKey(m_accountKeys.address.viewPublicKey, m_accountKeys.viewSecretKey);
   }
 
@@ -74,7 +74,7 @@ protected:
   cryptonote::Currency m_currency;
   TestBlockchainGenerator m_generator;
   INodeTrivialRefreshStub m_node;
-  AccountKeys m_accountKeys;
+  account_keys_t m_accountKeys;
   TransfersConsumer m_consumer;
 };
 
@@ -91,7 +91,7 @@ bool amountFound(const std::vector<TransactionOutputInformation>& outs, uint64_t
   return std::find_if(outs.begin(), outs.end(), [amount] (const TransactionOutputInformation& inf) { return inf.amount == amount; }) != outs.end();
 }
 
-AccountSubscription getAccountSubscriptionWithSyncStart(const AccountKeys& keys, uint64_t timestamp, uint64_t height) {
+AccountSubscription getAccountSubscriptionWithSyncStart(const account_keys_t& keys, uint64_t timestamp, uint64_t height) {
   AccountSubscription subscription = getAccountSubscription(keys);
   subscription.syncStart.timestamp = timestamp;
   subscription.syncStart.height = height;
@@ -108,7 +108,7 @@ TEST_F(TransfersConsumerTest, addSubscription_Success) {
 }
 
 TEST_F(TransfersConsumerTest, addSubscription_WrongViewKey) {
-  AccountKeys accountKeys = generateAccountKeys();
+  account_keys_t accountKeys = generateAccountKeys();
   AccountSubscription subscription = getAccountSubscription(accountKeys);
 
   ASSERT_ANY_THROW(m_consumer.addSubscription(subscription));
@@ -138,7 +138,7 @@ TEST_F(TransfersConsumerTest, removeSubscription_OneAddressLeft) {
   AccountSubscription subscription1 = getAccountSubscription(m_accountKeys);
   m_consumer.addSubscription(subscription1);
 
-  AccountKeys accountKeys = getAccountKeysWithViewKey(m_accountKeys.address.viewPublicKey, m_accountKeys.viewSecretKey);
+  account_keys_t accountKeys = getAccountKeysWithViewKey(m_accountKeys.address.viewPublicKey, m_accountKeys.viewSecretKey);
   AccountSubscription subscription2 = getAccountSubscription(accountKeys);
 
   m_consumer.addSubscription(subscription2);
@@ -167,13 +167,13 @@ TEST_F(TransfersConsumerTest, getSubscription_ReturnNullForNonExistentAddr) {
   AccountSubscription subscription1 = getAccountSubscription(m_accountKeys);
   m_consumer.addSubscription(subscription1);
 
-  AccountKeys accountKeys = getAccountKeysWithViewKey(m_accountKeys.address.viewPublicKey, m_accountKeys.viewSecretKey);
+  account_keys_t accountKeys = getAccountKeysWithViewKey(m_accountKeys.address.viewPublicKey, m_accountKeys.viewSecretKey);
 
   ASSERT_EQ(nullptr, m_consumer.getSubscription(accountKeys.address));
 }
 
 TEST_F(TransfersConsumerTest, getSubscriptions_Empty) {
-  std::vector<AccountPublicAddress> subscriptions;
+  std::vector<account_public_address_t> subscriptions;
   m_consumer.getSubscriptions(subscriptions);
 
   ASSERT_TRUE(subscriptions.empty());
@@ -183,11 +183,11 @@ TEST_F(TransfersConsumerTest, getSubscriptions_TwoSubscriptions) {
   AccountSubscription subscription1 = getAccountSubscription(m_accountKeys);
   m_consumer.addSubscription(subscription1);
 
-  AccountKeys accountKeys = getAccountKeysWithViewKey(m_accountKeys.address.viewPublicKey, m_accountKeys.viewSecretKey);
+  account_keys_t accountKeys = getAccountKeysWithViewKey(m_accountKeys.address.viewPublicKey, m_accountKeys.viewSecretKey);
   AccountSubscription subscription2 = getAccountSubscription(accountKeys);
   m_consumer.addSubscription(subscription2);
 
-  std::vector<AccountPublicAddress> subscriptions;
+  std::vector<account_public_address_t> subscriptions;
   m_consumer.getSubscriptions(subscriptions);
 
   ASSERT_EQ(2, subscriptions.size());
@@ -227,7 +227,7 @@ TEST_F(TransfersConsumerTest, getSyncStart_MinSyncSameSubscription) {
   subscription1.syncStart.height = height;
   subscription1.syncStart.timestamp = timestamp;
 
-  AccountKeys accountKeys = getAccountKeysWithViewKey(m_accountKeys.address.viewPublicKey, m_accountKeys.viewSecretKey);
+  account_keys_t accountKeys = getAccountKeysWithViewKey(m_accountKeys.address.viewPublicKey, m_accountKeys.viewSecretKey);
   AccountSubscription subscription2 = getAccountSubscription(accountKeys);
 
   subscription2.syncStart.height = minHeight;
@@ -251,7 +251,7 @@ TEST_F(TransfersConsumerTest, getSyncStart_MinSyncDifferentSubscriptions) {
   subscription1.syncStart.height = minHeight;
   subscription1.syncStart.timestamp = timestamp;
 
-  AccountKeys accountKeys = getAccountKeysWithViewKey(m_accountKeys.address.viewPublicKey, m_accountKeys.viewSecretKey);
+  account_keys_t accountKeys = getAccountKeysWithViewKey(m_accountKeys.address.viewPublicKey, m_accountKeys.viewSecretKey);
   AccountSubscription subscription2 = getAccountSubscription(accountKeys);
 
   subscription2.syncStart.height = height;
@@ -275,7 +275,7 @@ TEST_F(TransfersConsumerTest, getSyncStart_RemoveMinSyncSubscription) {
   subscription1.syncStart.height = height;
   subscription1.syncStart.timestamp = timestamp;
 
-  AccountKeys accountKeys = getAccountKeysWithViewKey(m_accountKeys.address.viewPublicKey, m_accountKeys.viewSecretKey);
+  account_keys_t accountKeys = getAccountKeysWithViewKey(m_accountKeys.address.viewPublicKey, m_accountKeys.viewSecretKey);
   AccountSubscription subscription2 = getAccountSubscription(accountKeys);
 
   subscription2.syncStart.height = minHeight;
@@ -819,7 +819,7 @@ TEST_F(TransfersConsumerTest, onPoolUpdated_addTransactionMultisignature) {
   TestTransactionBuilder b1;
   auto unknownSender = generateAccountKeys();
   b1.addTestInput(10000, unknownSender);
-  auto addresses = std::vector<AccountPublicAddress>{ m_accountKeys.address, generateAccountKeys().address };
+  auto addresses = std::vector<account_public_address_t>{ m_accountKeys.address, generateAccountKeys().address };
   b1.addTestMultisignatureOutput(10000, addresses, 1);
 
   auto tx = std::shared_ptr<ITransactionReader>(b1.build().release());
@@ -836,7 +836,7 @@ TEST_F(TransfersConsumerTest, onPoolUpdated_addTransactionMultisignature) {
   auto& o = outputs[0];
 
   uint64_t amount_;
-  MultisignatureOutput out;
+  multi_signature_output_t out;
   tx->getOutput(0, out, amount_);
 
   ASSERT_EQ(TransactionTypes::OutputType::Multisignature, o.type);
@@ -912,7 +912,7 @@ TEST_F(TransfersConsumerTest, getKnownPoolTxIds_empty) {
   ASSERT_TRUE(ids.empty());
 }
 
-std::shared_ptr<ITransactionReader> createTransactionTo(const AccountKeys& to, uint64_t amountIn, uint64_t amountOut) {
+std::shared_ptr<ITransactionReader> createTransactionTo(const account_keys_t& to, uint64_t amountIn, uint64_t amountOut) {
   TestTransactionBuilder b1;
   auto unknownSender = generateAccountKeys();
   b1.addTestInput(amountIn, unknownSender);
@@ -1030,7 +1030,7 @@ public:
     return expectedTransactions;
   }
 
-  std::vector<AccountKeys> recipients;
+  std::vector<account_keys_t> recipients;
   std::vector<CompleteBlock> blocks;
 };
 

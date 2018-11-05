@@ -118,7 +118,7 @@ public:
 
     auto txId = wallets[srcWallet]->sendTransaction(tr, fee);
 
-    logger(DEBUGGING) << "Transaction id = " << txId;
+    logger(DEBUGGING) << "transaction_t id = " << txId;
 
     return walletObservers[srcWallet]->waitSendResult(txId);
   }

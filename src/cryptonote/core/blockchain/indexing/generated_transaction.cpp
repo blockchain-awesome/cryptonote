@@ -12,7 +12,7 @@ GeneratedTransactionsIndex::GeneratedTransactionsIndex() : lastGeneratedTxNumber
 
 bool GeneratedTransactionsIndex::add(const block_t&block)
 {
-  uint32_t blockHeight = boost::get<BaseInput>(block.baseTransaction.inputs.front()).blockIndex;
+  uint32_t blockHeight = boost::get<base_input_t>(block.baseTransaction.inputs.front()).blockIndex;
 
   if (index.size() != blockHeight)
   {
@@ -29,7 +29,7 @@ bool GeneratedTransactionsIndex::add(const block_t&block)
 
 bool GeneratedTransactionsIndex::remove(const block_t&block)
 {
-  uint32_t blockHeight = boost::get<BaseInput>(block.baseTransaction.inputs.front()).blockIndex;
+  uint32_t blockHeight = boost::get<base_input_t>(block.baseTransaction.inputs.front()).blockIndex;
 
   if (blockHeight != index.size() - 1)
   {

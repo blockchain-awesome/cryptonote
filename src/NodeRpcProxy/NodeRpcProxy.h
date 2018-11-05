@@ -51,20 +51,20 @@ public:
   virtual uint32_t getKnownBlockCount() const override;
   virtual uint64_t getLastLocalBlockTimestamp() const override;
 
-  virtual void relayTransaction(const cryptonote::Transaction& transaction, const Callback& callback) override;
+  virtual void relayTransaction(const cryptonote::transaction_t& transaction, const Callback& callback) override;
   virtual void getRandomOutsByAmounts(std::vector<uint64_t>&& amounts, uint64_t outsCount, std::vector<COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS::outs_for_amount>& result, const Callback& callback) override;
   virtual void getNewBlocks(std::vector<crypto::hash_t>&& knownBlockIds, std::vector<cryptonote::block_complete_entry>& newBlocks, uint32_t& startHeight, const Callback& callback) override;
   virtual void getTransactionOutsGlobalIndices(const crypto::hash_t& transactionHash, std::vector<uint32_t>& outsGlobalIndices, const Callback& callback) override;
   virtual void queryBlocks(std::vector<crypto::hash_t>&& knownBlockIds, uint64_t timestamp, std::vector<BlockShortEntry>& newBlocks, uint32_t& startHeight, const Callback& callback) override;
   virtual void getPoolSymmetricDifference(std::vector<crypto::hash_t>&& knownPoolTxIds, crypto::hash_t knownBlockId, bool& isBcActual,
           std::vector<std::unique_ptr<ITransactionReader>>& newTxs, std::vector<crypto::hash_t>& deletedTxIds, const Callback& callback) override;
-  virtual void getMultisignatureOutputByGlobalIndex(uint64_t amount, uint32_t gindex, MultisignatureOutput& out, const Callback& callback) override;
+  virtual void getMultisignatureOutputByGlobalIndex(uint64_t amount, uint32_t gindex, multi_signature_output_t& out, const Callback& callback) override;
   virtual void getBlocks(const std::vector<uint32_t>& blockHeights, std::vector<std::vector<BlockDetails>>& blocks, const Callback& callback) override;
   virtual void getBlocks(const std::vector<crypto::hash_t>& blockHashes, std::vector<BlockDetails>& blocks, const Callback& callback) override;
   virtual void getBlocks(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t blocksNumberLimit, std::vector<BlockDetails>& blocks, uint32_t& blocksNumberWithinTimestamps, const Callback& callback) override;
-  virtual void getTransactions(const std::vector<crypto::hash_t>& transactionHashes, std::vector<TransactionDetails>& transactions, const Callback& callback) override;
-  virtual void getTransactionsByPaymentId(const crypto::hash_t& paymentId, std::vector<TransactionDetails>& transactions, const Callback& callback) override;
-  virtual void getPoolTransactions(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t transactionsNumberLimit, std::vector<TransactionDetails>& transactions, uint64_t& transactionsNumberWithinTimestamps, const Callback& callback) override;
+  virtual void getTransactions(const std::vector<crypto::hash_t>& transactionHashes, std::vector<transaction_details_t>& transactions, const Callback& callback) override;
+  virtual void getTransactionsByPaymentId(const crypto::hash_t& paymentId, std::vector<transaction_details_t>& transactions, const Callback& callback) override;
+  virtual void getPoolTransactions(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t transactionsNumberLimit, std::vector<transaction_details_t>& transactions, uint64_t& transactionsNumberWithinTimestamps, const Callback& callback) override;
   virtual void isSynchronized(bool& syncStatus, const Callback& callback) override;
 
   unsigned int rpcTimeout() const { return m_rpcTimeout; }
@@ -82,7 +82,7 @@ private:
   void updatePeerCount(size_t peerCount);
   void updatePoolState(const std::vector<std::unique_ptr<ITransactionReader>>& addedTxs, const std::vector<crypto::hash_t>& deletedTxsIds);
 
-  std::error_code doRelayTransaction(const cryptonote::Transaction& transaction);
+  std::error_code doRelayTransaction(const cryptonote::transaction_t& transaction);
   std::error_code doGetRandomOutsByAmounts(std::vector<uint64_t>& amounts, uint64_t outsCount,
                                            std::vector<COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS::outs_for_amount>& result);
   std::error_code doGetNewBlocks(std::vector<crypto::hash_t>& knownBlockIds,

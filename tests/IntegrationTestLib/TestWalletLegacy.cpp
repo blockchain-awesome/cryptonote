@@ -100,9 +100,9 @@ IWalletLegacy* TestWalletLegacy::wallet() {
   return m_wallet.get();
 }
 
-AccountPublicAddress TestWalletLegacy::address() const {
+account_public_address_t TestWalletLegacy::address() const {
   std::string addressString = m_wallet->getAddress();
-  AccountPublicAddress address;
+  account_public_address_t address;
   bool ok = Account::parseAddress(addressString, address);
   assert(ok);
   return address;

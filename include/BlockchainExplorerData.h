@@ -75,7 +75,7 @@ struct TransactionExtraDetails {
   std::vector<uint8_t> raw;
 };
 
-struct TransactionDetails {
+struct transaction_details_t {
   crypto::hash_t hash;
   uint64_t size;
   uint64_t fee;
@@ -113,7 +113,7 @@ struct BlockDetails {
   uint64_t sizeMedian;
   double penalty;
   uint64_t totalFeeAmount;
-  std::vector<TransactionDetails> transactions;
+  std::vector<transaction_details_t> transactions;
 };
 
 }

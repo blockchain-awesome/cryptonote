@@ -591,7 +591,7 @@ std::error_code WalletService::getSpendkeys(const std::string& address, std::str
   try {
     System::EventLock lk(readyEvent);
 
-    cryptonote::KeyPair key = wallet.getAddressSpendKey(address);
+    cryptonote::key_pair_t key = wallet.getAddressSpendKey(address);
 
     publicSpendKeyText = Common::podToHex(key.publicKey);
     secretSpendKeyText = Common::podToHex(key.secretKey);
@@ -656,7 +656,7 @@ std::error_code WalletService::getBlockHashes(uint32_t firstBlockIndex, uint32_t
 std::error_code WalletService::getViewKey(std::string& viewSecretKey) {
   try {
     System::EventLock lk(readyEvent);
-    cryptonote::KeyPair viewKey = wallet.getViewKey();
+    cryptonote::key_pair_t viewKey = wallet.getViewKey();
     viewSecretKey = Common::podToHex(viewKey.secretKey);
   } catch (std::system_error& x) {
     logger(Logging::WARNING) << "Error while getting view key: " << x.what();
@@ -773,7 +773,7 @@ std::error_code WalletService::getTransaction(const std::string& transactionHash
     cryptonote::WalletTransactionWithTransfers transactionWithTransfers = wallet.getTransaction(hash);
 
     if (transactionWithTransfers.transaction.state == cryptonote::WalletTransactionState::DELETED) {
-      logger(Logging::WARNING) << "Transaction " << transactionHash << " is deleted";
+      logger(Logging::WARNING) << "transaction_t " << transactionHash << " is deleted";
       return make_error_code(cryptonote::error::OBJECT_NOT_FOUND);
     }
 
@@ -834,7 +834,7 @@ std::error_code WalletService::sendTransaction(const SendTransaction::Request& r
     size_t transactionId = wallet.transfer(sendParams);
     transactionHash = Common::podToHex(wallet.getTransaction(transactionId).hash);
 
-    logger(Logging::DEBUGGING) << "Transaction " << transactionHash << " has been sent";
+    logger(Logging::DEBUGGING) << "transaction_t " << transactionHash << " has been sent";
   } catch (std::system_error& x) {
     logger(Logging::WARNING) << "Error while sending transaction: " << x.what();
     return x.code();

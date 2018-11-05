@@ -47,7 +47,7 @@ namespace {
     return true;
   }
 
-  void clearTransaction(cryptonote::Transaction& tx) {
+  void clearTransaction(cryptonote::transaction_t& tx) {
     tx.version = 0;
     tx.unlockTime = 0;
     tx.inputs.clear();
@@ -209,7 +209,7 @@ bool gen_block_no_miner_tx::generate(std::vector<test_event_entry>& events) cons
 {
   BLOCK_VALIDATION_INIT_GENERATE();
 
-  Transaction miner_tx;
+  transaction_t miner_tx;
   clearTransaction(miner_tx);
 
   block_t blk_1;
@@ -295,7 +295,7 @@ bool gen_block_height_is_low::generate(std::vector<test_event_entry>& events) co
   BLOCK_VALIDATION_INIT_GENERATE();
 
   MAKE_MINER_TX_MANUALLY(miner_tx, blk_0);
-  boost::get<BaseInput>(miner_tx.inputs[0]).blockIndex--;
+  boost::get<base_input_t>(miner_tx.inputs[0]).blockIndex--;
 
   block_t blk_1;
   generator.constructBlockManually(blk_1, blk_0, miner_account, 
@@ -312,7 +312,7 @@ bool gen_block_height_is_high::generate(std::vector<test_event_entry>& events) c
   BLOCK_VALIDATION_INIT_GENERATE();
 
   MAKE_MINER_TX_MANUALLY(miner_tx, blk_0);
-  boost::get<BaseInput>(miner_tx.inputs[0]).blockIndex++;
+  boost::get<base_input_t>(miner_tx.inputs[0]).blockIndex++;
 
   block_t blk_1;
   generator.constructBlockManually(blk_1, blk_0, miner_account, 
@@ -330,7 +330,7 @@ bool gen_block_miner_tx_has_2_tx_gen_in::generate(std::vector<test_event_entry>&
 
   MAKE_MINER_TX_MANUALLY(miner_tx, blk_0);
 
-  BaseInput in;
+  base_input_t in;
   in.blockIndex = get_block_height(blk_0) + 1;
   miner_tx.inputs.push_back(in);
 
@@ -354,7 +354,7 @@ bool gen_block_miner_tx_has_2_in::generate(std::vector<test_event_entry>& events
 
   TransactionSourceEntry se;
   se.amount = blk_0.baseTransaction.outputs[0].amount;
-  se.outputs.push_back(std::make_pair(0, boost::get<KeyOutput>(blk_0.baseTransaction.outputs[0].target).key));
+  se.outputs.push_back(std::make_pair(0, boost::get<key_output_t>(blk_0.baseTransaction.outputs[0].target).key));
   se.realOutput = 0;
   se.realTransactionPublicKey = getTransactionPublicKeyFromExtra(blk_0.baseTransaction.extra);
   se.realOutputIndexInTransaction = 0;
@@ -367,7 +367,7 @@ bool gen_block_miner_tx_has_2_in::generate(std::vector<test_event_entry>& events
   std::vector<TransactionDestinationEntry> destinations;
   destinations.push_back(de);
 
-  Transaction tmp_tx;
+  transaction_t tmp_tx;
   if (!constructTransaction(miner_account.getAccountKeys(), sources, destinations, std::vector<uint8_t>(), tmp_tx, 0, m_logger))
     return false;
 
@@ -397,7 +397,7 @@ bool gen_block_miner_tx_with_txin_to_key::generate(std::vector<test_event_entry>
 
   TransactionSourceEntry se;
   se.amount = blk_1.baseTransaction.outputs[0].amount;
-  se.outputs.push_back(std::make_pair(0, boost::get<KeyOutput>(blk_1.baseTransaction.outputs[0].target).key));
+  se.outputs.push_back(std::make_pair(0, boost::get<key_output_t>(blk_1.baseTransaction.outputs[0].target).key));
   se.realOutput = 0;
   se.realTransactionPublicKey = getTransactionPublicKeyFromExtra(blk_1.baseTransaction.extra);
   se.realOutputIndexInTransaction = 0;
@@ -410,7 +410,7 @@ bool gen_block_miner_tx_with_txin_to_key::generate(std::vector<test_event_entry>
   std::vector<TransactionDestinationEntry> destinations;
   destinations.push_back(de);
 
-  Transaction tmp_tx;
+  transaction_t tmp_tx;
   if (!constructTransaction(miner_account.getAccountKeys(), sources, destinations, std::vector<uint8_t>(), tmp_tx, 0, m_logger))
     return false;
 
@@ -484,7 +484,7 @@ bool gen_block_miner_tx_has_out_to_alice::generate(std::vector<test_event_entry>
 
   GENERATE_ACCOUNT(alice);
 
-  KeyPair txkey;
+  key_pair_t txkey;
   MAKE_MINER_TX_AND_KEY_MANUALLY(miner_tx, blk_0, &txkey);
 
   crypto::key_derivation_t derivation;
@@ -492,10 +492,10 @@ bool gen_block_miner_tx_has_out_to_alice::generate(std::vector<test_event_entry>
   crypto::generate_key_derivation(alice.getAccountKeys().address.viewPublicKey, txkey.secretKey, derivation);
   crypto::derive_public_key(derivation, 1, alice.getAccountKeys().address.spendPublicKey, out_eph_public_key);
 
-  TransactionOutput out_to_alice;
+  transaction_output_t out_to_alice;
   out_to_alice.amount = miner_tx.outputs[0].amount / 2;
   miner_tx.outputs[0].amount -= out_to_alice.amount;
-  out_to_alice.target = KeyOutput{out_eph_public_key};
+  out_to_alice.target = key_output_t{out_eph_public_key};
   miner_tx.outputs.push_back(out_to_alice);
 
   block_t blk_1;
@@ -618,7 +618,7 @@ bool gen_block_invalid_binary_format::generate(std::vector<test_event_entry>& ev
   diffic = m_currency.nextDifficulty(timestamps, cummulative_difficulties);
   if (!generator.constructBlockManually(blk_test, blk_last, miner_account,
     test_generator::bf_major_ver | test_generator::bf_diffic | test_generator::bf_timestamp | test_generator::bf_tx_hashes, 
-    BLOCK_MAJOR_VERSION_1, 0, blk_last.timestamp, crypto::hash_t(), diffic, Transaction(), tx_hashes, txs_size))
+    BLOCK_MAJOR_VERSION_1, 0, blk_last.timestamp, crypto::hash_t(), diffic, transaction_t(), tx_hashes, txs_size))
     return false;
 
   BinaryArray blob = toBinaryArray(blk_test);

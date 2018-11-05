@@ -7,7 +7,7 @@
 #include "crypto/crypto.h"
 #include "crypto/hash.h"
 #include "cryptonote/core/key.h"
-#include "cryptonote/core/serialize.h"
+#include "cryptonote/core/blockchain/serializer/crypto.h"
 #include "cryptonote/core/Currency.h"
 #include <logging/LoggerGroup.h>
 #include "common/os.h"

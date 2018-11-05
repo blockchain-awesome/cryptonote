@@ -254,7 +254,7 @@ bool DaemonCommandsHandler::print_tx(const std::vector<std::string>& args)
 
   std::vector<crypto::hash_t> tx_ids;
   tx_ids.push_back(tx_hash);
-  std::list<cryptonote::Transaction> txs;
+  std::list<cryptonote::transaction_t> txs;
   std::list<crypto::hash_t> missed_ids;
   m_core.getTransactions(tx_ids, txs, missed_ids, true);
 
@@ -285,7 +285,7 @@ bool DaemonCommandsHandler::start_mining(const std::vector<std::string> &args) {
     return true;
   }
 
-  cryptonote::AccountPublicAddress adr;
+  cryptonote::account_public_address_t adr;
   if (!Account::parseAddress(args.front(), adr)) {
     std::cout << "target account address has wrong format" << std::endl;
     return true;

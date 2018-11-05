@@ -36,16 +36,16 @@ class WalletInterface
 public:
   WalletInterface(System::Dispatcher &dispatcher, const Currency &currency, INode &node, Logging::LoggerGroup &logger);
   virtual ~WalletInterface();
-  bool createWallet(const AccountKeys &accountKeys);
+  bool createWallet(const account_keys_t &accountKeys);
   void init();
 
   bool isWalletExisted(const std::string &address);
 
-  bool checkAddress(const std::string &address, AccountPublicAddress &keys);
+  bool checkAddress(const std::string &address, account_public_address_t &keys);
 
   cryptonote::IWalletLegacy *getWallet(const std::string token);
 
-  std::string getAddressesByKeys(const AccountPublicAddress &keys);
+  std::string getAddressesByKeys(const account_public_address_t &keys);
 
   std::string sha256(const std::string str);
 

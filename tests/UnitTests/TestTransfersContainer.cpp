@@ -93,7 +93,7 @@ namespace {
     Logging::ConsoleLogger logger;
     Currency currency;
     TransfersContainer container;
-    AccountKeys account;
+    account_keys_t account;
   };
 
 }

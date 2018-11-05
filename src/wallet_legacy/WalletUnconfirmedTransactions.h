@@ -40,7 +40,7 @@ struct UnconfirmedTransferDetails {
   UnconfirmedTransferDetails() :
     amount(0), sentTime(0), transactionId(WALLET_LEGACY_INVALID_TRANSACTION_ID) {}
 
-  cryptonote::Transaction tx;
+  cryptonote::transaction_t tx;
   uint64_t amount;
   uint64_t outsAmount;
   time_t sentTime;
@@ -58,7 +58,7 @@ public:
 
   bool findTransactionId(const crypto::hash_t& hash, TransactionId& id);
   void erase(const crypto::hash_t& hash);
-  void add(const cryptonote::Transaction& tx, TransactionId transactionId, 
+  void add(const cryptonote::transaction_t& tx, TransactionId transactionId, 
     uint64_t amount, const std::list<TransactionOutputInformation>& usedOutputs);
   void updateTransactionId(const crypto::hash_t& hash, TransactionId id);
 

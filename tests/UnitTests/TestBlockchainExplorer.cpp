@@ -25,8 +25,8 @@ using namespace crypto;
 using namespace cryptonote;
 
 namespace {
-Transaction createTx(ITransactionReader& tx) {
-  Transaction outTx;
+transaction_t createTx(ITransactionReader& tx) {
+  transaction_t outTx;
   fromBinaryArray(outTx, tx.getTransactionData());
   return outTx;
 }
@@ -57,7 +57,7 @@ public:
     blockchainUpdatedCallback(newBlocks, orphanedBlocks);
   }
 
-  virtual void poolUpdated(const std::vector<TransactionDetails>& newTransactions, const std::vector<std::pair<hash_t, TransactionRemoveReason>>& removedTransactions) override {
+  virtual void poolUpdated(const std::vector<transaction_details_t>& newTransactions, const std::vector<std::pair<hash_t, TransactionRemoveReason>>& removedTransactions) override {
     poolUpdatedCallback(newTransactions, removedTransactions);
   }
 
@@ -69,7 +69,7 @@ public:
     blockchainUpdatedCallback = cb;
   }
 
-  void setCallback(const std::function<void(const std::vector<TransactionDetails>& newTransactions, const std::vector<std::pair<hash_t, TransactionRemoveReason>>& removedTransactions)>& cb) {
+  void setCallback(const std::function<void(const std::vector<transaction_details_t>& newTransactions, const std::vector<std::pair<hash_t, TransactionRemoveReason>>& removedTransactions)>& cb) {
     poolUpdatedCallback = cb;
   }
 
@@ -79,7 +79,7 @@ public:
 
 private:
   std::function<void(const std::vector<BlockDetails>& newBlocks, const std::vector<BlockDetails>& orphanedBlocks)> blockchainUpdatedCallback;
-  std::function<void(const std::vector<TransactionDetails>& newTransactions, const std::vector<std::pair<hash_t, TransactionRemoveReason>>& removedTransactions)> poolUpdatedCallback;
+  std::function<void(const std::vector<transaction_details_t>& newTransactions, const std::vector<std::pair<hash_t, TransactionRemoveReason>>& removedTransactions)> poolUpdatedCallback;
   std::function<void(const BlockDetails& topBlock)> blockchainSynchronizedCallback;
 };
 
@@ -320,7 +320,7 @@ TEST_F(BlockchainExplorerTests, getTransactionFromBlockchain) {
   hash_t hash = getObjectHash(tx);
   transactionHashes.push_back(hash);
 
-  std::vector<TransactionDetails> transactions;
+  std::vector<transaction_details_t> transactions;
 
   ASSERT_TRUE(blockchainExplorer.getTransactions(transactionHashes, transactions));
   ASSERT_EQ(transactions.size(), 1);
@@ -341,7 +341,7 @@ TEST_F(BlockchainExplorerTests, getTransactionFromPool) {
   hash_t hash = getObjectHash(tx);
   transactionHashes.push_back(hash);
 
-  std::vector<TransactionDetails> transactions;
+  std::vector<transaction_details_t> transactions;
 
   ASSERT_TRUE(blockchainExplorer.getTransactions(transactionHashes, transactions));
   ASSERT_EQ(transactions.size(), 1);
@@ -379,7 +379,7 @@ TEST_F(BlockchainExplorerTests, getTransactionsMany) {
   std::copy(poolTxs.begin(), poolTxs.end(), std::back_inserter(transactionHashes));
   std::copy(blockchainTxs.begin(), blockchainTxs.end(), std::back_inserter(transactionHashes));
 
-  std::vector<TransactionDetails> transactions;
+  std::vector<transaction_details_t> transactions;
 
   ASSERT_TRUE(blockchainExplorer.getTransactions(transactionHashes, transactions));
   ASSERT_EQ(transactions.size(), POOL_TX_NUMBER + BLOCKCHAIN_TX_NUMBER);
@@ -389,7 +389,7 @@ TEST_F(BlockchainExplorerTests, getTransactionsMany) {
     auto iter = std::find_if(
       transactions.begin(),
       transactions.end(),
-      [&poolTxHash](const TransactionDetails& txDetails) -> bool {
+      [&poolTxHash](const transaction_details_t& txDetails) -> bool {
       return poolTxHash == txDetails.hash;
     }
     );
@@ -402,7 +402,7 @@ TEST_F(BlockchainExplorerTests, getTransactionsMany) {
     auto iter = std::find_if(
       transactions.begin(),
       transactions.end(),
-      [&blockchainTxHash](const TransactionDetails& txDetails) -> bool {
+      [&blockchainTxHash](const transaction_details_t& txDetails) -> bool {
       return blockchainTxHash == txDetails.hash;
     }
     );
@@ -439,7 +439,7 @@ TEST_F(BlockchainExplorerTests, getTransactionsFail) {
   std::vector<hash_t> transactionHashes;
   transactionHashes.push_back(boost::value_initialized<hash_t>());
 
-  std::vector<TransactionDetails> transactions;
+  std::vector<transaction_details_t> transactions;
 
   ASSERT_ANY_THROW(blockchainExplorer.getTransactions(transactionHashes, transactions));
 }
@@ -455,7 +455,7 @@ TEST_F(BlockchainExplorerTests, getTransactionsNotInited) {
   hash_t hash = getObjectHash(tx);
   transactionHashes.push_back(hash);
 
-  std::vector<TransactionDetails> transactions;
+  std::vector<transaction_details_t> transactions;
 
   BlockchainExplorer newExplorer(nodeStub, logger);
 
@@ -475,7 +475,7 @@ TEST_F(BlockchainExplorerTests, getPoolStateEmpty) {
   hash_t knownBlockchainTop = topBlock.hash;
   bool isBlockchainActual;
 
-  std::vector<TransactionDetails> newTransactions;
+  std::vector<transaction_details_t> newTransactions;
   std::vector<hash_t> removedTransactions;
 
   ASSERT_TRUE(blockchainExplorer.getPoolState(knownPoolTransactionHashes, knownBlockchainTop, isBlockchainActual, newTransactions, removedTransactions));
@@ -510,7 +510,7 @@ TEST_F(BlockchainExplorerTests, getPoolStateMany) {
     hash_t knownBlockchainTop = topBlock.hash;
     bool isBlockchainActual;
 
-    std::vector<TransactionDetails> newTransactions;
+    std::vector<transaction_details_t> newTransactions;
     std::vector<hash_t> removedTransactions;
 
     ASSERT_TRUE(blockchainExplorer.getPoolState(knownPoolTransactionHashes, knownBlockchainTop, isBlockchainActual, newTransactions, removedTransactions));
@@ -523,7 +523,7 @@ TEST_F(BlockchainExplorerTests, getPoolStateMany) {
       auto iter = std::find_if(
         newTransactions.begin(),
         newTransactions.end(),
-        [&poolTxHash](const TransactionDetails& txDetails) -> bool {
+        [&poolTxHash](const transaction_details_t& txDetails) -> bool {
         return poolTxHash == txDetails.hash;
       }
       );
@@ -548,7 +548,7 @@ TEST_F(BlockchainExplorerTests, getPoolStateMany) {
     hash_t knownBlockchainTop = topBlock.hash;
     bool isBlockchainActual;
 
-    std::vector<TransactionDetails> newTransactions;
+    std::vector<transaction_details_t> newTransactions;
     std::vector<hash_t> removedTransactions;
 
     ASSERT_TRUE(blockchainExplorer.getPoolState(knownPoolTransactionHashes, knownBlockchainTop, isBlockchainActual, newTransactions, removedTransactions));
@@ -571,7 +571,7 @@ TEST_F(BlockchainExplorerTests, getPoolStateMany) {
     hash_t knownBlockchainTop = topBlock.hash;
     bool isBlockchainActual;
 
-    std::vector<TransactionDetails> newTransactions;
+    std::vector<transaction_details_t> newTransactions;
     std::vector<hash_t> removedTransactions;
 
     ASSERT_TRUE(blockchainExplorer.getPoolState(knownPoolTransactionHashes, knownBlockchainTop, isBlockchainActual, newTransactions, removedTransactions));
@@ -609,7 +609,7 @@ TEST_F(BlockchainExplorerTests, getPoolStateMany) {
     hash_t knownBlockchainTop = topBlock.hash;
     bool isBlockchainActual;
 
-    std::vector<TransactionDetails> newTransactions;
+    std::vector<transaction_details_t> newTransactions;
     std::vector<hash_t> removedTransactions;
 
     ASSERT_TRUE(blockchainExplorer.getPoolState(knownPoolTransactionHashes, knownBlockchainTop, isBlockchainActual, newTransactions, removedTransactions));
@@ -639,7 +639,7 @@ TEST_F(BlockchainExplorerTests, getPoolStateMany) {
     hash_t knownBlockchainTop = boost::value_initialized<hash_t>();
     bool isBlockchainActual;
 
-    std::vector<TransactionDetails> newTransactions;
+    std::vector<transaction_details_t> newTransactions;
     std::vector<hash_t> removedTransactions;
 
     ASSERT_TRUE(blockchainExplorer.getPoolState(knownPoolTransactionHashes, knownBlockchainTop, isBlockchainActual, newTransactions, removedTransactions));
@@ -653,7 +653,7 @@ TEST_F(BlockchainExplorerTests, getPoolStateNotInited) {
   hash_t knownBlockchainTop = boost::value_initialized<hash_t>();
   bool isBlockchainActual;
 
-  std::vector<TransactionDetails> newTransactions;
+  std::vector<transaction_details_t> newTransactions;
   std::vector<hash_t> removedTransactions;
 
   BlockchainExplorer newExplorer(nodeStub, logger);
@@ -771,9 +771,9 @@ TEST_F(BlockchainExplorerTests, poolUpdatedEmpty) {
   CallbackStatus status;
 
   std::function<
-    void(const std::vector<TransactionDetails>& newTransactions,
+    void(const std::vector<transaction_details_t>& newTransactions,
     const std::vector<std::pair<hash_t, TransactionRemoveReason>>& removedTransactions)
-  > cb = [&status](const std::vector<TransactionDetails>& newTransactions,
+  > cb = [&status](const std::vector<transaction_details_t>& newTransactions,
   const std::vector<std::pair<hash_t, TransactionRemoveReason>>& removedTransactions) {
     EXPECT_EQ(newTransactions.size(), 0);
     EXPECT_EQ(removedTransactions.size(), 0);
@@ -811,9 +811,9 @@ TEST_F(BlockchainExplorerTests, poolUpdatedMany) {
     CallbackStatus status;
 
     std::function<
-      void(const std::vector<TransactionDetails>& newTransactions,
+      void(const std::vector<transaction_details_t>& newTransactions,
       const std::vector<std::pair<hash_t, TransactionRemoveReason>>& removedTransactions)
-    > cb = [&status, &poolTxs, POOL_TX_NUMBER](const std::vector<TransactionDetails>& newTransactions,
+    > cb = [&status, &poolTxs, POOL_TX_NUMBER](const std::vector<transaction_details_t>& newTransactions,
     const std::vector<std::pair<hash_t, TransactionRemoveReason>>& removedTransactions) {
       EXPECT_EQ(newTransactions.size(), POOL_TX_NUMBER);
       EXPECT_EQ(removedTransactions.size(), 0);
@@ -822,7 +822,7 @@ TEST_F(BlockchainExplorerTests, poolUpdatedMany) {
         auto iter = std::find_if(
           newTransactions.begin(),
           newTransactions.end(),
-          [&poolTxHash](const TransactionDetails& txDetails) -> bool {
+          [&poolTxHash](const transaction_details_t& txDetails) -> bool {
           return poolTxHash == txDetails.hash;
         }
         );
@@ -866,9 +866,9 @@ TEST_F(BlockchainExplorerTests, poolUpdatedMany) {
     CallbackStatus status1;
 
     std::function<
-      void(const std::vector<TransactionDetails>& newTransactions,
+      void(const std::vector<transaction_details_t>& newTransactions,
       const std::vector<std::pair<hash_t, TransactionRemoveReason>>& removedTransactions)
-    > cb = [&status, &poolTxs, POOL_TX_NUMBER](const std::vector<TransactionDetails>& newTransactions,
+    > cb = [&status, &poolTxs, POOL_TX_NUMBER](const std::vector<transaction_details_t>& newTransactions,
     const std::vector<std::pair<hash_t, TransactionRemoveReason>>& removedTransactions) {
       EXPECT_EQ(newTransactions.size(), 0);
       EXPECT_EQ(removedTransactions.size(), POOL_TX_NUMBER);
@@ -935,9 +935,9 @@ TEST_F(BlockchainExplorerTests, poolUpdatedManyNotSynchronized) {
   CallbackStatus status;
 
   std::function<
-    void(const std::vector<TransactionDetails>& newTransactions,
+    void(const std::vector<transaction_details_t>& newTransactions,
     const std::vector<std::pair<hash_t, TransactionRemoveReason>>& removedTransactions)
-  > cb = [&status, &poolTxs, POOL_TX_NUMBER](const std::vector<TransactionDetails>& newTransactions,
+  > cb = [&status, &poolTxs, POOL_TX_NUMBER](const std::vector<transaction_details_t>& newTransactions,
   const std::vector<std::pair<hash_t, TransactionRemoveReason>>& removedTransactions) {
     EXPECT_EQ(newTransactions.size(), POOL_TX_NUMBER);
     EXPECT_EQ(removedTransactions.size(), 0);
@@ -946,7 +946,7 @@ TEST_F(BlockchainExplorerTests, poolUpdatedManyNotSynchronized) {
       auto iter = std::find_if(
         newTransactions.begin(),
         newTransactions.end(),
-        [&poolTxHash](const TransactionDetails& txDetails) -> bool {
+        [&poolTxHash](const transaction_details_t& txDetails) -> bool {
         return poolTxHash == txDetails.hash;
       }
       );
@@ -1132,7 +1132,7 @@ TEST_F(BlockchainExplorerTests, generatedTransactions) {
 TEST_F(BlockchainExplorerTests, getPoolTransactionsByTimestampEmpty) {
   ASSERT_GE(generator.getBlockchain().size(), 1);
 
-  std::vector<TransactionDetails> transactions;
+  std::vector<transaction_details_t> transactions;
 
   uint64_t totalTransactionsNumber;
 
@@ -1153,7 +1153,7 @@ TEST_F(BlockchainExplorerTests, getPoolTransactionsByTimestampMany) {
     generator.putTxToPool(tx);
   }
 
-  std::vector<TransactionDetails> transactions;
+  std::vector<transaction_details_t> transactions;
 
   uint64_t totalTransactionsNumber;
 
@@ -1172,7 +1172,7 @@ TEST_F(BlockchainExplorerTests, getPoolTransactionsByTimestampFail) {
 
   uint64_t startTime = currency.difficultyTarget() + 1;
 
-  std::vector<TransactionDetails> transactions;
+  std::vector<transaction_details_t> transactions;
 
   uint64_t totalTransactionsNumber;
 
@@ -1183,7 +1183,7 @@ TEST_F(BlockchainExplorerTests, getPoolTransactionsByTimestampFail) {
 TEST_F(BlockchainExplorerTests, getPoolTransactionsByTimestampNotInited) {
   BlockchainExplorer newExplorer(nodeStub, logger);
   uint64_t startTime = static_cast<uint64_t>(time(NULL));
-  std::vector<TransactionDetails> transactions;
+  std::vector<transaction_details_t> transactions;
   uint64_t totalTransactionsNumber;
   ASSERT_ANY_THROW(newExplorer.getPoolTransactions(startTime, startTime, 1, transactions, totalTransactionsNumber));
 }
@@ -1215,7 +1215,7 @@ TEST_F(BlockchainExplorerTests, getTransactionsByPaymentId) {
   }
 
   for (auto paymentId : paymentIds) {
-    std::vector<TransactionDetails> transactions;
+    std::vector<transaction_details_t> transactions;
 
     ASSERT_TRUE(blockchainExplorer.getTransactionsByPaymentId(paymentId, transactions));
     ASSERT_EQ(transactions.size(), TX_PER_PAYMENT_ID);
@@ -1230,7 +1230,7 @@ TEST_F(BlockchainExplorerTests, getTransactionsByPaymentId) {
 }
 
 TEST_F(BlockchainExplorerTests, getTransactionsByPaymentIdFail) {
-  std::vector<TransactionDetails> transactions;
+  std::vector<transaction_details_t> transactions;
 
   hash_t randomPaymentId;
   for (uint8_t& i : randomPaymentId.data) {
@@ -1249,7 +1249,7 @@ TEST_F(BlockchainExplorerTests, getTransactionsByPaymentIdNotInited) {
     i = rand();
   }
 
-  std::vector<TransactionDetails> transactions;
+  std::vector<transaction_details_t> transactions;
 
   EXPECT_EQ(generator.getBlockchain().size(), 2);
   ASSERT_ANY_THROW(newExplorer.getTransactionsByPaymentId(randomPaymentId, transactions));

@@ -128,7 +128,7 @@ struct COMMAND_RPC_GET_POOL_CHANGES_LITE {
 
   struct response {
     bool isTailBlockActual;
-    std::vector<TransactionPrefixInfo> addedTxs;          // Added transactions blobs
+    std::vector<transaction_prefix_info_t> addedTxs;          // Added transactions blobs
     std::vector<crypto::hash_t> deletedTxsIds; // IDs of not found transactions
     std::string status;
 
@@ -214,7 +214,7 @@ struct COMMAND_RPC_SEND_RAW_TX {
     std::string tx_as_hex;
 
     request() {}
-    explicit request(const Transaction &);
+    explicit request(const transaction_t &);
 
     void serialize(ISerializer &s) {
       KV_MEMBER(tx_as_hex)
@@ -443,7 +443,7 @@ struct COMMAND_RPC_QUERY_BLOCKS {
     uint64_t start_height;
     uint64_t current_height;
     uint64_t full_offset;
-    std::vector<BlockFullInfo> items;
+    std::vector<block_full_info_t> items;
 
     void serialize(ISerializer &s) {
       KV_MEMBER(status)
@@ -471,7 +471,7 @@ struct COMMAND_RPC_QUERY_BLOCKS_LITE {
     uint64_t startHeight;
     uint64_t currentHeight;
     uint64_t fullOffset;
-    std::vector<BlockShortInfo> items;
+    std::vector<block_short_info_t> items;
 
     void serialize(ISerializer &s) {
       KV_MEMBER(status)

@@ -61,7 +61,7 @@ void findMyOutputs(
     if (outType == TransactionTypes::OutputType::Key) {
 
       uint64_t amount;
-      KeyOutput out;
+      key_output_t out;
       tx.getOutput(idx, out, amount);
       checkOutputKey(derivation, out.key, keyIndex, idx, spendKeys, outputs);
       ++keyIndex;
@@ -69,7 +69,7 @@ void findMyOutputs(
     } else if (outType == TransactionTypes::OutputType::Multisignature) {
 
       uint64_t amount;
-      MultisignatureOutput out;
+      multi_signature_output_t out;
       tx.getOutput(idx, out, amount);
       for (const auto& key : out.keys) {
         checkOutputKey(derivation, key, idx, idx, spendKeys, outputs);
@@ -115,19 +115,19 @@ ITransfersSubscription& TransfersConsumer::addSubscription(const AccountSubscrip
   return *res;
 }
 
-bool TransfersConsumer::removeSubscription(const AccountPublicAddress& address) {
+bool TransfersConsumer::removeSubscription(const account_public_address_t& address) {
   m_subscriptions.erase(address.spendPublicKey);
   m_spendKeys.erase(address.spendPublicKey);
   updateSyncStart();
   return m_subscriptions.empty();
 }
 
-ITransfersSubscription* TransfersConsumer::getSubscription(const AccountPublicAddress& acc) {
+ITransfersSubscription* TransfersConsumer::getSubscription(const account_public_address_t& acc) {
   auto it = m_subscriptions.find(acc.spendPublicKey);
   return it == m_subscriptions.end() ? nullptr : it->second.get();
 }
 
-void TransfersConsumer::getSubscriptions(std::vector<AccountPublicAddress>& subscriptions) {
+void TransfersConsumer::getSubscriptions(std::vector<account_public_address_t>& subscriptions) {
   for (const auto& kv : m_subscriptions) {
     subscriptions.push_back(kv.second->getAddress());
   }
@@ -350,7 +350,7 @@ void TransfersConsumer::removeUnconfirmedTransaction(const crypto::hash_t& trans
 }
 
 std::error_code createTransfers(
-  const AccountKeys& account,
+  const account_keys_t& account,
   const TransactionBlockInfo& blockInfo,
   const ITransactionReader& tx,
   const std::vector<uint32_t>& outputs,
@@ -383,10 +383,10 @@ std::error_code createTransfers(
 
     if (outType == TransactionTypes::OutputType::Key) {
       uint64_t amount;
-      KeyOutput out;
+      key_output_t out;
       tx.getOutput(idx, out, amount);
 
-      cryptonote::KeyPair in_ephemeral;
+      cryptonote::key_pair_t in_ephemeral;
       cryptonote::generate_key_image_helper(
         account,
         txPubKey,
@@ -401,7 +401,7 @@ std::error_code createTransfers(
 
     } else if (outType == TransactionTypes::OutputType::Multisignature) {
       uint64_t amount;
-      MultisignatureOutput out;
+      multi_signature_output_t out;
       tx.getOutput(idx, out, amount);
 
       info.amount = amount;

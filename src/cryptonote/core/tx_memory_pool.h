@@ -20,7 +20,7 @@
 #include "common/ObserverManager.h"
 #include "crypto/hash.h"
 #include "crypto/crypto.h"
-#include "cryptonote/core/serialize.h"
+#include "cryptonote/core/blockchain/serializer/crypto.h"
 
 #include "cryptonote/core/key.h"
 #include "cryptonote/core/Currency.h"
@@ -38,7 +38,7 @@ namespace cryptonote {
 
   class ISerializer;
 
-  using cryptonote::BlockInfo;
+  using cryptonote::block_info_t;
   using namespace boost::multi_index;
 
   /************************************************************************/
@@ -60,10 +60,10 @@ namespace cryptonote {
     bool deinit();
 
     bool have_tx(const crypto::hash_t &id) const;
-    bool add_tx(const Transaction &tx, const crypto::hash_t &id, size_t blobSize, TxVerificationContext& tvc, bool keeped_by_block);
-    bool add_tx(const Transaction &tx, TxVerificationContext& tvc, bool keeped_by_block);
+    bool add_tx(const transaction_t &tx, const crypto::hash_t &id, size_t blobSize, TxVerificationContext& tvc, bool keeped_by_block);
+    bool add_tx(const transaction_t &tx, TxVerificationContext& tvc, bool keeped_by_block);
     //gets tx and remove it from pool
-    bool take_tx(const crypto::hash_t &id, Transaction &tx, size_t& blobSize, uint64_t& fee);
+    bool take_tx(const crypto::hash_t &id, transaction_t &tx, size_t& blobSize, uint64_t& fee);
 
     bool on_blockchain_inc(uint64_t new_block_height, const crypto::hash_t& top_block_id);
     bool on_blockchain_dec(uint64_t new_block_height, const crypto::hash_t& top_block_id);
@@ -74,7 +74,7 @@ namespace cryptonote {
 
     bool fill_block_template(block_t &bl, size_t median_size, size_t maxCumulativeSize, uint64_t already_generated_coins, size_t &total_size, uint64_t &fee);
 
-    void get_transactions(std::list<Transaction>& txs) const;
+    void get_transactions(std::list<transaction_t>& txs) const;
     void get_difference(const std::vector<crypto::hash_t>& known_tx_ids, std::vector<crypto::hash_t>& new_tx_ids, std::vector<crypto::hash_t>& deleted_tx_ids) const;
     size_t get_transactions_count() const;
     std::string print_pool(bool short_format) const;
@@ -101,10 +101,10 @@ namespace cryptonote {
 
   private:
 
-    typedef hashed_unique<BOOST_MULTI_INDEX_MEMBER(transaction::TransactionDetails, crypto::hash_t, id)> main_index_t;
-    typedef ordered_non_unique<identity<transaction::TransactionDetails>, transaction::TransactionPriorityComparator> fee_index_t;
+    typedef hashed_unique<BOOST_MULTI_INDEX_MEMBER(transaction::transaction_details_t, crypto::hash_t, id)> main_index_t;
+    typedef ordered_non_unique<identity<transaction::transaction_details_t>, transaction::transaction_priority_comparator_t> fee_index_t;
 
-    typedef multi_index_container<transaction::TransactionDetails,
+    typedef multi_index_container<transaction::transaction_details_t,
       indexed_by<main_index_t, fee_index_t>
     > tx_container_t;
 
@@ -114,13 +114,13 @@ namespace cryptonote {
 
 
     // double spending checking
-    bool addTransactionInputs(const crypto::hash_t& id, const Transaction& tx, bool keptByBlock);
-    bool haveSpentInputs(const Transaction& tx) const;
-    bool removeTransactionInputs(const crypto::hash_t& id, const Transaction& tx, bool keptByBlock);
+    bool addTransactionInputs(const crypto::hash_t& id, const transaction_t& tx, bool keptByBlock);
+    bool haveSpentInputs(const transaction_t& tx) const;
+    bool removeTransactionInputs(const crypto::hash_t& id, const transaction_t& tx, bool keptByBlock);
 
     tx_container_t::iterator removeTransaction(tx_container_t::iterator i);
     bool removeExpiredTransactions();
-    bool is_transaction_ready_to_go(const Transaction& tx, transaction::TransactionCheckInfo& txd) const;
+    bool is_transaction_ready_to_go(const transaction_t& tx, transaction::transaction_check_info_t& txd) const;
 
     void buildIndices();
 

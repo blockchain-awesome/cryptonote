@@ -18,7 +18,7 @@ class ILogger;
 
 namespace cryptonote {
 
-bool parseAndValidateTransactionFromBinaryArray(const BinaryArray& transactionBinaryArray, Transaction& transaction, crypto::hash_t& transactionHash, crypto::hash_t& transactionPrefixHash);
+bool parseAndValidateTransactionFromBinaryArray(const BinaryArray& transactionBinaryArray, transaction_t& transaction, crypto::hash_t& transactionHash, crypto::hash_t& transactionPrefixHash);
 
 struct TransactionSourceEntry {
   typedef std::pair<uint32_t, crypto::public_key_t> OutputEntry;
@@ -32,27 +32,27 @@ struct TransactionSourceEntry {
 
 struct TransactionDestinationEntry {
   uint64_t amount;                    //money
-  AccountPublicAddress addr;          //destination address
+  account_public_address_t addr;          //destination address
 
-  TransactionDestinationEntry() : amount(0), addr(boost::value_initialized<AccountPublicAddress>()) {}
-  TransactionDestinationEntry(uint64_t amount, const AccountPublicAddress &addr) : amount(amount), addr(addr) {}
+  TransactionDestinationEntry() : amount(0), addr(boost::value_initialized<account_public_address_t>()) {}
+  TransactionDestinationEntry(uint64_t amount, const account_public_address_t &addr) : amount(amount), addr(addr) {}
 };
 
 
 bool constructTransaction(
-  const AccountKeys& senderAccountKeys,
+  const account_keys_t& senderAccountKeys,
   const std::vector<TransactionSourceEntry>& sources,
   const std::vector<TransactionDestinationEntry>& destinations,
-  std::vector<uint8_t> extra, Transaction& transaction, uint64_t unlock_time, Logging::ILogger& log);
+  std::vector<uint8_t> extra, transaction_t& transaction, uint64_t unlock_time, Logging::ILogger& log);
 
 
-bool is_out_to_acc(const AccountKeys& acc, const KeyOutput& out_key, const crypto::public_key_t& tx_pub_key, size_t keyIndex);
-bool is_out_to_acc(const AccountKeys& acc, const KeyOutput& out_key, const crypto::key_derivation_t& derivation, size_t keyIndex);
-bool lookup_acc_outs(const AccountKeys& acc, const Transaction& tx, const crypto::public_key_t& tx_pub_key, std::vector<size_t>& outs, uint64_t& money_transfered);
-bool lookup_acc_outs(const AccountKeys& acc, const Transaction& tx, std::vector<size_t>& outs, uint64_t& money_transfered);
-bool get_tx_fee(const Transaction& tx, uint64_t & fee);
-uint64_t get_tx_fee(const Transaction& tx);
-bool generate_key_image_helper(const AccountKeys& ack, const crypto::public_key_t& tx_public_key, size_t real_output_index, KeyPair& in_ephemeral, crypto::key_image_t& ki);
+bool is_out_to_acc(const account_keys_t& acc, const key_output_t& out_key, const crypto::public_key_t& tx_pub_key, size_t keyIndex);
+bool is_out_to_acc(const account_keys_t& acc, const key_output_t& out_key, const crypto::key_derivation_t& derivation, size_t keyIndex);
+bool lookup_acc_outs(const account_keys_t& acc, const transaction_t& tx, const crypto::public_key_t& tx_pub_key, std::vector<size_t>& outs, uint64_t& money_transfered);
+bool lookup_acc_outs(const account_keys_t& acc, const transaction_t& tx, std::vector<size_t>& outs, uint64_t& money_transfered);
+bool get_tx_fee(const transaction_t& tx, uint64_t & fee);
+uint64_t get_tx_fee(const transaction_t& tx);
+bool generate_key_image_helper(const account_keys_t& ack, const crypto::public_key_t& tx_public_key, size_t real_output_index, key_pair_t& in_ephemeral, crypto::key_image_t& ki);
 std::string short_hash_str(const crypto::hash_t& h);
 
 bool get_block_hashing_blob(const block_t& b, BinaryArray& blob);
@@ -60,15 +60,15 @@ bool get_aux_block_header_hash(const block_t& b, crypto::hash_t& res);
 bool get_block_hash(const block_t& b, crypto::hash_t& res);
 crypto::hash_t get_block_hash(const block_t& b);
 bool get_block_longhash(const block_t& b, crypto::hash_t& res);
-bool get_inputs_money_amount(const Transaction& tx, uint64_t& money);
-uint64_t get_outs_money_amount(const Transaction& tx);
-bool check_inputs_types_supported(const TransactionPrefix& tx);
-bool check_outs_valid(const TransactionPrefix& tx, std::string* error = 0);
-bool checkMultisignatureInputsDiff(const TransactionPrefix& tx);
+bool get_inputs_money_amount(const transaction_t& tx, uint64_t& money);
+uint64_t get_outs_money_amount(const transaction_t& tx);
+bool check_inputs_types_supported(const transaction_prefix_t& tx);
+bool check_outs_valid(const transaction_prefix_t& tx, std::string* error = 0);
+bool checkMultisignatureInputsDiff(const transaction_prefix_t& tx);
 
-bool check_money_overflow(const TransactionPrefix& tx);
-bool check_outs_overflow(const TransactionPrefix& tx);
-bool check_inputs_overflow(const TransactionPrefix& tx);
+bool check_money_overflow(const transaction_prefix_t& tx);
+bool check_outs_overflow(const transaction_prefix_t& tx);
+bool check_inputs_overflow(const transaction_prefix_t& tx);
 uint32_t get_block_height(const block_t& b);
 std::vector<uint32_t> relative_output_offsets_to_absolute(const std::vector<uint32_t>& off);
 std::vector<uint32_t> absolute_output_offsets_to_relative(const std::vector<uint32_t>& off);

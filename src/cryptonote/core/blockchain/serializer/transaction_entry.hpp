@@ -8,7 +8,7 @@ namespace cryptonote
 {
 struct TransactionEntry
 {
-    Transaction tx;
+    transaction_t tx;
     std::vector<uint32_t> m_global_output_indexes;
 
     void serialize(ISerializer &s)

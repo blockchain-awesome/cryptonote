@@ -16,7 +16,7 @@ public:
 
   gen_double_spend_base();
 
-  bool check_TxVerificationContext(const cryptonote::TxVerificationContext& tvc, bool tx_added, size_t event_idx, const cryptonote::Transaction& tx);
+  bool check_TxVerificationContext(const cryptonote::TxVerificationContext& tvc, bool tx_added, size_t event_idx, const cryptonote::transaction_t& tx);
   bool check_BlockVerificationContext(const cryptonote::BlockVerificationContext& bvc, size_t event_idx, const cryptonote::block_t& block);
 
   bool mark_last_valid_block(cryptonote::core& c, size_t ev_index, const std::vector<test_event_entry>& events);
@@ -130,7 +130,7 @@ public:
 
   DoubleSpendBase();
 
-  bool check_TxVerificationContext(const cryptonote::TxVerificationContext& tvc, bool tx_added, size_t event_idx, const cryptonote::Transaction& tx);
+  bool check_TxVerificationContext(const cryptonote::TxVerificationContext& tvc, bool tx_added, size_t event_idx, const cryptonote::transaction_t& tx);
   bool check_BlockVerificationContext(const cryptonote::BlockVerificationContext& bvc, size_t event_idx, const cryptonote::block_t& block);
 
   bool mark_last_valid_block(cryptonote::core& c, size_t ev_index, const std::vector<test_event_entry>& events);
@@ -146,7 +146,7 @@ protected:
 
   cryptonote::AccountBase m_bob_account;
   cryptonote::AccountBase m_alice_account;
-  cryptonote::KeyPair m_outputTxKey;
+  cryptonote::key_pair_t m_outputTxKey;
 
 private:
 
@@ -190,7 +190,7 @@ struct MultiSigTx_DoubleSpendAltChainSameBlock : public DoubleSpendBase
 
   MultiSigTx_DoubleSpendAltChainSameBlock(bool txsKeepedByBlock);
 
-  bool check_TxVerificationContext(const cryptonote::TxVerificationContext& tvc, bool tx_added, size_t event_idx, const cryptonote::Transaction& tx) {
+  bool check_TxVerificationContext(const cryptonote::TxVerificationContext& tvc, bool tx_added, size_t event_idx, const cryptonote::transaction_t& tx) {
     return true;
   }
 

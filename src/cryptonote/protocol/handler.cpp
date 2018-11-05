@@ -579,7 +579,7 @@ int CryptoNoteProtocolHandler::handleRequestTxPool(int command, NOTIFY_REQUEST_T
                                                      CryptoNoteConnectionContext& context) {
   logger(Logging::TRACE) << context << "NOTIFY_REQUEST_TX_POOL: txs.size() = " << arg.txs.size();
 
-  std::vector<Transaction> addedTransactions;
+  std::vector<transaction_t> addedTransactions;
   std::vector<crypto::hash_t> deletedTransactions;
   m_core.getPoolChanges(arg.txs, addedTransactions, deletedTransactions);
 

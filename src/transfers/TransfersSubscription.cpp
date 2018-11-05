@@ -35,7 +35,7 @@ bool TransfersSubscription::advanceHeight(uint32_t height) {
   return transfers.advanceHeight(height);
 }
 
-const AccountKeys& TransfersSubscription::getKeys() const {
+const account_keys_t& TransfersSubscription::getKeys() const {
   return subscription.keys;
 }
 
@@ -49,7 +49,7 @@ bool TransfersSubscription::addTransaction(const TransactionBlockInfo& blockInfo
   return added;
 }
 
-AccountPublicAddress TransfersSubscription::getAddress() {
+account_public_address_t TransfersSubscription::getAddress() {
   return subscription.keys.address;
 }
 

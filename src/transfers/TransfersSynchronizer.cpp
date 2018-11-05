@@ -49,7 +49,7 @@ ITransfersSubscription& TransfersSyncronizer::addSubscription(const AccountSubsc
   return it->second->addSubscription(acc);
 }
 
-bool TransfersSyncronizer::removeSubscription(const AccountPublicAddress& acc) {
+bool TransfersSyncronizer::removeSubscription(const account_public_address_t& acc) {
   auto it = m_consumers.find(acc.viewPublicKey);
   if (it == m_consumers.end())
     return false;
@@ -64,13 +64,13 @@ bool TransfersSyncronizer::removeSubscription(const AccountPublicAddress& acc) {
   return true;
 }
 
-void TransfersSyncronizer::getSubscriptions(std::vector<AccountPublicAddress>& subscriptions) {
+void TransfersSyncronizer::getSubscriptions(std::vector<account_public_address_t>& subscriptions) {
   for (const auto& kv : m_consumers) {
     kv.second->getSubscriptions(subscriptions);
   }
 }
 
-ITransfersSubscription* TransfersSyncronizer::getSubscription(const AccountPublicAddress& acc) {
+ITransfersSubscription* TransfersSyncronizer::getSubscription(const account_public_address_t& acc) {
   auto it = m_consumers.find(acc.viewPublicKey);
   return (it == m_consumers.end()) ? nullptr : it->second->getSubscription(acc);
 }
@@ -158,7 +158,7 @@ void TransfersSyncronizer::save(std::ostream& os) {
     std::string blob = consumerState.str();
     s(blob, "state");
     
-    std::vector<AccountPublicAddress> subscriptions;
+    std::vector<account_public_address_t> subscriptions;
     consumer.second->getSubscriptions(subscriptions);
     size_t subCount = subscriptions.size();
 
@@ -217,7 +217,7 @@ void TransfersSyncronizer::load(std::istream& is) {
   struct ConsumerState {
     public_key_t viewKey;
     std::string state;
-    std::vector<std::pair<AccountPublicAddress, std::string>> subscriptionStates;
+    std::vector<std::pair<account_public_address_t, std::string>> subscriptionStates;
   };
 
   std::vector<ConsumerState> updatedStates;
@@ -254,7 +254,7 @@ void TransfersSyncronizer::load(std::istream& is) {
         while (subCount--) {
           s.beginObject("");
 
-          AccountPublicAddress acc;
+          account_public_address_t acc;
           std::string state;
 
           s(acc, "address");

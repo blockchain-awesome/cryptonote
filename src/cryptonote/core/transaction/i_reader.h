@@ -34,19 +34,19 @@ class ITransactionReader
     virtual size_t getInputCount() const = 0;
     virtual uint64_t getInputTotalAmount() const = 0;
     virtual TransactionTypes::InputType getInputType(size_t index) const = 0;
-    virtual void getInput(size_t index, KeyInput &input) const = 0;
-    virtual void getInput(size_t index, MultisignatureInput &input) const = 0;
+    virtual void getInput(size_t index, key_input_t &input) const = 0;
+    virtual void getInput(size_t index, multi_signature_input_t &input) const = 0;
 
     // outputs
     virtual size_t getOutputCount() const = 0;
     virtual uint64_t getOutputTotalAmount() const = 0;
     virtual TransactionTypes::OutputType getOutputType(size_t index) const = 0;
-    virtual void getOutput(size_t index, KeyOutput &output, uint64_t &amount) const = 0;
-    virtual void getOutput(size_t index, MultisignatureOutput &output, uint64_t &amount) const = 0;
+    virtual void getOutput(size_t index, key_output_t &output, uint64_t &amount) const = 0;
+    virtual void getOutput(size_t index, multi_signature_output_t &output, uint64_t &amount) const = 0;
 
     // signatures
     virtual size_t getRequiredSignaturesCount(size_t inputIndex) const = 0;
-    virtual bool findOutputsToAccount(const AccountPublicAddress &addr, const crypto::secret_key_t &viewSecretKey, std::vector<uint32_t> &outs, uint64_t &outputAmount) const = 0;
+    virtual bool findOutputsToAccount(const account_public_address_t &addr, const crypto::secret_key_t &viewSecretKey, std::vector<uint32_t> &outs, uint64_t &outputAmount) const = 0;
 
     // various checks
     virtual bool validateInputs() const = 0;

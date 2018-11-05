@@ -30,16 +30,16 @@ public:
   WalletManager(System::Dispatcher &dispatcher, const Currency &currency, INode &node, Logging::LoggerManager  &logger);
   virtual ~WalletManager();
 
-  bool createWallet(const AccountKeys &accountKeys);
+  bool createWallet(const account_keys_t &accountKeys);
   void init();
 
   bool isWalletExisted(const std::string &address);
 
-  bool checkAddress(const std::string &address, AccountPublicAddress &keys);
+  bool checkAddress(const std::string &address, account_public_address_t &keys);
 
   cryptonote::IWalletLegacy *getWallet(const std::string token);
 
-  std::string getAddressesByKeys(const AccountPublicAddress &keys);
+  std::string getAddressesByKeys(const account_public_address_t &keys);
 
   std::string sha256(const std::string str);
 

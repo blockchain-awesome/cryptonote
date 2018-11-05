@@ -294,7 +294,7 @@ namespace {
   };
 }
 
-bool BaseFunctionalTests::mineBlocks(TestNode& node, const cryptonote::AccountPublicAddress& address, size_t blockCount) {
+bool BaseFunctionalTests::mineBlocks(TestNode& node, const cryptonote::account_public_address_t& address, size_t blockCount) {
   for (size_t i = 0; i < blockCount; ++i) {
     block_t blockTemplate;
     uint64_t difficulty;

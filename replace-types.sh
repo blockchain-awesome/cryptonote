@@ -7,22 +7,12 @@ echo "please input both replacee and replacer"
 else
  
 for dir in "./src/" "./include/" "./tests/"; do
-find $dir -type f -exec sed -i "s/ $1 / $2 /g" {} +
-# find $dir -type f -exec sed -i "s/<$1>/<$2>/g" {} +
-# find $dir -type f -exec sed -i "s/($1)/($2)/g" {} +
-# find $dir -type f -exec sed -i "s/($1 /($2 /g" {} +
-# find $dir -type f -exec sed -i "s/($1\&/($2\&/g" {} +
-# find $dir -type f -exec sed -i "s/ $1\&/ $2\&/g" {} +
-# find $dir -type f -exec sed -i "s/ $1)/ $2)/g" {} +
-# find $dir -type f -exec sed -i "s/ $1\*/ $2\*/g" {} +
-# find $dir -type f -exec sed -i "s/<$1,/<$2,/g" {} +
-# find $dir -type f -exec sed -i "s/, $1>/, $2>/g" {} +
-# find $dir -type f -exec sed -i "s/^$1 /$2 /g" {} +
-# find $dir -type f -exec sed -i "s/<$1\*>/<$2\*> /g" {} +
-# find $dir -type f -exec sed -i "s/ $1,/ $2,/g" {} +
-# find $dir -type f -exec sed -i "s/<$1\&/<$2\&/g" {} +
-# find $dir -type f -exec sed -i "s/ $1()/ $2()" {} +
-
+echo "1";
+find $dir -type f -exec sed -i "s/\([^[:alpha:]]\+\)$1\([^[:alpha:]]\+\)/\1$2\2/g" {} +
+echo "2";
+find $dir -type f -exec sed -i "s/\([^[:alpha:]]\+\)$1\($\)/\1$2\2/g" {} +
+echo "3";
+find $dir -type f -exec sed -i "s/^$1\([^[:alpha:]]\+\)/$2\1/g" {} +
 done
 fi
 

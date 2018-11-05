@@ -40,19 +40,19 @@ public:
     if (!constructTransaction(this->m_miners[this->real_source_idx].getAccountKeys(), this->m_sources, destinations, std::vector<uint8_t>(), m_tx, 0, this->m_logger))
       return false;
 
-    getObjectHash(*static_cast<TransactionPrefix*>(&m_tx), m_tx_prefix_hash);
+    getObjectHash(*static_cast<transaction_prefix_t*>(&m_tx), m_tx_prefix_hash);
 
     return true;
   }
 
   bool test()
   {
-    const cryptonote::KeyInput& txin = boost::get<cryptonote::KeyInput>(m_tx.inputs[0]);
+    const cryptonote::key_input_t& txin = boost::get<cryptonote::key_input_t>(m_tx.inputs[0]);
     return crypto::check_ring_signature(m_tx_prefix_hash, txin.keyImage, this->m_public_key_ptrs, ring_size, m_tx.signatures[0].data());
   }
 
 private:
   cryptonote::AccountBase m_alice;
-  cryptonote::Transaction m_tx;
+  cryptonote::transaction_t m_tx;
   crypto::hash_t m_tx_prefix_hash;
 };

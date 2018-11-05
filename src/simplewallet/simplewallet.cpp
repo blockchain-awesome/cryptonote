@@ -669,7 +669,7 @@ bool simple_wallet::new_wallet(const std::string &wallet_file, const std::string
       throw;
     }
 
-    AccountKeys keys;
+    account_keys_t keys;
     m_wallet->getAccountKeys(keys);
 
     logger(INFO, BRIGHT_WHITE) <<

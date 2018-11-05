@@ -27,7 +27,7 @@ public:
 
   bool test()
   {
-    cryptonote::KeyPair in_ephemeral;
+    cryptonote::key_pair_t in_ephemeral;
     crypto::derive_public_key(m_key_derivation, 0, m_spend_public_key, in_ephemeral.publicKey);
     return true;
   }

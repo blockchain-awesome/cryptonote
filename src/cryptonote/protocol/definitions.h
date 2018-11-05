@@ -32,7 +32,7 @@ namespace cryptonote
 
   };
 
-  struct BlockFullInfo : public block_complete_entry
+  struct block_full_info_t : public block_complete_entry
   {
     crypto::hash_t block_id;
 
@@ -43,9 +43,9 @@ namespace cryptonote
     }
   };
 
-  struct TransactionPrefixInfo {
+  struct transaction_prefix_info_t {
     crypto::hash_t txHash;
-    TransactionPrefix txPrefix;
+    transaction_prefix_t txPrefix;
 
     void serialize(ISerializer& s) {
       KV_MEMBER(txHash);
@@ -53,10 +53,10 @@ namespace cryptonote
     }
   };
 
-  struct BlockShortInfo {
+  struct block_short_info_t {
     crypto::hash_t blockId;
     std::string block;
-    std::vector<TransactionPrefixInfo> txPrefixes;
+    std::vector<transaction_prefix_info_t> txPrefixes;
 
     void serialize(ISerializer& s) {
       KV_MEMBER(blockId);

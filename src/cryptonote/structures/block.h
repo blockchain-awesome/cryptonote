@@ -16,7 +16,7 @@ struct block_header_t
 
 struct block_t : public block_header_t
 {
-    Transaction baseTransaction;
+    transaction_t baseTransaction;
     std::vector<crypto::hash_t> transactionHashes;
 };
 

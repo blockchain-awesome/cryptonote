@@ -19,7 +19,7 @@ struct SynchronizationStart {
 };
 
 struct AccountSubscription {
-  AccountKeys keys;
+  account_keys_t keys;
   SynchronizationStart syncStart;
   size_t transactionSpendableAge;
 };
@@ -45,7 +45,7 @@ class ITransfersSubscription : public IObservable < ITransfersObserver > {
 public:
   virtual ~ITransfersSubscription() {}
 
-  virtual AccountPublicAddress getAddress() = 0;
+  virtual account_public_address_t getAddress() = 0;
   virtual ITransfersContainer& getContainer() = 0;
 };
 
@@ -64,10 +64,10 @@ public:
   virtual ~ITransfersSynchronizer() {}
 
   virtual ITransfersSubscription& addSubscription(const AccountSubscription& acc) = 0;
-  virtual bool removeSubscription(const AccountPublicAddress& acc) = 0;
-  virtual void getSubscriptions(std::vector<AccountPublicAddress>& subscriptions) = 0;
+  virtual bool removeSubscription(const account_public_address_t& acc) = 0;
+  virtual void getSubscriptions(std::vector<account_public_address_t>& subscriptions) = 0;
   // returns nullptr if address is not found
-  virtual ITransfersSubscription* getSubscription(const AccountPublicAddress& acc) = 0;
+  virtual ITransfersSubscription* getSubscription(const account_public_address_t& acc) = 0;
   virtual std::vector<crypto::hash_t> getViewKeyKnownBlocks(const crypto::public_key_t& publicViewKey) = 0;
 };
 

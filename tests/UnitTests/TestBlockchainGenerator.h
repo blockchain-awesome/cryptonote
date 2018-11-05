@@ -24,17 +24,17 @@ public:
   std::vector<cryptonote::block_t>& getBlockchain();
   std::vector<cryptonote::block_t> getBlockchainCopy();
   void generateEmptyBlocks(size_t count);
-  bool getBlockRewardForAddress(const cryptonote::AccountPublicAddress& address);
-  bool generateTransactionsInOneBlock(const cryptonote::AccountPublicAddress& address, size_t n);
-  bool getSingleOutputTransaction(const cryptonote::AccountPublicAddress& address, uint64_t amount);
-  void addTxToBlockchain(const cryptonote::Transaction& transaction);
-  bool getTransactionByHash(const crypto::hash_t& hash, cryptonote::Transaction& tx, bool checkTxPool = false);
+  bool getBlockRewardForAddress(const cryptonote::account_public_address_t& address);
+  bool generateTransactionsInOneBlock(const cryptonote::account_public_address_t& address, size_t n);
+  bool getSingleOutputTransaction(const cryptonote::account_public_address_t& address, uint64_t amount);
+  void addTxToBlockchain(const cryptonote::transaction_t& transaction);
+  bool getTransactionByHash(const crypto::hash_t& hash, cryptonote::transaction_t& tx, bool checkTxPool = false);
   const cryptonote::AccountBase& getMinerAccount() const;
   bool generateFromBaseTx(const cryptonote::AccountBase& address);
 
-  void putTxToPool(const cryptonote::Transaction& tx);
+  void putTxToPool(const cryptonote::transaction_t& tx);
   void getPoolSymmetricDifference(std::vector<crypto::hash_t>&& known_pool_tx_ids, crypto::hash_t known_block_id, bool& is_bc_actual,
-    std::vector<cryptonote::Transaction>& new_txs, std::vector<crypto::hash_t>& deleted_tx_ids);
+    std::vector<cryptonote::transaction_t>& new_txs, std::vector<crypto::hash_t>& deleted_tx_ids);
   void putTxPoolToBlockchain();
   void clearTxPool();
 
@@ -48,7 +48,7 @@ public:
   bool getTransactionIdsByPaymentId(const crypto::hash_t& paymentId, std::vector<crypto::hash_t>& transactionHashes);
 
   bool getTransactionGlobalIndexesByHash(const crypto::hash_t& transactionHash, std::vector<uint32_t>& globalIndexes);
-  bool getMultisignatureOutputByGlobalIndex(uint64_t amount, uint32_t globalIndex, cryptonote::MultisignatureOutput& out);
+  bool getMultisignatureOutputByGlobalIndex(uint64_t amount, uint32_t globalIndex, cryptonote::multi_signature_output_t& out);
   void setMinerAccount(const cryptonote::AccountBase& account);
 
 private:
@@ -69,12 +69,12 @@ private:
   test_generator generator;
   cryptonote::AccountBase miner_acc;
   std::vector<cryptonote::block_t> m_blockchain;
-  std::unordered_map<crypto::hash_t, cryptonote::Transaction> m_txs;
+  std::unordered_map<crypto::hash_t, cryptonote::transaction_t> m_txs;
   std::unordered_map<crypto::hash_t, std::vector<uint32_t>> transactionGlobalOuts;
   std::unordered_map<uint64_t, std::vector<MultisignatureOutEntry>> multisignatureOutsIndex;
   std::unordered_map<uint64_t, std::vector<KeyOutEntry>> keyOutsIndex;
 
-  std::unordered_map<crypto::hash_t, cryptonote::Transaction> m_txPool;
+  std::unordered_map<crypto::hash_t, cryptonote::transaction_t> m_txPool;
   mutable std::mutex m_mutex;
 
   cryptonote::PaymentIdIndex m_paymentIdIndex;
@@ -82,10 +82,10 @@ private:
   cryptonote::GeneratedTransactionsIndex m_generatedTransactionsIndex;
   cryptonote::OrphanBlocksIndex m_orthanBlocksIndex;
 
-  void addToBlockchain(const cryptonote::Transaction& tx);
-  void addToBlockchain(const std::vector<cryptonote::Transaction>& txs);
-  void addToBlockchain(const std::vector<cryptonote::Transaction>& txs, const cryptonote::AccountBase& minerAddress);
-  void addTx(const cryptonote::Transaction& tx);
+  void addToBlockchain(const cryptonote::transaction_t& tx);
+  void addToBlockchain(const std::vector<cryptonote::transaction_t>& txs);
+  void addToBlockchain(const std::vector<cryptonote::transaction_t>& txs, const cryptonote::AccountBase& minerAddress);
+  void addTx(const cryptonote::transaction_t& tx);
 
-  bool doGenerateTransactionsInOneBlock(cryptonote::AccountPublicAddress const &address, size_t n);
+  bool doGenerateTransactionsInOneBlock(cryptonote::account_public_address_t const &address, size_t n);
 };

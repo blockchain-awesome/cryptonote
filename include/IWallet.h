@@ -123,9 +123,9 @@ public:
 
   virtual size_t getAddressCount() const = 0;
   virtual std::string getAddress(size_t index) const = 0;
-  virtual KeyPair getAddressSpendKey(size_t index) const = 0;
-  virtual KeyPair getAddressSpendKey(const std::string& address) const = 0;
-  virtual KeyPair getViewKey() const = 0;
+  virtual key_pair_t getAddressSpendKey(size_t index) const = 0;
+  virtual key_pair_t getAddressSpendKey(const std::string& address) const = 0;
+  virtual key_pair_t getViewKey() const = 0;
   virtual std::string createAddress() = 0;
   virtual std::string createAddress(const crypto::secret_key_t& spendSecretKey) = 0;
   virtual std::string createAddress(const crypto::public_key_t& spendPublicKey) = 0;

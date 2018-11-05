@@ -37,7 +37,7 @@ public:
   }
 
   virtual void sendTransactionCompleted(TransactionId transactionId, std::error_code result) override {
-    std::cout << "Transaction sent, result = " << result << std::endl;
+    std::cout << "transaction_t sent, result = " << result << std::endl;
   }
 
   std::atomic<uint64_t> m_actualBalance;
@@ -200,7 +200,7 @@ public:
       acc.generate();
 
       AccountSubscription sub;
-      sub.keys = reinterpret_cast<const AccountKeys&>(acc.getAccountKeys());
+      sub.keys = reinterpret_cast<const account_keys_t&>(acc.getAccountKeys());
       sub.syncStart.timestamp = 0;
       sub.syncStart.height = 0;
       sub.transactionSpendableAge = TRANSACTION_SPENDABLE_AGE;
@@ -217,8 +217,8 @@ public:
     }
   }
 
-  std::vector<AccountPublicAddress> getAddresses() {
-    std::vector<AccountPublicAddress> addr;
+  std::vector<account_public_address_t> getAddresses() {
+    std::vector<account_public_address_t> addr;
     for (const auto& acc : m_accounts) {
       addr.push_back(acc.keys.address);
     }
@@ -301,7 +301,7 @@ TEST_F(TransfersTest, base) {
   cryptonote::AccountBase dstAcc;
   dstAcc.generate();
 
-  AccountKeys dstKeys = reinterpret_cast<const AccountKeys&>(dstAcc.getAccountKeys());
+  account_keys_t dstKeys = reinterpret_cast<const account_keys_t&>(dstAcc.getAccountKeys());
 
   BlockchainSynchronizer blockSync(*node2.get(), currency.genesisBlockHash());
   TransfersSyncronizer transferSync(currency, blockSync, *node2.get());
@@ -349,8 +349,8 @@ std::unique_ptr<ITransaction> createTransferToMultisignature(
   ITransfersContainer& tc, // money source
   uint64_t amount,
   uint64_t fee,
-  const AccountKeys& senderKeys,
-  const std::vector<AccountPublicAddress>& recipients,
+  const account_keys_t& senderKeys,
+  const std::vector<account_public_address_t>& recipients,
   uint32_t requiredSignatures) {
 
   std::vector<TransactionOutputInformation> transfers;
@@ -358,7 +358,7 @@ std::unique_ptr<ITransaction> createTransferToMultisignature(
 
   auto tx = createTransaction();
 
-  std::vector<std::pair<TransactionTypes::InputKeyInfo, KeyPair>> inputs;
+  std::vector<std::pair<TransactionTypes::InputKeyInfo, key_pair_t>> inputs;
 
   uint64_t foundMoney = 0;
 
@@ -376,7 +376,7 @@ std::unique_ptr<ITransaction> createTransferToMultisignature(
     info.realOutput.transactionIndex = 0;
     info.realOutput.transactionPublicKey = t.transactionPublicKey;
 
-    KeyPair kp;
+    key_pair_t kp;
     tx->addInput(senderKeys, info, kp);
 
     inputs.push_back(std::make_pair(info, kp));
@@ -407,7 +407,7 @@ std::unique_ptr<ITransaction> createTransferToMultisignature(
 std::error_code submitTransaction(INode& node, ITransactionReader& tx) {
   auto data = tx.getTransactionData();
 
-  cryptonote::Transaction outTx;
+  cryptonote::transaction_t outTx;
   fromBinaryArray(outTx, data);
 
 
@@ -428,7 +428,7 @@ std::error_code submitTransaction(INode& node, ITransactionReader& tx) {
 
 
 std::unique_ptr<ITransaction> createTransferFromMultisignature(
-  AccountGroup& consilium, const AccountPublicAddress& receiver, const hash_t& txHash, uint64_t amount, uint64_t fee) {
+  AccountGroup& consilium, const account_public_address_t& receiver, const hash_t& txHash, uint64_t amount, uint64_t fee) {
 
   auto& tc = consilium.getTransfers(0);
 
@@ -442,7 +442,7 @@ std::unique_ptr<ITransaction> createTransferFromMultisignature(
 
   auto tx = createTransaction();
 
-  MultisignatureInput msigInput;
+  multi_signature_input_t msigInput;
 
   msigInput.amount = out.amount;
   msigInput.outputIndex = out.globalOutputIndex;
@@ -491,7 +491,7 @@ TEST_F(MultisignatureTest, createMulitisignatureTransaction) {
 
   blockSync.start();
 
-  AccountPublicAddress senderAddress;
+  account_public_address_t senderAddress;
   ASSERT_TRUE(Account::parseAddress(sender.m_addresses[0], senderAddress));
   ASSERT_TRUE(mineBlocks(*nodeDaemons[0], senderAddress, 1 + currency.minedMoneyUnlockWindow()));
 
@@ -527,7 +527,7 @@ TEST_F(MultisignatureTest, createMulitisignatureTransaction) {
     LOG_DEBUG("Waiting for transaction to be included in block...");
     txConsumer.waitForTransaction(txHash);
 
-    LOG_DEBUG("Transaction in blockchain, waiting for observers to receive transaction...");
+    LOG_DEBUG("transaction_t in blockchain, waiting for observers to receive transaction...");
 
     uint64_t expectedFundBalance = fundBalance + sendAmount;
 

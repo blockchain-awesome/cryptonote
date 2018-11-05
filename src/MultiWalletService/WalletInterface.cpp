@@ -197,7 +197,7 @@ WalletInterface::~WalletInterface()
 //   return m_blockchain.get<BlockHeightIndex>()[blockIndex];
 // }
 
-bool WalletInterface::createWallet(const AccountKeys &accountKeys)
+bool WalletInterface::createWallet(const account_keys_t &accountKeys)
 {
 
   Logging::LoggerRef(m_logger, "inteface")(Logging::INFO) << "creating new wallet" << endl;
@@ -226,7 +226,7 @@ bool WalletInterface::isWalletExisted(const std::string &address)
   return false;
 }
 
-bool WalletInterface::checkAddress(const std::string &address, AccountPublicAddress &keys)
+bool WalletInterface::checkAddress(const std::string &address, account_public_address_t &keys)
 {
 
   std::string genAddress = m_currency.accountAddressAsString(keys);
@@ -249,7 +249,7 @@ cryptonote::IWalletLegacy *WalletInterface::getWallet(const std::string address)
   return NULL;
 }
 
-std::string WalletInterface::getAddressesByKeys(const AccountPublicAddress &keys)
+std::string WalletInterface::getAddressesByKeys(const account_public_address_t &keys)
 {
   return m_currency.accountAddressAsString(keys);
 }

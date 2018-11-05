@@ -38,9 +38,9 @@ public:
 
   virtual size_t getAddressCount() const override;
   virtual std::string getAddress(size_t index) const override;
-  virtual KeyPair getAddressSpendKey(size_t index) const override;
-  virtual KeyPair getAddressSpendKey(const std::string& address) const override;
-  virtual KeyPair getViewKey() const override;
+  virtual key_pair_t getAddressSpendKey(size_t index) const override;
+  virtual key_pair_t getAddressSpendKey(const std::string& address) const override;
+  virtual key_pair_t getViewKey() const override;
   virtual std::string createAddress() override;
   virtual std::string createAddress(const crypto::secret_key_t& spendSecretKey) override;
   virtual std::string createAddress(const crypto::public_key_t& spendPublicKey) override;
@@ -90,7 +90,7 @@ protected:
   struct InputInfo {
     TransactionTypes::InputKeyInfo keyInfo;
     WalletRecord* walletRecord = nullptr;
-    KeyPair ephKeys;
+    key_pair_t ephKeys;
   };
 
   struct OutputToTransfer {
@@ -99,7 +99,7 @@ protected:
   };
 
   struct ReceiverAmounts {
-    cryptonote::AccountPublicAddress receiver;
+    cryptonote::account_public_address_t receiver;
     std::vector<uint64_t> amounts;
   };
 
@@ -161,9 +161,9 @@ protected:
   const WalletRecord& getWalletRecord(const std::string& address) const;
   const WalletRecord& getWalletRecord(cryptonote::ITransfersContainer* container) const;
 
-  cryptonote::AccountPublicAddress parseAddress(const std::string& address) const;
+  cryptonote::account_public_address_t parseAddress(const std::string& address) const;
   std::string addWallet(const crypto::public_key_t& spendPublicKey, const crypto::secret_key_t& spendSecretKey, uint64_t creationTimestamp);
-  AccountKeys makeAccountKeys(const WalletRecord& wallet) const;
+  account_keys_t makeAccountKeys(const WalletRecord& wallet) const;
   size_t getTransactionId(const crypto::hash_t& transactionHash) const;
   void pushEvent(const WalletEvent& event);
   bool isFusionTransaction(const WalletTransaction& walletTx) const;
@@ -182,7 +182,7 @@ protected:
     const std::string& extra,
     uint64_t unlockTimestamp,
     const DonationSettings& donation,
-    const cryptonote::AccountPublicAddress& changeDestinationAddress,
+    const cryptonote::account_public_address_t& changeDestinationAddress,
     PreparedTransaction& preparedTransaction);
 
   void validateTransactionParameters(const TransactionParameters& transactionParameters);
@@ -205,12 +205,12 @@ protected:
 
   std::vector<ReceiverAmounts> splitDestinations(const std::vector<WalletTransfer>& destinations,
     uint64_t dustThreshold, const Currency& currency);
-  ReceiverAmounts splitAmount(uint64_t amount, const AccountPublicAddress& destination, uint64_t dustThreshold);
+  ReceiverAmounts splitAmount(uint64_t amount, const account_public_address_t& destination, uint64_t dustThreshold);
 
   std::unique_ptr<cryptonote::ITransaction> makeTransaction(const std::vector<ReceiverAmounts>& decomposedOutputs,
     std::vector<InputInfo>& keysInfo, const std::string& extra, uint64_t unlockTimestamp);
 
-  void sendTransaction(const cryptonote::Transaction& cryptoNoteTransaction);
+  void sendTransaction(const cryptonote::transaction_t& cryptoNoteTransaction);
   size_t validateSaveAndSendTransaction(const ITransactionReader& transaction, const std::vector<WalletTransfer>& destinations, bool isFusion, bool send);
 
   size_t insertBlockchainTransaction(const TransactionInformation& info, int64_t txBalance);
@@ -262,7 +262,7 @@ protected:
   std::vector<WalletTransfer> getTransactionTransfers(const WalletTransaction& transaction) const;
   void filterOutTransactions(WalletTransactions& transactions, WalletTransfers& transfers, std::function<bool (const WalletTransaction&)>&& pred) const;
   void getViewKeyKnownBlocks(const crypto::public_key_t& viewPublicKey);
-  cryptonote::AccountPublicAddress getChangeDestination(const std::string& changeDestinationAddress, const std::vector<std::string>& sourceAddresses) const;
+  cryptonote::account_public_address_t getChangeDestination(const std::string& changeDestinationAddress, const std::vector<std::string>& sourceAddresses) const;
   bool isMyAddress(const std::string& address) const;
 
   void deleteContainerFromUnlockTransactionJobs(const ITransfersContainer* container);

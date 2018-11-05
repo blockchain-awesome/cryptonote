@@ -1,4 +1,4 @@
-#include "serialize.h"
+#include "crypto.h"
 
 bool parse_hash256(const std::string& str_hash, crypto::hash_t& hash) {
   return Common::podFromHex(str_hash, hash);

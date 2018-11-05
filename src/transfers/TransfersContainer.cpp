@@ -168,7 +168,7 @@ bool TransfersContainer::addTransaction(const TransactionBlockInfo& block, const
   }
 
   if (m_transactions.count(tx.getTransactionHash()) > 0) {
-    throw std::invalid_argument("Transaction is already added");
+    throw std::invalid_argument("transaction_t is already added");
   }
 
   bool added = addTransactionOutputs(block, tx, transfers);
@@ -275,7 +275,7 @@ bool TransfersContainer::addTransactionInputs(const TransactionBlockInfo& block,
     auto inputType = tx.getInputType(i);
 
     if (inputType == TransactionTypes::InputType::Key) {
-      KeyInput input;
+      key_input_t input;
       tx.getInput(i, input);
 
       SpentOutputDescriptor descriptor(&input.keyImage);
@@ -317,7 +317,7 @@ bool TransfersContainer::addTransactionInputs(const TransactionBlockInfo& block,
 
       inputsAdded = true;
     } else if (inputType == TransactionTypes::InputType::Multisignature) {
-      MultisignatureInput input;
+      multi_signature_input_t input;
       tx.getInput(i, input);
 
       auto& outputDescriptorIndex = m_availableTransfers.get<SpentOutputDescriptorIndex>();

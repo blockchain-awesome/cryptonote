@@ -76,7 +76,7 @@ void WalletLegacySerializer::serialize(std::ostream& stream, const std::string& 
 
 void WalletLegacySerializer::saveKeys(cryptonote::ISerializer& serializer) {
   cryptonote::KeysStorage keys;
-  cryptonote::AccountKeys acc = account.getAccountKeys();
+  cryptonote::account_keys_t acc = account.getAccountKeys();
 
   keys.creationTimestamp = account.getCreatetime();
   keys.spendPublicKey = acc.address.spendPublicKey;
@@ -159,7 +159,7 @@ void WalletLegacySerializer::loadKeys(cryptonote::ISerializer& serializer) {
 
   keys.serialize(serializer, "keys");
 
-  cryptonote::AccountKeys acc;
+  cryptonote::account_keys_t acc;
   acc.address.spendPublicKey = keys.spendPublicKey;
   acc.spendSecretKey = keys.spendSecretKey;
   acc.address.viewPublicKey = keys.viewPublicKey;

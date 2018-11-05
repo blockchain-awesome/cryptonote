@@ -25,15 +25,15 @@ public:
 
   const cryptonote::Currency& currency() const { return generator.currency(); }
 
-  void makeNextBlock(const std::list<cryptonote::Transaction>& txs = std::list<cryptonote::Transaction>()) {
+  void makeNextBlock(const std::list<cryptonote::transaction_t>& txs = std::list<cryptonote::transaction_t>()) {
     cryptonote::block_t block;
     generator.constructBlock(block, lastBlock, minerAccount, txs);
     events.push_back(block);
     lastBlock = block;
   }
 
-  void makeNextBlock(const cryptonote::Transaction& tx) {
-    std::list<cryptonote::Transaction> txs;
+  void makeNextBlock(const cryptonote::transaction_t& tx) {
+    std::list<cryptonote::transaction_t> txs;
     txs.push_back(tx);
     makeNextBlock(txs);
   }
@@ -74,7 +74,7 @@ public:
   }
 
   void constructTxToKey(
-    cryptonote::Transaction& tx,
+    cryptonote::transaction_t& tx,
     const cryptonote::AccountBase& from,
     const cryptonote::AccountBase& to,
     uint64_t amount,

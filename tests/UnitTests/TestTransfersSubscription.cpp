@@ -51,7 +51,7 @@ public:
 
   Logging::ConsoleLogger m_logger;
   Currency currency;
-  AccountKeys account;
+  account_keys_t account;
   SynchronizationStart syncStart;
   TransfersSubscription sub;
   TransfersObserver observer;

@@ -23,18 +23,18 @@ using namespace Common;
 
 namespace cryptonote {
 
-bool parseAndValidateTransactionFromBinaryArray(const BinaryArray& tx_blob, Transaction& tx, hash_t& tx_hash, hash_t& tx_prefix_hash) {
+bool parseAndValidateTransactionFromBinaryArray(const BinaryArray& tx_blob, transaction_t& tx, hash_t& tx_hash, hash_t& tx_prefix_hash) {
   if (!fromBinaryArray(tx, tx_blob)) {
     return false;
   }
 
   //TODO: validate tx
   cn_fast_hash(tx_blob.data(), tx_blob.size(), tx_hash);
-  getObjectHash(*static_cast<TransactionPrefix*>(&tx), tx_prefix_hash);
+  getObjectHash(*static_cast<transaction_prefix_t*>(&tx), tx_prefix_hash);
   return true;
 }
 
-bool generate_key_image_helper(const AccountKeys& ack, const public_key_t& tx_public_key, size_t real_output_index, KeyPair& in_ephemeral, key_image_t& ki) {
+bool generate_key_image_helper(const account_keys_t& ack, const public_key_t& tx_public_key, size_t real_output_index, key_pair_t& in_ephemeral, key_image_t& ki) {
   key_derivation_t recv_derivation;
   bool r = generate_key_derivation(tx_public_key, ack.viewSecretKey, recv_derivation);
 
@@ -66,15 +66,15 @@ uint64_t power_integral(uint64_t a, uint64_t b) {
   return total;
 }
 
-bool get_tx_fee(const Transaction& tx, uint64_t & fee) {
+bool get_tx_fee(const transaction_t& tx, uint64_t & fee) {
   uint64_t amount_in = 0;
   uint64_t amount_out = 0;
 
   for (const auto& in : tx.inputs) {
-    if (in.type() == typeid(KeyInput)) {
-      amount_in += boost::get<KeyInput>(in).amount;
-    } else if (in.type() == typeid(MultisignatureInput)) {
-      amount_in += boost::get<MultisignatureInput>(in).amount;
+    if (in.type() == typeid(key_input_t)) {
+      amount_in += boost::get<key_input_t>(in).amount;
+    } else if (in.type() == typeid(multi_signature_input_t)) {
+      amount_in += boost::get<multi_signature_input_t>(in).amount;
     }
   }
 
@@ -90,7 +90,7 @@ bool get_tx_fee(const Transaction& tx, uint64_t & fee) {
   return true;
 }
 
-uint64_t get_tx_fee(const Transaction& tx) {
+uint64_t get_tx_fee(const transaction_t& tx) {
   uint64_t r = 0;
   if (!get_tx_fee(tx, r))
     return 0;
@@ -99,11 +99,11 @@ uint64_t get_tx_fee(const Transaction& tx) {
 
 
 bool constructTransaction(
-  const AccountKeys& sender_account_keys,
+  const account_keys_t& sender_account_keys,
   const std::vector<TransactionSourceEntry>& sources,
   const std::vector<TransactionDestinationEntry>& destinations,
   std::vector<uint8_t> extra,
-  Transaction& tx,
+  transaction_t& tx,
   uint64_t unlock_time,
   Logging::ILogger& log) {
   LoggerRef logger(log, "construct_tx");
@@ -116,13 +116,13 @@ bool constructTransaction(
   tx.unlockTime = unlock_time;
 
   tx.extra = extra;
-  // KeyPair txkey = generateKeyPair();
-  KeyPair txkey = Key::generate();
+  // key_pair_t txkey = generateKeyPair();
+  key_pair_t txkey = Key::generate();
 
   addTransactionPublicKeyToExtra(tx.extra, txkey.publicKey);
 
   struct input_generation_context_data {
-    KeyPair in_ephemeral;
+    key_pair_t in_ephemeral;
   };
 
   std::vector<input_generation_context_data> in_contexts;
@@ -137,7 +137,7 @@ bool constructTransaction(
 
     //KeyDerivation recv_derivation;
     in_contexts.push_back(input_generation_context_data());
-    KeyPair& in_ephemeral = in_contexts.back().in_ephemeral;
+    key_pair_t& in_ephemeral = in_contexts.back().in_ephemeral;
     key_image_t img;
     if (!generate_key_image_helper(sender_account_keys, src_entr.realTransactionPublicKey, src_entr.realOutputIndexInTransaction, in_ephemeral, img))
       return false;
@@ -151,7 +151,7 @@ bool constructTransaction(
     }
 
     //put key image into tx input
-    KeyInput input_to_key;
+    key_input_t input_to_key;
     input_to_key.amount = src_entr.amount;
     input_to_key.keyImage = img;
 
@@ -198,9 +198,9 @@ bool constructTransaction(
       return false;
     }
 
-    TransactionOutput out;
+    transaction_output_t out;
     out.amount = dst_entr.amount;
-    KeyOutput tk;
+    key_output_t tk;
     tk.key = out_eph_public_key;
     out.target = tk;
     tx.outputs.push_back(out);
@@ -210,13 +210,13 @@ bool constructTransaction(
 
   //check money
   if (summary_outs_money > summary_inputs_money) {
-    logger(ERROR) << "Transaction inputs money (" << summary_inputs_money << ") less than outputs money (" << summary_outs_money << ")";
+    logger(ERROR) << "transaction_t inputs money (" << summary_inputs_money << ") less than outputs money (" << summary_outs_money << ")";
     return false;
   }
 
   //generate ring signatures
   hash_t tx_prefix_hash;
-  getObjectHash(*static_cast<TransactionPrefix*>(&tx), tx_prefix_hash);
+  getObjectHash(*static_cast<transaction_prefix_t*>(&tx), tx_prefix_hash);
 
   size_t i = 0;
   for (const TransactionSourceEntry& src_entr : sources) {
@@ -228,7 +228,7 @@ bool constructTransaction(
     tx.signatures.push_back(std::vector<signature_t>());
     std::vector<signature_t>& sigs = tx.signatures.back();
     sigs.resize(src_entr.outputs.size());
-    generate_ring_signature(tx_prefix_hash, boost::get<KeyInput>(tx.inputs[i]).keyImage, keys_ptrs,
+    generate_ring_signature(tx_prefix_hash, boost::get<key_input_t>(tx.inputs[i]).keyImage, keys_ptrs,
       in_contexts[i].in_ephemeral.secretKey, src_entr.realOutput, sigs.data());
     i++;
   }
@@ -236,16 +236,16 @@ bool constructTransaction(
   return true;
 }
 
-bool get_inputs_money_amount(const Transaction& tx, uint64_t& money) {
+bool get_inputs_money_amount(const transaction_t& tx, uint64_t& money) {
   money = 0;
 
   for (const auto& in : tx.inputs) {
     uint64_t amount = 0;
 
-    if (in.type() == typeid(KeyInput)) {
-      amount = boost::get<KeyInput>(in).amount;
-    } else if (in.type() == typeid(MultisignatureInput)) {
-      amount = boost::get<MultisignatureInput>(in).amount;
+    if (in.type() == typeid(key_input_t)) {
+      amount = boost::get<key_input_t>(in).amount;
+    } else if (in.type() == typeid(multi_signature_input_t)) {
+      amount = boost::get<multi_signature_input_t>(in).amount;
     }
 
     money += amount;
@@ -258,15 +258,15 @@ uint32_t get_block_height(const block_t& b) {
     return 0;
   }
   const auto& in = b.baseTransaction.inputs[0];
-  if (in.type() != typeid(BaseInput)) {
+  if (in.type() != typeid(base_input_t)) {
     return 0;
   }
-  return boost::get<BaseInput>(in).blockIndex;
+  return boost::get<base_input_t>(in).blockIndex;
 }
 
-bool check_inputs_types_supported(const TransactionPrefix& tx) {
+bool check_inputs_types_supported(const transaction_prefix_t& tx) {
   for (const auto& in : tx.inputs) {
-    if (in.type() != typeid(KeyInput) && in.type() != typeid(MultisignatureInput)) {
+    if (in.type() != typeid(key_input_t) && in.type() != typeid(multi_signature_input_t)) {
       return false;
     }
   }
@@ -274,9 +274,9 @@ bool check_inputs_types_supported(const TransactionPrefix& tx) {
   return true;
 }
 
-bool check_outs_valid(const TransactionPrefix& tx, std::string* error) {
-  for (const TransactionOutput& out : tx.outputs) {
-    if (out.target.type() == typeid(KeyOutput)) {
+bool check_outs_valid(const transaction_prefix_t& tx, std::string* error) {
+  for (const transaction_output_t& out : tx.outputs) {
+    if (out.target.type() == typeid(key_output_t)) {
       if (out.amount == 0) {
         if (error) {
           *error = "Zero amount ouput";
@@ -284,14 +284,14 @@ bool check_outs_valid(const TransactionPrefix& tx, std::string* error) {
         return false;
       }
 
-      if (!check_key(boost::get<KeyOutput>(out.target).key)) {
+      if (!check_key(boost::get<key_output_t>(out.target).key)) {
         if (error) {
           *error = "Output with invalid key";
         }
         return false;
       }
-    } else if (out.target.type() == typeid(MultisignatureOutput)) {
-      const MultisignatureOutput& multisignatureOutput = ::boost::get<MultisignatureOutput>(out.target);
+    } else if (out.target.type() == typeid(multi_signature_output_t)) {
+      const multi_signature_output_t& multisignatureOutput = ::boost::get<multi_signature_output_t>(out.target);
       if (multisignatureOutput.requiredSignatureCount > multisignatureOutput.keys.size()) {
         if (error) {
           *error = "Multisignature output with invalid required signature count";
@@ -317,11 +317,11 @@ bool check_outs_valid(const TransactionPrefix& tx, std::string* error) {
   return true;
 }
 
-bool checkMultisignatureInputsDiff(const TransactionPrefix& tx) {
+bool checkMultisignatureInputsDiff(const transaction_prefix_t& tx) {
   std::set<std::pair<uint64_t, uint32_t>> inputsUsage;
   for (const auto& inv : tx.inputs) {
-    if (inv.type() == typeid(MultisignatureInput)) {
-      const MultisignatureInput& in = ::boost::get<MultisignatureInput>(inv);
+    if (inv.type() == typeid(multi_signature_input_t)) {
+      const multi_signature_input_t& in = ::boost::get<multi_signature_input_t>(inv);
       if (!inputsUsage.insert(std::make_pair(in.amount, in.outputIndex)).second) {
         return false;
       }
@@ -330,20 +330,20 @@ bool checkMultisignatureInputsDiff(const TransactionPrefix& tx) {
   return true;
 }
 
-bool check_money_overflow(const TransactionPrefix &tx) {
+bool check_money_overflow(const transaction_prefix_t &tx) {
   return check_inputs_overflow(tx) && check_outs_overflow(tx);
 }
 
-bool check_inputs_overflow(const TransactionPrefix &tx) {
+bool check_inputs_overflow(const transaction_prefix_t &tx) {
   uint64_t money = 0;
 
   for (const auto &in : tx.inputs) {
     uint64_t amount = 0;
 
-    if (in.type() == typeid(KeyInput)) {
-      amount = boost::get<KeyInput>(in).amount;
-    } else if (in.type() == typeid(MultisignatureInput)) {
-      amount = boost::get<MultisignatureInput>(in).amount;
+    if (in.type() == typeid(key_input_t)) {
+      amount = boost::get<key_input_t>(in).amount;
+    } else if (in.type() == typeid(multi_signature_input_t)) {
+      amount = boost::get<multi_signature_input_t>(in).amount;
     }
 
     if (money > amount + money)
@@ -354,7 +354,7 @@ bool check_inputs_overflow(const TransactionPrefix &tx) {
   return true;
 }
 
-bool check_outs_overflow(const TransactionPrefix& tx) {
+bool check_outs_overflow(const transaction_prefix_t& tx) {
   uint64_t money = 0;
   for (const auto& o : tx.outputs) {
     if (money > o.amount + money)
@@ -364,7 +364,7 @@ bool check_outs_overflow(const TransactionPrefix& tx) {
   return true;
 }
 
-uint64_t get_outs_money_amount(const Transaction& tx) {
+uint64_t get_outs_money_amount(const transaction_t& tx) {
   uint64_t outputs_amount = 0;
   for (const auto& o : tx.outputs) {
     outputs_amount += o.amount;
@@ -383,26 +383,26 @@ std::string short_hash_str(const hash_t& h) {
   return res;
 }
 
-bool is_out_to_acc(const AccountKeys& acc, const KeyOutput& out_key, const key_derivation_t& derivation, size_t keyIndex) {
+bool is_out_to_acc(const account_keys_t& acc, const key_output_t& out_key, const key_derivation_t& derivation, size_t keyIndex) {
   public_key_t pk;
   derive_public_key(derivation, keyIndex, acc.address.spendPublicKey, pk);
   return pk == out_key.key;
 }
 
-bool is_out_to_acc(const AccountKeys& acc, const KeyOutput& out_key, const public_key_t& tx_pub_key, size_t keyIndex) {
+bool is_out_to_acc(const account_keys_t& acc, const key_output_t& out_key, const public_key_t& tx_pub_key, size_t keyIndex) {
   key_derivation_t derivation;
   generate_key_derivation(tx_pub_key, acc.viewSecretKey, derivation);
   return is_out_to_acc(acc, out_key, derivation, keyIndex);
 }
 
-bool lookup_acc_outs(const AccountKeys& acc, const Transaction& tx, std::vector<size_t>& outs, uint64_t& money_transfered) {
+bool lookup_acc_outs(const account_keys_t& acc, const transaction_t& tx, std::vector<size_t>& outs, uint64_t& money_transfered) {
   public_key_t transactionPublicKey = getTransactionPublicKeyFromExtra(tx.extra);
   if (transactionPublicKey == NULL_PUBLIC_KEY)
     return false;
   return lookup_acc_outs(acc, tx, transactionPublicKey, outs, money_transfered);
 }
 
-bool lookup_acc_outs(const AccountKeys& acc, const Transaction& tx, const public_key_t& tx_pub_key, std::vector<size_t>& outs, uint64_t& money_transfered) {
+bool lookup_acc_outs(const account_keys_t& acc, const transaction_t& tx, const public_key_t& tx_pub_key, std::vector<size_t>& outs, uint64_t& money_transfered) {
   money_transfered = 0;
   size_t keyIndex = 0;
   size_t outputIndex = 0;
@@ -410,17 +410,17 @@ bool lookup_acc_outs(const AccountKeys& acc, const Transaction& tx, const public
   key_derivation_t derivation;
   generate_key_derivation(tx_pub_key, acc.viewSecretKey, derivation);
 
-  for (const TransactionOutput& o : tx.outputs) {
-    assert(o.target.type() == typeid(KeyOutput) || o.target.type() == typeid(MultisignatureOutput));
-    if (o.target.type() == typeid(KeyOutput)) {
-      if (is_out_to_acc(acc, boost::get<KeyOutput>(o.target), derivation, keyIndex)) {
+  for (const transaction_output_t& o : tx.outputs) {
+    assert(o.target.type() == typeid(key_output_t) || o.target.type() == typeid(multi_signature_output_t));
+    if (o.target.type() == typeid(key_output_t)) {
+      if (is_out_to_acc(acc, boost::get<key_output_t>(o.target), derivation, keyIndex)) {
         outs.push_back(outputIndex);
         money_transfered += o.amount;
       }
 
       ++keyIndex;
-    } else if (o.target.type() == typeid(MultisignatureOutput)) {
-      keyIndex += boost::get<MultisignatureOutput>(o.target).keys.size();
+    } else if (o.target.type() == typeid(multi_signature_output_t)) {
+      keyIndex += boost::get<multi_signature_output_t>(o.target).keys.size();
     }
 
     ++outputIndex;

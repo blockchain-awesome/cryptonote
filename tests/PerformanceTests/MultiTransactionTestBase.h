@@ -39,7 +39,7 @@ public:
       if (!currency.constructMinerTx(0, 0, 0, 2, 0, m_miners[i].getAccountKeys().address, m_miner_txs[i]))
         return false;
 
-      KeyOutput tx_out = boost::get<KeyOutput>(m_miner_txs[i].outputs[0].target);
+      key_output_t tx_out = boost::get<key_output_t>(m_miner_txs[i].outputs[0].target);
       output_entries.push_back(std::make_pair(i, tx_out.key));
       m_public_keys[i] = tx_out.key;
       m_public_key_ptrs[i] = &m_public_keys[i];
@@ -61,7 +61,7 @@ public:
 
 protected:
   cryptonote::AccountBase m_miners[ring_size];
-  cryptonote::Transaction m_miner_txs[ring_size];
+  cryptonote::transaction_t m_miner_txs[ring_size];
   uint64_t m_source_amount;
   Logging::ConsoleLogger m_logger;
 

@@ -89,7 +89,7 @@ DoubleSpendBase::DoubleSpendBase() :
   REGISTER_CALLBACK_METHOD(DoubleSpendBase, check_double_spend);
 }
 
-bool DoubleSpendBase::check_TxVerificationContext(const cryptonote::TxVerificationContext& tvc, bool tx_added, size_t event_idx, const cryptonote::Transaction& /*tx*/)
+bool DoubleSpendBase::check_TxVerificationContext(const cryptonote::TxVerificationContext& tvc, bool tx_added, size_t event_idx, const cryptonote::transaction_t& /*tx*/)
 {
   if (m_invalid_tx_index == event_idx)
     return tvc.m_verifivation_failed;
@@ -233,7 +233,7 @@ bool MultiSigTx_DoubleSpendSameBlock::generate(std::vector<test_event_entry>& ev
   generator.addCallback("mark_last_valid_block");
   SET_EVENT_VISITOR_SETT(events, event_visitor_settings::set_txs_keeped_by_block, m_txsKeepedByBlock);
 
-  std::list<Transaction> txs;
+  std::list<transaction_t> txs;
 
   auto builder = createBobToAliceTx();
 
@@ -314,7 +314,7 @@ bool MultiSigTx_DoubleSpendAltChainSameBlock::generate(std::vector<test_event_en
 
   auto builder = createBobToAliceTx();
 
-  std::list<Transaction> txs;
+  std::list<transaction_t> txs;
   auto tx1 = builder.build();
   auto tx2 = builder.newTxKeys().build();
   txs.push_back(tx1);

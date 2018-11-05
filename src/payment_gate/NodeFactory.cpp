@@ -26,7 +26,7 @@ public:
   virtual uint32_t getKnownBlockCount() const override { return 0; }
   virtual uint64_t getLastLocalBlockTimestamp() const override { return 0; }
 
-  virtual void relayTransaction(const cryptonote::Transaction& transaction, const Callback& callback) override { callback(std::error_code()); }
+  virtual void relayTransaction(const cryptonote::transaction_t& transaction, const Callback& callback) override { callback(std::error_code()); }
   virtual void getRandomOutsByAmounts(std::vector<uint64_t>&& amounts, uint64_t outsCount,
     std::vector<cryptonote::COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS::outs_for_amount>& result, const Callback& callback) override {
   }
@@ -57,16 +57,16 @@ public:
   virtual void getBlocks(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t blocksNumberLimit, std::vector<cryptonote::BlockDetails>& blocks, uint32_t& blocksNumberWithinTimestamps,
     const Callback& callback) override { }
 
-  virtual void getTransactions(const std::vector<crypto::hash_t>& transactionHashes, std::vector<cryptonote::TransactionDetails>& transactions,
+  virtual void getTransactions(const std::vector<crypto::hash_t>& transactionHashes, std::vector<cryptonote::transaction_details_t>& transactions,
     const Callback& callback) override { }
 
-  virtual void getPoolTransactions(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t transactionsNumberLimit, std::vector<cryptonote::TransactionDetails>& transactions, uint64_t& transactionsNumberWithinTimestamps,
+  virtual void getPoolTransactions(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t transactionsNumberLimit, std::vector<cryptonote::transaction_details_t>& transactions, uint64_t& transactionsNumberWithinTimestamps,
     const Callback& callback) override { }
 
-  virtual void getTransactionsByPaymentId(const crypto::hash_t& paymentId, std::vector<cryptonote::TransactionDetails>& transactions, 
+  virtual void getTransactionsByPaymentId(const crypto::hash_t& paymentId, std::vector<cryptonote::transaction_details_t>& transactions, 
     const Callback& callback) override { }
 
-  virtual void getMultisignatureOutputByGlobalIndex(uint64_t amount, uint32_t gindex, cryptonote::MultisignatureOutput& out,
+  virtual void getMultisignatureOutputByGlobalIndex(uint64_t amount, uint32_t gindex, cryptonote::multi_signature_output_t& out,
     const Callback& callback) override { }
 
   virtual void isSynchronized(bool& syncStatus, const Callback& callback) override { }

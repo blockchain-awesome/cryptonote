@@ -48,9 +48,9 @@ struct IWalletBaseStub : public cryptonote::IWallet {
 
   virtual size_t getAddressCount() const override { return 0; }
   virtual std::string getAddress(size_t index) const override { return ""; }
-  virtual KeyPair getAddressSpendKey(size_t index) const override { return KeyPair(); }
-  virtual KeyPair getAddressSpendKey(const std::string& address) const override { return KeyPair(); }
-  virtual KeyPair getViewKey() const override { return KeyPair(); }
+  virtual key_pair_t getAddressSpendKey(size_t index) const override { return key_pair_t(); }
+  virtual key_pair_t getAddressSpendKey(const std::string& address) const override { return key_pair_t(); }
+  virtual key_pair_t getViewKey() const override { return key_pair_t(); }
   virtual std::string createAddress() override { return ""; }
   virtual std::string createAddress(const crypto::secret_key_t& spendSecretKey) override { return ""; }
   virtual std::string createAddress(const crypto::public_key_t& spendPublicKey) override { return ""; }
@@ -239,11 +239,11 @@ struct WalletgetSpendKeysStub: public IWalletBaseStub {
     crypto::generate_keys(keyPair.publicKey, keyPair.secretKey);
   }
 
-  virtual KeyPair getAddressSpendKey(const std::string& address) const override {
+  virtual key_pair_t getAddressSpendKey(const std::string& address) const override {
     return keyPair;
   }
 
-  KeyPair keyPair;
+  key_pair_t keyPair;
 };
 
 TEST_F(WalletServiceTest_getSpendKeys, returnsKeysCorrectly) {
@@ -382,11 +382,11 @@ struct WalletGetViewKeyStub: public IWalletBaseStub {
     crypto::generate_keys(keyPair.publicKey, keyPair.secretKey);
   }
 
-  virtual KeyPair getViewKey() const override {
+  virtual key_pair_t getViewKey() const override {
     return keyPair;
   }
 
-  KeyPair keyPair;
+  key_pair_t keyPair;
 };
 
 TEST_F(WalletServiceTest_getViewKey, returnsCorrectValue) {

@@ -4,9 +4,9 @@
 namespace cryptonote
 {
 
-KeyPair Key::generate()
+key_pair_t Key::generate()
 {
-    KeyPair k;
+    key_pair_t k;
     crypto::generate_keys(k.publicKey, k.secretKey);
     return k;
 }

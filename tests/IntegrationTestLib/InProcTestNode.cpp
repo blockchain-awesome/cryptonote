@@ -124,7 +124,7 @@ void InProcTestNode::workerThread(std::promise<std::string>& initPromise) {
 
 bool InProcTestNode::startMining(size_t threadsCount, const std::string &address) {
   assert(core.get());
-  AccountPublicAddress addr;
+  account_public_address_t addr;
   Account::parseAddress(address, addr);
   return core->get_miner().start(addr, threadsCount);
 }
@@ -145,7 +145,7 @@ bool InProcTestNode::stopDaemon() {
 }
 
 bool InProcTestNode::getBlockTemplate(const std::string &minerAddress, cryptonote::block_t &blockTemplate, uint64_t &difficulty) {
-  AccountPublicAddress addr;
+  account_public_address_t addr;
   Account::parseAddress(minerAddress, addr);
   uint32_t height = 0;
   return core->get_block_template(blockTemplate, addr, difficulty, height, BinaryArray());
