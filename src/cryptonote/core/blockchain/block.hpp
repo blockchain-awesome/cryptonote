@@ -150,18 +150,18 @@ public:
   void push_back(const T& item);
 
 private:
-  struct ItemEntry;
-  struct CacheEntry;
+  struct item_entry_t;
+  struct cache_entry_t;
 
-  struct ItemEntry {
+  struct item_entry_t {
   public:
     T item;
-    typename std::list<CacheEntry>::iterator cacheIter;
+    typename std::list<cache_entry_t>::iterator cacheIter;
   };
 
-  struct CacheEntry {
+  struct cache_entry_t {
   public:
-    typename std::map<uint64_t, ItemEntry>::iterator itemIter;
+    typename std::map<uint64_t, item_entry_t>::iterator itemIter;
   };
 
   std::fstream m_itemsFile;
@@ -169,8 +169,8 @@ private:
   size_t m_poolSize;
   std::vector<uint64_t> m_offsets;
   uint64_t m_itemsFileSize;
-  std::map<uint64_t, ItemEntry> m_items;
-  std::list<CacheEntry> m_cache;
+  std::map<uint64_t, item_entry_t> m_items;
+  std::list<cache_entry_t> m_cache;
   uint64_t m_cacheHits;
   uint64_t m_cacheMisses;
 
@@ -388,8 +388,8 @@ template<class T> T* BlockAccessor<T>::prepare(uint64_t index) {
     m_cache.erase(cacheIter);
   }
 
-  auto itemIter = m_items.insert(std::make_pair(index, ItemEntry()));
-  CacheEntry cacheEntry = { itemIter.first };
+  auto itemIter = m_items.insert(std::make_pair(index, item_entry_t()));
+  cache_entry_t cacheEntry = { itemIter.first };
   auto cacheIter = m_cache.insert(m_cache.end(), cacheEntry);
   itemIter.first->second.cacheIter = cacheIter;
   return &itemIter.first->second.item;
