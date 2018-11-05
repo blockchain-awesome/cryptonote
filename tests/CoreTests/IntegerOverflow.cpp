@@ -27,9 +27,9 @@ namespace
     miner_tx.outputs.push_back(out2);
   }
 
-  void append_TransactionSourceEntry(std::vector<cryptonote::TransactionSourceEntry>& sources, const transaction_t& tx, size_t out_idx)
+  void append_transaction_source_entry_t(std::vector<cryptonote::transaction_source_entry_t>& sources, const transaction_t& tx, size_t out_idx)
   {
-    cryptonote::TransactionSourceEntry se;
+    cryptonote::transaction_source_entry_t se;
     se.amount = tx.outputs[out_idx].amount;
     se.outputs.push_back(std::make_pair(0, boost::get<cryptonote::key_output_t>(tx.outputs[out_idx].target).key));
     se.realOutput = 0;
@@ -48,12 +48,12 @@ gen_uint_overflow_base::gen_uint_overflow_base()
   REGISTER_CALLBACK_METHOD(gen_uint_overflow_1, mark_last_valid_block);
 }
 
-bool gen_uint_overflow_base::check_TxVerificationContext(const cryptonote::TxVerificationContext& tvc, bool tx_added, size_t event_idx, const cryptonote::transaction_t& /*tx*/)
+bool gen_uint_overflow_base::check_tx_verification_context_t(const cryptonote::tx_verification_context_t& tvc, bool tx_added, size_t event_idx, const cryptonote::transaction_t& /*tx*/)
 {
   return m_last_valid_block_event_idx < event_idx ? !tx_added && tvc.m_verifivation_failed : tx_added && !tvc.m_verifivation_failed;
 }
 
-bool gen_uint_overflow_base::check_BlockVerificationContext(const cryptonote::BlockVerificationContext& bvc, size_t event_idx, const cryptonote::block_t& /*block*/)
+bool gen_uint_overflow_base::check_block_verification_context_t(const cryptonote::block_verification_context_t& bvc, size_t event_idx, const cryptonote::block_t& /*block*/)
 {
   return m_last_valid_block_event_idx < event_idx ? bvc.m_verifivation_failed | bvc.m_marked_as_orphaned : !bvc.m_verifivation_failed;
 }
@@ -122,12 +122,12 @@ bool gen_uint_overflow_2::generate(std::vector<test_event_entry>& events) const
   DO_CALLBACK(events, "mark_last_valid_block");
 
   // Problem 1. Regular tx outputs overflow
-  std::vector<cryptonote::TransactionSourceEntry> sources;
+  std::vector<cryptonote::transaction_source_entry_t> sources;
   for (size_t i = 0; i < blk_0.baseTransaction.outputs.size(); ++i)
   {
     if (m_currency.minimumFee() < blk_0.baseTransaction.outputs[i].amount)
     {
-      append_TransactionSourceEntry(sources, blk_0.baseTransaction, i);
+      append_transaction_source_entry_t(sources, blk_0.baseTransaction, i);
       break;
     }
   }
@@ -136,12 +136,12 @@ bool gen_uint_overflow_2::generate(std::vector<test_event_entry>& events) const
     return false;
   }
 
-  std::vector<cryptonote::TransactionDestinationEntry> destinations;
+  std::vector<cryptonote::transaction_destination_entry_t> destinations;
   const account_public_address_t& bob_addr = bob_account.getAccountKeys().address;
-  destinations.push_back(TransactionDestinationEntry(m_currency.moneySupply(), bob_addr));
-  destinations.push_back(TransactionDestinationEntry(m_currency.moneySupply() - 1, bob_addr));
+  destinations.push_back(transaction_destination_entry_t(m_currency.moneySupply(), bob_addr));
+  destinations.push_back(transaction_destination_entry_t(m_currency.moneySupply() - 1, bob_addr));
   // sources.front().amount = destinations[0].amount + destinations[2].amount + destinations[3].amount + m_currency.minimumFee()
-  destinations.push_back(TransactionDestinationEntry(sources.front().amount - m_currency.moneySupply() - m_currency.moneySupply() + 1 - m_currency.minimumFee(), bob_addr));
+  destinations.push_back(transaction_destination_entry_t(sources.front().amount - m_currency.moneySupply() - m_currency.moneySupply() + 1 - m_currency.minimumFee(), bob_addr));
 
   cryptonote::transaction_t tx_1;
   if (!constructTransaction(miner_account.getAccountKeys(), sources, destinations, std::vector<uint8_t>(), tx_1, 0, m_logger))
@@ -159,11 +159,11 @@ bool gen_uint_overflow_2::generate(std::vector<test_event_entry>& events) const
     if (tx_1_out.amount < m_currency.moneySupply() - 1)
       continue;
 
-    append_TransactionSourceEntry(sources, tx_1, i);
+    append_transaction_source_entry_t(sources, tx_1, i);
   }
 
   destinations.clear();
-  cryptonote::TransactionDestinationEntry de;
+  cryptonote::transaction_destination_entry_t de;
   de.addr = alice_account.getAccountKeys().address;
   de.amount = m_currency.moneySupply() - m_currency.minimumFee();
   destinations.push_back(de);

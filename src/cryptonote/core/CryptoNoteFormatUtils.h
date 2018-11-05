@@ -20,29 +20,29 @@ namespace cryptonote {
 
 bool parseAndValidateTransactionFromBinaryArray(const BinaryArray& transactionBinaryArray, transaction_t& transaction, crypto::hash_t& transactionHash, crypto::hash_t& transactionPrefixHash);
 
-struct TransactionSourceEntry {
-  typedef std::pair<uint32_t, crypto::public_key_t> OutputEntry;
+struct transaction_source_entry_t {
+  typedef std::pair<uint32_t, crypto::public_key_t> output_entry_t;
 
-  std::vector<OutputEntry> outputs;           //index + key
+  std::vector<output_entry_t> outputs;           //index + key
   size_t realOutput;                          //index in outputs vector of real output_entry
   crypto::public_key_t realTransactionPublicKey; //incoming real tx public key
   size_t realOutputIndexInTransaction;        //index in transaction outputs vector
   uint64_t amount;                            //money
 };
 
-struct TransactionDestinationEntry {
+struct transaction_destination_entry_t {
   uint64_t amount;                    //money
   account_public_address_t addr;          //destination address
 
-  TransactionDestinationEntry() : amount(0), addr(boost::value_initialized<account_public_address_t>()) {}
-  TransactionDestinationEntry(uint64_t amount, const account_public_address_t &addr) : amount(amount), addr(addr) {}
+  transaction_destination_entry_t() : amount(0), addr(boost::value_initialized<account_public_address_t>()) {}
+  transaction_destination_entry_t(uint64_t amount, const account_public_address_t &addr) : amount(amount), addr(addr) {}
 };
 
 
 bool constructTransaction(
   const account_keys_t& senderAccountKeys,
-  const std::vector<TransactionSourceEntry>& sources,
-  const std::vector<TransactionDestinationEntry>& destinations,
+  const std::vector<transaction_source_entry_t>& sources,
+  const std::vector<transaction_destination_entry_t>& destinations,
   std::vector<uint8_t> extra, transaction_t& transaction, uint64_t unlock_time, Logging::ILogger& log);
 
 

@@ -12,40 +12,40 @@ namespace cryptonote
 namespace TransactionTypes
 {
 
-enum class InputType : uint8_t
+enum class input_type_t : uint8_t
 {
     Invalid,
     Key,
     Multisignature,
     Generating
 };
-enum class OutputType : uint8_t
+enum class output_type_t : uint8_t
 {
     Invalid,
     Key,
     Multisignature
 };
 
-struct GlobalOutput
+struct global_output_t
 {
     crypto::public_key_t targetKey;
     uint32_t outputIndex;
 };
 
-typedef std::vector<GlobalOutput> GlobalOutputsContainer;
+typedef std::vector<global_output_t> global_output_container_t;
 
-struct OutputKeyInfo
+struct output_key_info_t
 {
     crypto::public_key_t transactionPublicKey;
     size_t transactionIndex;
     size_t outputInTransaction;
 };
 
-struct InputKeyInfo
+struct input_key_info_t
 {
     uint64_t amount;
-    GlobalOutputsContainer outputs;
-    OutputKeyInfo realOutput;
+    global_output_container_t outputs;
+    output_key_info_t realOutput;
 };
 } // namespace TransactionTypes
 } // namespace cryptonote

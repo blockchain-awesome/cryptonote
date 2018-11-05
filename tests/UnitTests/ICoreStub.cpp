@@ -70,7 +70,7 @@ cryptonote::ICryptonoteProtocol* ICoreStub::get_protocol() {
   return nullptr;
 }
 
-bool ICoreStub::handle_incoming_tx(cryptonote::BinaryArray const& tx_blob, cryptonote::TxVerificationContext& tvc, bool keeped_by_block) {
+bool ICoreStub::handle_incoming_tx(cryptonote::BinaryArray const& tx_blob, cryptonote::tx_verification_context_t& tvc, bool keeped_by_block) {
   return true;
 }
 
@@ -324,7 +324,7 @@ std::unique_ptr<cryptonote::IBlock> ICoreStub::getBlock(const crypto::hash_t& bl
   return std::unique_ptr<cryptonote::IBlock>(nullptr);
 }
 
-bool ICoreStub::handleIncomingTransaction(const cryptonote::transaction_t& tx, const crypto::hash_t& txHash, size_t blobSize, cryptonote::TxVerificationContext& tvc, bool keptByBlock) {
+bool ICoreStub::handleIncomingTransaction(const cryptonote::transaction_t& tx, const crypto::hash_t& txHash, size_t blobSize, cryptonote::tx_verification_context_t& tvc, bool keptByBlock) {
   auto result = transactionPool.emplace(std::make_pair(txHash, tx));
   tvc.m_verifivation_failed = !poolTxVerificationResult;
   tvc.m_added_to_pool = true;

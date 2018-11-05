@@ -97,7 +97,7 @@ namespace cryptonote {
     logger(log, "txpool") {
   }
   //---------------------------------------------------------------------------------
-  bool TxMemoryPool::add_tx(const transaction_t &tx, /*const crypto::hash_t& tx_prefix_hash,*/ const crypto::hash_t &id, size_t blobSize, TxVerificationContext& tvc, bool keptByBlock) {
+  bool TxMemoryPool::add_tx(const transaction_t &tx, /*const crypto::hash_t& tx_prefix_hash,*/ const crypto::hash_t &id, size_t blobSize, tx_verification_context_t& tvc, bool keptByBlock) {
     if (!check_inputs_types_supported(tx)) {
       tvc.m_verifivation_failed = true;
       return false;
@@ -210,7 +210,7 @@ namespace cryptonote {
   }
 
   //---------------------------------------------------------------------------------
-  bool TxMemoryPool::add_tx(const transaction_t &tx, TxVerificationContext& tvc, bool keeped_by_block) {
+  bool TxMemoryPool::add_tx(const transaction_t &tx, tx_verification_context_t& tvc, bool keeped_by_block) {
     crypto::hash_t h = NULL_HASH;
     size_t blobSize = 0;
     getObjectHash(tx, h, blobSize);
@@ -533,7 +533,7 @@ namespace cryptonote {
       } else if (in.type() == typeid(multi_signature_input_t)) {
         if (!keptByBlock) {
           const auto& msig = boost::get<multi_signature_input_t>(in);
-          auto output = GlobalOutput(msig.amount, msig.outputIndex);
+          auto output = global_output_t(msig.amount, msig.outputIndex);
           assert(m_spentOutputs.count(output));
           m_spentOutputs.erase(output);
         }
@@ -565,7 +565,7 @@ namespace cryptonote {
       } else if (in.type() == typeid(multi_signature_input_t)) {
         if (!keptByBlock) {
           const auto& msig = boost::get<multi_signature_input_t>(in);
-          auto r = m_spentOutputs.insert(GlobalOutput(msig.amount, msig.outputIndex));
+          auto r = m_spentOutputs.insert(global_output_t(msig.amount, msig.outputIndex));
           (void)r;
           assert(r.second);
         }
@@ -585,7 +585,7 @@ namespace cryptonote {
         }
       } else if (in.type() == typeid(multi_signature_input_t)) {
         const auto& msig = boost::get<multi_signature_input_t>(in);
-        if (m_spentOutputs.count(GlobalOutput(msig.amount, msig.outputIndex))) {
+        if (m_spentOutputs.count(global_output_t(msig.amount, msig.outputIndex))) {
           return true;
         }
       }

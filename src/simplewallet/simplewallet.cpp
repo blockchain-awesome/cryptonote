@@ -179,7 +179,7 @@ struct TransferCommand {
           }
         } else {
           WalletLegacyTransfer destination;
-          cryptonote::TransactionDestinationEntry de;
+          cryptonote::transaction_destination_entry_t de;
 
           if (!Account::parseAddress(arg, de.addr)) {
             crypto::hash_t paymentId;

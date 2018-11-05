@@ -84,7 +84,7 @@ namespace {
     transaction.getOutput(index, output, amount_);
 
     TransactionOutputInformationIn outputInfo;
-    outputInfo.type = TransactionTypes::OutputType::Key;
+    outputInfo.type = TransactionTypes::output_type_t::Key;
     outputInfo.amount = amount_;
     outputInfo.globalOutputIndex = globalOutputIndex;
     outputInfo.outputInTransaction = index;
@@ -151,7 +151,7 @@ private:
     std::vector<AccountBase> accounts;
   };
 
-  std::unordered_map<size_t, std::pair<TransactionTypes::InputKeyInfo, key_pair_t>> keys;
+  std::unordered_map<size_t, std::pair<TransactionTypes::input_key_info_t, key_pair_t>> keys;
   std::unordered_map<size_t, MsigInfo> msigInputs;
 
   std::unique_ptr<ITransaction> tx;

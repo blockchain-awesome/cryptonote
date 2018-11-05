@@ -87,16 +87,16 @@ namespace {
 
 
 SpentOutputDescriptor::SpentOutputDescriptor() :
-    m_type(TransactionTypes::OutputType::Invalid) {
+    m_type(TransactionTypes::output_type_t::Invalid) {
 }
 
 SpentOutputDescriptor::SpentOutputDescriptor(const TransactionOutputInformationIn& transactionInfo) :
     m_type(transactionInfo.type),
     m_amount(0),
     m_globalOutputIndex(0) {
-  if (m_type == TransactionTypes::OutputType::Key) {
+  if (m_type == TransactionTypes::output_type_t::Key) {
     m_keyImage = &transactionInfo.keyImage;
-  } else if (m_type == TransactionTypes::OutputType::Multisignature) {
+  } else if (m_type == TransactionTypes::output_type_t::Multisignature) {
     m_amount = transactionInfo.amount;
     m_globalOutputIndex = transactionInfo.globalOutputIndex;
   } else {
@@ -113,24 +113,24 @@ SpentOutputDescriptor::SpentOutputDescriptor(uint64_t amount, uint32_t globalOut
 }
 
 void SpentOutputDescriptor::assign(const key_image_t* keyImage) {
-  m_type = TransactionTypes::OutputType::Key;
+  m_type = TransactionTypes::output_type_t::Key;
   m_keyImage = keyImage;
 }
 
 void SpentOutputDescriptor::assign(uint64_t amount, uint32_t globalOutputIndex) {
-  m_type = TransactionTypes::OutputType::Multisignature;
+  m_type = TransactionTypes::output_type_t::Multisignature;
   m_amount = amount;
   m_globalOutputIndex = globalOutputIndex;
 }
 
 bool SpentOutputDescriptor::isValid() const {
-  return m_type != TransactionTypes::OutputType::Invalid;
+  return m_type != TransactionTypes::output_type_t::Invalid;
 }
 
 bool SpentOutputDescriptor::operator==(const SpentOutputDescriptor& other) const {
-  if (m_type == TransactionTypes::OutputType::Key) {
+  if (m_type == TransactionTypes::output_type_t::Key) {
     return other.m_type == m_type && *other.m_keyImage == *m_keyImage;
-  } else if (m_type == TransactionTypes::OutputType::Multisignature) {
+  } else if (m_type == TransactionTypes::output_type_t::Multisignature) {
     return other.m_type == m_type && other.m_amount == m_amount && other.m_globalOutputIndex == m_globalOutputIndex;
   } else {
     assert(false);
@@ -139,10 +139,10 @@ bool SpentOutputDescriptor::operator==(const SpentOutputDescriptor& other) const
 }
 
 size_t SpentOutputDescriptor::hash() const {
-  if (m_type == TransactionTypes::OutputType::Key) {
+  if (m_type == TransactionTypes::output_type_t::Key) {
     static_assert(sizeof(size_t) < sizeof(*m_keyImage), "sizeof(size_t) < sizeof(*m_keyImage)");
     return *reinterpret_cast<const size_t*>(m_keyImage->data);
-  } else if (m_type == TransactionTypes::OutputType::Multisignature) {
+  } else if (m_type == TransactionTypes::output_type_t::Multisignature) {
     size_t hashValue = boost::hash_value(m_amount);
     boost::hash_combine(hashValue, m_globalOutputIndex);
     return hashValue;
@@ -242,7 +242,7 @@ bool TransfersContainer::addTransactionOutputs(const TransactionBlockInfo& block
       (void)result; // Disable unused warning
       assert(result.second);
     } else {
-      if (info.type == TransactionTypes::OutputType::Multisignature) {
+      if (info.type == TransactionTypes::output_type_t::Multisignature) {
         SpentOutputDescriptor descriptor(transfer);
         if (m_availableTransfers.get<SpentOutputDescriptorIndex>().count(descriptor) > 0 ||
             m_spentTransfers.get<SpentOutputDescriptorIndex>().count(descriptor) > 0) {
@@ -255,7 +255,7 @@ bool TransfersContainer::addTransactionOutputs(const TransactionBlockInfo& block
       assert(result.second);
     }
 
-    if (info.type == TransactionTypes::OutputType::Key) {
+    if (info.type == TransactionTypes::output_type_t::Key) {
       updateTransfersVisibility(info.keyImage);
     }
 
@@ -274,7 +274,7 @@ bool TransfersContainer::addTransactionInputs(const TransactionBlockInfo& block,
   for (size_t i = 0; i < tx.getInputCount(); ++i) {
     auto inputType = tx.getInputType(i);
 
-    if (inputType == TransactionTypes::InputType::Key) {
+    if (inputType == TransactionTypes::input_type_t::Key) {
       key_input_t input;
       tx.getInput(i, input);
 
@@ -316,7 +316,7 @@ bool TransfersContainer::addTransactionInputs(const TransactionBlockInfo& block,
       updateTransfersVisibility(input.keyImage);
 
       inputsAdded = true;
-    } else if (inputType == TransactionTypes::InputType::Multisignature) {
+    } else if (inputType == TransactionTypes::input_type_t::Multisignature) {
       multi_signature_input_t input;
       tx.getInput(i, input);
 
@@ -330,7 +330,7 @@ bool TransfersContainer::addTransactionInputs(const TransactionBlockInfo& block,
         inputsAdded = true;
       }
     } else {
-      assert(inputType == TransactionTypes::InputType::Generating);
+      assert(inputType == TransactionTypes::input_type_t::Generating);
     }
   }
 
@@ -387,7 +387,7 @@ bool TransfersContainer::markTransactionConfirmed(const TransactionBlockInfo& bl
     transfer.transactionIndex = block.transactionIndex;
     transfer.globalOutputIndex = globalIndices[transfer.outputInTransaction];
 
-    if (transfer.type == TransactionTypes::OutputType::Multisignature) {
+    if (transfer.type == TransactionTypes::output_type_t::Multisignature) {
       SpentOutputDescriptor descriptor(transfer);
       if (m_availableTransfers.get<SpentOutputDescriptorIndex>().count(descriptor) > 0 ||
           m_spentTransfers.get<SpentOutputDescriptorIndex>().count(descriptor) > 0) {
@@ -402,7 +402,7 @@ bool TransfersContainer::markTransactionConfirmed(const TransactionBlockInfo& bl
 
     transferIt = m_unconfirmedTransfers.get<ContainingTransactionIndex>().erase(transferIt);
 
-    if (transfer.type == TransactionTypes::OutputType::Key) {
+    if (transfer.type == TransactionTypes::output_type_t::Key) {
       updateTransfersVisibility(transfer.keyImage);
     }
   }
@@ -434,14 +434,14 @@ void TransfersContainer::deleteTransactionTransfers(const hash_t& transactionHas
     assert(result.second);
     it = spendingTransactionIndex.erase(it);
 
-    if (result.first->type == TransactionTypes::OutputType::Key) {
+    if (result.first->type == TransactionTypes::output_type_t::Key) {
       updateTransfersVisibility(result.first->keyImage);
     }
   }
 
   auto unconfirmedTransfersRange = m_unconfirmedTransfers.get<ContainingTransactionIndex>().equal_range(transactionHash);
   for (auto it = unconfirmedTransfersRange.first; it != unconfirmedTransfersRange.second;) {
-    if (it->type == TransactionTypes::OutputType::Key) {
+    if (it->type == TransactionTypes::output_type_t::Key) {
       key_image_t keyImage = it->keyImage;
       it = m_unconfirmedTransfers.get<ContainingTransactionIndex>().erase(it);
       updateTransfersVisibility(keyImage);
@@ -453,7 +453,7 @@ void TransfersContainer::deleteTransactionTransfers(const hash_t& transactionHas
   auto& transactionTransfersIndex = m_availableTransfers.get<ContainingTransactionIndex>();
   auto transactionTransfersRange = transactionTransfersIndex.equal_range(transactionHash);
   for (auto it = transactionTransfersRange.first; it != transactionTransfersRange.second;) {
-    if (it->type == TransactionTypes::OutputType::Key) {
+    if (it->type == TransactionTypes::output_type_t::Key) {
       key_image_t keyImage = it->keyImage;
     it = transactionTransfersIndex.erase(it);
       updateTransfersVisibility(keyImage);
@@ -828,12 +828,12 @@ bool TransfersContainer::isIncluded(const TransactionOutputInformationEx& info, 
   return isIncluded(info.type, state, flags);
 }
 
-bool TransfersContainer::isIncluded(TransactionTypes::OutputType type, uint32_t state, uint32_t flags) {
+bool TransfersContainer::isIncluded(TransactionTypes::output_type_t type, uint32_t state, uint32_t flags) {
   return
     // filter by type
     (
-    ((flags & IncludeTypeKey) != 0            && type == TransactionTypes::OutputType::Key) ||
-    ((flags & IncludeTypeMultisignature) != 0 && type == TransactionTypes::OutputType::Multisignature)
+    ((flags & IncludeTypeKey) != 0            && type == TransactionTypes::output_type_t::Key) ||
+    ((flags & IncludeTypeMultisignature) != 0 && type == TransactionTypes::output_type_t::Multisignature)
     )
     &&
     // filter by state

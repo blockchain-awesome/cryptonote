@@ -53,8 +53,8 @@ public:
 
   TransactionBuilder createTxBuilder(const cryptonote::AccountBase& from, const cryptonote::AccountBase& to, uint64_t amount, uint64_t fee) {
 
-    std::vector<cryptonote::TransactionSourceEntry> sources;
-    std::vector<cryptonote::TransactionDestinationEntry> destinations;
+    std::vector<cryptonote::transaction_source_entry_t> sources;
+    std::vector<cryptonote::transaction_destination_entry_t> destinations;
 
     fillTxSourcesAndDestinations(sources, destinations, from, to, amount, fee);
 
@@ -67,8 +67,8 @@ public:
   }
 
   void fillTxSourcesAndDestinations(
-    std::vector<cryptonote::TransactionSourceEntry>& sources, 
-    std::vector<cryptonote::TransactionDestinationEntry>& destinations,
+    std::vector<cryptonote::transaction_source_entry_t>& sources, 
+    std::vector<cryptonote::transaction_destination_entry_t>& destinations,
     const cryptonote::AccountBase& from, const cryptonote::AccountBase& to, uint64_t amount, uint64_t fee, size_t nmix = 0) {
     fill_tx_sources_and_destinations(events, lastBlock, from, to, amount, fee, nmix, sources, destinations);
   }

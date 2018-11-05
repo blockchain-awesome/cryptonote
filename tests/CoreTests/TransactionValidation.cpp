@@ -26,9 +26,9 @@ namespace
       addTransactionPublicKeyToExtra(m_tx.extra, m_tx_key.publicKey);
     }
 
-    void step2_fill_inputs(const account_keys_t& sender_account_keys, const std::vector<TransactionSourceEntry>& sources)
+    void step2_fill_inputs(const account_keys_t& sender_account_keys, const std::vector<transaction_source_entry_t>& sources)
     {
-      BOOST_FOREACH(const TransactionSourceEntry& src_entr, sources)
+      BOOST_FOREACH(const transaction_source_entry_t& src_entr, sources)
       {
         m_in_contexts.push_back(key_pair_t());
         key_pair_t& in_ephemeral = m_in_contexts.back();
@@ -41,7 +41,7 @@ namespace
         input_to_key.keyImage = img;
 
         // fill outputs array and use relative offsets
-        BOOST_FOREACH(const TransactionSourceEntry::OutputEntry& out_entry, src_entr.outputs)
+        BOOST_FOREACH(const transaction_source_entry_t::output_entry_t& out_entry, src_entr.outputs)
           input_to_key.outputIndexes.push_back(out_entry.first);
 
         input_to_key.outputIndexes = absolute_output_offsets_to_relative(input_to_key.outputIndexes);
@@ -49,10 +49,10 @@ namespace
       }
     }
 
-    void step3_fill_outputs(const std::vector<TransactionDestinationEntry>& destinations)
+    void step3_fill_outputs(const std::vector<transaction_destination_entry_t>& destinations)
     {
       size_t output_index = 0;
-      BOOST_FOREACH(const TransactionDestinationEntry& dst_entr, destinations)
+      BOOST_FOREACH(const transaction_destination_entry_t& dst_entr, destinations)
       {
         crypto::key_derivation_t derivation;
         crypto::public_key_t out_eph_public_key;
@@ -74,15 +74,15 @@ namespace
       getObjectHash(*static_cast<transaction_prefix_t*>(&m_tx), m_tx_prefix_hash);
     }
 
-    void step5_sign(const std::vector<TransactionSourceEntry>& sources)
+    void step5_sign(const std::vector<transaction_source_entry_t>& sources)
     {
       m_tx.signatures.clear();
 
       size_t i = 0;
-      BOOST_FOREACH(const TransactionSourceEntry& src_entr, sources)
+      BOOST_FOREACH(const transaction_source_entry_t& src_entr, sources)
       {
         std::vector<const crypto::public_key_t*> keys_ptrs;
-        BOOST_FOREACH(const TransactionSourceEntry::OutputEntry& o, src_entr.outputs)
+        BOOST_FOREACH(const transaction_source_entry_t::output_entry_t& o, src_entr.outputs)
         {
           keys_ptrs.push_back(&o.second);
         }
@@ -106,8 +106,8 @@ namespace
     const cryptonote::block_t& blk_head, const cryptonote::AccountBase& from, const cryptonote::AccountBase& to,
     uint64_t amount, uint64_t fee, uint64_t unlock_time)
   {
-    std::vector<TransactionSourceEntry> sources;
-    std::vector<TransactionDestinationEntry> destinations;
+    std::vector<transaction_source_entry_t> sources;
+    std::vector<transaction_destination_entry_t> destinations;
     fill_tx_sources_and_destinations(events, blk_head, from, to, amount, fee, 0, sources, destinations);
 
     tx_builder builder;
@@ -147,8 +147,8 @@ bool gen_tx_big_version::generate(std::vector<test_event_entry>& events) const
   MAKE_GENESIS_BLOCK(events, blk_0, miner_account, ts_start);
   REWIND_BLOCKS(events, blk_0r, blk_0, miner_account);
 
-  std::vector<TransactionSourceEntry> sources;
-  std::vector<TransactionDestinationEntry> destinations;
+  std::vector<transaction_source_entry_t> sources;
+  std::vector<transaction_destination_entry_t> destinations;
   fill_tx_sources_and_destinations(events, blk_0, miner_account, miner_account, MK_COINS(1), m_currency.minimumFee(), 0, sources, destinations);
 
   tx_builder builder;
@@ -230,8 +230,8 @@ bool gen_tx_no_inputs_has_outputs::generate(std::vector<test_event_entry>& event
   GENERATE_ACCOUNT(miner_account);
   MAKE_GENESIS_BLOCK(events, blk_0, miner_account, ts_start);
 
-  std::vector<TransactionSourceEntry> sources;
-  std::vector<TransactionDestinationEntry> destinations;
+  std::vector<transaction_source_entry_t> sources;
+  std::vector<transaction_destination_entry_t> destinations;
   fill_tx_sources_and_destinations(events, blk_0, miner_account, miner_account, MK_COINS(1), m_currency.minimumFee(), 0, sources, destinations);
 
   tx_builder builder;
@@ -252,8 +252,8 @@ bool gen_tx_has_inputs_no_outputs::generate(std::vector<test_event_entry>& event
   MAKE_GENESIS_BLOCK(events, blk_0, miner_account, ts_start);
   REWIND_BLOCKS(events, blk_0r, blk_0, miner_account);
 
-  std::vector<TransactionSourceEntry> sources;
-  std::vector<TransactionDestinationEntry> destinations;
+  std::vector<transaction_source_entry_t> sources;
+  std::vector<transaction_destination_entry_t> destinations;
   fill_tx_sources_and_destinations(events, blk_0, miner_account, miner_account, MK_COINS(1), m_currency.minimumFee(), 0, sources, destinations);
   destinations.clear();
 
@@ -278,8 +278,8 @@ bool gen_tx_invalid_input_amount::generate(std::vector<test_event_entry>& events
   MAKE_GENESIS_BLOCK(events, blk_0, miner_account, ts_start);
   REWIND_BLOCKS(events, blk_0r, blk_0, miner_account);
 
-  std::vector<TransactionSourceEntry> sources;
-  std::vector<TransactionDestinationEntry> destinations;
+  std::vector<transaction_source_entry_t> sources;
+  std::vector<transaction_destination_entry_t> destinations;
   fill_tx_sources_and_destinations(events, blk_0, miner_account, miner_account, MK_COINS(1), m_currency.minimumFee(), 0, sources, destinations);
   sources.front().amount++;
 
@@ -304,8 +304,8 @@ bool gen_tx_in_to_key_wo_key_offsets::generate(std::vector<test_event_entry>& ev
   MAKE_GENESIS_BLOCK(events, blk_0, miner_account, ts_start);
   REWIND_BLOCKS(events, blk_0r, blk_0, miner_account);
 
-  std::vector<TransactionSourceEntry> sources;
-  std::vector<TransactionDestinationEntry> destinations;
+  std::vector<transaction_source_entry_t> sources;
+  std::vector<transaction_destination_entry_t> destinations;
   fill_tx_sources_and_destinations(events, blk_0, miner_account, miner_account, MK_COINS(1), m_currency.minimumFee(), 0, sources, destinations);
 
   tx_builder builder;
@@ -341,12 +341,12 @@ bool gen_tx_key_offest_points_to_foreign_key::generate(std::vector<test_event_en
   MAKE_TX_LIST(events, txs_0, miner_account, alice_account, MK_COINS(60) + 1, blk_1);
   MAKE_NEXT_BLOCK_TX_LIST(events, blk_2, blk_1r, miner_account, txs_0);
 
-  std::vector<TransactionSourceEntry> sources_bob;
-  std::vector<TransactionDestinationEntry> destinations_bob;
+  std::vector<transaction_source_entry_t> sources_bob;
+  std::vector<transaction_destination_entry_t> destinations_bob;
   fill_tx_sources_and_destinations(events, blk_2, bob_account, miner_account, MK_COINS(60) + 1 - m_currency.minimumFee(), m_currency.minimumFee(), 0, sources_bob, destinations_bob);
 
-  std::vector<TransactionSourceEntry> sources_alice;
-  std::vector<TransactionDestinationEntry> destinations_alice;
+  std::vector<transaction_source_entry_t> sources_alice;
+  std::vector<transaction_destination_entry_t> destinations_alice;
   fill_tx_sources_and_destinations(events, blk_2, alice_account, miner_account, MK_COINS(60) + 1 - m_currency.minimumFee(), m_currency.minimumFee(), 0, sources_alice, destinations_alice);
 
   tx_builder builder;
@@ -372,8 +372,8 @@ bool gen_tx_sender_key_offest_not_exist::generate(std::vector<test_event_entry>&
   MAKE_GENESIS_BLOCK(events, blk_0, miner_account, ts_start);
   REWIND_BLOCKS(events, blk_0r, blk_0, miner_account);
 
-  std::vector<TransactionSourceEntry> sources;
-  std::vector<TransactionDestinationEntry> destinations;
+  std::vector<transaction_source_entry_t> sources;
+  std::vector<transaction_destination_entry_t> destinations;
   fill_tx_sources_and_destinations(events, blk_0, miner_account, miner_account, MK_COINS(1), m_currency.minimumFee(), 0, sources, destinations);
 
   tx_builder builder;
@@ -405,8 +405,8 @@ bool gen_tx_mixed_key_offest_not_exist::generate(std::vector<test_event_entry>& 
   MAKE_TX_LIST(events, txs_0, miner_account, alice_account, MK_COINS(1) + m_currency.minimumFee(), blk_1);
   MAKE_NEXT_BLOCK_TX_LIST(events, blk_2, blk_1r, miner_account, txs_0);
 
-  std::vector<TransactionSourceEntry> sources;
-  std::vector<TransactionDestinationEntry> destinations;
+  std::vector<transaction_source_entry_t> sources;
+  std::vector<transaction_destination_entry_t> destinations;
   fill_tx_sources_and_destinations(events, blk_2, bob_account, miner_account, MK_COINS(1), m_currency.minimumFee(), 1, sources, destinations);
 
   sources.front().outputs[(sources.front().realOutput + 1) % 2].first = std::numeric_limits<uint32_t>::max();
@@ -432,8 +432,8 @@ bool gen_tx_key_image_not_derive_from_tx_key::generate(std::vector<test_event_en
   MAKE_GENESIS_BLOCK(events, blk_0, miner_account, ts_start);
   REWIND_BLOCKS(events, blk_0r, blk_0, miner_account);
 
-  std::vector<TransactionSourceEntry> sources;
-  std::vector<TransactionDestinationEntry> destinations;
+  std::vector<transaction_source_entry_t> sources;
+  std::vector<transaction_destination_entry_t> destinations;
   fill_tx_sources_and_destinations(events, blk_0, miner_account, miner_account, MK_COINS(1), m_currency.minimumFee(), 0, sources, destinations);
 
   tx_builder builder;
@@ -469,8 +469,8 @@ bool gen_tx_key_image_is_invalid::generate(std::vector<test_event_entry>& events
   MAKE_GENESIS_BLOCK(events, blk_0, miner_account, ts_start);
   REWIND_BLOCKS(events, blk_0r, blk_0, miner_account);
 
-  std::vector<TransactionSourceEntry> sources;
-  std::vector<TransactionDestinationEntry> destinations;
+  std::vector<transaction_source_entry_t> sources;
+  std::vector<transaction_destination_entry_t> destinations;
   fill_tx_sources_and_destinations(events, blk_0, miner_account, miner_account, MK_COINS(1), m_currency.minimumFee(), 0, sources, destinations);
 
   tx_builder builder;
@@ -565,8 +565,8 @@ bool gen_tx_txout_to_key_has_invalid_key::generate(std::vector<test_event_entry>
   MAKE_GENESIS_BLOCK(events, blk_0, miner_account, ts_start);
   REWIND_BLOCKS(events, blk_0r, blk_0, miner_account);
 
-  std::vector<TransactionSourceEntry> sources;
-  std::vector<TransactionDestinationEntry> destinations;
+  std::vector<transaction_source_entry_t> sources;
+  std::vector<transaction_destination_entry_t> destinations;
   fill_tx_sources_and_destinations(events, blk_0, miner_account, miner_account, MK_COINS(1), m_currency.minimumFee(), 0, sources, destinations);
 
   tx_builder builder;
@@ -594,8 +594,8 @@ bool gen_tx_output_with_zero_amount::generate(std::vector<test_event_entry>& eve
   MAKE_GENESIS_BLOCK(events, blk_0, miner_account, ts_start);
   REWIND_BLOCKS(events, blk_0r, blk_0, miner_account);
 
-  std::vector<TransactionSourceEntry> sources;
-  std::vector<TransactionDestinationEntry> destinations;
+  std::vector<transaction_source_entry_t> sources;
+  std::vector<transaction_destination_entry_t> destinations;
   fill_tx_sources_and_destinations(events, blk_0, miner_account, miner_account, MK_COINS(1), m_currency.minimumFee(), 0, sources, destinations);
 
   tx_builder builder;
@@ -719,8 +719,8 @@ bool MultiSigTx_OutputSignatures::generate(TestGenerator& generator) const {
 
   generator.generateBlocks(m_currency.minedMoneyUnlockWindow());
 
-  std::vector<TransactionSourceEntry> sources;
-  std::vector<TransactionDestinationEntry> destinations;
+  std::vector<transaction_source_entry_t> sources;
+  std::vector<transaction_destination_entry_t> destinations;
   fill_tx_sources_and_destinations(generator.events, generator.lastBlock, generator.minerAccount, generator.minerAccount, 
     MK_COINS(1), m_currency.minimumFee(), 0, sources, destinations);
 
@@ -763,8 +763,8 @@ bool MultiSigTx_InvalidOutputSignature::generate(std::vector<test_event_entry>& 
   MAKE_GENESIS_BLOCK(events, blk_0, miner_account, ts_start);
   REWIND_BLOCKS(events, blk_0r, blk_0, miner_account);
 
-  std::vector<TransactionSourceEntry> sources;
-  std::vector<TransactionDestinationEntry> destinations;
+  std::vector<transaction_source_entry_t> sources;
+  std::vector<transaction_destination_entry_t> destinations;
   fill_tx_sources_and_destinations(events, blk_0, miner_account, miner_account, MK_COINS(1), m_currency.minimumFee(), 0, sources, destinations);
 
   tx_builder builder;
@@ -810,7 +810,7 @@ namespace
     builder.m_tx.inputs.push_back(input);
 
     // create output
-    std::vector<TransactionDestinationEntry> destinations;
+    std::vector<transaction_destination_entry_t> destinations;
     destinations.emplace_back(inputAmount - generator.currency().minimumFee(), generator.minerAccount.getAccountKeys().address);
     builder.step3_fill_outputs(destinations);
 

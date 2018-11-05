@@ -165,7 +165,7 @@ bool gen_block_invalid_prev_id::generate(std::vector<test_event_entry>& events) 
   return true;
 }
 
-bool gen_block_invalid_prev_id::check_BlockVerificationContext(const cryptonote::BlockVerificationContext& bvc, size_t event_idx, const cryptonote::block_t& /*blk*/)
+bool gen_block_invalid_prev_id::check_block_verification_context_t(const cryptonote::block_verification_context_t& bvc, size_t event_idx, const cryptonote::block_t& /*blk*/)
 {
   if (1 == event_idx)
     return bvc.m_marked_as_orphaned && !bvc.m_added_to_main_chain && !bvc.m_verifivation_failed;
@@ -352,19 +352,19 @@ bool gen_block_miner_tx_has_2_in::generate(std::vector<test_event_entry>& events
 
   GENERATE_ACCOUNT(alice);
 
-  TransactionSourceEntry se;
+  transaction_source_entry_t se;
   se.amount = blk_0.baseTransaction.outputs[0].amount;
   se.outputs.push_back(std::make_pair(0, boost::get<key_output_t>(blk_0.baseTransaction.outputs[0].target).key));
   se.realOutput = 0;
   se.realTransactionPublicKey = getTransactionPublicKeyFromExtra(blk_0.baseTransaction.extra);
   se.realOutputIndexInTransaction = 0;
-  std::vector<TransactionSourceEntry> sources;
+  std::vector<transaction_source_entry_t> sources;
   sources.push_back(se);
 
-  TransactionDestinationEntry de;
+  transaction_destination_entry_t de;
   de.addr = miner_account.getAccountKeys().address;
   de.amount = se.amount;
-  std::vector<TransactionDestinationEntry> destinations;
+  std::vector<transaction_destination_entry_t> destinations;
   destinations.push_back(de);
 
   transaction_t tmp_tx;
@@ -395,19 +395,19 @@ bool gen_block_miner_tx_with_txin_to_key::generate(std::vector<test_event_entry>
 
   REWIND_BLOCKS(events, blk_1r, blk_1, miner_account);
 
-  TransactionSourceEntry se;
+  transaction_source_entry_t se;
   se.amount = blk_1.baseTransaction.outputs[0].amount;
   se.outputs.push_back(std::make_pair(0, boost::get<key_output_t>(blk_1.baseTransaction.outputs[0].target).key));
   se.realOutput = 0;
   se.realTransactionPublicKey = getTransactionPublicKeyFromExtra(blk_1.baseTransaction.extra);
   se.realOutputIndexInTransaction = 0;
-  std::vector<TransactionSourceEntry> sources;
+  std::vector<transaction_source_entry_t> sources;
   sources.push_back(se);
 
-  TransactionDestinationEntry de;
+  transaction_destination_entry_t de;
   de.addr = miner_account.getAccountKeys().address;
   de.amount = se.amount;
-  std::vector<TransactionDestinationEntry> destinations;
+  std::vector<transaction_destination_entry_t> destinations;
   destinations.push_back(de);
 
   transaction_t tmp_tx;
@@ -639,7 +639,7 @@ bool gen_block_invalid_binary_format::generate(std::vector<test_event_entry>& ev
   return true;
 }
 
-bool gen_block_invalid_binary_format::check_BlockVerificationContext(const cryptonote::BlockVerificationContext& bvc,
+bool gen_block_invalid_binary_format::check_block_verification_context_t(const cryptonote::block_verification_context_t& bvc,
                                                                        size_t event_idx, const cryptonote::block_t& blk)
 {
   if (0 == m_corrupt_blocks_begin_idx || event_idx < m_corrupt_blocks_begin_idx)

@@ -146,7 +146,7 @@ bool gen_block_reward::generate(std::vector<test_event_entry>& events) const
   return true;
 }
 
-bool gen_block_reward::check_BlockVerificationContext(const cryptonote::BlockVerificationContext& bvc, size_t event_idx, const cryptonote::block_t& /*blk*/)
+bool gen_block_reward::check_block_verification_context_t(const cryptonote::block_verification_context_t& bvc, size_t event_idx, const cryptonote::block_t& /*blk*/)
 {
   if (m_invalid_block_index == event_idx)
   {

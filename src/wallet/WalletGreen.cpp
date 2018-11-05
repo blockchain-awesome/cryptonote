@@ -1511,7 +1511,7 @@ void WalletGreen::prepareInputs(
 
   size_t i = 0;
   for (const auto& input: selectedTransfers) {
-    TransactionTypes::InputKeyInfo keyInfo;
+    TransactionTypes::input_key_info_t keyInfo;
     keyInfo.amount = input.out.amount;
 
     if(mixinResult.size()) {
@@ -1523,7 +1523,7 @@ void WalletGreen::prepareInputs(
           continue;
         }
 
-        TransactionTypes::GlobalOutput globalOutput;
+        TransactionTypes::global_output_t globalOutput;
         globalOutput.outputIndex = static_cast<uint32_t>(fakeOut.global_amount_index);
         globalOutput.targetKey = reinterpret_cast<public_key_t&>(fakeOut.out_key);
         keyInfo.outputs.push_back(std::move(globalOutput));
@@ -1533,11 +1533,11 @@ void WalletGreen::prepareInputs(
     }
 
     //paste real transaction to the random index
-    auto insertIn = std::find_if(keyInfo.outputs.begin(), keyInfo.outputs.end(), [&](const TransactionTypes::GlobalOutput& a) {
+    auto insertIn = std::find_if(keyInfo.outputs.begin(), keyInfo.outputs.end(), [&](const TransactionTypes::global_output_t& a) {
       return a.outputIndex >= input.out.globalOutputIndex;
     });
 
-    TransactionTypes::GlobalOutput realOutput;
+    TransactionTypes::global_output_t realOutput;
     realOutput.outputIndex = input.out.globalOutputIndex;
     realOutput.targetKey = reinterpret_cast<const public_key_t&>(input.out.outputKey);
 

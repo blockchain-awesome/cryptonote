@@ -20,7 +20,7 @@ gen_double_spend_base<concrete_test>::gen_double_spend_base()
 }
 
 template<class concrete_test>
-bool gen_double_spend_base<concrete_test>::check_TxVerificationContext(const cryptonote::TxVerificationContext& tvc, bool tx_added, size_t event_idx, const cryptonote::transaction_t& /*tx*/)
+bool gen_double_spend_base<concrete_test>::check_tx_verification_context_t(const cryptonote::tx_verification_context_t& tvc, bool tx_added, size_t event_idx, const cryptonote::transaction_t& /*tx*/)
 {
   if (m_invalid_tx_index == event_idx)
     return tvc.m_verifivation_failed;
@@ -29,7 +29,7 @@ bool gen_double_spend_base<concrete_test>::check_TxVerificationContext(const cry
 }
 
 template<class concrete_test>
-bool gen_double_spend_base<concrete_test>::check_BlockVerificationContext(const cryptonote::BlockVerificationContext& bvc, size_t event_idx, const cryptonote::block_t& /*block*/)
+bool gen_double_spend_base<concrete_test>::check_block_verification_context_t(const cryptonote::block_verification_context_t& bvc, size_t event_idx, const cryptonote::block_t& /*block*/)
 {
   if (m_invalid_block_index == event_idx)
     return bvc.m_verifivation_failed;
@@ -101,8 +101,8 @@ bool gen_double_spend_in_tx<txs_keeped_by_block>::generate(std::vector<test_even
   INIT_DOUBLE_SPEND_TEST();
   DO_CALLBACK(events, "mark_last_valid_block");
 
-  std::vector<cryptonote::TransactionSourceEntry> sources;
-  cryptonote::TransactionSourceEntry se;
+  std::vector<cryptonote::transaction_source_entry_t> sources;
+  cryptonote::transaction_source_entry_t se;
   se.amount = tx_0.outputs[0].amount;
   se.outputs.push_back(std::make_pair(0, boost::get<cryptonote::key_output_t>(tx_0.outputs[0].target).key));
   se.realOutput = 0;
@@ -112,10 +112,10 @@ bool gen_double_spend_in_tx<txs_keeped_by_block>::generate(std::vector<test_even
   // Double spend!
   sources.push_back(se);
 
-  cryptonote::TransactionDestinationEntry de;
+  cryptonote::transaction_destination_entry_t de;
   de.addr = alice_account.getAccountKeys().address;
   de.amount = 2 * se.amount - this->m_currency.minimumFee();
-  std::vector<cryptonote::TransactionDestinationEntry> destinations;
+  std::vector<cryptonote::transaction_destination_entry_t> destinations;
   destinations.push_back(de);
 
   cryptonote::transaction_t tx_1;

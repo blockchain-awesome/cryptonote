@@ -32,8 +32,8 @@ namespace cryptonote {
      ~core();
 
      bool on_idle() override;
-     virtual bool handle_incoming_tx(const BinaryArray& tx_blob, TxVerificationContext& tvc, bool keeped_by_block) override; //Deprecated. Should be removed with CryptoNoteProtocolHandler.
-     bool handle_incoming_block_blob(const BinaryArray& block_blob, BlockVerificationContext& bvc, bool control_miner, bool relay_block) override;
+     virtual bool handle_incoming_tx(const BinaryArray& tx_blob, tx_verification_context_t& tvc, bool keeped_by_block) override; //Deprecated. Should be removed with CryptoNoteProtocolHandler.
+     bool handle_incoming_block_blob(const BinaryArray& block_blob, block_verification_context_t& bvc, bool control_miner, bool relay_block) override;
      virtual ICryptonoteProtocol* get_protocol() override {return m_pprotocol;}
      const Currency& currency() const { return m_currency; }
 
@@ -68,7 +68,7 @@ namespace cryptonote {
      virtual bool getTransactionsByPaymentId(const crypto::hash_t& paymentId, std::vector<transaction_t>& transactions) override;
      virtual bool getOutByMSigGIndex(uint64_t amount, uint64_t gindex, multi_signature_output_t& out) override;
      virtual std::unique_ptr<IBlock> getBlock(const crypto::hash_t& blocksId) override;
-     virtual bool handleIncomingTransaction(const transaction_t& tx, const crypto::hash_t& txHash, size_t blobSize, TxVerificationContext& tvc, bool keptByBlock) override;
+     virtual bool handleIncomingTransaction(const transaction_t& tx, const crypto::hash_t& txHash, size_t blobSize, tx_verification_context_t& tvc, bool keptByBlock) override;
      virtual std::error_code executeLocked(const std::function<std::error_code()>& func) override;
      
      virtual bool addMessageQueue(MessageQueue<BlockchainMessage>& messageQueue) override;
@@ -134,10 +134,10 @@ namespace cryptonote {
      uint64_t getTotalGeneratedAmount();
 
    private:
-     bool add_new_tx(const transaction_t& tx, const crypto::hash_t& tx_hash, size_t blob_size, TxVerificationContext& tvc, bool keeped_by_block);
+     bool add_new_tx(const transaction_t& tx, const crypto::hash_t& tx_hash, size_t blob_size, tx_verification_context_t& tvc, bool keeped_by_block);
      bool load_state_data();
      bool parse_tx_from_blob(transaction_t& tx, crypto::hash_t& tx_hash, crypto::hash_t& tx_prefix_hash, const BinaryArray& blob);
-     bool handle_incoming_block(const block_t& b, BlockVerificationContext& bvc, bool control_miner, bool relay_block);
+     bool handle_incoming_block(const block_t& b, block_verification_context_t& bvc, bool control_miner, bool relay_block);
 
      bool check_tx_syntax(const transaction_t& tx);
      //check correct values, amounts and all lightweight checks not related with database

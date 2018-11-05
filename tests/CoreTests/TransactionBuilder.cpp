@@ -27,7 +27,7 @@ TransactionBuilder& TransactionBuilder::setTxKeys(const cryptonote::key_pair_t& 
   return *this;
 }
 
-TransactionBuilder& TransactionBuilder::setInput(const std::vector<cryptonote::TransactionSourceEntry>& sources, const cryptonote::account_keys_t& senderKeys) {
+TransactionBuilder& TransactionBuilder::setInput(const std::vector<cryptonote::transaction_source_entry_t>& sources, const cryptonote::account_keys_t& senderKeys) {
   m_sources = sources;
   m_senderKeys = senderKeys;
   return *this;
@@ -38,12 +38,12 @@ TransactionBuilder& TransactionBuilder::addMultisignatureInput(const Multisignat
   return *this;
 }
 
-TransactionBuilder& TransactionBuilder::setOutput(const std::vector<cryptonote::TransactionDestinationEntry>& destinations) {
+TransactionBuilder& TransactionBuilder::setOutput(const std::vector<cryptonote::transaction_destination_entry_t>& destinations) {
   m_destinations = destinations;
   return *this;
 }
 
-TransactionBuilder& TransactionBuilder::addOutput(const cryptonote::TransactionDestinationEntry& dest) {
+TransactionBuilder& TransactionBuilder::addOutput(const cryptonote::transaction_destination_entry_t& dest) {
   m_destinations.push_back(dest);
   return *this;
 }
@@ -83,7 +83,7 @@ transaction_t TransactionBuilder::build() const {
 }
 
 void TransactionBuilder::fillInputs(transaction_t& tx, std::vector<cryptonote::key_pair_t>& contexts) const {
-  for (const TransactionSourceEntry& src_entr : m_sources) {
+  for (const transaction_source_entry_t& src_entr : m_sources) {
     contexts.push_back(key_pair_t());
     key_pair_t& in_ephemeral = contexts.back();
     crypto::key_image_t img;
@@ -95,7 +95,7 @@ void TransactionBuilder::fillInputs(transaction_t& tx, std::vector<cryptonote::k
     input_to_key.keyImage = img;
 
     // fill outputs array and use relative offsets
-    for (const TransactionSourceEntry::OutputEntry& out_entry : src_entr.outputs) {
+    for (const transaction_source_entry_t::output_entry_t& out_entry : src_entr.outputs) {
       input_to_key.outputIndexes.push_back(out_entry.first);
     }
 

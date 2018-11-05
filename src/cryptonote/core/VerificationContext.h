@@ -8,7 +8,7 @@ namespace cryptonote
   /************************************************************************/
   /*                                                                      */
   /************************************************************************/
-  struct TxVerificationContext
+  struct tx_verification_context_t
   {
     bool m_should_be_relayed;
     bool m_verifivation_failed; //bad tx, should drop connection
@@ -17,7 +17,7 @@ namespace cryptonote
     bool m_tx_fee_too_small;
   };
 
-  struct BlockVerificationContext
+  struct block_verification_context_t
   {
     bool m_added_to_main_chain;
     bool m_verifivation_failed; //bad block, should drop connection

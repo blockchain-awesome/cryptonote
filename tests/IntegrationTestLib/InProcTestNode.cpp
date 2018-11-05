@@ -152,7 +152,7 @@ bool InProcTestNode::getBlockTemplate(const std::string &minerAddress, cryptonot
 }
 
 bool InProcTestNode::submitBlock(const std::string& block) {
-  BlockVerificationContext bvc = boost::value_initialized<BlockVerificationContext>();
+  block_verification_context_t bvc = boost::value_initialized<block_verification_context_t>();
   core->handle_incoming_block_blob(Common::fromHex(block), bvc, true, true);
   return bvc.m_added_to_main_chain;
 }

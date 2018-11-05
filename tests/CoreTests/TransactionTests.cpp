@@ -55,10 +55,10 @@ bool test_transaction_generation_and_ring_signature()
   currency.constructMinerTx(0, 0, 0, 0, 0, miner_acc6.getAccountKeys().address, tx_mine_6);
 
   //fill inputs entry
-  typedef TransactionSourceEntry::OutputEntry tx_output_entry;
-  std::vector<TransactionSourceEntry> sources;
+  typedef transaction_source_entry_t::output_entry_t tx_output_entry;
+  std::vector<transaction_source_entry_t> sources;
   sources.resize(sources.size()+1);
-  TransactionSourceEntry& src = sources.back();
+  transaction_source_entry_t& src = sources.back();
   src.amount = 70368744177663;
   {
     tx_output_entry oe;
@@ -91,10 +91,10 @@ bool test_transaction_generation_and_ring_signature()
     src.realOutputIndexInTransaction = 0;
   }
   //fill outputs entry
-  TransactionDestinationEntry td;
+  transaction_destination_entry_t td;
   td.addr = rv_acc.getAccountKeys().address;
   td.amount = 69368744177663;
-  std::vector<TransactionDestinationEntry> destinations;
+  std::vector<transaction_destination_entry_t> destinations;
   destinations.push_back(td);
 
   transaction_t tx_rc1;

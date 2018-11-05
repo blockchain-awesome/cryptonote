@@ -28,18 +28,18 @@ public:
 
   void generate(const account_public_address_t& address, transaction_t& tx, uint64_t unlockTime = 0)
   {
-    std::vector<cryptonote::TransactionDestinationEntry> destinations;
+    std::vector<cryptonote::transaction_destination_entry_t> destinations;
 
     cryptonote::decompose_amount_into_digits(this->m_source_amount, 0,
-      [&](uint64_t chunk) { destinations.push_back(cryptonote::TransactionDestinationEntry(chunk, address)); },
-      [&](uint64_t a_dust) { destinations.push_back(cryptonote::TransactionDestinationEntry(a_dust, address)); });
+      [&](uint64_t chunk) { destinations.push_back(cryptonote::transaction_destination_entry_t(chunk, address)); },
+      [&](uint64_t a_dust) { destinations.push_back(cryptonote::transaction_destination_entry_t(a_dust, address)); });
 
     cryptonote::constructTransaction(this->m_miners[this->real_source_idx].getAccountKeys(), this->m_sources, destinations, std::vector<uint8_t>(), tx, unlockTime, m_logger);
   }
 
   void generateSingleOutputTx(const account_public_address_t& address, uint64_t amount, transaction_t& tx) {
-    std::vector<TransactionDestinationEntry> destinations;
-    destinations.push_back(TransactionDestinationEntry(amount, address));
+    std::vector<transaction_destination_entry_t> destinations;
+    destinations.push_back(transaction_destination_entry_t(amount, address));
     constructTransaction(this->m_miners[this->real_source_idx].getAccountKeys(), this->m_sources, destinations, std::vector<uint8_t>(), tx, 0, m_logger);
   }
 };

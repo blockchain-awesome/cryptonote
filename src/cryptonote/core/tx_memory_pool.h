@@ -60,8 +60,8 @@ namespace cryptonote {
     bool deinit();
 
     bool have_tx(const crypto::hash_t &id) const;
-    bool add_tx(const transaction_t &tx, const crypto::hash_t &id, size_t blobSize, TxVerificationContext& tvc, bool keeped_by_block);
-    bool add_tx(const transaction_t &tx, TxVerificationContext& tvc, bool keeped_by_block);
+    bool add_tx(const transaction_t &tx, const crypto::hash_t &id, size_t blobSize, tx_verification_context_t& tvc, bool keeped_by_block);
+    bool add_tx(const transaction_t &tx, tx_verification_context_t& tvc, bool keeped_by_block);
     //gets tx and remove it from pool
     bool take_tx(const crypto::hash_t &id, transaction_t &tx, size_t& blobSize, uint64_t& fee);
 
@@ -108,8 +108,8 @@ namespace cryptonote {
       indexed_by<main_index_t, fee_index_t>
     > tx_container_t;
 
-    typedef std::pair<uint64_t, uint64_t> GlobalOutput;
-    typedef std::set<GlobalOutput> GlobalOutputsContainer;
+    typedef std::pair<uint64_t, uint64_t> global_output_t;
+    typedef std::set<global_output_t> global_output_container_t;
     typedef std::unordered_map<crypto::key_image_t, std::unordered_set<crypto::hash_t> > key_images_container;
 
 
@@ -129,7 +129,7 @@ namespace cryptonote {
     OnceInTimeInterval m_txCheckInterval;
     mutable std::recursive_mutex m_transactions_lock;
     key_images_container m_spent_key_images;
-    GlobalOutputsContainer m_spentOutputs;
+    global_output_container_t m_spentOutputs;
 
     // std::string m_config_folder;
     cryptonote::ITransactionValidator& m_validator;

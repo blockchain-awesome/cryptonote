@@ -100,8 +100,8 @@ uint64_t get_tx_fee(const transaction_t& tx) {
 
 bool constructTransaction(
   const account_keys_t& sender_account_keys,
-  const std::vector<TransactionSourceEntry>& sources,
-  const std::vector<TransactionDestinationEntry>& destinations,
+  const std::vector<transaction_source_entry_t>& sources,
+  const std::vector<transaction_destination_entry_t>& destinations,
   std::vector<uint8_t> extra,
   transaction_t& tx,
   uint64_t unlock_time,
@@ -128,7 +128,7 @@ bool constructTransaction(
   std::vector<input_generation_context_data> in_contexts;
   uint64_t summary_inputs_money = 0;
   //fill inputs
-  for (const TransactionSourceEntry& src_entr : sources) {
+  for (const transaction_source_entry_t& src_entr : sources) {
     if (src_entr.realOutput >= src_entr.outputs.size()) {
       logger(ERROR) << "real_output index (" << src_entr.realOutput << ")bigger than output_keys.size()=" << src_entr.outputs.size();
       return false;
@@ -156,7 +156,7 @@ bool constructTransaction(
     input_to_key.keyImage = img;
 
     //fill outputs array and use relative offsets
-    for (const TransactionSourceEntry::OutputEntry& out_entry : src_entr.outputs) {
+    for (const transaction_source_entry_t::output_entry_t& out_entry : src_entr.outputs) {
       input_to_key.outputIndexes.push_back(out_entry.first);
     }
 
@@ -165,13 +165,13 @@ bool constructTransaction(
   }
 
   // "Shuffle" outs
-  std::vector<TransactionDestinationEntry> shuffled_dsts(destinations);
-  std::sort(shuffled_dsts.begin(), shuffled_dsts.end(), [](const TransactionDestinationEntry& de1, const TransactionDestinationEntry& de2) { return de1.amount < de2.amount; });
+  std::vector<transaction_destination_entry_t> shuffled_dsts(destinations);
+  std::sort(shuffled_dsts.begin(), shuffled_dsts.end(), [](const transaction_destination_entry_t& de1, const transaction_destination_entry_t& de2) { return de1.amount < de2.amount; });
 
   uint64_t summary_outs_money = 0;
   //fill outputs
   size_t output_index = 0;
-  for (const TransactionDestinationEntry& dst_entr : shuffled_dsts) {
+  for (const transaction_destination_entry_t& dst_entr : shuffled_dsts) {
     if (!(dst_entr.amount > 0)) {
       logger(ERROR, BRIGHT_RED) << "Destination with wrong amount: " << dst_entr.amount;
       return false;
@@ -219,9 +219,9 @@ bool constructTransaction(
   getObjectHash(*static_cast<transaction_prefix_t*>(&tx), tx_prefix_hash);
 
   size_t i = 0;
-  for (const TransactionSourceEntry& src_entr : sources) {
+  for (const transaction_source_entry_t& src_entr : sources) {
     std::vector<const public_key_t*> keys_ptrs;
-    for (const TransactionSourceEntry::OutputEntry& o : src_entr.outputs) {
+    for (const transaction_source_entry_t::output_entry_t& o : src_entr.outputs) {
       keys_ptrs.push_back(&o.second);
     }
 

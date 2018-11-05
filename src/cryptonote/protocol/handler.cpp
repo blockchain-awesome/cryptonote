@@ -233,7 +233,7 @@ int CryptoNoteProtocolHandler::handle_notify_new_block(int command, NOTIFY_NEW_B
   }
 
   for (auto tx_blob_it = arg.b.txs.begin(); tx_blob_it != arg.b.txs.end(); tx_blob_it++) {
-    cryptonote::TxVerificationContext tvc = boost::value_initialized<decltype(tvc)>();
+    cryptonote::tx_verification_context_t tvc = boost::value_initialized<decltype(tvc)>();
     m_core.handle_incoming_tx(asBinaryArray(*tx_blob_it), tvc, true);
     if (tvc.m_verifivation_failed) {
       logger(Logging::INFO) << context << "Block verification failed: transaction verification failed, dropping connection";
@@ -242,7 +242,7 @@ int CryptoNoteProtocolHandler::handle_notify_new_block(int command, NOTIFY_NEW_B
     }
   }
 
-  BlockVerificationContext bvc = boost::value_initialized<BlockVerificationContext>();
+  block_verification_context_t bvc = boost::value_initialized<block_verification_context_t>();
   m_core.handle_incoming_block_blob(asBinaryArray(arg.b.block), bvc, true, false);
   if (bvc.m_verifivation_failed) {
     logger(Logging::DEBUGGING) << context << "Block verification failed, dropping connection";
@@ -275,7 +275,7 @@ int CryptoNoteProtocolHandler::handle_notify_new_transactions(int command, NOTIF
     return 1;
 
   for (auto tx_blob_it = arg.txs.begin(); tx_blob_it != arg.txs.end();) {
-    cryptonote::TxVerificationContext tvc = boost::value_initialized<decltype(tvc)>();
+    cryptonote::tx_verification_context_t tvc = boost::value_initialized<decltype(tvc)>();
     m_core.handle_incoming_tx(asBinaryArray(*tx_blob_it), tvc, false);
     if (tvc.m_verifivation_failed) {
       logger(Logging::INFO) << context << "Tx verification failed";
@@ -402,7 +402,7 @@ int CryptoNoteProtocolHandler::processObjects(CryptoNoteConnectionContext& conte
 
     //process transactions
     for (auto& tx_blob : block_entry.txs) {
-      TxVerificationContext tvc = boost::value_initialized<decltype(tvc)>();
+      tx_verification_context_t tvc = boost::value_initialized<decltype(tvc)>();
       m_core.handle_incoming_tx(asBinaryArray(tx_blob), tvc, true);
       if (tvc.m_verifivation_failed) {
         logger(Logging::ERROR) << context << "transaction verification failed on NOTIFY_RESPONSE_GET_OBJECTS, \r\ntx_id = "
@@ -413,7 +413,7 @@ int CryptoNoteProtocolHandler::processObjects(CryptoNoteConnectionContext& conte
     }
 
     // process block
-    BlockVerificationContext bvc = boost::value_initialized<BlockVerificationContext>();
+    block_verification_context_t bvc = boost::value_initialized<block_verification_context_t>();
     m_core.handle_incoming_block_blob(asBinaryArray(block_entry.block), bvc, false, false);
 
     if (bvc.m_verifivation_failed) {

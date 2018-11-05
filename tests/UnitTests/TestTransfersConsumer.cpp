@@ -681,7 +681,7 @@ TEST_F(TransfersConsumerTest, onNewBlocks_checkTransactionOutputInformationMulti
   size_t txIndex = tx->addOutput(300, { m_accountKeys.address, generateAccountKeys().address}, 2);
 
   TransactionOutputInformation expectedOut;
-  expectedOut.type = TransactionTypes::OutputType::Multisignature;
+  expectedOut.type = TransactionTypes::output_type_t::Multisignature;
   expectedOut.amount = 300;
   expectedOut.globalOutputIndex = index;
   expectedOut.outputInTransaction = static_cast<uint32_t>(txIndex);
@@ -839,7 +839,7 @@ TEST_F(TransfersConsumerTest, onPoolUpdated_addTransactionMultisignature) {
   multi_signature_output_t out;
   tx->getOutput(0, out, amount_);
 
-  ASSERT_EQ(TransactionTypes::OutputType::Multisignature, o.type);
+  ASSERT_EQ(TransactionTypes::output_type_t::Multisignature, o.type);
   ASSERT_EQ(amount_, o.amount);
   ASSERT_EQ(out.requiredSignatureCount, o.requiredSignatures);
   ASSERT_EQ(UNCONFIRMED_TRANSACTION_GLOBAL_OUTPUT_INDEX, o.globalOutputIndex);

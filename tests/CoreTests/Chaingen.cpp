@@ -73,10 +73,10 @@ typedef pair<uint64_t, size_t>  outloc_t;
 
 namespace
 {
-  uint64_t get_inputs_amount(const vector<TransactionSourceEntry> &s)
+  uint64_t get_inputs_amount(const vector<transaction_source_entry_t> &s)
   {
     uint64_t r = 0;
-    BOOST_FOREACH(const TransactionSourceEntry &e, s)
+    BOOST_FOREACH(const transaction_source_entry_t &e, s)
     {
       r += e.amount;
     }
@@ -157,7 +157,7 @@ bool init_spent_output_indices(map_output_idx_t& outs, map_output_t& outs_mine, 
     return true;
 }
 
-bool fill_output_entries(std::vector<output_index>& out_indices, size_t sender_out, size_t nmix, size_t& real_entry_idx, std::vector<TransactionSourceEntry::OutputEntry>& output_entries)
+bool fill_output_entries(std::vector<output_index>& out_indices, size_t sender_out, size_t nmix, size_t& real_entry_idx, std::vector<transaction_source_entry_t::output_entry_t>& output_entries)
 {
   if (out_indices.size() <= nmix)
     return false;
@@ -186,14 +186,14 @@ bool fill_output_entries(std::vector<output_index>& out_indices, size_t sender_o
     if (append)
     {
       const key_output_t& otk = boost::get<key_output_t>(oi.out);
-      output_entries.push_back(TransactionSourceEntry::OutputEntry(oi.idx, otk.key));
+      output_entries.push_back(transaction_source_entry_t::output_entry_t(oi.idx, otk.key));
     }
   }
 
   return 0 == rest && sender_out_found;
 }
 
-bool fill_tx_sources(std::vector<TransactionSourceEntry>& sources, const std::vector<test_event_entry>& events,
+bool fill_tx_sources(std::vector<transaction_source_entry_t>& sources, const std::vector<test_event_entry>& events,
                      const block_t& blk_head, const cryptonote::AccountBase& from, uint64_t amount, size_t nmix)
 {
     map_output_idx_t outs;
@@ -222,7 +222,7 @@ bool fill_tx_sources(std::vector<TransactionSourceEntry>& sources, const std::ve
             if (oi.spent)
                 continue;
 
-            cryptonote::TransactionSourceEntry ts;
+            cryptonote::transaction_source_entry_t ts;
             ts.amount = oi.amount;
             ts.realOutputIndexInTransaction = oi.out_no;
             ts.realTransactionPublicKey = getTransactionPublicKeyFromExtra(oi.p_tx->extra); // incoming tx public key
@@ -245,7 +245,7 @@ bool fill_tx_sources(std::vector<TransactionSourceEntry>& sources, const std::ve
     return sources_found;
 }
 
-bool fill_tx_destination(TransactionDestinationEntry &de, const cryptonote::AccountBase &to, uint64_t amount) {
+bool fill_tx_destination(transaction_destination_entry_t &de, const cryptonote::AccountBase &to, uint64_t amount) {
     de.addr = to.getAccountKeys().address;
     de.amount = amount;
     return true;
@@ -253,8 +253,8 @@ bool fill_tx_destination(TransactionDestinationEntry &de, const cryptonote::Acco
 
 void fill_tx_sources_and_destinations(const std::vector<test_event_entry>& events, const block_t& blk_head,
                                       const cryptonote::AccountBase& from, const cryptonote::AccountBase& to,
-                                      uint64_t amount, uint64_t fee, size_t nmix, std::vector<TransactionSourceEntry>& sources,
-                                      std::vector<TransactionDestinationEntry>& destinations)
+                                      uint64_t amount, uint64_t fee, size_t nmix, std::vector<transaction_source_entry_t>& sources,
+                                      std::vector<transaction_destination_entry_t>& destinations)
 {
   sources.clear();
   destinations.clear();
@@ -262,12 +262,12 @@ void fill_tx_sources_and_destinations(const std::vector<test_event_entry>& event
   if (!fill_tx_sources(sources, events, blk_head, from, amount + fee, nmix))
     throw std::runtime_error("couldn't fill transaction sources");
 
-  TransactionDestinationEntry de;
+  transaction_destination_entry_t de;
   if (!fill_tx_destination(de, to, amount))
     throw std::runtime_error("couldn't fill transaction destination");
   destinations.push_back(de);
 
-  TransactionDestinationEntry de_change;
+  transaction_destination_entry_t de_change;
   uint64_t cache_back = get_inputs_amount(sources) - (amount + fee);
   if (0 < cache_back)
   {
@@ -281,8 +281,8 @@ bool construct_tx_to_key(Logging::ILogger& logger, const std::vector<test_event_
                          const cryptonote::AccountBase& from, const cryptonote::AccountBase& to, uint64_t amount,
                          uint64_t fee, size_t nmix)
 {
-  vector<TransactionSourceEntry> sources;
-  vector<TransactionDestinationEntry> destinations;
+  vector<transaction_source_entry_t> sources;
+  vector<transaction_destination_entry_t> destinations;
   fill_tx_sources_and_destinations(events, blk_head, from, to, amount, fee, nmix, sources, destinations);
 
   return constructTransaction(from.getAccountKeys(), sources, destinations, std::vector<uint8_t>(), tx, 0, logger);

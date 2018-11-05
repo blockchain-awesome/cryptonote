@@ -187,20 +187,20 @@ bool find_block_chain(const std::vector<test_event_entry>& events, std::vector<c
 void fill_tx_sources_and_destinations(const std::vector<test_event_entry>& events, const cryptonote::block_t& blk_head,
                                       const cryptonote::AccountBase& from, const cryptonote::AccountBase& to,
                                       uint64_t amount, uint64_t fee, size_t nmix,
-                                      std::vector<cryptonote::TransactionSourceEntry>& sources,
-                                      std::vector<cryptonote::TransactionDestinationEntry>& destinations);
+                                      std::vector<cryptonote::transaction_source_entry_t>& sources,
+                                      std::vector<cryptonote::transaction_destination_entry_t>& destinations);
 uint64_t get_balance(const cryptonote::AccountBase& addr, const std::vector<cryptonote::block_t>& blockchain, const map_hash2tx_t& mtx);
 
 //--------------------------------------------------------------------------
 template<class t_test_class>
-auto do_check_TxVerificationContext(const cryptonote::TxVerificationContext& tvc, bool tx_added, size_t event_index, const cryptonote::transaction_t& tx, t_test_class& validator, int)
-  -> decltype(validator.check_TxVerificationContext(tvc, tx_added, event_index, tx))
+auto do_check_tx_verification_context_t(const cryptonote::tx_verification_context_t& tvc, bool tx_added, size_t event_index, const cryptonote::transaction_t& tx, t_test_class& validator, int)
+  -> decltype(validator.check_tx_verification_context_t(tvc, tx_added, event_index, tx))
 {
-  return validator.check_TxVerificationContext(tvc, tx_added, event_index, tx);
+  return validator.check_tx_verification_context_t(tvc, tx_added, event_index, tx);
 }
 //--------------------------------------------------------------------------
 template<class t_test_class>
-bool do_check_TxVerificationContext(const cryptonote::TxVerificationContext& tvc, bool tx_added, size_t /*event_index*/, const cryptonote::transaction_t& /*tx*/, t_test_class&, long)
+bool do_check_tx_verification_context_t(const cryptonote::tx_verification_context_t& tvc, bool tx_added, size_t /*event_index*/, const cryptonote::transaction_t& /*tx*/, t_test_class&, long)
 {
   // Default block verification context check
   if (tvc.m_verifivation_failed)
@@ -209,21 +209,21 @@ bool do_check_TxVerificationContext(const cryptonote::TxVerificationContext& tvc
 }
 //--------------------------------------------------------------------------
 template<class t_test_class>
-bool check_TxVerificationContext(const cryptonote::TxVerificationContext& tvc, bool tx_added, size_t event_index, const cryptonote::transaction_t& tx, t_test_class& validator)
+bool check_tx_verification_context_t(const cryptonote::tx_verification_context_t& tvc, bool tx_added, size_t event_index, const cryptonote::transaction_t& tx, t_test_class& validator)
 {
   // SFINAE in action
-  return do_check_TxVerificationContext(tvc, tx_added, event_index, tx, validator, 0);
+  return do_check_tx_verification_context_t(tvc, tx_added, event_index, tx, validator, 0);
 }
 //--------------------------------------------------------------------------
 template<class t_test_class>
-auto do_check_BlockVerificationContext(const cryptonote::BlockVerificationContext& bvc, size_t event_index, const cryptonote::block_t& blk, t_test_class& validator, int)
-  -> decltype(validator.check_BlockVerificationContext(bvc, event_index, blk))
+auto do_check_block_verification_context_t(const cryptonote::block_verification_context_t& bvc, size_t event_index, const cryptonote::block_t& blk, t_test_class& validator, int)
+  -> decltype(validator.check_block_verification_context_t(bvc, event_index, blk))
 {
-  return validator.check_BlockVerificationContext(bvc, event_index, blk);
+  return validator.check_block_verification_context_t(bvc, event_index, blk);
 }
 //--------------------------------------------------------------------------
 template<class t_test_class>
-bool do_check_BlockVerificationContext(const cryptonote::BlockVerificationContext& bvc, size_t /*event_index*/, const cryptonote::block_t& /*blk*/, t_test_class&, long)
+bool do_check_block_verification_context_t(const cryptonote::block_verification_context_t& bvc, size_t /*event_index*/, const cryptonote::block_t& /*blk*/, t_test_class&, long)
 {
   // Default block verification context check
   if (bvc.m_verifivation_failed)
@@ -232,10 +232,10 @@ bool do_check_BlockVerificationContext(const cryptonote::BlockVerificationContex
 }
 //--------------------------------------------------------------------------
 template<class t_test_class>
-bool check_BlockVerificationContext(const cryptonote::BlockVerificationContext& bvc, size_t event_index, const cryptonote::block_t& blk, t_test_class& validator)
+bool check_block_verification_context_t(const cryptonote::block_verification_context_t& bvc, size_t event_index, const cryptonote::block_t& blk, t_test_class& validator)
 {
   // SFINAE in action
-  return do_check_BlockVerificationContext(bvc, event_index, blk, validator, 0);
+  return do_check_block_verification_context_t(bvc, event_index, blk, validator, 0);
 }
 
 /************************************************************************/
@@ -283,11 +283,11 @@ public:
   {
     log_event("cryptonote::transaction_t");
 
-    cryptonote::TxVerificationContext tvc = boost::value_initialized<decltype(tvc)>();
+    cryptonote::tx_verification_context_t tvc = boost::value_initialized<decltype(tvc)>();
     size_t pool_size = m_c.get_pool_transactions_count();
     m_c.handle_incoming_tx(toBinaryArray(tx), tvc, m_txs_keeped_by_block);
     bool tx_added = pool_size + 1 == m_c.get_pool_transactions_count();
-    bool r = check_TxVerificationContext(tvc, tx_added, m_ev_index, tx, m_validator);
+    bool r = check_tx_verification_context_t(tvc, tx_added, m_ev_index, tx, m_validator);
     CHECK_AND_NO_ASSERT_MES(r, false, "tx verification context check failed");
     return true;
   }
@@ -296,9 +296,9 @@ public:
   {
     log_event("cryptonote::block_t");
 
-    cryptonote::BlockVerificationContext bvc = boost::value_initialized<decltype(bvc)>();
+    cryptonote::block_verification_context_t bvc = boost::value_initialized<decltype(bvc)>();
     m_c.handle_incoming_block_blob(toBinaryArray(b), bvc, false, false);
-    bool r = check_BlockVerificationContext(bvc, m_ev_index, b, m_validator);
+    bool r = check_block_verification_context_t(bvc, m_ev_index, b, m_validator);
     CHECK_AND_NO_ASSERT_MES(r, false, "block verification context check failed");
     return r;
   }
@@ -319,7 +319,7 @@ public:
   {
     log_event("serialized_block");
 
-    cryptonote::BlockVerificationContext bvc = boost::value_initialized<decltype(bvc)>();
+    cryptonote::block_verification_context_t bvc = boost::value_initialized<decltype(bvc)>();
     m_c.handle_incoming_block_blob(sr_block.data, bvc, false, false);
 
     cryptonote::block_t blk;
@@ -327,7 +327,7 @@ public:
       blk = cryptonote::block_t();
     }
 
-    bool r = check_BlockVerificationContext(bvc, m_ev_index, blk, m_validator);
+    bool r = check_block_verification_context_t(bvc, m_ev_index, blk, m_validator);
     CHECK_AND_NO_ASSERT_MES(r, false, "block verification context check failed");
     return true;
   }
@@ -336,7 +336,7 @@ public:
   {
     log_event("serialized_transaction");
 
-    cryptonote::TxVerificationContext tvc = boost::value_initialized<decltype(tvc)>();;
+    cryptonote::tx_verification_context_t tvc = boost::value_initialized<decltype(tvc)>();;
     size_t pool_size = m_c.get_pool_transactions_count();
     m_c.handle_incoming_tx(sr_tx.data, tvc, m_txs_keeped_by_block);
     bool tx_added = pool_size + 1 == m_c.get_pool_transactions_count();
@@ -347,7 +347,7 @@ public:
       tx = cryptonote::transaction_t();
     }
 
-    bool r = check_TxVerificationContext(tvc, tx_added, m_ev_index, tx, m_validator);
+    bool r = check_tx_verification_context_t(tvc, tx_added, m_ev_index, tx, m_validator);
     CHECK_AND_NO_ASSERT_MES(r, false, "transaction verification context check failed");
     return true;
   }

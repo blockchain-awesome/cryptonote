@@ -29,18 +29,18 @@ public:
   TransactionBuilder& setTxKeys(const cryptonote::key_pair_t& txKeys);
 
   // inputs
-  TransactionBuilder& setInput(const std::vector<cryptonote::TransactionSourceEntry>& sources, const cryptonote::account_keys_t& senderKeys);
+  TransactionBuilder& setInput(const std::vector<cryptonote::transaction_source_entry_t>& sources, const cryptonote::account_keys_t& senderKeys);
   TransactionBuilder& addMultisignatureInput(const MultisignatureSource& source);
 
   // outputs
-  TransactionBuilder& setOutput(const std::vector<cryptonote::TransactionDestinationEntry>& destinations);
-  TransactionBuilder& addOutput(const cryptonote::TransactionDestinationEntry& dest);
+  TransactionBuilder& setOutput(const std::vector<cryptonote::transaction_destination_entry_t>& destinations);
+  TransactionBuilder& addOutput(const cryptonote::transaction_destination_entry_t& dest);
   TransactionBuilder& addMultisignatureOut(uint64_t amount, const KeysVector& keys, uint32_t required);
 
   cryptonote::transaction_t build() const;
 
-  std::vector<cryptonote::TransactionSourceEntry> m_sources;
-  std::vector<cryptonote::TransactionDestinationEntry> m_destinations;
+  std::vector<cryptonote::transaction_source_entry_t> m_sources;
+  std::vector<cryptonote::transaction_destination_entry_t> m_destinations;
 
 private:
 

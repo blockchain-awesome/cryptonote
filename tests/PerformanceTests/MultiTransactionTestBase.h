@@ -31,7 +31,7 @@ public:
 
     Currency currency = CurrencyBuilder(m_logger, os::appdata::path()).currency();
 
-    std::vector<TransactionSourceEntry::OutputEntry> output_entries;
+    std::vector<transaction_source_entry_t::output_entry_t> output_entries;
     for (uint32_t i = 0; i < ring_size; ++i)
     {
       m_miners[i].generate();
@@ -47,7 +47,7 @@ public:
 
     m_source_amount = m_miner_txs[0].outputs[0].amount;
 
-    TransactionSourceEntry source_entry;
+    transaction_source_entry_t source_entry;
     source_entry.amount = m_source_amount;
     source_entry.realTransactionPublicKey = getTransactionPublicKeyFromExtra(m_miner_txs[real_source_idx].extra);
     source_entry.realOutputIndexInTransaction = 0;
@@ -65,7 +65,7 @@ protected:
   uint64_t m_source_amount;
   Logging::ConsoleLogger m_logger;
 
-  std::vector<cryptonote::TransactionSourceEntry> m_sources;
+  std::vector<cryptonote::transaction_source_entry_t> m_sources;
   crypto::public_key_t m_public_keys[ring_size];
   const crypto::public_key_t* m_public_key_ptrs[ring_size];
 };

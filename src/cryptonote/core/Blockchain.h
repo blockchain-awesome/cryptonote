@@ -78,7 +78,7 @@ namespace cryptonote {
     crypto::hash_t getTailId(uint32_t& height);
     difficulty_type getDifficultyForNextBlock();
     uint64_t getCoinsInCirculation();
-    bool addNewBlock(const block_t& bl_, BlockVerificationContext& bvc);
+    bool addNewBlock(const block_t& bl_, block_verification_context_t& bvc);
     bool resetAndSetGenesisBlock(const block_t& b);
     bool haveBlock(const crypto::hash_t& id);
     size_t getTotalTransactions();
@@ -206,7 +206,7 @@ namespace cryptonote {
     void rebuildCache();
     bool storeCache();
     bool switch_to_alternative_blockchain(std::list<blocks_ext_by_hash::iterator>& alt_chain, bool discard_disconnected_chain);
-    bool handle_alternative_block(const block_t& b, const crypto::hash_t& id, BlockVerificationContext& bvc, bool sendNewAlternativeBlockMessage = true);
+    bool handle_alternative_block(const block_t& b, const crypto::hash_t& id, block_verification_context_t& bvc, bool sendNewAlternativeBlockMessage = true);
     difficulty_type get_next_difficulty_for_alternative_chain(const std::list<blocks_ext_by_hash::iterator>& alt_chain, BlockEntry& bei);
     bool prevalidate_miner_transaction(const block_t& b, uint32_t height);
     bool validate_miner_transaction(const block_t& b, uint32_t height, size_t cumulativeBlockSize, uint64_t alreadyGeneratedCoins, uint64_t fee, uint64_t& reward, int64_t& emissionChange);
@@ -228,8 +228,8 @@ namespace cryptonote {
     bool checkTransactionInputs(const transaction_t& tx, uint32_t* pmax_used_block_height = NULL);
     bool have_tx_keyimg_as_spent(const crypto::key_image_t &key_im);
     const TransactionEntry& transactionByIndex(TransactionIndex index);
-    bool pushBlock(const block_t& blockData, BlockVerificationContext& bvc);
-    bool pushBlock(const block_t& blockData, const std::vector<transaction_t>& transactions, BlockVerificationContext& bvc);
+    bool pushBlock(const block_t& blockData, block_verification_context_t& bvc);
+    bool pushBlock(const block_t& blockData, const std::vector<transaction_t>& transactions, block_verification_context_t& bvc);
     bool pushBlock(BlockEntry& block);
     void popBlock(const crypto::hash_t& blockHash);
     bool pushTransaction(BlockEntry& block, const crypto::hash_t& transactionHash, TransactionIndex transactionIndex);

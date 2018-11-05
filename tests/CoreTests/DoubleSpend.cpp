@@ -89,7 +89,7 @@ DoubleSpendBase::DoubleSpendBase() :
   REGISTER_CALLBACK_METHOD(DoubleSpendBase, check_double_spend);
 }
 
-bool DoubleSpendBase::check_TxVerificationContext(const cryptonote::TxVerificationContext& tvc, bool tx_added, size_t event_idx, const cryptonote::transaction_t& /*tx*/)
+bool DoubleSpendBase::check_tx_verification_context_t(const cryptonote::tx_verification_context_t& tvc, bool tx_added, size_t event_idx, const cryptonote::transaction_t& /*tx*/)
 {
   if (m_invalid_tx_index == event_idx)
     return tvc.m_verifivation_failed;
@@ -97,7 +97,7 @@ bool DoubleSpendBase::check_TxVerificationContext(const cryptonote::TxVerificati
     return !tvc.m_verifivation_failed && tx_added;
 }
 
-bool DoubleSpendBase::check_BlockVerificationContext(const cryptonote::BlockVerificationContext& bvc, size_t event_idx, const cryptonote::block_t& /*block*/)
+bool DoubleSpendBase::check_block_verification_context_t(const cryptonote::block_verification_context_t& bvc, size_t event_idx, const cryptonote::block_t& /*block*/)
 {
   if (m_invalid_block_index == event_idx)
     return bvc.m_verifivation_failed;
@@ -180,7 +180,7 @@ TransactionBuilder DoubleSpendBase::createBobToAliceTx() const {
 
   builder.
     addMultisignatureInput(createSource()).
-    addOutput(TransactionDestinationEntry(send_amount - m_currency.minimumFee(), m_alice_account.getAccountKeys().address));
+    addOutput(transaction_destination_entry_t(send_amount - m_currency.minimumFee(), m_alice_account.getAccountKeys().address));
 
   return builder;
 }
@@ -205,7 +205,7 @@ bool MultiSigTx_DoubleSpendInTx::generate(std::vector<test_event_entry>& events)
   auto tx = builder.
     addMultisignatureInput(createSource()).
     addMultisignatureInput(createSource()).
-    addOutput(TransactionDestinationEntry(send_amount*2 - m_currency.minimumFee(), m_alice_account.getAccountKeys().address)).
+    addOutput(transaction_destination_entry_t(send_amount*2 - m_currency.minimumFee(), m_alice_account.getAccountKeys().address)).
     build();
 
   SET_EVENT_VISITOR_SETT(events, event_visitor_settings::set_txs_keeped_by_block, m_txsKeepedByBlock);
