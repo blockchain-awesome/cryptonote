@@ -67,7 +67,7 @@ namespace cryptonote {
 
 struct BlockchainInfo {
   std::list<BlockShortEntry> blocks;
-  std::unordered_map<crypto::Hash, std::vector<uint32_t>> globalOutputs;
+  std::unordered_map<crypto::hash_t, std::vector<uint32_t>> globalOutputs;
 
   bool operator == (const BlockchainInfo& other) const {
     return blocks == other.blocks && globalOutputs == other.globalOutputs;
@@ -115,7 +115,7 @@ void NodeTest::startNetworkWithBlockchain(const std::string& sourcePath) {
 }
 
 void NodeTest::readBlockchainInfo(INode& node, BlockchainInfo& bc) {
-  std::vector<crypto::Hash> history = { currency.genesisBlockHash() };
+  std::vector<crypto::hash_t> history = { currency.genesisBlockHash() };
   uint64_t timestamp = 0;
   uint32_t startHeight = 0;
   size_t itemsAdded = 0;
@@ -128,7 +128,7 @@ void NodeTest::readBlockchainInfo(INode& node, BlockchainInfo& bc) {
   do {
     itemsAdded = 0;
     std::vector<BlockShortEntry> blocks;
-    node.queryBlocks(std::vector<crypto::Hash>(history.rbegin(), history.rend()), timestamp, blocks, startHeight, cb.callback());
+    node.queryBlocks(std::vector<crypto::hash_t>(history.rbegin(), history.rend()), timestamp, blocks, startHeight, cb.callback());
 
     ASSERT_TRUE(cb.get() == std::error_code());
 
@@ -296,7 +296,7 @@ TEST_F(NodeTest, queryBlocks) {
   auto startBlockIter = std::find_if(blocks.begin(), blocks.end(), [](const BlockShortEntry& e) { return e.hasBlock; });
   ASSERT_TRUE(startBlockIter != blocks.end());
 
-  const Block& startBlock = startBlockIter->block;
+  const block_t& startBlock = startBlockIter->block;
 
   std::cout << "Starting block timestamp: " << startBlock.timestamp << std::endl;
   auto startFullIndex = std::distance(blocks.begin(), startBlockIter);

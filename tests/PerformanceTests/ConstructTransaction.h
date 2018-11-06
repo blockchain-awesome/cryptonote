@@ -34,7 +34,7 @@ public:
 
     for (size_t i = 0; i < out_count; ++i)
     {
-      m_destinations.push_back(TransactionDestinationEntry(this->m_source_amount / out_count, m_alice.getAccountKeys().address));
+      m_destinations.push_back(transaction_destination_entry_t(this->m_source_amount / out_count, m_alice.getAccountKeys().address));
     }
 
     return true;
@@ -47,6 +47,6 @@ public:
 
 private:
   cryptonote::AccountBase m_alice;
-  std::vector<cryptonote::TransactionDestinationEntry> m_destinations;
-  cryptonote::Transaction m_tx;
+  std::vector<cryptonote::transaction_destination_entry_t> m_destinations;
+  cryptonote::transaction_t m_tx;
 };

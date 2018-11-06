@@ -173,7 +173,7 @@ bool TransferCommand::parseArguments(LoggerRef &logger, const std::vector<std::s
       else
       {
         WalletLegacyTransfer destination;
-        cryptonote::TransactionDestinationEntry de;
+        cryptonote::transaction_destination_entry_t de;
 
         if (!m_currency.parseAccountAddressString(arg, de.addr))
         {

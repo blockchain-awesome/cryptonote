@@ -20,7 +20,7 @@ gen_double_spend_base<concrete_test>::gen_double_spend_base()
 }
 
 template<class concrete_test>
-bool gen_double_spend_base<concrete_test>::check_TxVerificationContext(const cryptonote::TxVerificationContext& tvc, bool tx_added, size_t event_idx, const cryptonote::Transaction& /*tx*/)
+bool gen_double_spend_base<concrete_test>::check_tx_verification_context_t(const cryptonote::tx_verification_context_t& tvc, bool tx_added, size_t event_idx, const cryptonote::transaction_t& /*tx*/)
 {
   if (m_invalid_tx_index == event_idx)
     return tvc.m_verifivation_failed;
@@ -29,7 +29,7 @@ bool gen_double_spend_base<concrete_test>::check_TxVerificationContext(const cry
 }
 
 template<class concrete_test>
-bool gen_double_spend_base<concrete_test>::check_BlockVerificationContext(const cryptonote::BlockVerificationContext& bvc, size_t event_idx, const cryptonote::Block& /*block*/)
+bool gen_double_spend_base<concrete_test>::check_block_verification_context_t(const cryptonote::block_verification_context_t& bvc, size_t event_idx, const cryptonote::block_t& /*block*/)
 {
   if (m_invalid_block_index == event_idx)
     return bvc.m_verifivation_failed;
@@ -40,7 +40,7 @@ bool gen_double_spend_base<concrete_test>::check_BlockVerificationContext(const 
 template<class concrete_test>
 bool gen_double_spend_base<concrete_test>::mark_last_valid_block(cryptonote::core& c, size_t /*ev_index*/, const std::vector<test_event_entry>& /*events*/)
 {
-  std::list<cryptonote::Block> block_list;
+  std::list<cryptonote::block_t> block_list;
   bool r = c.get_blocks(c.get_current_blockchain_height() - 1, 1, block_list);
   CHECK_AND_ASSERT_MES(r, false, "core::get_blocks failed");
   m_last_valid_block = block_list.back();
@@ -72,7 +72,7 @@ bool gen_double_spend_base<concrete_test>::check_double_spend(cryptonote::core& 
   }
   CHECK_NOT_EQ(invalid_index_value, m_invalid_block_index);
 
-  std::list<cryptonote::Block> block_list;
+  std::list<cryptonote::block_t> block_list;
   bool r = c.get_blocks(0, 100 + 2 * static_cast<uint32_t>(this->m_currency.minedMoneyUnlockWindow()), block_list);
   CHECK_TEST_CONDITION(r);
   CHECK_TEST_CONDITION(m_last_valid_block == block_list.back());
@@ -82,9 +82,9 @@ bool gen_double_spend_base<concrete_test>::check_double_spend(cryptonote::core& 
   cryptonote::AccountBase bob_account = boost::get<cryptonote::AccountBase>(events[1]);
   cryptonote::AccountBase alice_account = boost::get<cryptonote::AccountBase>(events[2]);
 
-  std::vector<cryptonote::Block> chain;
+  std::vector<cryptonote::block_t> chain;
   map_hash2tx_t mtx;
-  std::vector<cryptonote::Block> blocks(block_list.begin(), block_list.end());
+  std::vector<cryptonote::block_t> blocks(block_list.begin(), block_list.end());
   r = find_block_chain(events, chain, mtx, get_block_hash(blocks.back()));
   CHECK_TEST_CONDITION(r);
   CHECK_EQ(concrete_test::expected_bob_balance, get_balance(bob_account, blocks, mtx));
@@ -101,10 +101,10 @@ bool gen_double_spend_in_tx<txs_keeped_by_block>::generate(std::vector<test_even
   INIT_DOUBLE_SPEND_TEST();
   DO_CALLBACK(events, "mark_last_valid_block");
 
-  std::vector<cryptonote::TransactionSourceEntry> sources;
-  cryptonote::TransactionSourceEntry se;
+  std::vector<cryptonote::transaction_source_entry_t> sources;
+  cryptonote::transaction_source_entry_t se;
   se.amount = tx_0.outputs[0].amount;
-  se.outputs.push_back(std::make_pair(0, boost::get<cryptonote::KeyOutput>(tx_0.outputs[0].target).key));
+  se.outputs.push_back(std::make_pair(0, boost::get<cryptonote::key_output_t>(tx_0.outputs[0].target).key));
   se.realOutput = 0;
   se.realTransactionPublicKey = cryptonote::getTransactionPublicKeyFromExtra(tx_0.extra);
   se.realOutputIndexInTransaction = 0;
@@ -112,13 +112,13 @@ bool gen_double_spend_in_tx<txs_keeped_by_block>::generate(std::vector<test_even
   // Double spend!
   sources.push_back(se);
 
-  cryptonote::TransactionDestinationEntry de;
+  cryptonote::transaction_destination_entry_t de;
   de.addr = alice_account.getAccountKeys().address;
   de.amount = 2 * se.amount - this->m_currency.minimumFee();
-  std::vector<cryptonote::TransactionDestinationEntry> destinations;
+  std::vector<cryptonote::transaction_destination_entry_t> destinations;
   destinations.push_back(de);
 
-  cryptonote::Transaction tx_1;
+  cryptonote::transaction_t tx_1;
   if (!constructTransaction(bob_account.getAccountKeys(), sources, destinations, std::vector<uint8_t>(), tx_1, 0, this->m_logger))
     return false;
 
@@ -141,7 +141,7 @@ bool gen_double_spend_in_the_same_block<txs_keeped_by_block>::generate(std::vect
   SET_EVENT_VISITOR_SETT(events, event_visitor_settings::set_txs_keeped_by_block, txs_keeped_by_block);
 
   MAKE_TX_LIST_START(events, txs_1, bob_account, alice_account, send_amount - this->m_currency.minimumFee(), blk_1);
-  cryptonote::Transaction tx_1 = txs_1.front();
+  cryptonote::transaction_t tx_1 = txs_1.front();
   auto tx_1_idx = events.size() - 1;
   // Remove tx_1, it is being inserted back a little later
   events.pop_back();
@@ -203,7 +203,7 @@ bool gen_double_spend_in_alt_chain_in_the_same_block<txs_keeped_by_block>::gener
 
   // Alt chain
   MAKE_TX_LIST_START(events, txs_1, bob_account, alice_account, send_amount - this->m_currency.minimumFee(), blk_1);
-  cryptonote::Transaction tx_1 = txs_1.front();
+  cryptonote::transaction_t tx_1 = txs_1.front();
   auto tx_1_idx = events.size() - 1;
   // Remove tx_1, it is being inserted back a little later
   events.pop_back();

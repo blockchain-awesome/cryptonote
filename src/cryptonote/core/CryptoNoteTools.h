@@ -10,12 +10,12 @@
 #include "stream/VectorOutputStream.h"
 #include "serialization/BinaryOutputStreamSerializer.h"
 #include "serialization/BinaryInputStreamSerializer.h"
-#include "CryptoNoteSerialization.h"
+#include "cryptonote/core/blockchain/serializer/basics.h"
 
 namespace cryptonote {
 
-void getBinaryArrayHash(const BinaryArray& binaryArray, crypto::Hash& hash);
-crypto::Hash getBinaryArrayHash(const BinaryArray& binaryArray);
+void getBinaryArrayHash(const BinaryArray& binaryArray, crypto::hash_t& hash);
+crypto::hash_t getBinaryArrayHash(const BinaryArray& binaryArray);
 
 template<class T>
 bool toBinaryArray(const T& object, BinaryArray& binaryArray) {
@@ -74,7 +74,7 @@ size_t getObjectBinarySize(const T& object) {
 }
 
 template<class T>
-bool getObjectHash(const T& object, crypto::Hash& hash) {
+bool getObjectHash(const T& object, crypto::hash_t& hash) {
   BinaryArray ba;
   if (!toBinaryArray(object, ba)) {
     hash = NULL_HASH;
@@ -86,7 +86,7 @@ bool getObjectHash(const T& object, crypto::Hash& hash) {
 }
 
 template<class T>
-bool getObjectHash(const T& object, crypto::Hash& hash, size_t& size) {
+bool getObjectHash(const T& object, crypto::hash_t& hash, size_t& size) {
   BinaryArray ba;
   if (!toBinaryArray(object, ba)) {
     hash = NULL_HASH;
@@ -100,14 +100,14 @@ bool getObjectHash(const T& object, crypto::Hash& hash, size_t& size) {
 }
 
 template<class T>
-crypto::Hash getObjectHash(const T& object) {
-  crypto::Hash hash;
+crypto::hash_t getObjectHash(const T& object) {
+  crypto::hash_t hash;
   getObjectHash(object, hash);
   return hash;
 }
 
-uint64_t getInputAmount(const Transaction& transaction);
-std::vector<uint64_t> getInputsAmounts(const Transaction& transaction);
-uint64_t getOutputAmount(const Transaction& transaction);
+uint64_t getInputAmount(const transaction_t& transaction);
+std::vector<uint64_t> getInputsAmounts(const transaction_t& transaction);
+uint64_t getOutputAmount(const transaction_t& transaction);
 void decomposeAmount(uint64_t amount, uint64_t dustThreshold, std::vector<uint64_t>& decomposedAmounts);
 }

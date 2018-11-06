@@ -4,12 +4,12 @@
 
 namespace cryptonote
 {
-struct BlockInfo
+struct block_info_t
 {
     uint32_t height;
-    crypto::Hash id;
+    crypto::hash_t id;
 
-    BlockInfo()
+    block_info_t()
     {
         clear();
     }

@@ -18,7 +18,7 @@
 namespace cryptonote {
 class ISerializer;
 
-typedef std::pair<crypto::PublicKey, size_t> TransactionOutputId;
+typedef std::pair<crypto::public_key_t, size_t> TransactionOutputId;
 }
 
 namespace std {
@@ -26,7 +26,7 @@ namespace std {
 template<> 
 struct hash<cryptonote::TransactionOutputId> {
   size_t operator()(const cryptonote::TransactionOutputId &_v) const {    
-    return hash<crypto::PublicKey>()(_v.first) ^ _v.second;
+    return hash<crypto::public_key_t>()(_v.first) ^ _v.second;
   } 
 }; 
 
@@ -40,7 +40,7 @@ struct UnconfirmedTransferDetails {
   UnconfirmedTransferDetails() :
     amount(0), sentTime(0), transactionId(WALLET_LEGACY_INVALID_TRANSACTION_ID) {}
 
-  cryptonote::Transaction tx;
+  cryptonote::transaction_t tx;
   uint64_t amount;
   uint64_t outsAmount;
   time_t sentTime;
@@ -56,11 +56,11 @@ public:
 
   bool serialize(cryptonote::ISerializer& s);
 
-  bool findTransactionId(const crypto::Hash& hash, TransactionId& id);
-  void erase(const crypto::Hash& hash);
-  void add(const cryptonote::Transaction& tx, TransactionId transactionId, 
+  bool findTransactionId(const crypto::hash_t& hash, TransactionId& id);
+  void erase(const crypto::hash_t& hash);
+  void add(const cryptonote::transaction_t& tx, TransactionId transactionId, 
     uint64_t amount, const std::list<TransactionOutputInformation>& usedOutputs);
-  void updateTransactionId(const crypto::Hash& hash, TransactionId id);
+  void updateTransactionId(const crypto::hash_t& hash, TransactionId id);
 
   uint64_t countUnconfirmedOutsAmount() const;
   uint64_t countUnconfirmedTransactionsAmount() const;
@@ -74,7 +74,7 @@ private:
   void collectUsedOutputs();
   void deleteUsedOutputs(const std::vector<TransactionOutputId>& usedOutputs);
 
-  typedef std::unordered_map<crypto::Hash, UnconfirmedTransferDetails, boost::hash<crypto::Hash>> UnconfirmedTxsContainer;
+  typedef std::unordered_map<crypto::hash_t, UnconfirmedTransferDetails, boost::hash<crypto::hash_t>> UnconfirmedTxsContainer;
   typedef std::unordered_set<TransactionOutputId> UsedOutputsContainer;
 
   UnconfirmedTxsContainer m_unconfirmedTxs;

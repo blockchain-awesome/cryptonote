@@ -6,23 +6,23 @@
 
 namespace cryptonote {
 
-NewBlockMessage::NewBlockMessage(const crypto::Hash& hash) : blockHash(hash) {}
+NewBlockMessage::NewBlockMessage(const crypto::hash_t& hash) : blockHash(hash) {}
 
-void NewBlockMessage::get(crypto::Hash& hash) const {
+void NewBlockMessage::get(crypto::hash_t& hash) const {
   hash = blockHash;
 }
 
-NewAlternativeBlockMessage::NewAlternativeBlockMessage(const crypto::Hash& hash) : blockHash(hash) {}
+NewAlternativeBlockMessage::NewAlternativeBlockMessage(const crypto::hash_t& hash) : blockHash(hash) {}
 
-void NewAlternativeBlockMessage::get(crypto::Hash& hash) const {
+void NewAlternativeBlockMessage::get(crypto::hash_t& hash) const {
   hash = blockHash;
 }
 
-ChainSwitchMessage::ChainSwitchMessage(std::vector<crypto::Hash>&& hashes) : blocksFromCommonRoot(std::move(hashes)) {}
+ChainSwitchMessage::ChainSwitchMessage(std::vector<crypto::hash_t>&& hashes) : blocksFromCommonRoot(std::move(hashes)) {}
 
 ChainSwitchMessage::ChainSwitchMessage(const ChainSwitchMessage& other) : blocksFromCommonRoot(other.blocksFromCommonRoot) {}
 
-void ChainSwitchMessage::get(std::vector<crypto::Hash>& hashes) const {
+void ChainSwitchMessage::get(std::vector<crypto::hash_t>& hashes) const {
   hashes = blocksFromCommonRoot;
 }
 
@@ -66,7 +66,7 @@ BlockchainMessage::MessageType BlockchainMessage::getType() const {
   return type;
 }
 
-bool BlockchainMessage::getNewBlockHash(crypto::Hash& hash) const {
+bool BlockchainMessage::getNewBlockHash(crypto::hash_t& hash) const {
   if (type == MessageType::NEW_BLOCK_MESSAGE) {
     newBlockMessage.get(hash);
     return true;
@@ -75,7 +75,7 @@ bool BlockchainMessage::getNewBlockHash(crypto::Hash& hash) const {
   }
 }
 
-bool BlockchainMessage::getNewAlternativeBlockHash(crypto::Hash& hash) const {
+bool BlockchainMessage::getNewAlternativeBlockHash(crypto::hash_t& hash) const {
   if (type == MessageType::NEW_ALTERNATIVE_BLOCK_MESSAGE) {
     newAlternativeBlockMessage.get(hash);
     return true;
@@ -84,7 +84,7 @@ bool BlockchainMessage::getNewAlternativeBlockHash(crypto::Hash& hash) const {
   }
 }
 
-bool BlockchainMessage::getChainSwitch(std::vector<crypto::Hash>& hashes) const {
+bool BlockchainMessage::getChainSwitch(std::vector<crypto::hash_t>& hashes) const {
   if (type == MessageType::CHAIN_SWITCH_MESSAGE) {
     chainSwitchMessage->get(hashes);
     return true;

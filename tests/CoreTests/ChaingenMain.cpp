@@ -78,7 +78,7 @@ int main(int argc, char* argv[])
     GENERATE_AND_PLAY(gen_ring_signature_2);
     //GENERATE_AND_PLAY(gen_ring_signature_big); // Takes up to XXX hours (if CRYPTONOTE_MINED_MONEY_UNLOCK_WINDOW == 10)
 
-    //// Block verification tests
+    //// block_t verification tests
     GENERATE_AND_PLAY(TestBlockMajorVersionAccepted);
     GENERATE_AND_PLAY(TestBlockMajorVersionRejected);
     GENERATE_AND_PLAY(TestBlockBigMinorVersion);
@@ -107,7 +107,7 @@ int main(int argc, char* argv[])
     GENERATE_AND_PLAY(TestBlockCumulativeSizeExceedsLimit);
     //GENERATE_AND_PLAY_EX_2VER(gen_block_invalid_binary_format); // Takes up to 30 minutes, if CRYPTONOTE_MINED_MONEY_UNLOCK_WINDOW == 10
 
-    // Transaction verification tests
+    // transaction_t verification tests
     GENERATE_AND_PLAY(gen_tx_big_version);
     GENERATE_AND_PLAY(gen_tx_unlock_time);
     GENERATE_AND_PLAY(gen_tx_no_inputs_no_outputs);

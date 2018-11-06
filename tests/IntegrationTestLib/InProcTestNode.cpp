@@ -94,7 +94,7 @@ void InProcTestNode::workerThread(std::promise<std::string>& initPromise) {
 
     coreConfig.configFolder = m_cfg.dataDir;
     
-    if (!core->init(coreConfig, emptyMiner, true)) {
+    if (!core->init(emptyMiner, true)) {
       throw std::runtime_error("Core failed to initialize");
     }
 
@@ -124,7 +124,7 @@ void InProcTestNode::workerThread(std::promise<std::string>& initPromise) {
 
 bool InProcTestNode::startMining(size_t threadsCount, const std::string &address) {
   assert(core.get());
-  AccountPublicAddress addr;
+  account_public_address_t addr;
   Account::parseAddress(address, addr);
   return core->get_miner().start(addr, threadsCount);
 }
@@ -144,20 +144,20 @@ bool InProcTestNode::stopDaemon() {
   return true;
 }
 
-bool InProcTestNode::getBlockTemplate(const std::string &minerAddress, cryptonote::Block &blockTemplate, uint64_t &difficulty) {
-  AccountPublicAddress addr;
+bool InProcTestNode::getBlockTemplate(const std::string &minerAddress, cryptonote::block_t &blockTemplate, uint64_t &difficulty) {
+  account_public_address_t addr;
   Account::parseAddress(minerAddress, addr);
   uint32_t height = 0;
   return core->get_block_template(blockTemplate, addr, difficulty, height, BinaryArray());
 }
 
 bool InProcTestNode::submitBlock(const std::string& block) {
-  BlockVerificationContext bvc = boost::value_initialized<BlockVerificationContext>();
+  block_verification_context_t bvc = boost::value_initialized<block_verification_context_t>();
   core->handle_incoming_block_blob(Common::fromHex(block), bvc, true, true);
   return bvc.m_added_to_main_chain;
 }
 
-bool InProcTestNode::getTailBlockId(crypto::Hash &tailBlockId) {
+bool InProcTestNode::getTailBlockId(crypto::hash_t &tailBlockId) {
   tailBlockId = core->get_tail_id();
   return true;
 }

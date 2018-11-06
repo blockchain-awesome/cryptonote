@@ -11,7 +11,7 @@
 #include "stream/MemoryInputStream.h"
 #include "stream/StdInputStream.h"
 #include "stream/StdOutputStream.h"
-#include "cryptonote/core/CryptoNoteSerialization.h"
+#include "cryptonote/core/blockchain/serializer/basics.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 
 #include "serialization/BinaryOutputStreamSerializer.h"
@@ -29,8 +29,8 @@ namespace {
 
 //DO NOT CHANGE IT
 struct WalletRecordDto {
-  PublicKey spendPublicKey;
-  SecretKey spendSecretKey;
+  public_key_t spendPublicKey;
+  secret_key_t spendSecretKey;
   uint64_t pendingBalance = 0;
   uint64_t actualBalance = 0;
   uint64_t creationTimestamp = 0;
@@ -39,22 +39,22 @@ struct WalletRecordDto {
 //DO NOT CHANGE IT
 struct ObsoleteSpentOutputDto {
   uint64_t amount;
-  Hash transactionHash;
+  hash_t transactionHash;
   uint32_t outputInTransaction;
   uint64_t walletIndex;
-  crypto::Hash spendingTransactionHash;
+  crypto::hash_t spendingTransactionHash;
 };
 
 //DO NOT CHANGE IT
 struct ObsoleteChangeDto {
-  Hash txHash;
+  hash_t txHash;
   uint64_t amount;
 };
 
 //DO NOT CHANGE IT
 struct UnlockTransactionJobDto {
   uint32_t blockHeight;
-  Hash transactionHash;
+  hash_t transactionHash;
   uint64_t walletIndex;
 };
 
@@ -77,7 +77,7 @@ struct WalletTransactionDto {
   cryptonote::WalletTransactionState state;
   uint64_t timestamp;
   uint32_t blockHeight;
-  Hash hash;
+  hash_t hash;
   int64_t totalAmount;
   uint64_t fee;
   uint64_t creationTime;
@@ -219,14 +219,14 @@ void deserializeEncrypted(Object& obj, const std::string& name, cryptonote::Cryp
   deserialize(obj, name, plain);
 }
 
-bool verifyKeys(const SecretKey& sec, const PublicKey& expected_pub) {
-  PublicKey pub;
+bool verifyKeys(const secret_key_t& sec, const public_key_t& expected_pub) {
+  public_key_t pub;
   bool r = crypto::secret_key_to_public_key(sec, pub);
 
   return r && expected_pub == pub;
 }
 
-void throwIfKeysMissmatch(const SecretKey& sec, const PublicKey& expected_pub) {
+void throwIfKeysMissmatch(const secret_key_t& sec, const public_key_t& expected_pub) {
   if (!verifyKeys(sec, expected_pub))
     throw std::system_error(make_error_code(cryptonote::error::WRONG_PASSWORD));
 }
@@ -270,8 +270,8 @@ void CryptoContext::incIv() {
 
 WalletSerializer::WalletSerializer(
   ITransfersObserver& transfersObserver,
-  PublicKey& viewPublicKey,
-  SecretKey& viewSecretKey,
+  public_key_t& viewPublicKey,
+  secret_key_t& viewSecretKey,
   uint64_t& actualBalance,
   uint64_t& pendingBalance,
   WalletsContainer& walletsContainer,
@@ -667,7 +667,7 @@ void WalletSerializer::loadWallets(Common::IInputStream& source, CryptoContext& 
     }
 
     if (dto.spendSecretKey != NULL_SECRET_KEY) {
-      crypto::PublicKey restoredPublicKey;
+      crypto::public_key_t restoredPublicKey;
       bool r = crypto::secret_key_to_public_key(dto.spendSecretKey, restoredPublicKey);
 
       if (!r || dto.spendPublicKey != restoredPublicKey) {
@@ -787,7 +787,7 @@ void WalletSerializer::loadUncommitedTransactions(Common::IInputStream& source, 
 }
 
 void WalletSerializer::initTransactionPool() {
-  std::unordered_set<crypto::Hash> uncommitedTransactionsSet;
+  std::unordered_set<crypto::hash_t> uncommitedTransactionsSet;
   std::transform(uncommitedTransactions.begin(), uncommitedTransactions.end(), std::inserter(uncommitedTransactionsSet, uncommitedTransactionsSet.end()),
     [](const UncommitedTransactions::value_type& pair) {
       return getObjectHash(pair.second);

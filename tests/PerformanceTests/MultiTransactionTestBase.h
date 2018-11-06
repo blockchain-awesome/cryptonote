@@ -31,7 +31,7 @@ public:
 
     Currency currency = CurrencyBuilder(m_logger, os::appdata::path()).currency();
 
-    std::vector<TransactionSourceEntry::OutputEntry> output_entries;
+    std::vector<transaction_source_entry_t::output_entry_t> output_entries;
     for (uint32_t i = 0; i < ring_size; ++i)
     {
       m_miners[i].generate();
@@ -39,7 +39,7 @@ public:
       if (!currency.constructMinerTx(0, 0, 0, 2, 0, m_miners[i].getAccountKeys().address, m_miner_txs[i]))
         return false;
 
-      KeyOutput tx_out = boost::get<KeyOutput>(m_miner_txs[i].outputs[0].target);
+      key_output_t tx_out = boost::get<key_output_t>(m_miner_txs[i].outputs[0].target);
       output_entries.push_back(std::make_pair(i, tx_out.key));
       m_public_keys[i] = tx_out.key;
       m_public_key_ptrs[i] = &m_public_keys[i];
@@ -47,7 +47,7 @@ public:
 
     m_source_amount = m_miner_txs[0].outputs[0].amount;
 
-    TransactionSourceEntry source_entry;
+    transaction_source_entry_t source_entry;
     source_entry.amount = m_source_amount;
     source_entry.realTransactionPublicKey = getTransactionPublicKeyFromExtra(m_miner_txs[real_source_idx].extra);
     source_entry.realOutputIndexInTransaction = 0;
@@ -61,11 +61,11 @@ public:
 
 protected:
   cryptonote::AccountBase m_miners[ring_size];
-  cryptonote::Transaction m_miner_txs[ring_size];
+  cryptonote::transaction_t m_miner_txs[ring_size];
   uint64_t m_source_amount;
   Logging::ConsoleLogger m_logger;
 
-  std::vector<cryptonote::TransactionSourceEntry> m_sources;
-  crypto::PublicKey m_public_keys[ring_size];
-  const crypto::PublicKey* m_public_key_ptrs[ring_size];
+  std::vector<cryptonote::transaction_source_entry_t> m_sources;
+  crypto::public_key_t m_public_keys[ring_size];
+  const crypto::public_key_t* m_public_key_ptrs[ring_size];
 };

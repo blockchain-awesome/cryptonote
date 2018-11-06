@@ -19,7 +19,7 @@ struct SynchronizationStart {
 };
 
 struct AccountSubscription {
-  AccountKeys keys;
+  account_keys_t keys;
   SynchronizationStart syncStart;
   size_t transactionSpendableAge;
 };
@@ -32,30 +32,30 @@ public:
     uint32_t height, std::error_code ec) {
   }
 
-  virtual void onTransactionUpdated(ITransfersSubscription* object, const crypto::Hash& transactionHash) {}
+  virtual void onTransactionUpdated(ITransfersSubscription* object, const crypto::hash_t& transactionHash) {}
 
   /**
    * \note The sender must guarantee that onTransactionDeleted() is called only after onTransactionUpdated() is called
    * for the same \a transactionHash.
    */
-  virtual void onTransactionDeleted(ITransfersSubscription* object, const crypto::Hash& transactionHash) {}
+  virtual void onTransactionDeleted(ITransfersSubscription* object, const crypto::hash_t& transactionHash) {}
 };
 
 class ITransfersSubscription : public IObservable < ITransfersObserver > {
 public:
   virtual ~ITransfersSubscription() {}
 
-  virtual AccountPublicAddress getAddress() = 0;
+  virtual account_public_address_t getAddress() = 0;
   virtual ITransfersContainer& getContainer() = 0;
 };
 
 class ITransfersSynchronizerObserver {
 public:
-  virtual void onBlocksAdded(const crypto::PublicKey& viewPublicKey, const std::vector<crypto::Hash>& blockHashes) {}
-  virtual void onBlockchainDetach(const crypto::PublicKey& viewPublicKey, uint32_t blockIndex) {}
-  virtual void onTransactionDeleteBegin(const crypto::PublicKey& viewPublicKey, crypto::Hash transactionHash) {}
-  virtual void onTransactionDeleteEnd(const crypto::PublicKey& viewPublicKey, crypto::Hash transactionHash) {}
-  virtual void onTransactionUpdated(const crypto::PublicKey& viewPublicKey, const crypto::Hash& transactionHash,
+  virtual void onBlocksAdded(const crypto::public_key_t& viewPublicKey, const std::vector<crypto::hash_t>& blockHashes) {}
+  virtual void onBlockchainDetach(const crypto::public_key_t& viewPublicKey, uint32_t blockIndex) {}
+  virtual void onTransactionDeleteBegin(const crypto::public_key_t& viewPublicKey, crypto::hash_t transactionHash) {}
+  virtual void onTransactionDeleteEnd(const crypto::public_key_t& viewPublicKey, crypto::hash_t transactionHash) {}
+  virtual void onTransactionUpdated(const crypto::public_key_t& viewPublicKey, const crypto::hash_t& transactionHash,
     const std::vector<ITransfersContainer*>& containers) {}
 };
 
@@ -64,11 +64,11 @@ public:
   virtual ~ITransfersSynchronizer() {}
 
   virtual ITransfersSubscription& addSubscription(const AccountSubscription& acc) = 0;
-  virtual bool removeSubscription(const AccountPublicAddress& acc) = 0;
-  virtual void getSubscriptions(std::vector<AccountPublicAddress>& subscriptions) = 0;
+  virtual bool removeSubscription(const account_public_address_t& acc) = 0;
+  virtual void getSubscriptions(std::vector<account_public_address_t>& subscriptions) = 0;
   // returns nullptr if address is not found
-  virtual ITransfersSubscription* getSubscription(const AccountPublicAddress& acc) = 0;
-  virtual std::vector<crypto::Hash> getViewKeyKnownBlocks(const crypto::PublicKey& publicViewKey) = 0;
+  virtual ITransfersSubscription* getSubscription(const account_public_address_t& acc) = 0;
+  virtual std::vector<crypto::hash_t> getViewKeyKnownBlocks(const crypto::public_key_t& publicViewKey) = 0;
 };
 
 }

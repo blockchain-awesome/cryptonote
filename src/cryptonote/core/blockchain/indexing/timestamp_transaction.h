@@ -15,9 +15,9 @@ class TimestampTransactionsIndex
 public:
   TimestampTransactionsIndex() = default;
 
-  bool add(uint64_t timestamp, const crypto::Hash &hash);
-  bool remove(uint64_t timestamp, const crypto::Hash &hash);
-  bool find(uint64_t timestampBegin, uint64_t timestampEnd, uint64_t hashesNumberLimit, std::vector<crypto::Hash> &hashes, uint64_t &hashesNumberWithinTimestamps);
+  bool add(uint64_t timestamp, const crypto::hash_t &hash);
+  bool remove(uint64_t timestamp, const crypto::hash_t &hash);
+  bool find(uint64_t timestampBegin, uint64_t timestampEnd, uint64_t hashesNumberLimit, std::vector<crypto::hash_t> &hashes, uint64_t &hashesNumberWithinTimestamps);
   void clear();
 
   void serialize(ISerializer &s);
@@ -29,6 +29,6 @@ public:
   }
 
 private:
-  std::multimap<uint64_t, crypto::Hash> index;
+  std::multimap<uint64_t, crypto::hash_t> index;
 };
 } // namespace cryptonote

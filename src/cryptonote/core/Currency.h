@@ -103,19 +103,19 @@ public:
 
   // bool isTestnet() const { return m_testnet; }
 
-  const Block& genesisBlock() const { return m_genesisBlock; }
-  const crypto::Hash& genesisBlockHash() const { return m_genesisBlockHash; }
+  const block_t& genesisBlock() const { return m_genesisBlock; }
+  const crypto::hash_t& genesisBlockHash() const { return m_genesisBlockHash; }
 
   bool getBlockReward(size_t medianSize, size_t currentBlockSize, uint64_t alreadyGeneratedCoins, uint64_t fee,
     uint64_t& reward, int64_t& emissionChange) const;
   size_t maxBlockCumulativeSize(uint64_t height) const;
 
   bool constructMinerTx(uint32_t height, size_t medianSize, uint64_t alreadyGeneratedCoins, size_t currentBlockSize,
-    uint64_t fee, const AccountPublicAddress& minerAddress, Transaction& tx,
+    uint64_t fee, const account_public_address_t& minerAddress, transaction_t& tx,
     const BinaryArray& extraNonce = BinaryArray(), size_t maxOuts = 1) const;
 
-  bool isFusionTransaction(const Transaction& transaction) const;
-  bool isFusionTransaction(const Transaction& transaction, size_t size) const;
+  bool isFusionTransaction(const transaction_t& transaction) const;
+  bool isFusionTransaction(const transaction_t& transaction, size_t size) const;
   bool isFusionTransaction(const std::vector<uint64_t>& inputsAmounts, const std::vector<uint64_t>& outputsAmounts, size_t size) const;
   bool isAmountApplicableInFusionTransactionInput(uint64_t amount, uint64_t threshold) const;
   bool isAmountApplicableInFusionTransactionInput(uint64_t amount, uint64_t threshold, uint8_t& amountPowerOfTen) const;
@@ -125,7 +125,7 @@ public:
   bool parseAmount(const std::string& str, uint64_t& amount) const;
 
   difficulty_type nextDifficulty(std::vector<uint64_t> timestamps, std::vector<difficulty_type> cumulativeDifficulties) const;
-  bool checkProofOfWork(const Block& block, difficulty_type currentDiffic, crypto::Hash& proofOfWork) const;
+  bool checkProofOfWork(const block_t& block, difficulty_type currentDiffic, crypto::hash_t& proofOfWork) const;
 
   size_t getApproximateMaximumInputCount(size_t transactionSize, size_t outputCount, size_t mixinCount) const;
 
@@ -182,18 +182,11 @@ private:
 
   coin::StorageFiles m_files;
   std::string m_path;
-  // std::string m_blocksFileName;
-  // std::string m_blocksCacheFileName;
-  // std::string m_blockIndexesFileName;
-  // std::string m_txPoolFileName;
-  // std::string m_blockchinIndicesFileName;
 
   static const std::vector<uint64_t> PRETTY_AMOUNTS;
 
-  // bool m_testnet;
-
-  Block m_genesisBlock;
-  crypto::Hash m_genesisBlockHash;
+  block_t m_genesisBlock;
+  crypto::hash_t m_genesisBlockHash;
 
   Logging::LoggerRef logger;
 
@@ -211,7 +204,7 @@ public:
     return m_currency;
   }
 
-  Transaction generateGenesisTransaction();
+  transaction_t generateGenesisTransaction();
 
   CurrencyBuilder& maxBlockNumber(uint64_t val) { m_currency.m_maxBlockHeight = val; return *this; }
   CurrencyBuilder& maxBlockBlobSize(size_t val) { m_currency.m_maxBlockBlobSize = val; return *this; }

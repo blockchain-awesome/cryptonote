@@ -27,9 +27,9 @@ namespace cryptonote {
     ~miner();
 
     bool init(const MinerConfig& config);
-    bool set_block_template(const Block& bl, const difficulty_type& diffic);
+    bool set_block_template(const block_t& bl, const difficulty_type& diffic);
     bool on_block_chain_update();
-    bool start(const AccountPublicAddress& adr, size_t threads_count);
+    bool start(const account_public_address_t& adr, size_t threads_count);
     uint64_t get_speed();
     void send_stop_signal();
     bool stop();
@@ -37,7 +37,7 @@ namespace cryptonote {
     bool on_idle();
     void on_synchronized();
     //synchronous analog (for fast calls)
-    static bool find_nonce_for_given_block(Block& bl, const difficulty_type& diffic);
+    static bool find_nonce_for_given_block(block_t& bl, const difficulty_type& diffic);
     void pause();
     void resume();
     void do_print_hashrate(bool do_hr);
@@ -60,7 +60,7 @@ namespace cryptonote {
 
     std::atomic<bool> m_stop;
     std::mutex m_template_lock;
-    Block m_template;
+    block_t m_template;
     std::atomic<uint32_t> m_template_no;
     std::atomic<uint32_t> m_starter_nonce;
     difficulty_type m_diffic;
@@ -72,7 +72,7 @@ namespace cryptonote {
     std::list<std::thread> m_threads;
     std::mutex m_threads_lock;
     IMinerHandler& m_handler;
-    AccountPublicAddress m_mine_address;
+    account_public_address_t m_mine_address;
     OnceInInterval m_update_block_template_interval;
     OnceInInterval m_update_merge_hr_interval;
 

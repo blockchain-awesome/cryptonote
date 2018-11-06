@@ -54,7 +54,7 @@ TEST_F(AccountTest, serialize)
 
   StdOutputStream stream(fstream);
   BinaryOutputStreamSerializer s(stream);
-  AccountKeys keys = acc->getAccountKeys();
+  account_keys_t keys = acc->getAccountKeys();
   acc->serialize(s);
   ASSERT_TRUE(sizeof(keys) > 0);
   ASSERT_TRUE(sizeof(keys.address.spendPublicKey) == 32);
@@ -72,7 +72,7 @@ TEST_F(AccountTest, serialize)
   BinaryInputStreamSerializer inS(inStream);
 
   acc1->serialize(inS);
-  AccountKeys keys1 = acc1->getAccountKeys();
-  ASSERT_TRUE(0 == memcmp(&keys, &keys1, sizeof(AccountKeys)));
+  account_keys_t keys1 = acc1->getAccountKeys();
+  ASSERT_TRUE(0 == memcmp(&keys, &keys1, sizeof(account_keys_t)));
 }
 } // namespace

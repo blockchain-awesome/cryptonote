@@ -31,12 +31,12 @@ namespace {
     return a;
   }
 
-  void derivePublicKey(const AccountKeys& reciever, const crypto::PublicKey& srcTxKey, size_t outputIndex, PublicKey& ephemeralKey) {
-    crypto::KeyDerivation derivation;
-    crypto::generate_key_derivation(srcTxKey, reinterpret_cast<const crypto::SecretKey&>(reciever.viewSecretKey), derivation);
+  void derivePublicKey(const account_keys_t& reciever, const crypto::public_key_t& srcTxKey, size_t outputIndex, public_key_t& ephemeralKey) {
+    crypto::key_derivation_t derivation;
+    crypto::generate_key_derivation(srcTxKey, reinterpret_cast<const crypto::secret_key_t&>(reciever.viewSecretKey), derivation);
     crypto::derive_public_key(derivation, outputIndex, 
-      reinterpret_cast<const crypto::PublicKey&>(reciever.address.spendPublicKey), 
-      reinterpret_cast<crypto::PublicKey&>(ephemeralKey));
+      reinterpret_cast<const crypto::public_key_t&>(reciever.address.spendPublicKey), 
+      reinterpret_cast<crypto::public_key_t&>(ephemeralKey));
   }
 
 
@@ -61,24 +61,24 @@ namespace {
       txHash = tx->getTransactionHash();
     }
 
-    TransactionTypes::InputKeyInfo createInputInfo(uint64_t amount) {
-      TransactionTypes::InputKeyInfo info;
+    TransactionTypes::input_key_info_t createInputInfo(uint64_t amount) {
+      TransactionTypes::input_key_info_t info;
 
-      // cryptonote::KeyPair srcTxKeys = cryptonote::generateKeyPair();
-      KeyPair srcTxKeys = Key::generate();
+      // cryptonote::key_pair_t srcTxKeys = cryptonote::generateKeyPair();
+      key_pair_t srcTxKeys = Key::generate();
 
-      PublicKey targetKey;
+      public_key_t targetKey;
 
       derivePublicKey(sender, srcTxKeys.publicKey, 5, targetKey);
 
-      TransactionTypes::GlobalOutput gout = { targetKey, 0 };
+      TransactionTypes::global_output_t gout = { targetKey, 0 };
 
       info.amount = 1000;
       info.outputs.push_back(gout);
 
       info.realOutput.transactionIndex = 0;
       info.realOutput.outputInTransaction = 5;
-      info.realOutput.transactionPublicKey = reinterpret_cast<const PublicKey&>(srcTxKeys.publicKey);
+      info.realOutput.transactionPublicKey = reinterpret_cast<const public_key_t&>(srcTxKeys.publicKey);
 
       return info;
     }
@@ -94,9 +94,9 @@ namespace {
     }
 
 
-    AccountKeys sender;
+    account_keys_t sender;
     std::unique_ptr<ITransaction> tx;
-    Hash txHash;
+    hash_t txHash;
   };
 
 }
@@ -115,14 +115,14 @@ TEST_F(TransactionApi, addAndSignInput) {
   ASSERT_EQ(0, tx->getInputCount());
   ASSERT_EQ(0, tx->getInputTotalAmount());
 
-  TransactionTypes::InputKeyInfo info = createInputInfo(1000);
-  KeyPair ephKeys;
+  TransactionTypes::input_key_info_t info = createInputInfo(1000);
+  key_pair_t ephKeys;
   size_t index = tx->addInput(sender, info, ephKeys);
 
   ASSERT_EQ(0, index);
   ASSERT_EQ(1, tx->getInputCount());
   ASSERT_EQ(1000, tx->getInputTotalAmount());
-  ASSERT_EQ(TransactionTypes::InputType::Key, tx->getInputType(index));
+  ASSERT_EQ(TransactionTypes::input_type_t::Key, tx->getInputType(index));
   ASSERT_EQ(1, tx->getRequiredSignaturesCount(index));
 
   ASSERT_TRUE(tx->validateInputs());
@@ -140,7 +140,7 @@ TEST_F(TransactionApi, addAndSignInput) {
 
 TEST_F(TransactionApi, addAndSignInputMsig) {
 
-  MultisignatureInput inputMsig;
+  multi_signature_input_t inputMsig;
 
   inputMsig.amount = 1000;
   inputMsig.outputIndex = 0;
@@ -151,14 +151,14 @@ TEST_F(TransactionApi, addAndSignInputMsig) {
   ASSERT_EQ(0, index);
   ASSERT_EQ(1, tx->getInputCount());
   ASSERT_EQ(1000, tx->getInputTotalAmount());
-  ASSERT_EQ(TransactionTypes::InputType::Multisignature, tx->getInputType(index));
+  ASSERT_EQ(TransactionTypes::input_type_t::Multisignature, tx->getInputType(index));
   ASSERT_EQ(3, tx->getRequiredSignaturesCount(index));
 
-  KeyPair kp1;
+  key_pair_t kp1;
   crypto::generate_keys(kp1.publicKey, kp1.secretKey );
 
   auto srcTxKey = kp1.publicKey;
-  AccountKeys accounts[] = { generateAccountKeys(), generateAccountKeys(), generateAccountKeys() };
+  account_keys_t accounts[] = { generateAccountKeys(), generateAccountKeys(), generateAccountKeys() };
 
   tx->signInputMultisignature(index, srcTxKey, 0, accounts[0]);
 
@@ -183,7 +183,7 @@ TEST_F(TransactionApi, addOutputKey) {
   ASSERT_EQ(0, index);
   ASSERT_EQ(1, tx->getOutputCount());
   ASSERT_EQ(1000, tx->getOutputTotalAmount());
-  ASSERT_EQ(TransactionTypes::OutputType::Key, tx->getOutputType(index));
+  ASSERT_EQ(TransactionTypes::output_type_t::Key, tx->getOutputType(index));
   EXPECT_NO_FATAL_FAILURE(checkHashChanged());
 }
 
@@ -191,8 +191,8 @@ TEST_F(TransactionApi, addOutputMsig) {
   ASSERT_EQ(0, tx->getOutputCount());
   ASSERT_EQ(0, tx->getOutputTotalAmount());
 
-  AccountKeys accounts[] = { generateAccountKeys(), generateAccountKeys(), generateAccountKeys() };
-  std::vector<AccountPublicAddress> targets;
+  account_keys_t accounts[] = { generateAccountKeys(), generateAccountKeys(), generateAccountKeys() };
+  std::vector<account_public_address_t> targets;
 
   for (size_t i = 0; i < sizeof(accounts)/sizeof(accounts[0]); ++i)
     targets.push_back(accounts[i].address);
@@ -202,7 +202,7 @@ TEST_F(TransactionApi, addOutputMsig) {
   ASSERT_EQ(0, index);
   ASSERT_EQ(1, tx->getOutputCount());
   ASSERT_EQ(1000, tx->getOutputTotalAmount());
-  ASSERT_EQ(TransactionTypes::OutputType::Multisignature, tx->getOutputType(index));
+  ASSERT_EQ(TransactionTypes::output_type_t::Multisignature, tx->getOutputType(index));
   EXPECT_NO_FATAL_FAILURE(checkHashChanged());
 }
 
@@ -213,12 +213,12 @@ TEST_F(TransactionApi, secretKey) {
   auto tx2 = reloadedTx(tx);
   ASSERT_ANY_THROW(tx2->addOutput(1000, sender.address));
   // take secret key from first transaction and add to second (reloaded)
-  SecretKey txSecretKey;
+  secret_key_t txSecretKey;
   ASSERT_TRUE(tx->getTransactionSecretKey(txSecretKey));
   
-  KeyPair kp1;
+  key_pair_t kp1;
   crypto::generate_keys(kp1.publicKey, kp1.secretKey);
-  SecretKey sk = kp1.secretKey;
+  secret_key_t sk = kp1.secretKey;
   ASSERT_ANY_THROW(tx2->setTransactionSecretKey(sk)); // unrelated secret key should not be accepted
   
   tx2->setTransactionSecretKey(txSecretKey);
@@ -238,7 +238,7 @@ TEST_F(TransactionApi, prefixHash) {
 }
 
 TEST_F(TransactionApi, findOutputs) {
-  AccountKeys accounts[] = { generateAccountKeys(), generateAccountKeys(), generateAccountKeys() };
+  account_keys_t accounts[] = { generateAccountKeys(), generateAccountKeys(), generateAccountKeys() };
 
   tx->addOutput(1111, accounts[0].address);
   tx->addOutput(2222, accounts[1].address);
@@ -255,7 +255,7 @@ TEST_F(TransactionApi, findOutputs) {
 }
 
 TEST_F(TransactionApi, setGetPaymentId) {
-  Hash paymentId = crypto::rand<Hash>();
+  hash_t paymentId = crypto::rand<hash_t>();
 
   ASSERT_FALSE(tx->getPaymentId(paymentId));
 
@@ -263,13 +263,13 @@ TEST_F(TransactionApi, setGetPaymentId) {
 
   EXPECT_NO_FATAL_FAILURE(checkHashChanged());
 
-  Hash paymentId2;
+  hash_t paymentId2;
   ASSERT_TRUE(tx->getPaymentId(paymentId2));
   ASSERT_EQ(paymentId, paymentId2);
 
   auto tx2 = reloadedTx(tx);
 
-  Hash paymentId3;
+  hash_t paymentId3;
   ASSERT_TRUE(tx->getPaymentId(paymentId3));
   ASSERT_EQ(paymentId, paymentId3);
 }
@@ -312,9 +312,9 @@ TEST_F(TransactionApi, appendExtra) {
 
 
 TEST_F(TransactionApi, doubleSpendInTransactionKey) {
-  TransactionTypes::InputKeyInfo info = createInputInfo(1000);
+  TransactionTypes::input_key_info_t info = createInputInfo(1000);
 
-  KeyPair ephKeys;
+  key_pair_t ephKeys;
   tx->addInput(sender, info, ephKeys);
   ASSERT_TRUE(tx->validateInputs());
   // now, add the same output again
@@ -323,7 +323,7 @@ TEST_F(TransactionApi, doubleSpendInTransactionKey) {
 }
 
 TEST_F(TransactionApi, doubleSpendInTransactionMultisignature) {
-  MultisignatureInput inputMsig = { 1000, 0, 2 };
+  multi_signature_input_t inputMsig = { 1000, 0, 2 };
 
   tx->addInput(inputMsig);
   ASSERT_TRUE(tx->validateInputs());
@@ -334,14 +334,14 @@ TEST_F(TransactionApi, doubleSpendInTransactionMultisignature) {
 
 TEST_F(TransactionApi, unableToModifySignedTransaction) {
 
-  MultisignatureInput inputMsig;
+  multi_signature_input_t inputMsig;
 
   inputMsig.amount = 1000;
   inputMsig.outputIndex = 0;
   inputMsig.signatureCount = 2;
   auto index = tx->addInput(inputMsig);
 
-  KeyPair kp1;
+  key_pair_t kp1;
   crypto::generate_keys(kp1.publicKey, kp1.secretKey);
 
   auto srcTxKey = kp1.publicKey;
@@ -352,7 +352,7 @@ TEST_F(TransactionApi, unableToModifySignedTransaction) {
   ASSERT_ANY_THROW(tx->addInput(inputMsig));
   ASSERT_ANY_THROW(tx->addOutput(500, sender.address));
 
-  Hash paymentId;
+  hash_t paymentId;
   ASSERT_ANY_THROW(tx->setPaymentId(paymentId));
   ASSERT_ANY_THROW(tx->setExtraNonce(Common::asBinaryArray("smth")));
 

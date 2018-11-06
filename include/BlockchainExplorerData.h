@@ -21,11 +21,11 @@ enum class TransactionRemoveReason : uint8_t
 };
 
 struct TransactionOutputToKeyDetails {
-  crypto::PublicKey txOutKey;
+  crypto::public_key_t txOutKey;
 };
 
 struct TransactionOutputMultisignatureDetails {
-  std::vector<crypto::PublicKey> keys;
+  std::vector<crypto::public_key_t> keys;
   uint32_t requiredSignatures;
 };
 
@@ -39,7 +39,7 @@ struct TransactionOutputDetails {
 };
 
 struct TransactionOutputReferenceDetails {
-  crypto::Hash transactionHash;
+  crypto::hash_t transactionHash;
   size_t number;
 };
 
@@ -49,7 +49,7 @@ struct TransactionInputGenerateDetails {
 
 struct TransactionInputToKeyDetails {
   std::vector<uint32_t> outputIndexes;
-  crypto::KeyImage keyImage;
+  crypto::key_image_t keyImage;
   uint64_t mixin;
   TransactionOutputReferenceDetails output;
 };
@@ -70,13 +70,13 @@ struct TransactionInputDetails {
 
 struct TransactionExtraDetails {
   std::vector<size_t> padding;
-  std::vector<crypto::PublicKey> publicKey; 
+  std::vector<crypto::public_key_t> publicKey; 
   std::vector<std::string> nonce;
   std::vector<uint8_t> raw;
 };
 
-struct TransactionDetails {
-  crypto::Hash hash;
+struct transaction_details_t {
+  crypto::hash_t hash;
   uint64_t size;
   uint64_t fee;
   uint64_t totalInputsAmount;
@@ -84,12 +84,12 @@ struct TransactionDetails {
   uint64_t mixin;
   uint64_t unlockTime;
   uint64_t timestamp;
-  crypto::Hash paymentId;
+  crypto::hash_t paymentId;
   bool inBlockchain;
-  crypto::Hash blockHash;
+  crypto::hash_t blockHash;
   uint32_t blockHeight;
   TransactionExtraDetails extra;
-  std::vector<std::vector<crypto::Signature>> signatures;
+  std::vector<std::vector<crypto::signature_t>> signatures;
   std::vector<TransactionInputDetails> inputs;
   std::vector<TransactionOutputDetails> outputs;
 };
@@ -98,11 +98,11 @@ struct BlockDetails {
   uint8_t majorVersion;
   uint8_t minorVersion;
   uint64_t timestamp;
-  crypto::Hash prevBlockHash;
+  crypto::hash_t prevBlockHash;
   uint32_t nonce;
   bool isOrphaned;
   uint32_t height;
-  crypto::Hash hash;
+  crypto::hash_t hash;
   uint64_t difficulty;
   uint64_t reward;
   uint64_t baseReward;
@@ -113,7 +113,7 @@ struct BlockDetails {
   uint64_t sizeMedian;
   double penalty;
   uint64_t totalFeeAmount;
-  std::vector<TransactionDetails> transactions;
+  std::vector<transaction_details_t> transactions;
 };
 
 }

@@ -87,16 +87,16 @@ namespace {
 
 
 SpentOutputDescriptor::SpentOutputDescriptor() :
-    m_type(TransactionTypes::OutputType::Invalid) {
+    m_type(TransactionTypes::output_type_t::Invalid) {
 }
 
 SpentOutputDescriptor::SpentOutputDescriptor(const TransactionOutputInformationIn& transactionInfo) :
     m_type(transactionInfo.type),
     m_amount(0),
     m_globalOutputIndex(0) {
-  if (m_type == TransactionTypes::OutputType::Key) {
+  if (m_type == TransactionTypes::output_type_t::Key) {
     m_keyImage = &transactionInfo.keyImage;
-  } else if (m_type == TransactionTypes::OutputType::Multisignature) {
+  } else if (m_type == TransactionTypes::output_type_t::Multisignature) {
     m_amount = transactionInfo.amount;
     m_globalOutputIndex = transactionInfo.globalOutputIndex;
   } else {
@@ -104,7 +104,7 @@ SpentOutputDescriptor::SpentOutputDescriptor(const TransactionOutputInformationI
   }
 }
 
-SpentOutputDescriptor::SpentOutputDescriptor(const KeyImage* keyImage) {
+SpentOutputDescriptor::SpentOutputDescriptor(const key_image_t* keyImage) {
   assign(keyImage);
 }
 
@@ -112,25 +112,25 @@ SpentOutputDescriptor::SpentOutputDescriptor(uint64_t amount, uint32_t globalOut
   assign(amount, globalOutputIndex);
 }
 
-void SpentOutputDescriptor::assign(const KeyImage* keyImage) {
-  m_type = TransactionTypes::OutputType::Key;
+void SpentOutputDescriptor::assign(const key_image_t* keyImage) {
+  m_type = TransactionTypes::output_type_t::Key;
   m_keyImage = keyImage;
 }
 
 void SpentOutputDescriptor::assign(uint64_t amount, uint32_t globalOutputIndex) {
-  m_type = TransactionTypes::OutputType::Multisignature;
+  m_type = TransactionTypes::output_type_t::Multisignature;
   m_amount = amount;
   m_globalOutputIndex = globalOutputIndex;
 }
 
 bool SpentOutputDescriptor::isValid() const {
-  return m_type != TransactionTypes::OutputType::Invalid;
+  return m_type != TransactionTypes::output_type_t::Invalid;
 }
 
 bool SpentOutputDescriptor::operator==(const SpentOutputDescriptor& other) const {
-  if (m_type == TransactionTypes::OutputType::Key) {
+  if (m_type == TransactionTypes::output_type_t::Key) {
     return other.m_type == m_type && *other.m_keyImage == *m_keyImage;
-  } else if (m_type == TransactionTypes::OutputType::Multisignature) {
+  } else if (m_type == TransactionTypes::output_type_t::Multisignature) {
     return other.m_type == m_type && other.m_amount == m_amount && other.m_globalOutputIndex == m_globalOutputIndex;
   } else {
     assert(false);
@@ -139,10 +139,10 @@ bool SpentOutputDescriptor::operator==(const SpentOutputDescriptor& other) const
 }
 
 size_t SpentOutputDescriptor::hash() const {
-  if (m_type == TransactionTypes::OutputType::Key) {
+  if (m_type == TransactionTypes::output_type_t::Key) {
     static_assert(sizeof(size_t) < sizeof(*m_keyImage), "sizeof(size_t) < sizeof(*m_keyImage)");
     return *reinterpret_cast<const size_t*>(m_keyImage->data);
-  } else if (m_type == TransactionTypes::OutputType::Multisignature) {
+  } else if (m_type == TransactionTypes::output_type_t::Multisignature) {
     size_t hashValue = boost::hash_value(m_amount);
     boost::hash_combine(hashValue, m_globalOutputIndex);
     return hashValue;
@@ -168,7 +168,7 @@ bool TransfersContainer::addTransaction(const TransactionBlockInfo& block, const
   }
 
   if (m_transactions.count(tx.getTransactionHash()) > 0) {
-    throw std::invalid_argument("Transaction is already added");
+    throw std::invalid_argument("transaction_t is already added");
   }
 
   bool added = addTransactionOutputs(block, tx, transfers);
@@ -242,7 +242,7 @@ bool TransfersContainer::addTransactionOutputs(const TransactionBlockInfo& block
       (void)result; // Disable unused warning
       assert(result.second);
     } else {
-      if (info.type == TransactionTypes::OutputType::Multisignature) {
+      if (info.type == TransactionTypes::output_type_t::Multisignature) {
         SpentOutputDescriptor descriptor(transfer);
         if (m_availableTransfers.get<SpentOutputDescriptorIndex>().count(descriptor) > 0 ||
             m_spentTransfers.get<SpentOutputDescriptorIndex>().count(descriptor) > 0) {
@@ -255,7 +255,7 @@ bool TransfersContainer::addTransactionOutputs(const TransactionBlockInfo& block
       assert(result.second);
     }
 
-    if (info.type == TransactionTypes::OutputType::Key) {
+    if (info.type == TransactionTypes::output_type_t::Key) {
       updateTransfersVisibility(info.keyImage);
     }
 
@@ -274,8 +274,8 @@ bool TransfersContainer::addTransactionInputs(const TransactionBlockInfo& block,
   for (size_t i = 0; i < tx.getInputCount(); ++i) {
     auto inputType = tx.getInputType(i);
 
-    if (inputType == TransactionTypes::InputType::Key) {
-      KeyInput input;
+    if (inputType == TransactionTypes::input_type_t::Key) {
+      key_input_t input;
       tx.getInput(i, input);
 
       SpentOutputDescriptor descriptor(&input.keyImage);
@@ -316,8 +316,8 @@ bool TransfersContainer::addTransactionInputs(const TransactionBlockInfo& block,
       updateTransfersVisibility(input.keyImage);
 
       inputsAdded = true;
-    } else if (inputType == TransactionTypes::InputType::Multisignature) {
-      MultisignatureInput input;
+    } else if (inputType == TransactionTypes::input_type_t::Multisignature) {
+      multi_signature_input_t input;
       tx.getInput(i, input);
 
       auto& outputDescriptorIndex = m_availableTransfers.get<SpentOutputDescriptorIndex>();
@@ -330,14 +330,14 @@ bool TransfersContainer::addTransactionInputs(const TransactionBlockInfo& block,
         inputsAdded = true;
       }
     } else {
-      assert(inputType == TransactionTypes::InputType::Generating);
+      assert(inputType == TransactionTypes::input_type_t::Generating);
     }
   }
 
   return inputsAdded;
 }
 
-bool TransfersContainer::deleteUnconfirmedTransaction(const Hash& transactionHash) {
+bool TransfersContainer::deleteUnconfirmedTransaction(const hash_t& transactionHash) {
   std::unique_lock<std::mutex> lock(m_mutex);
 
   auto it = m_transactions.find(transactionHash);
@@ -352,7 +352,7 @@ bool TransfersContainer::deleteUnconfirmedTransaction(const Hash& transactionHas
   }
 }
 
-bool TransfersContainer::markTransactionConfirmed(const TransactionBlockInfo& block, const Hash& transactionHash,
+bool TransfersContainer::markTransactionConfirmed(const TransactionBlockInfo& block, const hash_t& transactionHash,
                                                   const std::vector<uint32_t>& globalIndices) {
   if (block.height == WALLET_LEGACY_UNCONFIRMED_TRANSACTION_HEIGHT) {
     throw std::invalid_argument("Block height equals WALLET_LEGACY_UNCONFIRMED_TRANSACTION_HEIGHT");
@@ -387,7 +387,7 @@ bool TransfersContainer::markTransactionConfirmed(const TransactionBlockInfo& bl
     transfer.transactionIndex = block.transactionIndex;
     transfer.globalOutputIndex = globalIndices[transfer.outputInTransaction];
 
-    if (transfer.type == TransactionTypes::OutputType::Multisignature) {
+    if (transfer.type == TransactionTypes::output_type_t::Multisignature) {
       SpentOutputDescriptor descriptor(transfer);
       if (m_availableTransfers.get<SpentOutputDescriptorIndex>().count(descriptor) > 0 ||
           m_spentTransfers.get<SpentOutputDescriptorIndex>().count(descriptor) > 0) {
@@ -402,7 +402,7 @@ bool TransfersContainer::markTransactionConfirmed(const TransactionBlockInfo& bl
 
     transferIt = m_unconfirmedTransfers.get<ContainingTransactionIndex>().erase(transferIt);
 
-    if (transfer.type == TransactionTypes::OutputType::Key) {
+    if (transfer.type == TransactionTypes::output_type_t::Key) {
       updateTransfersVisibility(transfer.keyImage);
     }
   }
@@ -423,7 +423,7 @@ bool TransfersContainer::markTransactionConfirmed(const TransactionBlockInfo& bl
 /**
  * \pre m_mutex is locked.
  */
-void TransfersContainer::deleteTransactionTransfers(const Hash& transactionHash) {
+void TransfersContainer::deleteTransactionTransfers(const hash_t& transactionHash) {
   auto& spendingTransactionIndex = m_spentTransfers.get<SpendingTransactionIndex>();
   auto spentTransfersRange = spendingTransactionIndex.equal_range(transactionHash);
   for (auto it = spentTransfersRange.first; it != spentTransfersRange.second;) {
@@ -434,15 +434,15 @@ void TransfersContainer::deleteTransactionTransfers(const Hash& transactionHash)
     assert(result.second);
     it = spendingTransactionIndex.erase(it);
 
-    if (result.first->type == TransactionTypes::OutputType::Key) {
+    if (result.first->type == TransactionTypes::output_type_t::Key) {
       updateTransfersVisibility(result.first->keyImage);
     }
   }
 
   auto unconfirmedTransfersRange = m_unconfirmedTransfers.get<ContainingTransactionIndex>().equal_range(transactionHash);
   for (auto it = unconfirmedTransfersRange.first; it != unconfirmedTransfersRange.second;) {
-    if (it->type == TransactionTypes::OutputType::Key) {
-      KeyImage keyImage = it->keyImage;
+    if (it->type == TransactionTypes::output_type_t::Key) {
+      key_image_t keyImage = it->keyImage;
       it = m_unconfirmedTransfers.get<ContainingTransactionIndex>().erase(it);
       updateTransfersVisibility(keyImage);
     } else {
@@ -453,8 +453,8 @@ void TransfersContainer::deleteTransactionTransfers(const Hash& transactionHash)
   auto& transactionTransfersIndex = m_availableTransfers.get<ContainingTransactionIndex>();
   auto transactionTransfersRange = transactionTransfersIndex.equal_range(transactionHash);
   for (auto it = transactionTransfersRange.first; it != transactionTransfersRange.second;) {
-    if (it->type == TransactionTypes::OutputType::Key) {
-      KeyImage keyImage = it->keyImage;
+    if (it->type == TransactionTypes::output_type_t::Key) {
+      key_image_t keyImage = it->keyImage;
     it = transactionTransfersIndex.erase(it);
       updateTransfersVisibility(keyImage);
     } else {
@@ -481,13 +481,13 @@ void TransfersContainer::copyToSpent(const TransactionBlockInfo& block, const IT
   assert(result.second);
 }
 
-std::vector<Hash> TransfersContainer::detach(uint32_t height) {
+std::vector<hash_t> TransfersContainer::detach(uint32_t height) {
   // This method expects that WALLET_LEGACY_UNCONFIRMED_TRANSACTION_HEIGHT is a big positive number
   assert(height < WALLET_LEGACY_UNCONFIRMED_TRANSACTION_HEIGHT);
 
   std::lock_guard<std::mutex> lk(m_mutex);
 
-  std::vector<Hash> deletedTransactions;
+  std::vector<hash_t> deletedTransactions;
   auto& spendingTransactionIndex = m_spentTransfers.get<SpendingTransactionIndex>();
   auto& blockHeightIndex = m_transactions.get<1>();
   auto it = blockHeightIndex.end();
@@ -536,7 +536,7 @@ namespace {
 /**
  * \pre m_mutex is locked.
  */
-void TransfersContainer::updateTransfersVisibility(const KeyImage& keyImage) {
+void TransfersContainer::updateTransfersVisibility(const key_image_t& keyImage) {
   auto& unconfirmedIndex = m_unconfirmedTransfers.get<SpentOutputDescriptorIndex>();
   auto& availableIndex = m_availableTransfers.get<SpentOutputDescriptorIndex>();
   auto& spentIndex = m_spentTransfers.get<SpentOutputDescriptorIndex>();
@@ -630,7 +630,7 @@ void TransfersContainer::getOutputs(std::vector<TransactionOutputInformation>& t
   }
 }
 
-bool TransfersContainer::getTransactionInformation(const Hash& transactionHash, TransactionInformation& info, uint64_t* amountIn, uint64_t* amountOut) const {
+bool TransfersContainer::getTransactionInformation(const hash_t& transactionHash, TransactionInformation& info, uint64_t* amountIn, uint64_t* amountOut) const {
   std::lock_guard<std::mutex> lk(m_mutex);
   auto it = m_transactions.find(transactionHash);
   if (it == m_transactions.end()) {
@@ -671,7 +671,7 @@ bool TransfersContainer::getTransactionInformation(const Hash& transactionHash, 
   return true;
 }
 
-std::vector<TransactionOutputInformation> TransfersContainer::getTransactionOutputs(const Hash& transactionHash,
+std::vector<TransactionOutputInformation> TransfersContainer::getTransactionOutputs(const hash_t& transactionHash,
                                                                                     uint32_t flags) const {
   std::lock_guard<std::mutex> lk(m_mutex);
 
@@ -706,7 +706,7 @@ std::vector<TransactionOutputInformation> TransfersContainer::getTransactionOutp
   return result;
 }
 
-std::vector<TransactionOutputInformation> TransfersContainer::getTransactionInputs(const Hash& transactionHash, uint32_t flags) const {
+std::vector<TransactionOutputInformation> TransfersContainer::getTransactionInputs(const hash_t& transactionHash, uint32_t flags) const {
   //only type flags are feasible
   assert((flags & IncludeStateAll) == 0);
   flags |= IncludeStateUnlocked;
@@ -724,12 +724,12 @@ std::vector<TransactionOutputInformation> TransfersContainer::getTransactionInpu
   return result;
 }
 
-void TransfersContainer::getUnconfirmedTransactions(std::vector<crypto::Hash>& transactions) const {
+void TransfersContainer::getUnconfirmedTransactions(std::vector<crypto::hash_t>& transactions) const {
   std::lock_guard<std::mutex> lk(m_mutex);
   transactions.clear();
   for (auto& element : m_transactions) {
     if (element.blockHeight == WALLET_LEGACY_UNCONFIRMED_TRANSACTION_HEIGHT) {
-      transactions.push_back(*reinterpret_cast<const crypto::Hash*>(&element.transactionHash));
+      transactions.push_back(*reinterpret_cast<const crypto::hash_t*>(&element.transactionHash));
     }
   }
 }
@@ -828,12 +828,12 @@ bool TransfersContainer::isIncluded(const TransactionOutputInformationEx& info, 
   return isIncluded(info.type, state, flags);
 }
 
-bool TransfersContainer::isIncluded(TransactionTypes::OutputType type, uint32_t state, uint32_t flags) {
+bool TransfersContainer::isIncluded(TransactionTypes::output_type_t type, uint32_t state, uint32_t flags) {
   return
     // filter by type
     (
-    ((flags & IncludeTypeKey) != 0            && type == TransactionTypes::OutputType::Key) ||
-    ((flags & IncludeTypeMultisignature) != 0 && type == TransactionTypes::OutputType::Multisignature)
+    ((flags & IncludeTypeKey) != 0            && type == TransactionTypes::output_type_t::Key) ||
+    ((flags & IncludeTypeMultisignature) != 0 && type == TransactionTypes::output_type_t::Multisignature)
     )
     &&
     // filter by state

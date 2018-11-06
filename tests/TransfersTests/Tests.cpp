@@ -37,7 +37,7 @@ public:
   }
 
   virtual void sendTransactionCompleted(TransactionId transactionId, std::error_code result) override {
-    std::cout << "Transaction sent, result = " << result << std::endl;
+    std::cout << "transaction_t sent, result = " << result << std::endl;
   }
 
   std::atomic<uint64_t> m_actualBalance;
@@ -73,7 +73,7 @@ public:
     return true;
   }
 
-  bool waitForTransaction(const Hash& txHash) {
+  bool waitForTransaction(const hash_t& txHash) {
     std::unique_lock<std::mutex> lk(m_mutex);
     while (!hasTransaction(txHash)) {
       m_cv.wait_for(lk, std::chrono::seconds(1));
@@ -81,14 +81,14 @@ public:
     return true;
   }
 
-  std::error_code onPoolUpdated(const std::vector<std::unique_ptr<ITransactionReader>>& addedTransactions, const std::vector<crypto::Hash>& deletedTransactions) override {
+  std::error_code onPoolUpdated(const std::vector<std::unique_ptr<ITransactionReader>>& addedTransactions, const std::vector<crypto::hash_t>& deletedTransactions) override {
     //stub
     return std::error_code();
   }
 
-  const std::unordered_set<crypto::Hash>& getKnownPoolTxIds() const override {
+  const std::unordered_set<crypto::hash_t>& getKnownPoolTxIds() const override {
     //stub
-    static std::unordered_set<crypto::Hash> empty;
+    static std::unordered_set<crypto::hash_t> empty;
     return empty;
   }
 
@@ -96,7 +96,7 @@ public:
     throw std::runtime_error("Not implemented");
   }
 
-  void removeUnconfirmedTransaction(const crypto::Hash& /*transactionHash*/) override {
+  void removeUnconfirmedTransaction(const crypto::hash_t& /*transactionHash*/) override {
     throw std::runtime_error("Not implemented");
   }
 
@@ -110,7 +110,7 @@ public:
 
 private:
 
-  bool hasTransaction(const Hash& txHash) {
+  bool hasTransaction(const hash_t& txHash) {
     for (const auto& kv : m_transactions) {
       if (kv.second.count(txHash) > 0)
         return true;
@@ -120,13 +120,13 @@ private:
 
   std::mutex m_mutex;
   std::condition_variable m_cv;
-  std::map<uint64_t, std::unordered_set<Hash>> m_transactions;
+  std::map<uint64_t, std::unordered_set<hash_t>> m_transactions;
   SynchronizationStart syncStart;
 };
 
 class TransfersObserver : public ITransfersObserver, public IInterruptable {
 public:
-  virtual void onTransactionUpdated(ITransfersSubscription* object, const Hash& transactionHash) override {
+  virtual void onTransactionUpdated(ITransfersSubscription* object, const hash_t& transactionHash) override {
     {
       std::lock_guard<std::mutex> lk(m_mutex);
       m_transfers.push_back(transactionHash);
@@ -149,7 +149,7 @@ public:
     return true;
   }
 
-  bool waitTransactionTransfer(const Hash& transactionHash) {
+  bool waitTransactionTransfer(const hash_t& transactionHash) {
     std::unique_lock<std::mutex> lk(m_mutex);
 
     while (!m_interrupted) {
@@ -166,7 +166,7 @@ public:
   }
 
 private:
-  bool hasTransaction(const Hash& transactionHash) {
+  bool hasTransaction(const hash_t& transactionHash) {
     return std::find(m_transfers.begin(), m_transfers.end(), transactionHash) != m_transfers.end();
   }
 
@@ -179,7 +179,7 @@ private:
 private:
   std::mutex m_mutex;
   std::condition_variable m_cv;
-  std::vector<Hash> m_transfers;
+  std::vector<hash_t> m_transfers;
   bool m_interrupted = false;
 };
 
@@ -200,7 +200,7 @@ public:
       acc.generate();
 
       AccountSubscription sub;
-      sub.keys = reinterpret_cast<const AccountKeys&>(acc.getAccountKeys());
+      sub.keys = reinterpret_cast<const account_keys_t&>(acc.getAccountKeys());
       sub.syncStart.timestamp = 0;
       sub.syncStart.height = 0;
       sub.transactionSpendableAge = TRANSACTION_SPENDABLE_AGE;
@@ -217,8 +217,8 @@ public:
     }
   }
 
-  std::vector<AccountPublicAddress> getAddresses() {
-    std::vector<AccountPublicAddress> addr;
+  std::vector<account_public_address_t> getAddresses() {
+    std::vector<account_public_address_t> addr;
     for (const auto& acc : m_accounts) {
       addr.push_back(acc.keys.address);
     }
@@ -301,7 +301,7 @@ TEST_F(TransfersTest, base) {
   cryptonote::AccountBase dstAcc;
   dstAcc.generate();
 
-  AccountKeys dstKeys = reinterpret_cast<const AccountKeys&>(dstAcc.getAccountKeys());
+  account_keys_t dstKeys = reinterpret_cast<const account_keys_t&>(dstAcc.getAccountKeys());
 
   BlockchainSynchronizer blockSync(*node2.get(), currency.genesisBlockHash());
   TransfersSyncronizer transferSync(currency, blockSync, *node2.get());
@@ -330,7 +330,7 @@ TEST_F(TransfersTest, base) {
   Interrupter transferObserverInterrupter(transferObserver);
   blockSync.start();
 
-  Hash txId;
+  hash_t txId;
   ASSERT_FALSE(static_cast<bool>(wallet1.sendTransaction(dstAcc.toAddress(), TRANSFER_AMOUNT, txId)));
   ASSERT_TRUE(mineBlocks(*nodeDaemons[0], wallet1.address(), 1));
 
@@ -349,8 +349,8 @@ std::unique_ptr<ITransaction> createTransferToMultisignature(
   ITransfersContainer& tc, // money source
   uint64_t amount,
   uint64_t fee,
-  const AccountKeys& senderKeys,
-  const std::vector<AccountPublicAddress>& recipients,
+  const account_keys_t& senderKeys,
+  const std::vector<account_public_address_t>& recipients,
   uint32_t requiredSignatures) {
 
   std::vector<TransactionOutputInformation> transfers;
@@ -358,16 +358,16 @@ std::unique_ptr<ITransaction> createTransferToMultisignature(
 
   auto tx = createTransaction();
 
-  std::vector<std::pair<TransactionTypes::InputKeyInfo, KeyPair>> inputs;
+  std::vector<std::pair<TransactionTypes::input_key_info_t, key_pair_t>> inputs;
 
   uint64_t foundMoney = 0;
 
   for (const auto& t : transfers) {
-    TransactionTypes::InputKeyInfo info;
+    TransactionTypes::input_key_info_t info;
 
     info.amount = t.amount;
 
-    TransactionTypes::GlobalOutput globalOut;
+    TransactionTypes::global_output_t globalOut;
     globalOut.outputIndex = t.globalOutputIndex;
     globalOut.targetKey = t.outputKey;
     info.outputs.push_back(globalOut);
@@ -376,7 +376,7 @@ std::unique_ptr<ITransaction> createTransferToMultisignature(
     info.realOutput.transactionIndex = 0;
     info.realOutput.transactionPublicKey = t.transactionPublicKey;
 
-    KeyPair kp;
+    key_pair_t kp;
     tx->addInput(senderKeys, info, kp);
 
     inputs.push_back(std::make_pair(info, kp));
@@ -407,7 +407,7 @@ std::unique_ptr<ITransaction> createTransferToMultisignature(
 std::error_code submitTransaction(INode& node, ITransactionReader& tx) {
   auto data = tx.getTransactionData();
 
-  cryptonote::Transaction outTx;
+  cryptonote::transaction_t outTx;
   fromBinaryArray(outTx, data);
 
 
@@ -428,7 +428,7 @@ std::error_code submitTransaction(INode& node, ITransactionReader& tx) {
 
 
 std::unique_ptr<ITransaction> createTransferFromMultisignature(
-  AccountGroup& consilium, const AccountPublicAddress& receiver, const Hash& txHash, uint64_t amount, uint64_t fee) {
+  AccountGroup& consilium, const account_public_address_t& receiver, const hash_t& txHash, uint64_t amount, uint64_t fee) {
 
   auto& tc = consilium.getTransfers(0);
 
@@ -442,7 +442,7 @@ std::unique_ptr<ITransaction> createTransferFromMultisignature(
 
   auto tx = createTransaction();
 
-  MultisignatureInput msigInput;
+  multi_signature_input_t msigInput;
 
   msigInput.amount = out.amount;
   msigInput.outputIndex = out.globalOutputIndex;
@@ -491,7 +491,7 @@ TEST_F(MultisignatureTest, createMulitisignatureTransaction) {
 
   blockSync.start();
 
-  AccountPublicAddress senderAddress;
+  account_public_address_t senderAddress;
   ASSERT_TRUE(Account::parseAddress(sender.m_addresses[0], senderAddress));
   ASSERT_TRUE(mineBlocks(*nodeDaemons[0], senderAddress, 1 + currency.minedMoneyUnlockWindow()));
 
@@ -527,7 +527,7 @@ TEST_F(MultisignatureTest, createMulitisignatureTransaction) {
     LOG_DEBUG("Waiting for transaction to be included in block...");
     txConsumer.waitForTransaction(txHash);
 
-    LOG_DEBUG("Transaction in blockchain, waiting for observers to receive transaction...");
+    LOG_DEBUG("transaction_t in blockchain, waiting for observers to receive transaction...");
 
     uint64_t expectedFundBalance = fundBalance + sendAmount;
 

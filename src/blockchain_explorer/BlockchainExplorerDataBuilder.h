@@ -24,13 +24,13 @@ public:
   BlockchainExplorerDataBuilder& operator=(const BlockchainExplorerDataBuilder&) = delete;
   BlockchainExplorerDataBuilder& operator=(BlockchainExplorerDataBuilder&&) = delete;
 
-  bool fillBlockDetails(const Block& block, BlockDetails& blockDetails);
-  bool fillTransactionDetails(const Transaction &tx, TransactionDetails& txRpcInfo, uint64_t timestamp = 0);
+  bool fillBlockDetails(const block_t& block, BlockDetails& blockDetails);
+  bool fillTransactionDetails(const transaction_t &tx, transaction_details_t& txRpcInfo, uint64_t timestamp = 0);
 
-  static bool getPaymentId(const Transaction& transaction, crypto::Hash& paymentId);
+  static bool getPaymentId(const transaction_t& transaction, crypto::hash_t& paymentId);
 
 private:
-  bool getMixin(const Transaction& transaction, uint64_t& mixin);
+  bool getMixin(const transaction_t& transaction, uint64_t& mixin);
   bool fillTxExtra(const std::vector<uint8_t>& rawExtra, TransactionExtraDetails& extraDetails);
   size_t median(std::vector<size_t>& v);
 

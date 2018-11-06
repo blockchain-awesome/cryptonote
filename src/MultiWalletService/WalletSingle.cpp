@@ -145,7 +145,7 @@ void WalletSingle::removeObserver(IWalletLegacyObserver *observer)
   m_observerManager.remove(observer);
 }
 
-void WalletSingle::initWithKeys(const AccountKeys &accountKeys, const std::string &password)
+void WalletSingle::initWithKeys(const account_keys_t &accountKeys, const std::string &password)
 {
   {
     std::unique_lock<std::mutex> stateLock(m_cacheMutex);
@@ -208,7 +208,7 @@ void WalletSingle::initCompleted(std::error_code code)
 void WalletSingle::initSync()
 {
   AccountSubscription sub;
-  sub.keys = reinterpret_cast<const AccountKeys &>(m_account.getAccountKeys());
+  sub.keys = reinterpret_cast<const account_keys_t &>(m_account.getAccountKeys());
   sub.transactionSpendableAge = 1;
   sub.syncStart.height = 0;
   sub.syncStart.timestamp = m_account.get_createtime() - ACCOUN_CREATE_TIME_ACCURACY;
@@ -484,7 +484,7 @@ void WalletSingle::notifyIfBalanceChanged()
   }
 }
 
-void WalletSingle::getAccountKeys(AccountKeys &keys)
+void WalletSingle::getAccountKeys(account_keys_t &keys)
 {
   if (m_state == NOT_INITIALIZED)
   {

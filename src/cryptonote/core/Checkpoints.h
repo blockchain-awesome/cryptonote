@@ -8,7 +8,7 @@
 #include "crypto/crypto.h"
 #include "crypto/hash.h"
 #include "cryptonote/core/key.h"
-#include "cryptonote/core/serialize.h"
+#include "cryptonote/core/blockchain/serializer/crypto.h"
 #include <logging/LoggerRef.h>
 
 namespace cryptonote
@@ -20,12 +20,12 @@ namespace cryptonote
 
     bool add(uint32_t height, const std::string& hash_str);
     bool isCheckpoint(uint32_t height) const;
-    bool check(uint32_t height, const crypto::Hash& h) const;
-    bool check(uint32_t height, const crypto::Hash& h, bool& is_a_checkpoint) const;
+    bool check(uint32_t height, const crypto::hash_t& h) const;
+    bool check(uint32_t height, const crypto::hash_t& h, bool& is_a_checkpoint) const;
     bool isAllowed(uint32_t blockchain_height, uint32_t block_height) const;
 
   private:
-    std::map<uint32_t, crypto::Hash> m_points;
+    std::map<uint32_t, crypto::hash_t> m_points;
     Logging::LoggerRef logger;
   };
 }

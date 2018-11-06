@@ -275,7 +275,7 @@ public:
     LOG_DEBUG("Wallet2 actual:  " +  m_currency.formatAmount(wallet2->actualBalance()));
     CHECK_AND_ASSERT_MES((tr.amount == w2PendingDiff), false, "STEP 6 ASSERTION 1 FAILED\r\n Transfered amount " +  m_currency.formatAmount(tr.amount) + " doesn't match recieved amount " +  m_currency.formatAmount(w2PendingDiff));
     CHECK_AND_ASSERT_MES((wallet1ActualBeforeTransaction - wallet1PendingAfterTransaction - wallet1ActualAfterTransaction - tr.amount - FEE == 0), false,
-      "STEP 6 ASSERTION 2 FAILED\r\n wallet1 Actual Before Transaction doesn't match wallet1 total After Transaction + Transfered amount + Fee "  
+      "STEP 6 ASSERTION 2 FAILED\r\n wallet1 Actual Before transaction_t doesn't match wallet1 total After transaction_t + Transfered amount + Fee "  
       + m_currency.formatAmount(wallet1ActualBeforeTransaction) + " <> " + m_currency.formatAmount(wallet1PendingAfterTransaction) + " + " + m_currency.formatAmount(wallet1ActualAfterTransaction) + " + " + m_currency.formatAmount(tr.amount) + " + " + m_currency.formatAmount(FEE));
     LOG_TRACE("STEP 6 PASSED");
     LOG_DEBUG("Wallet1 pending: " +  m_currency.formatAmount(wallet1->pendingBalance()));
@@ -298,7 +298,7 @@ public:
     auto w1ActualDiff = wallet1ActualBeforeTransaction - wallet1ActualAfterTransactionAndConfirmation;
     CHECK_AND_ASSERT_MES((tr.amount == w2ActualDiff), false, "STEP 7 FAILED\r\n Transfered amount " +  m_currency.formatAmount(tr.amount) + " doesn't match confirmed recieved amount " +  m_currency.formatAmount(w2ActualDiff));
     CHECK_AND_ASSERT_MES((w1ActualDiff - tr.amount - FEE == 0), false,
-      "STEP 7 FAILED\r\n wallet1 Actual Before Transaction doesn't match wallet1 Actual After Transaction + Transfered amount + Fee "
+      "STEP 7 FAILED\r\n wallet1 Actual Before transaction_t doesn't match wallet1 Actual After transaction_t + Transfered amount + Fee "
       +  m_currency.formatAmount(wallet1ActualBeforeTransaction) + " <> " +  m_currency.formatAmount(wallet1ActualAfterTransactionAndConfirmation) + "+" +  m_currency.formatAmount(tr.amount) + "+" +  m_currency.formatAmount(FEE));
     LOG_TRACE("STEP 7 PASSED");
     LOG_DEBUG("Wallet1 pending: " +  m_currency.formatAmount(wallet1->pendingBalance()));
@@ -587,11 +587,11 @@ public:
     auto wallet1PendingAfterTransaction = wallet1->pendingBalance();
     auto w2PendingDiff = wallet2PendingAfterTransaction - wallet2PendingBeforeTransaction;
     auto w1PendingDiff = wallet1PendingBeforeTransaction - wallet1PendingAfterTransaction;
-    CHECK_AND_ASSERT_MES((txInfo.blockHeight == WALLET_LEGACY_UNCONFIRMED_TRANSACTION_HEIGHT), false, "STEP 5 ASSERTION 1 FAILED\r\n Transaction blockHeight differs unconfirmed_tx_height");
+    CHECK_AND_ASSERT_MES((txInfo.blockHeight == WALLET_LEGACY_UNCONFIRMED_TRANSACTION_HEIGHT), false, "STEP 5 ASSERTION 1 FAILED\r\n transaction_t blockHeight differs unconfirmed_tx_height");
     CHECK_AND_ASSERT_MES((tr.amount == txInfo.totalAmount), false, "STEP 5 ASSERTION 2 FAILED\r\n Transfered amount " + m_currency.formatAmount(tr.amount) + " doesn't match recieved amount from pool transaction " + m_currency.formatAmount(txInfo.totalAmount));
     CHECK_AND_ASSERT_MES((tr.amount == w2PendingDiff), false, "STEP 5 ASSERTION 3 FAILED\r\n Transfered amount " + m_currency.formatAmount(tr.amount) + " doesn't match recieved amount " + m_currency.formatAmount(w2PendingDiff));
     CHECK_AND_ASSERT_MES((w1PendingDiff - tr.amount - FEE == 0), false,
-      "STEP 5 ASSERTION 4 FAILED\r\n wallet1 Pending Before Transaction doesn't match wallet1 Pending After Transaction + Transfered amount + Fee "
+      "STEP 5 ASSERTION 4 FAILED\r\n wallet1 Pending Before transaction_t doesn't match wallet1 Pending After transaction_t + Transfered amount + Fee "
       + m_currency.formatAmount(wallet1PendingBeforeTransaction) + " <> " + m_currency.formatAmount(wallet1PendingAfterTransaction) + "+" + m_currency.formatAmount(tr.amount) + "+" + m_currency.formatAmount(FEE));
 
     LOG_TRACE("STEP 5 PASSED");
@@ -636,7 +636,7 @@ public:
     auto w1ActualDiff = wallet1ActualBeforeTransaction - wallet1ActualAfterTransactionAndConfirmation;
     CHECK_AND_ASSERT_MES((tr.amount == w2ActualDiff), false, "STEP 7 FAILED\r\n Transfered amount " + m_currency.formatAmount(tr.amount) + " doesn't match confirmed recieved amount " + m_currency.formatAmount(w2ActualDiff));
     CHECK_AND_ASSERT_MES((w1ActualDiff - tr.amount - FEE == 0), false,
-      "STEP 7 FAILED\r\n wallet1 Actual Before Transaction doesn't match wallet1 Actual After Transaction + Transfered amount + Fee "
+      "STEP 7 FAILED\r\n wallet1 Actual Before transaction_t doesn't match wallet1 Actual After transaction_t + Transfered amount + Fee "
       + m_currency.formatAmount(wallet1ActualBeforeTransaction) + " <> " + m_currency.formatAmount(wallet1ActualAfterTransactionAndConfirmation) + "+" + m_currency.formatAmount(tr.amount) + "+" + m_currency.formatAmount(FEE));
     LOG_TRACE("STEP 7 PASSED");
     LOG_DEBUG("Wallet1 pending: " + m_currency.formatAmount(wallet1->pendingBalance()));
@@ -735,11 +735,11 @@ public:
     auto wallet1PendingAfterTransaction = wallet1->pendingBalance();
     auto w2PendingDiff = wallet2PendingAfterTransaction - wallet2PendingBeforeTransaction;
     auto w1PendingDiff = wallet1PendingBeforeTransaction - wallet1PendingAfterTransaction;
-    CHECK_AND_ASSERT_MES((txInfo.blockHeight == WALLET_LEGACY_UNCONFIRMED_TRANSACTION_HEIGHT), false, "STEP 5 ASSERTION 1 FAILED\r\n Transaction blockHeight differs unconfirmed_tx_height");
+    CHECK_AND_ASSERT_MES((txInfo.blockHeight == WALLET_LEGACY_UNCONFIRMED_TRANSACTION_HEIGHT), false, "STEP 5 ASSERTION 1 FAILED\r\n transaction_t blockHeight differs unconfirmed_tx_height");
     CHECK_AND_ASSERT_MES((tr.amount == txInfo.totalAmount), false, "STEP 5 ASSERTION 2 FAILED\r\n Transfered amount " + m_currency.formatAmount(tr.amount) + " doesn't match recieved amount from pool transaction " + m_currency.formatAmount(txInfo.totalAmount));
     CHECK_AND_ASSERT_MES((tr.amount == w2PendingDiff), false, "STEP 5 ASSERTION 3 FAILED\r\n Transfered amount " + m_currency.formatAmount(tr.amount) + " doesn't match recieved amount " + m_currency.formatAmount(w2PendingDiff));
     CHECK_AND_ASSERT_MES((w1PendingDiff - tr.amount - FEE == 0), false,
-      "STEP 5 ASSERTION 4 FAILED\r\n wallet1 Pending Before Transaction doesn't match wallet1 Pending After Transaction + Transfered amount + Fee "
+      "STEP 5 ASSERTION 4 FAILED\r\n wallet1 Pending Before transaction_t doesn't match wallet1 Pending After transaction_t + Transfered amount + Fee "
       + m_currency.formatAmount(wallet1PendingBeforeTransaction) + " <> " + m_currency.formatAmount(wallet1PendingAfterTransaction) + "+" + m_currency.formatAmount(tr.amount) + "+" + m_currency.formatAmount(FEE));
 
     LOG_TRACE("STEP 5 PASSED");

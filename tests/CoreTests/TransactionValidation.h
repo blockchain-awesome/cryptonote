@@ -15,7 +15,7 @@ struct get_tx_validation_base : public test_chain_unit_base
     REGISTER_CALLBACK_METHOD(get_tx_validation_base, mark_invalid_block);
   }
 
-  bool check_TxVerificationContext(const cryptonote::TxVerificationContext& tvc, bool tx_added, size_t event_idx, const cryptonote::Transaction& /*tx*/)
+  bool check_tx_verification_context_t(const cryptonote::tx_verification_context_t& tvc, bool tx_added, size_t event_idx, const cryptonote::transaction_t& /*tx*/)
   {
     if (m_invalid_tx_index == event_idx)
       return tvc.m_verifivation_failed;
@@ -23,7 +23,7 @@ struct get_tx_validation_base : public test_chain_unit_base
       return !tvc.m_verifivation_failed && tx_added;
   }
 
-  bool check_BlockVerificationContext(const cryptonote::BlockVerificationContext& bvc, size_t event_idx, const cryptonote::Block& /*block*/)
+  bool check_block_verification_context_t(const cryptonote::block_verification_context_t& bvc, size_t event_idx, const cryptonote::block_t& /*block*/)
   {
     if (m_invalid_block_index == event_idx)
       return bvc.m_verifivation_failed;

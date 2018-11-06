@@ -27,12 +27,12 @@ public:
 
   bool test()
   {
-    cryptonote::KeyPair in_ephemeral;
+    cryptonote::key_pair_t in_ephemeral;
     crypto::derive_secret_key(m_key_derivation, 0, m_spend_secret_key, in_ephemeral.secretKey);
     return true;
   }
 
 private:
-  crypto::KeyDerivation m_key_derivation;
-  crypto::SecretKey m_spend_secret_key;
+  crypto::key_derivation_t m_key_derivation;
+  crypto::secret_key_t m_spend_secret_key;
 };

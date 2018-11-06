@@ -22,12 +22,12 @@ TransactionBuilder& TransactionBuilder::newTxKeys() {
   return *this;
 }
 
-TransactionBuilder& TransactionBuilder::setTxKeys(const cryptonote::KeyPair& txKeys) {
+TransactionBuilder& TransactionBuilder::setTxKeys(const cryptonote::key_pair_t& txKeys) {
   m_txKey = txKeys;
   return *this;
 }
 
-TransactionBuilder& TransactionBuilder::setInput(const std::vector<cryptonote::TransactionSourceEntry>& sources, const cryptonote::AccountKeys& senderKeys) {
+TransactionBuilder& TransactionBuilder::setInput(const std::vector<cryptonote::transaction_source_entry_t>& sources, const cryptonote::account_keys_t& senderKeys) {
   m_sources = sources;
   m_senderKeys = senderKeys;
   return *this;
@@ -38,12 +38,12 @@ TransactionBuilder& TransactionBuilder::addMultisignatureInput(const Multisignat
   return *this;
 }
 
-TransactionBuilder& TransactionBuilder::setOutput(const std::vector<cryptonote::TransactionDestinationEntry>& destinations) {
+TransactionBuilder& TransactionBuilder::setOutput(const std::vector<cryptonote::transaction_destination_entry_t>& destinations) {
   m_destinations = destinations;
   return *this;
 }
 
-TransactionBuilder& TransactionBuilder::addOutput(const cryptonote::TransactionDestinationEntry& dest) {
+TransactionBuilder& TransactionBuilder::addOutput(const cryptonote::transaction_destination_entry_t& dest) {
   m_destinations.push_back(dest);
   return *this;
 }
@@ -61,41 +61,41 @@ TransactionBuilder& TransactionBuilder::addMultisignatureOut(uint64_t amount, co
   return *this;
 }
 
-Transaction TransactionBuilder::build() const {
-  crypto::Hash prefixHash;
+transaction_t TransactionBuilder::build() const {
+  crypto::hash_t prefixHash;
 
-  Transaction tx;
+  transaction_t tx;
   addTransactionPublicKeyToExtra(tx.extra, m_txKey.publicKey);
 
   tx.version = static_cast<uint8_t>(m_version);
   tx.unlockTime = m_unlockTime;
 
-  std::vector<cryptonote::KeyPair> contexts;
+  std::vector<cryptonote::key_pair_t> contexts;
 
   fillInputs(tx, contexts);
   fillOutputs(tx);
 
-  getObjectHash(*static_cast<TransactionPrefix*>(&tx), prefixHash);
+  getObjectHash(*static_cast<transaction_prefix_t*>(&tx), prefixHash);
 
   signSources(prefixHash, contexts, tx);
 
   return tx;
 }
 
-void TransactionBuilder::fillInputs(Transaction& tx, std::vector<cryptonote::KeyPair>& contexts) const {
-  for (const TransactionSourceEntry& src_entr : m_sources) {
-    contexts.push_back(KeyPair());
-    KeyPair& in_ephemeral = contexts.back();
-    crypto::KeyImage img;
+void TransactionBuilder::fillInputs(transaction_t& tx, std::vector<cryptonote::key_pair_t>& contexts) const {
+  for (const transaction_source_entry_t& src_entr : m_sources) {
+    contexts.push_back(key_pair_t());
+    key_pair_t& in_ephemeral = contexts.back();
+    crypto::key_image_t img;
     generate_key_image_helper(m_senderKeys, src_entr.realTransactionPublicKey, src_entr.realOutputIndexInTransaction, in_ephemeral, img);
 
     // put key image into tx input
-    KeyInput input_to_key;
+    key_input_t input_to_key;
     input_to_key.amount = src_entr.amount;
     input_to_key.keyImage = img;
 
     // fill outputs array and use relative offsets
-    for (const TransactionSourceEntry::OutputEntry& out_entry : src_entr.outputs) {
+    for (const transaction_source_entry_t::output_entry_t& out_entry : src_entr.outputs) {
       input_to_key.outputIndexes.push_back(out_entry.first);
     }
 
@@ -108,18 +108,18 @@ void TransactionBuilder::fillInputs(Transaction& tx, std::vector<cryptonote::Key
   }
 }
 
-void TransactionBuilder::fillOutputs(Transaction& tx) const {
+void TransactionBuilder::fillOutputs(transaction_t& tx) const {
   size_t output_index = 0;
   
   for(const auto& dst_entr : m_destinations) {
-    crypto::KeyDerivation derivation;
-    crypto::PublicKey out_eph_public_key;
+    crypto::key_derivation_t derivation;
+    crypto::public_key_t out_eph_public_key;
     crypto::generate_key_derivation(dst_entr.addr.viewPublicKey, m_txKey.secretKey, derivation);
     crypto::derive_public_key(derivation, output_index, dst_entr.addr.spendPublicKey, out_eph_public_key);
 
-    TransactionOutput out;
+    transaction_output_t out;
     out.amount = dst_entr.amount;
-    KeyOutput tk;
+    key_output_t tk;
     tk.key = out_eph_public_key;
     out.target = tk;
     tx.outputs.push_back(out);
@@ -127,14 +127,14 @@ void TransactionBuilder::fillOutputs(Transaction& tx) const {
   }
 
   for (const auto& mdst : m_msigDestinations) {   
-    TransactionOutput out;
-    MultisignatureOutput target;
+    transaction_output_t out;
+    multi_signature_output_t target;
 
     target.requiredSignatureCount = mdst.requiredSignatures;
 
     for (const auto& key : mdst.keys) {
-      crypto::KeyDerivation derivation;
-      crypto::PublicKey ephemeralPublicKey;
+      crypto::key_derivation_t derivation;
+      crypto::public_key_t ephemeralPublicKey;
       crypto::generate_key_derivation(key.address.viewPublicKey, m_txKey.secretKey, derivation);
       crypto::derive_public_key(derivation, output_index, key.address.spendPublicKey, ephemeralPublicKey);
       target.keys.push_back(ephemeralPublicKey);
@@ -147,7 +147,7 @@ void TransactionBuilder::fillOutputs(Transaction& tx) const {
 }
 
 
-void TransactionBuilder::signSources(const crypto::Hash& prefixHash, const std::vector<cryptonote::KeyPair>& contexts, Transaction& tx) const {
+void TransactionBuilder::signSources(const crypto::hash_t& prefixHash, const std::vector<cryptonote::key_pair_t>& contexts, transaction_t& tx) const {
   
   tx.signatures.clear();
 
@@ -155,16 +155,16 @@ void TransactionBuilder::signSources(const crypto::Hash& prefixHash, const std::
 
   // sign TransactionInputToKey sources
   for (const auto& src_entr : m_sources) {
-    std::vector<const crypto::PublicKey*> keys_ptrs;
+    std::vector<const crypto::public_key_t*> keys_ptrs;
 
     for (const auto& o : src_entr.outputs) {
       keys_ptrs.push_back(&o.second);
     }
 
-    tx.signatures.push_back(std::vector<crypto::Signature>());
-    std::vector<crypto::Signature>& sigs = tx.signatures.back();
+    tx.signatures.push_back(std::vector<crypto::signature_t>());
+    std::vector<crypto::signature_t>& sigs = tx.signatures.back();
     sigs.resize(src_entr.outputs.size());
-    generate_ring_signature(prefixHash, boost::get<KeyInput>(tx.inputs[i]).keyImage, keys_ptrs, contexts[i].secretKey, src_entr.realOutput, sigs.data());
+    generate_ring_signature(prefixHash, boost::get<key_input_t>(tx.inputs[i]).keyImage, keys_ptrs, contexts[i].secretKey, src_entr.realOutput, sigs.data());
     i++;
   }
 
@@ -174,15 +174,15 @@ void TransactionBuilder::signSources(const crypto::Hash& prefixHash, const std::
     auto& outsigs = tx.signatures.back();
 
     for (const auto& key : msrc.keys) {
-      crypto::KeyDerivation derivation;
-      crypto::PublicKey ephemeralPublicKey;
-      crypto::SecretKey ephemeralSecretKey;
+      crypto::key_derivation_t derivation;
+      crypto::public_key_t ephemeralPublicKey;
+      crypto::secret_key_t ephemeralSecretKey;
 
       crypto::generate_key_derivation(msrc.srcTxPubKey, key.viewSecretKey, derivation);
       crypto::derive_public_key(derivation, msrc.srcOutputIndex, key.address.spendPublicKey, ephemeralPublicKey);
       crypto::derive_secret_key(derivation, msrc.srcOutputIndex, key.spendSecretKey, ephemeralSecretKey);
 
-      crypto::Signature sig;
+      crypto::signature_t sig;
       crypto::generate_signature(prefixHash, ephemeralPublicKey, ephemeralSecretKey, sig);
       outsigs.push_back(sig);
     }

@@ -180,7 +180,7 @@ bool DaemonCommandsHandler::set_log(const std::vector<std::string>& args)
 //--------------------------------------------------------------------------------
 bool DaemonCommandsHandler::print_block_by_height(uint32_t height)
 {
-  std::list<cryptonote::Block> blocks;
+  std::list<cryptonote::block_t> blocks;
   m_core.get_blocks(height, 1, blocks);
 
   if (1 == blocks.size()) {
@@ -188,7 +188,7 @@ bool DaemonCommandsHandler::print_block_by_height(uint32_t height)
     print_as_json(blocks.front());
   } else {
     uint32_t current_height;
-    crypto::Hash top_id;
+    crypto::hash_t top_id;
     m_core.get_blockchain_top(current_height, top_id);
     std::cout << "block wasn't found. Current block chain height: " << current_height << ", requested: " << height << std::endl;
     return false;
@@ -199,15 +199,15 @@ bool DaemonCommandsHandler::print_block_by_height(uint32_t height)
 //--------------------------------------------------------------------------------
 bool DaemonCommandsHandler::print_block_by_hash(const std::string& arg)
 {
-  crypto::Hash block_hash;
+  crypto::hash_t block_hash;
   if (!parse_hash256(arg, block_hash)) {
     return false;
   }
 
-  std::list<crypto::Hash> block_ids;
+  std::list<crypto::hash_t> block_ids;
   block_ids.push_back(block_hash);
-  std::list<cryptonote::Block> blocks;
-  std::list<crypto::Hash> missed_ids;
+  std::list<cryptonote::block_t> blocks;
+  std::list<crypto::hash_t> missed_ids;
   m_core.get_blocks(block_ids, blocks, missed_ids);
 
   if (1 == blocks.size())
@@ -247,15 +247,15 @@ bool DaemonCommandsHandler::print_tx(const std::vector<std::string>& args)
   }
 
   const std::string &str_hash = args.front();
-  crypto::Hash tx_hash;
+  crypto::hash_t tx_hash;
   if (!parse_hash256(str_hash, tx_hash)) {
     return true;
   }
 
-  std::vector<crypto::Hash> tx_ids;
+  std::vector<crypto::hash_t> tx_ids;
   tx_ids.push_back(tx_hash);
-  std::list<cryptonote::Transaction> txs;
-  std::list<crypto::Hash> missed_ids;
+  std::list<cryptonote::transaction_t> txs;
+  std::list<crypto::hash_t> missed_ids;
   m_core.getTransactions(tx_ids, txs, missed_ids, true);
 
   if (1 == txs.size()) {
@@ -285,7 +285,7 @@ bool DaemonCommandsHandler::start_mining(const std::vector<std::string> &args) {
     return true;
   }
 
-  cryptonote::AccountPublicAddress adr;
+  cryptonote::account_public_address_t adr;
   if (!Account::parseAddress(args.front(), adr)) {
     std::cout << "target account address has wrong format" << std::endl;
     return true;

@@ -26,8 +26,8 @@ class WalletSerializer {
 public:
   WalletSerializer(
     ITransfersObserver& transfersObserver,
-    crypto::PublicKey& viewPublicKey,
-    crypto::SecretKey& viewSecretKey,
+    crypto::public_key_t& viewPublicKey,
+    crypto::secret_key_t& viewSecretKey,
     uint64_t& actualBalance,
     uint64_t& pendingBalance,
     WalletsContainer& walletsContainer,
@@ -92,8 +92,8 @@ private:
   void updateTransfersSign();
 
   ITransfersObserver& m_transfersObserver;
-  crypto::PublicKey& m_viewPublicKey;
-  crypto::SecretKey& m_viewSecretKey;
+  crypto::public_key_t& m_viewPublicKey;
+  crypto::secret_key_t& m_viewSecretKey;
   uint64_t& m_actualBalance;
   uint64_t& m_pendingBalance;
   WalletsContainer& m_walletsContainer;

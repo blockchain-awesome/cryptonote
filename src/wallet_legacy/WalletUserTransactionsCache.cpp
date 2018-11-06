@@ -77,7 +77,7 @@ TransactionId WalletUserTransactionsCache::addNewTransaction(
 }
 
 void WalletUserTransactionsCache::updateTransaction(
-  TransactionId transactionId, const cryptonote::Transaction& tx, uint64_t amount, const std::list<TransactionOutputInformation>& usedOutputs) {
+  TransactionId transactionId, const cryptonote::transaction_t& tx, uint64_t amount, const std::list<TransactionOutputInformation>& usedOutputs) {
   // update extra field from created transaction
   auto& txInfo = m_transactions.at(transactionId);
   txInfo.extra.assign(tx.extra.begin(), tx.extra.end());
@@ -138,7 +138,7 @@ std::shared_ptr<WalletLegacyEvent> WalletUserTransactionsCache::onTransactionUpd
   return event;
 }
 
-std::shared_ptr<WalletLegacyEvent> WalletUserTransactionsCache::onTransactionDeleted(const Hash& transactionHash) {
+std::shared_ptr<WalletLegacyEvent> WalletUserTransactionsCache::onTransactionDeleted(const hash_t& transactionHash) {
   TransactionId id = cryptonote::WALLET_LEGACY_INVALID_TRANSACTION_ID;
   if (m_unconfirmedTransactions.findTransactionId(transactionHash, id)) {
     m_unconfirmedTransactions.erase(transactionHash);
@@ -157,7 +157,7 @@ std::shared_ptr<WalletLegacyEvent> WalletUserTransactionsCache::onTransactionDel
 
     event = std::make_shared<WalletTransactionUpdatedEvent>(id);
   } else {
-    // LOG_ERROR("Transaction wasn't found: " << transactionHash);
+    // LOG_ERROR("transaction_t wasn't found: " << transactionHash);
     assert(false);
   }
 
@@ -203,12 +203,12 @@ bool WalletUserTransactionsCache::getTransfer(TransferId transferId, WalletLegac
   return true;
 }
 
-TransactionId WalletUserTransactionsCache::insertTransaction(WalletLegacyTransaction&& Transaction) {
-  m_transactions.emplace_back(std::move(Transaction));
+TransactionId WalletUserTransactionsCache::insertTransaction(WalletLegacyTransaction&& transaction_t) {
+  m_transactions.emplace_back(std::move(transaction_t));
   return m_transactions.size() - 1;
 }
 
-TransactionId WalletUserTransactionsCache::findTransactionByHash(const Hash& hash) {
+TransactionId WalletUserTransactionsCache::findTransactionByHash(const hash_t& hash) {
   auto it = std::find_if(m_transactions.begin(), m_transactions.end(), [&hash](const WalletLegacyTransaction& tx) { return tx.hash == hash; });
 
   if (it == m_transactions.end())

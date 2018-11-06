@@ -49,7 +49,7 @@ bool INodeDummyStub::removeObserver(INodeObserver* observer) {
   return observerManager.remove(observer);
 }
 
-void INodeTrivialRefreshStub::getNewBlocks(std::vector<crypto::Hash>&& knownBlockIds, std::vector<block_complete_entry>& newBlocks, uint32_t& startHeight, const Callback& callback)
+void INodeTrivialRefreshStub::getNewBlocks(std::vector<crypto::hash_t>&& knownBlockIds, std::vector<block_complete_entry>& newBlocks, uint32_t& startHeight, const Callback& callback)
 {
   m_asyncCounter.addAsyncContext();
 
@@ -66,17 +66,17 @@ void INodeTrivialRefreshStub::waitForAsyncContexts() {
   m_asyncCounter.waitAsyncContextsFinish();
 }
 
-void INodeTrivialRefreshStub::doGetNewBlocks(std::vector<crypto::Hash> knownBlockIds, std::vector<block_complete_entry>& newBlocks,
-        uint32_t& startHeight, std::vector<Block> blockchain, const Callback& callback)
+void INodeTrivialRefreshStub::doGetNewBlocks(std::vector<crypto::hash_t> knownBlockIds, std::vector<block_complete_entry>& newBlocks,
+        uint32_t& startHeight, std::vector<block_t> blockchain, const Callback& callback)
 {
   ContextCounterHolder counterHolder(m_asyncCounter);
   std::unique_lock<std::mutex> lock(m_walletLock);
 
-  std::vector<Block>::iterator start = blockchain.end();
+  std::vector<block_t>::iterator start = blockchain.end();
 
   for (const auto& id : knownBlockIds) {
     start = std::find_if(blockchain.begin(), blockchain.end(), 
-      [&id](Block& block) { return get_block_hash(block) == id; });
+      [&id](block_t& block) { return get_block_hash(block) == id; });
     if (start != blockchain.end())
       break;
   }
@@ -97,7 +97,7 @@ void INodeTrivialRefreshStub::doGetNewBlocks(std::vector<crypto::Hash> knownBloc
 
     for (auto hash : blockchain[m_lastHeight].transactionHashes)
     {
-      Transaction tx;
+      transaction_t tx;
       if (!m_blockchainGenerator.getTransactionByHash(hash, tx))
         continue;
 
@@ -118,7 +118,7 @@ void INodeTrivialRefreshStub::doGetNewBlocks(std::vector<crypto::Hash> knownBloc
   callback(std::error_code());
 }
 
-void INodeTrivialRefreshStub::getTransactionOutsGlobalIndices(const crypto::Hash& transactionHash, std::vector<uint32_t>& outsGlobalIndices, const Callback& callback)
+void INodeTrivialRefreshStub::getTransactionOutsGlobalIndices(const crypto::hash_t& transactionHash, std::vector<uint32_t>& outsGlobalIndices, const Callback& callback)
 {
   m_asyncCounter.addAsyncContext();
   std::unique_lock<std::mutex> lock(m_walletLock);
@@ -127,7 +127,7 @@ void INodeTrivialRefreshStub::getTransactionOutsGlobalIndices(const crypto::Hash
   task.detach();
 }
 
-void INodeTrivialRefreshStub::doGetTransactionOutsGlobalIndices(const crypto::Hash& transactionHash, std::vector<uint32_t>& outsGlobalIndices, const Callback& callback) {
+void INodeTrivialRefreshStub::doGetTransactionOutsGlobalIndices(const crypto::hash_t& transactionHash, std::vector<uint32_t>& outsGlobalIndices, const Callback& callback) {
   ContextCounterHolder counterHolder(m_asyncCounter);
   std::unique_lock<std::mutex> lock(m_walletLock);
 
@@ -149,14 +149,14 @@ void INodeTrivialRefreshStub::doGetTransactionOutsGlobalIndices(const crypto::Ha
   }
 }
 
-void INodeTrivialRefreshStub::relayTransaction(const Transaction& transaction, const Callback& callback)
+void INodeTrivialRefreshStub::relayTransaction(const transaction_t& transaction, const Callback& callback)
 {
   m_asyncCounter.addAsyncContext();
   std::thread task(&INodeTrivialRefreshStub::doRelayTransaction, this, transaction, callback);
   task.detach();
 }
 
-void INodeTrivialRefreshStub::doRelayTransaction(const Transaction& transaction, const Callback& callback)
+void INodeTrivialRefreshStub::doRelayTransaction(const transaction_t& transaction, const Callback& callback)
 {
   ContextCounterHolder counterHolder(m_asyncCounter);
   std::unique_lock<std::mutex> lock(m_walletLock);
@@ -205,8 +205,8 @@ void INodeTrivialRefreshStub::doGetRandomOutsByAmounts(std::vector<uint64_t> amo
 
     for (uint32_t i = 0; i < count; ++i)
     {
-      crypto::PublicKey key;
-      crypto::SecretKey sk;
+      crypto::public_key_t key;
+      crypto::secret_key_t sk;
       generate_keys(key, sk);
 
       COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS::out_entry e;
@@ -223,7 +223,7 @@ void INodeTrivialRefreshStub::doGetRandomOutsByAmounts(std::vector<uint64_t> amo
   callback(std::error_code());
 }
 
-void INodeTrivialRefreshStub::queryBlocks(std::vector<crypto::Hash>&& knownBlockIds, uint64_t timestamp,
+void INodeTrivialRefreshStub::queryBlocks(std::vector<crypto::hash_t>&& knownBlockIds, uint64_t timestamp,
         std::vector<BlockShortEntry>& newBlocks, uint32_t& startHeight, const Callback& callback) {
   auto resultHolder = std::make_shared<std::vector<block_complete_entry>>();
 
@@ -246,7 +246,7 @@ void INodeTrivialRefreshStub::queryBlocks(std::vector<crypto::Hash>&& knownBlock
       entry.blockHash = get_block_hash(entry.block);
 
       for (const auto& txBlob: item.txs) {
-        Transaction tx;
+        transaction_t tx;
         if (!fromBinaryArray(tx, asBinaryArray(txBlob))) {
           callback(std::make_error_code(std::errc::invalid_argument));
           return;
@@ -286,8 +286,8 @@ void INodeTrivialRefreshStub::cleanTransactionPool() {
   m_blockchainGenerator.clearTxPool();
 }
 
-void INodeTrivialRefreshStub::getPoolSymmetricDifference(std::vector<crypto::Hash>&& known_pool_tx_ids, crypto::Hash known_block_id, bool& is_bc_actual,
-        std::vector<std::unique_ptr<ITransactionReader>>& new_txs, std::vector<crypto::Hash>& deleted_tx_ids, const Callback& callback)
+void INodeTrivialRefreshStub::getPoolSymmetricDifference(std::vector<crypto::hash_t>&& known_pool_tx_ids, crypto::hash_t known_block_id, bool& is_bc_actual,
+        std::vector<std::unique_ptr<ITransactionReader>>& new_txs, std::vector<crypto::hash_t>& deleted_tx_ids, const Callback& callback)
 {
   m_asyncCounter.addAsyncContext();
   std::thread task(
@@ -298,13 +298,13 @@ void INodeTrivialRefreshStub::getPoolSymmetricDifference(std::vector<crypto::Has
   task.detach();
 }
 
-void INodeTrivialRefreshStub::doGetPoolSymmetricDifference(std::vector<crypto::Hash>&& known_pool_tx_ids, crypto::Hash known_block_id, bool& is_bc_actual,
-        std::vector<std::unique_ptr<ITransactionReader>>& new_txs, std::vector<crypto::Hash>& deleted_tx_ids, const Callback& callback)
+void INodeTrivialRefreshStub::doGetPoolSymmetricDifference(std::vector<crypto::hash_t>&& known_pool_tx_ids, crypto::hash_t known_block_id, bool& is_bc_actual,
+        std::vector<std::unique_ptr<ITransactionReader>>& new_txs, std::vector<crypto::hash_t>& deleted_tx_ids, const Callback& callback)
 {
   ContextCounterHolder counterHolder(m_asyncCounter);
   std::unique_lock<std::mutex> lock(m_walletLock);
 
-  std::vector<Transaction> txs;
+  std::vector<transaction_t> txs;
   m_blockchainGenerator.getPoolSymmetricDifference(std::move(known_pool_tx_ids), known_block_id, is_bc_actual, txs, deleted_tx_ids);
   lock.unlock();
 
@@ -368,7 +368,7 @@ void INodeTrivialRefreshStub::doGetBlocks(const std::vector<uint32_t>& blockHeig
     BlockDetails b = BlockDetails();
     b.height = height;
     b.isOrphaned = false;
-    crypto::Hash hash = get_block_hash(m_blockchainGenerator.getBlockchain()[height]);
+    crypto::hash_t hash = get_block_hash(m_blockchainGenerator.getBlockchain()[height]);
     b.hash = hash;
     if (!m_blockchainGenerator.getGeneratedTransactionsNumber(height, b.alreadyGeneratedTransactions)) {
       callback(std::error_code(EDOM, std::generic_category()));
@@ -383,14 +383,14 @@ void INodeTrivialRefreshStub::doGetBlocks(const std::vector<uint32_t>& blockHeig
   callback(std::error_code());
 }
 
-void INodeTrivialRefreshStub::getBlocks(const std::vector<crypto::Hash>& blockHashes, std::vector<BlockDetails>& blocks, const Callback& callback) {
+void INodeTrivialRefreshStub::getBlocks(const std::vector<crypto::hash_t>& blockHashes, std::vector<BlockDetails>& blocks, const Callback& callback) {
   m_asyncCounter.addAsyncContext();
 
   std::thread task(
     std::bind(
       static_cast<
         void(INodeTrivialRefreshStub::*)(
-          const std::vector<crypto::Hash>&, 
+          const std::vector<crypto::hash_t>&, 
           std::vector<BlockDetails>&, 
           const Callback&
         )
@@ -404,15 +404,15 @@ void INodeTrivialRefreshStub::getBlocks(const std::vector<crypto::Hash>& blockHa
   task.detach();
 }
 
-void INodeTrivialRefreshStub::doGetBlocks(const std::vector<crypto::Hash>& blockHashes, std::vector<BlockDetails>& blocks, const Callback& callback) {
+void INodeTrivialRefreshStub::doGetBlocks(const std::vector<crypto::hash_t>& blockHashes, std::vector<BlockDetails>& blocks, const Callback& callback) {
   ContextCounterHolder counterHolder(m_asyncCounter);
   std::unique_lock<std::mutex> lock(m_walletLock);
 
-  for (const crypto::Hash& hash: blockHashes) {
+  for (const crypto::hash_t& hash: blockHashes) {
     auto iter = std::find_if(
         m_blockchainGenerator.getBlockchain().begin(), 
         m_blockchainGenerator.getBlockchain().end(), 
-        [&hash](const Block& block) -> bool {
+        [&hash](const block_t& block) -> bool {
           return hash == get_block_hash(block);
         }
     );
@@ -422,7 +422,7 @@ void INodeTrivialRefreshStub::doGetBlocks(const std::vector<crypto::Hash>& block
       return;
     }
     BlockDetails b = BlockDetails();
-    crypto::Hash actualHash = get_block_hash(*iter);
+    crypto::hash_t actualHash = get_block_hash(*iter);
     b.hash = actualHash;
     b.isOrphaned = false;
     blocks.push_back(b);
@@ -463,17 +463,17 @@ void INodeTrivialRefreshStub::doGetBlocks(uint64_t timestampBegin, uint64_t time
   ContextCounterHolder counterHolder(m_asyncCounter);
   std::unique_lock<std::mutex> lock(m_walletLock);
 
-  std::vector<crypto::Hash> blockHashes;
+  std::vector<crypto::hash_t> blockHashes;
   if (!m_blockchainGenerator.getBlockIdsByTimestamp(timestampBegin, timestampEnd, blocksNumberLimit, blockHashes, blocksNumberWithinTimestamps)) {
     callback(std::error_code(EDOM, std::generic_category()));
     return;
   }
 
-  for (const crypto::Hash& hash: blockHashes) {
+  for (const crypto::hash_t& hash: blockHashes) {
     auto iter = std::find_if(
         m_blockchainGenerator.getBlockchain().begin(), 
         m_blockchainGenerator.getBlockchain().end(), 
-        [&hash](const Block& block) -> bool {
+        [&hash](const block_t& block) -> bool {
           return hash == get_block_hash(block);
         }
     );
@@ -482,7 +482,7 @@ void INodeTrivialRefreshStub::doGetBlocks(uint64_t timestampBegin, uint64_t time
       return;
     }
     BlockDetails b = BlockDetails();
-    crypto::Hash actualHash = get_block_hash(*iter);
+    crypto::hash_t actualHash = get_block_hash(*iter);
     b.hash = actualHash;
     b.isOrphaned = false;
     b.timestamp = iter->timestamp;
@@ -492,15 +492,15 @@ void INodeTrivialRefreshStub::doGetBlocks(uint64_t timestampBegin, uint64_t time
   callback(std::error_code());
 }
 
-void INodeTrivialRefreshStub::getTransactions(const std::vector<crypto::Hash>& transactionHashes, std::vector<TransactionDetails>& transactions, const Callback& callback) {
+void INodeTrivialRefreshStub::getTransactions(const std::vector<crypto::hash_t>& transactionHashes, std::vector<transaction_details_t>& transactions, const Callback& callback) {
   m_asyncCounter.addAsyncContext();
 
   std::thread task(
     std::bind(
       static_cast<
         void(INodeTrivialRefreshStub::*)(
-          const std::vector<crypto::Hash>&, 
-          std::vector<TransactionDetails>&, 
+          const std::vector<crypto::hash_t>&, 
+          std::vector<transaction_details_t>&, 
           const Callback&
         )
       >(&INodeTrivialRefreshStub::doGetTransactions),
@@ -513,19 +513,19 @@ void INodeTrivialRefreshStub::getTransactions(const std::vector<crypto::Hash>& t
   task.detach();
 }
 
-void INodeTrivialRefreshStub::doGetTransactions(const std::vector<crypto::Hash>& transactionHashes, std::vector<TransactionDetails>& transactions, const Callback& callback) {
+void INodeTrivialRefreshStub::doGetTransactions(const std::vector<crypto::hash_t>& transactionHashes, std::vector<transaction_details_t>& transactions, const Callback& callback) {
   ContextCounterHolder counterHolder(m_asyncCounter);
   std::unique_lock<std::mutex> lock(m_walletLock);
 
-  for (const crypto::Hash& hash : transactionHashes) {
-    Transaction tx;
-    TransactionDetails txDetails = TransactionDetails();
+  for (const crypto::hash_t& hash : transactionHashes) {
+    transaction_t tx;
+    transaction_details_t txDetails = transaction_details_t();
     if (m_blockchainGenerator.getTransactionByHash(hash, tx, false)) {
-      crypto::Hash actualHash = getObjectHash(tx);
+      crypto::hash_t actualHash = getObjectHash(tx);
       txDetails.hash = actualHash;
       txDetails.inBlockchain = true;
     } else if (m_blockchainGenerator.getTransactionByHash(hash, tx, true)) {
-      crypto::Hash actualHash = getObjectHash(tx);
+      crypto::hash_t actualHash = getObjectHash(tx);
       txDetails.hash = actualHash;
       txDetails.inBlockchain = false;
     } else {
@@ -541,7 +541,7 @@ void INodeTrivialRefreshStub::doGetTransactions(const std::vector<crypto::Hash>&
   callback(std::error_code());
 }
 
-void INodeTrivialRefreshStub::getPoolTransactions(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t transactionsNumberLimit, std::vector<TransactionDetails>& transactions, uint64_t& transactionsNumberWithinTimestamps, const Callback& callback) {
+void INodeTrivialRefreshStub::getPoolTransactions(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t transactionsNumberLimit, std::vector<transaction_details_t>& transactions, uint64_t& transactionsNumberWithinTimestamps, const Callback& callback) {
   m_asyncCounter.addAsyncContext();
 
   std::thread task(
@@ -559,25 +559,25 @@ void INodeTrivialRefreshStub::getPoolTransactions(uint64_t timestampBegin, uint6
   task.detach();
 }
 
-void INodeTrivialRefreshStub::doGetPoolTransactions(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t transactionsNumberLimit, std::vector<TransactionDetails>& transactions, uint64_t& transactionsNumberWithinTimestamps, const Callback& callback) {
+void INodeTrivialRefreshStub::doGetPoolTransactions(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t transactionsNumberLimit, std::vector<transaction_details_t>& transactions, uint64_t& transactionsNumberWithinTimestamps, const Callback& callback) {
   ContextCounterHolder counterHolder(m_asyncCounter);
   std::unique_lock<std::mutex> lock(m_walletLock);
 
-  std::vector<crypto::Hash> transactionHashes;
+  std::vector<crypto::hash_t> transactionHashes;
   if (!m_blockchainGenerator.getPoolTransactionIdsByTimestamp(timestampBegin, timestampEnd, transactionsNumberLimit, transactionHashes, transactionsNumberWithinTimestamps)) {
     callback(std::error_code(EDOM, std::generic_category()));
     return;
   }
 
-  for (const crypto::Hash& hash : transactionHashes) {
-    Transaction tx;
-    TransactionDetails txDetails = TransactionDetails();
+  for (const crypto::hash_t& hash : transactionHashes) {
+    transaction_t tx;
+    transaction_details_t txDetails = transaction_details_t();
     if (m_blockchainGenerator.getTransactionByHash(hash, tx, false)) {
-      crypto::Hash actualHash = getObjectHash(tx);
+      crypto::hash_t actualHash = getObjectHash(tx);
       txDetails.hash = actualHash;
       txDetails.inBlockchain = true;
     } else if (m_blockchainGenerator.getTransactionByHash(hash, tx, true)) {
-      crypto::Hash actualHash = getObjectHash(tx);
+      crypto::hash_t actualHash = getObjectHash(tx);
       txDetails.hash = actualHash;
       txDetails.inBlockchain = false;
     } else {
@@ -591,7 +591,7 @@ void INodeTrivialRefreshStub::doGetPoolTransactions(uint64_t timestampBegin, uin
   callback(std::error_code());
 }
 
-void INodeTrivialRefreshStub::getTransactionsByPaymentId(const crypto::Hash& paymentId, std::vector<TransactionDetails>& transactions, const Callback& callback) {
+void INodeTrivialRefreshStub::getTransactionsByPaymentId(const crypto::hash_t& paymentId, std::vector<transaction_details_t>& transactions, const Callback& callback) {
   m_asyncCounter.addAsyncContext();
 
   std::thread task(
@@ -606,31 +606,31 @@ void INodeTrivialRefreshStub::getTransactionsByPaymentId(const crypto::Hash& pay
   task.detach();
 }
 
-void INodeTrivialRefreshStub::doGetTransactionsByPaymentId(const crypto::Hash& paymentId, std::vector<TransactionDetails>& transactions, const Callback& callback) {
+void INodeTrivialRefreshStub::doGetTransactionsByPaymentId(const crypto::hash_t& paymentId, std::vector<transaction_details_t>& transactions, const Callback& callback) {
   ContextCounterHolder counterHolder(m_asyncCounter);
   std::unique_lock<std::mutex> lock(m_walletLock);
 
-  std::vector<crypto::Hash> transactionHashes;
+  std::vector<crypto::hash_t> transactionHashes;
   if (!m_blockchainGenerator.getTransactionIdsByPaymentId(paymentId, transactionHashes)) {
     callback(std::error_code(EDOM, std::generic_category()));
     return;
   }
 
-  for (const crypto::Hash& hash : transactionHashes) {
-    Transaction tx;
-    TransactionDetails txDetails = TransactionDetails();
+  for (const crypto::hash_t& hash : transactionHashes) {
+    transaction_t tx;
+    transaction_details_t txDetails = transaction_details_t();
     if (m_blockchainGenerator.getTransactionByHash(hash, tx, false)) {
-      crypto::Hash actualHash = getObjectHash(tx);
+      crypto::hash_t actualHash = getObjectHash(tx);
       txDetails.hash = actualHash;
       txDetails.inBlockchain = true;
-      crypto::Hash paymentId;
+      crypto::hash_t paymentId;
       BlockchainExplorerDataBuilder::getPaymentId(tx, paymentId);
       txDetails.paymentId = paymentId;
     } else if (m_blockchainGenerator.getTransactionByHash(hash, tx, true)) {
-      crypto::Hash actualHash = getObjectHash(tx);
+      crypto::hash_t actualHash = getObjectHash(tx);
       txDetails.hash =actualHash;
       txDetails.inBlockchain = false;
-      crypto::Hash paymentId;
+      crypto::hash_t paymentId;
       BlockchainExplorerDataBuilder::getPaymentId(tx, paymentId);
       txDetails.paymentId = paymentId;
     } else {
@@ -665,14 +665,14 @@ void INodeTrivialRefreshStub::sendLocalBlockchainUpdated(){
   observerManager.notify(&INodeObserver::localBlockchainUpdated, getLastLocalBlockHeight());
 }
 
-void INodeTrivialRefreshStub::getMultisignatureOutputByGlobalIndex(uint64_t amount, uint32_t gindex, cryptonote::MultisignatureOutput& out, const Callback& callback) {
+void INodeTrivialRefreshStub::getMultisignatureOutputByGlobalIndex(uint64_t amount, uint32_t gindex, cryptonote::multi_signature_output_t& out, const Callback& callback) {
   m_asyncCounter.addAsyncContext();
   std::unique_lock<std::mutex> lock(m_walletLock);
   std::thread task(&INodeTrivialRefreshStub::doGetOutByMSigGIndex, this, amount, gindex, std::ref(out), callback);
   task.detach();
 }
 
-void INodeTrivialRefreshStub::doGetOutByMSigGIndex(uint64_t amount, uint32_t gindex, cryptonote::MultisignatureOutput& out, const Callback& callback) {
+void INodeTrivialRefreshStub::doGetOutByMSigGIndex(uint64_t amount, uint32_t gindex, cryptonote::multi_signature_output_t& out, const Callback& callback) {
   ContextCounterHolder counterHolder(m_asyncCounter);
   std::unique_lock<std::mutex> lock(m_walletLock);
 

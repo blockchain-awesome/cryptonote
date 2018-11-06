@@ -20,13 +20,13 @@ core(core),
 protocol(protocol) {
 }
 
-bool BlockchainExplorerDataBuilder::getMixin(const Transaction& transaction, uint64_t& mixin) {
+bool BlockchainExplorerDataBuilder::getMixin(const transaction_t& transaction, uint64_t& mixin) {
   mixin = 0;
-  for (const TransactionInput& txin : transaction.inputs) {
-    if (txin.type() != typeid(KeyInput)) {
+  for (const transaction_input_t& txin : transaction.inputs) {
+    if (txin.type() != typeid(key_input_t)) {
       continue;
     }
-    uint64_t currentMixin = boost::get<KeyInput>(txin).outputIndexes.size();
+    uint64_t currentMixin = boost::get<key_input_t>(txin).outputIndexes.size();
     if (currentMixin > mixin) {
       mixin = currentMixin;
     }
@@ -34,7 +34,7 @@ bool BlockchainExplorerDataBuilder::getMixin(const Transaction& transaction, uin
   return true;
 }
 
-bool BlockchainExplorerDataBuilder::getPaymentId(const Transaction& transaction, crypto::Hash& paymentId) {
+bool BlockchainExplorerDataBuilder::getPaymentId(const transaction_t& transaction, crypto::hash_t& paymentId) {
   std::vector<TransactionExtraField> txExtraFields;
   parseTransactionExtra(transaction.extra, txExtraFields);
   TransactionExtraNonce extraNonce;
@@ -77,8 +77,8 @@ size_t BlockchainExplorerDataBuilder::median(std::vector<size_t>& v) {
 
 }
 
-bool BlockchainExplorerDataBuilder::fillBlockDetails(const Block &block, BlockDetails& blockDetails) {
-  crypto::Hash hash = get_block_hash(block);
+bool BlockchainExplorerDataBuilder::fillBlockDetails(const block_t&block, BlockDetails& blockDetails) {
+  crypto::hash_t hash = get_block_hash(block);
 
   blockDetails.majorVersion = block.majorVersion;
   blockDetails.minorVersion = block.minorVersion;
@@ -88,15 +88,15 @@ bool BlockchainExplorerDataBuilder::fillBlockDetails(const Block &block, BlockDe
   blockDetails.hash = hash;
 
   blockDetails.reward = 0;
-  for (const TransactionOutput& out : block.baseTransaction.outputs) {
+  for (const transaction_output_t& out : block.baseTransaction.outputs) {
     blockDetails.reward += out.amount;
   }
 
-  if (block.baseTransaction.inputs.front().type() != typeid(BaseInput))
+  if (block.baseTransaction.inputs.front().type() != typeid(base_input_t))
     return false;
-  blockDetails.height = boost::get<BaseInput>(block.baseTransaction.inputs.front()).blockIndex;
+  blockDetails.height = boost::get<base_input_t>(block.baseTransaction.inputs.front()).blockIndex;
 
-  crypto::Hash tmpHash = core.getBlockIdByHeight(blockDetails.height);
+  crypto::hash_t tmpHash = core.getBlockIdByHeight(blockDetails.height);
   blockDetails.isOrphaned = hash != tmpHash;
 
   if (!core.getBlockDifficulty(blockDetails.height, blockDetails.difficulty)) {
@@ -155,14 +155,14 @@ bool BlockchainExplorerDataBuilder::fillBlockDetails(const Block &block, BlockDe
 
 
   blockDetails.transactions.reserve(block.transactionHashes.size() + 1);
-  TransactionDetails transactionDetails;
+  transaction_details_t transactionDetails;
   if (!fillTransactionDetails(block.baseTransaction, transactionDetails, block.timestamp)) {
     return false;
   }
   blockDetails.transactions.push_back(std::move(transactionDetails));
 
-  std::list<Transaction> found;
-  std::list<crypto::Hash> missed;
+  std::list<transaction_t> found;
+  std::list<crypto::hash_t> missed;
   core.getTransactions(block.transactionHashes, found, missed, blockDetails.isOrphaned);
   if (found.size() != block.transactionHashes.size()) {
     return false;
@@ -170,8 +170,8 @@ bool BlockchainExplorerDataBuilder::fillBlockDetails(const Block &block, BlockDe
 
   blockDetails.totalFeeAmount = 0;
 
-  for (const Transaction& tx : found) {
-    TransactionDetails transactionDetails;
+  for (const transaction_t& tx : found) {
+    transaction_details_t transactionDetails;
     if (!fillTransactionDetails(tx, transactionDetails, block.timestamp)) {
       return false;
     }
@@ -181,24 +181,24 @@ bool BlockchainExplorerDataBuilder::fillBlockDetails(const Block &block, BlockDe
   return true;
 }
 
-bool BlockchainExplorerDataBuilder::fillTransactionDetails(const Transaction& transaction, TransactionDetails& transactionDetails, uint64_t timestamp) {
-  crypto::Hash hash = getObjectHash(transaction);
+bool BlockchainExplorerDataBuilder::fillTransactionDetails(const transaction_t& transaction, transaction_details_t& transactionDetails, uint64_t timestamp) {
+  crypto::hash_t hash = getObjectHash(transaction);
   transactionDetails.hash = hash;
 
   transactionDetails.timestamp = timestamp;
 
-  crypto::Hash blockHash;
+  crypto::hash_t blockHash;
   uint32_t blockHeight;
   if (!core.getBlockContainingTx(hash, blockHash, blockHeight)) {
     transactionDetails.inBlockchain = false;
     transactionDetails.blockHeight = boost::value_initialized<uint32_t>();
-    transactionDetails.blockHash = boost::value_initialized<crypto::Hash>();
+    transactionDetails.blockHash = boost::value_initialized<crypto::hash_t>();
   } else {
     transactionDetails.inBlockchain = true;
     transactionDetails.blockHeight = blockHeight;
     transactionDetails.blockHash = blockHash;
     if (timestamp == 0) {
-      Block block;
+      block_t block;
       if (!core.getBlockByHash(blockHash, block)) {
         return false;
       }
@@ -216,7 +216,7 @@ bool BlockchainExplorerDataBuilder::fillTransactionDetails(const Transaction& tr
   }
   transactionDetails.totalInputsAmount = inputsAmount;
 
-  if (transaction.inputs.size() > 0 && transaction.inputs.front().type() == typeid(BaseInput)) {
+  if (transaction.inputs.size() > 0 && transaction.inputs.front().type() == typeid(base_input_t)) {
     //It's gen transaction
     transactionDetails.fee = 0;
     transactionDetails.mixin = 0;
@@ -233,41 +233,41 @@ bool BlockchainExplorerDataBuilder::fillTransactionDetails(const Transaction& tr
     transactionDetails.mixin = mixin;
   }
 
-  crypto::Hash paymentId;
+  crypto::hash_t paymentId;
   if (getPaymentId(transaction, paymentId)) {
     transactionDetails.paymentId = paymentId;
   } else {
-    transactionDetails.paymentId = boost::value_initialized<crypto::Hash>();
+    transactionDetails.paymentId = boost::value_initialized<crypto::hash_t>();
   }
 
   fillTxExtra(transaction.extra, transactionDetails.extra);
 
   transactionDetails.signatures.reserve(transaction.signatures.size());
-  for (const std::vector<crypto::Signature>& signatures : transaction.signatures) {
-    std::vector<crypto::Signature> signaturesDetails;
+  for (const std::vector<crypto::signature_t>& signatures : transaction.signatures) {
+    std::vector<crypto::signature_t> signaturesDetails;
     signaturesDetails.reserve(signatures.size());
-    for (const crypto::Signature& signature : signatures) {
+    for (const crypto::signature_t& signature : signatures) {
       signaturesDetails.push_back(std::move(signature));
     }
     transactionDetails.signatures.push_back(std::move(signaturesDetails));
   }
 
   transactionDetails.inputs.reserve(transaction.inputs.size());
-  for (const TransactionInput& txIn : transaction.inputs) {
+  for (const transaction_input_t& txIn : transaction.inputs) {
     TransactionInputDetails txInDetails;
 
-    if (txIn.type() == typeid(BaseInput)) {
+    if (txIn.type() == typeid(base_input_t)) {
       TransactionInputGenerateDetails txInGenDetails;
-      txInGenDetails.height = boost::get<BaseInput>(txIn).blockIndex;
+      txInGenDetails.height = boost::get<base_input_t>(txIn).blockIndex;
       txInDetails.amount = 0;
-      for (const TransactionOutput& out : transaction.outputs) {
+      for (const transaction_output_t& out : transaction.outputs) {
         txInDetails.amount += out.amount;
       }
       txInDetails.input = txInGenDetails;
-    } else if (txIn.type() == typeid(KeyInput)) {
+    } else if (txIn.type() == typeid(key_input_t)) {
       TransactionInputToKeyDetails txInToKeyDetails;
-      const KeyInput& txInToKey = boost::get<KeyInput>(txIn);
-      std::list<std::pair<crypto::Hash, size_t>> outputReferences;
+      const key_input_t& txInToKey = boost::get<key_input_t>(txIn);
+      std::list<std::pair<crypto::hash_t, size_t>> outputReferences;
       if (!core.scanOutputkeysForIndices(txInToKey, outputReferences)) {
         return false;
       }
@@ -278,12 +278,12 @@ bool BlockchainExplorerDataBuilder::fillTransactionDetails(const Transaction& tr
       txInToKeyDetails.output.number = outputReferences.back().second;
       txInToKeyDetails.output.transactionHash = outputReferences.back().first;
       txInDetails.input = txInToKeyDetails;
-    } else if (txIn.type() == typeid(MultisignatureInput)) {
+    } else if (txIn.type() == typeid(multi_signature_input_t)) {
       TransactionInputMultisignatureDetails txInMultisigDetails;
-      const MultisignatureInput& txInMultisig = boost::get<MultisignatureInput>(txIn);
+      const multi_signature_input_t& txInMultisig = boost::get<multi_signature_input_t>(txIn);
       txInDetails.amount = txInMultisig.amount;
       txInMultisigDetails.signatures = txInMultisig.signatureCount;
-      std::pair<crypto::Hash, size_t> outputReference;
+      std::pair<crypto::hash_t, size_t> outputReference;
       if (!core.getMultisigOutputReference(txInMultisig, outputReference)) {
         return false;
       }
@@ -305,22 +305,22 @@ bool BlockchainExplorerDataBuilder::fillTransactionDetails(const Transaction& tr
     }
   }
 
-  typedef boost::tuple<TransactionOutput, uint32_t> outputWithIndex;
+  typedef boost::tuple<transaction_output_t, uint32_t> outputWithIndex;
   auto range = boost::combine(transaction.outputs, globalIndices);
   for (const outputWithIndex& txOutput : range) {
     TransactionOutputDetails txOutDetails;
     txOutDetails.amount = txOutput.get<0>().amount;
     txOutDetails.globalIndex = txOutput.get<1>();
 
-    if (txOutput.get<0>().target.type() == typeid(KeyOutput)) {
+    if (txOutput.get<0>().target.type() == typeid(key_output_t)) {
       TransactionOutputToKeyDetails txOutToKeyDetails;
-      txOutToKeyDetails.txOutKey = boost::get<KeyOutput>(txOutput.get<0>().target).key;
+      txOutToKeyDetails.txOutKey = boost::get<key_output_t>(txOutput.get<0>().target).key;
       txOutDetails.output = txOutToKeyDetails;
-    } else if (txOutput.get<0>().target.type() == typeid(MultisignatureOutput)) {
+    } else if (txOutput.get<0>().target.type() == typeid(multi_signature_output_t)) {
       TransactionOutputMultisignatureDetails txOutMultisigDetails;
-      MultisignatureOutput txOutMultisig = boost::get<MultisignatureOutput>(txOutput.get<0>().target);
+      multi_signature_output_t txOutMultisig = boost::get<multi_signature_output_t>(txOutput.get<0>().target);
       txOutMultisigDetails.keys.reserve(txOutMultisig.keys.size());
-      for (const crypto::PublicKey& key : txOutMultisig.keys) {
+      for (const crypto::public_key_t& key : txOutMultisig.keys) {
         txOutMultisigDetails.keys.push_back(std::move(key));
       }
       txOutMultisigDetails.requiredSignatures = txOutMultisig.requiredSignatureCount;

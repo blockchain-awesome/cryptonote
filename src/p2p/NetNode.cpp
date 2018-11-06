@@ -978,9 +978,9 @@ namespace cryptonote
       return false;
     }
 
-    crypto::PublicKey pk;
+    crypto::public_key_t pk;
     Common::podFromHex(cryptonote::P2P_STAT_TRUSTED_PUB_KEY, pk);
-    crypto::Hash h = get_proof_of_trust_hash(tr);
+    crypto::hash_t h = get_proof_of_trust_hash(tr);
     if (!crypto::check_signature(h, pk, tr.sign)) {
       logger(ERROR) << "check_trust failed: sign check failed";
       return false;

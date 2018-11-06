@@ -8,27 +8,27 @@
 
 namespace crypto {
 
-struct Hash {
+struct hash_t {
   uint8_t data[32];
 };
 
-struct PublicKey {
+struct public_key_t {
   uint8_t data[32];
 };
 
-struct SecretKey {
+struct secret_key_t {
   uint8_t data[32];
 };
 
-struct KeyDerivation {
+struct key_derivation_t {
   uint8_t data[32];
 };
 
-struct KeyImage {
+struct key_image_t {
   uint8_t data[32];
 };
 
-struct Signature {
+struct signature_t {
   uint8_t data[64];
 };
 

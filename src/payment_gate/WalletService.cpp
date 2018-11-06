@@ -59,24 +59,24 @@ bool checkPaymentId(const std::string& paymentId) {
   });
 }
 
-crypto::Hash parsePaymentId(const std::string& paymentIdStr) {
+crypto::hash_t parsePaymentId(const std::string& paymentIdStr) {
   if (!checkPaymentId(paymentIdStr)) {
     throw std::system_error(make_error_code(cryptonote::error::WalletServiceErrorCode::WRONG_PAYMENT_ID_FORMAT));
   }
 
-  crypto::Hash paymentId;
+  crypto::hash_t paymentId;
   bool r = Common::podFromHex(paymentIdStr, paymentId);
   assert(r);
 
   return paymentId;
 }
 
-bool getPaymentIdFromExtra(const std::string& binaryString, crypto::Hash& paymentId) {
+bool getPaymentIdFromExtra(const std::string& binaryString, crypto::hash_t& paymentId) {
   return cryptonote::getPaymentIdFromTxExtra(Common::asBinaryArray(binaryString), paymentId);
 }
 
 std::string getPaymentIdStringFromExtra(const std::string& binaryString) {
-  crypto::Hash paymentId;
+  crypto::hash_t paymentId;
 
   if (!getPaymentIdFromExtra(binaryString, paymentId)) {
     return std::string();
@@ -101,7 +101,7 @@ struct TransactionsInBlockInfoFilter {
 
   bool checkTransaction(const cryptonote::WalletTransactionWithTransfers& transaction) const {
     if (havePaymentId) {
-      crypto::Hash transactionPaymentId;
+      crypto::hash_t transactionPaymentId;
       if (!getPaymentIdFromExtra(transaction.transaction.extra, transactionPaymentId)) {
         return false;
       }
@@ -128,7 +128,7 @@ struct TransactionsInBlockInfoFilter {
 
   std::unordered_set<std::string> addresses;
   bool havePaymentId = false;
-  crypto::Hash paymentId;
+  crypto::hash_t paymentId;
 };
 
 namespace {
@@ -190,8 +190,8 @@ void replaceWalletFiles(const std::string &path, const std::string &tempFilePath
   boost::filesystem::rename(tempFilePath, path);
 }
 
-crypto::Hash parseHash(const std::string& hashString, Logging::LoggerRef logger) {
-  crypto::Hash hash;
+crypto::hash_t parseHash(const std::string& hashString, Logging::LoggerRef logger) {
+  crypto::hash_t hash;
 
   if (!Common::podFromHex(hashString, hash)) {
     logger(Logging::WARNING) << "Can't parse hash string " << hashString;
@@ -485,13 +485,13 @@ std::error_code WalletService::replaceWithNewWallet(const std::string& viewSecre
   try {
     System::EventLock lk(readyEvent);
 
-    crypto::SecretKey viewSecretKey;
+    crypto::secret_key_t viewSecretKey;
     if (!Common::podFromHex(viewSecretKeyText, viewSecretKey)) {
       logger(Logging::WARNING) << "Cannot restore view secret key: " << viewSecretKeyText;
       return make_error_code(cryptonote::error::WalletServiceErrorCode::WRONG_KEY_FORMAT);
     }
 
-    crypto::PublicKey viewPublicKey;
+    crypto::public_key_t viewPublicKey;
     if (!crypto::secret_key_to_public_key(viewSecretKey, viewPublicKey)) {
       logger(Logging::WARNING) << "Cannot derive view public key, wrong secret key: " << viewSecretKeyText;
       return make_error_code(cryptonote::error::WalletServiceErrorCode::WRONG_KEY_FORMAT);
@@ -516,7 +516,7 @@ std::error_code WalletService::createAddress(const std::string& spendSecretKeyTe
 
     logger(Logging::DEBUGGING) << "Creating address";
 
-    crypto::SecretKey secretKey;
+    crypto::secret_key_t secretKey;
     if (!Common::podFromHex(spendSecretKeyText, secretKey)) {
       logger(Logging::WARNING) << "Wrong key format: " << spendSecretKeyText;
       return make_error_code(cryptonote::error::WalletServiceErrorCode::WRONG_KEY_FORMAT);
@@ -556,7 +556,7 @@ std::error_code WalletService::createTrackingAddress(const std::string& spendPub
 
     logger(Logging::DEBUGGING) << "Creating tracking address";
 
-    crypto::PublicKey publicKey;
+    crypto::public_key_t publicKey;
     if (!Common::podFromHex(spendPublicKeyText, publicKey)) {
       logger(Logging::WARNING) << "Wrong key format: " << spendPublicKeyText;
       return make_error_code(cryptonote::error::WalletServiceErrorCode::WRONG_KEY_FORMAT);
@@ -591,7 +591,7 @@ std::error_code WalletService::getSpendkeys(const std::string& address, std::str
   try {
     System::EventLock lk(readyEvent);
 
-    cryptonote::KeyPair key = wallet.getAddressSpendKey(address);
+    cryptonote::key_pair_t key = wallet.getAddressSpendKey(address);
 
     publicSpendKeyText = Common::podToHex(key.publicKey);
     secretSpendKeyText = Common::podToHex(key.secretKey);
@@ -639,7 +639,7 @@ std::error_code WalletService::getBalance(uint64_t& availableBalance, uint64_t& 
 std::error_code WalletService::getBlockHashes(uint32_t firstBlockIndex, uint32_t blockCount, std::vector<std::string>& blockHashes) {
   try {
     System::EventLock lk(readyEvent);
-    std::vector<crypto::Hash> hashes = wallet.getBlockHashes(firstBlockIndex, blockCount);
+    std::vector<crypto::hash_t> hashes = wallet.getBlockHashes(firstBlockIndex, blockCount);
 
     blockHashes.reserve(hashes.size());
     for (const auto& hash: hashes) {
@@ -656,7 +656,7 @@ std::error_code WalletService::getBlockHashes(uint32_t firstBlockIndex, uint32_t
 std::error_code WalletService::getViewKey(std::string& viewSecretKey) {
   try {
     System::EventLock lk(readyEvent);
-    cryptonote::KeyPair viewKey = wallet.getViewKey();
+    cryptonote::key_pair_t viewKey = wallet.getViewKey();
     viewSecretKey = Common::podToHex(viewKey.secretKey);
   } catch (std::system_error& x) {
     logger(Logging::WARNING) << "Error while getting view key: " << x.what();
@@ -677,7 +677,7 @@ std::error_code WalletService::getTransactionHashes(const std::vector<std::strin
     }
 
     TransactionsInBlockInfoFilter transactionFilter(addresses, paymentId);
-    crypto::Hash blockHash = parseHash(blockHashString, logger);
+    crypto::hash_t blockHash = parseHash(blockHashString, logger);
 
     transactionHashes = getRpcTransactionHashes(blockHash, blockCount, transactionFilter);
   } catch (std::system_error& x) {
@@ -727,7 +727,7 @@ std::error_code WalletService::getTransactions(const std::vector<std::string>& a
 
     TransactionsInBlockInfoFilter transactionFilter(addresses, paymentId);
 
-    crypto::Hash blockHash = parseHash(blockHashString, logger);
+    crypto::hash_t blockHash = parseHash(blockHashString, logger);
 
     transactions = getRpcTransactions(blockHash, blockCount, transactionFilter);
   } catch (std::system_error& x) {
@@ -768,12 +768,12 @@ std::error_code WalletService::getTransactions(const std::vector<std::string>& a
 std::error_code WalletService::getTransaction(const std::string& transactionHash, TransactionRpcInfo& transaction) {
   try {
     System::EventLock lk(readyEvent);
-    crypto::Hash hash = parseHash(transactionHash, logger);
+    crypto::hash_t hash = parseHash(transactionHash, logger);
 
     cryptonote::WalletTransactionWithTransfers transactionWithTransfers = wallet.getTransaction(hash);
 
     if (transactionWithTransfers.transaction.state == cryptonote::WalletTransactionState::DELETED) {
-      logger(Logging::WARNING) << "Transaction " << transactionHash << " is deleted";
+      logger(Logging::WARNING) << "transaction_t " << transactionHash << " is deleted";
       return make_error_code(cryptonote::error::OBJECT_NOT_FOUND);
     }
 
@@ -834,7 +834,7 @@ std::error_code WalletService::sendTransaction(const SendTransaction::Request& r
     size_t transactionId = wallet.transfer(sendParams);
     transactionHash = Common::podToHex(wallet.getTransaction(transactionId).hash);
 
-    logger(Logging::DEBUGGING) << "Transaction " << transactionHash << " has been sent";
+    logger(Logging::DEBUGGING) << "transaction_t " << transactionHash << " has been sent";
   } catch (std::system_error& x) {
     logger(Logging::WARNING) << "Error while sending transaction: " << x.what();
     return x.code();
@@ -1034,7 +1034,7 @@ void WalletService::reset() {
   init();
 }
 
-void WalletService::replaceWithNewWallet(const crypto::SecretKey& viewSecretKey) {
+void WalletService::replaceWithNewWallet(const crypto::secret_key_t& viewSecretKey) {
   wallet.stop();
   wallet.shutdown();
   inited = false;
@@ -1047,7 +1047,7 @@ void WalletService::replaceWithNewWallet(const crypto::SecretKey& viewSecretKey)
   inited = true;
 }
 
-std::vector<cryptonote::TransactionsInBlockInfo> WalletService::getTransactions(const crypto::Hash& blockHash, size_t blockCount) const {
+std::vector<cryptonote::TransactionsInBlockInfo> WalletService::getTransactions(const crypto::hash_t& blockHash, size_t blockCount) const {
   std::vector<cryptonote::TransactionsInBlockInfo> result = wallet.getTransactions(blockHash, blockCount);
   if (result.empty()) {
     throw std::system_error(make_error_code(cryptonote::error::WalletServiceErrorCode::OBJECT_NOT_FOUND));
@@ -1065,7 +1065,7 @@ std::vector<cryptonote::TransactionsInBlockInfo> WalletService::getTransactions(
   return result;
 }
 
-std::vector<TransactionHashesInBlockRpcInfo> WalletService::getRpcTransactionHashes(const crypto::Hash& blockHash, size_t blockCount, const TransactionsInBlockInfoFilter& filter) const {
+std::vector<TransactionHashesInBlockRpcInfo> WalletService::getRpcTransactionHashes(const crypto::hash_t& blockHash, size_t blockCount, const TransactionsInBlockInfoFilter& filter) const {
   std::vector<cryptonote::TransactionsInBlockInfo> allTransactions = getTransactions(blockHash, blockCount);
   std::vector<cryptonote::TransactionsInBlockInfo> filteredTransactions = filterTransactions(allTransactions, filter);
   return convertTransactionsInBlockInfoToTransactionHashesInBlockRpcInfo(filteredTransactions);
@@ -1077,7 +1077,7 @@ std::vector<TransactionHashesInBlockRpcInfo> WalletService::getRpcTransactionHas
   return convertTransactionsInBlockInfoToTransactionHashesInBlockRpcInfo(filteredTransactions);
 }
 
-std::vector<TransactionsInBlockRpcInfo> WalletService::getRpcTransactions(const crypto::Hash& blockHash, size_t blockCount, const TransactionsInBlockInfoFilter& filter) const {
+std::vector<TransactionsInBlockRpcInfo> WalletService::getRpcTransactions(const crypto::hash_t& blockHash, size_t blockCount, const TransactionsInBlockInfoFilter& filter) const {
   std::vector<cryptonote::TransactionsInBlockInfo> allTransactions = getTransactions(blockHash, blockCount);
   std::vector<cryptonote::TransactionsInBlockInfo> filteredTransactions = filterTransactions(allTransactions, filter);
   return convertTransactionsInBlockInfoToTransactionsInBlockRpcInfo(filteredTransactions);

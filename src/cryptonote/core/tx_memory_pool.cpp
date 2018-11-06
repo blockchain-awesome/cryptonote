@@ -33,17 +33,17 @@ namespace cryptonote {
   class BlockTemplate {
   public:
 
-    bool addTransaction(const crypto::Hash& txid, const Transaction& tx) {
+    bool addTransaction(const crypto::hash_t& txid, const transaction_t& tx) {
       if (!canAdd(tx))
         return false;
 
       for (const auto& in : tx.inputs) {
-        if (in.type() == typeid(KeyInput)) {
-          auto r = m_keyImages.insert(boost::get<KeyInput>(in).keyImage);
+        if (in.type() == typeid(key_input_t)) {
+          auto r = m_keyImages.insert(boost::get<key_input_t>(in).keyImage);
           (void)r; //just to make compiler to shut up
           assert(r.second);
-        } else if (in.type() == typeid(MultisignatureInput)) {
-          const auto& msig = boost::get<MultisignatureInput>(in);
+        } else if (in.type() == typeid(multi_signature_input_t)) {
+          const auto& msig = boost::get<multi_signature_input_t>(in);
           auto r = m_usedOutputs.insert(std::make_pair(msig.amount, msig.outputIndex));
           (void)r; //just to make compiler to shut up
           assert(r.second);
@@ -54,20 +54,20 @@ namespace cryptonote {
       return true;
     }
 
-    const std::vector<crypto::Hash>& getTransactions() const {
+    const std::vector<crypto::hash_t>& getTransactions() const {
       return m_txHashes;
     }
 
   private:
 
-    bool canAdd(const Transaction& tx) {
+    bool canAdd(const transaction_t& tx) {
       for (const auto& in : tx.inputs) {
-        if (in.type() == typeid(KeyInput)) {
-          if (m_keyImages.count(boost::get<KeyInput>(in).keyImage)) {
+        if (in.type() == typeid(key_input_t)) {
+          if (m_keyImages.count(boost::get<key_input_t>(in).keyImage)) {
             return false;
           }
-        } else if (in.type() == typeid(MultisignatureInput)) {
-          const auto& msig = boost::get<MultisignatureInput>(in);
+        } else if (in.type() == typeid(multi_signature_input_t)) {
+          const auto& msig = boost::get<multi_signature_input_t>(in);
           if (m_usedOutputs.count(std::make_pair(msig.amount, msig.outputIndex))) {
             return false;
           }
@@ -76,12 +76,12 @@ namespace cryptonote {
       return true;
     }
     
-    std::unordered_set<crypto::KeyImage> m_keyImages;
+    std::unordered_set<crypto::key_image_t> m_keyImages;
     std::set<std::pair<uint64_t, uint64_t>> m_usedOutputs;
-    std::vector<crypto::Hash> m_txHashes;
+    std::vector<crypto::hash_t> m_txHashes;
   };
 
-  using cryptonote::BlockInfo;
+  using cryptonote::block_info_t;
 
   //---------------------------------------------------------------------------------
   TxMemoryPool::TxMemoryPool(
@@ -97,7 +97,7 @@ namespace cryptonote {
     logger(log, "txpool") {
   }
   //---------------------------------------------------------------------------------
-  bool TxMemoryPool::add_tx(const Transaction &tx, /*const crypto::Hash& tx_prefix_hash,*/ const crypto::Hash &id, size_t blobSize, TxVerificationContext& tvc, bool keptByBlock) {
+  bool TxMemoryPool::add_tx(const transaction_t &tx, /*const crypto::hash_t& tx_prefix_hash,*/ const crypto::hash_t &id, size_t blobSize, tx_verification_context_t& tvc, bool keptByBlock) {
     if (!check_inputs_types_supported(tx)) {
       tvc.m_verifivation_failed = true;
       return false;
@@ -132,13 +132,13 @@ namespace cryptonote {
     if (!keptByBlock) {
       std::lock_guard<std::recursive_mutex> lock(m_transactions_lock);
       if (haveSpentInputs(tx)) {
-        logger(INFO) << "Transaction with id= " << id << " used already spent inputs";
+        logger(INFO) << "transaction_t with id= " << id << " used already spent inputs";
         tvc.m_verifivation_failed = true;
         return false;
       }
     }
 
-    BlockInfo maxUsedBlock;
+    block_info_t maxUsedBlock;
 
     // check inputs
     bool inputsValid = m_validator.checkTransactionInputs(tx, maxUsedBlock);
@@ -175,7 +175,7 @@ namespace cryptonote {
 
     // add to pool
     {
-      transaction::TransactionDetails txd;
+      transaction::transaction_details_t txd;
 
       txd.id = id;
       txd.blobSize = blobSize;
@@ -210,14 +210,14 @@ namespace cryptonote {
   }
 
   //---------------------------------------------------------------------------------
-  bool TxMemoryPool::add_tx(const Transaction &tx, TxVerificationContext& tvc, bool keeped_by_block) {
-    crypto::Hash h = NULL_HASH;
+  bool TxMemoryPool::add_tx(const transaction_t &tx, tx_verification_context_t& tvc, bool keeped_by_block) {
+    crypto::hash_t h = NULL_HASH;
     size_t blobSize = 0;
     getObjectHash(tx, h, blobSize);
     return add_tx(tx, h, blobSize, tvc, keeped_by_block);
   }
   //---------------------------------------------------------------------------------
-  bool TxMemoryPool::take_tx(const crypto::Hash &id, Transaction &tx, size_t& blobSize, uint64_t& fee) {
+  bool TxMemoryPool::take_tx(const crypto::hash_t &id, transaction_t &tx, size_t& blobSize, uint64_t& fee) {
     std::lock_guard<std::recursive_mutex> lock(m_transactions_lock);
     auto it = m_transactions.find(id);
     if (it == m_transactions.end()) {
@@ -239,24 +239,24 @@ namespace cryptonote {
     return m_transactions.size();
   }
   //---------------------------------------------------------------------------------
-  void TxMemoryPool::get_transactions(std::list<Transaction>& txs) const {
+  void TxMemoryPool::get_transactions(std::list<transaction_t>& txs) const {
     std::lock_guard<std::recursive_mutex> lock(m_transactions_lock);
     for (const auto& tx_vt : m_transactions) {
       txs.push_back(tx_vt.tx);
     }
   }
   //---------------------------------------------------------------------------------
-  void TxMemoryPool::get_difference(const std::vector<crypto::Hash>& known_tx_ids, std::vector<crypto::Hash>& new_tx_ids, std::vector<crypto::Hash>& deleted_tx_ids) const {
+  void TxMemoryPool::get_difference(const std::vector<crypto::hash_t>& known_tx_ids, std::vector<crypto::hash_t>& new_tx_ids, std::vector<crypto::hash_t>& deleted_tx_ids) const {
     std::lock_guard<std::recursive_mutex> lock(m_transactions_lock);
-    std::unordered_set<crypto::Hash> ready_tx_ids;
+    std::unordered_set<crypto::hash_t> ready_tx_ids;
     for (const auto& tx : m_transactions) {
-      transaction::TransactionCheckInfo checkInfo(tx);
+      transaction::transaction_check_info_t checkInfo(tx);
       if (is_transaction_ready_to_go(tx.tx, checkInfo)) {
         ready_tx_ids.insert(tx.id);
       }
     }
 
-    std::unordered_set<crypto::Hash> known_set(known_tx_ids.begin(), known_tx_ids.end());
+    std::unordered_set<crypto::hash_t> known_set(known_tx_ids.begin(), known_tx_ids.end());
     for (auto it = ready_tx_ids.begin(), e = ready_tx_ids.end(); it != e;) {
       auto known_it = known_set.find(*it);
       if (known_it != known_set.end()) {
@@ -272,15 +272,15 @@ namespace cryptonote {
     deleted_tx_ids.assign(known_set.begin(), known_set.end());
   }
   //---------------------------------------------------------------------------------
-  bool TxMemoryPool::on_blockchain_inc(uint64_t new_block_height, const crypto::Hash& top_block_id) {
+  bool TxMemoryPool::on_blockchain_inc(uint64_t new_block_height, const crypto::hash_t& top_block_id) {
     return true;
   }
   //---------------------------------------------------------------------------------
-  bool TxMemoryPool::on_blockchain_dec(uint64_t new_block_height, const crypto::Hash& top_block_id) {
+  bool TxMemoryPool::on_blockchain_dec(uint64_t new_block_height, const crypto::hash_t& top_block_id) {
     return true;
   }
   //---------------------------------------------------------------------------------
-  bool TxMemoryPool::have_tx(const crypto::Hash &id) const {
+  bool TxMemoryPool::have_tx(const crypto::hash_t &id) const {
     std::lock_guard<std::recursive_mutex> lock(m_transactions_lock);
     if (m_transactions.count(id)) {
       return true;
@@ -301,7 +301,7 @@ namespace cryptonote {
   }
 
   //---------------------------------------------------------------------------------
-  bool TxMemoryPool::is_transaction_ready_to_go(const Transaction& tx, transaction::TransactionCheckInfo& txd) const {
+  bool TxMemoryPool::is_transaction_ready_to_go(const transaction_t& tx, transaction::transaction_check_info_t& txd) const {
 
     if (!m_validator.checkTransactionInputs(tx, txd.maxUsedBlock, txd.lastFailedBlock))
       return false;
@@ -337,7 +337,7 @@ namespace cryptonote {
     return ss.str();
   }
   //---------------------------------------------------------------------------------
-  bool TxMemoryPool::fill_block_template(Block& bl, size_t median_size, size_t maxCumulativeSize,
+  bool TxMemoryPool::fill_block_template(block_t& bl, size_t median_size, size_t maxCumulativeSize,
                                            uint64_t already_generated_coins, size_t& total_size, uint64_t& fee) {
     std::lock_guard<std::recursive_mutex> lock(m_transactions_lock);
 
@@ -356,7 +356,7 @@ namespace cryptonote {
         continue;
       }
 
-      transaction::TransactionCheckInfo checkInfo(txd);
+      transaction::transaction_check_info_t checkInfo(txd);
       if (is_transaction_ready_to_go(txd.tx, checkInfo) && blockTemplate.addTransaction(txd.id, txd.tx)) {
         total_size += txd.blobSize;
       }
@@ -370,11 +370,11 @@ namespace cryptonote {
         continue;
       }
 
-      transaction::TransactionCheckInfo checkInfo(txd);
+      transaction::transaction_check_info_t checkInfo(txd);
       bool ready = is_transaction_ready_to_go(txd.tx, checkInfo);
 
       // update item state
-      m_fee_index.modify(i, [&checkInfo](transaction::TransactionCheckInfo& item) {
+      m_fee_index.modify(i, [&checkInfo](transaction::transaction_check_info_t& item) {
         item = checkInfo;
       });
 
@@ -422,7 +422,7 @@ namespace cryptonote {
 
 #define CURRENT_MEMPOOL_ARCHIVE_VER 1
 
-  void serialize(transaction::TransactionDetails& td, ISerializer& s) {
+  void serialize(transaction::transaction_details_t& td, ISerializer& s) {
     s(td.id, "id");
     s(td.blobSize, "blobSize");
     s(td.fee, "fee");
@@ -450,9 +450,9 @@ namespace cryptonote {
 
     if (s.type() == ISerializer::INPUT) {
       m_transactions.clear();
-      readSequence<transaction::TransactionDetails>(std::inserter(m_transactions, m_transactions.end()), "transactions", s);
+      readSequence<transaction::transaction_details_t>(std::inserter(m_transactions, m_transactions.end()), "transactions", s);
     } else {
-      writeSequence<transaction::TransactionDetails>(m_transactions.begin(), m_transactions.end(), "transactions", s);
+      writeSequence<transaction::transaction_details_t>(m_transactions.begin(), m_transactions.end(), "transactions", s);
     }
 
     KV_MEMBER(m_spent_key_images);
@@ -511,14 +511,14 @@ namespace cryptonote {
     return m_transactions.erase(i);
   }
 
-  bool TxMemoryPool::removeTransactionInputs(const crypto::Hash& tx_id, const Transaction& tx, bool keptByBlock) {
+  bool TxMemoryPool::removeTransactionInputs(const crypto::hash_t& tx_id, const transaction_t& tx, bool keptByBlock) {
     for (const auto& in : tx.inputs) {
-      if (in.type() == typeid(KeyInput)) {
-        const auto& txin = boost::get<KeyInput>(in);
+      if (in.type() == typeid(key_input_t)) {
+        const auto& txin = boost::get<key_input_t>(in);
         auto it = m_spent_key_images.find(txin.keyImage);
         if (!(it != m_spent_key_images.end())) { logger(ERROR, BRIGHT_RED) << "failed to find transaction input in key images. img=" << txin.keyImage << std::endl
           << "transaction id = " << tx_id; return false; }
-        std::unordered_set<crypto::Hash>& key_image_set = it->second;
+        std::unordered_set<crypto::hash_t>& key_image_set = it->second;
         if (!(!key_image_set.empty())) { logger(ERROR, BRIGHT_RED) << "empty key_image set, img=" << txin.keyImage << std::endl
           << "transaction id = " << tx_id; return false; }
 
@@ -530,10 +530,10 @@ namespace cryptonote {
           //it is now empty hash container for this key_image
           m_spent_key_images.erase(it);
         }
-      } else if (in.type() == typeid(MultisignatureInput)) {
+      } else if (in.type() == typeid(multi_signature_input_t)) {
         if (!keptByBlock) {
-          const auto& msig = boost::get<MultisignatureInput>(in);
-          auto output = GlobalOutput(msig.amount, msig.outputIndex);
+          const auto& msig = boost::get<multi_signature_input_t>(in);
+          auto output = global_output_t(msig.amount, msig.outputIndex);
           assert(m_spentOutputs.count(output));
           m_spentOutputs.erase(output);
         }
@@ -544,12 +544,12 @@ namespace cryptonote {
   }
 
   //---------------------------------------------------------------------------------
-  bool TxMemoryPool::addTransactionInputs(const crypto::Hash& id, const Transaction& tx, bool keptByBlock) {
+  bool TxMemoryPool::addTransactionInputs(const crypto::hash_t& id, const transaction_t& tx, bool keptByBlock) {
     // should not fail
     for (const auto& in : tx.inputs) {
-      if (in.type() == typeid(KeyInput)) {
-        const auto& txin = boost::get<KeyInput>(in);
-        std::unordered_set<crypto::Hash>& kei_image_set = m_spent_key_images[txin.keyImage];
+      if (in.type() == typeid(key_input_t)) {
+        const auto& txin = boost::get<key_input_t>(in);
+        std::unordered_set<crypto::hash_t>& kei_image_set = m_spent_key_images[txin.keyImage];
         if (!(keptByBlock || kei_image_set.size() == 0)) {
           logger(ERROR, BRIGHT_RED)
               << "internal error: keptByBlock=" << keptByBlock
@@ -562,10 +562,10 @@ namespace cryptonote {
           logger(ERROR, BRIGHT_RED) << "internal error: try to insert duplicate iterator in key_image set";
           return false;
         }
-      } else if (in.type() == typeid(MultisignatureInput)) {
+      } else if (in.type() == typeid(multi_signature_input_t)) {
         if (!keptByBlock) {
-          const auto& msig = boost::get<MultisignatureInput>(in);
-          auto r = m_spentOutputs.insert(GlobalOutput(msig.amount, msig.outputIndex));
+          const auto& msig = boost::get<multi_signature_input_t>(in);
+          auto r = m_spentOutputs.insert(global_output_t(msig.amount, msig.outputIndex));
           (void)r;
           assert(r.second);
         }
@@ -576,16 +576,16 @@ namespace cryptonote {
   }
 
   //---------------------------------------------------------------------------------
-  bool TxMemoryPool::haveSpentInputs(const Transaction& tx) const {
+  bool TxMemoryPool::haveSpentInputs(const transaction_t& tx) const {
     for (const auto& in : tx.inputs) {
-      if (in.type() == typeid(KeyInput)) {
-        const auto& tokey_in = boost::get<KeyInput>(in);
+      if (in.type() == typeid(key_input_t)) {
+        const auto& tokey_in = boost::get<key_input_t>(in);
         if (m_spent_key_images.count(tokey_in.keyImage)) {
           return true;
         }
-      } else if (in.type() == typeid(MultisignatureInput)) {
-        const auto& msig = boost::get<MultisignatureInput>(in);
-        if (m_spentOutputs.count(GlobalOutput(msig.amount, msig.outputIndex))) {
+      } else if (in.type() == typeid(multi_signature_input_t)) {
+        const auto& msig = boost::get<multi_signature_input_t>(in);
+        if (m_spentOutputs.count(global_output_t(msig.amount, msig.outputIndex))) {
           return true;
         }
       }
@@ -609,12 +609,12 @@ namespace cryptonote {
     }
   }
 
-  bool TxMemoryPool::getTransactionIdsByPaymentId(const crypto::Hash& paymentId, std::vector<crypto::Hash>& transactionIds) {
+  bool TxMemoryPool::getTransactionIdsByPaymentId(const crypto::hash_t& paymentId, std::vector<crypto::hash_t>& transactionIds) {
     std::lock_guard<std::recursive_mutex> lock(m_transactions_lock);
     return m_paymentIdIndex.find(paymentId, transactionIds);
   }
 
-  bool TxMemoryPool::getTransactionIdsByTimestamp(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t transactionsNumberLimit, std::vector<crypto::Hash>& hashes, uint64_t& transactionsNumberWithinTimestamps) {
+  bool TxMemoryPool::getTransactionIdsByTimestamp(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t transactionsNumberLimit, std::vector<crypto::hash_t>& hashes, uint64_t& transactionsNumberWithinTimestamps) {
     std::lock_guard<std::recursive_mutex> lock(m_transactions_lock);
     return m_timestampIndex.find(timestampBegin, timestampEnd, transactionsNumberLimit, hashes, transactionsNumberWithinTimestamps);
   }

@@ -16,17 +16,17 @@ public:
     errors.emplace_back(height, ec);
   }
 
-  virtual void onTransactionUpdated(ITransfersSubscription* object, const Hash& transactionHash) override {
+  virtual void onTransactionUpdated(ITransfersSubscription* object, const hash_t& transactionHash) override {
     updated.push_back(transactionHash);
   }
 
-  virtual void onTransactionDeleted(ITransfersSubscription* object, const Hash& transactionHash) override {
+  virtual void onTransactionDeleted(ITransfersSubscription* object, const hash_t& transactionHash) override {
     deleted.push_back(transactionHash);
   }
 
   std::vector<std::tuple<uint64_t, std::error_code>> errors;
-  std::vector<Hash> updated;
-  std::vector<Hash> deleted;
+  std::vector<hash_t> updated;
+  std::vector<hash_t> deleted;
 };
 
 

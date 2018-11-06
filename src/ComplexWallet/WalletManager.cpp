@@ -59,7 +59,7 @@ WalletManager::~WalletManager()
 {
 }
 
-bool WalletManager::createWallet(const AccountKeys &accountKeys)
+bool WalletManager::createWallet(const account_keys_t &accountKeys)
 {
 
   Logging::LoggerRef(m_logger, "inteface")(Logging::INFO) << "creating new wallet" << endl;
@@ -89,7 +89,7 @@ bool WalletManager::isWalletExisted(const std::string &address)
   return false;
 }
 
-bool WalletManager::checkAddress(const std::string &address, AccountPublicAddress &keys)
+bool WalletManager::checkAddress(const std::string &address, account_public_address_t &keys)
 {
 
   std::string genAddress = m_currency.accountAddressAsString(keys);
@@ -112,7 +112,7 @@ cryptonote::IWalletLegacy *WalletManager::getWallet(const std::string address)
   return NULL;
 }
 
-std::string WalletManager::getAddressesByKeys(const AccountPublicAddress &keys)
+std::string WalletManager::getAddressesByKeys(const account_public_address_t &keys)
 {
   return m_currency.accountAddressAsString(keys);
 }

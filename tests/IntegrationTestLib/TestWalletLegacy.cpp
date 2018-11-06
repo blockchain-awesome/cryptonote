@@ -68,7 +68,7 @@ namespace {
   };
 }
 
-std::error_code TestWalletLegacy::sendTransaction(const std::string& address, uint64_t amount, Hash& txHash) {
+std::error_code TestWalletLegacy::sendTransaction(const std::string& address, uint64_t amount, hash_t& txHash) {
   TransactionSendingWaiter transactionSendingWaiter(m_dispatcher);
   m_wallet->addObserver(&transactionSendingWaiter);
 
@@ -100,9 +100,9 @@ IWalletLegacy* TestWalletLegacy::wallet() {
   return m_wallet.get();
 }
 
-AccountPublicAddress TestWalletLegacy::address() const {
+account_public_address_t TestWalletLegacy::address() const {
   std::string addressString = m_wallet->getAddress();
-  AccountPublicAddress address;
+  account_public_address_t address;
   bool ok = Account::parseAddress(addressString, address);
   assert(ok);
   return address;

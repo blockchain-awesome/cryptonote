@@ -8,7 +8,7 @@
 #include "stream/StdOutputStream.h"
 #include "serialization/BinaryInputStreamSerializer.h"
 #include "serialization/BinaryOutputStreamSerializer.h"
-#include "cryptonote/core/CryptoNoteSerialization.h"
+#include "cryptonote/core/blockchain/serializer/basics.h"
 
 using namespace Common;
 
@@ -79,7 +79,7 @@ void SynchronizationState::detach(uint32_t height) {
   m_blockchain.resize(height);
 }
 
-void SynchronizationState::addBlocks(const crypto::Hash* blockHashes, uint32_t height, uint32_t count) {
+void SynchronizationState::addBlocks(const crypto::hash_t* blockHashes, uint32_t height, uint32_t count) {
   assert(blockHashes);
   auto size = m_blockchain.size();
   assert( size == height);
@@ -90,7 +90,7 @@ uint32_t SynchronizationState::getHeight() const {
   return static_cast<uint32_t>(m_blockchain.size());
 }
 
-const std::vector<crypto::Hash>& SynchronizationState::getKnownBlockHashes() const {
+const std::vector<crypto::hash_t>& SynchronizationState::getKnownBlockHashes() const {
   return m_blockchain;
 }
 

@@ -137,7 +137,7 @@ namespace Tests {
       void stopNode(size_t index);
 
       bool makeWallet(std::unique_ptr<cryptonote::IWalletLegacy> & wallet, std::unique_ptr<cryptonote::INode>& node, const std::string& password = "pass");
-      bool mineBlocks(TestNode& node, const cryptonote::AccountPublicAddress& address, size_t blockCount);
+      bool mineBlocks(TestNode& node, const cryptonote::account_public_address_t& address, size_t blockCount);
       bool mineBlock(std::unique_ptr<cryptonote::IWalletLegacy>& wallet);
       bool mineBlock();
       bool startMining(size_t threads);
@@ -151,7 +151,7 @@ namespace Tests {
       bool waitForPoolSize(size_t nodeIndex, cryptonote::INode& node, size_t expectedPoolSize,
         std::vector<std::unique_ptr<cryptonote::ITransactionReader>>& txPool);
 
-      bool prepareAndSubmitBlock(TestNode& node, cryptonote::Block&& blockTemplate);
+      bool prepareAndSubmitBlock(TestNode& node, cryptonote::block_t&& blockTemplate);
 
     private:
 #ifdef __linux__

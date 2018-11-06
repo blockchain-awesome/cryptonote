@@ -97,7 +97,7 @@ void Node::onError(cryptonote::ITransfersSubscription *object,
   std::cout << "onError" << std::endl;
 }
 
-cryptonote::ITransfersSubscription &Node::initAccount(cryptonote::AccountKeys &keys)
+cryptonote::ITransfersSubscription &Node::initAccount(cryptonote::account_keys_t &keys)
 {
   cryptonote::AccountSubscription sub;
   sub.keys = keys;
@@ -177,19 +177,19 @@ void Node::wait(size_t milliseconds)
   std::cout << "end waiting" << std::endl;
 }
 
-bool Node::checkTransactionInputs(const cryptonote::Transaction &tx, cryptonote::BlockInfo &maxUsedBlock)
+bool Node::checkTransactionInputs(const cryptonote::transaction_t &tx, cryptonote::block_info_t &maxUsedBlock)
 {
     std::cout << "checkTransactionInputs" << std::endl;
 
   return true;
 }
-bool Node::checkTransactionInputs(const cryptonote::Transaction &tx, cryptonote::BlockInfo &maxUsedBlock, cryptonote::BlockInfo &lastFailed)
+bool Node::checkTransactionInputs(const cryptonote::transaction_t &tx, cryptonote::block_info_t &maxUsedBlock, cryptonote::block_info_t &lastFailed)
 {
     std::cout << "checkTransactionInputs" << std::endl;
 
   return true;
 }
-bool Node::haveSpentKeyImages(const cryptonote::Transaction &tx)
+bool Node::haveSpentKeyImages(const cryptonote::transaction_t &tx)
 {
     std::cout << "haveSpentKeyImages" << std::endl;
 

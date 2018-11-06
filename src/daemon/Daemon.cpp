@@ -38,18 +38,19 @@ using namespace Logging;
 
 namespace fs = boost::filesystem;
 
-JsonValue buildLoggerConfiguration(Level level, const std::string& logfile) {
+JsonValue buildLoggerConfiguration(Level level, const std::string &logfile)
+{
   JsonValue loggerConfiguration(JsonValue::OBJECT);
   loggerConfiguration.insert("globalLevel", static_cast<int64_t>(level));
 
-  JsonValue& cfgLoggers = loggerConfiguration.insert("loggers", JsonValue::ARRAY);
+  JsonValue &cfgLoggers = loggerConfiguration.insert("loggers", JsonValue::ARRAY);
 
-  JsonValue& fileLogger = cfgLoggers.pushBack(JsonValue::OBJECT);
+  JsonValue &fileLogger = cfgLoggers.pushBack(JsonValue::OBJECT);
   fileLogger.insert("type", "file");
   fileLogger.insert("filename", logfile);
   fileLogger.insert("level", static_cast<int64_t>(TRACE));
 
-  JsonValue& consoleLogger = cfgLoggers.pushBack(JsonValue::OBJECT);
+  JsonValue &consoleLogger = cfgLoggers.pushBack(JsonValue::OBJECT);
   consoleLogger.insert("type", "console");
   consoleLogger.insert("level", static_cast<int64_t>(TRACE));
   consoleLogger.insert("pattern", "%T %L ");
@@ -57,12 +58,11 @@ JsonValue buildLoggerConfiguration(Level level, const std::string& logfile) {
   return loggerConfiguration;
 }
 
-
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
 
 #ifdef WIN32
-  _CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
+  _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 
   LoggerManager logManager;
@@ -74,62 +74,74 @@ int main(int argc, char* argv[])
   names.full = "Allowed options";
   Daemon cli(names);
 
-  try {
+  try
+  {
     cli.init();
 
-    po::options_description& desc_cmd_sett = cli.desc_cmd_sett;
+    po::options_description &desc_cmd_sett = cli.desc_cmd_sett;
     RpcServerConfig::initOptions(desc_cmd_sett);
-    CoreConfig::initOptions(desc_cmd_sett);
+    // CoreConfig::initOptions(desc_cmd_sett);
     NetNodeConfig::initOptions(desc_cmd_sett);
     MinerConfig::initOptions(desc_cmd_sett);
 
     cli.setup();
 
     po::variables_map &vm = cli.vm;
-    bool r = cli.parse(argc, argv, [&]()
-    {
+    bool r = cli.parse(argc, argv, [&]() {
       return true;
     });
 
     if (!r)
+    {
+      std::cerr << "Command parsing error!" << std::endl;
       return 1;
-  
-    auto modulePath = boost::filesystem::path(argv[0]);
-    auto cfgLogFile = boost::filesystem::path(get_arg(vm, arg_log_file));
-
-    if (cfgLogFile.empty()) {
-      cfgLogFile = fs::change_extension(modulePath, ".log").string();
-    } else {
-      if (!cfgLogFile.parent_path().empty()) {
-        cfgLogFile = modulePath.root_path().string() + cfgLogFile.string();
-      }
     }
 
-    Level cfgLogLevel = static_cast<Level>(static_cast<int>(Logging::ERROR) + get_arg(vm, arg_log_level));
+    CoreConfig coreConfig;
+    coreConfig.init(vm);
+    NetNodeConfig netNodeConfig;
+    netNodeConfig.init(vm);
+    MinerConfig minerConfig;
+    minerConfig.init(vm);
+    RpcServerConfig rpcConfig;
+    rpcConfig.init(vm);
+
+    coreConfig.checkDataDir();
+    cli.parseConfigFile();
+
+    auto cfgLogFile = cli.getLogFile();
+
+    Level cfgLogLevel = static_cast<Level>(static_cast<int>(Logging::ERROR) + cli.get(arg_log_level));
 
     // configure logging
     logManager.configure(buildLoggerConfiguration(cfgLogLevel, cfgLogFile.string()));
 
     logger(INFO) << cryptonote::CRYPTONOTE_NAME << " v" << PROJECT_VERSION_LONG;
 
-    if (cli.checkVersion()) {
+    if (cli.checkVersion())
+    {
       return 0;
     }
 
     logger(INFO) << "Module folder: " << argv[0];
 
     bool testnet_mode = get_arg(vm, arg_testnet_on);
-    if (testnet_mode) {
+    if (testnet_mode)
+    {
       logger(INFO) << "Starting in testnet mode!";
     }
+    netNodeConfig.setTestnet(testnet_mode);
 
     //create objects and link them
-    cryptonote::CurrencyBuilder currencyBuilder(logManager, os::appdata::path());
+    cryptonote::CurrencyBuilder currencyBuilder(logManager, coreConfig.configFolder);
     // currencyBuilder.testnet(testnet_mode);
 
-    try {
+    try
+    {
       currencyBuilder.currency();
-    } catch (std::exception&) {
+    }
+    catch (std::exception &)
+    {
       std::cout << "GENESIS_COINBASE_TX_HEX constant has an incorrect value. Please launch: " << cryptonote::CRYPTONOTE_NAME << "d --" << arg_print_genesis_tx.name;
       return 1;
     }
@@ -138,25 +150,15 @@ int main(int argc, char* argv[])
     cryptonote::core ccore(currency, nullptr, logManager);
 
     cryptonote::Checkpoints checkpoints(logManager);
-    for (const auto& cp : cryptonote::CHECKPOINTS) {
+    for (const auto &cp : cryptonote::CHECKPOINTS)
+    {
       checkpoints.add(cp.height, cp.blockId);
     }
 
-    if (!testnet_mode) {
+    if (!testnet_mode)
+    {
       ccore.set_checkpoints(std::move(checkpoints));
     }
-
-    CoreConfig coreConfig;
-    coreConfig.init(vm);
-    NetNodeConfig netNodeConfig;
-    netNodeConfig.init(vm);
-    netNodeConfig.setTestnet(testnet_mode);
-    MinerConfig minerConfig;
-    minerConfig.init(vm);
-    RpcServerConfig rpcConfig;
-    rpcConfig.init(vm);
-
-    coreConfig.checkDataDir();
 
     System::Dispatcher dispatcher;
 
@@ -170,7 +172,8 @@ int main(int argc, char* argv[])
 
     // initialize objects
     logger(INFO) << "Initializing p2p server...";
-    if (!p2psrv.init(netNodeConfig)) {
+    if (!p2psrv.init(netNodeConfig))
+    {
       logger(ERROR, BRIGHT_RED) << "Failed to initialize p2p server.";
       return 1;
     }
@@ -185,14 +188,16 @@ int main(int argc, char* argv[])
 
     // initialize core here
     logger(INFO) << "Initializing core...";
-    if (!ccore.init(coreConfig, minerConfig, true)) {
+    if (!ccore.init(minerConfig, true))
+    {
       logger(ERROR, BRIGHT_RED) << "Failed to initialize core";
       return 1;
     }
     logger(INFO) << "Core initialized OK";
 
     // start components
-    if (!has_arg(vm, arg_console)) {
+    if (!has_arg(vm, arg_console))
+    {
       dch.start_handling();
     }
 
@@ -223,13 +228,13 @@ int main(int argc, char* argv[])
 
     ccore.set_cryptonote_protocol(NULL);
     cprotocol.set_p2p_endpoint(NULL);
-
-  } catch (const std::exception& e) {
-    logger(ERROR, BRIGHT_RED) << "Exception: " << e.what();
+  }
+  catch (const std::exception &e)
+  {
+    std::cerr << "Exception catched: " << e.what() << std::endl;
     return 1;
   }
 
   logger(INFO) << "Node stopped.";
   return 0;
 }
-

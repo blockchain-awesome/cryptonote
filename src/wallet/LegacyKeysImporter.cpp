@@ -33,8 +33,8 @@ struct keys_file_data {
   }
 };
 
-bool verify_keys(const SecretKey& sec, const PublicKey& expected_pub) {
-  PublicKey pub;
+bool verify_keys(const secret_key_t& sec, const public_key_t& expected_pub) {
+  public_key_t pub;
   bool r = secret_key_to_public_key(sec, pub);
   return r && expected_pub == pub;
 }
@@ -57,7 +57,7 @@ void loadKeysFromFile(const std::string& filename, const std::string& password, 
   account_data.resize(keys_file_data.account_data.size());
   chacha8(keys_file_data.account_data.data(), keys_file_data.account_data.size(), key, keys_file_data.iv, &account_data[0]);
 
-  const cryptonote::AccountKeys& keys = account.getAccountKeys();
+  const cryptonote::account_keys_t& keys = account.getAccountKeys();
 
   if (cryptonote::loadFromBinaryKeyValue(account, account_data) &&
       verify_keys(keys.viewSecretKey, keys.address.viewPublicKey) &&

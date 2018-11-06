@@ -132,7 +132,7 @@ void CryptoNoteProtocolHandler::log_connections() {
 
 uint32_t CryptoNoteProtocolHandler::get_current_blockchain_height() {
   uint32_t height;
-  crypto::Hash blockId;
+  crypto::hash_t blockId;
   m_core.get_blockchain_top(height, blockId);
   return height;
 }
@@ -233,7 +233,7 @@ int CryptoNoteProtocolHandler::handle_notify_new_block(int command, NOTIFY_NEW_B
   }
 
   for (auto tx_blob_it = arg.b.txs.begin(); tx_blob_it != arg.b.txs.end(); tx_blob_it++) {
-    cryptonote::TxVerificationContext tvc = boost::value_initialized<decltype(tvc)>();
+    cryptonote::tx_verification_context_t tvc = boost::value_initialized<decltype(tvc)>();
     m_core.handle_incoming_tx(asBinaryArray(*tx_blob_it), tvc, true);
     if (tvc.m_verifivation_failed) {
       logger(Logging::INFO) << context << "Block verification failed: transaction verification failed, dropping connection";
@@ -242,7 +242,7 @@ int CryptoNoteProtocolHandler::handle_notify_new_block(int command, NOTIFY_NEW_B
     }
   }
 
-  BlockVerificationContext bvc = boost::value_initialized<BlockVerificationContext>();
+  block_verification_context_t bvc = boost::value_initialized<block_verification_context_t>();
   m_core.handle_incoming_block_blob(asBinaryArray(arg.b.block), bvc, true, false);
   if (bvc.m_verifivation_failed) {
     logger(Logging::DEBUGGING) << context << "Block verification failed, dropping connection";
@@ -275,7 +275,7 @@ int CryptoNoteProtocolHandler::handle_notify_new_transactions(int command, NOTIF
     return 1;
 
   for (auto tx_blob_it = arg.txs.begin(); tx_blob_it != arg.txs.end();) {
-    cryptonote::TxVerificationContext tvc = boost::value_initialized<decltype(tvc)>();
+    cryptonote::tx_verification_context_t tvc = boost::value_initialized<decltype(tvc)>();
     m_core.handle_incoming_tx(asBinaryArray(*tx_blob_it), tvc, false);
     if (tvc.m_verifivation_failed) {
       logger(Logging::INFO) << context << "Tx verification failed";
@@ -325,7 +325,7 @@ int CryptoNoteProtocolHandler::handle_response_get_objects(int command, NOTIFY_R
   size_t count = 0;
   for (const block_complete_entry& block_entry : arg.blocks) {
     ++count;
-    Block b;
+    block_t b;
     if (!fromBinaryArray(b, asBinaryArray(block_entry.block))) {
       logger(Logging::ERROR) << context << "sent wrong block: failed to parse and validate block: \r\n"
         << toHex(asBinaryArray(block_entry.block)) << "\r\n dropping connection";
@@ -382,7 +382,7 @@ int CryptoNoteProtocolHandler::handle_response_get_objects(int command, NOTIFY_R
   }
 
   uint32_t height;
-  crypto::Hash top;
+  crypto::hash_t top;
   m_core.get_blockchain_top(height, top);
   logger(DEBUGGING, BRIGHT_GREEN) << "Local blockchain updated, new height = " << height;
 
@@ -402,7 +402,7 @@ int CryptoNoteProtocolHandler::processObjects(CryptoNoteConnectionContext& conte
 
     //process transactions
     for (auto& tx_blob : block_entry.txs) {
-      TxVerificationContext tvc = boost::value_initialized<decltype(tvc)>();
+      tx_verification_context_t tvc = boost::value_initialized<decltype(tvc)>();
       m_core.handle_incoming_tx(asBinaryArray(tx_blob), tvc, true);
       if (tvc.m_verifivation_failed) {
         logger(Logging::ERROR) << context << "transaction verification failed on NOTIFY_RESPONSE_GET_OBJECTS, \r\ntx_id = "
@@ -413,7 +413,7 @@ int CryptoNoteProtocolHandler::processObjects(CryptoNoteConnectionContext& conte
     }
 
     // process block
-    BlockVerificationContext bvc = boost::value_initialized<BlockVerificationContext>();
+    block_verification_context_t bvc = boost::value_initialized<block_verification_context_t>();
     m_core.handle_incoming_block_blob(asBinaryArray(block_entry.block), bvc, false, false);
 
     if (bvc.m_verifivation_failed) {
@@ -528,7 +528,7 @@ bool CryptoNoteProtocolHandler::on_connection_synchronized() {
     m_core.on_synchronized();
 
     uint32_t height;
-    crypto::Hash hash;
+    crypto::hash_t hash;
     m_core.get_blockchain_top(height, hash);
     m_observerManager.notify(&ICryptoNoteProtocolObserver::blockchainSynchronized, height);
   }
@@ -579,8 +579,8 @@ int CryptoNoteProtocolHandler::handleRequestTxPool(int command, NOTIFY_REQUEST_T
                                                      CryptoNoteConnectionContext& context) {
   logger(Logging::TRACE) << context << "NOTIFY_REQUEST_TX_POOL: txs.size() = " << arg.txs.size();
 
-  std::vector<Transaction> addedTransactions;
-  std::vector<crypto::Hash> deletedTransactions;
+  std::vector<transaction_t> addedTransactions;
+  std::vector<crypto::hash_t> deletedTransactions;
   m_core.getPoolChanges(arg.txs, addedTransactions, deletedTransactions);
 
   if (!addedTransactions.empty()) {
@@ -663,7 +663,7 @@ void CryptoNoteProtocolHandler::recalculateMaxObservedHeight(const CryptoNoteCon
   });
 
   uint32_t localHeight = 0;
-  crypto::Hash ignore;
+  crypto::hash_t ignore;
   m_core.get_blockchain_top(localHeight, ignore);
   m_observedHeight = std::max(peerHeight, localHeight + 1);
 }

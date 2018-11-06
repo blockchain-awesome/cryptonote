@@ -58,7 +58,7 @@ namespace {
       return tx;
     }
 
-    std::unique_ptr<ITransactionReader> addSpendingTransaction(const Hash& sourceTx, uint64_t height, uint32_t outputIndex, uint64_t amount = TEST_OUTPUT_AMOUNT) {
+    std::unique_ptr<ITransactionReader> addSpendingTransaction(const hash_t& sourceTx, uint64_t height, uint32_t outputIndex, uint64_t amount = TEST_OUTPUT_AMOUNT) {
       auto outputs = container.getTransactionOutputs(sourceTx, ITransfersContainer::IncludeTypeAll |
         ITransfersContainer::IncludeStateUnlocked | ITransfersContainer::IncludeStateSoftLocked);
 
@@ -93,7 +93,7 @@ namespace {
     Logging::ConsoleLogger logger;
     Currency currency;
     TransfersContainer container;
-    AccountKeys account;
+    account_keys_t account;
   };
 
 }
@@ -289,7 +289,7 @@ TEST_F(TransfersContainer_addTransaction, handlesAddingUnconfirmedOutputToKey) {
   ASSERT_EQ(0, amountIn);
   ASSERT_EQ(TEST_OUTPUT_AMOUNT, amountOut);
 
-  std::vector<crypto::Hash> unconfirmedTransactions;
+  std::vector<crypto::hash_t> unconfirmedTransactions;
   container.getUnconfirmedTransactions(unconfirmedTransactions);
   ASSERT_EQ(1, unconfirmedTransactions.size());
 }
@@ -335,7 +335,7 @@ TEST_F(TransfersContainer_addTransaction, handlesAddingConfirmedOutputToKey) {
   ASSERT_EQ(0, amountIn);
   ASSERT_EQ(TEST_OUTPUT_AMOUNT, amountOut);
 
-  std::vector<crypto::Hash> unconfirmedTransactions;
+  std::vector<crypto::hash_t> unconfirmedTransactions;
   container.getUnconfirmedTransactions(unconfirmedTransactions);
   ASSERT_TRUE(unconfirmedTransactions.empty());
 }
@@ -372,7 +372,7 @@ TEST_F(TransfersContainer_addTransaction, addingEmptyTransactionOuptutsDoesNotCh
   TransactionInformation txInfo;
   ASSERT_FALSE(container.getTransactionInformation(tx->getTransactionHash(), txInfo));
 
-  std::vector<crypto::Hash> unconfirmedTransactions;
+  std::vector<crypto::hash_t> unconfirmedTransactions;
   container.getUnconfirmedTransactions(unconfirmedTransactions);
   ASSERT_TRUE(unconfirmedTransactions.empty());
 }
@@ -519,7 +519,7 @@ class TransfersContainer_deleteUnconfirmedTransaction : public TransfersContaine
 TEST_F(TransfersContainer_deleteUnconfirmedTransaction, tryDeleteNonExistingTx) {
   addTransaction();
   ASSERT_EQ(1, container.transactionsCount());
-  ASSERT_FALSE(container.deleteUnconfirmedTransaction(crypto::rand<crypto::Hash>()));
+  ASSERT_FALSE(container.deleteUnconfirmedTransaction(crypto::rand<crypto::hash_t>()));
   ASSERT_EQ(1, container.transactionsCount());
 }
 
@@ -576,7 +576,7 @@ TEST_F(TransfersContainer_deleteUnconfirmedTransaction, deleteTx) {
 //--------------------------------------------------------------------------- 
 class TransfersContainer_markTransactionConfirmed : public TransfersContainerTest {
 public:
-  bool markConfirmed(const Hash& txHash, uint64_t height = TEST_BLOCK_HEIGHT, 
+  bool markConfirmed(const hash_t& txHash, uint64_t height = TEST_BLOCK_HEIGHT, 
     const std::vector<uint32_t>& globalIndices = { TEST_TRANSACTION_OUTPUT_GLOBAL_INDEX }) {
     return container.markTransactionConfirmed(blockInfo(height), txHash, globalIndices);
   }
@@ -590,7 +590,7 @@ TEST_F(TransfersContainer_markTransactionConfirmed, nonExistingTransaction) {
   addTransaction();
   ASSERT_EQ(1, container.transactionsCount());
   ASSERT_EQ(TEST_OUTPUT_AMOUNT, container.balance(ITransfersContainer::IncludeAllLocked));
-  ASSERT_FALSE(markConfirmed(crypto::rand<Hash>()));
+  ASSERT_FALSE(markConfirmed(crypto::rand<hash_t>()));
   ASSERT_EQ(1, container.transactionsCount());
   ASSERT_EQ(TEST_OUTPUT_AMOUNT, container.balance(ITransfersContainer::IncludeAllLocked));
 }

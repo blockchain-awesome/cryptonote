@@ -12,7 +12,7 @@
 #include "../Io.h"
 
 using namespace std;
-typedef crypto::Hash chash;
+typedef crypto::hash_t chash;
 
 extern "C" {
 #ifdef _MSC_VER
@@ -75,7 +75,7 @@ int main(int argc, char *argv[]) {
     f(data.data(), data.size(), (char *) &actual);
     if (expected != actual) {
       size_t i;
-      cerr << "Hash mismatch on test " << test << endl << "Input: ";
+      cerr << "hash_t mismatch on test " << test << endl << "Input: ";
       if (data.size() == 0) {
         cerr << "empty";
       } else {

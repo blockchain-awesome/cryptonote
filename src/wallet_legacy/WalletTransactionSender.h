@@ -20,7 +20,7 @@ namespace cryptonote {
 class WalletTransactionSender
 {
 public:
-  WalletTransactionSender(const Currency& currency, WalletUserTransactionsCache& transactionsCache, AccountKeys keys, ITransfersContainer& transfersContainer);
+  WalletTransactionSender(const Currency& currency, WalletUserTransactionsCache& transactionsCache, account_keys_t keys, ITransfersContainer& transfersContainer);
 
   void stop();
 
@@ -31,11 +31,11 @@ private:
   std::shared_ptr<WalletRequest> makeGetRandomOutsRequest(std::shared_ptr<SendTransactionContext> context);
   std::shared_ptr<WalletRequest> doSendTransaction(std::shared_ptr<SendTransactionContext> context, std::deque<std::shared_ptr<WalletLegacyEvent>>& events);
   void prepareInputs(const std::list<TransactionOutputInformation>& selectedTransfers, std::vector<COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS::outs_for_amount>& outs,
-      std::vector<TransactionSourceEntry>& sources, uint64_t mixIn);
-  void splitDestinations(TransferId firstTransferId, size_t transfersCount, const TransactionDestinationEntry& changeDts,
-    const TxDustPolicy& dustPolicy, std::vector<TransactionDestinationEntry>& splittedDests);
-  void digitSplitStrategy(TransferId firstTransferId, size_t transfersCount, const TransactionDestinationEntry& change_dst, uint64_t dust_threshold,
-    std::vector<TransactionDestinationEntry>& splitted_dsts, uint64_t& dust);
+      std::vector<transaction_source_entry_t>& sources, uint64_t mixIn);
+  void splitDestinations(TransferId firstTransferId, size_t transfersCount, const transaction_destination_entry_t& changeDts,
+    const TxDustPolicy& dustPolicy, std::vector<transaction_destination_entry_t>& splittedDests);
+  void digitSplitStrategy(TransferId firstTransferId, size_t transfersCount, const transaction_destination_entry_t& change_dst, uint64_t dust_threshold,
+    std::vector<transaction_destination_entry_t>& splitted_dsts, uint64_t& dust);
   void sendTransactionRandomOutsByAmount(std::shared_ptr<SendTransactionContext> context, std::deque<std::shared_ptr<WalletLegacyEvent>>& events,
       boost::optional<std::shared_ptr<WalletRequest> >& nextRequest, std::error_code ec);
   void relayTransactionCallback(std::shared_ptr<SendTransactionContext> context, std::deque<std::shared_ptr<WalletLegacyEvent>>& events,
@@ -48,7 +48,7 @@ private:
   uint64_t selectTransfersToSend(uint64_t neededMoney, bool addDust, uint64_t dust, std::list<TransactionOutputInformation>& selectedTransfers);
 
   const Currency& m_currency;
-  AccountKeys m_keys;
+  account_keys_t m_keys;
   WalletUserTransactionsCache& m_transactionsCache;
   uint64_t m_upperTransactionSizeLimit;
 

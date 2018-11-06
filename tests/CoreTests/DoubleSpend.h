@@ -16,8 +16,8 @@ public:
 
   gen_double_spend_base();
 
-  bool check_TxVerificationContext(const cryptonote::TxVerificationContext& tvc, bool tx_added, size_t event_idx, const cryptonote::Transaction& tx);
-  bool check_BlockVerificationContext(const cryptonote::BlockVerificationContext& bvc, size_t event_idx, const cryptonote::Block& block);
+  bool check_tx_verification_context_t(const cryptonote::tx_verification_context_t& tvc, bool tx_added, size_t event_idx, const cryptonote::transaction_t& tx);
+  bool check_block_verification_context_t(const cryptonote::block_verification_context_t& bvc, size_t event_idx, const cryptonote::block_t& block);
 
   bool mark_last_valid_block(cryptonote::core& c, size_t ev_index, const std::vector<test_event_entry>& events);
   bool mark_invalid_tx(cryptonote::core& c, size_t ev_index, const std::vector<test_event_entry>& events);
@@ -25,7 +25,7 @@ public:
   bool check_double_spend(cryptonote::core& c, size_t ev_index, const std::vector<test_event_entry>& events);
 
 private:
-  cryptonote::Block m_last_valid_block;
+  cryptonote::block_t m_last_valid_block;
   size_t m_invalid_tx_index;
   size_t m_invalid_block_index;
 };
@@ -130,8 +130,8 @@ public:
 
   DoubleSpendBase();
 
-  bool check_TxVerificationContext(const cryptonote::TxVerificationContext& tvc, bool tx_added, size_t event_idx, const cryptonote::Transaction& tx);
-  bool check_BlockVerificationContext(const cryptonote::BlockVerificationContext& bvc, size_t event_idx, const cryptonote::Block& block);
+  bool check_tx_verification_context_t(const cryptonote::tx_verification_context_t& tvc, bool tx_added, size_t event_idx, const cryptonote::transaction_t& tx);
+  bool check_block_verification_context_t(const cryptonote::block_verification_context_t& bvc, size_t event_idx, const cryptonote::block_t& block);
 
   bool mark_last_valid_block(cryptonote::core& c, size_t ev_index, const std::vector<test_event_entry>& events);
   bool mark_invalid_tx(cryptonote::core& c, size_t ev_index, const std::vector<test_event_entry>& events);
@@ -146,11 +146,11 @@ protected:
 
   cryptonote::AccountBase m_bob_account;
   cryptonote::AccountBase m_alice_account;
-  cryptonote::KeyPair m_outputTxKey;
+  cryptonote::key_pair_t m_outputTxKey;
 
 private:
 
-  crypto::Hash m_last_valid_block;
+  crypto::hash_t m_last_valid_block;
   size_t m_invalid_tx_index;
   size_t m_invalid_block_index;
 };
@@ -190,11 +190,11 @@ struct MultiSigTx_DoubleSpendAltChainSameBlock : public DoubleSpendBase
 
   MultiSigTx_DoubleSpendAltChainSameBlock(bool txsKeepedByBlock);
 
-  bool check_TxVerificationContext(const cryptonote::TxVerificationContext& tvc, bool tx_added, size_t event_idx, const cryptonote::Transaction& tx) {
+  bool check_tx_verification_context_t(const cryptonote::tx_verification_context_t& tvc, bool tx_added, size_t event_idx, const cryptonote::transaction_t& tx) {
     return true;
   }
 
-  bool check_BlockVerificationContext(const cryptonote::BlockVerificationContext& bvc, size_t event_idx, const cryptonote::Block& block) {
+  bool check_block_verification_context_t(const cryptonote::block_verification_context_t& bvc, size_t event_idx, const cryptonote::block_t& block) {
     return true;
   }
 

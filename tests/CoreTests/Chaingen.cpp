@@ -17,7 +17,7 @@
 #include "crypto/crypto.h"
 #include "crypto/hash.h"
 #include "cryptonote/core/key.h"
-#include "cryptonote/core/serialize.h"
+#include "cryptonote/core/blockchain/serializer/crypto.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/core/Core.h"
@@ -30,17 +30,17 @@ using namespace std;
 using namespace cryptonote;
 
 struct output_index {
-    const cryptonote::TransactionOutputTarget out;
+    const cryptonote::transaction_output_target_t out;
     uint64_t amount;
     size_t blk_height; // block height
     size_t tx_no; // index of transaction in block
     size_t out_no; // index of out in transaction
     uint32_t idx;
     bool spent;
-    const cryptonote::Block *p_blk;
-    const cryptonote::Transaction *p_tx;
+    const cryptonote::block_t *p_blk;
+    const cryptonote::transaction_t *p_tx;
 
-    output_index(const cryptonote::TransactionOutputTarget &_out, uint64_t _a, size_t _h, size_t tno, size_t ono, const cryptonote::Block *_pb, const cryptonote::Transaction *_pt)
+    output_index(const cryptonote::transaction_output_target_t &_out, uint64_t _a, size_t _h, size_t tno, size_t ono, const cryptonote::block_t *_pb, const cryptonote::transaction_t *_pt)
         : out(_out), amount(_a), blk_height(_h), tx_no(tno), out_no(ono), idx(0), spent(false), p_blk(_pb), p_tx(_pt) { }
 
     output_index(const output_index &other)
@@ -73,10 +73,10 @@ typedef pair<uint64_t, size_t>  outloc_t;
 
 namespace
 {
-  uint64_t get_inputs_amount(const vector<TransactionSourceEntry> &s)
+  uint64_t get_inputs_amount(const vector<transaction_source_entry_t> &s)
   {
     uint64_t r = 0;
-    BOOST_FOREACH(const TransactionSourceEntry &e, s)
+    BOOST_FOREACH(const transaction_source_entry_t &e, s)
     {
       r += e.amount;
     }
@@ -85,13 +85,13 @@ namespace
   }
 }
 
-bool init_output_indices(map_output_idx_t& outs, std::map<uint64_t, std::vector<size_t> >& outs_mine, const std::vector<cryptonote::Block>& blockchain, const map_hash2tx_t& mtx, const cryptonote::AccountBase& from) {
+bool init_output_indices(map_output_idx_t& outs, std::map<uint64_t, std::vector<size_t> >& outs_mine, const std::vector<cryptonote::block_t>& blockchain, const map_hash2tx_t& mtx, const cryptonote::AccountBase& from) {
 
-    BOOST_FOREACH (const Block& blk, blockchain) {
-        vector<const Transaction*> vtx;
+    BOOST_FOREACH (const block_t& blk, blockchain) {
+        vector<const transaction_t*> vtx;
         vtx.push_back(&blk.baseTransaction);
 
-        for (const crypto::Hash& h : blk.transactionHashes) {
+        for (const crypto::hash_t& h : blk.transactionHashes) {
             const map_hash2tx_t::const_iterator cit = mtx.find(h);
             if (mtx.end() == cit)
                 throw std::runtime_error("block contains an unknown tx hash");
@@ -102,24 +102,24 @@ bool init_output_indices(map_output_idx_t& outs, std::map<uint64_t, std::vector<
         //vtx.insert(vtx.end(), blk.);
         // TODO: add all other txes
         for (size_t i = 0; i < vtx.size(); i++) {
-            const Transaction &tx = *vtx[i];
+            const transaction_t &tx = *vtx[i];
 
             size_t keyIndex = 0;
             for (size_t j = 0; j < tx.outputs.size(); ++j) {
-              const TransactionOutput &out = tx.outputs[j];
-              if (out.target.type() == typeid(KeyOutput)) {
-                output_index oi(out.target, out.amount, boost::get<BaseInput>(*blk.baseTransaction.inputs.begin()).blockIndex, i, j, &blk, vtx[i]);
+              const transaction_output_t &out = tx.outputs[j];
+              if (out.target.type() == typeid(key_output_t)) {
+                output_index oi(out.target, out.amount, boost::get<base_input_t>(*blk.baseTransaction.inputs.begin()).blockIndex, i, j, &blk, vtx[i]);
                 outs[out.amount].push_back(oi);
                 uint32_t tx_global_idx = static_cast<uint32_t>(outs[out.amount].size() - 1);
                 outs[out.amount][tx_global_idx].idx = tx_global_idx;
                 // Is out to me?
-                if (is_out_to_acc(from.getAccountKeys(), boost::get<KeyOutput>(out.target), getTransactionPublicKeyFromExtra(tx.extra), keyIndex)) {
+                if (is_out_to_acc(from.getAccountKeys(), boost::get<key_output_t>(out.target), getTransactionPublicKeyFromExtra(tx.extra), keyIndex)) {
                   outs_mine[out.amount].push_back(tx_global_idx);
                 }
 
                 ++keyIndex;
-              } else if (out.target.type() == typeid(MultisignatureOutput)) {
-                keyIndex += boost::get<MultisignatureOutput>(out.target).keys.size();
+              } else if (out.target.type() == typeid(multi_signature_output_t)) {
+                keyIndex += boost::get<multi_signature_output_t>(out.target).keys.size();
               }
             }
         }
@@ -128,23 +128,23 @@ bool init_output_indices(map_output_idx_t& outs, std::map<uint64_t, std::vector<
     return true;
 }
 
-bool init_spent_output_indices(map_output_idx_t& outs, map_output_t& outs_mine, const std::vector<cryptonote::Block>& blockchain, const map_hash2tx_t& mtx, const cryptonote::AccountBase& from) {
+bool init_spent_output_indices(map_output_idx_t& outs, map_output_t& outs_mine, const std::vector<cryptonote::block_t>& blockchain, const map_hash2tx_t& mtx, const cryptonote::AccountBase& from) {
 
     for (const map_output_t::value_type& o: outs_mine) {
         for (size_t i = 0; i < o.second.size(); ++i) {
             output_index &oi = outs[o.first][o.second[i]];
 
             // construct key image for this output
-            crypto::KeyImage img;
-            KeyPair in_ephemeral;
+            crypto::key_image_t img;
+            key_pair_t in_ephemeral;
             generate_key_image_helper(from.getAccountKeys(), getTransactionPublicKeyFromExtra(oi.p_tx->extra), oi.out_no, in_ephemeral, img);
 
             // lookup for this key image in the events vector
             for (auto& tx_pair : mtx) {
-                const Transaction& tx = *tx_pair.second;
+                const transaction_t& tx = *tx_pair.second;
                 for (const auto& in : tx.inputs) {
-                    if (in.type() == typeid(KeyInput)) {
-                        const KeyInput &itk = boost::get<KeyInput>(in);
+                    if (in.type() == typeid(key_input_t)) {
+                        const key_input_t &itk = boost::get<key_input_t>(in);
                         if (itk.keyImage == img) {
                             oi.spent = true;
                         }
@@ -157,7 +157,7 @@ bool init_spent_output_indices(map_output_idx_t& outs, map_output_t& outs_mine, 
     return true;
 }
 
-bool fill_output_entries(std::vector<output_index>& out_indices, size_t sender_out, size_t nmix, size_t& real_entry_idx, std::vector<TransactionSourceEntry::OutputEntry>& output_entries)
+bool fill_output_entries(std::vector<output_index>& out_indices, size_t sender_out, size_t nmix, size_t& real_entry_idx, std::vector<transaction_source_entry_t::output_entry_t>& output_entries)
 {
   if (out_indices.size() <= nmix)
     return false;
@@ -185,21 +185,21 @@ bool fill_output_entries(std::vector<output_index>& out_indices, size_t sender_o
 
     if (append)
     {
-      const KeyOutput& otk = boost::get<KeyOutput>(oi.out);
-      output_entries.push_back(TransactionSourceEntry::OutputEntry(oi.idx, otk.key));
+      const key_output_t& otk = boost::get<key_output_t>(oi.out);
+      output_entries.push_back(transaction_source_entry_t::output_entry_t(oi.idx, otk.key));
     }
   }
 
   return 0 == rest && sender_out_found;
 }
 
-bool fill_tx_sources(std::vector<TransactionSourceEntry>& sources, const std::vector<test_event_entry>& events,
-                     const Block& blk_head, const cryptonote::AccountBase& from, uint64_t amount, size_t nmix)
+bool fill_tx_sources(std::vector<transaction_source_entry_t>& sources, const std::vector<test_event_entry>& events,
+                     const block_t& blk_head, const cryptonote::AccountBase& from, uint64_t amount, size_t nmix)
 {
     map_output_idx_t outs;
     map_output_t outs_mine;
 
-    std::vector<cryptonote::Block> blockchain;
+    std::vector<cryptonote::block_t> blockchain;
     map_hash2tx_t mtx;
     if (!find_block_chain(events, blockchain, mtx, get_block_hash(blk_head)))
         return false;
@@ -222,7 +222,7 @@ bool fill_tx_sources(std::vector<TransactionSourceEntry>& sources, const std::ve
             if (oi.spent)
                 continue;
 
-            cryptonote::TransactionSourceEntry ts;
+            cryptonote::transaction_source_entry_t ts;
             ts.amount = oi.amount;
             ts.realOutputIndexInTransaction = oi.out_no;
             ts.realTransactionPublicKey = getTransactionPublicKeyFromExtra(oi.p_tx->extra); // incoming tx public key
@@ -245,16 +245,16 @@ bool fill_tx_sources(std::vector<TransactionSourceEntry>& sources, const std::ve
     return sources_found;
 }
 
-bool fill_tx_destination(TransactionDestinationEntry &de, const cryptonote::AccountBase &to, uint64_t amount) {
+bool fill_tx_destination(transaction_destination_entry_t &de, const cryptonote::AccountBase &to, uint64_t amount) {
     de.addr = to.getAccountKeys().address;
     de.amount = amount;
     return true;
 }
 
-void fill_tx_sources_and_destinations(const std::vector<test_event_entry>& events, const Block& blk_head,
+void fill_tx_sources_and_destinations(const std::vector<test_event_entry>& events, const block_t& blk_head,
                                       const cryptonote::AccountBase& from, const cryptonote::AccountBase& to,
-                                      uint64_t amount, uint64_t fee, size_t nmix, std::vector<TransactionSourceEntry>& sources,
-                                      std::vector<TransactionDestinationEntry>& destinations)
+                                      uint64_t amount, uint64_t fee, size_t nmix, std::vector<transaction_source_entry_t>& sources,
+                                      std::vector<transaction_destination_entry_t>& destinations)
 {
   sources.clear();
   destinations.clear();
@@ -262,12 +262,12 @@ void fill_tx_sources_and_destinations(const std::vector<test_event_entry>& event
   if (!fill_tx_sources(sources, events, blk_head, from, amount + fee, nmix))
     throw std::runtime_error("couldn't fill transaction sources");
 
-  TransactionDestinationEntry de;
+  transaction_destination_entry_t de;
   if (!fill_tx_destination(de, to, amount))
     throw std::runtime_error("couldn't fill transaction destination");
   destinations.push_back(de);
 
-  TransactionDestinationEntry de_change;
+  transaction_destination_entry_t de_change;
   uint64_t cache_back = get_inputs_amount(sources) - (amount + fee);
   if (0 < cache_back)
   {
@@ -277,27 +277,27 @@ void fill_tx_sources_and_destinations(const std::vector<test_event_entry>& event
   }
 }
 
-bool construct_tx_to_key(Logging::ILogger& logger, const std::vector<test_event_entry>& events, cryptonote::Transaction& tx, const Block& blk_head,
+bool construct_tx_to_key(Logging::ILogger& logger, const std::vector<test_event_entry>& events, cryptonote::transaction_t& tx, const block_t& blk_head,
                          const cryptonote::AccountBase& from, const cryptonote::AccountBase& to, uint64_t amount,
                          uint64_t fee, size_t nmix)
 {
-  vector<TransactionSourceEntry> sources;
-  vector<TransactionDestinationEntry> destinations;
+  vector<transaction_source_entry_t> sources;
+  vector<transaction_destination_entry_t> destinations;
   fill_tx_sources_and_destinations(events, blk_head, from, to, amount, fee, nmix, sources, destinations);
 
   return constructTransaction(from.getAccountKeys(), sources, destinations, std::vector<uint8_t>(), tx, 0, logger);
 }
 
-Transaction construct_tx_with_fee(Logging::ILogger& logger, std::vector<test_event_entry>& events, const Block& blk_head,
+transaction_t construct_tx_with_fee(Logging::ILogger& logger, std::vector<test_event_entry>& events, const block_t& blk_head,
                                   const AccountBase& acc_from, const AccountBase& acc_to, uint64_t amount, uint64_t fee)
 {
-  Transaction tx;
+  transaction_t tx;
   construct_tx_to_key(logger, events, tx, blk_head, acc_from, acc_to, amount, fee, 0);
   events.push_back(tx);
   return tx;
 }
 
-uint64_t get_balance(const cryptonote::AccountBase& addr, const std::vector<cryptonote::Block>& blockchain, const map_hash2tx_t& mtx) {
+uint64_t get_balance(const cryptonote::AccountBase& addr, const std::vector<cryptonote::block_t>& blockchain, const map_hash2tx_t& mtx) {
     uint64_t res = 0;
     std::map<uint64_t, std::vector<output_index> > outs;
     std::map<uint64_t, std::vector<size_t> > outs_mine;
@@ -323,12 +323,12 @@ uint64_t get_balance(const cryptonote::AccountBase& addr, const std::vector<cryp
     return res;
 }
 
-void get_confirmed_txs(const std::vector<cryptonote::Block>& blockchain, const map_hash2tx_t& mtx, map_hash2tx_t& confirmed_txs)
+void get_confirmed_txs(const std::vector<cryptonote::block_t>& blockchain, const map_hash2tx_t& mtx, map_hash2tx_t& confirmed_txs)
 {
-  std::unordered_set<crypto::Hash> confirmed_hashes;
-  for (const Block& blk : blockchain)
+  std::unordered_set<crypto::hash_t> confirmed_hashes;
+  for (const block_t& blk : blockchain)
   {
-    for (const crypto::Hash& tx_hash : blk.transactionHashes)
+    for (const crypto::hash_t& tx_hash : blk.transactionHashes)
     {
       confirmed_hashes.insert(tx_hash);
     }
@@ -343,24 +343,24 @@ void get_confirmed_txs(const std::vector<cryptonote::Block>& blockchain, const m
   }
 }
 
-bool find_block_chain(const std::vector<test_event_entry>& events, std::vector<cryptonote::Block>& blockchain, map_hash2tx_t& mtx, const crypto::Hash& head) {
-    std::unordered_map<crypto::Hash, const Block*> block_index;
+bool find_block_chain(const std::vector<test_event_entry>& events, std::vector<cryptonote::block_t>& blockchain, map_hash2tx_t& mtx, const crypto::hash_t& head) {
+    std::unordered_map<crypto::hash_t, const block_t*> block_index;
     BOOST_FOREACH(const test_event_entry& ev, events)
     {
-        if (typeid(Block) == ev.type())
+        if (typeid(block_t) == ev.type())
         {
-            const Block* blk = &boost::get<Block>(ev);
+            const block_t* blk = &boost::get<block_t>(ev);
             block_index[get_block_hash(*blk)] = blk;
         }
-        else if (typeid(Transaction) == ev.type())
+        else if (typeid(transaction_t) == ev.type())
         {
-            const Transaction& tx = boost::get<Transaction>(ev);
+            const transaction_t& tx = boost::get<transaction_t>(ev);
             mtx[getObjectHash(tx)] = &tx;
         }
     }
 
     bool b_success = false;
-    crypto::Hash id = head;
+    crypto::hash_t id = head;
     for (auto it = block_index.find(id); block_index.end() != it; it = block_index.find(id))
     {
         blockchain.push_back(*it->second);

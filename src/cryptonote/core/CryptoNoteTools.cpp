@@ -20,45 +20,45 @@ bool toBinaryArray(const BinaryArray& object, BinaryArray& binaryArray) {
   return true;
 }
 
-void getBinaryArrayHash(const BinaryArray& binaryArray, crypto::Hash& hash) {
+void getBinaryArrayHash(const BinaryArray& binaryArray, crypto::hash_t& hash) {
   cn_fast_hash(binaryArray.data(), binaryArray.size(), hash);
 }
 
-crypto::Hash getBinaryArrayHash(const BinaryArray& binaryArray) {
-  crypto::Hash hash;
+crypto::hash_t getBinaryArrayHash(const BinaryArray& binaryArray) {
+  crypto::hash_t hash;
   getBinaryArrayHash(binaryArray, hash);
   return hash;
 }
 
-uint64_t getInputAmount(const Transaction& transaction) {
+uint64_t getInputAmount(const transaction_t& transaction) {
   uint64_t amount = 0;
   for (auto& input : transaction.inputs) {
-    if (input.type() == typeid(KeyInput)) {
-      amount += boost::get<KeyInput>(input).amount;
-    } else if (input.type() == typeid(MultisignatureInput)) {
-      amount += boost::get<MultisignatureInput>(input).amount;
+    if (input.type() == typeid(key_input_t)) {
+      amount += boost::get<key_input_t>(input).amount;
+    } else if (input.type() == typeid(multi_signature_input_t)) {
+      amount += boost::get<multi_signature_input_t>(input).amount;
     }
   }
 
   return amount;
 }
 
-std::vector<uint64_t> getInputsAmounts(const Transaction& transaction) {
+std::vector<uint64_t> getInputsAmounts(const transaction_t& transaction) {
   std::vector<uint64_t> inputsAmounts;
   inputsAmounts.reserve(transaction.inputs.size());
 
   for (auto& input: transaction.inputs) {
-    if (input.type() == typeid(KeyInput)) {
-      inputsAmounts.push_back(boost::get<KeyInput>(input).amount);
-    } else if (input.type() == typeid(MultisignatureInput)) {
-      inputsAmounts.push_back(boost::get<MultisignatureInput>(input).amount);
+    if (input.type() == typeid(key_input_t)) {
+      inputsAmounts.push_back(boost::get<key_input_t>(input).amount);
+    } else if (input.type() == typeid(multi_signature_input_t)) {
+      inputsAmounts.push_back(boost::get<multi_signature_input_t>(input).amount);
     }
   }
 
   return inputsAmounts;
 }
 
-uint64_t getOutputAmount(const Transaction& transaction) {
+uint64_t getOutputAmount(const transaction_t& transaction) {
   uint64_t amount = 0;
   for (auto& output : transaction.outputs) {
     amount += output.amount;

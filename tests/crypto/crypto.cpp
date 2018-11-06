@@ -18,13 +18,13 @@ void hash_to_scalar(const void *data, size_t length, crypto::EllipticCurveScalar
   crypto::hash_to_scalar(data, length, res);
 }
 
-void hash_to_point(const crypto::Hash &h, crypto::EllipticCurvePoint &res) {
+void hash_to_point(const crypto::hash_t &h, crypto::EllipticCurvePoint &res) {
   crypto::ge_p2 point;
   crypto::ge_fromfe_frombytes_vartime(&point, reinterpret_cast<const unsigned char *>(&h));
   crypto::ge_tobytes(reinterpret_cast<unsigned char*>(&res), &point);
 }
 
-void hash_to_ec(const crypto::PublicKey &key, crypto::EllipticCurvePoint &res) {
+void hash_to_ec(const crypto::public_key_t &key, crypto::EllipticCurvePoint &res) {
   crypto::ge_p3 tmp;
   crypto::hash_to_ec(key, tmp);
   crypto::ge_p3_tobytes(reinterpret_cast<unsigned char*>(&res), &tmp);

@@ -5,19 +5,19 @@
 namespace cryptonote
 {
 
-struct BlockHeader
+struct block_header_t
 {
     uint8_t majorVersion;
     uint8_t minorVersion;
     uint32_t nonce;
     uint64_t timestamp;
-    crypto::Hash previousBlockHash;
+    crypto::hash_t previousBlockHash;
 };
 
-struct Block : public BlockHeader
+struct block_t : public block_header_t
 {
-    Transaction baseTransaction;
-    std::vector<crypto::Hash> transactionHashes;
+    transaction_t baseTransaction;
+    std::vector<crypto::hash_t> transactionHashes;
 };
 
 } // namespace cryptonote

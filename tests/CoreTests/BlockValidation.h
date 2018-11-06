@@ -18,7 +18,7 @@ public:
     REGISTER_CALLBACK("markInvalidBlock", CheckBlockPurged::markInvalidBlock);
   }
 
-  bool check_BlockVerificationContext(const cryptonote::BlockVerificationContext& bvc, size_t eventIdx, const cryptonote::Block& /*blk*/) {
+  bool check_block_verification_context_t(const cryptonote::block_verification_context_t& bvc, size_t eventIdx, const cryptonote::block_t& /*blk*/) {
     if (m_invalidBlockIdx == eventIdx) {
       return bvc.m_verifivation_failed;
     } else {
@@ -134,7 +134,7 @@ struct gen_block_invalid_prev_id : public CheckBlockPurged
     : CheckBlockPurged(1) {}
 
   bool generate(std::vector<test_event_entry>& events) const;
-  bool check_BlockVerificationContext(const cryptonote::BlockVerificationContext& bvc, size_t event_idx, const cryptonote::Block& /*blk*/);
+  bool check_block_verification_context_t(const cryptonote::block_verification_context_t& bvc, size_t event_idx, const cryptonote::block_t& /*blk*/);
 };
 
 struct gen_block_invalid_nonce : public CheckBlockPurged
@@ -294,7 +294,7 @@ struct gen_block_invalid_binary_format : public test_chain_unit_base
   gen_block_invalid_binary_format();
 
   bool generate(std::vector<test_event_entry>& events) const;
-  bool check_BlockVerificationContext(const cryptonote::BlockVerificationContext& bvc, size_t event_idx, const cryptonote::Block& /*blk*/);
+  bool check_block_verification_context_t(const cryptonote::block_verification_context_t& bvc, size_t event_idx, const cryptonote::block_t& /*blk*/);
   bool check_all_blocks_purged(cryptonote::core& c, size_t ev_index, const std::vector<test_event_entry>& events);
   bool corrupt_blocks_boundary(cryptonote::core& c, size_t ev_index, const std::vector<test_event_entry>& events);
 

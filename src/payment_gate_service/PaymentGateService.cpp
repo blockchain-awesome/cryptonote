@@ -121,16 +121,7 @@ void PaymentGateService::stop() {
 }
 
 void PaymentGateService::runInProcess(Logging::LoggerRef& log) {
-  boost::filesystem::path path(config.coreConfig.configFolder);
-  if (!config.coreConfig.configFolderDefaulted) {
-    if (!boost::filesystem::exists(path)) {
-      throw std::runtime_error("Directory does not exist: " + config.coreConfig.configFolder);
-    }
-  } else {
-    if (!boost::filesystem::exists(path) && !boost::filesystem::create_directory(path)) {
-      throw std::runtime_error("Can't create directory: " + config.coreConfig.configFolder);
-    }
-  }
+  config.coreConfig.checkDataDir();
 
   log(Logging::INFO) << "Starting Payment Gate with local node";
 
@@ -150,7 +141,7 @@ void PaymentGateService::runInProcess(Logging::LoggerRef& log) {
 
   log(Logging::INFO) << "initializing core";
   cryptonote::MinerConfig emptyMiner;
-  core.init(config.coreConfig, emptyMiner, true);
+  core.init(emptyMiner, true);
 
   std::promise<std::error_code> initPromise;
   auto initFuture = initPromise.get_future();

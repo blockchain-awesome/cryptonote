@@ -45,7 +45,7 @@ public:
 
   virtual void initAndGenerate(const std::string& password) override;
   virtual void initAndLoad(std::istream& source, const std::string& password) override;
-  virtual void initWithKeys(const AccountKeys& accountKeys, const std::string& password) override;
+  virtual void initWithKeys(const account_keys_t& accountKeys, const std::string& password) override;
   virtual void shutdown() override;
   virtual void reset() override;
 
@@ -70,7 +70,7 @@ public:
   virtual TransactionId sendTransaction(const std::vector<WalletLegacyTransfer>& transfers, uint64_t fee, const std::string& extra = "", uint64_t mixIn = 0, uint64_t unlockTimestamp = 0) override;
   virtual std::error_code cancelTransaction(size_t transactionId) override;
 
-  virtual void getAccountKeys(AccountKeys& keys) override;
+  virtual void getAccountKeys(account_keys_t& keys) override;
 
 private:
 
@@ -79,8 +79,8 @@ private:
   virtual void synchronizationCompleted(std::error_code result) override;
 
   // ITransfersObserver
-  virtual void onTransactionUpdated(ITransfersSubscription* object, const crypto::Hash& transactionHash) override;
-  virtual void onTransactionDeleted(ITransfersSubscription* object, const crypto::Hash& transactionHash) override;
+  virtual void onTransactionUpdated(ITransfersSubscription* object, const crypto::hash_t& transactionHash) override;
+  virtual void onTransactionDeleted(ITransfersSubscription* object, const crypto::hash_t& transactionHash) override;
 
   void initSync();
   void throwIfNotInitialised();

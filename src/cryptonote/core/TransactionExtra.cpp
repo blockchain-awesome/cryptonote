@@ -109,21 +109,21 @@ bool writeTransactionExtra(std::vector<uint8_t>& tx_extra, const std::vector<Tra
   return true;
 }
 
-PublicKey getTransactionPublicKeyFromExtra(const std::vector<uint8_t>& tx_extra) {
+public_key_t getTransactionPublicKeyFromExtra(const std::vector<uint8_t>& tx_extra) {
   std::vector<TransactionExtraField> tx_extra_fields;
   parseTransactionExtra(tx_extra, tx_extra_fields);
 
   TransactionExtraPublicKey pub_key_field;
   if (!findTransactionExtraFieldByType(tx_extra_fields, pub_key_field))
-    return boost::value_initialized<PublicKey>();
+    return boost::value_initialized<public_key_t>();
 
   return pub_key_field.publicKey;
 }
 
-bool addTransactionPublicKeyToExtra(std::vector<uint8_t>& tx_extra, const PublicKey& tx_pub_key) {
-  tx_extra.resize(tx_extra.size() + 1 + sizeof(PublicKey));
-  tx_extra[tx_extra.size() - 1 - sizeof(PublicKey)] = TX_EXTRA_TAG_PUBKEY;
-  *reinterpret_cast<PublicKey*>(&tx_extra[tx_extra.size() - sizeof(PublicKey)]) = tx_pub_key;
+bool addTransactionPublicKeyToExtra(std::vector<uint8_t>& tx_extra, const public_key_t& tx_pub_key) {
+  tx_extra.resize(tx_extra.size() + 1 + sizeof(public_key_t));
+  tx_extra[tx_extra.size() - 1 - sizeof(public_key_t)] = TX_EXTRA_TAG_PUBKEY;
+  *reinterpret_cast<public_key_t*> (&tx_extra[tx_extra.size() - sizeof(public_key_t)]) = tx_pub_key;
   return true;
 }
 
@@ -146,28 +146,28 @@ bool addExtraNonceToTransactionExtra(std::vector<uint8_t>& tx_extra, const Binar
   return true;
 }
 
-void setPaymentIdToTransactionExtraNonce(std::vector<uint8_t>& extra_nonce, const Hash& payment_id) {
+void setPaymentIdToTransactionExtraNonce(std::vector<uint8_t>& extra_nonce, const hash_t& payment_id) {
   extra_nonce.clear();
   extra_nonce.push_back(TX_EXTRA_NONCE_PAYMENT_ID);
   const uint8_t* payment_id_ptr = reinterpret_cast<const uint8_t*>(&payment_id);
   std::copy(payment_id_ptr, payment_id_ptr + sizeof(payment_id), std::back_inserter(extra_nonce));
 }
 
-bool getPaymentIdFromTransactionExtraNonce(const std::vector<uint8_t>& extra_nonce, Hash& payment_id) {
-  if (sizeof(Hash) + 1 != extra_nonce.size())
+bool getPaymentIdFromTransactionExtraNonce(const std::vector<uint8_t>& extra_nonce, hash_t& payment_id) {
+  if (sizeof(hash_t) + 1 != extra_nonce.size())
     return false;
   if (TX_EXTRA_NONCE_PAYMENT_ID != extra_nonce[0])
     return false;
-  payment_id = *reinterpret_cast<const Hash*>(extra_nonce.data() + 1);
+  payment_id = *reinterpret_cast<const hash_t*>(extra_nonce.data() + 1);
   return true;
 }
 
-bool parsePaymentId(const std::string& paymentIdString, Hash& paymentId) {
+bool parsePaymentId(const std::string& paymentIdString, hash_t& paymentId) {
   return Common::podFromHex(paymentIdString, paymentId);
 }
 
 bool createTxExtraWithPaymentId(const std::string& paymentIdString, std::vector<uint8_t>& extra) {
-  Hash paymentIdBin;
+  hash_t paymentIdBin;
 
   if (!parsePaymentId(paymentIdString, paymentIdBin)) {
     return false;
@@ -183,7 +183,7 @@ bool createTxExtraWithPaymentId(const std::string& paymentIdString, std::vector<
   return true;
 }
 
-bool getPaymentIdFromTxExtra(const std::vector<uint8_t>& extra, Hash& paymentId) {
+bool getPaymentIdFromTxExtra(const std::vector<uint8_t>& extra, hash_t& paymentId) {
   std::vector<TransactionExtraField> tx_extra_fields;
   if (!parseTransactionExtra(extra, tx_extra_fields)) {
     return false;

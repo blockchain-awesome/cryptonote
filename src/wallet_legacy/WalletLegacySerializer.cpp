@@ -12,7 +12,7 @@
 #include "serialization/BinaryOutputStreamSerializer.h"
 #include "serialization/BinaryInputStreamSerializer.h"
 #include "cryptonote/core/Account.h"
-#include "cryptonote/core/CryptoNoteSerialization.h"
+#include "cryptonote/core/blockchain/serializer/basics.h"
 #include "wallet_legacy/WalletUserTransactionsCache.h"
 #include "wallet/WalletErrors.h"
 #include "wallet_legacy/KeysStorage.h"
@@ -21,13 +21,13 @@ using namespace Common;
 
 namespace {
 
-bool verifyKeys(const crypto::SecretKey& sec, const crypto::PublicKey& expected_pub) {
-  crypto::PublicKey pub;
+bool verifyKeys(const crypto::secret_key_t& sec, const crypto::public_key_t& expected_pub) {
+  crypto::public_key_t pub;
   bool r = crypto::secret_key_to_public_key(sec, pub);
   return r && expected_pub == pub;
 }
 
-void throwIfKeysMissmatch(const crypto::SecretKey& sec, const crypto::PublicKey& expected_pub) {
+void throwIfKeysMissmatch(const crypto::secret_key_t& sec, const crypto::public_key_t& expected_pub) {
   if (!verifyKeys(sec, expected_pub))
     throw std::system_error(make_error_code(cryptonote::error::WRONG_PASSWORD));
 }
@@ -76,7 +76,7 @@ void WalletLegacySerializer::serialize(std::ostream& stream, const std::string& 
 
 void WalletLegacySerializer::saveKeys(cryptonote::ISerializer& serializer) {
   cryptonote::KeysStorage keys;
-  cryptonote::AccountKeys acc = account.getAccountKeys();
+  cryptonote::account_keys_t acc = account.getAccountKeys();
 
   keys.creationTimestamp = account.getCreatetime();
   keys.spendPublicKey = acc.address.spendPublicKey;
@@ -159,7 +159,7 @@ void WalletLegacySerializer::loadKeys(cryptonote::ISerializer& serializer) {
 
   keys.serialize(serializer, "keys");
 
-  cryptonote::AccountKeys acc;
+  cryptonote::account_keys_t acc;
   acc.address.spendPublicKey = keys.spendPublicKey;
   acc.spendSecretKey = keys.spendSecretKey;
   acc.address.viewPublicKey = keys.viewPublicKey;

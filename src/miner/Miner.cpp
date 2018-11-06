@@ -24,7 +24,7 @@ Miner::~Miner() {
   assert(m_state != MiningState::MINING_IN_PROGRESS);
 }
 
-Block Miner::mine(const BlockMiningParameters& blockMiningParameters, size_t threadCount) {
+block_t Miner::mine(const BlockMiningParameters& blockMiningParameters, size_t threadCount) {
   if (threadCount == 0) {
     throw std::runtime_error("Miner requires at least one thread");
   }
@@ -83,12 +83,12 @@ void Miner::runWorkers(BlockMiningParameters blockMiningParameters, size_t threa
   m_miningStopped.set();
 }
 
-void Miner::workerFunc(const Block& blockTemplate, difficulty_type difficulty, uint32_t nonceStep) {
+void Miner::workerFunc(const block_t& blockTemplate, difficulty_type difficulty, uint32_t nonceStep) {
   try {
-    Block block = blockTemplate;
+    block_t block = blockTemplate;
 
     while (m_state == MiningState::MINING_IN_PROGRESS) {
-      crypto::Hash hash;
+      crypto::hash_t hash;
       if (!get_block_longhash(block, hash)) {
         //error occured
         m_logger(Logging::DEBUGGING) << "calculating long hash error occured";

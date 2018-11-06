@@ -24,7 +24,7 @@ class BlockCacheSerializer
 {
 
 public:
-  BlockCacheSerializer(Blockchain &bs, const crypto::Hash lastBlockHash, ILogger &logger) : m_bs(bs), m_lastBlockHash(lastBlockHash), m_loaded(false), logger(logger, "BlockCacheSerializer")
+  BlockCacheSerializer(Blockchain &bs, const crypto::hash_t lastBlockHash, ILogger &logger) : m_bs(bs), m_lastBlockHash(lastBlockHash), m_loaded(false), logger(logger, "BlockCacheSerializer")
   {
   }
 
@@ -40,7 +40,7 @@ public:
 
       StdInputStream stream(stdStream);
       BinaryInputStreamSerializer s(stream);
-      cryptonote::serialize(*this, s);
+      serialize(s);
     }
     catch (std::exception &e)
     {
@@ -60,7 +60,7 @@ public:
 
       StdOutputStream stream(file);
       BinaryOutputStreamSerializer s(stream);
-      cryptonote::serialize(*this, s);
+      serialize(s);
     }
     catch (std::exception &)
     {
@@ -77,6 +77,8 @@ public:
     uint8_t version = CURRENT_BLOCKCACHE_STORAGE_ARCHIVE_VER;
     s(version, "version");
 
+    std::cout << "Blockchain version: " << (int)version << std::endl;
+
     // ignore old versions, do rebuild
     if (version < CURRENT_BLOCKCACHE_STORAGE_ARCHIVE_VER)
       return;
@@ -85,7 +87,7 @@ public:
     if (s.type() == ISerializer::INPUT)
     {
       operation = "- loading ";
-      crypto::Hash blockHash;
+      crypto::hash_t blockHash;
       s(blockHash, "last_block");
 
       if (blockHash != m_lastBlockHash)
@@ -130,7 +132,7 @@ private:
   LoggerRef logger;
   bool m_loaded;
   Blockchain &m_bs;
-  crypto::Hash m_lastBlockHash;
+  crypto::hash_t m_lastBlockHash;
 };
 
 } // namespace cryptonote

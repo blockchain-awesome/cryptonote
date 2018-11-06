@@ -162,7 +162,7 @@ std::error_code MultiServiceJsonRpcServer::handleLogin(const Login::Request &req
     return make_error_code(MultiWalletErrorCode::INVALID_VIEW_SECRET_KEY);
   }
 
-  AccountKeys keys;
+  account_keys_t keys;
   logger(Logging::INFO) << "address is " << request.address << ", length" << request.address.size() << endl;
   logger(Logging::INFO) << "sendSecretKey is " << request.sendSecretKey << ", length" << request.sendSecretKey.size() << endl;
   logger(Logging::INFO) << "viewSecretKey is " << request.viewSecretKey << ", length" << request.viewSecretKey.size() << endl;

@@ -10,6 +10,7 @@
 #include <boost/program_options/parsers.hpp>
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/variables_map.hpp>
+#include <boost/filesystem.hpp>
 
 namespace command_line
 {
@@ -234,6 +235,7 @@ public:
   {
     try
     {
+      exeFile = boost::filesystem::path(argv[0]);
       po::store(po::parse_command_line(argc, argv, desc_options), vm);
       if (!innerParse())
       {
@@ -260,6 +262,7 @@ public:
   po::options_description desc_cmd_only;
   po::options_description desc_options;
   po::variables_map vm;
+  boost::filesystem::path exeFile;
 };
 
 } // namespace command_line

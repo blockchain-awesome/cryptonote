@@ -45,7 +45,7 @@ struct COMMAND_RPC_GET_HEIGHT {
 struct COMMAND_RPC_GET_BLOCKS_FAST {
 
   struct request {
-    std::vector<crypto::Hash> block_ids; //*first 10 blocks id goes sequential, next goes in pow(2,n) offset, like 2, 4, 8, 16, 32, 64 and so on, and the last one is always genesis block */
+    std::vector<crypto::hash_t> block_ids; //*first 10 blocks id goes sequential, next goes in pow(2,n) offset, like 2, 4, 8, 16, 32, 64 and so on, and the last one is always genesis block */
     
     void serialize(ISerializer &s) {
       serializeAsBinary(block_ids, "block_ids", s);
@@ -91,8 +91,8 @@ struct COMMAND_RPC_GET_TRANSACTIONS {
 //-----------------------------------------------
 struct COMMAND_RPC_GET_POOL_CHANGES {
   struct request {
-    crypto::Hash tailBlockId;
-    std::vector<crypto::Hash> knownTxsIds;
+    crypto::hash_t tailBlockId;
+    std::vector<crypto::hash_t> knownTxsIds;
 
     void serialize(ISerializer &s) {
       KV_MEMBER(tailBlockId)
@@ -103,7 +103,7 @@ struct COMMAND_RPC_GET_POOL_CHANGES {
   struct response {
     bool isTailBlockActual;
     std::vector<BinaryArray> addedTxs;          // Added transactions blobs
-    std::vector<crypto::Hash> deletedTxsIds; // IDs of not found transactions
+    std::vector<crypto::hash_t> deletedTxsIds; // IDs of not found transactions
     std::string status;
 
     void serialize(ISerializer &s) {
@@ -117,8 +117,8 @@ struct COMMAND_RPC_GET_POOL_CHANGES {
 
 struct COMMAND_RPC_GET_POOL_CHANGES_LITE {
   struct request {
-    crypto::Hash tailBlockId;
-    std::vector<crypto::Hash> knownTxsIds;
+    crypto::hash_t tailBlockId;
+    std::vector<crypto::hash_t> knownTxsIds;
 
     void serialize(ISerializer &s) {
       KV_MEMBER(tailBlockId)
@@ -128,8 +128,8 @@ struct COMMAND_RPC_GET_POOL_CHANGES_LITE {
 
   struct response {
     bool isTailBlockActual;
-    std::vector<TransactionPrefixInfo> addedTxs;          // Added transactions blobs
-    std::vector<crypto::Hash> deletedTxsIds; // IDs of not found transactions
+    std::vector<transaction_prefix_info_t> addedTxs;          // Added transactions blobs
+    std::vector<crypto::hash_t> deletedTxsIds; // IDs of not found transactions
     std::string status;
 
     void serialize(ISerializer &s) {
@@ -145,7 +145,7 @@ struct COMMAND_RPC_GET_POOL_CHANGES_LITE {
 struct COMMAND_RPC_GET_TX_GLOBAL_OUTPUTS_INDEXES {
   
   struct request {
-    crypto::Hash txid;
+    crypto::hash_t txid;
 
     void serialize(ISerializer &s) {
       KV_MEMBER(txid)
@@ -176,7 +176,7 @@ struct COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_request {
 #pragma pack(push, 1)
 struct COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_out_entry {
   uint64_t global_amount_index;
-  crypto::PublicKey out_key;
+  crypto::public_key_t out_key;
 };
 #pragma pack(pop)
 
@@ -214,7 +214,7 @@ struct COMMAND_RPC_SEND_RAW_TX {
     std::string tx_as_hex;
 
     request() {}
-    explicit request(const Transaction &);
+    explicit request(const transaction_t &);
 
     void serialize(ISerializer &s) {
       KV_MEMBER(tx_as_hex)
@@ -429,7 +429,7 @@ struct COMMAND_RPC_GET_BLOCK_HEADER_BY_HEIGHT {
 
 struct COMMAND_RPC_QUERY_BLOCKS {
   struct request {
-    std::vector<crypto::Hash> block_ids; //*first 10 blocks id goes sequential, next goes in pow(2,n) offset, like 2, 4, 8, 16, 32, 64 and so on, and the last one is always genesis block */
+    std::vector<crypto::hash_t> block_ids; //*first 10 blocks id goes sequential, next goes in pow(2,n) offset, like 2, 4, 8, 16, 32, 64 and so on, and the last one is always genesis block */
     uint64_t timestamp;
 
     void serialize(ISerializer &s) {
@@ -443,7 +443,7 @@ struct COMMAND_RPC_QUERY_BLOCKS {
     uint64_t start_height;
     uint64_t current_height;
     uint64_t full_offset;
-    std::vector<BlockFullInfo> items;
+    std::vector<block_full_info_t> items;
 
     void serialize(ISerializer &s) {
       KV_MEMBER(status)
@@ -457,7 +457,7 @@ struct COMMAND_RPC_QUERY_BLOCKS {
 
 struct COMMAND_RPC_QUERY_BLOCKS_LITE {
   struct request {
-    std::vector<crypto::Hash> blockIds;
+    std::vector<crypto::hash_t> blockIds;
     uint64_t timestamp;
 
     void serialize(ISerializer &s) {
@@ -471,7 +471,7 @@ struct COMMAND_RPC_QUERY_BLOCKS_LITE {
     uint64_t startHeight;
     uint64_t currentHeight;
     uint64_t fullOffset;
-    std::vector<BlockShortInfo> items;
+    std::vector<block_short_info_t> items;
 
     void serialize(ISerializer &s) {
       KV_MEMBER(status)

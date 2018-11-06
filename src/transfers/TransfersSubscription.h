@@ -18,15 +18,15 @@ public:
   void onBlockchainDetach(uint32_t height);
   void onError(const std::error_code& ec, uint32_t height);
   bool advanceHeight(uint32_t height);
-  const AccountKeys& getKeys() const;
+  const account_keys_t& getKeys() const;
   bool addTransaction(const TransactionBlockInfo& blockInfo, const ITransactionReader& tx,
                       const std::vector<TransactionOutputInformationIn>& transfers);
 
-  void deleteUnconfirmedTransaction(const crypto::Hash& transactionHash);
-  void markTransactionConfirmed(const TransactionBlockInfo& block, const crypto::Hash& transactionHash, const std::vector<uint32_t>& globalIndices);
+  void deleteUnconfirmedTransaction(const crypto::hash_t& transactionHash);
+  void markTransactionConfirmed(const TransactionBlockInfo& block, const crypto::hash_t& transactionHash, const std::vector<uint32_t>& globalIndices);
 
   // ITransfersSubscription
-  virtual AccountPublicAddress getAddress() override;
+  virtual account_public_address_t getAddress() override;
   virtual ITransfersContainer& getContainer() override;
 
 private:

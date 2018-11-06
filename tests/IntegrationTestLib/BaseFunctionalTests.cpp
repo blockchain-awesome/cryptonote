@@ -294,9 +294,9 @@ namespace {
   };
 }
 
-bool BaseFunctionalTests::mineBlocks(TestNode& node, const cryptonote::AccountPublicAddress& address, size_t blockCount) {
+bool BaseFunctionalTests::mineBlocks(TestNode& node, const cryptonote::account_public_address_t& address, size_t blockCount) {
   for (size_t i = 0; i < blockCount; ++i) {
-    Block blockTemplate;
+    block_t blockTemplate;
     uint64_t difficulty;
 
     if (!node.getBlockTemplate(Account::getAddress(address), blockTemplate, difficulty)) {
@@ -315,7 +315,7 @@ bool BaseFunctionalTests::mineBlocks(TestNode& node, const cryptonote::AccountPu
   return true;
 }
 
-bool BaseFunctionalTests::prepareAndSubmitBlock(TestNode& node, cryptonote::Block&& blockTemplate) {
+bool BaseFunctionalTests::prepareAndSubmitBlock(TestNode& node, cryptonote::block_t&& blockTemplate) {
   blockTemplate.timestamp = m_nextTimestamp;
   m_nextTimestamp += 2 * m_currency.difficultyTarget();
 
@@ -515,7 +515,7 @@ bool BaseFunctionalTests::getNodeTransactionPool(size_t nodeIndex, cryptonote::I
   assert(nodeIndex < nodeDaemons.size() && nodeDaemons[nodeIndex].get() != nullptr);
   auto& daemon = *nodeDaemons[nodeIndex];
 
-  crypto::Hash tailBlockId;
+  crypto::hash_t tailBlockId;
   bool updateTailBlockId = true;
   while (true) {
     if (updateTailBlockId) {
@@ -529,8 +529,8 @@ bool BaseFunctionalTests::getNodeTransactionPool(size_t nodeIndex, cryptonote::I
     std::error_code ec;
     bool isTailBlockActual;
     std::vector<std::unique_ptr<ITransactionReader>> addedTxs;
-    std::vector<crypto::Hash> deletedTxsIds;
-    node.getPoolSymmetricDifference(std::vector<crypto::Hash>(), tailBlockId, isTailBlockActual, addedTxs, deletedTxsIds,
+    std::vector<crypto::hash_t> deletedTxsIds;
+    node.getPoolSymmetricDifference(std::vector<crypto::hash_t>(), tailBlockId, isTailBlockActual, addedTxs, deletedTxsIds,
       [this, &poolReceivedEvent, &ec](std::error_code result) {
         ec = result;
         m_dispatcher.remoteSpawn([&poolReceivedEvent]() { poolReceivedEvent.set(); });

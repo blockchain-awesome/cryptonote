@@ -34,7 +34,7 @@ namespace cryptonote
     m_currency(currency),
     logger(log, "miner"),
     m_stop(true),
-    m_template(boost::value_initialized<Block>()),
+    m_template(boost::value_initialized<block_t>()),
     m_template_no(0),
     m_diffic(0),
     m_handler(handler),
@@ -55,7 +55,7 @@ namespace cryptonote
     stop();
   }
   //-----------------------------------------------------------------------------------------------------
-  bool miner::set_block_template(const Block& bl, const difficulty_type& di) {
+  bool miner::set_block_template(const block_t& bl, const difficulty_type& di) {
     std::lock_guard<decltype(m_template_lock)> lk(m_template_lock);
 
     m_template = bl;
@@ -74,7 +74,7 @@ namespace cryptonote
   }
   //-----------------------------------------------------------------------------------------------------
   bool miner::request_block_template() {
-    Block bl = boost::value_initialized<Block>();
+    block_t bl = boost::value_initialized<block_t>();
     difficulty_type di = 0;
     uint32_t height;
     cryptonote::BinaryArray extra_nonce;
@@ -188,7 +188,7 @@ namespace cryptonote
     return !m_stop;
   }
   //-----------------------------------------------------------------------------------------------------
-  bool miner::start(const AccountPublicAddress& adr, size_t threads_count)
+  bool miner::start(const account_public_address_t& adr, size_t threads_count)
   {   
     if (is_mining()) {
       logger(ERROR) << "Starting miner but it's already started";
@@ -250,7 +250,7 @@ namespace cryptonote
     return true;
   }
   //-----------------------------------------------------------------------------------------------------
-  bool miner::find_nonce_for_given_block(Block& bl, const difficulty_type& diffic) {
+  bool miner::find_nonce_for_given_block(block_t& bl, const difficulty_type& diffic) {
 
     unsigned nthreads = std::thread::hardware_concurrency();
 
@@ -262,9 +262,9 @@ namespace cryptonote
 
       for (unsigned i = 0; i < nthreads; ++i) {
         threads[i] = std::async(std::launch::async, [&, i]() {
-          crypto::Hash h;
+          crypto::hash_t h;
 
-          Block lb(bl); // copy to local block
+          block_t lb(bl); // copy to local block
 
           for (uint32_t nonce = startNonce + i; !found; nonce += nthreads) {
             lb.nonce = nonce;
@@ -293,7 +293,7 @@ namespace cryptonote
       return found;
     } else {
       for (; bl.nonce != std::numeric_limits<uint32_t>::max(); bl.nonce++) {
-        crypto::Hash h;
+        crypto::hash_t h;
         if (!get_block_longhash(bl, h)) {
           return false;
         }
@@ -341,7 +341,7 @@ namespace cryptonote
     uint32_t nonce = m_starter_nonce + th_local_index;
     difficulty_type local_diff = 0;
     uint32_t local_template_ver = 0;
-    Block b;
+    block_t b;
 
     while(!m_stop)
     {
@@ -369,7 +369,7 @@ namespace cryptonote
       }
 
       b.nonce = nonce;
-      crypto::Hash h;
+      crypto::hash_t h;
       if (!m_stop && !get_block_longhash(b, h)) {
         logger(ERROR) << "Failed to get block long hash";
         m_stop = true;

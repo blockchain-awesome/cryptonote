@@ -25,7 +25,7 @@ class Node : public cryptonote::INodeObserver,
 
 public:
   Node(std::string &host, uint16_t port);
-  cryptonote::ITransfersSubscription &initAccount(cryptonote::AccountKeys &keys);
+  cryptonote::ITransfersSubscription &initAccount(cryptonote::account_keys_t &keys);
   bool init(cryptonote::Currency &currency, Logging::ILogger &logger);
   void wait(size_t milliseconds = 1000);
 
@@ -63,9 +63,9 @@ public:
 
   // Interface cryptonote::ITransactionValidator
 
-  virtual bool checkTransactionInputs(const cryptonote::Transaction &tx, cryptonote::BlockInfo &maxUsedBlock) override;
-  virtual bool checkTransactionInputs(const cryptonote::Transaction &tx, cryptonote::BlockInfo &maxUsedBlock, cryptonote::BlockInfo &lastFailed) override;
-  virtual bool haveSpentKeyImages(const cryptonote::Transaction &tx) override;
+  virtual bool checkTransactionInputs(const cryptonote::transaction_t &tx, cryptonote::block_info_t &maxUsedBlock) override;
+  virtual bool checkTransactionInputs(const cryptonote::transaction_t &tx, cryptonote::block_info_t &maxUsedBlock, cryptonote::block_info_t &lastFailed) override;
+  virtual bool haveSpentKeyImages(const cryptonote::transaction_t &tx) override;
   virtual bool checkTransactionSize(size_t blobSize) override;
 
 private:

@@ -8,26 +8,26 @@ namespace cryptonote
 namespace transaction
 {
 
-struct TransactionCheckInfo
+struct transaction_check_info_t
 {
-    BlockInfo maxUsedBlock;
-    BlockInfo lastFailedBlock;
+    block_info_t maxUsedBlock;
+    block_info_t lastFailedBlock;
 };
 
-struct TransactionDetails : public TransactionCheckInfo
+struct transaction_details_t : public transaction_check_info_t
 {
-    crypto::Hash id;
-    Transaction tx;
+    crypto::hash_t id;
+    transaction_t tx;
     size_t blobSize;
     uint64_t fee;
     bool keptByBlock;
     time_t receiveTime;
 };
 
-struct TransactionPriorityComparator
+struct transaction_priority_comparator_t
 {
     // lhs > hrs
-    bool operator()(const TransactionDetails &lhs, const TransactionDetails &rhs) const
+    bool operator()(const transaction_details_t &lhs, const transaction_details_t &rhs) const
     {
         // price(lhs) = lhs.fee / lhs.blobSize
         // price(lhs) > price(rhs) -->

@@ -86,7 +86,7 @@ bool Currency::init() {
 }
 
 bool Currency::generateGenesisBlock() {
-  m_genesisBlock = boost::value_initialized<Block>();
+  m_genesisBlock = boost::value_initialized<block_t>();
 
   // Hard code coinbase tx in genesis block, because "tru" generating tx use random, but genesis should be always the same
   std::string genesisCoinbaseTxHex = GENESIS_COINBASE_TX_HEX;
@@ -156,14 +156,13 @@ size_t Currency::maxBlockCumulativeSize(uint64_t height) const {
 }
 
 bool Currency::constructMinerTx(uint32_t height, size_t medianSize, uint64_t alreadyGeneratedCoins, size_t currentBlockSize,
-  uint64_t fee, const AccountPublicAddress& minerAddress, Transaction& tx,
+  uint64_t fee, const account_public_address_t& minerAddress, transaction_t& tx,
   const BinaryArray& extraNonce/* = BinaryArray()*/, size_t maxOuts/* = 1*/) const {
   tx.inputs.clear();
   tx.outputs.clear();
   tx.extra.clear();
 
-  // KeyPair txkey = generateKeyPair();
-  KeyPair txkey = Key::generate();
+  key_pair_t txkey = Key::generate();
   addTransactionPublicKeyToExtra(tx.extra, txkey.publicKey);
   if (!extraNonce.empty()) {
     if (!addExtraNonceToTransactionExtra(tx.extra, extraNonce)) {
@@ -171,7 +170,7 @@ bool Currency::constructMinerTx(uint32_t height, size_t medianSize, uint64_t alr
     }
   }
 
-  BaseInput in;
+  base_input_t in;
   in.blockIndex = height;
 
   uint64_t blockReward;
@@ -194,8 +193,8 @@ bool Currency::constructMinerTx(uint32_t height, size_t medianSize, uint64_t alr
 
   uint64_t summaryAmounts = 0;
   for (size_t no = 0; no < outAmounts.size(); no++) {
-    crypto::KeyDerivation derivation = boost::value_initialized<crypto::KeyDerivation>();
-    crypto::PublicKey outEphemeralPubKey = boost::value_initialized<crypto::PublicKey>();
+    crypto::key_derivation_t derivation = boost::value_initialized<crypto::key_derivation_t>();
+    crypto::public_key_t outEphemeralPubKey = boost::value_initialized<crypto::public_key_t>();
 
     bool r = crypto::generate_key_derivation(minerAddress.viewPublicKey, txkey.secretKey, derivation);
 
@@ -216,10 +215,10 @@ bool Currency::constructMinerTx(uint32_t height, size_t medianSize, uint64_t alr
       return false;
     }
 
-    KeyOutput tk;
+    key_output_t tk;
     tk.key = outEphemeralPubKey;
 
-    TransactionOutput out;
+    transaction_output_t out;
     summaryAmounts += out.amount = outAmounts[no];
     out.target = tk;
     tx.outputs.push_back(out);
@@ -267,19 +266,19 @@ bool Currency::isFusionTransaction(const std::vector<uint64_t>& inputsAmounts, c
   return expectedOutputsAmounts == outputsAmounts;
 }
 
-bool Currency::isFusionTransaction(const Transaction& transaction, size_t size) const {
+bool Currency::isFusionTransaction(const transaction_t& transaction, size_t size) const {
   assert(getObjectBinarySize(transaction) == size);
 
   std::vector<uint64_t> outputsAmounts;
   outputsAmounts.reserve(transaction.outputs.size());
-  for (const TransactionOutput& output : transaction.outputs) {
+  for (const transaction_output_t& output : transaction.outputs) {
     outputsAmounts.push_back(output.amount);
   }
 
   return isFusionTransaction(getInputsAmounts(transaction), outputsAmounts, size);
 }
 
-bool Currency::isFusionTransaction(const Transaction& transaction) const {
+bool Currency::isFusionTransaction(const transaction_t& transaction) const {
   return isFusionTransaction(transaction, getObjectBinarySize(transaction));
 }
 
@@ -405,8 +404,8 @@ difficulty_type Currency::nextDifficulty(std::vector<uint64_t> timestamps,
   return (low + timeSpan - 1) / timeSpan;
 }
 
-bool Currency::checkProofOfWork(const Block& block, difficulty_type currentDiffic,
-  crypto::Hash& proofOfWork) const {
+bool Currency::checkProofOfWork(const block_t& block, difficulty_type currentDiffic,
+  crypto::hash_t& proofOfWork) const {
 
   if (!get_block_longhash(block, proofOfWork)) {
     return false;
@@ -416,17 +415,17 @@ bool Currency::checkProofOfWork(const Block& block, difficulty_type currentDiffi
 }
 
 size_t Currency::getApproximateMaximumInputCount(size_t transactionSize, size_t outputCount, size_t mixinCount) const {
-  const size_t KEY_IMAGE_SIZE = sizeof(crypto::KeyImage);
-  const size_t OUTPUT_KEY_SIZE = sizeof(decltype(KeyOutput::key));
+  const size_t KEY_IMAGE_SIZE = sizeof(crypto::key_image_t);
+  const size_t OUTPUT_KEY_SIZE = sizeof(decltype(key_output_t::key));
   const size_t AMOUNT_SIZE = sizeof(uint64_t) + 2; //varint
   const size_t GLOBAL_INDEXES_VECTOR_SIZE_SIZE = sizeof(uint8_t);//varint
   const size_t GLOBAL_INDEXES_INITIAL_VALUE_SIZE = sizeof(uint32_t);//varint
   const size_t GLOBAL_INDEXES_DIFFERENCE_SIZE = sizeof(uint32_t);//varint
-  const size_t SIGNATURE_SIZE = sizeof(crypto::Signature);
+  const size_t SIGNATURE_SIZE = sizeof(crypto::signature_t);
   const size_t EXTRA_TAG_SIZE = sizeof(uint8_t);
   const size_t INPUT_TAG_SIZE = sizeof(uint8_t);
   const size_t OUTPUT_TAG_SIZE = sizeof(uint8_t);
-  const size_t PUBLIC_KEY_SIZE = sizeof(crypto::PublicKey);
+  const size_t PUBLIC_KEY_SIZE = sizeof(crypto::public_key_t);
   const size_t TRANSACTION_VERSION_SIZE = sizeof(uint8_t);
   const size_t TRANSACTION_UNLOCK_TIME_SIZE = sizeof(uint64_t);
 
@@ -487,14 +486,12 @@ CurrencyBuilder::CurrencyBuilder(Logging::ILogger& log, std::string path) : m_cu
   files.txPool = parameters::CRYPTONOTE_POOLDATA_FILENAME;
   files.blockchainIndexes = parameters::CRYPTONOTE_BLOCKCHAIN_INDICES_FILENAME;
   m_currency.setFiles(files);
-  // testnet(false);
 }
 
-Transaction CurrencyBuilder::generateGenesisTransaction() {
-  cryptonote::Transaction tx;
-  cryptonote::AccountPublicAddress ac = boost::value_initialized<cryptonote::AccountPublicAddress>();
+transaction_t CurrencyBuilder::generateGenesisTransaction() {
+  cryptonote::transaction_t tx;
+  cryptonote::account_public_address_t ac = boost::value_initialized<cryptonote::account_public_address_t>();
   m_currency.constructMinerTx(0, 0, 0, 0, 0, ac, tx); // zero fee in genesis
-
   return tx;
 }
 

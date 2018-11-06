@@ -4,22 +4,22 @@
 
 namespace cryptonote
 {
-struct AccountPublicAddress
+struct account_public_address_t
 {
-    crypto::PublicKey spendPublicKey;
-    crypto::PublicKey viewPublicKey;
+    crypto::public_key_t spendPublicKey;
+    crypto::public_key_t viewPublicKey;
 };
 
-struct AccountKeys
+struct account_keys_t
 {
-    AccountPublicAddress address;
-    crypto::SecretKey spendSecretKey;
-    crypto::SecretKey viewSecretKey;
+    account_public_address_t address;
+    crypto::secret_key_t spendSecretKey;
+    crypto::secret_key_t viewSecretKey;
 };
 
-struct KeyPair
+struct key_pair_t
 {
-    crypto::PublicKey publicKey;
-    crypto::SecretKey secretKey;
+    crypto::public_key_t publicKey;
+    crypto::secret_key_t secretKey;
 };
 } // namespace cryptonote

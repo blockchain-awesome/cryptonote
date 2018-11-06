@@ -82,7 +82,7 @@ namespace {
     PoolChangedObserver observer;
     node0->addObserver(&observer);
 
-    Hash dontCare;
+    hash_t dontCare;
     ASSERT_FALSE(static_cast<bool>(wallet1.sendTransaction(Account::getAddress(wallet2.address()), m_currency.coin(), dontCare)));
     ASSERT_TRUE(observer.waitPoolChanged(10));
   }
