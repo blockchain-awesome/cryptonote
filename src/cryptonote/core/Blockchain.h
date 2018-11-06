@@ -165,7 +165,7 @@ namespace cryptonote {
 
   private:
     typedef google::sparse_hash_set<crypto::key_image_t> key_images_container;
-    typedef std::unordered_map<crypto::hash_t, BlockEntry> blocks_ext_by_hash;
+    typedef std::unordered_map<crypto::hash_t, block_entry_t> blocks_ext_by_hash;
     typedef google::sparse_hash_map<uint64_t, std::vector<std::pair<TransactionIndex, uint16_t>>> outputs_container; //crypto::hash_t - tx hash, size_t - index of out in transaction
     typedef google::sparse_hash_map<uint64_t, std::vector<MultisignatureOutputUsage>> MultisignatureOutputsContainer;
 
@@ -182,7 +182,7 @@ namespace cryptonote {
     Checkpoints m_checkpoints;
     std::atomic<bool> m_is_in_checkpoint_zone;
 
-    typedef BlockAccessor<BlockEntry> Blocks;
+    typedef BlockAccessor<block_entry_t> Blocks;
     typedef std::unordered_map<crypto::hash_t, uint32_t> BlockMap;
     typedef std::unordered_map<crypto::hash_t, TransactionIndex> TransactionMap;
 
@@ -207,7 +207,7 @@ namespace cryptonote {
     bool storeCache();
     bool switch_to_alternative_blockchain(std::list<blocks_ext_by_hash::iterator>& alt_chain, bool discard_disconnected_chain);
     bool handle_alternative_block(const block_t& b, const crypto::hash_t& id, block_verification_context_t& bvc, bool sendNewAlternativeBlockMessage = true);
-    difficulty_type get_next_difficulty_for_alternative_chain(const std::list<blocks_ext_by_hash::iterator>& alt_chain, BlockEntry& bei);
+    difficulty_type get_next_difficulty_for_alternative_chain(const std::list<blocks_ext_by_hash::iterator>& alt_chain, block_entry_t& bei);
     bool prevalidate_miner_transaction(const block_t& b, uint32_t height);
     bool validate_miner_transaction(const block_t& b, uint32_t height, size_t cumulativeBlockSize, uint64_t alreadyGeneratedCoins, uint64_t fee, uint64_t& reward, int64_t& emissionChange);
     bool rollback_blockchain_switching(std::list<block_t>& original_chain, size_t rollback_height);
@@ -230,11 +230,11 @@ namespace cryptonote {
     const TransactionEntry& transactionByIndex(TransactionIndex index);
     bool pushBlock(const block_t& blockData, block_verification_context_t& bvc);
     bool pushBlock(const block_t& blockData, const std::vector<transaction_t>& transactions, block_verification_context_t& bvc);
-    bool pushBlock(BlockEntry& block);
+    bool pushBlock(block_entry_t& block);
     void popBlock(const crypto::hash_t& blockHash);
-    bool pushTransaction(BlockEntry& block, const crypto::hash_t& transactionHash, TransactionIndex transactionIndex);
+    bool pushTransaction(block_entry_t& block, const crypto::hash_t& transactionHash, TransactionIndex transactionIndex);
     void popTransaction(const transaction_t& transaction, const crypto::hash_t& transactionHash);
-    void popTransactions(const BlockEntry& block, const crypto::hash_t& minerTransactionHash);
+    void popTransactions(const block_entry_t& block, const crypto::hash_t& minerTransactionHash);
     bool validateInput(const multi_signature_input_t& input, const crypto::hash_t& transactionHash, const crypto::hash_t& transactionPrefixHash, const std::vector<crypto::signature_t>& transactionSignatures);
 
     bool storeBlockchainIndices();

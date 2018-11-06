@@ -7,7 +7,7 @@
 
 namespace cryptonote
 {
-struct BlockEntry
+struct block_entry_t
 {
     block_t bl;
     uint32_t height;

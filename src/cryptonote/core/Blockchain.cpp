@@ -66,6 +66,7 @@ m_currency(currency),
 m_tx_pool(tx_pool),
 m_current_block_cumul_sz_limit(0),
 m_is_in_checkpoint_zone(false),
+m_blocks(currency),
 m_checkpoints(logger) {
 
   m_outputs.set_deleted_key(0);
@@ -157,7 +158,7 @@ uint32_t Blockchain::getCurrentBlockchainHeight() {
 
 bool Blockchain::init(bool load_existing) {
   std::lock_guard<decltype(m_blockchain_lock)> lk(m_blockchain_lock);
-  if (!m_blocks.open(m_currency.blocksFileName(), m_currency.blockIndexesFileName(), 1024)) {
+  if (!m_blocks.init()) {
     return false;
   }
 
@@ -221,7 +222,7 @@ void Blockchain::rebuildCache() {
     if (b % 1000 == 0) {
       logger(INFO, BRIGHT_WHITE) << "Height " << b << " of " << m_blocks.size();
     }
-    const BlockEntry& block = m_blocks[b];
+    const block_entry_t& block = m_blocks[b];
     crypto::hash_t blockHash = get_block_hash(block.bl);
     m_blockIndex.push(blockHash);
     for (uint16_t t = 0; t < block.transactions.size(); ++t) {
@@ -511,7 +512,7 @@ bool Blockchain::switch_to_alternative_blockchain(std::list<blocks_ext_by_hash::
   return true;
 }
 
-difficulty_type Blockchain::get_next_difficulty_for_alternative_chain(const std::list<blocks_ext_by_hash::iterator>& alt_chain, BlockEntry& bei) {
+difficulty_type Blockchain::get_next_difficulty_for_alternative_chain(const std::list<blocks_ext_by_hash::iterator>& alt_chain, block_entry_t& bei) {
   std::vector<uint64_t> timestamps;
   std::vector<difficulty_type> commulative_difficulties;
   if (alt_chain.size() < m_currency.difficultyBlocksCount()) {
@@ -736,7 +737,7 @@ bool Blockchain::handle_alternative_block(const block_t& b, const crypto::hash_t
       return false;
     }
 
-    BlockEntry bei = boost::value_initialized<BlockEntry>();
+    block_entry_t bei = boost::value_initialized<block_entry_t>();
     bei.bl = b;
     bei.height = static_cast<uint32_t>(alt_chain.size() ? it_prev->second.height + 1 : mainPrevHeight + 1);
 
@@ -1467,7 +1468,7 @@ bool Blockchain::pushBlock(const block_t& blockData, const std::vector<transacti
 
   crypto::hash_t minerTransactionHash = getObjectHash(blockData.baseTransaction);
 
-  BlockEntry block;
+  block_entry_t block;
   block.bl = blockData;
   block.transactions.resize(1);
   block.transactions[0].tx = blockData.baseTransaction;
@@ -1545,7 +1546,7 @@ bool Blockchain::pushBlock(const block_t& blockData, const std::vector<transacti
   return true;
 }
 
-bool Blockchain::pushBlock(BlockEntry& block) {
+bool Blockchain::pushBlock(block_entry_t& block) {
   crypto::hash_t blockHash = get_block_hash(block.bl);
 
   m_blocks.push_back(block);
@@ -1584,7 +1585,7 @@ void Blockchain::popBlock(const crypto::hash_t& blockHash) {
   assert(m_blockIndex.size() == m_blocks.size());
 }
 
-bool Blockchain::pushTransaction(BlockEntry& block, const crypto::hash_t& transactionHash, TransactionIndex transactionIndex) {
+bool Blockchain::pushTransaction(block_entry_t& block, const crypto::hash_t& transactionHash, TransactionIndex transactionIndex) {
   auto result = m_transactionMap.insert(std::make_pair(transactionHash, transactionIndex));
   if (!result.second) {
     logger(ERROR, BRIGHT_RED) <<
@@ -1745,7 +1746,7 @@ void Blockchain::popTransaction(const transaction_t& transaction, const crypto::
   }
 }
 
-void Blockchain::popTransactions(const BlockEntry& block, const crypto::hash_t& minerTransactionHash) {
+void Blockchain::popTransactions(const block_entry_t& block, const crypto::hash_t& minerTransactionHash) {
   for (size_t i = 0; i < block.transactions.size() - 1; ++i) {
     popTransaction(block.transactions[block.transactions.size() - 1 - i].tx, block.bl.transactionHashes[block.transactions.size() - 2 - i]);
   }
@@ -1816,7 +1817,7 @@ bool Blockchain::getLowerBound(uint64_t timestamp, uint64_t startOffset, uint32_
   assert(startOffset < m_blocks.size());
 
   auto bound = std::lower_bound(m_blocks.begin() + startOffset, m_blocks.end(), timestamp - m_currency.blockFutureTimeLimit(),
-    [](const BlockEntry& b, uint64_t timestamp) { return b.bl.timestamp < timestamp; });
+    [](const block_entry_t& b, uint64_t timestamp) { return b.bl.timestamp < timestamp; });
 
   if (bound == m_blocks.end()) {
     return false;
@@ -1937,7 +1938,7 @@ bool Blockchain::loadBlockchainIndices() {
       if (b % 1000 == 0) {
         logger(INFO, BRIGHT_WHITE) << "Height " << b << " of " << m_blocks.size();
       }
-      const BlockEntry& block = m_blocks[b];
+      const block_entry_t& block = m_blocks[b];
       m_timestampIndex.add(block.bl.timestamp, get_block_hash(block.bl));
       m_generatedTransactionsIndex.add(block.bl);
       for (uint16_t t = 0; t < block.transactions.size(); ++t) {

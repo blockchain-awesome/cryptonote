@@ -26,6 +26,7 @@ uint64_t getPenalizedAmount(uint64_t amount, size_t medianSize, size_t currentBl
 class Currency {
 public:
   uint64_t maxBlockHeight() const { return m_maxBlockHeight; }
+  size_t getPoolSize() const { return m_poolSize; }
   size_t maxBlockBlobSize() const { return m_maxBlockBlobSize; }
   size_t maxTxSize() const { return m_maxTxSize; }
   uint64_t publicAddressBase58Prefix() const { return m_publicAddressBase58Prefix; }
@@ -131,9 +132,11 @@ public:
 
 private:
   Currency(std::string path, Logging::ILogger& log) : m_path(path), logger(log, "currency") {
+
   }
 
   bool init();
+  bool getPathAndFilesReady();
 
   bool generateGenesisBlock();
 
@@ -182,11 +185,14 @@ private:
 
   coin::StorageFiles m_files;
   std::string m_path;
+  bool m_path_initialized = false;
 
   static const std::vector<uint64_t> PRETTY_AMOUNTS;
 
   block_t m_genesisBlock;
   crypto::hash_t m_genesisBlockHash;
+
+  size_t m_poolSize = 1024;
 
   Logging::LoggerRef logger;
 

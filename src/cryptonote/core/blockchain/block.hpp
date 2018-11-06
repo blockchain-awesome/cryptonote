@@ -18,7 +18,9 @@
 #include "stream/StdOutputStream.h"
 #include "serialization/BinaryInputStreamSerializer.h"
 #include "serialization/BinaryOutputStreamSerializer.h"
+#include "cryptonote/core/Currency.h"
 
+using namespace cryptonote;
 template<class T> class BlockAccessor {
 public:
   typedef T value_type;
@@ -130,12 +132,12 @@ public:
     size_t m_index;
   };
 
-  BlockAccessor();
+  BlockAccessor(const Currency &currency);
   //BlockAccessor(const BlockAccessor&) = delete;
   ~BlockAccessor();
   //BlockAccessor& operator=(const BlockAccessor&) = delete;
 
-  bool open(const std::string& itemFileName, const std::string& indexFileName, size_t poolSize);
+  bool init();
   void close();
 
   bool empty() const;
@@ -168,6 +170,7 @@ private:
   std::fstream m_indexesFile;
   size_t m_poolSize;
   std::vector<uint64_t> m_offsets;
+  const Currency &m_currency;
   uint64_t m_itemsFileSize;
   std::map<uint64_t, item_entry_t> m_items;
   std::list<cache_entry_t> m_cache;
@@ -177,20 +180,24 @@ private:
   T* prepare(uint64_t index);
 };
 
-template<class T> BlockAccessor<T>::BlockAccessor() {
+template <class T>
+BlockAccessor<T>::BlockAccessor(const Currency &currency) : m_currency(currency)
+{
+  m_poolSize = currency.getPoolSize();
 }
 
 template<class T> BlockAccessor<T>::~BlockAccessor() {
   close();
 }
 
-template<class T> bool BlockAccessor<T>::open(const std::string& itemFileName, const std::string& indexFileName, size_t poolSize) {
-  if (poolSize == 0) {
-    return false;
-  }
+template <class T>
+bool BlockAccessor<T>::init()
+{
+  std::string blockFilename = m_currency.blocksFileName();
+  std::string blockIndexesFilename = m_currency.blockIndexesFileName();
 
-  m_itemsFile.open(itemFileName, std::ios::in | std::ios::out | std::ios::binary);
-  m_indexesFile.open(indexFileName, std::ios::in | std::ios::out | std::ios::binary);
+  m_itemsFile.open(blockFilename, std::ios::in | std::ios::out | std::ios::binary);
+  m_indexesFile.open(blockIndexesFilename, std::ios::in | std::ios::out | std::ios::binary);
   if (m_itemsFile && m_indexesFile) {
     uint64_t count;
     m_indexesFile.read(reinterpret_cast<char*>(&count), sizeof count);
@@ -214,10 +221,10 @@ template<class T> bool BlockAccessor<T>::open(const std::string& itemFileName, c
     m_offsets.swap(offsets);
     m_itemsFileSize = itemsFileSize;
   } else {
-    m_itemsFile.open(itemFileName, std::ios::out | std::ios::binary);
+    m_itemsFile.open(blockFilename, std::ios::out | std::ios::binary);
     m_itemsFile.close();
-    m_itemsFile.open(itemFileName, std::ios::in | std::ios::out | std::ios::binary);
-    m_indexesFile.open(indexFileName, std::ios::out | std::ios::binary);
+    m_itemsFile.open(blockFilename, std::ios::in | std::ios::out | std::ios::binary);
+    m_indexesFile.open(blockIndexesFilename, std::ios::out | std::ios::binary);
     uint64_t count = 0;
     m_indexesFile.write(reinterpret_cast<char*>(&count), sizeof count);
     if (!m_indexesFile) {
@@ -225,12 +232,11 @@ template<class T> bool BlockAccessor<T>::open(const std::string& itemFileName, c
     }
 
     m_indexesFile.close();
-    m_indexesFile.open(indexFileName, std::ios::in | std::ios::out | std::ios::binary);
+    m_indexesFile.open(blockIndexesFilename, std::ios::in | std::ios::out | std::ios::binary);
     m_offsets.clear();
     m_itemsFileSize = 0;
   }
 
-  m_poolSize = poolSize;
   m_items.clear();
   m_cache.clear();
   m_cacheHits = 0;
