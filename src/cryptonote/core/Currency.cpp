@@ -449,8 +449,8 @@ bool Currency::parseAmount(const std::string &str, uint64_t &amount) const
   return Common::fromString(strAmount, amount);
 }
 
-difficulty_type Currency::nextDifficulty(std::vector<uint64_t> timestamps,
-                                         std::vector<difficulty_type> cumulativeDifficulties) const
+difficulty_t Currency::nextDifficulty(std::vector<uint64_t> timestamps,
+                                         std::vector<difficulty_t> cumulativeDifficulties) const
 {
   assert(m_difficultyWindow >= 2);
 
@@ -489,7 +489,7 @@ difficulty_type Currency::nextDifficulty(std::vector<uint64_t> timestamps,
     timeSpan = 1;
   }
 
-  difficulty_type totalWork = cumulativeDifficulties[cutEnd - 1] - cumulativeDifficulties[cutBegin];
+  difficulty_t totalWork = cumulativeDifficulties[cutEnd - 1] - cumulativeDifficulties[cutBegin];
   assert(totalWork > 0);
 
   uint64_t low, high;
@@ -502,7 +502,7 @@ difficulty_type Currency::nextDifficulty(std::vector<uint64_t> timestamps,
   return (low + timeSpan - 1) / timeSpan;
 }
 
-bool Currency::checkProofOfWork(const block_t &block, difficulty_type currentDiffic,
+bool Currency::checkProofOfWork(const block_t &block, difficulty_t currentDiffic,
                                 crypto::hash_t &proofOfWork) const
 {
 

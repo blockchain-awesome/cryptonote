@@ -87,7 +87,7 @@ public:
   virtual bool getBlockReward(size_t medianSize, size_t currentBlockSize, uint64_t alreadyGeneratedCoins, uint64_t fee,
                               uint64_t& reward, int64_t& emissionChange) = 0;
   virtual bool scanOutputkeysForIndices(const key_input_t& txInToKey, std::list<std::pair<crypto::hash_t, size_t>>& outputReferences) = 0;
-  virtual bool getBlockDifficulty(uint32_t height, difficulty_type& difficulty) = 0;
+  virtual bool getBlockDifficulty(uint32_t height, difficulty_t& difficulty) = 0;
   virtual bool getBlockContainingTx(const crypto::hash_t& txId, crypto::hash_t& blockId, uint32_t& blockHeight) = 0;
   virtual bool getMultisigOutputReference(const multi_signature_input_t& txInMultisig, std::pair<crypto::hash_t, size_t>& outputReference) = 0;
 

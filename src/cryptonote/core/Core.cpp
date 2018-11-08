@@ -290,7 +290,7 @@ bool core::add_new_tx(const transaction_t& tx, const crypto::hash_t& tx_hash, si
   return m_mempool.add_tx(tx, tx_hash, blob_size, tvc, keeped_by_block);
 }
 
-bool core::get_block_template(block_t& b, const account_public_address_t& adr, difficulty_type& diffic, uint32_t& height, const BinaryArray& ex_nonce) {
+bool core::get_block_template(block_t& b, const account_public_address_t& adr, difficulty_t& diffic, uint32_t& height, const BinaryArray& ex_nonce) {
   size_t median_size;
   uint64_t already_generated_coins;
 
@@ -815,7 +815,7 @@ bool core::scanOutputkeysForIndices(const key_input_t& txInToKey, std::list<std:
   return m_blockchain.scanOutputKeysForIndexes(txInToKey, vi);
 }
 
-bool core::getBlockDifficulty(uint32_t height, difficulty_type& difficulty) {
+bool core::getBlockDifficulty(uint32_t height, difficulty_t& difficulty) {
   difficulty = m_blockchain.blockDifficulty(height);
   return true;
 }

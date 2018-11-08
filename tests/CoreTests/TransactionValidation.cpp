@@ -479,7 +479,7 @@ bool gen_tx_key_image_is_invalid::generate(std::vector<test_event_entry>& events
 
   key_input_t& in_to_key = boost::get<key_input_t>(builder.m_tx.inputs.front());
   crypto::public_key_t pub = generate_invalid_pub_key();
-  memcpy(&in_to_key.keyImage, &pub, sizeof(crypto::EllipticCurvePoint));
+  memcpy(&in_to_key.keyImage, &pub, sizeof(crypto::elliptic_curve_point_t));
 
   builder.step3_fill_outputs(destinations);
   builder.step4_calc_hash();

@@ -76,7 +76,7 @@ namespace cryptonote {
     uint32_t getCurrentBlockchainHeight(); //TODO rename to getCurrentBlockchainSize
     crypto::hash_t getTailId();
     crypto::hash_t getTailId(uint32_t& height);
-    difficulty_type getDifficultyForNextBlock();
+    difficulty_t getDifficultyForNextBlock();
     uint64_t getCoinsInCirculation();
     bool addNewBlock(const block_t& bl_, block_verification_context_t& bvc);
     bool resetAndSetGenesisBlock(const block_t& b);
@@ -166,7 +166,7 @@ namespace cryptonote {
   private:
     typedef google::sparse_hash_set<crypto::key_image_t> key_images_container;
     typedef std::unordered_map<crypto::hash_t, block_entry_t> blocks_ext_by_hash;
-    typedef google::sparse_hash_map<uint64_t, std::vector<std::pair<TransactionIndex, uint16_t>>> outputs_container; //crypto::hash_t - tx hash, size_t - index of out in transaction
+    typedef google::sparse_hash_map<uint64_t, std::vector<std::pair<transaction_index_t, uint16_t>>> outputs_container; //crypto::hash_t - tx hash, size_t - index of out in transaction
     typedef google::sparse_hash_map<uint64_t, std::vector<MultisignatureOutputUsage>> MultisignatureOutputsContainer;
 
     const Currency& m_currency;
@@ -184,7 +184,7 @@ namespace cryptonote {
 
     typedef BlockAccessor<block_entry_t> Blocks;
     typedef std::unordered_map<crypto::hash_t, uint32_t> BlockMap;
-    typedef std::unordered_map<crypto::hash_t, TransactionIndex> TransactionMap;
+    typedef std::unordered_map<crypto::hash_t, transaction_index_t> TransactionMap;
 
     friend class BlockCacheSerializer;
     friend class BlockchainIndicesSerializer;
@@ -207,14 +207,14 @@ namespace cryptonote {
     bool storeCache();
     bool switch_to_alternative_blockchain(std::list<blocks_ext_by_hash::iterator>& alt_chain, bool discard_disconnected_chain);
     bool handle_alternative_block(const block_t& b, const crypto::hash_t& id, block_verification_context_t& bvc, bool sendNewAlternativeBlockMessage = true);
-    difficulty_type get_next_difficulty_for_alternative_chain(const std::list<blocks_ext_by_hash::iterator>& alt_chain, block_entry_t& bei);
+    difficulty_t get_next_difficulty_for_alternative_chain(const std::list<blocks_ext_by_hash::iterator>& alt_chain, block_entry_t& bei);
     bool prevalidate_miner_transaction(const block_t& b, uint32_t height);
     bool validate_miner_transaction(const block_t& b, uint32_t height, size_t cumulativeBlockSize, uint64_t alreadyGeneratedCoins, uint64_t fee, uint64_t& reward, int64_t& emissionChange);
     bool rollback_blockchain_switching(std::list<block_t>& original_chain, size_t rollback_height);
     bool get_last_n_blocks_sizes(std::vector<size_t>& sz, size_t count);
-    bool add_out_to_get_random_outs(std::vector<std::pair<TransactionIndex, uint16_t>>& amount_outs, COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_outs_for_amount& result_outs, uint64_t amount, size_t i);
+    bool add_out_to_get_random_outs(std::vector<std::pair<transaction_index_t, uint16_t>>& amount_outs, COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_outs_for_amount& result_outs, uint64_t amount, size_t i);
     bool is_tx_spendtime_unlocked(uint64_t unlock_time);
-    size_t find_end_of_allowed_index(const std::vector<std::pair<TransactionIndex, uint16_t>>& amount_outs);
+    size_t find_end_of_allowed_index(const std::vector<std::pair<transaction_index_t, uint16_t>>& amount_outs);
     bool check_block_timestamp_main(const block_t& b);
     bool check_block_timestamp(std::vector<uint64_t> timestamps, const block_t& b);
     uint64_t get_adjusted_time();
@@ -227,12 +227,12 @@ namespace cryptonote {
     bool checkTransactionInputs(const transaction_t& tx, const crypto::hash_t& tx_prefix_hash, uint32_t* pmax_used_block_height = NULL);
     bool checkTransactionInputs(const transaction_t& tx, uint32_t* pmax_used_block_height = NULL);
     bool have_tx_keyimg_as_spent(const crypto::key_image_t &key_im);
-    const TransactionEntry& transactionByIndex(TransactionIndex index);
+    const transaction_entry_t& transactionByIndex(transaction_index_t index);
     bool pushBlock(const block_t& blockData, block_verification_context_t& bvc);
     bool pushBlock(const block_t& blockData, const std::vector<transaction_t>& transactions, block_verification_context_t& bvc);
     bool pushBlock(block_entry_t& block);
     void popBlock(const crypto::hash_t& blockHash);
-    bool pushTransaction(block_entry_t& block, const crypto::hash_t& transactionHash, TransactionIndex transactionIndex);
+    bool pushTransaction(block_entry_t& block, const crypto::hash_t& transactionHash, transaction_index_t transactionIndex);
     void popTransaction(const transaction_t& transaction, const crypto::hash_t& transactionHash);
     void popTransactions(const block_entry_t& block, const crypto::hash_t& minerTransactionHash);
     bool validateInput(const multi_signature_input_t& input, const crypto::hash_t& transactionHash, const crypto::hash_t& transactionPrefixHash, const std::vector<crypto::signature_t>& transactionSignatures);
@@ -255,7 +255,7 @@ namespace cryptonote {
       return false;
 
     std::vector<uint32_t> absolute_offsets = relative_output_offsets_to_absolute(tx_in_to_key.outputIndexes);
-    std::vector<std::pair<TransactionIndex, uint16_t>>& amount_outs_vec = it->second;
+    std::vector<std::pair<transaction_index_t, uint16_t>>& amount_outs_vec = it->second;
     size_t count = 0;
     for (uint64_t i : absolute_offsets) {
       if(i >= amount_outs_vec.size() ) {
@@ -266,7 +266,7 @@ namespace cryptonote {
       //auto tx_it = m_transactionMap.find(amount_outs_vec[i].first);
       //if (!(tx_it != m_transactionMap.end())) { logger(ERROR, BRIGHT_RED) << "Wrong transaction id in output indexes: " << Common::podToHex(amount_outs_vec[i].first); return false; }
 
-      const TransactionEntry& tx = transactionByIndex(amount_outs_vec[i].first);
+      const transaction_entry_t& tx = transactionByIndex(amount_outs_vec[i].first);
 
       if (!(amount_outs_vec[i].second < tx.tx.outputs.size())) {
         logger(Logging::ERROR, Logging::BRIGHT_RED)

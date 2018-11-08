@@ -110,7 +110,7 @@ bool TransactionPrefixImpl::getPaymentId(hash_t& hash) const {
 }
 
 bool TransactionPrefixImpl::getExtraNonce(BinaryArray& nonce) const {
-  TransactionExtraNonce extraNonce;
+  transaction_extra_nonce_t extraNonce;
 
   if (m_extra.get(extraNonce)) {
     nonce = extraNonce.nonce;

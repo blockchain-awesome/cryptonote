@@ -16,7 +16,7 @@ using namespace Common;
 
 namespace cryptonote {
 
-bool parseTransactionExtra(const std::vector<uint8_t> &transactionExtra, std::vector<TransactionExtraField> &transactionExtraFields) {
+bool parseTransactionExtra(const std::vector<uint8_t> &transactionExtra, std::vector<transaction_extra_field_t> &transactionExtraFields) {
   transactionExtraFields.clear();
 
   if (transactionExtra.empty())
@@ -43,19 +43,19 @@ bool parseTransactionExtra(const std::vector<uint8_t> &transactionExtra, std::ve
           return false;
         }
 
-        transactionExtraFields.push_back(TransactionExtraPadding{ size });
+        transactionExtraFields.push_back(transaction_extra_padding_t{ size });
         break;
       }
 
       case TX_EXTRA_TAG_PUBKEY: {
-        TransactionExtraPublicKey extraPk;
+        transaction_extra_public_key_t extraPk;
         ar(extraPk.publicKey, "public_key");
         transactionExtraFields.push_back(extraPk);
         break;
       }
 
       case TX_EXTRA_NONCE: {
-        TransactionExtraNonce extraNonce;
+        transaction_extra_nonce_t extraNonce;
         uint8_t size = read<uint8_t>(iss);
         if (size > 0) {
           extraNonce.nonce.resize(size);
@@ -80,7 +80,7 @@ struct ExtraSerializerVisitor : public boost::static_visitor<bool> {
   ExtraSerializerVisitor(std::vector<uint8_t>& tx_extra)
     : extra(tx_extra) {}
 
-  bool operator()(const TransactionExtraPadding& t) {
+  bool operator()(const transaction_extra_padding_t& t) {
     if (t.size > TX_EXTRA_PADDING_MAX_COUNT) {
       return false;
     }
@@ -88,16 +88,16 @@ struct ExtraSerializerVisitor : public boost::static_visitor<bool> {
     return true;
   }
 
-  bool operator()(const TransactionExtraPublicKey& t) {
+  bool operator()(const transaction_extra_public_key_t& t) {
     return addTransactionPublicKeyToExtra(extra, t.publicKey);
   }
 
-  bool operator()(const TransactionExtraNonce& t) {
+  bool operator()(const transaction_extra_nonce_t& t) {
     return addExtraNonceToTransactionExtra(extra, t.nonce);
   }
 };
 
-bool writeTransactionExtra(std::vector<uint8_t>& tx_extra, const std::vector<TransactionExtraField>& tx_extra_fields) {
+bool writeTransactionExtra(std::vector<uint8_t>& tx_extra, const std::vector<transaction_extra_field_t>& tx_extra_fields) {
   ExtraSerializerVisitor visitor(tx_extra);
 
   for (const auto& tag : tx_extra_fields) {
@@ -110,10 +110,10 @@ bool writeTransactionExtra(std::vector<uint8_t>& tx_extra, const std::vector<Tra
 }
 
 public_key_t getTransactionPublicKeyFromExtra(const std::vector<uint8_t>& tx_extra) {
-  std::vector<TransactionExtraField> tx_extra_fields;
+  std::vector<transaction_extra_field_t> tx_extra_fields;
   parseTransactionExtra(tx_extra, tx_extra_fields);
 
-  TransactionExtraPublicKey pub_key_field;
+  transaction_extra_public_key_t pub_key_field;
   if (!findTransactionExtraFieldByType(tx_extra_fields, pub_key_field))
     return boost::value_initialized<public_key_t>();
 
@@ -184,12 +184,12 @@ bool createTxExtraWithPaymentId(const std::string& paymentIdString, std::vector<
 }
 
 bool getPaymentIdFromTxExtra(const std::vector<uint8_t>& extra, hash_t& paymentId) {
-  std::vector<TransactionExtraField> tx_extra_fields;
+  std::vector<transaction_extra_field_t> tx_extra_fields;
   if (!parseTransactionExtra(extra, tx_extra_fields)) {
     return false;
   }
 
-  TransactionExtraNonce extra_nonce;
+  transaction_extra_nonce_t extra_nonce;
   if (findTransactionExtraFieldByType(tx_extra_fields, extra_nonce)) {
     if (!getPaymentIdFromTransactionExtraNonce(extra_nonce.nonce, paymentId)) {
       return false;

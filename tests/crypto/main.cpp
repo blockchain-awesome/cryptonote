@@ -16,12 +16,12 @@
 using namespace std;
 typedef crypto::hash_t chash;
 
-bool operator !=(const crypto::EllipticCurveScalar &a, const crypto::EllipticCurveScalar &b) {
-  return 0 != memcmp(&a, &b, sizeof(crypto::EllipticCurveScalar));
+bool operator !=(const crypto::elliptic_curve_scalar_t &a, const crypto::elliptic_curve_scalar_t &b) {
+  return 0 != memcmp(&a, &b, sizeof(crypto::elliptic_curve_scalar_t));
 }
 
-bool operator !=(const crypto::EllipticCurvePoint &a, const crypto::EllipticCurvePoint &b) {
-  return 0 != memcmp(&a, &b, sizeof(crypto::EllipticCurvePoint));
+bool operator !=(const crypto::elliptic_curve_point_t &a, const crypto::elliptic_curve_point_t &b) {
+  return 0 != memcmp(&a, &b, sizeof(crypto::elliptic_curve_point_t));
 }
 
 bool operator !=(const crypto::key_derivation_t &a, const crypto::key_derivation_t &b) {
@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
     }
     input.exceptions(ios_base::badbit | ios_base::failbit | ios_base::eofbit);
     if (cmd == "check_scalar") {
-      crypto::EllipticCurveScalar scalar;
+      crypto::elliptic_curve_scalar_t scalar;
       bool expected, actual;
       get(input, scalar, expected);
       actual = check_scalar(scalar);
@@ -55,7 +55,7 @@ int main(int argc, char *argv[]) {
         goto error;
       }
     } else if (cmd == "random_scalar") {
-      crypto::EllipticCurveScalar expected, actual;
+      crypto::elliptic_curve_scalar_t expected, actual;
       get(input, expected);
       random_scalar(actual);
       if (expected != actual) {
@@ -63,7 +63,7 @@ int main(int argc, char *argv[]) {
       }
     } else if (cmd == "hash_to_scalar") {
       vector<char> data;
-      crypto::EllipticCurveScalar expected, actual;
+      crypto::elliptic_curve_scalar_t expected, actual;
       get(input, data, expected);
       hash_to_scalar(data.data(), data.size(), actual);
       if (expected != actual) {
@@ -170,7 +170,7 @@ int main(int argc, char *argv[]) {
       }
     } else if (cmd == "hash_to_point") {
       chash h;
-      crypto::EllipticCurvePoint expected, actual;
+      crypto::elliptic_curve_point_t expected, actual;
       get(input, h, expected);
       hash_to_point(h, actual);
       if (expected != actual) {
@@ -178,7 +178,7 @@ int main(int argc, char *argv[]) {
       }
     } else if (cmd == "hash_to_ec") {
       crypto::public_key_t key;
-      crypto::EllipticCurvePoint expected, actual;
+      crypto::elliptic_curve_point_t expected, actual;
       get(input, key, expected);
       hash_to_ec(key, actual);
       if (expected != actual) {

@@ -1263,7 +1263,7 @@ std::string removeTxPublicKey(const std::string& txExtra) {
 
 std::string createExtraNonce(const std::string& nonce) {
   cryptonote::TransactionExtra txExtra;
-  cryptonote::TransactionExtraNonce extraNonce;
+  cryptonote::transaction_extra_nonce_t extraNonce;
   extraNonce.nonce = asBinaryArray(nonce);
   txExtra.set(extraNonce);
   auto vec = txExtra.serialize();

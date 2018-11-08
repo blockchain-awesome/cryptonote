@@ -35,9 +35,9 @@ bool BlockchainExplorerDataBuilder::getMixin(const transaction_t& transaction, u
 }
 
 bool BlockchainExplorerDataBuilder::getPaymentId(const transaction_t& transaction, crypto::hash_t& paymentId) {
-  std::vector<TransactionExtraField> txExtraFields;
+  std::vector<transaction_extra_field_t> txExtraFields;
   parseTransactionExtra(transaction.extra, txExtraFields);
-  TransactionExtraNonce extraNonce;
+  transaction_extra_nonce_t extraNonce;
   if (!findTransactionExtraFieldByType(txExtraFields, extraNonce)) {
     return false;
   }
@@ -46,15 +46,15 @@ bool BlockchainExplorerDataBuilder::getPaymentId(const transaction_t& transactio
 
 bool BlockchainExplorerDataBuilder::fillTxExtra(const std::vector<uint8_t>& rawExtra, TransactionExtraDetails& extraDetails) {
   extraDetails.raw = rawExtra;
-  std::vector<TransactionExtraField> txExtraFields;
+  std::vector<transaction_extra_field_t> txExtraFields;
   parseTransactionExtra(rawExtra, txExtraFields);
-  for (const TransactionExtraField& field : txExtraFields) {
-    if (typeid(TransactionExtraPadding) == field.type()) {
-      extraDetails.padding.push_back(std::move(boost::get<TransactionExtraPadding>(field).size));
-    } else if (typeid(TransactionExtraPublicKey) == field.type()) {
-      extraDetails.publicKey.push_back(std::move(boost::get<TransactionExtraPublicKey>(field).publicKey));
-    } else if (typeid(TransactionExtraNonce) == field.type()) {
-      extraDetails.nonce.push_back(Common::toHex(boost::get<TransactionExtraNonce>(field).nonce.data(), boost::get<TransactionExtraNonce>(field).nonce.size()));
+  for (const transaction_extra_field_t& field : txExtraFields) {
+    if (typeid(transaction_extra_padding_t) == field.type()) {
+      extraDetails.padding.push_back(std::move(boost::get<transaction_extra_padding_t>(field).size));
+    } else if (typeid(transaction_extra_public_key_t) == field.type()) {
+      extraDetails.publicKey.push_back(std::move(boost::get<transaction_extra_public_key_t>(field).publicKey));
+    } else if (typeid(transaction_extra_nonce_t) == field.type()) {
+      extraDetails.nonce.push_back(Common::toHex(boost::get<transaction_extra_nonce_t>(field).nonce.data(), boost::get<transaction_extra_nonce_t>(field).nonce.size()));
     }
   }
   return true;

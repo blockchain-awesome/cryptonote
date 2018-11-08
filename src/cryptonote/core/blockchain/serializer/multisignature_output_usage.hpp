@@ -6,7 +6,7 @@ namespace cryptonote
 {
 struct MultisignatureOutputUsage
 {
-    TransactionIndex transactionIndex;
+    transaction_index_t transactionIndex;
     uint16_t outputIndex;
     bool isUsed;
 

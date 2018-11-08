@@ -55,7 +55,7 @@ namespace cryptonote
     stop();
   }
   //-----------------------------------------------------------------------------------------------------
-  bool miner::set_block_template(const block_t& bl, const difficulty_type& di) {
+  bool miner::set_block_template(const block_t& bl, const difficulty_t& di) {
     std::lock_guard<decltype(m_template_lock)> lk(m_template_lock);
 
     m_template = bl;
@@ -75,7 +75,7 @@ namespace cryptonote
   //-----------------------------------------------------------------------------------------------------
   bool miner::request_block_template() {
     block_t bl = boost::value_initialized<block_t>();
-    difficulty_type di = 0;
+    difficulty_t di = 0;
     uint32_t height;
     cryptonote::BinaryArray extra_nonce;
 
@@ -250,7 +250,7 @@ namespace cryptonote
     return true;
   }
   //-----------------------------------------------------------------------------------------------------
-  bool miner::find_nonce_for_given_block(block_t& bl, const difficulty_type& diffic) {
+  bool miner::find_nonce_for_given_block(block_t& bl, const difficulty_t& diffic) {
 
     unsigned nthreads = std::thread::hardware_concurrency();
 
@@ -339,7 +339,7 @@ namespace cryptonote
   {
     logger(INFO) << "Miner thread was started ["<< th_local_index << "]";
     uint32_t nonce = m_starter_nonce + th_local_index;
-    difficulty_type local_diff = 0;
+    difficulty_t local_diff = 0;
     uint32_t local_template_ver = 0;
     block_t b;
 

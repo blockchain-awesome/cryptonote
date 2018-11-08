@@ -369,7 +369,7 @@ struct block_header_response {
   uint64_t height;
   uint64_t depth;
   std::string hash;
-  difficulty_type difficulty;
+  difficulty_t difficulty;
   uint64_t reward;
 
   void serialize(ISerializer &s) {

@@ -6,7 +6,7 @@
 
 namespace cryptonote
 {
-struct TransactionEntry
+struct transaction_entry_t
 {
     transaction_t tx;
     std::vector<uint32_t> m_global_output_indexes;

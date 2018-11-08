@@ -327,9 +327,9 @@ void WalletSerializer::save(const std::string& password, Common::IOutputStream& 
 CryptoContext WalletSerializer::generateCryptoContext(const std::string& password) {
   CryptoContext context;
 
-  crypto::generate_chacha_key(password, context.key);
+  crypto::generate_chacha_key_t(password, context.key);
 
-  context.iv = crypto::rand<crypto::chacha_iv>();
+  context.iv = crypto::rand<crypto::chacha_iv_t>();
 
   return context;
 }
@@ -341,9 +341,9 @@ void WalletSerializer::saveVersion(Common::IOutputStream& destination) {
   s(version, "version");
 }
 
-void WalletSerializer::saveIv(Common::IOutputStream& destination, crypto::chacha_iv& iv) {
+void WalletSerializer::saveIv(Common::IOutputStream& destination, crypto::chacha_iv_t& iv) {
   BinaryOutputStreamSerializer s(destination);
-  s.binary(reinterpret_cast<void *>(&iv.data), sizeof(iv.data), "chacha_iv");
+  s.binary(reinterpret_cast<void *>(&iv.data), sizeof(iv.data), "chacha_iv_t");
 }
 
 void WalletSerializer::saveKeys(Common::IOutputStream& destination, CryptoContext& cryptoContext) {
@@ -609,14 +609,14 @@ uint32_t WalletSerializer::loadVersion(Common::IInputStream& source) {
   return version;
 }
 
-void WalletSerializer::loadIv(Common::IInputStream& source, crypto::chacha_iv& iv) {
+void WalletSerializer::loadIv(Common::IInputStream& source, crypto::chacha_iv_t& iv) {
   cryptonote::BinaryInputStreamSerializer s(source);
 
-  s.binary(static_cast<void *>(&iv.data), sizeof(iv.data), "chacha_iv");
+  s.binary(static_cast<void *>(&iv.data), sizeof(iv.data), "chacha_iv_t");
 }
 
-void WalletSerializer::generateKey(const std::string& password, crypto::chacha_key& key) {
-  crypto::generate_chacha_key(password, key);
+void WalletSerializer::generateKey(const std::string& password, crypto::chacha_key_t& key) {
+  crypto::generate_chacha_key_t(password, key);
 }
 
 void WalletSerializer::loadKeys(Common::IInputStream& source, CryptoContext& cryptoContext) {

@@ -4,7 +4,7 @@
 
 namespace cryptonote
 {
-struct TransactionIndex
+struct transaction_index_t
 {
     uint32_t block;
     uint16_t transaction;

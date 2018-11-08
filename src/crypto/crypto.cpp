@@ -29,14 +29,14 @@ namespace crypto {
 
   mutex random_lock;
 
-  static inline void random_scalar(EllipticCurveScalar &res) {
+  static inline void random_scalar(elliptic_curve_scalar_t &res) {
     unsigned char tmp[64];
     generate_random_bytes_not_thread_safe(64, tmp);
     sc_reduce(tmp);
     memcpy(&res, tmp, 32);
   }
 
-  static inline void hash_to_scalar(const void *data, size_t length, EllipticCurveScalar &res) {
+  static inline void hash_to_scalar(const void *data, size_t length, elliptic_curve_scalar_t &res) {
     cn_fast_hash(data, length, reinterpret_cast<hash_t &>(res));
     sc_reduce32(reinterpret_cast<unsigned char*>(&res));
   }
@@ -44,7 +44,7 @@ namespace crypto {
   void crypto_ops::generate_keys(public_key_t &pub, secret_key_t &sec) {
     lock_guard<mutex> lock(random_lock);
     ge_p3 point;
-    random_scalar(reinterpret_cast<EllipticCurveScalar&>(sec));
+    random_scalar(reinterpret_cast<elliptic_curve_scalar_t&>(sec));
     ge_scalarmult_base(&point, reinterpret_cast<unsigned char*>(&sec));
     ge_p3_tobytes(reinterpret_cast<unsigned char*>(&pub), &point);
   }
@@ -79,7 +79,7 @@ namespace crypto {
     return true;
   }
 
-  static void derivation_to_scalar(const key_derivation_t &derivation, size_t output_index, EllipticCurveScalar &res) {
+  static void derivation_to_scalar(const key_derivation_t &derivation, size_t output_index, elliptic_curve_scalar_t &res) {
     struct {
       key_derivation_t derivation;
       char output_index[(sizeof(size_t) * 8 + 6) / 7];
@@ -91,7 +91,7 @@ namespace crypto {
     hash_to_scalar(&buf, end - reinterpret_cast<char *>(&buf), res);
   }
 
-  static void derivation_to_scalar(const key_derivation_t &derivation, size_t output_index, const uint8_t* suffix, size_t suffixLength, EllipticCurveScalar &res) {
+  static void derivation_to_scalar(const key_derivation_t &derivation, size_t output_index, const uint8_t* suffix, size_t suffixLength, elliptic_curve_scalar_t &res) {
     assert(suffixLength <= 32);
     struct {
       key_derivation_t derivation;
@@ -108,7 +108,7 @@ namespace crypto {
 
   bool crypto_ops::derive_public_key(const key_derivation_t &derivation, size_t output_index,
     const public_key_t &base, public_key_t &derived_key) {
-    EllipticCurveScalar scalar;
+    elliptic_curve_scalar_t scalar;
     ge_p3 point1;
     ge_p3 point2;
     ge_cached point3;
@@ -128,7 +128,7 @@ namespace crypto {
 
   bool crypto_ops::derive_public_key(const key_derivation_t &derivation, size_t output_index,
     const public_key_t &base, const uint8_t* suffix, size_t suffixLength, public_key_t &derived_key) {
-    EllipticCurveScalar scalar;
+    elliptic_curve_scalar_t scalar;
     ge_p3 point1;
     ge_p3 point2;
     ge_cached point3;
@@ -147,7 +147,7 @@ namespace crypto {
   }
 
   bool crypto_ops::underive_public_key_and_get_scalar(const key_derivation_t &derivation, size_t output_index,
-    const public_key_t &derived_key, public_key_t &base, EllipticCurveScalar &hashed_derivation) {
+    const public_key_t &derived_key, public_key_t &base, elliptic_curve_scalar_t &hashed_derivation) {
     ge_p3 point1;
     ge_p3 point2;
     ge_cached point3;
@@ -167,7 +167,7 @@ namespace crypto {
 
   void crypto_ops::derive_secret_key(const key_derivation_t &derivation, size_t output_index,
     const secret_key_t &base, secret_key_t &derived_key) {
-    EllipticCurveScalar scalar;
+    elliptic_curve_scalar_t scalar;
     assert(sc_check(reinterpret_cast<const unsigned char*>(&base)) == 0);
     derivation_to_scalar(derivation, output_index, scalar);
     sc_add(reinterpret_cast<unsigned char*>(&derived_key), reinterpret_cast<const unsigned char*>(&base), reinterpret_cast<unsigned char*>(&scalar));
@@ -175,7 +175,7 @@ namespace crypto {
 
   void crypto_ops::derive_secret_key(const key_derivation_t &derivation, size_t output_index,
     const secret_key_t &base, const uint8_t* suffix, size_t suffixLength, secret_key_t &derived_key) {
-    EllipticCurveScalar scalar;
+    elliptic_curve_scalar_t scalar;
     assert(sc_check(reinterpret_cast<const unsigned char*>(&base)) == 0);
     derivation_to_scalar(derivation, output_index, suffix, suffixLength, scalar);
     sc_add(reinterpret_cast<unsigned char*>(&derived_key), reinterpret_cast<const unsigned char*>(&base), reinterpret_cast<unsigned char*>(&scalar));
@@ -184,7 +184,7 @@ namespace crypto {
 
   bool crypto_ops::underive_public_key(const key_derivation_t &derivation, size_t output_index,
     const public_key_t &derived_key, public_key_t &base) {
-    EllipticCurveScalar scalar;
+    elliptic_curve_scalar_t scalar;
     ge_p3 point1;
     ge_p3 point2;
     ge_cached point3;
@@ -204,7 +204,7 @@ namespace crypto {
 
   bool crypto_ops::underive_public_key(const key_derivation_t &derivation, size_t output_index,
     const public_key_t &derived_key, const uint8_t* suffix, size_t suffixLength, public_key_t &base) {
-    EllipticCurveScalar scalar;
+    elliptic_curve_scalar_t scalar;
     ge_p3 point1;
     ge_p3 point2;
     ge_cached point3;
@@ -226,14 +226,14 @@ namespace crypto {
 
   struct s_comm {
     hash_t h;
-    EllipticCurvePoint key;
-    EllipticCurvePoint comm;
+    elliptic_curve_point_t key;
+    elliptic_curve_point_t comm;
   };
 
   void crypto_ops::generate_signature(const hash_t &prefix_hash, const public_key_t &pub, const secret_key_t &sec, signature_t &sig) {
     lock_guard<mutex> lock(random_lock);
     ge_p3 tmp3;
-    EllipticCurveScalar k;
+    elliptic_curve_scalar_t k;
     s_comm buf;
 #if !defined(NDEBUG)
     {
@@ -246,22 +246,22 @@ namespace crypto {
     }
 #endif
     buf.h = prefix_hash;
-    buf.key = reinterpret_cast<const EllipticCurvePoint&>(pub);
+    buf.key = reinterpret_cast<const elliptic_curve_point_t&>(pub);
     random_scalar(k);
     ge_scalarmult_base(&tmp3, reinterpret_cast<unsigned char*>(&k));
     ge_p3_tobytes(reinterpret_cast<unsigned char*>(&buf.comm), &tmp3);
-    hash_to_scalar(&buf, sizeof(s_comm), reinterpret_cast<EllipticCurveScalar&>(sig));
+    hash_to_scalar(&buf, sizeof(s_comm), reinterpret_cast<elliptic_curve_scalar_t&>(sig));
     sc_mulsub(reinterpret_cast<unsigned char*>(&sig) + 32, reinterpret_cast<unsigned char*>(&sig), reinterpret_cast<const unsigned char*>(&sec), reinterpret_cast<unsigned char*>(&k));
   }
 
   bool crypto_ops::check_signature(const hash_t &prefix_hash, const public_key_t &pub, const signature_t &sig) {
     ge_p2 tmp2;
     ge_p3 tmp3;
-    EllipticCurveScalar c;
+    elliptic_curve_scalar_t c;
     s_comm buf;
     assert(check_key(pub));
     buf.h = prefix_hash;
-    buf.key = reinterpret_cast<const EllipticCurvePoint&>(pub);
+    buf.key = reinterpret_cast<const elliptic_curve_point_t&>(pub);
     if (ge_frombytes_vartime(&tmp3, reinterpret_cast<const unsigned char*>(&pub)) != 0) {
       abort();
     }
@@ -305,7 +305,7 @@ namespace crypto {
     ge_tobytes(reinterpret_cast<unsigned char*>(&image), &point2);
   }
   
-  void crypto_ops::generate_incomplete_key_image(const public_key_t &pub, EllipticCurvePoint &incomplete_key_image) {
+  void crypto_ops::generate_incomplete_key_image(const public_key_t &pub, elliptic_curve_point_t &incomplete_key_image) {
     ge_p3 point;
     hash_to_ec(pub, point);
     ge_p3_tobytes(reinterpret_cast<unsigned char*>(&incomplete_key_image), &point);
@@ -318,7 +318,7 @@ namespace crypto {
   struct rs_comm {
     hash_t h;
     struct {
-      EllipticCurvePoint a, b;
+      elliptic_curve_point_t a, b;
     } ab[];
   };
 
@@ -335,7 +335,7 @@ namespace crypto {
     size_t i;
     ge_p3 image_unp;
     ge_dsmp image_pre;
-    EllipticCurveScalar sum, k, h;
+    elliptic_curve_scalar_t sum, k, h;
     rs_comm *const buf = reinterpret_cast<rs_comm *>(alloca(rs_comm_size(pubs_count)));
     assert(sec_index < pubs_count);
 #if !defined(NDEBUG)
@@ -371,8 +371,8 @@ namespace crypto {
         ge_scalarmult(&tmp2, reinterpret_cast<unsigned char*>(&k), &tmp3);
         ge_tobytes(reinterpret_cast<unsigned char*>(&buf->ab[i].b), &tmp2);
       } else {
-        random_scalar(reinterpret_cast<EllipticCurveScalar&>(sig[i]));
-        random_scalar(*reinterpret_cast<EllipticCurveScalar*>(reinterpret_cast<unsigned char*>(&sig[i]) + 32));
+        random_scalar(reinterpret_cast<elliptic_curve_scalar_t&>(sig[i]));
+        random_scalar(*reinterpret_cast<elliptic_curve_scalar_t*>(reinterpret_cast<unsigned char*>(&sig[i]) + 32));
         if (ge_frombytes_vartime(&tmp3, reinterpret_cast<const unsigned char*>(&*pubs[i])) != 0) {
           abort();
         }
@@ -395,7 +395,7 @@ namespace crypto {
     size_t i;
     ge_p3 image_unp;
     ge_dsmp image_pre;
-    EllipticCurveScalar sum, h;
+    elliptic_curve_scalar_t sum, h;
     rs_comm *const buf = reinterpret_cast<rs_comm *>(alloca(rs_comm_size(pubs_count)));
 #if !defined(NDEBUG)
     for (i = 0; i < pubs_count; i++) {

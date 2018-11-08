@@ -20,15 +20,15 @@
 
 namespace cryptonote {
 
-struct TransactionExtraPadding {
+struct transaction_extra_padding_t {
   size_t size;
 };
 
-struct TransactionExtraPublicKey {
+struct transaction_extra_public_key_t {
   crypto::public_key_t publicKey;
 };
 
-struct TransactionExtraNonce {
+struct transaction_extra_nonce_t {
   std::vector<uint8_t> nonce;
 };
 
@@ -36,14 +36,14 @@ struct TransactionExtraNonce {
 //   varint tag;
 //   varint size;
 //   varint data[];
-typedef boost::variant<TransactionExtraPadding, TransactionExtraPublicKey, TransactionExtraNonce> TransactionExtraField;
+typedef boost::variant<transaction_extra_padding_t, transaction_extra_public_key_t, transaction_extra_nonce_t> transaction_extra_field_t;
 
 
 
 template<typename T>
-bool findTransactionExtraFieldByType(const std::vector<TransactionExtraField>& tx_extra_fields, T& field) {
+bool findTransactionExtraFieldByType(const std::vector<transaction_extra_field_t>& tx_extra_fields, T& field) {
   auto it = std::find_if(tx_extra_fields.begin(), tx_extra_fields.end(),
-    [](const TransactionExtraField& f) { return typeid(T) == f.type(); });
+    [](const transaction_extra_field_t& f) { return typeid(T) == f.type(); });
 
   if (tx_extra_fields.end() == it)
     return false;
@@ -52,8 +52,8 @@ bool findTransactionExtraFieldByType(const std::vector<TransactionExtraField>& t
   return true;
 }
 
-bool parseTransactionExtra(const std::vector<uint8_t>& tx_extra, std::vector<TransactionExtraField>& tx_extra_fields);
-bool writeTransactionExtra(std::vector<uint8_t>& tx_extra, const std::vector<TransactionExtraField>& tx_extra_fields);
+bool parseTransactionExtra(const std::vector<uint8_t>& tx_extra, std::vector<transaction_extra_field_t>& tx_extra_fields);
+bool writeTransactionExtra(std::vector<uint8_t>& tx_extra, const std::vector<transaction_extra_field_t>& tx_extra_fields);
 
 crypto::public_key_t getTransactionPublicKeyFromExtra(const std::vector<uint8_t>& tx_extra);
 bool addTransactionPublicKeyToExtra(std::vector<uint8_t>& tx_extra, const crypto::public_key_t& tx_pub_key);

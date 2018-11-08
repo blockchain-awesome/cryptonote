@@ -148,7 +148,7 @@ namespace cryptonote {
     // cryptonote::key_pair_t txKeys(cryptonote::generateKeyPair());
     key_pair_t txKeys = Key::generate();
 
-    TransactionExtraPublicKey pk = { txKeys.publicKey };
+    transaction_extra_public_key_t pk = { txKeys.publicKey };
     extra.set(pk);
 
     transaction.version = CURRENT_TRANSACTION_VERSION;
@@ -411,7 +411,7 @@ namespace cryptonote {
 
   void TransactionImpl::setExtraNonce(const BinaryArray& nonce) {
     checkIfSigning();
-    TransactionExtraNonce extraNonce = { nonce };
+    transaction_extra_nonce_t extraNonce = { nonce };
     extra.set(extraNonce);
     transaction.extra = extra.serialize();
     invalidateHash();
@@ -424,7 +424,7 @@ namespace cryptonote {
   }
 
   bool TransactionImpl::getExtraNonce(BinaryArray& nonce) const {
-    TransactionExtraNonce extraNonce;
+    transaction_extra_nonce_t extraNonce;
     if (extra.get(extraNonce)) {
       nonce = extraNonce.nonce;
       return true;

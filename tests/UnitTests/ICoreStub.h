@@ -63,7 +63,7 @@ public:
   virtual bool getBlockReward(size_t medianSize, size_t currentBlockSize, uint64_t alreadyGeneratedCoins, uint64_t fee,
       uint64_t& reward, int64_t& emissionChange) override;
   virtual bool scanOutputkeysForIndices(const cryptonote::key_input_t& txInToKey, std::list<std::pair<crypto::hash_t, size_t>>& outputReferences) override;
-  virtual bool getBlockDifficulty(uint32_t height, cryptonote::difficulty_type& difficulty) override;
+  virtual bool getBlockDifficulty(uint32_t height, cryptonote::difficulty_t& difficulty) override;
   virtual bool getBlockContainingTx(const crypto::hash_t& txId, crypto::hash_t& blockId, uint32_t& blockHeight) override;
   virtual bool getMultisigOutputReference(const cryptonote::multi_signature_input_t& txInMultisig, std::pair<crypto::hash_t, size_t>& outputReference) override;
 

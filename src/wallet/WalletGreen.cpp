@@ -1560,7 +1560,7 @@ WalletTransactionWithTransfers WalletGreen::getTransaction(const crypto::hash_t&
   throwIfNotInitialized();
   throwIfStopped();
 
-  auto& hashIndex = m_transactions.get<TransactionIndex>();
+  auto& hashIndex = m_transactions.get<transaction_index_t>();
   auto it = hashIndex.find(transactionHash);
   if (it == hashIndex.end()) {
     throw std::system_error(make_error_code(error::OBJECT_NOT_FOUND), "transaction_t not found");
@@ -1826,7 +1826,7 @@ void WalletGreen::transactionUpdated(const TransactionInformation& transactionIn
     [](int64_t sum, const ContainerAmounts& containerAmounts) { return sum + containerAmounts.amounts.input + containerAmounts.amounts.output; });
 
   size_t transactionId;
-  auto& hashIndex = m_transactions.get<TransactionIndex>();
+  auto& hashIndex = m_transactions.get<transaction_index_t>();
   auto it = hashIndex.find(transactionInfo.transactionHash);
   if (it != hashIndex.end()) {
     transactionId = std::distance(m_transactions.get<RandomAccessIndex>().begin(), m_transactions.project<RandomAccessIndex>(it));
@@ -1868,9 +1868,9 @@ void WalletGreen::pushEvent(const WalletEvent& event) {
 }
 
 size_t WalletGreen::getTransactionId(const hash_t& transactionHash) const {
-  auto it = m_transactions.get<TransactionIndex>().find(transactionHash);
+  auto it = m_transactions.get<transaction_index_t>().find(transactionHash);
 
-  if (it == m_transactions.get<TransactionIndex>().end()) {
+  if (it == m_transactions.get<transaction_index_t>().end()) {
     throw std::system_error(make_error_code(std::errc::invalid_argument));
   }
 
@@ -1892,8 +1892,8 @@ void WalletGreen::transactionDeleted(ITransfersSubscription* object, const hash_
     return;
   }
 
-  auto it = m_transactions.get<TransactionIndex>().find(transactionHash);
-  if (it == m_transactions.get<TransactionIndex>().end()) {
+  auto it = m_transactions.get<transaction_index_t>().find(transactionHash);
+  if (it == m_transactions.get<transaction_index_t>().end()) {
     return;
   }
 
@@ -1902,7 +1902,7 @@ void WalletGreen::transactionDeleted(ITransfersSubscription* object, const hash_
   deleteUnlockTransactionJob(transactionHash);
 
   bool updated = false;
-  m_transactions.get<TransactionIndex>().modify(it, [&updated](cryptonote::WalletTransaction& tx) {
+  m_transactions.get<transaction_index_t>().modify(it, [&updated](cryptonote::WalletTransaction& tx) {
     if (tx.state == WalletTransactionState::CREATED || tx.state == WalletTransactionState::SUCCEEDED) {
       tx.state = WalletTransactionState::CANCELLED;
       updated = true;

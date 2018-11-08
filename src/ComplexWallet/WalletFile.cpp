@@ -111,12 +111,12 @@ using namespace cryptonote;
 
     std::string plain = plainArchive.str();
     std::string cipher;
-    crypto::chacha_key key;
-    crypto::generate_chacha_key(password, key);
+    crypto::chacha_key_t key;
+    crypto::generate_chacha_key_t(password, key);
 
     cipher.resize(plain.size());
 
-    crypto::chacha_iv iv = crypto::rand<crypto::chacha_iv>();
+    crypto::chacha_iv_t iv = crypto::rand<crypto::chacha_iv_t>();
     crypto::chacha8(plain.data(), plain.size(), key, iv, &cipher[0]);
 
     uint32_t version = 1;

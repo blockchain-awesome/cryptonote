@@ -12,9 +12,9 @@ struct block_entry_t
     block_t bl;
     uint32_t height;
     uint64_t block_cumulative_size;
-    difficulty_type cumulative_difficulty;
+    difficulty_t cumulative_difficulty;
     uint64_t already_generated_coins;
-    std::vector<TransactionEntry> transactions;
+    std::vector<transaction_entry_t> transactions;
 
     void serialize(ISerializer &s)
     {

@@ -161,7 +161,7 @@ bool test_generator::constructBlock(cryptonote::block_t& blk, const cryptonote::
 bool test_generator::constructBlockManually(block_t& blk, const block_t& prevBlock, const AccountBase& minerAcc,
                                             int actualParams/* = bf_none*/, uint8_t majorVer/* = 0*/,
                                             uint8_t minorVer/* = 0*/, uint64_t timestamp/* = 0*/,
-                                            const crypto::hash_t& previousBlockHash/* = crypto::hash_t()*/, const difficulty_type& diffic/* = 1*/,
+                                            const crypto::hash_t& previousBlockHash/* = crypto::hash_t()*/, const difficulty_t& diffic/* = 1*/,
                                             const transaction_t& baseTransaction/* = transaction()*/,
                                             const std::vector<crypto::hash_t>& transactionHashes/* = std::vector<crypto::hash_t>()*/,
                                             size_t txsSizes/* = 0*/, uint64_t fee/* = 0*/) {
@@ -187,7 +187,7 @@ bool test_generator::constructBlockManually(block_t& blk, const block_t& prevBlo
     }
   }
 
-  difficulty_type aDiffic = actualParams & bf_diffic ? diffic : getTestDifficulty();
+  difficulty_t aDiffic = actualParams & bf_diffic ? diffic : getTestDifficulty();
   if (1 < aDiffic) {
     fillNonce(blk, aDiffic);
   }
@@ -237,7 +237,7 @@ bool test_generator::constructMaxSizeBlock(cryptonote::block_t& blk, const crypt
     0, 0, 0, crypto::hash_t(), 0, baseTransaction, transactionHashes, txsSize, totalFee);
 }
 
-void fillNonce(cryptonote::block_t& blk, const difficulty_type& diffic) {
+void fillNonce(cryptonote::block_t& blk, const difficulty_t& diffic) {
   blk.nonce = 0;
   while (!miner::find_nonce_for_given_block(blk, diffic)) {
     blk.timestamp++;

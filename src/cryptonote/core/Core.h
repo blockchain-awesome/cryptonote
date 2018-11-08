@@ -39,7 +39,7 @@ namespace cryptonote {
 
      //-------------------- IMinerHandler -----------------------
      virtual bool handle_block_found(block_t& b) override;
-     virtual bool get_block_template(block_t& b, const account_public_address_t& adr, difficulty_type& diffic, uint32_t& height, const BinaryArray& ex_nonce) override;
+     virtual bool get_block_template(block_t& b, const account_public_address_t& adr, difficulty_t& diffic, uint32_t& height, const BinaryArray& ex_nonce) override;
 
      bool addObserver(ICoreObserver* observer) override;
      bool removeObserver(ICoreObserver* observer) override;
@@ -58,7 +58,7 @@ namespace cryptonote {
      virtual bool getBlockReward(size_t medianSize, size_t currentBlockSize, uint64_t alreadyGeneratedCoins, uint64_t fee,
                                  uint64_t& reward, int64_t& emissionChange) override;
      virtual bool scanOutputkeysForIndices(const key_input_t& txInToKey, std::list<std::pair<crypto::hash_t, size_t>>& outputReferences) override;
-     virtual bool getBlockDifficulty(uint32_t height, difficulty_type& difficulty) override;
+     virtual bool getBlockDifficulty(uint32_t height, difficulty_t& difficulty) override;
      virtual bool getBlockContainingTx(const crypto::hash_t& txId, crypto::hash_t& blockId, uint32_t& blockHeight) override;
      virtual bool getMultisigOutputReference(const multi_signature_input_t& txInMultisig, std::pair<crypto::hash_t, size_t>& output_reference) override;
      virtual bool getGeneratedTransactionsNumber(uint32_t height, uint64_t& generatedTransactions) override;
