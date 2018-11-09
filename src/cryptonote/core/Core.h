@@ -21,7 +21,7 @@
 #include <logging/LoggerMessage.h>
 
 namespace cryptonote {
-  class LockedBlockchainStorage;
+  class Locker;
   struct CoreStateInfo;
   class miner;
   class CoreConfig;

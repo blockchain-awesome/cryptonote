@@ -37,8 +37,6 @@ namespace cryptonote {
   struct COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_outs_for_amount;
 
   using cryptonote::block_info_t;
-  
-  class LockedBlockchainStorage;
 
   class Blockchain : public cryptonote::ITransactionValidator {
   public:
@@ -163,6 +161,10 @@ namespace cryptonote {
     void print_blockchain_index();
     void print_blockchain_outs(const std::string& file);
 
+    std::recursive_mutex & getMutex() {
+      return m_blockchain_lock;
+    }
+
   private:
     typedef google::sparse_hash_set<crypto::key_image_t> key_images_container;
     typedef std::unordered_map<crypto::hash_t, block_entry_t> blocks_ext_by_hash;
@@ -244,8 +246,6 @@ namespace cryptonote {
     void saveTransactions(const std::vector<transaction_t>& transactions);
 
     void sendMessage(const BlockchainMessage& message);
-
-    friend class LockedBlockchainStorage;
   };
 
   template<class visitor_t> bool Blockchain::scanOutputKeysForIndexes(const key_input_t& tx_in_to_key, visitor_t& vis, uint32_t* pmax_related_block_height) {
