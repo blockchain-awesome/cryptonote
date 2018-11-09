@@ -27,7 +27,7 @@ public:
       cryptonote::COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_response& res) override;
   virtual bool get_tx_outputs_gindexs(const crypto::hash_t& tx_id, std::vector<uint32_t>& indexs) override;
   virtual cryptonote::ICryptonoteProtocol* get_protocol() override;
-  virtual bool handle_incoming_tx(cryptonote::BinaryArray const& tx_blob, cryptonote::tx_verification_context_t& tvc, bool keeped_by_block) override;
+  virtual bool handle_incoming_tx(cryptonote::binary_array_t const& tx_blob, cryptonote::tx_verification_context_t& tvc, bool keeped_by_block) override;
   virtual std::vector<cryptonote::transaction_t> getPoolTransactions() override;
   virtual bool getPoolChanges(const crypto::hash_t& tailBlockId, const std::vector<crypto::hash_t>& knownTxsIds,
                               std::vector<cryptonote::transaction_t>& addedTxs, std::vector<crypto::hash_t>& deletedTxsIds) override;
@@ -47,7 +47,7 @@ public:
   virtual bool on_idle() override { return false; }
   virtual void pause_mining() override {}
   virtual void update_block_template_and_resume_mining() override {}
-  virtual bool handle_incoming_block_blob(const cryptonote::BinaryArray& block_blob, cryptonote::block_verification_context_t& bvc, bool control_miner, bool relay_block) override { return false; }
+  virtual bool handle_incoming_block_blob(const cryptonote::binary_array_t& block_blob, cryptonote::block_verification_context_t& bvc, bool control_miner, bool relay_block) override { return false; }
   virtual bool handle_get_objects(cryptonote::NOTIFY_REQUEST_GET_OBJECTS::request& arg, cryptonote::NOTIFY_RESPONSE_GET_OBJECTS::request& rsp) override { return false; }
   virtual void on_synchronized() override {}
   virtual bool getOutByMSigGIndex(uint64_t amount, uint64_t gindex, cryptonote::multi_signature_output_t& out) override { return true; }

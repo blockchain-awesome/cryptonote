@@ -133,7 +133,7 @@ bool Currency::generateGenesisBlock()
 
   // Hard code coinbase tx in genesis block, because "tru" generating tx use random, but genesis should be always the same
   std::string genesisCoinbaseTxHex = GENESIS_COINBASE_TX_HEX;
-  BinaryArray minerTxBlob;
+  binary_array_t minerTxBlob;
 
   bool r =
       fromHex(genesisCoinbaseTxHex, minerTxBlob) &&
@@ -207,7 +207,7 @@ size_t Currency::maxBlockCumulativeSize(uint64_t height) const
 
 bool Currency::constructMinerTx(uint32_t height, size_t medianSize, uint64_t alreadyGeneratedCoins, size_t currentBlockSize,
                                 uint64_t fee, const account_public_address_t &minerAddress, transaction_t &tx,
-                                const BinaryArray &extraNonce /* = BinaryArray()*/, size_t maxOuts /* = 1*/) const
+                                const binary_array_t &extraNonce /* = binary_array_t()*/, size_t maxOuts /* = 1*/) const
 {
   tx.inputs.clear();
   tx.outputs.clear();

@@ -275,8 +275,8 @@ TEST_F(TransactionApi, setGetPaymentId) {
 }
 
 TEST_F(TransactionApi, setExtraNonce) {
-  BinaryArray extraNonce = Common::asBinaryArray("Hello, world"); // just a sequence of bytes
-  BinaryArray s;
+  binary_array_t extraNonce = Common::asBinaryArray("Hello, world"); // just a sequence of bytes
+  binary_array_t s;
 
   ASSERT_FALSE(tx->getExtraNonce(s));
   tx->setExtraNonce(extraNonce);
@@ -291,7 +291,7 @@ TEST_F(TransactionApi, setExtraNonce) {
 }
 
 TEST_F(TransactionApi, appendExtra) {
-  BinaryArray ba;
+  binary_array_t ba;
 
   ba.resize(100);
   std::iota(ba.begin(), ba.end(), 0);

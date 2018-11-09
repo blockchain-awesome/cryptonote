@@ -6,5 +6,5 @@
 
 namespace cryptonote
 {
-using BinaryArray = std::vector<uint8_t>;
+using binary_array_t = std::vector<uint8_t>;
 }

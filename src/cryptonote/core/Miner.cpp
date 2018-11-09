@@ -77,7 +77,7 @@ namespace cryptonote
     block_t bl = boost::value_initialized<block_t>();
     difficulty_t di = 0;
     uint32_t height;
-    cryptonote::BinaryArray extra_nonce;
+    cryptonote::binary_array_t extra_nonce;
 
     if(m_extra_messages.size() && m_config.current_extra_message_index < m_extra_messages.size()) {
       extra_nonce = m_extra_messages[m_config.current_extra_message_index];
@@ -153,7 +153,7 @@ namespace cryptonote
         boost::algorithm::trim(extra_vec[i]);
         if(!extra_vec[i].size())
           continue;
-        BinaryArray ba = Common::asBinaryArray(Common::base64Decode(extra_vec[i]));
+        binary_array_t ba = Common::asBinaryArray(Common::base64Decode(extra_vec[i]));
         if(buff != "0")
           m_extra_messages[i] = ba;
       }

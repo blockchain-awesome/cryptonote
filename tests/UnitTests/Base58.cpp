@@ -470,7 +470,7 @@ TEST(parseAccountAddressString, handles_valid_address)
   ASSERT_TRUE(Account::parseAddress(prefix, addr, test_keys_addr_str));
   ASSERT_EQ(TEST_PUBLIC_ADDRESS_BASE58_PREFIX, prefix);
 
-  BinaryArray blob;
+  binary_array_t blob;
   ASSERT_NO_THROW(blob = cryptonote::storeToBinary(addr));
   ASSERT_EQ(Common::asString(blob), test_serialized_keys);
 }

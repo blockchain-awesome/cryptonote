@@ -57,9 +57,9 @@ bool writeTransactionExtra(std::vector<uint8_t>& tx_extra, const std::vector<tra
 
 crypto::public_key_t getTransactionPublicKeyFromExtra(const std::vector<uint8_t>& tx_extra);
 bool addTransactionPublicKeyToExtra(std::vector<uint8_t>& tx_extra, const crypto::public_key_t& tx_pub_key);
-bool addExtraNonceToTransactionExtra(std::vector<uint8_t>& tx_extra, const BinaryArray& extra_nonce);
-void setPaymentIdToTransactionExtraNonce(BinaryArray& extra_nonce, const crypto::hash_t& payment_id);
-bool getPaymentIdFromTransactionExtraNonce(const BinaryArray& extra_nonce, crypto::hash_t& payment_id);
+bool addExtraNonceToTransactionExtra(std::vector<uint8_t>& tx_extra, const binary_array_t& extra_nonce);
+void setPaymentIdToTransactionExtraNonce(binary_array_t& extra_nonce, const crypto::hash_t& payment_id);
+bool getPaymentIdFromTransactionExtraNonce(const binary_array_t& extra_nonce, crypto::hash_t& payment_id);
 
 bool createTxExtraWithPaymentId(const std::string& paymentIdString, std::vector<uint8_t>& extra);
 //returns false if payment id is not found or parse error

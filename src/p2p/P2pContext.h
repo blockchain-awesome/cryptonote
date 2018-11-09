@@ -83,8 +83,8 @@ private:
   void timedSyncLoop();
 };
 
-P2pContext::Message makeReply(uint32_t command, const BinaryArray& data, uint32_t returnCode);
-P2pContext::Message makeRequest(uint32_t command, const BinaryArray& data);
+P2pContext::Message makeReply(uint32_t command, const binary_array_t& data, uint32_t returnCode);
+P2pContext::Message makeRequest(uint32_t command, const binary_array_t& data);
 
 std::ostream& operator <<(std::ostream& s, const P2pContext& conn);
 

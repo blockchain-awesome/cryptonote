@@ -14,11 +14,11 @@
 
 namespace cryptonote {
 
-void getBinaryArrayHash(const BinaryArray& binaryArray, crypto::hash_t& hash);
-crypto::hash_t getBinaryArrayHash(const BinaryArray& binaryArray);
+void getBinaryArrayHash(const binary_array_t& binaryArray, crypto::hash_t& hash);
+crypto::hash_t getBinaryArrayHash(const binary_array_t& binaryArray);
 
 template<class T>
-bool toBinaryArray(const T& object, BinaryArray& binaryArray) {
+bool toBinaryArray(const T& object, binary_array_t& binaryArray) {
   try {
     ::Common::VectorOutputStream stream(binaryArray);
     BinaryOutputStreamSerializer serializer(stream);
@@ -31,17 +31,17 @@ bool toBinaryArray(const T& object, BinaryArray& binaryArray) {
 }
 
 template<>
-bool toBinaryArray(const BinaryArray& object, BinaryArray& binaryArray); 
+bool toBinaryArray(const binary_array_t& object, binary_array_t& binaryArray); 
 
 template<class T>
-BinaryArray toBinaryArray(const T& object) {
-  BinaryArray ba;
+binary_array_t toBinaryArray(const T& object) {
+  binary_array_t ba;
   toBinaryArray(object, ba);
   return ba;
 }
 
 template<class T>
-bool fromBinaryArray(T& object, const BinaryArray& binaryArray) {
+bool fromBinaryArray(T& object, const binary_array_t& binaryArray) {
   bool result = false;
   try {
     Common::MemoryInputStream stream(binaryArray.data(), binaryArray.size());
@@ -56,7 +56,7 @@ bool fromBinaryArray(T& object, const BinaryArray& binaryArray) {
 
 template<class T>
 bool getObjectBinarySize(const T& object, size_t& size) {
-  BinaryArray ba;
+  binary_array_t ba;
   if (!toBinaryArray(object, ba)) {
     size = (std::numeric_limits<size_t>::max)();
     return false;
@@ -75,7 +75,7 @@ size_t getObjectBinarySize(const T& object) {
 
 template<class T>
 bool getObjectHash(const T& object, crypto::hash_t& hash) {
-  BinaryArray ba;
+  binary_array_t ba;
   if (!toBinaryArray(object, ba)) {
     hash = NULL_HASH;
     return false;
@@ -87,7 +87,7 @@ bool getObjectHash(const T& object, crypto::hash_t& hash) {
 
 template<class T>
 bool getObjectHash(const T& object, crypto::hash_t& hash, size_t& size) {
-  BinaryArray ba;
+  binary_array_t ba;
   if (!toBinaryArray(object, ba)) {
     hash = NULL_HASH;
     size = (std::numeric_limits<size_t>::max)();

@@ -113,7 +113,7 @@ public:
 
   bool constructMinerTx(uint32_t height, size_t medianSize, uint64_t alreadyGeneratedCoins, size_t currentBlockSize,
     uint64_t fee, const account_public_address_t& minerAddress, transaction_t& tx,
-    const BinaryArray& extraNonce = BinaryArray(), size_t maxOuts = 1) const;
+    const binary_array_t& extraNonce = binary_array_t(), size_t maxOuts = 1) const;
 
   bool isFusionTransaction(const transaction_t& transaction) const;
   bool isFusionTransaction(const transaction_t& transaction, size_t size) const;

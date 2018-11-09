@@ -288,7 +288,7 @@ bool RpcServer::onGetPoolChanges(const COMMAND_RPC_GET_POOL_CHANGES::request& re
   std::vector<cryptonote::transaction_t> addedTransactions;
   rsp.isTailBlockActual = m_core.getPoolChanges(req.tailBlockId, req.knownTxsIds, addedTransactions, rsp.deletedTxsIds);
   for (auto& tx : addedTransactions) {
-    BinaryArray txBlob;
+    binary_array_t txBlob;
     if (!toBinaryArray(tx, txBlob)) {
       rsp.status = "Internal error";
       break;;
@@ -336,7 +336,7 @@ bool RpcServer::on_get_height(const COMMAND_RPC_GET_HEIGHT::request& req, COMMAN
 bool RpcServer::on_get_transactions(const COMMAND_RPC_GET_TRANSACTIONS::request& req, COMMAND_RPC_GET_TRANSACTIONS::response& res) {
   std::vector<hash_t> vh;
   for (const auto& tx_hex_str : req.txs_hashes) {
-    BinaryArray b;
+    binary_array_t b;
     if (!fromHex(tx_hex_str, b))
     {
       res.status = "Failed to parse hex representation of transaction hash";
@@ -365,7 +365,7 @@ bool RpcServer::on_get_transactions(const COMMAND_RPC_GET_TRANSACTIONS::request&
 }
 
 bool RpcServer::on_send_raw_tx(const COMMAND_RPC_SEND_RAW_TX::request& req, COMMAND_RPC_SEND_RAW_TX::response& res) {
-  BinaryArray tx_blob;
+  binary_array_t tx_blob;
   if (!fromHex(req.tx_as_hex, tx_blob))
   {
     logger(INFO) << "[on_send_raw_tx]: Failed to parse tx from hexbuff: " << req.tx_as_hex;
@@ -496,14 +496,14 @@ bool RpcServer::on_getblocktemplate(const COMMAND_RPC_GETBLOCKTEMPLATE::request&
   }
 
   block_t b = boost::value_initialized<block_t>();
-  cryptonote::BinaryArray blob_reserve;
+  cryptonote::binary_array_t blob_reserve;
   blob_reserve.resize(req.reserve_size, 0);
   if (!m_core.get_block_template(b, acc, res.difficulty, res.height, blob_reserve)) {
     logger(ERROR) << "Failed to create block template";
     throw JsonRpc::JsonRpcError{ CORE_RPC_ERROR_CODE_INTERNAL_ERROR, "Internal error: failed to create block template" };
   }
 
-  BinaryArray block_blob = toBinaryArray(b);
+  binary_array_t block_blob = toBinaryArray(b);
   public_key_t tx_pub_key = cryptonote::getTransactionPublicKeyFromExtra(b.baseTransaction.extra);
   if (tx_pub_key == NULL_PUBLIC_KEY) {
     logger(ERROR) << "Failed to find tx pub key in coinbase extra";
@@ -542,7 +542,7 @@ bool RpcServer::on_submitblock(const COMMAND_RPC_SUBMITBLOCK::request& req, COMM
     throw JsonRpc::JsonRpcError{ CORE_RPC_ERROR_CODE_WRONG_PARAM, "Wrong param" };
   }
 
-  BinaryArray blockblob;
+  binary_array_t blockblob;
   if (!fromHex(req[0], blockblob)) {
     throw JsonRpc::JsonRpcError{ CORE_RPC_ERROR_CODE_WRONG_BLOCKBLOB, "Wrong block blob" };
   }

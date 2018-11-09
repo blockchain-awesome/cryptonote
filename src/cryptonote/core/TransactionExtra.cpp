@@ -128,7 +128,7 @@ bool addTransactionPublicKeyToExtra(std::vector<uint8_t>& tx_extra, const public
 }
 
 
-bool addExtraNonceToTransactionExtra(std::vector<uint8_t>& tx_extra, const BinaryArray& extra_nonce) {
+bool addExtraNonceToTransactionExtra(std::vector<uint8_t>& tx_extra, const binary_array_t& extra_nonce) {
   if (extra_nonce.size() > TX_EXTRA_NONCE_MAX_COUNT) {
     return false;
   }

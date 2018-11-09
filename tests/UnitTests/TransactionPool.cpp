@@ -700,7 +700,7 @@ transaction_t createTestFusionTransaction(const Currency& currency) {
 transaction_t createTestOrdinaryTransactionWithExtra(const Currency& currency, size_t extraSize) {
   TestTransactionBuilder builder;
   if (extraSize != 0) {
-    builder.appendExtra(BinaryArray(extraSize, 0));
+    builder.appendExtra(binary_array_t(extraSize, 0));
   }
 
   builder.addTestInput(100 * currency.minimumFee());

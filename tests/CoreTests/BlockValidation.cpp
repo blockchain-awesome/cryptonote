@@ -621,13 +621,13 @@ bool gen_block_invalid_binary_format::generate(std::vector<test_event_entry>& ev
     BLOCK_MAJOR_VERSION_1, 0, blk_last.timestamp, crypto::hash_t(), diffic, transaction_t(), tx_hashes, txs_size))
     return false;
 
-  BinaryArray blob = toBinaryArray(blk_test);
+  binary_array_t blob = toBinaryArray(blk_test);
   for (size_t i = 0; i < blob.size(); ++i)
   {
-    for (size_t bit_idx = 0; bit_idx < sizeof(BinaryArray::value_type) * 8; ++bit_idx)
+    for (size_t bit_idx = 0; bit_idx < sizeof(binary_array_t::value_type) * 8; ++bit_idx)
     {
       serialized_block sr_block(blob);
-      BinaryArray::value_type& ch = sr_block.data[i];
+      binary_array_t::value_type& ch = sr_block.data[i];
       ch ^= 1 << bit_idx;
 
       events.push_back(sr_block);

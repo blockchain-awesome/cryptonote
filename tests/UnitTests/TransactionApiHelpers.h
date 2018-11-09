@@ -108,10 +108,10 @@ class TestTransactionBuilder {
 public:
 
   TestTransactionBuilder();
-  TestTransactionBuilder(const BinaryArray& txTemplate, const crypto::secret_key_t& secretKey);
+  TestTransactionBuilder(const binary_array_t& txTemplate, const crypto::secret_key_t& secretKey);
 
   public_key_t getTransactionPublicKey() const;
-  void appendExtra(const BinaryArray& extraData);
+  void appendExtra(const binary_array_t& extraData);
   void setUnlockTime(uint64_t time);
 
   // inputs

@@ -184,7 +184,7 @@ bool CryptoNoteProtocolHandler::get_payload_sync_data(CORE_SYNC_DATA& hshd) {
 
 
 template <typename Command, typename Handler>
-int notifyAdaptor(const BinaryArray& reqBuf, CryptoNoteConnectionContext& ctx, Handler handler) {
+int notifyAdaptor(const binary_array_t& reqBuf, CryptoNoteConnectionContext& ctx, Handler handler) {
 
   typedef typename Command::request Request;
   int command = Command::ID;
@@ -199,7 +199,7 @@ int notifyAdaptor(const BinaryArray& reqBuf, CryptoNoteConnectionContext& ctx, H
 
 #define HANDLE_NOTIFY(CMD, Handler) case CMD::ID: { ret = notifyAdaptor<CMD>(in, ctx, std::bind(Handler, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)); break; }
 
-int CryptoNoteProtocolHandler::handleCommand(bool is_notify, int command, const BinaryArray& in, BinaryArray& out, CryptoNoteConnectionContext& ctx, bool& handled) {
+int CryptoNoteProtocolHandler::handleCommand(bool is_notify, int command, const binary_array_t& in, binary_array_t& out, CryptoNoteConnectionContext& ctx, bool& handled) {
   int ret = 0;
   handled = true;
 

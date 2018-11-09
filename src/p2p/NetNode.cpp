@@ -170,7 +170,7 @@ namespace cryptonote
 
 
   template <typename Command, typename Handler>
-  int invokeAdaptor(const BinaryArray& reqBuf, BinaryArray& resBuf, P2pConnectionContext& ctx, Handler handler) {
+  int invokeAdaptor(const binary_array_t& reqBuf, binary_array_t& resBuf, P2pConnectionContext& ctx, Handler handler) {
     typedef typename Command::request Request;
     typedef typename Command::response Response;
     int command = Command::ID;
@@ -220,7 +220,7 @@ namespace cryptonote
 
 #define INVOKE_HANDLER(CMD, Handler) case CMD::ID: { ret = invokeAdaptor<CMD>(cmd.buf, out, ctx,  boost::bind(Handler, this, _1, _2, _3, _4)); break; }
 
-  int NodeServer::handleCommand(const LevinProtocol::Command& cmd, BinaryArray& out, P2pConnectionContext& ctx, bool& handled) {
+  int NodeServer::handleCommand(const LevinProtocol::Command& cmd, binary_array_t& out, P2pConnectionContext& ctx, bool& handled) {
     int ret = 0;
     handled = true;
 
@@ -316,7 +316,7 @@ namespace cryptonote
   }
 
   //----------------------------------------------------------------------------------- 
-  void NodeServer::externalRelayNotifyToAll(int command, const BinaryArray& data_buff) {
+  void NodeServer::externalRelayNotifyToAll(int command, const binary_array_t& data_buff) {
     m_dispatcher.remoteSpawn([this, command, data_buff] {
       relay_notify_to_all(command, data_buff, nullptr);
     });
@@ -618,7 +618,7 @@ namespace cryptonote
     return true;
   }
 
-  bool NodeServer::handleTimedSyncResponse(const BinaryArray& in, P2pConnectionContext& context) {
+  bool NodeServer::handleTimedSyncResponse(const binary_array_t& in, P2pConnectionContext& context) {
     COMMAND_TIMED_SYNC::response rsp;
     if (!LevinProtocol::decode<COMMAND_TIMED_SYNC::response>(in, rsp)) {
       return false;
@@ -1039,7 +1039,7 @@ namespace cryptonote
   
   //-----------------------------------------------------------------------------------
   
-  void NodeServer::relay_notify_to_all(int command, const BinaryArray& data_buff, const net_connection_id* excludeConnection) {
+  void NodeServer::relay_notify_to_all(int command, const binary_array_t& data_buff, const net_connection_id* excludeConnection) {
     net_connection_id excludeId = excludeConnection ? *excludeConnection : boost::value_initialized<net_connection_id>();
 
     forEachConnection([&](P2pConnectionContext& conn) {
@@ -1052,7 +1052,7 @@ namespace cryptonote
   }
  
   //-----------------------------------------------------------------------------------
-  bool NodeServer::invoke_notify_to_peer(int command, const BinaryArray& buffer, const CryptoNoteConnectionContext& context) {
+  bool NodeServer::invoke_notify_to_peer(int command, const binary_array_t& buffer, const CryptoNoteConnectionContext& context) {
     auto it = m_connections.find(context.m_connection_id);
     if (it == m_connections.end()) {
       return false;
@@ -1377,7 +1377,7 @@ namespace cryptonote
             break;
           }
 
-          BinaryArray response;
+          binary_array_t response;
           bool handled = false;
           auto retcode = handleCommand(cmd, response, ctx, handled);
 

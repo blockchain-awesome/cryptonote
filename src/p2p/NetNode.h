@@ -46,7 +46,7 @@ namespace cryptonote
       NOTIFY
     };
 
-    P2pMessage(Type type, uint32_t command, const BinaryArray& buffer, int32_t returnCode = 0) :
+    P2pMessage(Type type, uint32_t command, const binary_array_t& buffer, int32_t returnCode = 0) :
       type(type), command(command), buffer(buffer), returnCode(returnCode) {
     }
 
@@ -60,7 +60,7 @@ namespace cryptonote
 
     Type type;
     uint32_t command;
-    const BinaryArray buffer;
+    const binary_array_t buffer;
     int32_t returnCode;
   };
 
@@ -135,7 +135,7 @@ namespace cryptonote
 
   private:
 
-    int handleCommand(const LevinProtocol::Command& cmd, BinaryArray& buff_out, P2pConnectionContext& context, bool& handled);
+    int handleCommand(const LevinProtocol::Command& cmd, binary_array_t& buff_out, P2pConnectionContext& context, bool& handled);
 
     //----------------- commands handlers ----------------------------------------------
     int handle_handshake(int command, COMMAND_HANDSHAKE::request& arg, COMMAND_HANDSHAKE::response& rsp, P2pConnectionContext& context);
@@ -155,17 +155,17 @@ namespace cryptonote
 
     bool handshake(cryptonote::LevinProtocol& proto, P2pConnectionContext& context, bool just_take_peerlist = false);
     bool timedSync();
-    bool handleTimedSyncResponse(const BinaryArray& in, P2pConnectionContext& context);
+    bool handleTimedSyncResponse(const binary_array_t& in, P2pConnectionContext& context);
     void forEachConnection(std::function<void(P2pConnectionContext&)> action);
 
     void on_connection_new(P2pConnectionContext& context);
     void on_connection_close(P2pConnectionContext& context);
 
     //----------------- i_p2p_endpoint -------------------------------------------------------------
-    virtual void relay_notify_to_all(int command, const BinaryArray& data_buff, const net_connection_id* excludeConnection) override;
-    virtual bool invoke_notify_to_peer(int command, const BinaryArray& req_buff, const CryptoNoteConnectionContext& context) override;
+    virtual void relay_notify_to_all(int command, const binary_array_t& data_buff, const net_connection_id* excludeConnection) override;
+    virtual bool invoke_notify_to_peer(int command, const binary_array_t& req_buff, const CryptoNoteConnectionContext& context) override;
     virtual void for_each_connection(std::function<void(cryptonote::CryptoNoteConnectionContext&, PeerIdType)> f) override;
-    virtual void externalRelayNotifyToAll(int command, const BinaryArray& data_buff) override;
+    virtual void externalRelayNotifyToAll(int command, const binary_array_t& data_buff) override;
 
     //-----------------------------------------------------------------------------------------------
     bool handle_command_line(const boost::program_options::variables_map& vm);

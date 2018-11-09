@@ -319,7 +319,7 @@ bool BaseFunctionalTests::prepareAndSubmitBlock(TestNode& node, cryptonote::bloc
   blockTemplate.timestamp = m_nextTimestamp;
   m_nextTimestamp += 2 * m_currency.difficultyTarget();
 
-  BinaryArray blockBlob = cryptonote::toBinaryArray(blockTemplate);
+  binary_array_t blockBlob = cryptonote::toBinaryArray(blockTemplate);
   return node.submitBlock(::Common::toHex(blockBlob.data(), blockBlob.size()));
 }
 

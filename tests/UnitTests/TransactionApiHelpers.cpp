@@ -21,7 +21,7 @@ TestTransactionBuilder::TestTransactionBuilder() {
   tx = createTransaction();
 }
 
-TestTransactionBuilder::TestTransactionBuilder(const BinaryArray& txTemplate, const crypto::secret_key_t& secretKey) {
+TestTransactionBuilder::TestTransactionBuilder(const binary_array_t& txTemplate, const crypto::secret_key_t& secretKey) {
   tx = createTransaction(txTemplate);
   tx->setTransactionSecretKey(secretKey);
 }
@@ -30,7 +30,7 @@ public_key_t TestTransactionBuilder::getTransactionPublicKey() const {
   return tx->getTransactionPublicKey();
 }
 
-void TestTransactionBuilder::appendExtra(const BinaryArray& extraData) {
+void TestTransactionBuilder::appendExtra(const binary_array_t& extraData) {
   tx->appendExtra(extraData);
 }
 
@@ -285,7 +285,7 @@ std::unique_ptr<ITransactionReader> FusionTransactionBuilder::buildReader() cons
   TestTransactionBuilder builder;
 
   if (m_extraSize != 0) {
-    builder.appendExtra(BinaryArray(m_extraSize, 0));
+    builder.appendExtra(binary_array_t(m_extraSize, 0));
   }
 
   if (m_firstInput != 0) {

@@ -173,7 +173,7 @@ size_t core::addChain(const std::vector<const IBlock*>& chain) {
   return blocksCounter;
 }
 
-bool core::handle_incoming_tx(const BinaryArray& tx_blob, tx_verification_context_t& tvc, bool keeped_by_block) { //Deprecated. Should be removed with CryptoNoteProtocolHandler.
+bool core::handle_incoming_tx(const binary_array_t& tx_blob, tx_verification_context_t& tvc, bool keeped_by_block) { //Deprecated. Should be removed with CryptoNoteProtocolHandler.
   tvc = boost::value_initialized<tx_verification_context_t>();
   //want to process all transactions sequentially
 
@@ -290,7 +290,7 @@ bool core::add_new_tx(const transaction_t& tx, const crypto::hash_t& tx_hash, si
   return m_mempool.add_tx(tx, tx_hash, blob_size, tvc, keeped_by_block);
 }
 
-bool core::get_block_template(block_t& b, const account_public_address_t& adr, difficulty_t& diffic, uint32_t& height, const BinaryArray& ex_nonce) {
+bool core::get_block_template(block_t& b, const account_public_address_t& adr, difficulty_t& diffic, uint32_t& height, const binary_array_t& ex_nonce) {
   size_t median_size;
   uint64_t already_generated_coins;
 
@@ -459,7 +459,7 @@ void core::getPoolChanges(const std::vector<crypto::hash_t>& knownTxsIds, std::v
   assert(misses.empty());
 }
 
-bool core::handle_incoming_block_blob(const BinaryArray& block_blob, block_verification_context_t& bvc, bool control_miner, bool relay_block) {
+bool core::handle_incoming_block_blob(const binary_array_t& block_blob, block_verification_context_t& bvc, bool control_miner, bool relay_block) {
   if (block_blob.size() > m_currency.maxBlockBlobSize()) {
     logger(INFO) << "WRONG BLOCK BLOB, too big size " << block_blob.size() << ", rejected";
     bvc.m_verifivation_failed = true;
@@ -502,7 +502,7 @@ bool core::handle_incoming_block(const block_t& b, block_verification_context_t&
       NOTIFY_NEW_BLOCK::request arg;
       arg.hop = 0;
       arg.current_blockchain_height = m_blockchain.getCurrentBlockchainHeight();
-      BinaryArray blockBa;
+      binary_array_t blockBa;
       bool r = toBinaryArray(b, blockBa);
       if (!(r)) { logger(ERROR, BRIGHT_RED) << "failed to serialize block"; return false; }
       arg.b.block = asString(blockBa);
@@ -529,7 +529,7 @@ bool core::have_block(const crypto::hash_t& id) {
   return m_blockchain.haveBlock(id);
 }
 
-bool core::parse_tx_from_blob(transaction_t& tx, crypto::hash_t& tx_hash, crypto::hash_t& tx_prefix_hash, const BinaryArray& blob) {
+bool core::parse_tx_from_blob(transaction_t& tx, crypto::hash_t& tx_hash, crypto::hash_t& tx_prefix_hash, const binary_array_t& blob) {
   return parseAndValidateTransactionFromBinaryArray(blob, tx, tx_hash, tx_prefix_hash);
 }
 

@@ -102,7 +102,7 @@ struct COMMAND_RPC_GET_POOL_CHANGES {
 
   struct response {
     bool isTailBlockActual;
-    std::vector<BinaryArray> addedTxs;          // Added transactions blobs
+    std::vector<binary_array_t> addedTxs;          // Added transactions blobs
     std::vector<crypto::hash_t> deletedTxsIds; // IDs of not found transactions
     std::string status;
 

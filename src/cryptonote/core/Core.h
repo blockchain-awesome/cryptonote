@@ -32,14 +32,14 @@ namespace cryptonote {
      ~core();
 
      bool on_idle() override;
-     virtual bool handle_incoming_tx(const BinaryArray& tx_blob, tx_verification_context_t& tvc, bool keeped_by_block) override; //Deprecated. Should be removed with CryptoNoteProtocolHandler.
-     bool handle_incoming_block_blob(const BinaryArray& block_blob, block_verification_context_t& bvc, bool control_miner, bool relay_block) override;
+     virtual bool handle_incoming_tx(const binary_array_t& tx_blob, tx_verification_context_t& tvc, bool keeped_by_block) override; //Deprecated. Should be removed with CryptoNoteProtocolHandler.
+     bool handle_incoming_block_blob(const binary_array_t& block_blob, block_verification_context_t& bvc, bool control_miner, bool relay_block) override;
      virtual ICryptonoteProtocol* get_protocol() override {return m_pprotocol;}
      const Currency& currency() const { return m_currency; }
 
      //-------------------- IMinerHandler -----------------------
      virtual bool handle_block_found(block_t& b) override;
-     virtual bool get_block_template(block_t& b, const account_public_address_t& adr, difficulty_t& diffic, uint32_t& height, const BinaryArray& ex_nonce) override;
+     virtual bool get_block_template(block_t& b, const account_public_address_t& adr, difficulty_t& diffic, uint32_t& height, const binary_array_t& ex_nonce) override;
 
      bool addObserver(ICoreObserver* observer) override;
      bool removeObserver(ICoreObserver* observer) override;
@@ -136,7 +136,7 @@ namespace cryptonote {
    private:
      bool add_new_tx(const transaction_t& tx, const crypto::hash_t& tx_hash, size_t blob_size, tx_verification_context_t& tvc, bool keeped_by_block);
      bool load_state_data();
-     bool parse_tx_from_blob(transaction_t& tx, crypto::hash_t& tx_hash, crypto::hash_t& tx_prefix_hash, const BinaryArray& blob);
+     bool parse_tx_from_blob(transaction_t& tx, crypto::hash_t& tx_hash, crypto::hash_t& tx_prefix_hash, const binary_array_t& blob);
      bool handle_incoming_block(const block_t& b, block_verification_context_t& bvc, bool control_miner, bool relay_block);
 
      bool check_tx_syntax(const transaction_t& tx);

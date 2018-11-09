@@ -929,7 +929,7 @@ void WalletGreen::pushBackOutgoingTransfers(size_t txId, const std::vector<Walle
   }
 }
 
-size_t WalletGreen::insertOutgoingTransactionAndPushEvent(const hash_t& transactionHash, uint64_t fee, const BinaryArray& extra, uint64_t unlockTimestamp) {
+size_t WalletGreen::insertOutgoingTransactionAndPushEvent(const hash_t& transactionHash, uint64_t fee, const binary_array_t& extra, uint64_t unlockTimestamp) {
   WalletTransaction insertTx;
   insertTx.state = WalletTransactionState::CREATED;
   insertTx.creationTime = static_cast<uint64_t>(time(nullptr));
@@ -1288,7 +1288,7 @@ void WalletGreen::sendTransaction(const cryptonote::transaction_t& cryptoNoteTra
 }
 
 size_t WalletGreen::validateSaveAndSendTransaction(const ITransactionReader& transaction, const std::vector<WalletTransfer>& destinations, bool isFusion, bool send) {
-  BinaryArray transactionData = transaction.getTransactionData();
+  binary_array_t transactionData = transaction.getTransactionData();
 
   if (transactionData.size() > m_upperTransactionSizeLimit) {
     throw std::system_error(make_error_code(error::TRANSACTION_SIZE_TOO_BIG));

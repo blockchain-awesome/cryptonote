@@ -72,7 +72,7 @@ void Daemon::printGenesisTx()
 {
   Logging::ConsoleLogger logger;
   cryptonote::transaction_t tx = cryptonote::CurrencyBuilder(logger, os::appdata::path()).generateGenesisTransaction();
-  cryptonote::BinaryArray txb = cryptonote::toBinaryArray(tx);
+  cryptonote::binary_array_t txb = cryptonote::toBinaryArray(tx);
   std::string tx_hex = Common::toHex(txb);
 
   std::cout << "Insert this line into your coin configuration file as is: " << std::endl;

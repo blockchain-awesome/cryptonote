@@ -7,7 +7,7 @@
 
 namespace cryptonote {
 template<>
-bool toBinaryArray(const BinaryArray& object, BinaryArray& binaryArray) {
+bool toBinaryArray(const binary_array_t& object, binary_array_t& binaryArray) {
   try {
     Common::VectorOutputStream stream(binaryArray);
     BinaryOutputStreamSerializer serializer(stream);
@@ -20,11 +20,11 @@ bool toBinaryArray(const BinaryArray& object, BinaryArray& binaryArray) {
   return true;
 }
 
-void getBinaryArrayHash(const BinaryArray& binaryArray, crypto::hash_t& hash) {
+void getBinaryArrayHash(const binary_array_t& binaryArray, crypto::hash_t& hash) {
   cn_fast_hash(binaryArray.data(), binaryArray.size(), hash);
 }
 
-crypto::hash_t getBinaryArrayHash(const BinaryArray& binaryArray) {
+crypto::hash_t getBinaryArrayHash(const binary_array_t& binaryArray) {
   crypto::hash_t hash;
   getBinaryArrayHash(binaryArray, hash);
   return hash;

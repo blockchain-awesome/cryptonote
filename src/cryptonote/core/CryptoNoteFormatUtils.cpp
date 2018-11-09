@@ -23,7 +23,7 @@ using namespace Common;
 
 namespace cryptonote {
 
-bool parseAndValidateTransactionFromBinaryArray(const BinaryArray& tx_blob, transaction_t& tx, hash_t& tx_hash, hash_t& tx_prefix_hash) {
+bool parseAndValidateTransactionFromBinaryArray(const binary_array_t& tx_blob, transaction_t& tx, hash_t& tx_hash, hash_t& tx_prefix_hash) {
   if (!fromBinaryArray(tx, tx_blob)) {
     return false;
   }
@@ -428,7 +428,7 @@ bool lookup_acc_outs(const account_keys_t& acc, const transaction_t& tx, const p
   return true;
 }
 
-bool get_block_hashing_blob(const block_t& b, BinaryArray& ba) {
+bool get_block_hashing_blob(const block_t& b, binary_array_t& ba) {
   if (!toBinaryArray(static_cast<const block_header_t&>(b), ba)) {
     return false;
   }
@@ -441,7 +441,7 @@ bool get_block_hashing_blob(const block_t& b, BinaryArray& ba) {
 }
 
 bool get_block_hash(const block_t& b, hash_t& res) {
-  BinaryArray ba;
+  binary_array_t ba;
   if (!get_block_hashing_blob(b, ba)) {
     return false;
   }
@@ -456,7 +456,7 @@ hash_t get_block_hash(const block_t& b) {
 }
 
 bool get_aux_block_header_hash(const block_t& b, hash_t& res) {
-  BinaryArray blob;
+  binary_array_t blob;
   if (!get_block_hashing_blob(b, blob)) {
     return false;
   }
@@ -465,7 +465,7 @@ bool get_aux_block_header_hash(const block_t& b, hash_t& res) {
 }
 
 bool get_block_longhash(const block_t& b, hash_t& res) {
-  BinaryArray bd;
+  binary_array_t bd;
   if (!get_block_hashing_blob(b, bd)) {
     return false;
   }

@@ -636,7 +636,7 @@ bool gen_tx_signatures_are_invalid::generate(std::vector<test_event_entry>& even
 
   // Tx with nmix = 0 without signatures
   DO_CALLBACK(events, "mark_invalid_tx");
-  BinaryArray sr_tx = toBinaryArray(static_cast<transaction_prefix_t>(tx_0));
+  binary_array_t sr_tx = toBinaryArray(static_cast<transaction_prefix_t>(tx_0));
   events.push_back(serialized_transaction(sr_tx));
 
   // Tx with nmix = 0 have a few inputs, and not enough signatures

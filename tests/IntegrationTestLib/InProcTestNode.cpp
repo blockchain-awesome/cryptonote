@@ -148,7 +148,7 @@ bool InProcTestNode::getBlockTemplate(const std::string &minerAddress, cryptonot
   account_public_address_t addr;
   Account::parseAddress(minerAddress, addr);
   uint32_t height = 0;
-  return core->get_block_template(blockTemplate, addr, difficulty, height, BinaryArray());
+  return core->get_block_template(blockTemplate, addr, difficulty, height, binary_array_t());
 }
 
 bool InProcTestNode::submitBlock(const std::string& block) {

@@ -92,12 +92,12 @@ struct serialized_object
 {
   serialized_object() { }
 
-  serialized_object(const cryptonote::BinaryArray& a_data)
+  serialized_object(const cryptonote::binary_array_t& a_data)
     : data(a_data)
   {
   }
 
-  cryptonote::BinaryArray data;
+  cryptonote::binary_array_t data;
   //BEGIN_SERIALIZE_OBJECT()
   //  FIELD(data)
   //  END_SERIALIZE()

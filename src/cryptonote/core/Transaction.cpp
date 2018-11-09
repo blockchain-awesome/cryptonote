@@ -39,7 +39,7 @@ namespace cryptonote {
   class TransactionImpl : public ITransaction {
   public:
     TransactionImpl();
-    TransactionImpl(const BinaryArray& txblob);
+    TransactionImpl(const binary_array_t& txblob);
     TransactionImpl(const cryptonote::transaction_t& tx);
   
     // ITransactionReader
@@ -48,8 +48,8 @@ namespace cryptonote {
     virtual public_key_t getTransactionPublicKey() const override;
     virtual uint64_t getUnlockTime() const override;
     virtual bool getPaymentId(hash_t& hash) const override;
-    virtual bool getExtraNonce(BinaryArray& nonce) const override;
-    virtual BinaryArray getExtra() const override;
+    virtual bool getExtraNonce(binary_array_t& nonce) const override;
+    virtual binary_array_t getExtra() const override;
 
     // inputs
     virtual size_t getInputCount() const override;
@@ -74,14 +74,14 @@ namespace cryptonote {
     virtual bool validateSignatures() const override;
 
     // get serialized transaction
-    virtual BinaryArray getTransactionData() const override;
+    virtual binary_array_t getTransactionData() const override;
 
     // ITransactionWriter
 
     virtual void setUnlockTime(uint64_t unlockTime) override;
     virtual void setPaymentId(const hash_t& hash) override;
-    virtual void setExtraNonce(const BinaryArray& nonce) override;
-    virtual void appendExtra(const BinaryArray& extraData) override;
+    virtual void setExtraNonce(const binary_array_t& nonce) override;
+    virtual void appendExtra(const binary_array_t& extraData) override;
 
     // Inputs/Outputs 
     virtual size_t addInput(const key_input_t& input) override;
@@ -136,7 +136,7 @@ namespace cryptonote {
     return std::unique_ptr<ITransaction>(new TransactionImpl());
   }
 
-  std::unique_ptr<ITransaction> createTransaction(const BinaryArray& transactionBlob) {
+  std::unique_ptr<ITransaction> createTransaction(const binary_array_t& transactionBlob) {
     return std::unique_ptr<ITransaction>(new TransactionImpl(transactionBlob));
   }
 
@@ -158,7 +158,7 @@ namespace cryptonote {
     secretKey = txKeys.secretKey;
   }
 
-  TransactionImpl::TransactionImpl(const BinaryArray& ba) {
+  TransactionImpl::TransactionImpl(const binary_array_t& ba) {
     if (!fromBinaryArray(transaction, ba)) {
       throw std::runtime_error("Invalid transaction data");
     }
@@ -386,19 +386,19 @@ namespace cryptonote {
     return transaction.signatures[input];
   }
 
-  BinaryArray TransactionImpl::getTransactionData() const {
+  binary_array_t TransactionImpl::getTransactionData() const {
     return toBinaryArray(transaction);
   }
 
   void TransactionImpl::setPaymentId(const hash_t& hash) {
     checkIfSigning();
-    BinaryArray paymentIdBlob;
+    binary_array_t paymentIdBlob;
     setPaymentIdToTransactionExtraNonce(paymentIdBlob, reinterpret_cast<const hash_t&>(hash));
     setExtraNonce(paymentIdBlob);
   }
 
   bool TransactionImpl::getPaymentId(hash_t& hash) const {
-    BinaryArray nonce;
+    binary_array_t nonce;
     if (getExtraNonce(nonce)) {
       hash_t paymentId;
       if (getPaymentIdFromTransactionExtraNonce(nonce, paymentId)) {
@@ -409,7 +409,7 @@ namespace cryptonote {
     return false;
   }
 
-  void TransactionImpl::setExtraNonce(const BinaryArray& nonce) {
+  void TransactionImpl::setExtraNonce(const binary_array_t& nonce) {
     checkIfSigning();
     transaction_extra_nonce_t extraNonce = { nonce };
     extra.set(extraNonce);
@@ -417,13 +417,13 @@ namespace cryptonote {
     invalidateHash();
   }
 
-  void TransactionImpl::appendExtra(const BinaryArray& extraData) {
+  void TransactionImpl::appendExtra(const binary_array_t& extraData) {
     checkIfSigning();
     transaction.extra.insert(
       transaction.extra.end(), extraData.begin(), extraData.end());
   }
 
-  bool TransactionImpl::getExtraNonce(BinaryArray& nonce) const {
+  bool TransactionImpl::getExtraNonce(binary_array_t& nonce) const {
     transaction_extra_nonce_t extraNonce;
     if (extra.get(extraNonce)) {
       nonce = extraNonce.nonce;
@@ -432,7 +432,7 @@ namespace cryptonote {
     return false;
   }
 
-  BinaryArray TransactionImpl::getExtra() const {
+  binary_array_t TransactionImpl::getExtra() const {
     return transaction.extra;
   }
 

@@ -160,14 +160,14 @@ void P2pContext::timedSyncLoop() {
   timedSyncFinished.set();
 }
 
-P2pContext::Message makeReply(uint32_t command, const BinaryArray& data, uint32_t returnCode) {
+P2pContext::Message makeReply(uint32_t command, const binary_array_t& data, uint32_t returnCode) {
   return P2pContext::Message(
     P2pMessage{ command, data },
     P2pContext::Message::REPLY,
     returnCode);
 }
 
-P2pContext::Message makeRequest(uint32_t command, const BinaryArray& data) {
+P2pContext::Message makeRequest(uint32_t command, const binary_array_t& data) {
   return P2pContext::Message(
     P2pMessage{ command, data },
     P2pContext::Message::REQUEST);
