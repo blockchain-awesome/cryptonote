@@ -9,10 +9,10 @@
 
 Logging::ConsoleLogger logger;
 System::Dispatcher globalSystem;
-cryptonote::Currency currency = cryptonote::CurrencyBuilder(logger, os::appdata::path())
+cryptonote::Currency currency = cryptonote::CurrencyBuilder(os::appdata::path(), config::testnet::data, logger)
 // .testnet(true)
 .currency();
-Tests::Common::BaseFunctionalTestsConfig config;
+Tests::Common::BaseFunctionalTestsConfig testConfig;
 
 
 namespace po = boost::program_options;
@@ -23,10 +23,10 @@ int main(int argc, char** argv) {
   po::options_description desc;
   po::variables_map vm;
   
-  config.init(desc);
+  testConfig.init(desc);
   po::store(po::command_line_parser(argc, argv).options(desc).allow_unregistered().run(), vm);
   po::notify(vm);
-  config.handleCommandLine(vm);
+  testConfig.handleCommandLine(vm);
 
   try {
 

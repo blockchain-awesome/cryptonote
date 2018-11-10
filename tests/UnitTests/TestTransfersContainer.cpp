@@ -30,7 +30,7 @@ namespace {
     };
 
     TransfersContainerTest() : 
-      currency(CurrencyBuilder(logger, os::appdata::path()).currency()), 
+      currency(CurrencyBuilder(os::appdata::path(), config::testnet::data, logger).currency()), 
       container(currency, TEST_TRANSACTION_SPENDABLE_AGE), 
       account(generateAccountKeys()) {   
     }

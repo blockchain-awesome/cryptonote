@@ -38,7 +38,7 @@ namespace
 
 gen_block_reward::gen_block_reward()
   : m_invalid_block_index(0) {
-  cryptonote::CurrencyBuilder currencyBuilder(m_logger, os::appdata::path());
+  cryptonote::CurrencyBuilder currencyBuilder(os::appdata::path(), config::testnet::data, m_logger);
   currencyBuilder.maxBlockSizeInitial(std::numeric_limits<size_t>::max() / 2);
   m_currency = currencyBuilder.currency();
 

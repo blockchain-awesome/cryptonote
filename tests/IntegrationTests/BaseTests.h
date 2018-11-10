@@ -19,7 +19,7 @@ class BaseTest : public testing::Test {
 public:
 
   BaseTest() :
-    currency(cryptonote::CurrencyBuilder(logger, os::appdata::path())
+    currency(cryptonote::CurrencyBuilder(os::appdata::path(), config::testnet::data, logger)
     // .testnet(true)
     .currency()),
     network(dispatcher, currency) {

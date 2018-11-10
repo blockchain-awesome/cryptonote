@@ -175,7 +175,7 @@ private:
 class BcSTest : public ::testing::Test, public IBlockchainSynchronizerObserver {
 public:
   BcSTest() :
-    m_currency(CurrencyBuilder(m_logger, os::appdata::path()).currency()),
+    m_currency(CurrencyBuilder(os::appdata::path(), config::testnet::data, m_logger).currency()),
     generator(m_currency),
     m_node(generator),
     m_sync(m_node, m_currency.genesisBlockHash()) {

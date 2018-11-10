@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
     Logging::ConsoleLogger logger;
-    cryptonote::CurrencyBuilder currencyBuilder(logger, os::appdata::path());
+    cryptonote::CurrencyBuilder currencyBuilder(os::appdata::path(), config::testnet::data, logger);
     currencyBuilder.difficultyTarget(120);
     currencyBuilder.difficultyWindow(720);
     currencyBuilder.difficultyCut(60);

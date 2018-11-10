@@ -23,15 +23,15 @@ using namespace Tests::Common;
 using namespace crypto;
 
 extern System::Dispatcher globalSystem;
-extern Tests::Common::BaseFunctionalTestsConfig config;
+extern Tests::Common::BaseFunctionalTestsConfig testConfig;
 
 namespace {
   class NodeTxPoolSyncTest : public Tests::Common::BaseFunctionalTests, public ::testing::Test {
   public:
     NodeTxPoolSyncTest() :
-        BaseFunctionalTests(m_currency, globalSystem, config),
+        BaseFunctionalTests(m_currency, globalSystem, testConfig),
         m_dispatcher(globalSystem),
-        m_currency(CurrencyBuilder(m_logManager, os::appdata::path())
+        m_currency(CurrencyBuilder(os::appdata::path(), config::testnet::data, m_logManager)
         // .testnet(true)
         .currency()) {
     }

@@ -132,7 +132,8 @@ bool Currency::generateGenesisBlock()
   m_genesisBlock = boost::value_initialized<block_t>();
 
   // Hard code coinbase tx in genesis block, because "tru" generating tx use random, but genesis should be always the same
-  std::string genesisCoinbaseTxHex = GENESIS_COINBASE_TX_HEX;
+  // std::string genesisCoinbaseTxHex = GENESIS_COINBASE_TX_HEX;
+  std::string genesisCoinbaseTxHex = m_config.block.genesis_coinbase_tx_hex;
   binary_array_t minerTxBlob;
 
   bool r =
@@ -538,7 +539,7 @@ size_t Currency::getApproximateMaximumInputCount(size_t transactionSize, size_t 
   return (transactionSize - headerSize - outputsSize) / inputSize;
 }
 
-CurrencyBuilder::CurrencyBuilder(Logging::ILogger &log, std::string path) : m_currency(path, log)
+CurrencyBuilder::CurrencyBuilder(std::string path, config::config_t& config, Logging::ILogger &log) : m_currency(path, config, log)
 {
   maxBlockNumber(parameters::CRYPTONOTE_MAX_BLOCK_NUMBER);
   maxBlockBlobSize(parameters::CRYPTONOTE_MAX_BLOCK_BLOB_SIZE);

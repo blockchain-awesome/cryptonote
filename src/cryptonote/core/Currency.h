@@ -131,7 +131,7 @@ public:
   size_t getApproximateMaximumInputCount(size_t transactionSize, size_t outputCount, size_t mixinCount) const;
 
 private:
-  Currency(std::string path, Logging::ILogger& log) : m_path(path), logger(log, "currency") {
+  Currency(std::string path, config::config_t &config, Logging::ILogger& log) : m_path(path), logger(log, "currency"), m_config(config){
 
   }
 
@@ -141,6 +141,7 @@ private:
   bool generateGenesisBlock();
 
 private:
+  config::config_t m_config;
   uint64_t m_maxBlockHeight;
   size_t m_maxBlockBlobSize;
   size_t m_maxTxSize;
@@ -201,7 +202,7 @@ private:
 
 class CurrencyBuilder : boost::noncopyable {
 public:
-  CurrencyBuilder(Logging::ILogger& log, std::string path/* = os::appdata::path() */);
+  CurrencyBuilder(std::string path, config::config_t& config, Logging::ILogger &log);
 
   Currency currency() {
     if (!m_currency.init()) {

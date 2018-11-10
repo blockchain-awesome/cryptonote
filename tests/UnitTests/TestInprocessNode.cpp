@@ -47,7 +47,7 @@ class InProcessNodeTests : public ::testing::Test {
 public:
   InProcessNodeTests() :
     node(coreStub, protocolQueryStub),
-    currency(cryptonote::CurrencyBuilder(logger, os::appdata::path()).currency()),
+    currency(cryptonote::CurrencyBuilder(os::appdata::path(), config::testnet::data, logger).currency()),
     generator(currency) {}
   void SetUp() override;
 

@@ -491,7 +491,7 @@ TEST(parseAccountAddressString, fails_on_invalid_address_prefix)
 
   Logging::LoggerGroup logger;
   // cryptonote::Currency currency = cryptonote::CurrencyBuilder(logger).currency();
-  cryptonote::Currency currency = cryptonote::CurrencyBuilder(logger, os::appdata::path()).currency();
+  cryptonote::Currency currency = cryptonote::CurrencyBuilder(os::appdata::path(), config::testnet::data, logger).currency();
 
   cryptonote::account_public_address_t addr;
   

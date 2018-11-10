@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
   names.command = "Command line options";
   names.setting = "Command line options and settings options";
   names.full = "Allowed options";
-  Daemon cli(names);
+  Daemon cli(names, config::mainnet::data);
 
   try
   {
@@ -126,15 +126,20 @@ int main(int argc, char *argv[])
     logger(INFO) << "Module folder: " << argv[0];
 
     bool testnet_mode = get_arg(vm, arg_testnet_on);
+    config::config_t &conf = config::mainnet::data;
+
     if (testnet_mode)
     {
+      conf = config::testnet::data;
+      cli.setConfig(conf);
       logger(INFO) << "Starting in testnet mode!";
     }
     netNodeConfig.setTestnet(testnet_mode);
 
+    // config::config_t &config = coreConfig.getConfig(vm);
+
     //create objects and link them
-    cryptonote::CurrencyBuilder currencyBuilder(logManager, coreConfig.configFolder);
-    // currencyBuilder.testnet(testnet_mode);
+    cryptonote::CurrencyBuilder currencyBuilder(coreConfig.configFolder, conf, logManager);
 
     try
     {

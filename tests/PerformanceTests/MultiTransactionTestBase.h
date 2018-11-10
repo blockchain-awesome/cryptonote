@@ -29,7 +29,7 @@ public:
   {
     using namespace cryptonote;
 
-    Currency currency = CurrencyBuilder(m_logger, os::appdata::path()).currency();
+    Currency currency = CurrencyBuilder(os::appdata::path(), config::testnet::data, m_logger).currency();
 
     std::vector<transaction_source_entry_t::output_entry_t> output_entries;
     for (uint32_t i = 0; i < ring_size; ++i)

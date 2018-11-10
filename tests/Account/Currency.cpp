@@ -28,7 +28,7 @@ public:
 TEST_F(CurrencyTest, create)
 {
   LoggerManager logManager;
-  cryptonote::CurrencyBuilder currencyBuilder(logManager, "./data");
+  cryptonote::CurrencyBuilder currencyBuilder("./data", config::testnet::data, logManager);
 
   Currency c = currencyBuilder.currency();
 

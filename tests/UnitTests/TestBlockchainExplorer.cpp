@@ -86,7 +86,7 @@ private:
 class BlockchainExplorerTests : public ::testing::Test {
 public:
   BlockchainExplorerTests() :
-    currency(CurrencyBuilder(logger, os::appdata::path()).currency()),
+    currency(CurrencyBuilder(os::appdata::path(), config::testnet::data, logger).currency()),
     generator(currency),
     nodeStub(generator),
     blockchainExplorer(nodeStub, logger) {

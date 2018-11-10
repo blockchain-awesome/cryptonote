@@ -144,7 +144,7 @@ void WaitWalletLoad(TrivialWalletObserver* observer) {
 class WalletLegacyApi : public ::testing::Test
 {
 public:
-  WalletLegacyApi() : m_currency(cryptonote::CurrencyBuilder(m_logger, os::appdata::path()).currency()), generator(m_currency) {
+  WalletLegacyApi() : m_currency(cryptonote::CurrencyBuilder(os::appdata::path(), config::testnet::data, m_logger).currency()), generator(m_currency) {
   }
 
   void SetUp() override;

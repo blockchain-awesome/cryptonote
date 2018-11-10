@@ -71,7 +71,7 @@ fs::path Daemon::getLogFile()
 void Daemon::printGenesisTx()
 {
   Logging::ConsoleLogger logger;
-  cryptonote::transaction_t tx = cryptonote::CurrencyBuilder(logger, os::appdata::path()).generateGenesisTransaction();
+  cryptonote::transaction_t tx = cryptonote::CurrencyBuilder(os::appdata::path(), m_config, logger).generateGenesisTransaction();
   cryptonote::binary_array_t txb = cryptonote::toBinaryArray(tx);
   std::string tx_hex = Common::toHex(txb);
 

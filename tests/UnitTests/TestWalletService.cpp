@@ -119,7 +119,7 @@ protected:
 class WalletServiceTest: public ::testing::Test {
 public:
   WalletServiceTest() :
-    currency(cryptonote::CurrencyBuilder(logger, os::appdata::path()).currency()),
+    currency(cryptonote::CurrencyBuilder(os::appdata::path(), config::testnet::data, logger).currency()),
     generator(currency),
     nodeStub(generator),
     walletBase(dispatcher)

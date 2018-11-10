@@ -1084,11 +1084,16 @@ int main(int argc, char* argv[]) {
 
   po::variables_map vm;
 
+  config::config_t & conf = config::mainnet::data;
+
   bool r = command_line::handle_error_helper(desc_all, [&]() {
     po::store(command_line::parse_command_line(argc, argv, desc_general, true), vm);
 
+    if (command_line::get_arg(vm, command_line::arg_testnet_on)) {
+      conf = config::testnet::data;
+    }
     if (command_line::get_arg(vm, command_line::arg_help)) {
-      cryptonote::Currency tmp_currency = cryptonote::CurrencyBuilder(logManager, os::appdata::path()).currency();
+      cryptonote::Currency tmp_currency = cryptonote::CurrencyBuilder(os::appdata::path(), conf, logManager).currency();
       cryptonote::simple_wallet tmp_wallet(dispatcher, tmp_currency, logManager);
 
       std::cout << CRYPTONOTE_NAME << " wallet v" << PROJECT_VERSION_LONG << std::endl;
@@ -1120,7 +1125,7 @@ int main(int argc, char* argv[]) {
 
   logger(INFO, BRIGHT_WHITE) << CRYPTONOTE_NAME << " wallet v" << PROJECT_VERSION_LONG;
 
-  cryptonote::Currency currency = cryptonote::CurrencyBuilder(logManager, os::appdata::path()).
+  cryptonote::Currency currency = cryptonote::CurrencyBuilder(os::appdata::path(), conf, logManager).
     // testnet(command_line::get_arg(vm, arg_testnet)).currency();
     currency();
 

@@ -131,7 +131,7 @@ class tx_pool : public ::testing::Test {
 public:
 
   tx_pool() : 
-    currency(cryptonote::CurrencyBuilder(logger, os::appdata::path()).currency()) {}
+    currency(cryptonote::CurrencyBuilder(os::appdata::path(), config::testnet::data, logger).currency()) {}
 
 protected:
   virtual void SetUp() override {
@@ -174,7 +174,7 @@ namespace
   class TxTestBase {
   public:
     TxTestBase(size_t ringSize) :
-      m_currency(cryptonote::CurrencyBuilder(m_logger, os::appdata::path()).currency()),
+      m_currency(cryptonote::CurrencyBuilder(os::appdata::path(), config::testnet::data, m_logger).currency()),
       txGenerator(m_currency, ringSize),
       pool(m_currency, validator, m_time, m_logger)
     {
@@ -729,7 +729,7 @@ class TxPool_FillBlockTemplate : public tx_pool {
 public:
   TxPool_FillBlockTemplate() :
     tx_pool() {
-    currency = cryptonote::CurrencyBuilder(logger, os::appdata::path()).fusionTxMaxSize(TEST_FUSION_TX_MAX_SIZE).blockGrantedFullRewardZone(TEST_MEDIAN_SIZE).currency();
+    currency = cryptonote::CurrencyBuilder(os::appdata::path(), config::testnet::data, logger).fusionTxMaxSize(TEST_FUSION_TX_MAX_SIZE).blockGrantedFullRewardZone(TEST_MEDIAN_SIZE).currency();
   }
 
   void doTest(size_t poolOrdinaryTxCount, size_t poolFusionTxCount, size_t expectedBlockOrdinaryTxCount, size_t expectedBlockFusionTxCount) {

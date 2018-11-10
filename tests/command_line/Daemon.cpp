@@ -6,6 +6,7 @@
 
 #include "command_line/daemon.h"
 #include "parameters.h"
+#include "CryptoNoteConfig.h"
 
 using namespace command_line;
 
@@ -24,7 +25,7 @@ TEST_F(DaemonTest, run)
   names.command = "Command line options";
   names.setting = "Command line options and settings options";
   names.full = "Allowed options";
-  Daemon cli(names);
+  Daemon cli(names, config::testnet::data);
   cli.init();
   cli.setup();
   // bool r = cli.parse(my_argc, my_argv, [] {

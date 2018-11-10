@@ -37,7 +37,7 @@ class IntegrationTest : public Tests::Common::BaseFunctionalTests, public ::test
 public:
 
   IntegrationTest() : 
-    currency(cryptonote::CurrencyBuilder(log, os::appdata::path())
+    currency(cryptonote::CurrencyBuilder(os::appdata::path(), config::testnet::data, log)
     // .testnet(true)
     .currency()), 
     BaseFunctionalTests(currency, dispatcher, baseCfg),

@@ -567,7 +567,7 @@ bool TestBlockCumulativeSizeExceedsLimit::generate(std::vector<test_event_entry>
 
 gen_block_invalid_binary_format::gen_block_invalid_binary_format() : 
     m_corrupt_blocks_begin_idx(0) {
-  cryptonote::CurrencyBuilder currencyBuilder(m_logger, os::appdata::path());
+  cryptonote::CurrencyBuilder currencyBuilder(os::appdata::path(), config::testnet::data, m_logger);
   m_currency = currencyBuilder.currency();
 
   REGISTER_CALLBACK("check_all_blocks_purged", gen_block_invalid_binary_format::check_all_blocks_purged);
