@@ -85,7 +85,7 @@ namespace
   }
 }
 
-bool init_output_indices(map_output_idx_t& outs, std::map<uint64_t, std::vector<size_t> >& outs_mine, const std::vector<cryptonote::block_t>& blockchain, const map_hash2tx_t& mtx, const cryptonote::AccountBase& from) {
+bool init_output_indices(map_output_idx_t& outs, std::map<uint64_t, std::vector<size_t> >& outs_mine, const std::vector<cryptonote::block_t>& blockchain, const map_hash2tx_t& mtx, const cryptonote::Account& from) {
 
     BOOST_FOREACH (const block_t& blk, blockchain) {
         vector<const transaction_t*> vtx;
@@ -128,7 +128,7 @@ bool init_output_indices(map_output_idx_t& outs, std::map<uint64_t, std::vector<
     return true;
 }
 
-bool init_spent_output_indices(map_output_idx_t& outs, map_output_t& outs_mine, const std::vector<cryptonote::block_t>& blockchain, const map_hash2tx_t& mtx, const cryptonote::AccountBase& from) {
+bool init_spent_output_indices(map_output_idx_t& outs, map_output_t& outs_mine, const std::vector<cryptonote::block_t>& blockchain, const map_hash2tx_t& mtx, const cryptonote::Account& from) {
 
     for (const map_output_t::value_type& o: outs_mine) {
         for (size_t i = 0; i < o.second.size(); ++i) {
@@ -194,7 +194,7 @@ bool fill_output_entries(std::vector<output_index>& out_indices, size_t sender_o
 }
 
 bool fill_tx_sources(std::vector<transaction_source_entry_t>& sources, const std::vector<test_event_entry>& events,
-                     const block_t& blk_head, const cryptonote::AccountBase& from, uint64_t amount, size_t nmix)
+                     const block_t& blk_head, const cryptonote::Account& from, uint64_t amount, size_t nmix)
 {
     map_output_idx_t outs;
     map_output_t outs_mine;
@@ -245,14 +245,14 @@ bool fill_tx_sources(std::vector<transaction_source_entry_t>& sources, const std
     return sources_found;
 }
 
-bool fill_tx_destination(transaction_destination_entry_t &de, const cryptonote::AccountBase &to, uint64_t amount) {
+bool fill_tx_destination(transaction_destination_entry_t &de, const cryptonote::Account &to, uint64_t amount) {
     de.addr = to.getAccountKeys().address;
     de.amount = amount;
     return true;
 }
 
 void fill_tx_sources_and_destinations(const std::vector<test_event_entry>& events, const block_t& blk_head,
-                                      const cryptonote::AccountBase& from, const cryptonote::AccountBase& to,
+                                      const cryptonote::Account& from, const cryptonote::Account& to,
                                       uint64_t amount, uint64_t fee, size_t nmix, std::vector<transaction_source_entry_t>& sources,
                                       std::vector<transaction_destination_entry_t>& destinations)
 {
@@ -278,7 +278,7 @@ void fill_tx_sources_and_destinations(const std::vector<test_event_entry>& event
 }
 
 bool construct_tx_to_key(Logging::ILogger& logger, const std::vector<test_event_entry>& events, cryptonote::transaction_t& tx, const block_t& blk_head,
-                         const cryptonote::AccountBase& from, const cryptonote::AccountBase& to, uint64_t amount,
+                         const cryptonote::Account& from, const cryptonote::Account& to, uint64_t amount,
                          uint64_t fee, size_t nmix)
 {
   vector<transaction_source_entry_t> sources;
@@ -289,7 +289,7 @@ bool construct_tx_to_key(Logging::ILogger& logger, const std::vector<test_event_
 }
 
 transaction_t construct_tx_with_fee(Logging::ILogger& logger, std::vector<test_event_entry>& events, const block_t& blk_head,
-                                  const AccountBase& acc_from, const AccountBase& acc_to, uint64_t amount, uint64_t fee)
+                                  const Account& acc_from, const Account& acc_to, uint64_t amount, uint64_t fee)
 {
   transaction_t tx;
   construct_tx_to_key(logger, events, tx, blk_head, acc_from, acc_to, amount, fee, 0);
@@ -297,7 +297,7 @@ transaction_t construct_tx_with_fee(Logging::ILogger& logger, std::vector<test_e
   return tx;
 }
 
-uint64_t get_balance(const cryptonote::AccountBase& addr, const std::vector<cryptonote::block_t>& blockchain, const map_hash2tx_t& mtx) {
+uint64_t get_balance(const cryptonote::Account& addr, const std::vector<cryptonote::block_t>& blockchain, const map_hash2tx_t& mtx) {
     uint64_t res = 0;
     std::map<uint64_t, std::vector<output_index> > outs;
     std::map<uint64_t, std::vector<size_t> > outs_mine;

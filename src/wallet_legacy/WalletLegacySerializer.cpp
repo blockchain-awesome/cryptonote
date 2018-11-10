@@ -36,7 +36,7 @@ void throwIfKeysMissmatch(const crypto::secret_key_t& sec, const crypto::public_
 
 namespace cryptonote {
 
-WalletLegacySerializer::WalletLegacySerializer(cryptonote::AccountBase& account, WalletUserTransactionsCache& transactionsCache) :
+WalletLegacySerializer::WalletLegacySerializer(cryptonote::Account& account, WalletUserTransactionsCache& transactionsCache) :
   account(account),
   transactionsCache(transactionsCache),
   walletSerializationVersion(1)

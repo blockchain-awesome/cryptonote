@@ -113,7 +113,7 @@ public:
     constructTransaction(m_realSenderKeys, m_sources, destinations, std::vector<uint8_t>(), tx, 0, m_logger);
   }
 
-  std::vector<AccountBase> m_miners;
+  std::vector<Account> m_miners;
   std::vector<transaction_t> m_miner_txs;
   std::vector<transaction_source_entry_t> m_sources;
   std::vector<crypto::public_key_t> m_public_keys;
@@ -124,7 +124,7 @@ public:
   const size_t m_ringSize;
   account_keys_t m_realSenderKeys;
   uint64_t m_source_amount;
-  AccountBase rv_acc;
+  Account rv_acc;
 };
 
 class tx_pool : public ::testing::Test {

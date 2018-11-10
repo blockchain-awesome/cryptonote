@@ -14,7 +14,7 @@ struct Difficulty
   size_t blockCount;
 };
 
-struct StorageFiles
+struct storage_files_t
 {
   std::string blocks;
   std::string blocksCache;

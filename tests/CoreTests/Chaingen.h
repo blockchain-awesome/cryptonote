@@ -148,7 +148,7 @@ private:
 //VARIANT_TAG(binary_archive, serialized_transaction, 0xce);
 //VARIANT_TAG(binary_archive, event_visitor_settings, 0xcf);
 
-typedef boost::variant<cryptonote::block_t, cryptonote::transaction_t, cryptonote::AccountBase, callback_entry, serialized_block, serialized_transaction, event_visitor_settings> test_event_entry;
+typedef boost::variant<cryptonote::block_t, cryptonote::transaction_t, cryptonote::Account, callback_entry, serialized_block, serialized_transaction, event_visitor_settings> test_event_entry;
 typedef std::unordered_map<crypto::hash_t, const cryptonote::transaction_t*> map_hash2tx_t;
 
 class test_chain_unit_base: boost::noncopyable
@@ -176,20 +176,20 @@ private:
 
 
 bool construct_tx_to_key(Logging::ILogger& logger, const std::vector<test_event_entry>& events, cryptonote::transaction_t& tx,
-                         const cryptonote::block_t& blk_head, const cryptonote::AccountBase& from, const cryptonote::AccountBase& to,
+                         const cryptonote::block_t& blk_head, const cryptonote::Account& from, const cryptonote::Account& to,
                          uint64_t amount, uint64_t fee, size_t nmix);
 cryptonote::transaction_t construct_tx_with_fee(Logging::ILogger& logger, std::vector<test_event_entry>& events, const cryptonote::block_t& blk_head,
-                                            const cryptonote::AccountBase& acc_from, const cryptonote::AccountBase& acc_to,
+                                            const cryptonote::Account& acc_from, const cryptonote::Account& acc_to,
                                             uint64_t amount, uint64_t fee);
 
 void get_confirmed_txs(const std::vector<cryptonote::block_t>& blockchain, const map_hash2tx_t& mtx, map_hash2tx_t& confirmed_txs);
 bool find_block_chain(const std::vector<test_event_entry>& events, std::vector<cryptonote::block_t>& blockchain, map_hash2tx_t& mtx, const crypto::hash_t& head);
 void fill_tx_sources_and_destinations(const std::vector<test_event_entry>& events, const cryptonote::block_t& blk_head,
-                                      const cryptonote::AccountBase& from, const cryptonote::AccountBase& to,
+                                      const cryptonote::Account& from, const cryptonote::Account& to,
                                       uint64_t amount, uint64_t fee, size_t nmix,
                                       std::vector<cryptonote::transaction_source_entry_t>& sources,
                                       std::vector<cryptonote::transaction_destination_entry_t>& destinations);
-uint64_t get_balance(const cryptonote::AccountBase& addr, const std::vector<cryptonote::block_t>& blockchain, const map_hash2tx_t& mtx);
+uint64_t get_balance(const cryptonote::Account& addr, const std::vector<cryptonote::block_t>& blockchain, const map_hash2tx_t& mtx);
 
 //--------------------------------------------------------------------------
 template<class t_test_class>
@@ -309,7 +309,7 @@ public:
     return m_validator.verify(cb.callback_name, m_c, m_ev_index, m_events);
   }
 
-  bool operator()(const cryptonote::AccountBase& ab) const
+  bool operator()(const cryptonote::Account& ab) const
   {
     log_event("cryptonote::account_base");
     return true;
@@ -426,11 +426,11 @@ inline bool do_replay_file(const std::string& filename)
 }
 //--------------------------------------------------------------------------
 #define GENERATE_ACCOUNT(account) \
-    cryptonote::AccountBase account; \
+    cryptonote::Account account; \
     account.generate();
 
 #define MAKE_ACCOUNT(VEC_EVENTS, account) \
-  cryptonote::AccountBase account; \
+  cryptonote::Account account; \
   account.generate(); \
   VEC_EVENTS.push_back(account);
 

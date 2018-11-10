@@ -69,7 +69,7 @@ namespace {
     nodeDaemons[NODE_2]->makeINode(node2);
     nodeDaemons[NODE_3]->makeINode(node3);
 
-    cryptonote::AccountBase minerAccount;
+    cryptonote::Account minerAccount;
     minerAccount.generate();
 
     TestWalletLegacy wallet1(m_dispatcher, m_currency, *node1);
@@ -159,7 +159,7 @@ namespace {
     nodeDaemons[NODE_2]->makeINode(node2);
     nodeDaemons[NODE_3]->makeINode(node3);
 
-    cryptonote::AccountBase minerAccount;
+    cryptonote::Account minerAccount;
     minerAccount.generate();
 
     TestWalletLegacy wallet1(m_dispatcher, m_currency, *node1);
@@ -257,7 +257,7 @@ namespace {
     nodeDaemons[NODE_3]->makeINode(node3);
     nodeDaemons[NODE_4]->makeINode(node4);
 
-    cryptonote::AccountBase minerAccount;
+    cryptonote::Account minerAccount;
     minerAccount.generate();
 
     TestWalletLegacy wallet1(m_dispatcher, m_currency, *node1);

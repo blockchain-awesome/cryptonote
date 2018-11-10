@@ -70,8 +70,8 @@ bool gen_ring_signature_1::check_balances_1(cryptonote::core& c, size_t ev_index
 {
   DEFINE_TESTS_ERROR_CONTEXT("gen_ring_signature_1::check_balances_1");
 
-  m_bob_account = boost::get<AccountBase>(events[3]);
-  m_alice_account = boost::get<AccountBase>(events[4]);
+  m_bob_account = boost::get<Account>(events[3]);
+  m_alice_account = boost::get<Account>(events[4]);
 
   std::list<block_t> blocks;
   bool r = c.get_blocks(0, 100 + 2 * m_currency.minedMoneyUnlockWindow(), blocks);
@@ -151,8 +151,8 @@ bool gen_ring_signature_2::check_balances_1(cryptonote::core& c, size_t ev_index
 {
   DEFINE_TESTS_ERROR_CONTEXT("gen_ring_signature_2::check_balances_1");
 
-  m_bob_account = boost::get<AccountBase>(events[1]);
-  m_alice_account = boost::get<AccountBase>(events[2]);
+  m_bob_account = boost::get<Account>(events[1]);
+  m_alice_account = boost::get<Account>(events[2]);
 
   std::list<block_t> blocks;
   bool r = c.get_blocks(0, 100 + 2 * m_currency.minedMoneyUnlockWindow(), blocks);
@@ -207,7 +207,7 @@ gen_ring_signature_big::gen_ring_signature_big()
  */
 bool gen_ring_signature_big::generate(std::vector<test_event_entry>& events) const
 {
-  std::vector<AccountBase> accounts(m_test_size);
+  std::vector<Account> accounts(m_test_size);
   std::vector<block_t> blocks;
   blocks.reserve(m_test_size + m_currency.minedMoneyUnlockWindow());
 
@@ -261,8 +261,8 @@ bool gen_ring_signature_big::check_balances_1(cryptonote::core& c, size_t ev_ind
 {
   DEFINE_TESTS_ERROR_CONTEXT("gen_ring_signature_big::check_balances_1");
 
-  m_bob_account = boost::get<AccountBase>(events[1]);
-  m_alice_account = boost::get<AccountBase>(events[1 + m_test_size]);
+  m_bob_account = boost::get<Account>(events[1]);
+  m_alice_account = boost::get<Account>(events[1 + m_test_size]);
 
   std::list<block_t> blocks;
   bool r = c.get_blocks(0, 2 * m_test_size + m_currency.minedMoneyUnlockWindow(), blocks);
@@ -277,7 +277,7 @@ bool gen_ring_signature_big::check_balances_1(cryptonote::core& c, size_t ev_ind
 
   for (size_t i = 2; i < 1 + m_test_size; ++i)
   {
-    const AccountBase& an_account = boost::get<AccountBase>(events[i]);
+    const Account& an_account = boost::get<Account>(events[i]);
     uint64_t balance = m_tx_amount + m_currency.minimumFee() * i;
     CHECK_EQ(balance, get_balance(an_account, chain, mtx));
   }
@@ -302,7 +302,7 @@ bool gen_ring_signature_big::check_balances_2(cryptonote::core& c, size_t ev_ind
 
   for (size_t i = 2; i < 1 + m_test_size; ++i)
   {
-    const AccountBase& an_account = boost::get<AccountBase>(events[i]);
+    const Account& an_account = boost::get<Account>(events[i]);
     uint64_t balance = m_tx_amount + m_currency.minimumFee() * i;
     CHECK_EQ(balance, get_balance(an_account, chain, mtx));
   }

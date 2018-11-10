@@ -51,7 +51,7 @@ public:
     }
   }
 
-  TransactionBuilder createTxBuilder(const cryptonote::AccountBase& from, const cryptonote::AccountBase& to, uint64_t amount, uint64_t fee) {
+  TransactionBuilder createTxBuilder(const cryptonote::Account& from, const cryptonote::Account& to, uint64_t amount, uint64_t fee) {
 
     std::vector<cryptonote::transaction_source_entry_t> sources;
     std::vector<cryptonote::transaction_destination_entry_t> destinations;
@@ -69,14 +69,14 @@ public:
   void fillTxSourcesAndDestinations(
     std::vector<cryptonote::transaction_source_entry_t>& sources, 
     std::vector<cryptonote::transaction_destination_entry_t>& destinations,
-    const cryptonote::AccountBase& from, const cryptonote::AccountBase& to, uint64_t amount, uint64_t fee, size_t nmix = 0) {
+    const cryptonote::Account& from, const cryptonote::Account& to, uint64_t amount, uint64_t fee, size_t nmix = 0) {
     fill_tx_sources_and_destinations(events, lastBlock, from, to, amount, fee, nmix, sources, destinations);
   }
 
   void constructTxToKey(
     cryptonote::transaction_t& tx,
-    const cryptonote::AccountBase& from,
-    const cryptonote::AccountBase& to,
+    const cryptonote::Account& from,
+    const cryptonote::Account& to,
     uint64_t amount,
     uint64_t fee,
     size_t nmix = 0) {
@@ -105,6 +105,6 @@ public:
   test_generator generator;
   cryptonote::block_t genesisBlock;
   cryptonote::block_t lastBlock;
-  cryptonote::AccountBase minerAccount;
+  cryptonote::Account minerAccount;
   std::vector<test_event_entry>& events;
 };

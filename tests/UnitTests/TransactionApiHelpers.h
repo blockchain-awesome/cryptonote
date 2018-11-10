@@ -39,8 +39,8 @@ namespace {
     return accountKeysFromKeypairs(p1, p2);
   }
 
-  AccountBase generateAccount() {
-    AccountBase account;
+  Account generateAccount() {
+    Account account;
     account.generate();
     return account;
   }
@@ -148,7 +148,7 @@ private:
   struct MsigInfo {
     public_key_t transactionKey;
     size_t outputIndex;
-    std::vector<AccountBase> accounts;
+    std::vector<Account> accounts;
   };
 
   std::unordered_map<size_t, std::pair<TransactionTypes::input_key_info_t, key_pair_t>> keys;

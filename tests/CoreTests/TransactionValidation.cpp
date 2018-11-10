@@ -103,7 +103,7 @@ namespace
   };
 
   transaction_t make_simple_tx_with_unlock_time(const std::vector<test_event_entry>& events,
-    const cryptonote::block_t& blk_head, const cryptonote::AccountBase& from, const cryptonote::AccountBase& to,
+    const cryptonote::block_t& blk_head, const cryptonote::Account& from, const cryptonote::Account& to,
     uint64_t amount, uint64_t fee, uint64_t unlock_time)
   {
     std::vector<transaction_source_entry_t> sources;
@@ -506,7 +506,7 @@ bool gen_tx_check_input_unlock_time::generate(std::vector<test_event_entry>& eve
   REWIND_BLOCKS_N(events, blk_1, blk_0, miner_account, tests_count - 1);
   REWIND_BLOCKS(events, blk_1r, blk_1, miner_account);
 
-  std::array<AccountBase, tests_count> accounts;
+  std::array<Account, tests_count> accounts;
   for (size_t i = 0; i < tests_count; ++i)
   {
     MAKE_ACCOUNT(events, acc);
@@ -703,7 +703,7 @@ MultiSigTx_OutputSignatures::MultiSigTx_OutputSignatures(size_t givenKeys, uint3
   m_givenKeys(givenKeys), m_requiredSignatures(requiredSignatures), m_shouldSucceed(shouldSucceed) {
 
   for (size_t i = 0; i < m_givenKeys; ++i) {
-    AccountBase acc;
+    Account acc;
     acc.generate();
     m_outputAccounts.push_back(acc);
   }

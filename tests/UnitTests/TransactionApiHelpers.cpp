@@ -10,8 +10,8 @@ using namespace crypto;
 
 namespace {
 
-  const std::vector<AccountBase>& getMsigAccounts() {
-    static std::vector<AccountBase> msigAccounts = { generateAccount(), generateAccount() };
+  const std::vector<Account>& getMsigAccounts() {
+    static std::vector<Account> msigAccounts = { generateAccount(), generateAccount() };
     return msigAccounts;
   }
 
@@ -130,7 +130,7 @@ size_t TestTransactionBuilder::addFakeMultisignatureInput(uint64_t amount, uint3
   input.signatureCount = static_cast<uint8_t>(signatureCount);
   size_t idx = tx->addInput(input);
 
-  std::vector<AccountBase> accs;
+  std::vector<Account> accs;
   for (size_t i = 0; i < signatureCount; ++i) {
     accs.push_back(generateAccount());
   }

@@ -581,7 +581,7 @@ CurrencyBuilder::CurrencyBuilder(Logging::ILogger &log, std::string path) : m_cu
   fusionTxMinInputCount(parameters::FUSION_TX_MIN_INPUT_COUNT);
   fusionTxMinInOutCountRatio(parameters::FUSION_TX_MIN_IN_OUT_COUNT_RATIO);
 
-  coin::StorageFiles files;
+  coin::storage_files_t files;
   files.blocks = parameters::CRYPTONOTE_BLOCKS_FILENAME;
   files.blocksCache = parameters::CRYPTONOTE_BLOCKSCACHE_FILENAME;
   files.blocksIndexes = parameters::CRYPTONOTE_BLOCKINDEXES_FILENAME;

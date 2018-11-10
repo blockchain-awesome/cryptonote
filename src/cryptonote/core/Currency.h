@@ -19,7 +19,7 @@
 
 namespace cryptonote {
 
-class AccountBase;
+class Account;
 
 uint64_t getPenalizedAmount(uint64_t amount, size_t medianSize, size_t currentBlockSize);
 
@@ -69,7 +69,7 @@ public:
   size_t fusionTxMinInputCount() const { return m_fusionTxMinInputCount; }
   size_t fusionTxMinInOutCountRatio() const { return m_fusionTxMinInOutCountRatio; }
 
-  void setFiles(coin::StorageFiles files) {
+  void setFiles(coin::storage_files_t files) {
     m_files = files;
   }
 
@@ -183,7 +183,7 @@ private:
   size_t m_fusionTxMinInputCount;
   size_t m_fusionTxMinInOutCountRatio;
 
-  coin::StorageFiles m_files;
+  coin::storage_files_t m_files;
   std::string m_path;
   bool m_path_initialized = false;
 

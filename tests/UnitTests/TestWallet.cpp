@@ -230,7 +230,7 @@ void WalletApi::SetUp() {
 }
 
 void WalletApi::setMinerTo(cryptonote::WalletGreen& wallet) {
-  AccountBase base;
+  Account base;
   account_keys_t keys;
   auto viewKey = wallet.getViewKey();
   auto spendKey = wallet.getAddressSpendKey(0);
@@ -1039,7 +1039,7 @@ TEST_F(WalletApi, loadWithWrongPassword) {
 
 void WalletApi::testIWalletDataCompatibility(bool details, const std::string& cache, const std::vector<WalletLegacyTransaction>& txs,
     const std::vector<WalletLegacyTransfer>& trs, const std::vector<std::pair<TransactionInformation, int64_t>>& externalTxs) {
-  cryptonote::AccountBase account;
+  cryptonote::Account account;
   account.generate();
 
   WalletUserTransactionsCache iWalletCache;
@@ -3528,7 +3528,7 @@ TEST_F(WalletApi, transferFailsIfNoChangeDestinationAndMultipleSourceAddressesSe
 
 TEST_F(WalletApi, checkBaseTransaction) {
   cryptonote::account_keys_t keys{ parseAddress(alice.getAddress(0)), alice.getAddressSpendKey(0).secretKey, alice.getViewKey().secretKey };
-  cryptonote::AccountBase acc;
+  cryptonote::Account acc;
   acc.setAccountKeys(keys);
   acc.setCreatetime(0);
   generator.generateFromBaseTx(acc);

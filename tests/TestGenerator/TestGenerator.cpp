@@ -67,7 +67,7 @@ void test_generator::addBlock(const cryptonote::block_t& blk, size_t tsxSize, ui
 }
 
 bool test_generator::constructBlock(cryptonote::block_t& blk, uint32_t height, const crypto::hash_t& previousBlockHash,
-                                    const cryptonote::AccountBase& minerAcc, uint64_t timestamp, uint64_t alreadyGeneratedCoins,
+                                    const cryptonote::Account& minerAcc, uint64_t timestamp, uint64_t alreadyGeneratedCoins,
                                     std::vector<size_t>& blockSizes, const std::list<cryptonote::transaction_t>& txList) {
   blk.majorVersion = defaultMajorVersion;
   blk.minorVersion = defaultMinorVersion;
@@ -138,14 +138,14 @@ bool test_generator::constructBlock(cryptonote::block_t& blk, uint32_t height, c
   return true;
 }
 
-bool test_generator::constructBlock(cryptonote::block_t& blk, const cryptonote::AccountBase& minerAcc, uint64_t timestamp) {
+bool test_generator::constructBlock(cryptonote::block_t& blk, const cryptonote::Account& minerAcc, uint64_t timestamp) {
   std::vector<size_t> blockSizes;
   std::list<cryptonote::transaction_t> txList;
   return constructBlock(blk, 0, NULL_HASH, minerAcc, timestamp, 0, blockSizes, txList);
 }
 
 bool test_generator::constructBlock(cryptonote::block_t& blk, const cryptonote::block_t& blkPrev,
-                                    const cryptonote::AccountBase& minerAcc,
+                                    const cryptonote::Account& minerAcc,
                                     const std::list<cryptonote::transaction_t>& txList/* = std::list<cryptonote::transaction_t>()*/) {
   uint32_t height = boost::get<base_input_t>(blkPrev.baseTransaction.inputs.front()).blockIndex + 1;
   crypto::hash_t previousBlockHash = get_block_hash(blkPrev);
@@ -158,7 +158,7 @@ bool test_generator::constructBlock(cryptonote::block_t& blk, const cryptonote::
   return constructBlock(blk, height, previousBlockHash, minerAcc, timestamp, alreadyGeneratedCoins, blockSizes, txList);
 }
 
-bool test_generator::constructBlockManually(block_t& blk, const block_t& prevBlock, const AccountBase& minerAcc,
+bool test_generator::constructBlockManually(block_t& blk, const block_t& prevBlock, const Account& minerAcc,
                                             int actualParams/* = bf_none*/, uint8_t majorVer/* = 0*/,
                                             uint8_t minorVer/* = 0*/, uint64_t timestamp/* = 0*/,
                                             const crypto::hash_t& previousBlockHash/* = crypto::hash_t()*/, const difficulty_t& diffic/* = 1*/,
@@ -198,14 +198,14 @@ bool test_generator::constructBlockManually(block_t& blk, const block_t& prevBlo
 }
 
 bool test_generator::constructBlockManuallyTx(cryptonote::block_t& blk, const cryptonote::block_t& prevBlock,
-                                              const cryptonote::AccountBase& minerAcc,
+                                              const cryptonote::Account& minerAcc,
                                               const std::vector<crypto::hash_t>& transactionHashes, size_t txsSize) {
   return constructBlockManually(blk, prevBlock, minerAcc, bf_tx_hashes, 0, 0, 0, crypto::hash_t(), 0, transaction_t(),
     transactionHashes, txsSize);
 }
 
 bool test_generator::constructMaxSizeBlock(cryptonote::block_t& blk, const cryptonote::block_t& blkPrev,
-                                           const cryptonote::AccountBase& minerAccount,
+                                           const cryptonote::Account& minerAccount,
                                            size_t medianBlockCount/* = 0*/,
                                            const std::list<cryptonote::transaction_t>& txList/* = std::list<cryptonote::transaction_t>()*/) {
   std::vector<size_t> blockSizes;

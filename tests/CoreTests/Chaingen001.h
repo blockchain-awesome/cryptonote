@@ -17,7 +17,7 @@ public:
 
 class one_block: public test_chain_unit_base
 {
-  cryptonote::AccountBase alice;
+  cryptonote::Account alice;
 public:
   one_block();
   bool generate(std::vector<test_event_entry> &events);

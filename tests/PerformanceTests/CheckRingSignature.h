@@ -52,7 +52,7 @@ public:
   }
 
 private:
-  cryptonote::AccountBase m_alice;
+  cryptonote::Account m_alice;
   cryptonote::transaction_t m_tx;
   crypto::hash_t m_tx_prefix_hash;
 };

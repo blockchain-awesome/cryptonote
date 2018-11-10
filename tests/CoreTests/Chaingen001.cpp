@@ -30,7 +30,7 @@ bool one_block::verify_1(cryptonote::core& c, size_t ev_index, const std::vector
 {
     DEFINE_TESTS_ERROR_CONTEXT("one_block::verify_1");
 
-    alice = boost::get<cryptonote::AccountBase>(events[1]);
+    alice = boost::get<cryptonote::Account>(events[1]);
 
     // check balances
     //std::vector<const cryptonote::Block*> chain;

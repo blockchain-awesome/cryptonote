@@ -29,8 +29,8 @@ public:
   bool getSingleOutputTransaction(const cryptonote::account_public_address_t& address, uint64_t amount);
   void addTxToBlockchain(const cryptonote::transaction_t& transaction);
   bool getTransactionByHash(const crypto::hash_t& hash, cryptonote::transaction_t& tx, bool checkTxPool = false);
-  const cryptonote::AccountBase& getMinerAccount() const;
-  bool generateFromBaseTx(const cryptonote::AccountBase& address);
+  const cryptonote::Account& getMinerAccount() const;
+  bool generateFromBaseTx(const cryptonote::Account& address);
 
   void putTxToPool(const cryptonote::transaction_t& tx);
   void getPoolSymmetricDifference(std::vector<crypto::hash_t>&& known_pool_tx_ids, crypto::hash_t known_block_id, bool& is_bc_actual,
@@ -49,7 +49,7 @@ public:
 
   bool getTransactionGlobalIndexesByHash(const crypto::hash_t& transactionHash, std::vector<uint32_t>& globalIndexes);
   bool getMultisignatureOutputByGlobalIndex(uint64_t amount, uint32_t globalIndex, cryptonote::multi_signature_output_t& out);
-  void setMinerAccount(const cryptonote::AccountBase& account);
+  void setMinerAccount(const cryptonote::Account& account);
 
 private:
   struct MultisignatureOutEntry {
@@ -67,7 +67,7 @@ private:
 
   const cryptonote::Currency& m_currency;
   test_generator generator;
-  cryptonote::AccountBase miner_acc;
+  cryptonote::Account miner_acc;
   std::vector<cryptonote::block_t> m_blockchain;
   std::unordered_map<crypto::hash_t, cryptonote::transaction_t> m_txs;
   std::unordered_map<crypto::hash_t, std::vector<uint32_t>> transactionGlobalOuts;
@@ -84,7 +84,7 @@ private:
 
   void addToBlockchain(const cryptonote::transaction_t& tx);
   void addToBlockchain(const std::vector<cryptonote::transaction_t>& txs);
-  void addToBlockchain(const std::vector<cryptonote::transaction_t>& txs, const cryptonote::AccountBase& minerAddress);
+  void addToBlockchain(const std::vector<cryptonote::transaction_t>& txs, const cryptonote::Account& minerAddress);
   void addTx(const cryptonote::transaction_t& tx);
 
   bool doGenerateTransactionsInOneBlock(cryptonote::account_public_address_t const &address, size_t n);

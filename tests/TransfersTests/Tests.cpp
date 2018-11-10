@@ -194,7 +194,7 @@ public:
     m_sync(sync) {}
 
   void generateAccounts(size_t count) {
-    cryptonote::AccountBase acc;
+    cryptonote::Account acc;
 
     while (count--) {
       acc.generate();
@@ -298,7 +298,7 @@ TEST_F(TransfersTest, base) {
   nodeDaemons[0]->makeINode(node1);
   nodeDaemons[1]->makeINode(node2);
 
-  cryptonote::AccountBase dstAcc;
+  cryptonote::Account dstAcc;
   dstAcc.generate();
 
   account_keys_t dstKeys = reinterpret_cast<const account_keys_t&>(dstAcc.getAccountKeys());

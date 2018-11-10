@@ -16,10 +16,10 @@ class ISerializer;
 /************************************************************************/
 /*                                                                      */
 /************************************************************************/
-class AccountBase
+class Account
 {
 public:
-  AccountBase(uint64_t prefix = parameters::CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX);
+  Account(uint64_t prefix = parameters::CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX);
   void generate();
 
   const account_keys_t &getAccountKeys() const;
@@ -49,6 +49,4 @@ private:
   uint64_t m_creation_timestamp;
   uint64_t m_publicAddressBase58Prefix;
 };
-
-typedef AccountBase Account;
 } // namespace cryptonote

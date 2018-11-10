@@ -20,7 +20,7 @@ namespace {
                           std::vector<uint64_t>& timestamps,
                           std::vector<cryptonote::difficulty_t>& cummulative_difficulties, test_generator& generator,
                           size_t new_block_count, const cryptonote::block_t blk_last,
-                          const cryptonote::AccountBase& miner_account, uint8_t block_major_version) {
+                          const cryptonote::Account& miner_account, uint8_t block_major_version) {
     cryptonote::difficulty_t commulative_diffic = cummulative_difficulties.empty() ? 0 : cummulative_difficulties.back();
     cryptonote::block_t blk_prev = blk_last;
     for (size_t i = 0; i < new_block_count; ++i) {

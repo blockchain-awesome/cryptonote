@@ -11,7 +11,7 @@ using namespace cryptonote;
 namespace
 {
   bool rewind_blocks(std::vector<test_event_entry>& events, test_generator& generator, block_t& blk, const block_t& blk_prev,
-    const AccountBase& miner_account, size_t block_count)
+    const Account& miner_account, size_t block_count)
   {
     blk = blk_prev;
     for (size_t i = 0; i < block_count; ++i)

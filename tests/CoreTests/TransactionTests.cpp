@@ -22,24 +22,24 @@ bool test_transaction_generation_and_ring_signature()
   Logging::ConsoleLogger logger;
   cryptonote::Currency currency = cryptonote::CurrencyBuilder(logger, os::appdata::path()).currency();
 
-  AccountBase miner_acc1;
+  Account miner_acc1;
   miner_acc1.generate();
-  AccountBase miner_acc2;
+  Account miner_acc2;
   miner_acc2.generate();
-  AccountBase miner_acc3;
+  Account miner_acc3;
   miner_acc3.generate();
-  AccountBase miner_acc4;
+  Account miner_acc4;
   miner_acc4.generate();
-  AccountBase miner_acc5;
+  Account miner_acc5;
   miner_acc5.generate();
-  AccountBase miner_acc6;
+  Account miner_acc6;
   miner_acc6.generate();
 
   std::string add_str = miner_acc3.toAddress();
 
-  AccountBase rv_acc;
+  Account rv_acc;
   rv_acc.generate();
-  AccountBase rv_acc2;
+  Account rv_acc2;
   rv_acc2.generate();
   transaction_t tx_mine_1;
   currency.constructMinerTx(0, 0, 0, 10, 0, miner_acc1.getAccountKeys().address, tx_mine_1);

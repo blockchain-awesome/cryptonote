@@ -39,7 +39,7 @@ public:
     miningTest();
 
     // create some address for mining
-    cryptonote::AccountBase stashAddress;
+    cryptonote::Account stashAddress;
     stashAddress.generate();
     auto stashAddressStr = stashAddress.toAddress();
 

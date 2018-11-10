@@ -70,7 +70,7 @@ protected:
 
   Logging::LoggerGroup &m_logger;
 
-  // cryptonote::AccountBase m_account;
+  // cryptonote::Account m_account;
 
   System::Dispatcher &m_dispatcher;
   const Currency &m_currency;

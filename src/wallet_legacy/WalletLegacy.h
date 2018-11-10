@@ -105,7 +105,7 @@ private:
 
   WalletState m_state;
   std::mutex m_cacheMutex;
-  cryptonote::AccountBase m_account;
+  cryptonote::Account m_account;
   std::string m_password;
   const cryptonote::Currency& m_currency;
   INode& m_node;

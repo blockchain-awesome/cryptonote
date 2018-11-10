@@ -39,7 +39,7 @@ bool verify_keys(const secret_key_t& sec, const public_key_t& expected_pub) {
   return r && expected_pub == pub;
 }
 
-void loadKeysFromFile(const std::string& filename, const std::string& password, cryptonote::AccountBase& account) {
+void loadKeysFromFile(const std::string& filename, const std::string& password, cryptonote::Account& account) {
   keys_file_data keys_file_data;
   std::string buf;
 
@@ -73,7 +73,7 @@ void loadKeysFromFile(const std::string& filename, const std::string& password, 
 namespace cryptonote {
 
 void importLegacyKeys(const std::string& legacyKeysFilename, const std::string& password, std::ostream& destination) {
-  cryptonote::AccountBase account;
+  cryptonote::Account account;
 
   loadKeysFromFile(legacyKeysFilename, password, account);
 

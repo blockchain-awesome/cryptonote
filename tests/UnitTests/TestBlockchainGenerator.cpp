@@ -86,7 +86,7 @@ bool TestBlockchainGenerator::getTransactionByHash(const crypto::hash_t& hash, c
   return false;
 }
 
-const cryptonote::AccountBase& TestBlockchainGenerator::getMinerAccount() const {
+const cryptonote::Account& TestBlockchainGenerator::getMinerAccount() const {
   std::unique_lock<std::mutex> lock(m_mutex);
   return miner_acc;
 }
@@ -200,7 +200,7 @@ void TestBlockchainGenerator::addToBlockchain(const std::vector<cryptonote::tran
   addToBlockchain(txs, miner_acc);
 }
 
-void TestBlockchainGenerator::addToBlockchain(const std::vector<cryptonote::transaction_t>& txs, const cryptonote::AccountBase& minerAddress) {
+void TestBlockchainGenerator::addToBlockchain(const std::vector<cryptonote::transaction_t>& txs, const cryptonote::Account& minerAddress) {
   std::list<cryptonote::transaction_t> txsToBlock;
 
   for (const auto& tx: txs) {
@@ -299,7 +299,7 @@ bool TestBlockchainGenerator::addOrphan(const crypto::hash_t& hash, uint32_t hei
   return m_orthanBlocksIndex.add(block);
 }
 
-void TestBlockchainGenerator::setMinerAccount(const cryptonote::AccountBase& account) {
+void TestBlockchainGenerator::setMinerAccount(const cryptonote::Account& account) {
   miner_acc = account;
 }
 
@@ -388,7 +388,7 @@ bool TestBlockchainGenerator::getMultisignatureOutputByGlobalIndex(uint64_t amou
   return true;
 }
 
-bool TestBlockchainGenerator::generateFromBaseTx(const cryptonote::AccountBase& address) {
+bool TestBlockchainGenerator::generateFromBaseTx(const cryptonote::Account& address) {
   std::unique_lock<std::mutex> lock(m_mutex);
   addToBlockchain({}, address);
   return true;
