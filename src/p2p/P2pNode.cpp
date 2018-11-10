@@ -71,9 +71,9 @@ private:
   std::set<size_t> visited;
 };
 
-NetworkAddress getRemoteAddress(const TcpConnection& connection) {
+network_address_t getRemoteAddress(const TcpConnection& connection) {
   auto addressAndPort = connection.getPeerAddressAndPort();
-  NetworkAddress remoteAddress;
+  network_address_t remoteAddress;
   remoteAddress.ip = hostToNetwork(addressAndPort.first.getValue());
   remoteAddress.port = addressAndPort.second;
   return remoteAddress;
@@ -103,7 +103,7 @@ void doWithTimeoutAndThrow(System::Dispatcher& dispatcher, std::chrono::nanoseco
 
 }
 
-P2pNode::P2pNode(const P2pNodeConfig& cfg, Dispatcher& dispatcher, Logging::ILogger& log, const crypto::hash_t& genesisHash, PeerIdType peerId) :
+P2pNode::P2pNode(const P2pNodeConfig& cfg, Dispatcher& dispatcher, Logging::ILogger& log, const crypto::hash_t& genesisHash, peer_id_type_t peerId) :
   logger(log, "P2pNode:" + std::to_string(cfg.getBindPort())),
   m_stopRequested(false),
   m_cfg(cfg),
@@ -272,7 +272,7 @@ bool P2pNode::makeNewConnectionFromPeerlist(const PeerlistManager::Peerlist& pee
   PeerIndexGenerator idxGen(std::min<uint64_t>(peerlist.count() - 1, m_cfg.getPeerListConnectRange()));
 
   for (size_t tryCount = 0; idxGen.generate(peerIndex) && tryCount < m_cfg.getPeerListGetTryCount(); ++tryCount) {
-    PeerlistEntry peer;
+    peerlist_entry_t peer;
     if (!peerlist.get(peer, peerIndex)) {
       logger(WARNING) << "Failed to get peer from list, idx = " << peerIndex;
       continue;
@@ -311,7 +311,7 @@ void P2pNode::preprocessIncomingConnection(ContextPtr ctx) {
   }
 }
 
-void P2pNode::connectPeerList(const std::vector<NetworkAddress>& peers) {
+void P2pNode::connectPeerList(const std::vector<network_address_t>& peers) {
   for (const auto& address : peers) {
     if (!isPeerConnected(address)) {
       auto conn = tryToConnectPeer(address);
@@ -322,7 +322,7 @@ void P2pNode::connectPeerList(const std::vector<NetworkAddress>& peers) {
   }
 }
 
-bool P2pNode::isPeerConnected(const NetworkAddress& address) {
+bool P2pNode::isPeerConnected(const network_address_t& address) {
   for (const auto& c : m_contexts) {
     if (!c->isIncoming() && c->getRemoteAddress() == address) {
       return true;
@@ -332,7 +332,7 @@ bool P2pNode::isPeerConnected(const NetworkAddress& address) {
   return false;
 }
 
-bool P2pNode::isPeerUsed(const PeerlistEntry& peer) {
+bool P2pNode::isPeerUsed(const peerlist_entry_t& peer) {
   if (m_myPeerId == peer.id) {
     return true; //dont make connections to ourself
   }
@@ -346,7 +346,7 @@ bool P2pNode::isPeerUsed(const PeerlistEntry& peer) {
   return false;
 }
 
-P2pNode::ContextPtr P2pNode::tryToConnectPeer(const NetworkAddress& address) {
+P2pNode::ContextPtr P2pNode::tryToConnectPeer(const network_address_t& address) {
   try {
     TcpConnector connector(m_dispatcher);
     TcpConnection tcpConnection;
@@ -404,12 +404,12 @@ bool P2pNode::fetchPeerList(ContextPtr connection) {
 
 namespace {
 
-std::list<PeerlistEntry> fixTimeDelta(const std::list<PeerlistEntry>& peerlist, time_t remoteTime) {
+std::list<peerlist_entry_t> fixTimeDelta(const std::list<peerlist_entry_t>& peerlist, time_t remoteTime) {
   //fix time delta
   int64_t delta = time(nullptr) - remoteTime;
-  std::list<PeerlistEntry> peerlistCopy(peerlist);
+  std::list<peerlist_entry_t> peerlistCopy(peerlist);
 
-  for (PeerlistEntry& be : peerlistCopy) {
+  for (peerlist_entry_t& be : peerlistCopy) {
     if (be.last_seen > uint64_t(remoteTime)) {
       throw std::runtime_error("Invalid peerlist entry (time in future)");
     }
@@ -421,7 +421,7 @@ std::list<PeerlistEntry> fixTimeDelta(const std::list<PeerlistEntry>& peerlist, 
 }
 }
 
-bool P2pNode::handleRemotePeerList(const std::list<PeerlistEntry>& peerlist, time_t remoteTime) {
+bool P2pNode::handleRemotePeerList(const std::list<peerlist_entry_t>& peerlist, time_t remoteTime) {
   return m_peerlist.merge_peerlist(fixTimeDelta(peerlist, remoteTime));
 }
 
@@ -429,8 +429,8 @@ const CORE_SYNC_DATA& P2pNode::getGenesisPayload() const {
   return m_genesisPayload;
 }
 
-std::list<PeerlistEntry> P2pNode::getLocalPeerList() const {
-  std::list<PeerlistEntry> peerlist;
+std::list<peerlist_entry_t> P2pNode::getLocalPeerList() const {
+  std::list<peerlist_entry_t> peerlist;
   m_peerlist.get_peerlist_head(peerlist);
   return peerlist;
 }
@@ -451,7 +451,7 @@ basic_node_data P2pNode::getNodeData() const {
   return nodeData;
 }
 
-PeerIdType P2pNode::getPeerId() const {
+peer_id_type_t P2pNode::getPeerId() const {
   return m_myPeerId;
 }
 
@@ -486,7 +486,7 @@ void P2pNode::tryPing(P2pContext& ctx) {
     return;
   }
 
-  NetworkAddress peerAddress;
+  network_address_t peerAddress;
   peerAddress.ip = ctx.getRemoteAddress().ip;
   peerAddress.port = ctx.getPeerPort();
 
@@ -505,7 +505,7 @@ void P2pNode::tryPing(P2pContext& ctx) {
       proto.invoke(COMMAND_PING::ID, request, response);
 
       if (response.status == PING_OK_RESPONSE_STATUS_TEXT && response.peer_id == ctx.getPeerId()) {
-        PeerlistEntry entry;
+        peerlist_entry_t entry;
         entry.adr = peerAddress;
         entry.id = ctx.getPeerId();
         entry.last_seen = time(nullptr);

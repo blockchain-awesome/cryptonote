@@ -37,10 +37,17 @@ struct checkpoint_data_t
     const char *blockId;
 };
 
+typedef std::initializer_list<const char*> seeds_t;
+
+typedef std::initializer_list<checkpoint_data_t> checkpoints_t;
+
 struct config_t
 {
     config_block_t block;
     config_trasaction_t transaction;
     config_net_t net;
+    seeds_t seeds;
+    checkpoints_t checkpoints;
 };
+
 } // namespace config

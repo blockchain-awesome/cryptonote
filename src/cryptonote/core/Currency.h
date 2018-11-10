@@ -129,6 +129,9 @@ public:
   bool checkProofOfWork(const block_t& block, difficulty_t currentDiffic, crypto::hash_t& proofOfWork) const;
 
   size_t getApproximateMaximumInputCount(size_t transactionSize, size_t outputCount, size_t mixinCount) const;
+  const config::config_t &getConfig() const {
+    return m_config;
+  }
 
 private:
   Currency(std::string path, config::config_t &config, Logging::ILogger& log) : m_path(path), logger(log, "currency"), m_config(config){

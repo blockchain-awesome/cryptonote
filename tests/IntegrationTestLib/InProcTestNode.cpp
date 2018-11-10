@@ -24,7 +24,7 @@ using namespace cryptonote;
 namespace Tests {
 
 namespace {
-bool parse_peer_from_string(NetworkAddress &pe, const std::string &node_addr) {
+bool parse_peer_from_string(network_address_t &pe, const std::string &node_addr) {
   return ::Common::parseIpAddressAndPort(pe.ip, pe.port, node_addr);
 }
 }
@@ -76,9 +76,9 @@ void InProcTestNode::workerThread(std::promise<std::string>& initPromise) {
     p2pConfig.setHideMyPort(false);
     p2pConfig.setConfigFolder(m_cfg.dataDir);
 
-    std::vector<NetworkAddress> exclusiveNodes;
+    std::vector<network_address_t> exclusiveNodes;
     for (const auto& en : m_cfg.exclusiveNodes) {
-      NetworkAddress na;
+      network_address_t na;
       parse_peer_from_string(na, en);
       exclusiveNodes.push_back(na);
     }

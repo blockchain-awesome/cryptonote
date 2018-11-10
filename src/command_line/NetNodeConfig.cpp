@@ -28,17 +28,17 @@ const arg_descriptor<std::vector<std::string> > arg_p2p_add_exclusive_node   = {
 const arg_descriptor<std::vector<std::string> > arg_p2p_seed_node   = {"seed-node", "Connect to a node to retrieve peer addresses, and disconnect"};
 const arg_descriptor<bool> arg_p2p_hide_my_port   =    {"hide-my-port", "Do not announce yourself as peerlist candidate", false, true};
 
-bool parsePeerFromString(NetworkAddress& pe, const std::string& node_addr) {
+bool parsePeerFromString(network_address_t& pe, const std::string& node_addr) {
   return Common::parseIpAddressAndPort(pe.ip, pe.port, node_addr);
 }
 
 bool parsePeersAndAddToContainer(const boost::program_options::variables_map& vm,
-    const arg_descriptor<std::vector<std::string>>& arg, std::vector<NetworkAddress>& container)
+    const arg_descriptor<std::vector<std::string>>& arg, std::vector<network_address_t>& container)
 {
   std::vector<std::string> peers = get_arg(vm, arg);
 
   for(const std::string& str: peers) {
-    NetworkAddress na = boost::value_initialized<NetworkAddress>();
+    network_address_t na = boost::value_initialized<network_address_t>();
     if (!parsePeerFromString(na, str)) {
       return false;
     }
@@ -99,7 +99,7 @@ bool NetNodeConfig::init(const boost::program_options::variables_map& vm)
   if (has_arg(vm, arg_p2p_add_peer)) {
     std::vector<std::string> perrs = get_arg(vm, arg_p2p_add_peer);
     for(const std::string& pr_str: perrs) {
-      PeerlistEntry pe = boost::value_initialized<PeerlistEntry>();
+      peerlist_entry_t pe = boost::value_initialized<peerlist_entry_t>();
       pe.id = crypto::rand<uint64_t>();
       if (!parsePeerFromString(pe.adr, pr_str)) {
         return false;
@@ -163,19 +163,19 @@ bool NetNodeConfig::getAllowLocalIp() const {
   return allowLocalIp;
 }
 
-std::vector<PeerlistEntry> NetNodeConfig::getPeers() const {
+std::vector<peerlist_entry_t> NetNodeConfig::getPeers() const {
   return peers;
 }
 
-std::vector<NetworkAddress> NetNodeConfig::getPriorityNodes() const {
+std::vector<network_address_t> NetNodeConfig::getPriorityNodes() const {
   return priorityNodes;
 }
 
-std::vector<NetworkAddress> NetNodeConfig::getExclusiveNodes() const {
+std::vector<network_address_t> NetNodeConfig::getExclusiveNodes() const {
   return exclusiveNodes;
 }
 
-std::vector<NetworkAddress> NetNodeConfig::getSeedNodes() const {
+std::vector<network_address_t> NetNodeConfig::getSeedNodes() const {
   return seedNodes;
 }
 
@@ -207,19 +207,19 @@ void NetNodeConfig::setAllowLocalIp(bool allow) {
   allowLocalIp = allow;
 }
 
-void NetNodeConfig::setPeers(const std::vector<PeerlistEntry>& peerList) {
+void NetNodeConfig::setPeers(const std::vector<peerlist_entry_t>& peerList) {
   peers = peerList;
 }
 
-void NetNodeConfig::setPriorityNodes(const std::vector<NetworkAddress>& addresses) {
+void NetNodeConfig::setPriorityNodes(const std::vector<network_address_t>& addresses) {
   priorityNodes = addresses;
 }
 
-void NetNodeConfig::setExclusiveNodes(const std::vector<NetworkAddress>& addresses) {
+void NetNodeConfig::setExclusiveNodes(const std::vector<network_address_t>& addresses) {
   exclusiveNodes = addresses;
 }
 
-void NetNodeConfig::setSeedNodes(const std::vector<NetworkAddress>& addresses) {
+void NetNodeConfig::setSeedNodes(const std::vector<network_address_t>& addresses) {
   seedNodes = addresses;
 }
 

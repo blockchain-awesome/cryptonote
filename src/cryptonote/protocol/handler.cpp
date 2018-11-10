@@ -119,7 +119,7 @@ void CryptoNoteProtocolHandler::log_connections() {
     << std::setw(25) << "State"
     << std::setw(20) << "Lifetime(seconds)" << ENDL;
 
-  m_p2p->for_each_connection([&](const CryptoNoteConnectionContext& cntxt, PeerIdType peer_id) {
+  m_p2p->for_each_connection([&](const CryptoNoteConnectionContext& cntxt, peer_id_type_t peer_id) {
     ss << std::setw(25) << std::left << std::string(cntxt.m_is_income ? "[INC]" : "[OUT]") +
       Common::ipAddressToString(cntxt.m_remote_ip) + ":" + std::to_string(cntxt.m_remote_port)
       << std::setw(20) << std::hex << peer_id
@@ -656,7 +656,7 @@ void CryptoNoteProtocolHandler::updateObservedHeight(uint32_t peerHeight, const 
 void CryptoNoteProtocolHandler::recalculateMaxObservedHeight(const CryptoNoteConnectionContext& context) {
   //should be locked outside
   uint32_t peerHeight = 0;
-  m_p2p->for_each_connection([&peerHeight, &context](const CryptoNoteConnectionContext& ctx, PeerIdType peerId) {
+  m_p2p->for_each_connection([&peerHeight, &context](const CryptoNoteConnectionContext& ctx, peer_id_type_t peerId) {
     if (ctx.m_connection_id != context.m_connection_id) {
       peerHeight = std::max(peerHeight, ctx.m_remote_blockchain_height);
     }

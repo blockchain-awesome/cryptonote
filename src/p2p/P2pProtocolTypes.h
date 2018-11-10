@@ -13,41 +13,41 @@ namespace cryptonote
 {
   typedef boost::uuids::uuid uuid;
   typedef boost::uuids::uuid net_connection_id;
-  typedef uint64_t PeerIdType;
+  typedef uint64_t peer_id_type_t;
 
 #pragma pack (push, 1)
   
-  struct NetworkAddress
+  struct network_address_t
   {
     uint32_t ip;
     uint32_t port;
   };
 
-  struct PeerlistEntry
+  struct peerlist_entry_t
   {
-    NetworkAddress adr;
-    PeerIdType id;
+    network_address_t adr;
+    peer_id_type_t id;
     uint64_t last_seen;
   };
 
-  struct connection_entry
+  struct connection_entry_t
   {
-    NetworkAddress adr;
-    PeerIdType id;
+    network_address_t adr;
+    peer_id_type_t id;
     bool is_income;
   };
 
 #pragma pack(pop)
 
-  inline bool operator < (const NetworkAddress& a, const NetworkAddress& b) {
+  inline bool operator < (const network_address_t& a, const network_address_t& b) {
     return std::tie(a.ip, a.port) < std::tie(b.ip, b.port);
   }
 
-  inline bool operator == (const NetworkAddress& a, const NetworkAddress& b) {
+  inline bool operator == (const network_address_t& a, const network_address_t& b) {
     return memcmp(&a, &b, sizeof(a)) == 0;
   }
 
-  inline std::ostream& operator << (std::ostream& s, const NetworkAddress& na) {
+  inline std::ostream& operator << (std::ostream& s, const network_address_t& na) {
     return s << Common::ipAddressToString(na.ip) << ":" << std::to_string(na.port);   
   }
 

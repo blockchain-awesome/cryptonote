@@ -29,7 +29,7 @@ P2pContext::P2pContext(
   Dispatcher& dispatcher,
   TcpConnection&& conn,
   bool isIncoming,
-  const NetworkAddress& remoteAddress,
+  const network_address_t& remoteAddress,
   std::chrono::nanoseconds timedSyncInterval,
   const CORE_SYNC_DATA& timedSyncData)
   :
@@ -60,7 +60,7 @@ P2pContext::~P2pContext() {
   writeEvent.wait();
 }
 
-PeerIdType P2pContext::getPeerId() const {
+peer_id_type_t P2pContext::getPeerId() const {
   return peerId;
 }
 
@@ -68,7 +68,7 @@ uint16_t P2pContext::getPeerPort() const {
   return peerPort;
 }
 
-const NetworkAddress& P2pContext::getRemoteAddress() const {
+const network_address_t& P2pContext::getRemoteAddress() const {
   return remoteAddress;
 }
 
@@ -76,7 +76,7 @@ bool P2pContext::isIncoming() const {
   return incoming;
 }
 
-void P2pContext::setPeerInfo(uint8_t protocolVersion, PeerIdType id, uint16_t port) {
+void P2pContext::setPeerInfo(uint8_t protocolVersion, peer_id_type_t id, uint16_t port) {
   version = protocolVersion;
   peerId = id;
   if (isIncoming()) {

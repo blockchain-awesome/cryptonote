@@ -70,7 +70,7 @@ namespace cryptonote
     using TimePoint = Clock::time_point;
 
     System::Context<void>* context;
-    PeerIdType peerId;
+    peer_id_type_t peerId;
     System::TcpConnection connection;
 
     P2pConnectionContext(System::Dispatcher& dispatcher, Logging::ILogger& log, System::TcpConnection&& conn) :
@@ -117,7 +117,7 @@ namespace cryptonote
 
     virtual ~NodeServer() {};
     bool run();
-    bool init(const NetNodeConfig& config);
+    bool init(const NetNodeConfig& conf);
     bool deinit();
     bool sendStopSignal();
     uint32_t get_this_peer_port(){return m_listeningPort;}
@@ -150,7 +150,7 @@ namespace cryptonote
     bool init_config();
     bool make_default_config();
     bool store_config();
-    bool check_trust(const proof_of_trust& tr);
+    bool check_trust(const proof_of_trust_t& tr);
     void initUpnp();
 
     bool handshake(cryptonote::LevinProtocol& proto, P2pConnectionContext& context, bool just_take_peerlist = false);
@@ -164,33 +164,33 @@ namespace cryptonote
     //----------------- i_p2p_endpoint -------------------------------------------------------------
     virtual void relay_notify_to_all(int command, const binary_array_t& data_buff, const net_connection_id* excludeConnection) override;
     virtual bool invoke_notify_to_peer(int command, const binary_array_t& req_buff, const CryptoNoteConnectionContext& context) override;
-    virtual void for_each_connection(std::function<void(cryptonote::CryptoNoteConnectionContext&, PeerIdType)> f) override;
+    virtual void for_each_connection(std::function<void(cryptonote::CryptoNoteConnectionContext&, peer_id_type_t)> f) override;
     virtual void externalRelayNotifyToAll(int command, const binary_array_t& data_buff) override;
 
     //-----------------------------------------------------------------------------------------------
     bool handle_command_line(const boost::program_options::variables_map& vm);
-    bool handleConfig(const NetNodeConfig& config);
-    bool append_net_address(std::vector<NetworkAddress>& nodes, const std::string& addr);
+    bool handleConfig(const NetNodeConfig& conf);
+    bool append_net_address(std::vector<network_address_t>& nodes, const std::string& addr);
     bool idle_worker();
-    bool handle_remote_peerlist(const std::list<PeerlistEntry>& peerlist, time_t local_time, const CryptoNoteConnectionContext& context);
+    bool handle_remote_peerlist(const std::list<peerlist_entry_t>& peerlist, time_t local_time, const CryptoNoteConnectionContext& context);
     bool get_local_node_data(basic_node_data& node_data);
 
-    bool merge_peerlist_with_local(const std::list<PeerlistEntry>& bs);
-    bool fix_time_delta(std::list<PeerlistEntry>& local_peerlist, time_t local_time, int64_t& delta);
+    bool merge_peerlist_with_local(const std::list<peerlist_entry_t>& bs);
+    bool fix_time_delta(std::list<peerlist_entry_t>& local_peerlist, time_t local_time, int64_t& delta);
 
     bool connections_maker();
     bool make_new_connection_from_peerlist(bool use_white_list);
-    bool try_to_connect_and_handshake_with_new_peer(const NetworkAddress& na, bool just_take_peerlist = false, uint64_t last_seen_stamp = 0, bool white = true);
-    bool is_peer_used(const PeerlistEntry& peer);
-    bool is_addr_connected(const NetworkAddress& peer);  
+    bool try_to_connect_and_handshake_with_new_peer(const network_address_t& na, bool just_take_peerlist = false, uint64_t last_seen_stamp = 0, bool white = true);
+    bool is_peer_used(const peerlist_entry_t& peer);
+    bool is_addr_connected(const network_address_t& peer);  
     bool try_ping(basic_node_data& node_data, P2pConnectionContext& context);
     bool make_expected_connections_count(bool white_list, size_t expected_connections);
-    bool is_priority_node(const NetworkAddress& na);
+    bool is_priority_node(const network_address_t& na);
 
-    bool connect_to_peerlist(const std::vector<NetworkAddress>& peers);
+    bool connect_to_peerlist(const std::vector<network_address_t>& peers);
 
     bool parse_peers_and_add_to_container(const boost::program_options::variables_map& vm, 
-      const command_line::arg_descriptor<std::vector<std::string> > & arg, std::vector<NetworkAddress>& container);
+      const command_line::arg_descriptor<std::vector<std::string> > & arg, std::vector<network_address_t>& container);
 
     //debug functions
     std::string print_connections_container();
@@ -206,7 +206,7 @@ namespace cryptonote
     void timedSyncLoop();
     void timeoutLoop();
 
-    struct config
+    struct  net_config_t
     {
       network_config m_net_config;
       uint64_t m_peer_id;
@@ -217,7 +217,7 @@ namespace cryptonote
       }
     };
 
-    config m_config;
+    net_config_t m_config;
     std::string m_config_folder;
 
     bool m_have_address;
@@ -251,10 +251,10 @@ namespace cryptonote
 #ifdef ALLOW_DEBUG_COMMANDS
     uint64_t m_last_stat_request_time;
 #endif
-    std::vector<NetworkAddress> m_priority_peers;
-    std::vector<NetworkAddress> m_exclusive_peers;
-    std::vector<NetworkAddress> m_seed_nodes;
-    std::list<PeerlistEntry> m_command_line_peers;
+    std::vector<network_address_t> m_priority_peers;
+    std::vector<network_address_t> m_exclusive_peers;
+    std::vector<network_address_t> m_seed_nodes;
+    std::list<peerlist_entry_t> m_command_line_peers;
     uint64_t m_peer_livetime;
     boost::uuids::uuid m_network_id;
   };

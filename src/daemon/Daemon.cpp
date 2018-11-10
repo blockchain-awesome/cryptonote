@@ -155,7 +155,7 @@ int main(int argc, char *argv[])
     cryptonote::core ccore(currency, nullptr, logManager);
 
     cryptonote::Checkpoints checkpoints(logManager);
-    for (const auto &cp : cryptonote::CHECKPOINTS)
+    for (const auto &cp : conf.checkpoints)
     {
       checkpoints.add(cp.height, cp.blockId);
     }

@@ -51,7 +51,7 @@ namespace cryptonote
     uint8_t version;
     uint64_t local_time;
     uint32_t my_port;
-    PeerIdType peer_id;
+    peer_id_type_t peer_id;
 
     void serialize(ISerializer& s) {
       KV_MEMBER(network_id)
@@ -101,7 +101,7 @@ namespace cryptonote
     {
       basic_node_data node_data;
       CORE_SYNC_DATA payload_data;
-      std::list<PeerlistEntry> local_peerlist; 
+      std::list<peerlist_entry_t> local_peerlist; 
 
       void serialize(ISerializer& s) {
         KV_MEMBER(node_data)
@@ -133,7 +133,7 @@ namespace cryptonote
     {
       uint64_t local_time;
       CORE_SYNC_DATA payload_data;
-      std::list<PeerlistEntry> local_peerlist;
+      std::list<peerlist_entry_t> local_peerlist;
 
       void serialize(ISerializer& s) {
         KV_MEMBER(local_time)
@@ -167,7 +167,7 @@ namespace cryptonote
     struct response
     {
       std::string status;
-      PeerIdType peer_id;
+      peer_id_type_t peer_id;
 
       void serialize(ISerializer& s) {
         KV_MEMBER(status)
@@ -181,9 +181,9 @@ namespace cryptonote
   //These commands are considered as insecure, and made in debug purposes for a limited lifetime. 
   //Anyone who feel unsafe with this commands can disable the ALLOW_GET_STAT_COMMAND macro.
 
-  struct proof_of_trust
+  struct proof_of_trust_t
   {
-    PeerIdType peer_id;
+    peer_id_type_t peer_id;
     uint64_t    time;
     crypto::signature_t sign;
 
@@ -194,7 +194,7 @@ namespace cryptonote
     }
   };
 
-  inline crypto::hash_t get_proof_of_trust_hash(const proof_of_trust& pot) {
+  inline crypto::hash_t get_proof_of_trust_t_hash(const proof_of_trust_t& pot) {
     std::string s;
     s.append(reinterpret_cast<const char*>(&pot.peer_id), sizeof(pot.peer_id));
     s.append(reinterpret_cast<const char*>(&pot.time), sizeof(pot.time));
@@ -207,7 +207,7 @@ namespace cryptonote
 
     struct request
     {
-      proof_of_trust tr;
+      proof_of_trust_t tr;
 
       void serialize(ISerializer& s) {
         KV_MEMBER(tr)
@@ -242,7 +242,7 @@ namespace cryptonote
 
     struct request
     {
-      proof_of_trust tr;
+      proof_of_trust_t tr;
 
       void serialize(ISerializer& s) {
         KV_MEMBER(tr)
@@ -251,10 +251,10 @@ namespace cryptonote
 
     struct response
     {
-      std::list<PeerlistEntry> local_peerlist_white;
-      std::list<PeerlistEntry> local_peerlist_gray;
-      std::list<connection_entry> connections_list;
-      PeerIdType my_id;
+      std::list<peerlist_entry_t> local_peerlist_white;
+      std::list<peerlist_entry_t> local_peerlist_gray;
+      std::list<connection_entry_t> connections_list;
+      peer_id_type_t my_id;
       uint64_t local_time;
 
       void serialize(ISerializer& s) {
@@ -281,7 +281,7 @@ namespace cryptonote
 
     struct response
     {
-      PeerIdType my_id;
+      peer_id_type_t my_id;
 
       void serialize(ISerializer& s) {
         KV_MEMBER(my_id)

@@ -59,6 +59,7 @@ namespace cryptonote
     virtual size_t getPeerCount() const override;
     virtual uint32_t getObservedHeight() const override;
     void requestMissingPoolTransactions(const CryptoNoteConnectionContext& context);
+    const Currency& m_currency;
 
   private:
     //----------------- commands handlers ----------------------------------------------
@@ -84,10 +85,8 @@ namespace cryptonote
     Logging::LoggerRef logger;
 
   private:
-
     System::Dispatcher& m_dispatcher;
     ICore& m_core;
-    const Currency& m_currency;
 
     p2p_endpoint_stub m_p2p_stub;
     IP2pEndpoint* m_p2p;
