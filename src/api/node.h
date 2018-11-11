@@ -10,7 +10,7 @@
 #include "ITransfersSynchronizer.h"
 
 #include <cryptonote/core/Account.h>
-#include <cryptonote/core/Blockchain.h>
+#include <cryptonote/core/blockchain.h>
 #include <cryptonote/core/Currency.h>
 #include <logging/ILogger.h>
 

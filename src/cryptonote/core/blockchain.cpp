@@ -2,7 +2,7 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "Blockchain.h"
+#include "blockchain.h"
 #include <boost/filesystem.hpp>
 
 #include <algorithm>
@@ -434,7 +434,7 @@ bool Blockchain::rollback_blockchain_switching(std::list<block_t> &original_chai
   return true;
 }
 
-bool Blockchain::switch_to_alternative_blockchain(std::list<blocks_ext_by_hash::iterator>& alt_chain, bool discard_disconnected_chain) {
+bool Blockchain::switch_to_alternative_blockchain(std::list<blocks_ext_by_hash_t::iterator>& alt_chain, bool discard_disconnected_chain) {
   std::lock_guard<decltype(m_blockchain_lock)> lk(m_blockchain_lock);
 
   if (!(alt_chain.size())) {
@@ -512,7 +512,7 @@ bool Blockchain::switch_to_alternative_blockchain(std::list<blocks_ext_by_hash::
   return true;
 }
 
-difficulty_t Blockchain::get_next_difficulty_for_alternative_chain(const std::list<blocks_ext_by_hash::iterator>& alt_chain, block_entry_t& bei) {
+difficulty_t Blockchain::get_next_difficulty_for_alternative_chain(const std::list<blocks_ext_by_hash_t::iterator>& alt_chain, block_entry_t& bei) {
   std::vector<uint64_t> timestamps;
   std::vector<difficulty_t> commulative_difficulties;
   if (alt_chain.size() < m_currency.difficultyBlocksCount()) {
@@ -706,8 +706,8 @@ bool Blockchain::handle_alternative_block(const block_t& b, const crypto::hash_t
     //we have new block in alternative chain
 
     //build alternative subchain, front -> mainchain, back -> alternative head
-    blocks_ext_by_hash::iterator alt_it = it_prev; //m_alternative_chains.find()
-    std::list<blocks_ext_by_hash::iterator> alt_chain;
+    blocks_ext_by_hash_t::iterator alt_it = it_prev; //m_alternative_chains.find()
+    std::list<blocks_ext_by_hash_t::iterator> alt_chain;
     std::vector<uint64_t> timestamps;
     while (alt_it != m_alternative_chains.end()) {
       alt_chain.push_front(alt_it);
@@ -778,7 +778,7 @@ bool Blockchain::handle_alternative_block(const block_t& b, const crypto::hash_t
     if (!(i_dres == m_alternative_chains.end())) { logger(ERROR, BRIGHT_RED) << "insertion of new alternative block returned as it already exist"; return false; }
 #endif
 
-    auto i_res = m_alternative_chains.insert(blocks_ext_by_hash::value_type(id, bei));
+    auto i_res = m_alternative_chains.insert(blocks_ext_by_hash_t::value_type(id, bei));
     if (!(i_res.second)) { logger(ERROR, BRIGHT_RED) << "insertion of new alternative block returned as it already exist"; return false; }
 
     m_orthanBlocksIndex.add(bei.bl);
@@ -1028,7 +1028,7 @@ void Blockchain::print_blockchain_index() {
 void Blockchain::print_blockchain_outs(const std::string& file) {
   std::stringstream ss;
   std::lock_guard<decltype(m_blockchain_lock)> lk(m_blockchain_lock);
-  for (const outputs_container::value_type& v : m_outputs) {
+  for (const outputs_container_t::value_type& v : m_outputs) {
     const std::vector<std::pair<transaction_index_t, uint16_t>>& vals = v.second;
     if (!vals.empty()) {
       ss << "amount: " << v.first << ENDL;
@@ -1756,7 +1756,7 @@ void Blockchain::popTransactions(const block_entry_t& block, const crypto::hash_
 
 bool Blockchain::validateInput(const multi_signature_input_t& input, const crypto::hash_t& transactionHash, const crypto::hash_t& transactionPrefixHash, const std::vector<crypto::signature_t>& transactionSignatures) {
   assert(input.signatureCount == transactionSignatures.size());
-  MultisignatureOutputsContainer::const_iterator amountOutputs = m_multisignatureOutputs.find(input.amount);
+  multisignature_outputs_container_t::const_iterator amountOutputs = m_multisignatureOutputs.find(input.amount);
   if (amountOutputs == m_multisignatureOutputs.end()) {
     logger(DEBUGGING) <<
       "transaction_t << " << transactionHash << " contains multisignature input with invalid amount.";
@@ -1888,7 +1888,7 @@ bool Blockchain::getBlockSize(const crypto::hash_t& hash, size_t& size) {
 
 bool Blockchain::getMultisigOutputReference(const multi_signature_input_t& txInMultisig, std::pair<crypto::hash_t, size_t>& outputReference) {
   std::lock_guard<decltype(m_blockchain_lock)> lk(m_blockchain_lock);
-  MultisignatureOutputsContainer::const_iterator amountIter = m_multisignatureOutputs.find(txInMultisig.amount);
+  multisignature_outputs_container_t::const_iterator amountIter = m_multisignatureOutputs.find(txInMultisig.amount);
   if (amountIter == m_multisignatureOutputs.end()) {
     logger(DEBUGGING) << "transaction_t contains multisignature input with invalid amount.";
     return false;

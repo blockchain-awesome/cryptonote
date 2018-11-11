@@ -7,7 +7,7 @@
 #include "cryptonote/protocol/handler_common.h"
 #include "Currency.h"
 #include "tx_memory_pool.h"
-#include "Blockchain.h"
+#include "blockchain.h"
 #include "cryptonote/core/IMinerHandler.h"
 #include "command_line/MinerConfig.h"
 #include "ICore.h"

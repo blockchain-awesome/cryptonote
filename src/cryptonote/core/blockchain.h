@@ -166,35 +166,35 @@ namespace cryptonote {
     }
 
   private:
-    typedef google::sparse_hash_set<crypto::key_image_t> key_images_container;
-    typedef std::unordered_map<crypto::hash_t, block_entry_t> blocks_ext_by_hash;
-    typedef google::sparse_hash_map<uint64_t, std::vector<std::pair<transaction_index_t, uint16_t>>> outputs_container; //crypto::hash_t - tx hash, size_t - index of out in transaction
-    typedef google::sparse_hash_map<uint64_t, std::vector<MultisignatureOutputUsage>> MultisignatureOutputsContainer;
+    typedef google::sparse_hash_set<crypto::key_image_t> key_images_container_t;
+    typedef std::unordered_map<crypto::hash_t, block_entry_t> blocks_ext_by_hash_t;
+    typedef google::sparse_hash_map<uint64_t, std::vector<std::pair<transaction_index_t, uint16_t>>> outputs_container_t; //crypto::hash_t - tx hash, size_t - index of out in transaction
+    typedef google::sparse_hash_map<uint64_t, std::vector<MultisignatureOutputUsage>> multisignature_outputs_container_t;
 
     const Currency& m_currency;
     TxMemoryPool& m_tx_pool;
     std::recursive_mutex m_blockchain_lock; // TODO: add here reader/writer lock
     Tools::ObserverManager<IBlockchainStorageObserver> m_observerManager;
 
-    key_images_container m_spent_keys;
+    key_images_container_t m_spent_keys;
     size_t m_current_block_cumul_sz_limit;
-    blocks_ext_by_hash m_alternative_chains; // crypto::hash_t -> block_extended_info
-    outputs_container m_outputs;
+    blocks_ext_by_hash_t m_alternative_chains; // crypto::hash_t -> block_extended_info
+    outputs_container_t m_outputs;
 
     Checkpoints m_checkpoints;
     std::atomic<bool> m_is_in_checkpoint_zone;
 
-    typedef BlockAccessor<block_entry_t> Blocks;
-    typedef std::unordered_map<crypto::hash_t, uint32_t> BlockMap;
-    typedef std::unordered_map<crypto::hash_t, transaction_index_t> TransactionMap;
+    typedef BlockAccessor<block_entry_t> blocks_t;
+    typedef std::unordered_map<crypto::hash_t, uint32_t> block_map_t;
+    typedef std::unordered_map<crypto::hash_t, transaction_index_t> transaction_map_t;
 
     friend class BlockCacheSerializer;
     friend class BlockchainIndicesSerializer;
 
-    Blocks m_blocks;
+    blocks_t m_blocks;
     cryptonote::BlockIndex m_blockIndex;
-    TransactionMap m_transactionMap;
-    MultisignatureOutputsContainer m_multisignatureOutputs;
+    transaction_map_t m_transactionMap;
+    multisignature_outputs_container_t m_multisignatureOutputs;
 
     PaymentIdIndex m_paymentIdIndex;
     TimestampBlocksIndex m_timestampIndex;
@@ -207,9 +207,9 @@ namespace cryptonote {
 
     void rebuildCache();
     bool storeCache();
-    bool switch_to_alternative_blockchain(std::list<blocks_ext_by_hash::iterator>& alt_chain, bool discard_disconnected_chain);
+    bool switch_to_alternative_blockchain(std::list<blocks_ext_by_hash_t::iterator>& alt_chain, bool discard_disconnected_chain);
     bool handle_alternative_block(const block_t& b, const crypto::hash_t& id, block_verification_context_t& bvc, bool sendNewAlternativeBlockMessage = true);
-    difficulty_t get_next_difficulty_for_alternative_chain(const std::list<blocks_ext_by_hash::iterator>& alt_chain, block_entry_t& bei);
+    difficulty_t get_next_difficulty_for_alternative_chain(const std::list<blocks_ext_by_hash_t::iterator>& alt_chain, block_entry_t& bei);
     bool prevalidate_miner_transaction(const block_t& b, uint32_t height);
     bool validate_miner_transaction(const block_t& b, uint32_t height, size_t cumulativeBlockSize, uint64_t alreadyGeneratedCoins, uint64_t fee, uint64_t& reward, int64_t& emissionChange);
     bool rollback_blockchain_switching(std::list<block_t>& original_chain, size_t rollback_height);

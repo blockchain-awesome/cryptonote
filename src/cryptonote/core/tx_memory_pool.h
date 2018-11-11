@@ -110,7 +110,7 @@ namespace cryptonote {
 
     typedef std::pair<uint64_t, uint64_t> global_output_t;
     typedef std::set<global_output_t> global_output_container_t;
-    typedef std::unordered_map<crypto::key_image_t, std::unordered_set<crypto::hash_t> > key_images_container;
+    typedef std::unordered_map<crypto::key_image_t, std::unordered_set<crypto::hash_t> > key_images_container_t;
 
 
     // double spending checking
@@ -128,7 +128,7 @@ namespace cryptonote {
     const cryptonote::Currency& m_currency;
     OnceInTimeInterval m_txCheckInterval;
     mutable std::recursive_mutex m_transactions_lock;
-    key_images_container m_spent_key_images;
+    key_images_container_t m_spent_key_images;
     global_output_container_t m_spentOutputs;
 
     // std::string m_config_folder;

@@ -1039,7 +1039,7 @@ TEST_F(TransfersConsumerPerformanceTest, DISABLED_memory) {
   addAndSubscribeAccounts(10000);
   size_t txcount = generateBlocks(1000, 50, 1);
 
-  std::cout << "Blocks generated, calling onNewBlocks" << std::endl;
+  std::cout << "blocks_t generated, calling onNewBlocks" << std::endl;
 
   {
     AutoPrintTimer t;

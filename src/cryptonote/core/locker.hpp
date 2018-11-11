@@ -1,6 +1,6 @@
 
 #pragma once
-#include "cryptonote/core/Blockchain.h"
+#include "cryptonote/core/blockchain.h"
 
 namespace cryptonote
 {
