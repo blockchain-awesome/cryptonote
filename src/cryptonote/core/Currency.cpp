@@ -11,6 +11,7 @@
 #include "common/base58.h"
 #include "common/int-util.h"
 #include "common/StringTools.h"
+#include "cryptonote/structures/block.h"
 
 #include "Account.h"
 #include "CryptoNoteFormatUtils.h"
@@ -129,32 +130,7 @@ bool Currency::getPathAndFilesReady()
 
 bool Currency::generateGenesisBlock()
 {
-  m_genesisBlock = boost::value_initialized<block_t>();
-
-  // Hard code coinbase tx in genesis block, because "tru" generating tx use random, but genesis should be always the same
-  // std::string genesisCoinbaseTxHex = GENESIS_COINBASE_TX_HEX;
-  std::string genesisCoinbaseTxHex = m_config.block.genesis_coinbase_tx_hex;
-  binary_array_t minerTxBlob;
-
-  bool r =
-      fromHex(genesisCoinbaseTxHex, minerTxBlob) &&
-      fromBinaryArray(m_genesisBlock.baseTransaction, minerTxBlob);
-
-  if (!r)
-  {
-    logger(ERROR, BRIGHT_RED) << "failed to parse coinbase tx from hard coded blob";
-    return false;
-  }
-
-  m_genesisBlock.majorVersion = BLOCK_MAJOR_VERSION_1;
-  m_genesisBlock.minorVersion = BLOCK_MINOR_VERSION_0;
-  m_genesisBlock.timestamp = 0;
-  m_genesisBlock.nonce = 70;
-  // if (m_testnet) {
-  //   ++m_genesisBlock.nonce;
-  // }
-  //miner::find_nonce_for_given_block(bl, 1, 0);
-
+  m_genesisBlock = Block::genesis(m_config);
   return true;
 }
 

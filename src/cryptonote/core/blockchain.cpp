@@ -247,7 +247,7 @@ void Blockchain::rebuildCache() {
         if (out.target.type() == typeid(key_output_t)) {
           m_outputs[out.amount].push_back(std::make_pair<>(transactionIndex, o));
         } else if (out.target.type() == typeid(multi_signature_output_t)) {
-          MultisignatureOutputUsage usage = { transactionIndex, o, false };
+          multisignature_output_usage_t usage = { transactionIndex, o, false };
           m_multisignatureOutputs[out.amount].push_back(usage);
         }
       }
@@ -1635,7 +1635,7 @@ bool Blockchain::pushTransaction(block_entry_t& block, const crypto::hash_t& tra
     } else if (transaction.tx.outputs[output].target.type() == typeid(multi_signature_output_t)) {
       auto& amountOutputs = m_multisignatureOutputs[transaction.tx.outputs[output].amount];
       transaction.m_global_output_indexes[output] = static_cast<uint32_t>(amountOutputs.size());
-      MultisignatureOutputUsage outputUsage = { transactionIndex, output, false };
+      multisignature_output_usage_t outputUsage = { transactionIndex, output, false };
       amountOutputs.push_back(outputUsage);
     }
   }
@@ -1769,7 +1769,7 @@ bool Blockchain::validateInput(const multi_signature_input_t& input, const crypt
     return false;
   }
 
-  const MultisignatureOutputUsage& outputIndex = amountOutputs->second[input.outputIndex];
+  const multisignature_output_usage_t& outputIndex = amountOutputs->second[input.outputIndex];
   if (outputIndex.isUsed) {
     logger(DEBUGGING) <<
       "transaction_t << " << transactionHash << " contains double spending multisignature input.";
@@ -1897,7 +1897,7 @@ bool Blockchain::getMultisigOutputReference(const multi_signature_input_t& txInM
     logger(DEBUGGING) << "transaction_t contains multisignature input with invalid outputIndex.";
     return false;
   }
-  const MultisignatureOutputUsage& outputIndex = amountIter->second[txInMultisig.outputIndex];
+  const multisignature_output_usage_t& outputIndex = amountIter->second[txInMultisig.outputIndex];
   const transaction_t& outputTransaction = m_blocks[outputIndex.transactionIndex.block].transactions[outputIndex.transactionIndex.transaction].tx;
   outputReference.first = getObjectHash(outputTransaction);
   outputReference.second = outputIndex.outputIndex;

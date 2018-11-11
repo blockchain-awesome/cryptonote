@@ -4,7 +4,7 @@
 
 namespace cryptonote
 {
-struct MultisignatureOutputUsage
+struct multisignature_output_usage_t
 {
     transaction_index_t transactionIndex;
     uint16_t outputIndex;
