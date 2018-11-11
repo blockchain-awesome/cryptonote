@@ -6,7 +6,7 @@
 
 #include "cryptonote/core/account.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
-#include "cryptonote/core/Currency.h"
+#include "cryptonote/core/currency.h"
 
 class TransactionBuilder {
 public:

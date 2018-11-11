@@ -26,7 +26,7 @@
 #include "stream/StdOutputStream.h"
 #include "common/StringTools.h"
 #include "cryptonote/core/account.h"
-#include "cryptonote/core/Currency.h"
+#include "cryptonote/core/currency.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/core/TransactionApi.h"

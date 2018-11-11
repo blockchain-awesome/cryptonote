@@ -15,7 +15,7 @@
 #include "command_line/daemon.h"
 #include "command_line/CoreConfig.h"
 #include "cryptonote/core/CryptoNoteTools.h"
-#include "cryptonote/core/Currency.h"
+#include "cryptonote/core/currency.h"
 #include "command_line/MinerConfig.h"
 #include "cryptonote/protocol/handler.h"
 #include "p2p/NetNode.h"

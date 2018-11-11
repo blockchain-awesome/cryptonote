@@ -18,7 +18,7 @@
 #include "stream/StdOutputStream.h"
 #include "serialization/BinaryInputStreamSerializer.h"
 #include "serialization/BinaryOutputStreamSerializer.h"
-#include "cryptonote/core/Currency.h"
+#include "cryptonote/core/currency.h"
 
 using namespace cryptonote;
 template<class T> class BlockAccessor {

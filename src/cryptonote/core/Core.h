@@ -5,7 +5,7 @@
 #pragma once
 #include "p2p/NetNodeCommon.h"
 #include "cryptonote/protocol/handler_common.h"
-#include "Currency.h"
+#include "currency.h"
 #include "tx_memory_pool.h"
 #include "blockchain.h"
 #include "cryptonote/core/IMinerHandler.h"

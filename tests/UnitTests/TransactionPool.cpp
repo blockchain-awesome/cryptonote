@@ -11,7 +11,7 @@
 #include "cryptonote/core/account.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/CryptoNoteTools.h"
-#include "cryptonote/core/Currency.h"
+#include "cryptonote/core/currency.h"
 #include "cryptonote/core/TransactionExtra.h"
 #include "cryptonote/core/tx_memory_pool.h"
 

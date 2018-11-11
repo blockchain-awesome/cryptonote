@@ -10,7 +10,7 @@
 
 #include <IWallet.h>
 
-#include "cryptonote/core/Currency.h"
+#include "cryptonote/core/currency.h"
 #include "logging/LoggerGroup.h"
 #include "logging/ConsoleLogger.h"
 #include <system/Event.h>

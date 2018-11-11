@@ -13,7 +13,7 @@
 #include "wallet_legacy/WalletLegacy.h"
 #include "wallet_legacy/WalletHelper.h"
 #include "cryptonote/core/account.h"
-#include "cryptonote/core/Currency.h"
+#include "cryptonote/core/currency.h"
 #include "cryptonote.h"
 
 #include "INodeStubs.h"

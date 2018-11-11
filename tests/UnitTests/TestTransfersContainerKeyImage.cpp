@@ -8,7 +8,7 @@
 
 #include "crypto/crypto.h"
 #include "cryptonote/core/account.h"
-#include "cryptonote/core/Currency.h"
+#include "cryptonote/core/currency.h"
 #include "cryptonote/core/TransactionApi.h"
 #include "logging/ConsoleLogger.h"
 #include "transfers/TransfersContainer.h"

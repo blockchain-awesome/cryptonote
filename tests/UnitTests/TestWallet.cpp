@@ -11,7 +11,7 @@
 
 #include "common/StringTools.h"
 #include "crypto/hash.h"
-#include "cryptonote/core/Currency.h"
+#include "cryptonote/core/currency.h"
 #include "cryptonote/core/TransactionApi.h"
 #include "cryptonote/core/TransactionApiExtra.h"
 #include "INodeStubs.h"

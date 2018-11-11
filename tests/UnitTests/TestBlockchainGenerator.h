@@ -9,7 +9,7 @@
 
 #include "cryptonote/core/account.h"
 #include "cryptonote/core/key.h"
-#include "cryptonote/core/Currency.h"
+#include "cryptonote/core/currency.h"
 #include "cryptonote/core/blockchain/indexing/exports.h"
 #include "crypto/hash.h"
 

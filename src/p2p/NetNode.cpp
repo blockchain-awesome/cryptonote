@@ -35,7 +35,7 @@
 #include "CryptoNoteConfig.h"
 #include "LevinProtocol.h"
 #include "P2pProtocolDefinitions.h"
-#include "cryptonote/core/Currency.h"
+#include "cryptonote/core/currency.h"
 
 #include "serialization/BinaryInputStreamSerializer.h"
 #include "serialization/BinaryOutputStreamSerializer.h"

@@ -9,7 +9,7 @@
 
 #include "common/StringTools.h"
 
-#include "cryptonote/core/Currency.h"
+#include "cryptonote/core/currency.h"
 #include "cryptonote/core/account.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 

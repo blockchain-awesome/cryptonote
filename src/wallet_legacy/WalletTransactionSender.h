@@ -5,7 +5,7 @@
 #pragma once
 
 #include "cryptonote/core/account.h"
-#include "cryptonote/core/Currency.h"
+#include "cryptonote/core/currency.h"
 
 #include "INode.h"
 #include "wallet_legacy/WalletSendTransactionContext.h"

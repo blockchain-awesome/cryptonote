@@ -12,7 +12,7 @@
 #include "common/ObserverManager.h"
 #include "cryptonote/core/blockchain/serializer/block_index.h"
 #include "cryptonote/core/Checkpoints.h"
-#include "cryptonote/core/Currency.h"
+#include "cryptonote/core/currency.h"
 #include "cryptonote/core/blockchain/serializer/exports.h"
 #include "cryptonote/core/IBlockchainStorageObserver.h"
 #include "cryptonote/core/ITransactionValidator.h"

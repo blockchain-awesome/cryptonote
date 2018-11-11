@@ -14,7 +14,7 @@
 #include <serialization/JsonInputStreamSerializer.h>
 #include <serialization/SerializationOverloads.h>
 
-#include "cryptonote/core/Currency.h"
+#include "cryptonote/core/currency.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "wallet/WalletGreen.h"
 

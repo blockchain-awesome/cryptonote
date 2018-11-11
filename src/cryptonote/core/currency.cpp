@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include <fstream>
-#include "Currency.h"
+#include "currency.h"
 #include <cctype>
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/lexical_cast.hpp>

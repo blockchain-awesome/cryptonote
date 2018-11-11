@@ -17,7 +17,7 @@
 #include "common/ObserverManager.h"
 #include "cryptonote/core/TransactionExtra.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
-#include "cryptonote/core/Currency.h"
+#include "cryptonote/core/currency.h"
 #include "wallet_legacy/WalletUserTransactionsCache.h"
 #include "wallet_legacy/WalletUnconfirmedTransactions.h"
 

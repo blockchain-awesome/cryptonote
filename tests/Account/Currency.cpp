@@ -9,7 +9,7 @@
 #include "stream/StdOutputStream.h"
 #include "serialization/BinaryInputStreamSerializer.h"
 #include "serialization/BinaryOutputStreamSerializer.h"
-#include "cryptonote/core/Currency.h"
+#include "cryptonote/core/currency.h"
 #include <logging/LoggerManager.h>
 
 using namespace cryptonote;

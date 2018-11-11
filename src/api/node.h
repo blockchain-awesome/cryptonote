@@ -11,7 +11,7 @@
 
 #include <cryptonote/core/account.h>
 #include <cryptonote/core/blockchain.h>
-#include <cryptonote/core/Currency.h>
+#include <cryptonote/core/currency.h>
 #include <logging/ILogger.h>
 
 namespace api

@@ -9,7 +9,7 @@
 // #include "stream/StdOutputStream.h"
 #include "common/base58.h"
 #include "cryptonote/core/CryptoNoteBasicImpl.h"
-#include "cryptonote/core/Currency.h"
+#include "cryptonote/core/currency.h"
 
 // #include "serialization/BinaryOutputStreamSerializer.h"
 // #include "cryptonote/core/blockchain/serializer/basics.h"
