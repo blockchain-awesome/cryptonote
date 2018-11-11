@@ -19,7 +19,7 @@
 #include "stream/StringOutputStream.h"
 #include "crypto/crypto.h"
 
-#include "cryptonote/core/Account.h"
+#include "cryptonote/core/account.h"
 
 #include "CryptoNoteConfig.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"

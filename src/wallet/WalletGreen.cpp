@@ -23,7 +23,7 @@
 #include "stream/StdInputStream.h"
 #include "stream/StdOutputStream.h"
 #include "common/StringTools.h"
-#include "cryptonote/core/Account.h"
+#include "cryptonote/core/account.h"
 #include "cryptonote/core/Currency.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/CryptoNoteTools.h"

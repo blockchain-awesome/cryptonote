@@ -11,7 +11,7 @@
 #include "command_line/options.h"
 #include "common/ConsoleTools.h"
 
-#include "cryptonote/core/Account.h"
+#include "cryptonote/core/account.h"
 #include "cryptonote/core/Core.h"
 #include "cryptonote/core/TransactionExtra.h"
 

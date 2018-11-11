@@ -6,7 +6,7 @@
 #include "crypto/hash.h"
 #include "cryptonote/core/key.h"
 #include "cryptonote/core/blockchain/serializer/crypto.h"
-#include "cryptonote/core/Account.h"
+#include "cryptonote/core/account.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/core/Currency.h"

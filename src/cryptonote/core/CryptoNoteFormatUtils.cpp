@@ -11,7 +11,7 @@
 #include "serialization/BinaryOutputStreamSerializer.h"
 #include "serialization/BinaryInputStreamSerializer.h"
 
-#include "Account.h"
+#include "account.h"
 #include "TransactionExtra.h"
 #include "CryptoNoteTools.h"
 

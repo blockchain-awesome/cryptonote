@@ -9,7 +9,7 @@
 
 #include "cryptonote/core/TransactionApi.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h" // TODO: delete
-#include "cryptonote/core/Account.h"
+#include "cryptonote/core/account.h"
 #include "crypto/crypto.h"
 #include "TransactionApiHelpers.h"
 

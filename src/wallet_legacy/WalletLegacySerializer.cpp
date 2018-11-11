@@ -11,7 +11,7 @@
 #include "stream/StdOutputStream.h"
 #include "serialization/BinaryOutputStreamSerializer.h"
 #include "serialization/BinaryInputStreamSerializer.h"
-#include "cryptonote/core/Account.h"
+#include "cryptonote/core/account.h"
 #include "cryptonote/core/blockchain/serializer/basics.h"
 #include "wallet_legacy/WalletUserTransactionsCache.h"
 #include "wallet/WalletErrors.h"

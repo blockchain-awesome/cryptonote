@@ -2,7 +2,7 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "Account.h"
+#include "account.h"
 #include "cryptonote/core/blockchain/serializer/basics.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "common/base58.h"

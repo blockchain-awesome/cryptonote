@@ -5,7 +5,7 @@
 #include "TestGenerator.h"
 
 #include <common/Math.h>
-#include "cryptonote/core/Account.h"
+#include "cryptonote/core/account.h"
 #include "cryptonote/core/Miner.h"
 #include "cryptonote/core/TransactionExtra.h"
 #include "cryptonote/core/CryptoNoteTools.h"

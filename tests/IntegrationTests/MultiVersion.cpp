@@ -7,7 +7,7 @@
 #include <thread>
 #include <logging/ConsoleLogger.h>
 
-#include "cryptonote/core/Account.h"
+#include "cryptonote/core/account.h"
 #include "WalletLegacyObserver.h"
 
 #undef ERROR

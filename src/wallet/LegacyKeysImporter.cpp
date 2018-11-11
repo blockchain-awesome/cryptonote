@@ -10,7 +10,7 @@
 #include "common/StringTools.h"
 
 #include "cryptonote/core/Currency.h"
-#include "cryptonote/core/Account.h"
+#include "cryptonote/core/account.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 
 #include "serialization/SerializationTools.h"

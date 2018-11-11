@@ -13,7 +13,7 @@
 #include "common/StringTools.h"
 #include "cryptonote/structures/block.h"
 
-#include "Account.h"
+#include "account.h"
 #include "CryptoNoteFormatUtils.h"
 #include "CryptoNoteTools.h"
 #include "TransactionExtra.h"

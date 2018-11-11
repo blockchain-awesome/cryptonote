@@ -11,7 +11,7 @@
 #include "crypto/hash.h"
 #include "cryptonote/core/key.h"
 #include "cryptonote/core/blockchain/serializer/crypto.h"
-#include "cryptonote/core/Account.h"
+#include "cryptonote/core/account.h"
 #include "cryptonote/core/Currency.h"
 #include "cryptonote/core/blockchain/serializer/basics.h"
 #include "common/os.h"

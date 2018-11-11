@@ -20,7 +20,7 @@
 #include "cryptonote.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/TransactionExtra.h"
-#include "cryptonote/core/Account.h"
+#include "cryptonote/core/account.h"
 
 #include <system/EventLock.h>
 
