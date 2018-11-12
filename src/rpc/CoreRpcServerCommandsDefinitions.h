@@ -6,7 +6,7 @@
 
 #include "cryptonote/protocol/definitions.h"
 #include "cryptonote/core/key.h"
-#include "cryptonote/core/Difficulty.h"
+#include "cryptonote/core/difficulty.h"
 #include "crypto/hash.h"
 
 #include "serialization/SerializationOverloads.h"

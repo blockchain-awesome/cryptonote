@@ -17,6 +17,7 @@
 #include "CryptoNoteFormatUtils.h"
 #include "CryptoNoteTools.h"
 #include "TransactionExtra.h"
+#include "../structures/block_entry.h"
 
 #undef ERROR
 
@@ -477,18 +478,6 @@ difficulty_t Currency::nextDifficulty(std::vector<uint64_t> timestamps,
   }
 
   return (low + timeSpan - 1) / timeSpan;
-}
-
-bool Currency::checkProofOfWork(const block_t &block, difficulty_t currentDiffic,
-                                crypto::hash_t &proofOfWork) const
-{
-
-  if (!get_block_longhash(block, proofOfWork))
-  {
-    return false;
-  }
-
-  return check_hash(proofOfWork, currentDiffic);
 }
 
 size_t Currency::getApproximateMaximumInputCount(size_t transactionSize, size_t outputCount, size_t mixinCount) const

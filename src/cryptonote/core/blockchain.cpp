@@ -754,7 +754,7 @@ bool Blockchain::handle_alternative_block(const block_t& b, const crypto::hash_t
     difficulty_t current_diff = get_next_difficulty_for_alternative_chain(alt_chain, bei);
     if (!(current_diff)) { logger(ERROR, BRIGHT_RED) << "!!!!!!! DIFFICULTY OVERHEAD !!!!!!!"; return false; }
     crypto::hash_t proof_of_work = NULL_HASH;
-    if (!m_currency.checkProofOfWork(bei.bl, current_diff, proof_of_work)) {
+    if (!Block::checkProofOfWork(bei.bl, current_diff, proof_of_work)) {
       logger(INFO, BRIGHT_RED) <<
         "Block with id: " << id
         << ENDL << " for alternative chain, have not enough proof of work: " << proof_of_work
@@ -1001,9 +1001,8 @@ void Blockchain::print_blockchain(uint64_t start_index, uint64_t end_index) {
   }
 
   for (size_t i = start_index; i != m_blocks.size() && i != end_index; i++) {
-    ss << "height " << i << ", timestamp " << m_blocks[i].bl.timestamp << ", cumul_dif " << m_blocks[i].cumulative_difficulty << ", cumul_size " << m_blocks[i].block_cumulative_size
-      << "\nid\t\t" << get_block_hash(m_blocks[i].bl)
-      << "\ndifficulty\t\t" << blockDifficulty(i) << ", nonce " << m_blocks[i].bl.nonce << ", tx_count " << m_blocks[i].bl.transactionHashes.size() << ENDL;
+    ss << Block::toString(m_blocks[i]);
+    ss << "Difficulty: " << blockDifficulty(i) << std::endl;
   }
   logger(DEBUGGING) <<
     "Current blockchain:" << ENDL << ss.str();
@@ -1449,7 +1448,7 @@ bool Blockchain::pushBlock(const block_t& blockData, const std::vector<transacti
       return false;
     }
   } else {
-    if (!m_currency.checkProofOfWork(blockData, currentDifficulty, proof_of_work)) {
+    if (!Block::checkProofOfWork(blockData, currentDifficulty, proof_of_work)) {
       logger(INFO, BRIGHT_WHITE) <<
         "Block " << blockHash << ", has too weak proof of work: " << proof_of_work << ", expected difficulty: " << currentDifficulty;
       bvc.m_verifivation_failed = true;

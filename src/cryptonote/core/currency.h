@@ -13,7 +13,8 @@
 #include "crypto/hash.h"
 #include "logging/LoggerRef.h"
 #include "key.h"
-#include "Difficulty.h"
+#include "../structures/block.h"
+#include "difficulty.h"
 #include "coin/exports.h"
 #include "common/os.h"
 
@@ -126,7 +127,6 @@ public:
   bool parseAmount(const std::string& str, uint64_t& amount) const;
 
   difficulty_t nextDifficulty(std::vector<uint64_t> timestamps, std::vector<difficulty_t> cumulativeDifficulties) const;
-  bool checkProofOfWork(const block_t& block, difficulty_t currentDiffic, crypto::hash_t& proofOfWork) const;
 
   size_t getApproximateMaximumInputCount(size_t transactionSize, size_t outputCount, size_t mixinCount) const;
   const config::config_t &getConfig() const {

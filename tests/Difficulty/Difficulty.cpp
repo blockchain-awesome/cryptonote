@@ -11,7 +11,7 @@
 
 #include "CryptoNoteConfig.h"
 #include "common/os.h"
-#include "cryptonote/core/Difficulty.h"
+#include "cryptonote/core/difficulty.h"
 #include "cryptonote/core/currency.h"
 #include "logging/ConsoleLogger.h"
 

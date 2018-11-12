@@ -2,6 +2,7 @@
 
 #include "config/common.h"
 #include "cryptonote/core/transaction/transaction.h"
+#include "cryptonote/core/difficulty.h"
 
 namespace cryptonote
 {
@@ -19,15 +20,6 @@ struct block_t : public block_header_t
 {
     transaction_t baseTransaction;
     std::vector<crypto::hash_t> transactionHashes;
-};
-
-class Block
-{
-  public:
-    static block_t genesis(config::config_t& conf);
-
-  private:
-    block_t m_block;
 };
 
 } // namespace cryptonote

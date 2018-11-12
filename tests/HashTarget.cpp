@@ -7,7 +7,7 @@
 #include <cstring>
 #include <limits>
 #include "crypto/hash.h"
-#include "cryptonote/core/Difficulty.h"
+#include "cryptonote/core/difficulty.h"
 
 using namespace std;
 using cryptonote::check_hash;

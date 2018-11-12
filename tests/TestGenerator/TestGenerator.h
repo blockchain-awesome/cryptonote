@@ -15,7 +15,7 @@
 #include "cryptonote/core/blockchain/serializer/crypto.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/currency.h"
-#include "cryptonote/core/Difficulty.h"
+#include "cryptonote/core/difficulty.h"
 
 
 class test_generator
