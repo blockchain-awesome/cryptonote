@@ -38,9 +38,6 @@ class Block
     static crypto::hash_t getHash(const block_t&block);
 
     static bool getLongHash(const block_t& b, crypto::hash_t& res);
-    static bool getAuxHeaderHash(const block_t& b, crypto::hash_t& res);
-
-
     static bool checkProofOfWork(const block_t &block, difficulty_t currentDiffic, crypto::hash_t &proofOfWork);
 
     static block_t genesis(config::config_t &conf);

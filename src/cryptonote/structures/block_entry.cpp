@@ -43,15 +43,6 @@ bool Block::getBlob(const block_t& b, binary_array_t& ba) {
   return true;
 }
 
-bool Block::getAuxHeaderHash(const block_t& b, crypto::hash_t& res) {
-  binary_array_t blob;
-  if (!Block::getBlob(b, blob)) {
-    return false;
-  }
-
-  return getObjectHash(blob, res);
-}
-
 bool Block::getLongHash(const block_t& b, crypto::hash_t& res) {
   binary_array_t bd;
   if (!Block::getBlob(b, bd)) {
