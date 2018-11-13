@@ -442,7 +442,7 @@ namespace cryptonote {
 
     s(version, "version");
 
-    std::cout << "Mempool version: " << version << std::endl;
+    std::cout << "Mempool version: " << (uint32_t) version << std::endl;
 
     if (version != CURRENT_MEMPOOL_ARCHIVE_VER) {
       return;

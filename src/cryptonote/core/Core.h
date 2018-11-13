@@ -93,10 +93,8 @@ namespace cryptonote {
     virtual bool queryBlocksLite(const std::vector<crypto::hash_t>& knownBlockIds, uint64_t timestamp,
       uint32_t& resStartHeight, uint32_t& resCurrentHeight, uint32_t& resFullOffset, std::vector<block_short_info_t>& entries) override;
     virtual crypto::hash_t getBlockIdByHeight(uint32_t height) override;
-     void getTransactions(const std::vector<crypto::hash_t>& txs_ids, std::list<transaction_t>& txs, std::list<crypto::hash_t>& missed_txs, bool checkTxPool = false) override;
-     virtual bool getBlockByHash(const crypto::hash_t &h, block_t &blk) override;
-     virtual bool getBlockHeight(const crypto::hash_t& blockId, uint32_t& blockHeight) override;
-     //void get_all_known_block_ids(std::list<crypto::hash_t> &main, std::list<crypto::hash_t> &alt, std::list<crypto::hash_t> &invalid);
+    void getTransactions(const std::vector<crypto::hash_t>& txs_ids, std::list<transaction_t>& txs, std::list<crypto::hash_t>& missed_txs, bool checkTxPool = false) override;
+    virtual bool getBlockByHash(const crypto::hash_t &h, block_t &blk) override;
 
      bool get_alternative_blocks(std::list<block_t>& blocks);
      size_t get_alternative_blocks_count();

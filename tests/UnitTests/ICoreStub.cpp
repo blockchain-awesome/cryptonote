@@ -199,15 +199,6 @@ bool ICoreStub::getBlockByHash(const crypto::hash_t &h, cryptonote::block_t &blk
   return true;
 }
 
-bool ICoreStub::getBlockHeight(const crypto::hash_t& blockId, uint32_t& blockHeight) {
-  auto it = blocks.find(blockId);
-  if (it == blocks.end()) {
-    return false;
-  }
-  blockHeight = get_block_height(it->second);
-  return true;
-}
-
 void ICoreStub::getTransactions(const std::vector<crypto::hash_t>& txs_ids, std::list<cryptonote::transaction_t>& txs, std::list<crypto::hash_t>& missed_txs, bool checkTxPool) {
   for (const crypto::hash_t& hash : txs_ids) {
     auto iter = transactions.find(hash);

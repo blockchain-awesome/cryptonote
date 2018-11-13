@@ -576,14 +576,6 @@ bool core::getBlockByHash(const crypto::hash_t &h, block_t &blk) {
   return m_blockchain.getBlockByHash(h, blk);
 }
 
-bool core::getBlockHeight(const crypto::hash_t& blockId, uint32_t& blockHeight) {
-  return m_blockchain.getBlockHeight(blockId, blockHeight);
-}
-
-//void core::get_all_known_block_ids(std::list<crypto::hash_t> &main, std::list<crypto::hash_t> &alt, std::list<crypto::hash_t> &invalid) {
-//  m_blockchain.get_all_known_block_ids(main, alt, invalid);
-//}
-
 std::string core::print_pool(bool short_format) {
   return m_mempool.print_pool(short_format);
 }
