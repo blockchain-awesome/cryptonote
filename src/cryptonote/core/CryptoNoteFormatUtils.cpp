@@ -428,52 +428,6 @@ bool lookup_acc_outs(const account_keys_t& acc, const transaction_t& tx, const p
   return true;
 }
 
-bool get_block_hashing_blob(const block_t& b, binary_array_t& ba) {
-  if (!toBinaryArray(static_cast<const block_header_t&>(b), ba)) {
-    return false;
-  }
-
-  hash_t treeRootHash = get_tx_tree_hash(b);
-  ba.insert(ba.end(), treeRootHash.data, treeRootHash.data + 32);
-  auto transactionCount = asBinaryArray(Tools::get_varint_data(b.transactionHashes.size() + 1));
-  ba.insert(ba.end(), transactionCount.begin(), transactionCount.end());
-  return true;
-}
-
-// bool Block::getHash(const block_t& b, hash_t& res) {
-//   binary_array_t ba;
-//   if (!get_block_hashing_blob(b, ba)) {
-//     return false;
-//   }
-
-//   return getObjectHash(ba, res);
-// }
-
-// hash_t Block::getHash(const block_t& b) {
-//   hash_t p = NULL_HASH;
-//   Block::getHash(b, p);
-//   return p;
-// }
-
-bool get_aux_block_header_hash(const block_t& b, hash_t& res) {
-  binary_array_t blob;
-  if (!get_block_hashing_blob(b, blob)) {
-    return false;
-  }
-
-  return getObjectHash(blob, res);
-}
-
-bool get_block_longhash(const block_t& b, hash_t& res) {
-  binary_array_t bd;
-  if (!get_block_hashing_blob(b, bd)) {
-    return false;
-  }
-
-  cn_slow_hash(bd.data(), bd.size(), res);
-  return true;
-}
-
 std::vector<uint32_t> relative_output_offsets_to_absolute(const std::vector<uint32_t>& off) {
   std::vector<uint32_t> res = off;
   for (size_t i = 1; i < res.size(); i++)

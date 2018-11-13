@@ -55,11 +55,6 @@ uint64_t get_tx_fee(const transaction_t& tx);
 bool generate_key_image_helper(const account_keys_t& ack, const crypto::public_key_t& tx_public_key, size_t real_output_index, key_pair_t& in_ephemeral, crypto::key_image_t& ki);
 std::string short_hash_str(const crypto::hash_t& h);
 
-bool get_block_hashing_blob(const block_t& b, binary_array_t& blob);
-bool get_aux_block_header_hash(const block_t& b, crypto::hash_t& res);
-// bool Block::getHash(const block_t& b, crypto::hash_t& res);
-// crypto::hash_t Block::getHash(const block_t& b);
-bool get_block_longhash(const block_t& b, crypto::hash_t& res);
 bool get_inputs_money_amount(const transaction_t& tx, uint64_t& money);
 uint64_t get_outs_money_amount(const transaction_t& tx);
 bool check_inputs_types_supported(const transaction_prefix_t& tx);

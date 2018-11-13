@@ -1,6 +1,7 @@
 #pragma once
 
 #include "block.h"
+#include "array.h"
 #include "cryptonote/core/blockchain/serializer/transaction_entry.hpp"
 
 namespace cryptonote
@@ -32,8 +33,13 @@ class Block
 
 
     //Static tool functions
+    static bool getBlob(const block_t& b, binary_array_t& ba);
     static bool getHash(const block_t& block, crypto::hash_t& hash);
     static crypto::hash_t getHash(const block_t&block);
+
+    static bool getLongHash(const block_t& b, crypto::hash_t& res);
+    static bool getAuxHeaderHash(const block_t& b, crypto::hash_t& res);
+
 
     static bool checkProofOfWork(const block_t &block, difficulty_t currentDiffic, crypto::hash_t &proofOfWork);
 

@@ -22,6 +22,7 @@
 #include "serialization/SerializationTools.h"
 
 #include "CryptoNoteFormatUtils.h"
+#include "cryptonote/structures/block_entry.h"
 #include "TransactionExtra.h"
 #include "cryptonote/core/account.h"
 
@@ -269,7 +270,7 @@ namespace cryptonote
           for (uint32_t nonce = startNonce + i; !found; nonce += nthreads) {
             lb.nonce = nonce;
 
-            if (!get_block_longhash(lb, h)) {
+            if (!Block::getLongHash(lb, h)) {
               return;
             }
 
@@ -294,7 +295,7 @@ namespace cryptonote
     } else {
       for (; bl.nonce != std::numeric_limits<uint32_t>::max(); bl.nonce++) {
         crypto::hash_t h;
-        if (!get_block_longhash(bl, h)) {
+        if (!Block::getLongHash(bl, h)) {
           return false;
         }
 
@@ -370,7 +371,7 @@ namespace cryptonote
 
       b.nonce = nonce;
       crypto::hash_t h;
-      if (!m_stop && !get_block_longhash(b, h)) {
+      if (!m_stop && !Block::getLongHash(b, h)) {
         logger(ERROR) << "Failed to get block long hash";
         m_stop = true;
       }

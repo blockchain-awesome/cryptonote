@@ -87,7 +87,7 @@ TEST_F(BlockTest, create)
   hash_t h;
   hash_t h1 = boost::value_initialized<hash_t>();
 
-  ASSERT_TRUE(get_block_longhash(b, h));
+  ASSERT_TRUE(Block::getLongHash(b, h));
   ASSERT_TRUE(Block::checkProofOfWork(b, 0, h));
 
   // std::string filename = c.txPoolFileName(true);

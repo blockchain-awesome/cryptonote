@@ -1,3 +1,5 @@
+#include "common/varint.h"
+#include "common/StringTools.h"
 #include "block.h"
 #include "array.h"
 #include <boost/utility/value_init.hpp>
@@ -29,9 +31,40 @@ std::string Block::toString(const block_entry_t &block)
   return ss.str();
 }
 
+bool Block::getBlob(const block_t& b, binary_array_t& ba) {
+  if (!toBinaryArray(static_cast<const block_header_t&>(b), ba)) {
+    return false;
+  }
+
+  hash_t treeRootHash = get_tx_tree_hash(b);
+  ba.insert(ba.end(), treeRootHash.data, treeRootHash.data + 32);
+  auto transactionCount = Common::asBinaryArray(Tools::get_varint_data(b.transactionHashes.size() + 1));
+  ba.insert(ba.end(), transactionCount.begin(), transactionCount.end());
+  return true;
+}
+
+bool Block::getAuxHeaderHash(const block_t& b, crypto::hash_t& res) {
+  binary_array_t blob;
+  if (!Block::getBlob(b, blob)) {
+    return false;
+  }
+
+  return getObjectHash(blob, res);
+}
+
+bool Block::getLongHash(const block_t& b, crypto::hash_t& res) {
+  binary_array_t bd;
+  if (!Block::getBlob(b, bd)) {
+    return false;
+  }
+
+  cn_slow_hash(bd.data(), bd.size(), res);
+  return true;
+}
+
 bool Block::getHash(const block_t& block, crypto::hash_t& hash) {
   binary_array_t ba;
-  if (!get_block_hashing_blob(block, ba)) {
+  if (!Block::getBlob(block, ba)) {
     return false;
   }
 
@@ -70,7 +103,7 @@ bool Block::checkProofOfWork(const block_t &block, difficulty_t currentDiffic,
                              crypto::hash_t &proofOfWork)
 {
 
-  get_block_longhash(block, proofOfWork);
+  Block::getLongHash(block, proofOfWork);
   return check_hash(proofOfWork, currentDiffic);
 }
 } // namespace cryptonote
