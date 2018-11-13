@@ -8,7 +8,7 @@
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/core/IBlock.h"
 #include "cryptonote/core/VerificationContext.h"
-
+#include "cryptonote/structures/block_entry.h"
 
 ICoreStub::ICoreStub() :
     topHeight(0),
@@ -277,7 +277,7 @@ bool ICoreStub::getMultisigOutputReference(const cryptonote::multi_signature_inp
 
 void ICoreStub::addBlock(const cryptonote::block_t& block) {
   uint32_t height = boost::get<cryptonote::base_input_t>(block.baseTransaction.inputs.front()).blockIndex;
-  crypto::hash_t hash = cryptonote::get_block_hash(block);
+  crypto::hash_t hash = cryptonote::Block::getHash(block);
   if (height > topHeight) {
     topHeight = height;
     topId = hash;

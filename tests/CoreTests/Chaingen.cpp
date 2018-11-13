@@ -201,7 +201,7 @@ bool fill_tx_sources(std::vector<transaction_source_entry_t>& sources, const std
 
     std::vector<cryptonote::block_t> blockchain;
     map_hash2tx_t mtx;
-    if (!find_block_chain(events, blockchain, mtx, get_block_hash(blk_head)))
+    if (!find_block_chain(events, blockchain, mtx, Block::getHash(blk_head)))
         return false;
 
     if (!init_output_indices(outs, outs_mine, blockchain, mtx, from))
@@ -350,7 +350,7 @@ bool find_block_chain(const std::vector<test_event_entry>& events, std::vector<c
         if (typeid(block_t) == ev.type())
         {
             const block_t* blk = &boost::get<block_t>(ev);
-            block_index[get_block_hash(*blk)] = blk;
+            block_index[Block::getHash(*blk)] = blk;
         }
         else if (typeid(transaction_t) == ev.type())
         {

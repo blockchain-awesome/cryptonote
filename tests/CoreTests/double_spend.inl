@@ -85,7 +85,7 @@ bool gen_double_spend_base<concrete_test>::check_double_spend(cryptonote::core& 
   std::vector<cryptonote::block_t> chain;
   map_hash2tx_t mtx;
   std::vector<cryptonote::block_t> blocks(block_list.begin(), block_list.end());
-  r = find_block_chain(events, chain, mtx, get_block_hash(blocks.back()));
+  r = find_block_chain(events, chain, mtx, Block::getHash(blocks.back()));
   CHECK_TEST_CONDITION(r);
   CHECK_EQ(concrete_test::expected_bob_balance, get_balance(bob_account, blocks, mtx));
   CHECK_EQ(concrete_test::expected_alice_balance, get_balance(alice_account, blocks, mtx));

@@ -17,6 +17,7 @@
 #include <system_error>
 
 #include "crypto/crypto.h"
+#include "cryptonote/structures/block_entry.h"
 
 #include "blockchain_explorer/BlockchainExplorerDataBuilder.h"
 
@@ -76,7 +77,7 @@ void INodeTrivialRefreshStub::doGetNewBlocks(std::vector<crypto::hash_t> knownBl
 
   for (const auto& id : knownBlockIds) {
     start = std::find_if(blockchain.begin(), blockchain.end(), 
-      [&id](block_t& block) { return get_block_hash(block) == id; });
+      [&id](block_t& block) { return Block::getHash(block) == id; });
     if (start != blockchain.end())
       break;
   }
@@ -243,7 +244,7 @@ void INodeTrivialRefreshStub::queryBlocks(std::vector<crypto::hash_t>&& knownBlo
       }
 
       entry.hasBlock = true;
-      entry.blockHash = get_block_hash(entry.block);
+      entry.blockHash = Block::getHash(entry.block);
 
       for (const auto& txBlob: item.txs) {
         transaction_t tx;
@@ -368,7 +369,7 @@ void INodeTrivialRefreshStub::doGetBlocks(const std::vector<uint32_t>& blockHeig
     BlockDetails b = BlockDetails();
     b.height = height;
     b.isOrphaned = false;
-    crypto::hash_t hash = get_block_hash(m_blockchainGenerator.getBlockchain()[height]);
+    crypto::hash_t hash = Block::getHash(m_blockchainGenerator.getBlockchain()[height]);
     b.hash = hash;
     if (!m_blockchainGenerator.getGeneratedTransactionsNumber(height, b.alreadyGeneratedTransactions)) {
       callback(std::error_code(EDOM, std::generic_category()));
@@ -413,7 +414,7 @@ void INodeTrivialRefreshStub::doGetBlocks(const std::vector<crypto::hash_t>& blo
         m_blockchainGenerator.getBlockchain().begin(), 
         m_blockchainGenerator.getBlockchain().end(), 
         [&hash](const block_t& block) -> bool {
-          return hash == get_block_hash(block);
+          return hash == Block::getHash(block);
         }
     );
     if (iter == m_blockchainGenerator.getBlockchain().end()) {
@@ -422,7 +423,7 @@ void INodeTrivialRefreshStub::doGetBlocks(const std::vector<crypto::hash_t>& blo
       return;
     }
     BlockDetails b = BlockDetails();
-    crypto::hash_t actualHash = get_block_hash(*iter);
+    crypto::hash_t actualHash = Block::getHash(*iter);
     b.hash = actualHash;
     b.isOrphaned = false;
     blocks.push_back(b);
@@ -474,7 +475,7 @@ void INodeTrivialRefreshStub::doGetBlocks(uint64_t timestampBegin, uint64_t time
         m_blockchainGenerator.getBlockchain().begin(), 
         m_blockchainGenerator.getBlockchain().end(), 
         [&hash](const block_t& block) -> bool {
-          return hash == get_block_hash(block);
+          return hash == Block::getHash(block);
         }
     );
     if (iter == m_blockchainGenerator.getBlockchain().end()) {
@@ -482,7 +483,7 @@ void INodeTrivialRefreshStub::doGetBlocks(uint64_t timestampBegin, uint64_t time
       return;
     }
     BlockDetails b = BlockDetails();
-    crypto::hash_t actualHash = get_block_hash(*iter);
+    crypto::hash_t actualHash = Block::getHash(*iter);
     b.hash = actualHash;
     b.isOrphaned = false;
     b.timestamp = iter->timestamp;

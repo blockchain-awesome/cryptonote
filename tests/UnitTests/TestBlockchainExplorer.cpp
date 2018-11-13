@@ -16,6 +16,7 @@
 #include "TestBlockchainGenerator.h"
 
 #include "cryptonote/core/CryptoNoteTools.h"
+#include "cryptonote/structures/block_entry.h"
 
 #include "logging/FileLogger.h"
 
@@ -224,7 +225,7 @@ TEST_F(BlockchainExplorerTests, getBlocksByHashGenesis) {
   std::vector<hash_t> blockHashes;
   ASSERT_GE(generator.getBlockchain().size(), 1);
 
-  hash_t genesisHash = get_block_hash(generator.getBlockchain().front());
+  hash_t genesisHash = Block::getHash(generator.getBlockchain().front());
   blockHashes.push_back(genesisHash);
   std::vector<BlockDetails> blocks;
 
@@ -249,7 +250,7 @@ TEST_F(BlockchainExplorerTests, getBlocksByHashMany) {
     if (blockHashes.size() == NUMBER_OF_BLOCKS) {
       break;
     }
-    hash_t hash = get_block_hash(block);
+    hash_t hash = Block::getHash(block);
     blockHashes.push_back(hash);
   }
 
@@ -284,7 +285,7 @@ TEST_F(BlockchainExplorerTests, getBlocksByHashFail) {
 TEST_F(BlockchainExplorerTests, getBlocksByHashNotInited) {
   BlockchainExplorer newExplorer(nodeStub, logger);
   std::vector<hash_t> blockHashes;
-  hash_t genesisHash = get_block_hash(generator.getBlockchain().front());
+  hash_t genesisHash = Block::getHash(generator.getBlockchain().front());
   blockHashes.push_back(genesisHash);
   std::vector<BlockDetails> blocks;
   ASSERT_ANY_THROW(newExplorer.getBlocks(blockHashes, blocks));
@@ -736,7 +737,7 @@ TEST_F(BlockchainExplorerTests, blockchainUpdatedMany) {
     if (blockHashes.size() == NUMBER_OF_BLOCKS) {
       break;
     }
-    hash_t hash = get_block_hash(*iter);
+    hash_t hash = Block::getHash(*iter);
     blockHashes.push_back(hash);
   }
 
@@ -1020,7 +1021,7 @@ TEST_F(BlockchainExplorerTests, unexpectedExeption) {
 TEST_F(BlockchainExplorerTests, getBlocksByTimestampGenesis) {
   ASSERT_GE(generator.getBlockchain().size(), 1);
 
-  hash_t genesisHash = get_block_hash(generator.getBlockchain().front());
+  hash_t genesisHash = Block::getHash(generator.getBlockchain().front());
 
   std::vector<BlockDetails> blocks;
 
@@ -1049,7 +1050,7 @@ TEST_F(BlockchainExplorerTests, getBlocksByTimestampMany) {
   ASSERT_EQ(generator.getBlockchain().size(), NUMBER_OF_BLOCKS + 2);
 
   for (auto iter = generator.getBlockchain().begin() + 2; iter != generator.getBlockchain().end(); iter++) {
-    hash_t hash = get_block_hash(*iter);
+    hash_t hash = Block::getHash(*iter);
     blockHashes.push_back(hash);
   }
 

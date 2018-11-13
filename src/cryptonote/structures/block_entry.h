@@ -30,6 +30,11 @@ class Block
   public:
     Block(block_entry_t &block) : m_block(block){};
 
+
+    //Static tool functions
+    static bool getHash(const block_t& block, crypto::hash_t& hash);
+    static crypto::hash_t getHash(const block_t&block);
+
     static bool checkProofOfWork(const block_t &block, difficulty_t currentDiffic, crypto::hash_t &proofOfWork);
 
     static block_t genesis(config::config_t &conf);

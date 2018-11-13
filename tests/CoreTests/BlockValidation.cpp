@@ -154,7 +154,7 @@ bool gen_block_invalid_prev_id::generate(std::vector<test_event_entry>& events) 
   BLOCK_VALIDATION_INIT_GENERATE();
 
   block_t blk_1;
-  crypto::hash_t prev_id = get_block_hash(blk_0);
+  crypto::hash_t prev_id = Block::getHash(blk_0);
   reinterpret_cast<char &>(prev_id) ^= 1;
   generator.constructBlockManually(blk_1, blk_0, miner_account, 
     test_generator::bf_major_ver | test_generator::bf_prev_id, BLOCK_MAJOR_VERSION_1, 0, 0, prev_id);

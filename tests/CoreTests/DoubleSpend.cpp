@@ -61,7 +61,7 @@ bool gen_double_spend_in_different_chains::check_double_spend(cryptonote::core& 
 
   std::vector<cryptonote::block_t> chain;
   map_hash2tx_t mtx;
-  r = find_block_chain(events, chain, mtx, get_block_hash(blocks.back()));
+  r = find_block_chain(events, chain, mtx, Block::getHash(blocks.back()));
   CHECK_TEST_CONDITION(r);
   CHECK_EQ(0, get_balance(bob_account, blocks, mtx));
   CHECK_EQ(send_amount - m_currency.minimumFee(), get_balance(alice_account, blocks, mtx));

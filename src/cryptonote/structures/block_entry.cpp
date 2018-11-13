@@ -23,12 +23,26 @@ std::string Block::toString(const block_entry_t &block)
   ss << "timestamp: " << block.bl.timestamp << std::endl;
   ss << "cumulative difficulty: " << block.cumulative_difficulty << std::endl;
   ss << "cumulative size: " << block.block_cumulative_size << std::endl;
-  ss << "hash: " << get_block_hash(block.bl) << std::endl;
+  ss << "hash: " << Block::getHash(block.bl) << std::endl;
   ss << "nonce " << block.bl.nonce << std::endl;
   ss << "tx_count " << block.bl.transactionHashes.size() << std::endl;
   return ss.str();
 }
 
+bool Block::getHash(const block_t& block, crypto::hash_t& hash) {
+  binary_array_t ba;
+  if (!get_block_hashing_blob(block, ba)) {
+    return false;
+  }
+
+  return getObjectHash(ba, hash);
+}
+
+hash_t Block::getHash(const block_t&block) {
+  hash_t hash = NULL_HASH;
+  Block::getHash(block, hash);
+  return hash;
+}
 block_t Block::genesis(config::config_t &conf)
 {
   block_t block = boost::value_initialized<block_t>();

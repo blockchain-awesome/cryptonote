@@ -9,6 +9,7 @@
 
 #include "common/StringTools.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
+#include "cryptonote/structures/block_entry.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/core/TransactionExtra.h"
 #include "CryptoNoteConfig.h"
@@ -78,7 +79,7 @@ size_t BlockchainExplorerDataBuilder::median(std::vector<size_t>& v) {
 }
 
 bool BlockchainExplorerDataBuilder::fillBlockDetails(const block_t&block, BlockDetails& blockDetails) {
-  crypto::hash_t hash = get_block_hash(block);
+  crypto::hash_t hash = Block::getHash(block);
 
   blockDetails.majorVersion = block.majorVersion;
   blockDetails.minorVersion = block.minorVersion;

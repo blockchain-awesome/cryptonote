@@ -11,6 +11,7 @@
 
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/CryptoNoteTools.h"
+#include "cryptonote/structures/block_entry.h"
 #include "cryptonote/core/currency.h"
 #include "cryptonote/core/VerificationContext.h"
 #include "p2p/LevinProtocol.h"
@@ -335,7 +336,7 @@ int CryptoNoteProtocolHandler::handle_response_get_objects(int command, NOTIFY_R
 
     //to avoid concurrency in core between connections, suspend connections which delivered block later then first one
     if (count == 2) {
-      if (m_core.have_block(get_block_hash(b))) {
+      if (m_core.have_block(Block::getHash(b))) {
         context.m_state = CryptoNoteConnectionContext::state_idle;
         context.m_needed_objects.clear();
         context.m_requested_objects.clear();
@@ -344,7 +345,7 @@ int CryptoNoteProtocolHandler::handle_response_get_objects(int command, NOTIFY_R
       }
     }
 
-    auto blockHash = get_block_hash(b);
+    auto blockHash = Block::getHash(b);
     auto req_it = context.m_requested_objects.find(blockHash);
     if (req_it == context.m_requested_objects.end()) {
       logger(Logging::ERROR) << context << "sent wrong NOTIFY_RESPONSE_GET_OBJECTS: block with id=" << Common::podToHex(blockHash)

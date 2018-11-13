@@ -12,6 +12,7 @@
 #include "CryptoNoteConfig.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
+#include "cryptonote/structures/block_entry.h"
 #include "cryptonote/core/TransactionExtra.h"
 #include "rpc/HttpClient.h"
 #include "rpc/CoreRpcServerCommandsDefinitions.h"
@@ -189,10 +190,10 @@ bool MinerManager::submitBlock(const block_t& minedBlock, const std::string& dae
     System::EventLock lk(m_httpEvent);
     JsonRpc::invokeJsonRpcCommand(client, "submitblock", request, response);
 
-    m_logger(Logging::INFO) << "Block has been successfully submitted. block_t hash: " << Common::podToHex(get_block_hash(minedBlock));
+    m_logger(Logging::INFO) << "Block has been successfully submitted. block_t hash: " << Common::podToHex(Block::getHash(minedBlock));
     return true;
   } catch (std::exception& e) {
-    m_logger(Logging::WARNING) << "Couldn't submit block: " << Common::podToHex(get_block_hash(minedBlock)) << ", reason: " << e.what();
+    m_logger(Logging::WARNING) << "Couldn't submit block: " << Common::podToHex(Block::getHash(minedBlock)) << ", reason: " << e.what();
     return false;
   }
 }

@@ -440,20 +440,20 @@ bool get_block_hashing_blob(const block_t& b, binary_array_t& ba) {
   return true;
 }
 
-bool get_block_hash(const block_t& b, hash_t& res) {
-  binary_array_t ba;
-  if (!get_block_hashing_blob(b, ba)) {
-    return false;
-  }
+// bool Block::getHash(const block_t& b, hash_t& res) {
+//   binary_array_t ba;
+//   if (!get_block_hashing_blob(b, ba)) {
+//     return false;
+//   }
 
-  return getObjectHash(ba, res);
-}
+//   return getObjectHash(ba, res);
+// }
 
-hash_t get_block_hash(const block_t& b) {
-  hash_t p = NULL_HASH;
-  get_block_hash(b, p);
-  return p;
-}
+// hash_t Block::getHash(const block_t& b) {
+//   hash_t p = NULL_HASH;
+//   Block::getHash(b, p);
+//   return p;
+// }
 
 bool get_aux_block_header_hash(const block_t& b, hash_t& res) {
   binary_array_t blob;

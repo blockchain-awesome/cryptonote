@@ -109,7 +109,7 @@ bool gen_chain_switch_1::check_split_not_switched(cryptonote::core& c, size_t ev
 
   std::vector<cryptonote::block_t> chain;
   map_hash2tx_t mtx;
-  r = find_block_chain(events, chain, mtx, get_block_hash(blocks.back()));
+  r = find_block_chain(events, chain, mtx, Block::getHash(blocks.back()));
   CHECK_TEST_CONDITION(r);
   CHECK_EQ(MK_COINS(8),  get_balance(m_recipient_account_1, chain, mtx));
   CHECK_EQ(MK_COINS(10), get_balance(m_recipient_account_2, chain, mtx));
@@ -157,7 +157,7 @@ bool gen_chain_switch_1::check_split_switched(cryptonote::core& c, size_t ev_ind
 
   std::vector<cryptonote::block_t> chain;
   map_hash2tx_t mtx;
-  r = find_block_chain(events, chain, mtx, get_block_hash(blocks.back()));
+  r = find_block_chain(events, chain, mtx, Block::getHash(blocks.back()));
   CHECK_TEST_CONDITION(r);
   CHECK_EQ(MK_COINS(8),  get_balance(m_recipient_account_1, chain, mtx));
   CHECK_EQ(MK_COINS(3),  get_balance(m_recipient_account_2, chain, mtx));

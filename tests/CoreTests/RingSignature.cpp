@@ -79,7 +79,7 @@ bool gen_ring_signature_1::check_balances_1(cryptonote::core& c, size_t ev_index
 
   std::vector<cryptonote::block_t> chain;
   map_hash2tx_t mtx;
-  r = find_block_chain(events, chain, mtx, get_block_hash(blocks.back()));
+  r = find_block_chain(events, chain, mtx, Block::getHash(blocks.back()));
   CHECK_TEST_CONDITION(r);
   CHECK_EQ(MK_COINS(130) + 2 * rnd_11 + rnd_20 + 3 * rnd_29, get_balance(m_bob_account, chain, mtx));
   CHECK_EQ(0, get_balance(m_alice_account, chain, mtx));
@@ -97,7 +97,7 @@ bool gen_ring_signature_1::check_balances_2(cryptonote::core& c, size_t ev_index
 
   std::vector<cryptonote::block_t> chain;
   map_hash2tx_t mtx;
-  r = find_block_chain(events, chain, mtx, get_block_hash(blocks.back()));
+  r = find_block_chain(events, chain, mtx, Block::getHash(blocks.back()));
   CHECK_TEST_CONDITION(r);
   CHECK_EQ(MK_COINS(1), get_balance(m_bob_account, chain, mtx));
   CHECK_EQ(MK_COINS(129) + 2 * rnd_11 + rnd_20 + 3 * rnd_29 - m_currency.minimumFee(), get_balance(m_alice_account, chain, mtx));
@@ -160,7 +160,7 @@ bool gen_ring_signature_2::check_balances_1(cryptonote::core& c, size_t ev_index
 
   std::vector<cryptonote::block_t> chain;
   map_hash2tx_t mtx;
-  r = find_block_chain(events, chain, mtx, get_block_hash(blocks.back()));
+  r = find_block_chain(events, chain, mtx, Block::getHash(blocks.back()));
   CHECK_TEST_CONDITION(r);
   CHECK_EQ(MK_COINS(244), get_balance(m_bob_account, chain, mtx));
   CHECK_EQ(0, get_balance(m_alice_account, chain, mtx));
@@ -178,7 +178,7 @@ bool gen_ring_signature_2::check_balances_2(cryptonote::core& c, size_t ev_index
 
   std::vector<cryptonote::block_t> chain;
   map_hash2tx_t mtx;
-  r = find_block_chain(events, chain, mtx, get_block_hash(blocks.back()));
+  r = find_block_chain(events, chain, mtx, Block::getHash(blocks.back()));
   CHECK_TEST_CONDITION(r);
   CHECK_EQ(0, get_balance(m_bob_account, chain, mtx));
   CHECK_EQ(MK_COINS(244) - m_currency.minimumFee(), get_balance(m_alice_account, chain, mtx));
@@ -244,7 +244,7 @@ bool gen_ring_signature_big::generate(std::vector<test_event_entry>& events) con
 
     std::vector<cryptonote::block_t> chain;
     map_hash2tx_t mtx;
-    bool r = find_block_chain(events, chain, mtx, get_block_hash(blk_i));
+    bool r = find_block_chain(events, chain, mtx, Block::getHash(blk_i));
     CHECK_AND_NO_ASSERT_MES(r, false, "failed to call find_block_chain");
     std::cout << i << ": " << get_balance(accounts[i], chain, mtx) << std::endl;
   }
@@ -270,7 +270,7 @@ bool gen_ring_signature_big::check_balances_1(cryptonote::core& c, size_t ev_ind
 
   std::vector<cryptonote::block_t> chain;
   map_hash2tx_t mtx;
-  r = find_block_chain(events, chain, mtx, get_block_hash(blocks.back()));
+  r = find_block_chain(events, chain, mtx, Block::getHash(blocks.back()));
   CHECK_TEST_CONDITION(r);
   CHECK_EQ(m_tx_amount + m_currency.minimumFee(), get_balance(m_bob_account, chain, mtx));
   CHECK_EQ(0, get_balance(m_alice_account, chain, mtx));
@@ -295,7 +295,7 @@ bool gen_ring_signature_big::check_balances_2(cryptonote::core& c, size_t ev_ind
 
   std::vector<cryptonote::block_t> chain;
   map_hash2tx_t mtx;
-  r = find_block_chain(events, chain, mtx, get_block_hash(blocks.back()));
+  r = find_block_chain(events, chain, mtx, Block::getHash(blocks.back()));
   CHECK_TEST_CONDITION(r);
   CHECK_EQ(0, get_balance(m_bob_account, chain, mtx));
   CHECK_EQ(m_tx_amount, get_balance(m_alice_account, chain, mtx));

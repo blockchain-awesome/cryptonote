@@ -18,6 +18,7 @@
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/core/VerificationContext.h"
 #include "common/StringTools.h"
+#include "cryptonote/structures/block_entry.h"
 
 using namespace crypto;
 using namespace cryptonote;
@@ -289,7 +290,7 @@ TEST_F(InProcessNodeTests, getBlocksByHeightMany) {
     EXPECT_EQ(sameHeight.get<1>().size(), 1);
     for (const cryptonote::BlockDetails& block : sameHeight.get<1>()) {
       EXPECT_EQ(block.height, sameHeight.get<0>().get<0>());
-      crypto::hash_t expectedCryptoHash = cryptonote::get_block_hash(sameHeight.get<0>().get<1>());
+      crypto::hash_t expectedCryptoHash = cryptonote::Block::getHash(sameHeight.get<0>().get<1>());
       hash_t expectedHash = reinterpret_cast<const hash_t&>(expectedCryptoHash);
       EXPECT_EQ(block.hash, expectedHash);
       EXPECT_FALSE(block.isOrphaned);
@@ -367,7 +368,7 @@ TEST_F(InProcessNodeTests, getBlocksByHashMany) {
 
   for (auto iter = generator.getBlockchain().begin() + 1; iter != generator.getBlockchain().end(); iter++) {
     expectedBlocks.push_back(*iter);
-    blockHashes.push_back(cryptonote::get_block_hash(*iter));
+    blockHashes.push_back(cryptonote::Block::getHash(*iter));
     coreStub.addBlock(*iter);
   }
 
@@ -385,7 +386,7 @@ TEST_F(InProcessNodeTests, getBlocksByHashMany) {
   auto range1 = boost::combine(blockHashes, expectedBlocks);
   auto range = boost::combine(range1, actualBlocks);
   for (const boost::tuple<boost::tuple<crypto::hash_t, cryptonote::block_t>, cryptonote::BlockDetails>& sameHeight : range) {
-    crypto::hash_t expectedCryptoHash = cryptonote::get_block_hash(sameHeight.get<0>().get<1>());
+    crypto::hash_t expectedCryptoHash = cryptonote::Block::getHash(sameHeight.get<0>().get<1>());
     EXPECT_EQ(expectedCryptoHash, sameHeight.get<0>().get<0>());
     hash_t expectedHash = reinterpret_cast<const hash_t&>(expectedCryptoHash);
     EXPECT_EQ(sameHeight.get<1>().hash, expectedHash);
@@ -469,7 +470,7 @@ TEST_F(InProcessNodeTests, getTxMany) {
     prevBlockchainSize = generator.getBlockchain().size();
     coreStub.addBlock(generator.getBlockchain().back());
     coreStub.addTransaction(tx);
-    expectedTransactions.push_back(std::make_tuple(tx, cryptonote::get_block_hash(generator.getBlockchain().back()), boost::get<cryptonote::base_input_t>(generator.getBlockchain().back().baseTransaction.inputs.front()).blockIndex));
+    expectedTransactions.push_back(std::make_tuple(tx, cryptonote::Block::getHash(generator.getBlockchain().back()), boost::get<cryptonote::base_input_t>(generator.getBlockchain().back().baseTransaction.inputs.front()).blockIndex));
   }
 
   ASSERT_EQ(transactionHashes.size(), BLOCKCHAIN_TX_NUMBER);
@@ -535,7 +536,7 @@ TEST_F(InProcessNodeTests, getTxFail) {
     prevBlockchainSize = generator.getBlockchain().size();
     coreStub.addBlock(generator.getBlockchain().back());
     coreStub.addTransaction(tx);
-    expectedTransactions.push_back(std::make_tuple(tx, cryptonote::get_block_hash(generator.getBlockchain().back()), boost::get<cryptonote::base_input_t>(generator.getBlockchain().back().baseTransaction.inputs.front()).blockIndex));
+    expectedTransactions.push_back(std::make_tuple(tx, cryptonote::Block::getHash(generator.getBlockchain().back()), boost::get<cryptonote::base_input_t>(generator.getBlockchain().back().baseTransaction.inputs.front()).blockIndex));
   }
 
   ASSERT_EQ(transactionHashes.size(), BLOCKCHAIN_TX_NUMBER);
