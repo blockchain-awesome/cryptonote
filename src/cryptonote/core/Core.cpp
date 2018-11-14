@@ -670,7 +670,7 @@ bool core::queryBlocks(const std::vector<crypto::hash_t>& knownBlockIds, uint64_
       m_blockchain.getTransactions(b.transactionHashes, txs, missedTxs);
 
       // fill data
-      block_complete_entry& completeEntry = item;
+      block_complete_entry_t& completeEntry = item;
       completeEntry.block = asString(toBinaryArray(b));
       for (auto& tx : txs) {
         completeEntry.txs.push_back(asString(toBinaryArray(tx)));

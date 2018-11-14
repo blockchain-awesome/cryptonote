@@ -94,7 +94,7 @@ void InProcessNode::workerFunc() {
   ioService.run();
 }
 
-void InProcessNode::getNewBlocks(std::vector<crypto::hash_t>&& knownBlockIds, std::vector<cryptonote::block_complete_entry>& newBlocks,
+void InProcessNode::getNewBlocks(std::vector<crypto::hash_t>&& knownBlockIds, std::vector<cryptonote::block_complete_entry_t>& newBlocks,
   uint32_t& startHeight, const Callback& callback)
 {
   std::unique_lock<std::mutex> lock(mutex);
@@ -115,7 +115,7 @@ void InProcessNode::getNewBlocks(std::vector<crypto::hash_t>&& knownBlockIds, st
   );
 }
 
-void InProcessNode::getNewBlocksAsync(std::vector<crypto::hash_t>& knownBlockIds, std::vector<cryptonote::block_complete_entry>& newBlocks,
+void InProcessNode::getNewBlocksAsync(std::vector<crypto::hash_t>& knownBlockIds, std::vector<cryptonote::block_complete_entry_t>& newBlocks,
   uint32_t& startHeight, const Callback& callback)
 {
   std::error_code ec = doGetNewBlocks(std::move(knownBlockIds), newBlocks, startHeight);
@@ -123,7 +123,7 @@ void InProcessNode::getNewBlocksAsync(std::vector<crypto::hash_t>& knownBlockIds
 }
 
 //it's always protected with mutex
-std::error_code InProcessNode::doGetNewBlocks(std::vector<crypto::hash_t>&& knownBlockIds, std::vector<cryptonote::block_complete_entry>& newBlocks, uint32_t& startHeight) {
+std::error_code InProcessNode::doGetNewBlocks(std::vector<crypto::hash_t>&& knownBlockIds, std::vector<cryptonote::block_complete_entry_t>& newBlocks, uint32_t& startHeight) {
   {
     std::unique_lock<std::mutex> lock(mutex);
     if (state != INITIALIZED) {
@@ -149,7 +149,7 @@ std::error_code InProcessNode::doGetNewBlocks(std::vector<crypto::hash_t>&& know
       auto completeBlock = core.getBlock(blockId);
       assert(completeBlock != nullptr);
 
-      cryptonote::block_complete_entry be;
+      cryptonote::block_complete_entry_t be;
       be.block = asString(toBinaryArray(completeBlock->getBlock()));
 
       be.txs.reserve(completeBlock->getTransactionCount());

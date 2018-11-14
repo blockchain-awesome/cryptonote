@@ -324,7 +324,7 @@ int CryptoNoteProtocolHandler::handle_response_get_objects(int command, NOTIFY_R
   context.m_remote_blockchain_height = arg.current_blockchain_height;
 
   size_t count = 0;
-  for (const block_complete_entry& block_entry : arg.blocks) {
+  for (const block_complete_entry_t& block_entry : arg.blocks) {
     ++count;
     block_t b;
     if (!fromBinaryArray(b, asBinaryArray(block_entry.block))) {
@@ -355,7 +355,7 @@ int CryptoNoteProtocolHandler::handle_response_get_objects(int command, NOTIFY_R
     }
     if (b.transactionHashes.size() != block_entry.txs.size()) {
       logger(Logging::ERROR) << context << "sent wrong NOTIFY_RESPONSE_GET_OBJECTS: block with id=" << Common::podToHex(blockHash)
-        << ", transactionHashes.size()=" << b.transactionHashes.size() << " mismatch with block_complete_entry.m_txs.size()=" << block_entry.txs.size() << ", dropping connection";
+        << ", transactionHashes.size()=" << b.transactionHashes.size() << " mismatch with block_complete_entry_t.m_txs.size()=" << block_entry.txs.size() << ", dropping connection";
       context.m_state = CryptoNoteConnectionContext::state_shutdown;
       return 1;
     }
@@ -394,9 +394,9 @@ int CryptoNoteProtocolHandler::handle_response_get_objects(int command, NOTIFY_R
   return 1;
 }
 
-int CryptoNoteProtocolHandler::processObjects(CryptoNoteConnectionContext& context, const std::vector<block_complete_entry>& blocks) {
+int CryptoNoteProtocolHandler::processObjects(CryptoNoteConnectionContext& context, const std::vector<block_complete_entry_t>& blocks) {
 
-  for (const block_complete_entry& block_entry : blocks) {
+  for (const block_complete_entry_t& block_entry : blocks) {
     if (m_stop) {
       break;
     }

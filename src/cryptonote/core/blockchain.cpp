@@ -871,8 +871,8 @@ bool Blockchain::handleGetObjects(NOTIFY_REQUEST_GET_OBJECTS::request& arg, NOTI
     std::list<transaction_t> txs;
     getTransactions(bl.transactionHashes, txs, rsp.missed_ids);
     if (!(!missed_tx_id.size())) { logger(ERROR, BRIGHT_RED) << "Internal error: have missed missed_tx_id.size()=" << missed_tx_id.size() << ENDL << "for block id = " << Block::getHash(bl); return false; } //WTF???
-    rsp.blocks.push_back(block_complete_entry());
-    block_complete_entry& e = rsp.blocks.back();
+    rsp.blocks.push_back(block_complete_entry_t());
+    block_complete_entry_t& e = rsp.blocks.back();
     //pack block
     e.block = asString(toBinaryArray(bl));
     //pack transactions

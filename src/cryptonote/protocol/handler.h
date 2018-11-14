@@ -81,7 +81,7 @@ namespace cryptonote
     bool on_connection_synchronized();
     void updateObservedHeight(uint32_t peerHeight, const CryptoNoteConnectionContext& context);
     void recalculateMaxObservedHeight(const CryptoNoteConnectionContext& context);
-    int processObjects(CryptoNoteConnectionContext& context, const std::vector<block_complete_entry>& blocks);
+    int processObjects(CryptoNoteConnectionContext& context, const std::vector<block_complete_entry_t>& blocks);
     Logging::LoggerRef logger;
 
   private:

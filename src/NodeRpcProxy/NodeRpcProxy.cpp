@@ -323,7 +323,7 @@ void NodeRpcProxy::getRandomOutsByAmounts(std::vector<uint64_t>&& amounts, uint6
 }
 
 void NodeRpcProxy::getNewBlocks(std::vector<crypto::hash_t>&& knownBlockIds,
-                                std::vector<cryptonote::block_complete_entry>& newBlocks,
+                                std::vector<cryptonote::block_complete_entry_t>& newBlocks,
                                 uint32_t& startHeight,
                                 const Callback& callback) {
   std::lock_guard<std::mutex> lock(m_mutex);
@@ -483,7 +483,7 @@ std::error_code NodeRpcProxy::doGetRandomOutsByAmounts(std::vector<uint64_t>& am
 }
 
 std::error_code NodeRpcProxy::doGetNewBlocks(std::vector<crypto::hash_t>& knownBlockIds,
-                                             std::vector<cryptonote::block_complete_entry>& newBlocks,
+                                             std::vector<cryptonote::block_complete_entry_t>& newBlocks,
                                              uint32_t& startHeight) {
   cryptonote::COMMAND_RPC_GET_BLOCKS_FAST::request req = AUTO_VAL_INIT(req);
   cryptonote::COMMAND_RPC_GET_BLOCKS_FAST::response rsp = AUTO_VAL_INIT(rsp);

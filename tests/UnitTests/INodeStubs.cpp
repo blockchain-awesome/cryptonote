@@ -50,7 +50,7 @@ bool INodeDummyStub::removeObserver(INodeObserver* observer) {
   return observerManager.remove(observer);
 }
 
-void INodeTrivialRefreshStub::getNewBlocks(std::vector<crypto::hash_t>&& knownBlockIds, std::vector<block_complete_entry>& newBlocks, uint32_t& startHeight, const Callback& callback)
+void INodeTrivialRefreshStub::getNewBlocks(std::vector<crypto::hash_t>&& knownBlockIds, std::vector<block_complete_entry_t>& newBlocks, uint32_t& startHeight, const Callback& callback)
 {
   m_asyncCounter.addAsyncContext();
 
@@ -67,7 +67,7 @@ void INodeTrivialRefreshStub::waitForAsyncContexts() {
   m_asyncCounter.waitAsyncContextsFinish();
 }
 
-void INodeTrivialRefreshStub::doGetNewBlocks(std::vector<crypto::hash_t> knownBlockIds, std::vector<block_complete_entry>& newBlocks,
+void INodeTrivialRefreshStub::doGetNewBlocks(std::vector<crypto::hash_t> knownBlockIds, std::vector<block_complete_entry_t>& newBlocks,
         uint32_t& startHeight, std::vector<block_t> blockchain, const Callback& callback)
 {
   ContextCounterHolder counterHolder(m_asyncCounter);
@@ -93,7 +93,7 @@ void INodeTrivialRefreshStub::doGetNewBlocks(std::vector<crypto::hash_t> knownBl
 
   for (; m_lastHeight < blockchain.size(); ++m_lastHeight)
   {
-    block_complete_entry e;
+    block_complete_entry_t e;
     e.block = asString(toBinaryArray(blockchain[m_lastHeight]));
 
     for (auto hash : blockchain[m_lastHeight].transactionHashes)
@@ -226,7 +226,7 @@ void INodeTrivialRefreshStub::doGetRandomOutsByAmounts(std::vector<uint64_t> amo
 
 void INodeTrivialRefreshStub::queryBlocks(std::vector<crypto::hash_t>&& knownBlockIds, uint64_t timestamp,
         std::vector<BlockShortEntry>& newBlocks, uint32_t& startHeight, const Callback& callback) {
-  auto resultHolder = std::make_shared<std::vector<block_complete_entry>>();
+  auto resultHolder = std::make_shared<std::vector<block_complete_entry_t>>();
 
   getNewBlocks(std::move(knownBlockIds), *resultHolder, startHeight, [resultHolder, callback, &newBlocks](std::error_code ec)
   {
