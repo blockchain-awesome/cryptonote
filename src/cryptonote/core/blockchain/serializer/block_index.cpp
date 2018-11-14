@@ -44,7 +44,7 @@ namespace cryptonote {
   std::vector<crypto::hash_t> BlockIndex::buildSparseChain(const crypto::hash_t& startBlockId) const {
     assert(m_index.count(startBlockId) > 0);
 
-    uint32_t startBlockHeight;
+    uint32_t startBlockHeight = 0;
     getBlockHeight(startBlockId, startBlockHeight);
 
     std::vector<crypto::hash_t> result;
