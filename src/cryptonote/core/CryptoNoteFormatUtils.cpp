@@ -112,7 +112,7 @@ bool constructTransaction(
   tx.outputs.clear();
   tx.signatures.clear();
 
-  tx.version = CURRENT_TRANSACTION_VERSION;
+  tx.version = config::get().transaction.version.major;
   tx.unlockTime = unlock_time;
 
   tx.extra = extra;

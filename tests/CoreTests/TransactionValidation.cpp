@@ -12,7 +12,7 @@ namespace
 {
   struct tx_builder
   {
-    void step1_init(size_t version = CURRENT_TRANSACTION_VERSION, uint64_t unlock_time = 0)
+    void step1_init(size_t version = config::get().transaction.version.major, uint64_t unlock_time = 0)
     {
       m_tx.inputs.clear();
       m_tx.outputs.clear();
@@ -111,7 +111,7 @@ namespace
     fill_tx_sources_and_destinations(events, blk_head, from, to, amount, fee, 0, sources, destinations);
 
     tx_builder builder;
-    builder.step1_init(CURRENT_TRANSACTION_VERSION, unlock_time);
+    builder.step1_init(config::get().transaction.version.major, unlock_time);
     builder.step2_fill_inputs(from.getAccountKeys(), sources);
     builder.step3_fill_outputs(destinations);
     builder.step4_calc_hash();
@@ -152,7 +152,7 @@ bool gen_tx_big_version::generate(std::vector<test_event_entry>& events) const
   fill_tx_sources_and_destinations(events, blk_0, miner_account, miner_account, MK_COINS(1), m_currency.minimumFee(), 0, sources, destinations);
 
   tx_builder builder;
-  builder.step1_init(CURRENT_TRANSACTION_VERSION + 1, 0);
+  builder.step1_init(config::get().transaction.version.major + 1, 0);
   builder.step2_fill_inputs(miner_account.getAccountKeys(), sources);
   builder.step3_fill_outputs(destinations);
   builder.step4_calc_hash();

@@ -9,6 +9,7 @@ const char P2P_STAT_TRUSTED_PUB_KEY[] = "8f80f9a5a434a9f1510d13336228debfee9c918
 
 const uint8_t BLOCK_MAJOR_VERSION_1 = 1;
 const uint8_t BLOCK_MINOR_VERSION_0 = 0;
+const uint8_t CURRENT_TRANSACTION_VERSION = 1;
 
 //TODO Put here the name of your currency
 const char CRYPTONOTE_NAME[] = "vigcointest";
@@ -25,7 +26,8 @@ config_t data = {
     // Block Info
     {GENESIS_COINBASE_TX_HEX,
      {BLOCK_MAJOR_VERSION_1, BLOCK_MINOR_VERSION_0, 0}},
-    {1, 0, 0},
+    //Transaction Info
+    {CURRENT_TRANSACTION_VERSION, 0, 0},
     {P2P_STAT_TRUSTED_PUB_KEY,
      {1, 0, 0}},
     seeds,

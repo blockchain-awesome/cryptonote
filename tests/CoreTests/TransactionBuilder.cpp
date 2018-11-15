@@ -11,7 +11,7 @@ using namespace crypto;
 using namespace Common;
 
 TransactionBuilder::TransactionBuilder(const cryptonote::Currency& currency, uint64_t unlockTime)
-  : m_currency(currency), m_version(cryptonote::CURRENT_TRANSACTION_VERSION), m_unlockTime(unlockTime), 
+  : m_currency(currency), m_version(config::get().transaction.version.major), m_unlockTime(unlockTime), 
   // m_txKey(generateKeyPair())
   m_txKey(Key::generate())
   {}

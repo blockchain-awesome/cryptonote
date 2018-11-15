@@ -278,7 +278,7 @@ bool constructMinerTxManually(const cryptonote::Currency& currency, uint32_t hei
   out.target = key_output_t{outEphPublicKey};
   tx.outputs.push_back(out);
 
-  tx.version = CURRENT_TRANSACTION_VERSION;
+  tx.version = config::get().transaction.version.major;
   tx.unlockTime = height + currency.minedMoneyUnlockWindow();
 
   return true;

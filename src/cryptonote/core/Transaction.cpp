@@ -151,7 +151,7 @@ namespace cryptonote {
     transaction_extra_public_key_t pk = { txKeys.publicKey };
     extra.set(pk);
 
-    transaction.version = CURRENT_TRANSACTION_VERSION;
+    transaction.version = config::get().transaction.version.major;
     transaction.unlockTime = 0;
     transaction.extra = extra.serialize();
 

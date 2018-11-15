@@ -270,7 +270,7 @@ bool Currency::constructMinerTx(uint32_t height, size_t medianSize, uint64_t alr
     return false;
   }
 
-  tx.version = CURRENT_TRANSACTION_VERSION;
+  tx.version = config::get().transaction.version.major;
   //lock
   tx.unlockTime = height + m_minedMoneyUnlockWindow;
   tx.inputs.push_back(in);

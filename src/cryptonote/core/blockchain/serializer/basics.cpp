@@ -132,9 +132,9 @@ namespace cryptonote {
 void serialize(transaction_prefix_t& txP, ISerializer& serializer) {
   serializer(txP.version, "version");
 
-  if (CURRENT_TRANSACTION_VERSION < txP.version) {
-    throw std::runtime_error("Wrong transaction version");
-  }
+  // if (CURRENT_TRANSACTION_VERSION < txP.version) {
+  //   throw std::runtime_error("Wrong transaction version");
+  // }
 
   serializer(txP.unlockTime, "unlock_time");
   serializer(txP.inputs, "vin");
