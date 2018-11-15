@@ -290,14 +290,14 @@ std::string get_special_folder_path(int nfolder, bool iscreate)
 std::string path()
 {
     //namespace fs = boost::filesystem;
-    // Windows < Vista: C:\Documents and Settings\Username\Application Data\CRYPTONOTE_NAME
-    // Windows >= Vista: C:\Users\Username\AppData\Roaming\CRYPTONOTE_NAME
-    // Mac: ~/Library/Application Support/CRYPTONOTE_NAME
-    // Unix: ~/.CRYPTONOTE_NAME
+    // Windows < Vista: C:\Documents and Settings\Username\Application Data\config::get().name
+    // Windows >= Vista: C:\Users\Username\AppData\Roaming\config::get().name
+    // Mac: ~/Library/Application Support/config::get().name
+    // Unix: ~/.config::get().name
     std::string config_folder;
 #ifdef WIN32
     // Windows
-    config_folder = get_special_folder_path(CSIDL_APPDATA, true) + "/" + cryptonote::CRYPTONOTE_NAME;
+    config_folder = get_special_folder_path(CSIDL_APPDATA, true) + "/" + config::get().name;
 #else
     std::string pathRet;
     char *pszHome = getenv("HOME");
@@ -308,10 +308,10 @@ std::string path()
 #ifdef MAC_OSX
     // Mac
     pathRet /= "Library/Application Support";
-    config_folder = (pathRet + "/" + cryptonote::CRYPTONOTE_NAME);
+    config_folder = (pathRet + "/" + config::get().name);
 #else
     // Unix
-    config_folder = (pathRet + "/." + cryptonote::CRYPTONOTE_NAME);
+    config_folder = (pathRet + "/." + config::get().name);
 #endif
 #endif
 

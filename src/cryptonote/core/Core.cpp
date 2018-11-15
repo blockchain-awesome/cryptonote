@@ -293,6 +293,7 @@ bool core::add_new_tx(const transaction_t& tx, const crypto::hash_t& tx_hash, si
 bool core::get_block_template(block_t& b, const account_public_address_t& adr, difficulty_t& diffic, uint32_t& height, const binary_array_t& ex_nonce) {
   size_t median_size;
   uint64_t already_generated_coins;
+  config::config_t conf = m_currency.getConfig();
 
   {
     Locker lbs(m_blockchain.getMutex());;
@@ -304,8 +305,8 @@ bool core::get_block_template(block_t& b, const account_public_address_t& adr, d
     }
 
     b = boost::value_initialized<block_t>();
-    b.majorVersion = BLOCK_MAJOR_VERSION_1;
-    b.minorVersion = BLOCK_MINOR_VERSION_0;
+    b.majorVersion = conf.block.version.major;
+    b.minorVersion = conf.block.version.miner;
 
     b.previousBlockHash = get_tail_id();
     b.timestamp = time(NULL);

@@ -48,7 +48,7 @@ DaemonCommandsHandler::DaemonCommandsHandler(cryptonote::core& core, cryptonote:
 std::string DaemonCommandsHandler::get_commands_str()
 {
   std::stringstream ss;
-  ss << cryptonote::CRYPTONOTE_NAME << " v" << PROJECT_VERSION_LONG << ENDL;
+  ss << config::get().name << " v" << PROJECT_VERSION_LONG << ENDL;
   ss << "Commands: " << ENDL;
   std::string usage = m_consoleHandler.getUsage();
   boost::replace_all(usage, "\n", "\n  ");

@@ -16,12 +16,12 @@ int main(int argc, char *argv[])
   std::unique_ptr<api::Account> account;
 
   auto helpHandler = [] {
-    std::cout << cryptonote::CRYPTONOTE_NAME << " api version " << PROJECT_VERSION_LONG << std::endl;
+    std::cout << config::get().name << " api version " << PROJECT_VERSION_LONG << std::endl;
     std::cout << "Usage: api" << std::endl;
   };
 
   auto versionHandler = [] {
-    std::cout << cryptonote::CRYPTONOTE_NAME << " api version " << PROJECT_VERSION_LONG << std::endl;
+    std::cout << config::get().name << " api version " << PROJECT_VERSION_LONG << std::endl;
   };
 
   auto parameterHandler = [&](po::variables_map &vm) {

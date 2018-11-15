@@ -253,9 +253,9 @@ void serialize(multi_signature_output_t& multisignature, ISerializer& serializer
 
 void serializeBlockHeader(block_header_t& header, ISerializer& serializer) {
   serializer(header.majorVersion, "major_version");
-  if (header.majorVersion > BLOCK_MAJOR_VERSION_1) {
-    throw std::runtime_error("Wrong major version");
-  }
+  // if (header.majorVersion > BLOCK_MAJOR_VERSION_1) {
+  //   throw std::runtime_error("Wrong major version");
+  // }
 
   serializer(header.minorVersion, "minor_version");
   serializer(header.timestamp, "timestamp");

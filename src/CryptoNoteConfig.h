@@ -73,13 +73,7 @@ const char     CRYPTONOTE_BLOCKCHAIN_INDICES_FILENAME[]      = "blockchainindice
 const char     MINER_CONFIG_FILE_NAME[]                      = "miner_conf.json";
 } // parameters
 
-//TODO Put here the name of your currency
-const char     CRYPTONOTE_NAME[]                             = "vigcoin";
-// const char     GENESIS_COINBASE_TX_HEX[]                     = "013c01ff000101029b2e4c0281c0b02e7c53291a94d1d0cbff8883f8024f5142ee494ffbbd0880712101a9a4569f7e10164a32324b2b878ae32d98be0949ce6e0150ba1d7e54d60969e5";
-
 const uint8_t  CURRENT_TRANSACTION_VERSION                   =  1;
-const uint8_t  BLOCK_MAJOR_VERSION_1                         =  1;
-const uint8_t  BLOCK_MINOR_VERSION_0                         =  0;
 
 const size_t   BLOCKS_IDS_SYNCHRONIZING_DEFAULT_COUNT        =  10000;  //by default, blocks ids count in synchronizing
 const size_t   BLOCKS_SYNCHRONIZING_DEFAULT_COUNT            =  200;    //by default, blocks count in blocks downloading

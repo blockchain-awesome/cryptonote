@@ -89,7 +89,7 @@ int main(int argc, char *argv[])
       cryptonote::Currency tmp_currency = cryptonote::CurrencyBuilder(logManager).currency();
       cryptonote::complex_wallet tmp_wallet(dispatcher, tmp_currency, logManager);
 
-      std::cout << CRYPTONOTE_NAME << " wallet version " << PROJECT_VERSION_LONG << std::endl;
+      std::cout << config::get().name << " wallet version " << PROJECT_VERSION_LONG << std::endl;
       std::cout << "Usage: complexwallet [--wallet-file=<file>|--generate-new-wallet=<file>] [--daemon-address=<host>:<port>] [<COMMAND>]";
       std::cout << desc_all << '\n'
                 << tmp_wallet.get_commands_str();
@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
     }
     else if (command_line::get_arg(vm, command_line::arg_version))
     {
-      std::cout << CRYPTONOTE_NAME << " wallet version " << PROJECT_VERSION_LONG;
+      std::cout << config::get().name << " wallet version " << PROJECT_VERSION_LONG;
       return false;
     }
 
@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
 
   logManager.configure(buildLoggerConfiguration(logLevel, Common::ReplaceExtenstion(argv[0], ".log")));
 
-  logger(INFO, BRIGHT_WHITE) << CRYPTONOTE_NAME << " wallet version " << PROJECT_VERSION_LONG;
+  logger(INFO, BRIGHT_WHITE) << config::get().name << " wallet version " << PROJECT_VERSION_LONG;
 
   cryptonote::Currency currency = cryptonote::CurrencyBuilder(logManager).testnet(command_line::get_arg(vm, arg_testnet)).currency();
 

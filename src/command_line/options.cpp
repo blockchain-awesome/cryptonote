@@ -4,6 +4,7 @@
 
 #include "CryptoNoteConfig.h"
 #include "options.h"
+#include "config/common.h"
 
 namespace command_line
 {
@@ -13,7 +14,7 @@ const arg_descriptor<bool> arg_os_version = {"os-version", ""};
 
 // Storage
 const arg_descriptor<std::string> arg_data_dir = {"data-dir", "Specify data directory"};
-const arg_descriptor<std::string> arg_config_file = {"config-file", "Specify configuration file", std::string(cryptonote::CRYPTONOTE_NAME) + ".conf"};
+const arg_descriptor<std::string> arg_config_file = {"config-file", "Specify configuration file", std::string(config::get().name) + ".conf"};
 
 // Log info
 const arg_descriptor<std::string> arg_log_file = {"log-file", "", ""};

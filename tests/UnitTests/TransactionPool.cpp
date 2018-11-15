@@ -193,7 +193,7 @@ namespace
     TxMemoryPool pool;
   };
 
-  void InitBlock(block_t& bl, uint8_t majorVersion = BLOCK_MAJOR_VERSION_1) {
+  void InitBlock(block_t& bl, uint8_t majorVersion = config::mainnet::data.block.version.major) {
     bl.majorVersion = majorVersion;
     bl.minorVersion = 0;
     bl.nonce = 0;

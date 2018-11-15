@@ -116,7 +116,7 @@ int main(int argc, char *argv[])
     // configure logging
     logManager.configure(buildLoggerConfiguration(cfgLogLevel, cfgLogFile.string()));
 
-    logger(INFO) << cryptonote::CRYPTONOTE_NAME << " v" << PROJECT_VERSION_LONG;
+    logger(INFO) << config::get().name << " v" << PROJECT_VERSION_LONG;
 
     if (cli.checkVersion())
     {
@@ -147,7 +147,7 @@ int main(int argc, char *argv[])
     }
     catch (std::exception &)
     {
-      std::cout << "GENESIS_COINBASE_TX_HEX constant has an incorrect value. Please launch: " << cryptonote::CRYPTONOTE_NAME << "d --" << arg_print_genesis_tx.name;
+      std::cout << "GENESIS_COINBASE_TX_HEX constant has an incorrect value. Please launch: " << config::get().name << "d --" << arg_print_genesis_tx.name;
       return 1;
     }
 

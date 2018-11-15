@@ -102,7 +102,7 @@ bool Daemon::checkVersion()
 
   if (get_arg(vm, arg_version))
   {
-    std::cout << cryptonote::CRYPTONOTE_NAME << " v" << PROJECT_VERSION_LONG << ENDL;
+    std::cout << config::get().name << " v" << PROJECT_VERSION_LONG << ENDL;
     exit = true;
   }
   if (get_arg(vm, arg_os_version))
@@ -123,7 +123,7 @@ bool Daemon::parseHelp()
 {
   if (get_arg(vm, arg_help))
   {
-    std::cout << cryptonote::CRYPTONOTE_NAME << " v" << PROJECT_VERSION_LONG << ENDL << ENDL;
+    std::cout << config::get().name << " v" << PROJECT_VERSION_LONG << ENDL << ENDL;
     std::cout << desc_options << std::endl;
     return false;
   }
