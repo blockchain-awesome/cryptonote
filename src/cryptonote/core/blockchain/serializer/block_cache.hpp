@@ -32,9 +32,11 @@ public:
   {
     try
     {
+      std::cout << "Loading cache from file: " << filename << std::endl;
       std::ifstream stdStream(filename, std::ios::binary);
       if (!stdStream)
       {
+        std::cout << "Failed to open cached file: " << filename << std::endl;
         return;
       }
 
