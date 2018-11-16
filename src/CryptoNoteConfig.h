@@ -82,12 +82,12 @@ const size_t   COMMAND_RPC_GET_BLOCKS_FAST_MAX_COUNT         =  1000;
 const uint64_t CRYPTONOTE_CREATION_TIME                      = 1520035200000;
 
 
-//TODO This port will be used by the daemon to establish connections with p2p network
-const int      P2P_DEFAULT_PORT                              = 19800;
-//TODO This port will be used by the daemon to interact with simlewallet
-const int      RPC_DEFAULT_PORT                              = 19801;
-//TODO This port will be used by the client wallets to interact with a service node
-const int      RPC_WALLET_PORT                              = 19888;
+// //TODO This port will be used by the daemon to establish connections with p2p network
+// const int      P2P_DEFAULT_PORT                              = 19800;
+// //TODO This port will be used by the daemon to interact with simlewallet
+// const int      RPC_DEFAULT_PORT                              = 19801;
+// //TODO This port will be used by the client wallets to interact with a service node
+// const int      RPC_WALLET_PORT                              = 19888;
 
 
 const size_t   P2P_LOCAL_WHITE_PEERLIST_LIMIT                =  1000;

@@ -28,6 +28,9 @@ struct config_trasaction_t
 struct config_net_t
 {
     const char *p2p_stat_trusted_pub_key;
+    uint16_t p2p_port;
+    uint16_t rpc_port;
+    uint16_t wallet_port;
     version_t version;
 };
 

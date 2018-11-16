@@ -11,7 +11,7 @@ namespace cryptonote {
   namespace {
 
     const std::string DEFAULT_RPC_IP = "127.0.0.1";
-    const uint16_t DEFAULT_RPC_PORT = RPC_DEFAULT_PORT;
+    const uint16_t DEFAULT_RPC_PORT = config::get().net.rpc_port;
 
     const command_line::arg_descriptor<std::string> arg_rpc_bind_ip = { "rpc-bind-ip", "", DEFAULT_RPC_IP };
     const command_line::arg_descriptor<uint16_t> arg_rpc_bind_port = { "rpc-bind-port", "", DEFAULT_RPC_PORT };

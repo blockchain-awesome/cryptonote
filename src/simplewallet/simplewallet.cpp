@@ -553,7 +553,7 @@ bool simple_wallet::init(const boost::program_options::variables_map& vm) {
   if (m_daemon_host.empty())
     m_daemon_host = "localhost";
   if (!m_daemon_port)
-    m_daemon_port = RPC_DEFAULT_PORT;
+    m_daemon_port = config::get().net.rpc_port;
   
   if (!m_daemon_address.empty()) {
     if (!parseUrlAddress(m_daemon_address, m_daemon_host, m_daemon_port)) {
@@ -1154,7 +1154,7 @@ int main(int argc, char* argv[]) {
     if (daemon_host.empty())
       daemon_host = "localhost";
     if (!daemon_port)
-      daemon_port = RPC_DEFAULT_PORT;
+      daemon_port = config::get().net.rpc_port;
 
     if (!daemon_address.empty()) {
       if (!parseUrlAddress(daemon_address, daemon_host, daemon_port)) {

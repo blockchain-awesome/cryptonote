@@ -48,6 +48,9 @@ config_t data = {
      {1, 0, 0}},
     {1, 0, 0},
     {P2P_STAT_TRUSTED_PUB_KEY,
+     1,
+     1,
+     1,
      {1, 0, 0}},
     seeds,
     checkpoints};
@@ -58,33 +61,33 @@ config_t data = {
 
 //   return a == b;
 
-  // if (strcmp(a.name, b.name) != 0)
-  // {
-  //   return false;
-  // }
-  // if (strcmp(a.block.genesis_coinbase_tx_hex, b.block.genesis_coinbase_tx_hex) != 0)
-  // {
-  //   return false;
-  // }
+// if (strcmp(a.name, b.name) != 0)
+// {
+//   return false;
+// }
+// if (strcmp(a.block.genesis_coinbase_tx_hex, b.block.genesis_coinbase_tx_hex) != 0)
+// {
+//   return false;
+// }
 
-  // if (strcmp(a.net.p2p_stat_trusted_pub_key, b.net.p2p_stat_trusted_pub_key) != 0)
-  // {
-  //   return false;
-  // }
+// if (strcmp(a.net.p2p_stat_trusted_pub_key, b.net.p2p_stat_trusted_pub_key) != 0)
+// {
+//   return false;
+// }
 
-  // if (a.block.version.major == b.block.version.major)
-  //   return false;
-  // if (a.block.version.miner == b.block.version.miner)
-  //   return false;
-  // if (a.block.version.patch == b.block.version.patch)
-  //   return false;
+// if (a.block.version.major == b.block.version.major)
+//   return false;
+// if (a.block.version.miner == b.block.version.miner)
+//   return false;
+// if (a.block.version.patch == b.block.version.patch)
+//   return false;
 
-  // if (a.net.version.major == b.net.version.major)
-  //   return false;
-  // if (a.net.version.miner == b.net.version.miner)
-  //   return false;
-  // if (a.net.version.patch == b.net.version.patch)
-  //   return false;
+// if (a.net.version.major == b.net.version.major)
+//   return false;
+// if (a.net.version.miner == b.net.version.miner)
+//   return false;
+// if (a.net.version.patch == b.net.version.patch)
+//   return false;
 
 //   return true;
 // }
@@ -146,6 +149,8 @@ TEST_F(BlockTest, create)
   const config::config_t *conf1 = &config::get();
 
   ASSERT_TRUE(&config::testnet::data == conf1);
+
+  ASSERT_TRUE(!os::version::get().empty());
 
   // ASSERT_TRUE(tx.outputs.size() == 1);
   // ASSERT_TRUE(boost::filesystem::exists(c.blockchainIndexesFileName()));

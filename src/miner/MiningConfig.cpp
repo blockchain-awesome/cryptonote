@@ -55,7 +55,7 @@ MiningConfig::MiningConfig(): help(false) {
       ("help,h", "produce this help message and exit")
       ("address", po::value<std::string>(), "Valid cryptonote miner's address")
       ("daemon-host", po::value<std::string>()->default_value(DEFAULT_DAEMON_HOST), "Daemon host")
-      ("daemon-rpc-port", po::value<uint16_t>()->default_value(static_cast<uint16_t>(RPC_DEFAULT_PORT)), "Daemon's RPC port")
+      ("daemon-rpc-port", po::value<uint16_t>()->default_value(static_cast<uint16_t>(config::get().net.rpc_port)), "Daemon's RPC port")
       ("daemon-address", po::value<std::string>(), "Daemon host:port. If you use this option you must not use --daemon-host and --daemon-port options")
       ("threads", po::value<size_t>()->default_value(CONCURRENCY_LEVEL), "Mining threads count. Must not be greater than you concurrency level. Default value is your hardware concurrency level")
       ("scan-time", po::value<size_t>()->default_value(DEFAULT_SCANT_PERIOD), "Blockchain polling interval (seconds). How often miner will check blockchain for updates")
