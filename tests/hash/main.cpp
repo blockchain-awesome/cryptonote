@@ -9,7 +9,7 @@
 #include <string>
 
 #include "crypto/hash.h"
-#include "../Io.h"
+#include "../io.h"
 
 using namespace std;
 typedef crypto::hash_t chash;

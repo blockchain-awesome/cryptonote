@@ -25,7 +25,7 @@ static inline const void *cpadd(const void *p, size_t i) {
 static_assert(sizeof(size_t) == 4 || sizeof(size_t) == 8, "size_t must be 4 or 8 bytes long");
 static inline void place_length(uint8_t *buffer, size_t bufsize, size_t length) {
   if (sizeof(size_t) == 4) {
-    *(uint32_t *) padd(buffer, bufsize - 4) = swap32be((uint32_t) length);
+    *(uint32_t *) padd(buffer, bufsize - 4) = swap32be(length);
   } else {
     *(uint64_t *) padd(buffer, bufsize - 8) = swap64be(length);
   }

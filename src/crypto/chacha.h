@@ -3,8 +3,8 @@
 #include <stdint.h>
 #include <stddef.h>
 
-#define CHACHA8_KEY_SIZE 32
-#define CHACHA8_IV_SIZE 8
+#define CHACHA_KEY_SIZE 32
+#define CHACHA_IV_SIZE 8
 
 #if defined(__cplusplus)
 #include <memory.h>
@@ -21,7 +21,7 @@ namespace crypto {
 
 #pragma pack(push, 1)
   struct chacha_key_t {
-    uint8_t data[CHACHA8_KEY_SIZE];
+    uint8_t data[CHACHA_KEY_SIZE];
 
     ~chacha_key_t()
     {
@@ -31,11 +31,11 @@ namespace crypto {
 
   // MS VC 2012 doesn't interpret `class chacha_iv_t` as POD in spite of [9.0.10], so it is a struct
   struct chacha_iv_t {
-    uint8_t data[CHACHA8_IV_SIZE];
+    uint8_t data[CHACHA_IV_SIZE];
   };
 #pragma pack(pop)
 
-  static_assert(sizeof(chacha_key_t) == CHACHA8_KEY_SIZE && sizeof(chacha_iv_t) == CHACHA8_IV_SIZE, "Invalid structure size");
+  static_assert(sizeof(chacha_key_t) == CHACHA_KEY_SIZE && sizeof(chacha_iv_t) == CHACHA_IV_SIZE, "Invalid structure size");
 
   inline void chacha8(const void* data, size_t length, const chacha_key_t& key, const chacha_iv_t& iv, char* cipher) {
     chacha8(data, length, reinterpret_cast<const uint8_t*>(&key), reinterpret_cast<const uint8_t*>(&iv), cipher);
