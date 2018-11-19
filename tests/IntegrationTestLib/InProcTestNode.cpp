@@ -9,7 +9,7 @@
 #include <common/StringTools.h>
 #include <logging/ConsoleLogger.h>
 
-#include "cryptonote/core/Core.h"
+#include "cryptonote/core/core.h"
 #include "cryptonote/core/account.h"
 #include "command_line/CoreConfig.h"
 #include "cryptonote/core/Miner.h"

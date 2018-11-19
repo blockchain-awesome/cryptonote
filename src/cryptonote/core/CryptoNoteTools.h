@@ -14,9 +14,6 @@
 
 namespace cryptonote {
 
-void getBinaryArrayHash(const binary_array_t& binaryArray, crypto::hash_t& hash);
-crypto::hash_t getBinaryArrayHash(const binary_array_t& binaryArray);
-
 template<class T>
 bool toBinaryArray(const T& object, binary_array_t& binaryArray) {
   try {
@@ -81,7 +78,7 @@ bool getObjectHash(const T& object, crypto::hash_t& hash) {
     return false;
   }
 
-  hash = getBinaryArrayHash(ba);
+  hash = BinaryArray::getHash(ba);
   return true;
 }
 
@@ -95,7 +92,7 @@ bool getObjectHash(const T& object, crypto::hash_t& hash, size_t& size) {
   }
 
   size = ba.size();
-  hash = getBinaryArrayHash(ba);
+  hash = BinaryArray::getHash(ba);
   return true;
 }
 

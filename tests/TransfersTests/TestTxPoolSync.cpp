@@ -6,7 +6,7 @@
 
 #include "cryptonote/core/account.h"
 #include "command_line/CoreConfig.h"
-#include "cryptonote/core/Core.h"
+#include "cryptonote/core/core.h"
 #include "cryptonote/core/currency.h"
 #include "logging/LoggerManager.h"
 #include "command_line/NetNodeConfig.h"

@@ -9,7 +9,7 @@
 #include "stream/StdOutputStream.h"
 #include "serialization/BinaryInputStreamSerializer.h"
 #include "serialization/BinaryOutputStreamSerializer.h"
-#include "cryptonote/core/Checkpoints.h"
+#include "cryptonote/core/checkpoints.h"
 #include <logging/LoggerRef.h>
 #include <logging/LoggerManager.h>
 

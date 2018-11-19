@@ -7,7 +7,7 @@
 #include "logging/ConsoleLogger.h"
 #include "common/StringTools.h"
 #include "version.h"
-#include "cryptonote/core/Core.h"
+#include "cryptonote/core/core.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "CryptoNoteConfig.h"
 

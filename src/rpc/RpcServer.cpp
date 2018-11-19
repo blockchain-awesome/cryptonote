@@ -10,7 +10,7 @@
 // CryptoNote
 #include "common/StringTools.h"
 #include "cryptonote/core/CryptoNoteTools.h"
-#include "cryptonote/core/Core.h"
+#include "cryptonote/core/core.h"
 #include "cryptonote/core/account.h"
 #include "cryptonote/core/IBlock.h"
 #include "cryptonote/core/Miner.h"

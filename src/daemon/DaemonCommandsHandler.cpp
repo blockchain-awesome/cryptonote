@@ -6,7 +6,7 @@
 
 #include "p2p/NetNode.h"
 #include "cryptonote/core/Miner.h"
-#include "cryptonote/core/Core.h"
+#include "cryptonote/core/core.h"
 #include "cryptonote/core/account.h"
 #include "cryptonote/protocol/handler.h"
 #include "serialization/SerializationTools.h"

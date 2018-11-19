@@ -164,7 +164,7 @@ namespace cryptonote {
     }
     
     extra.parse(transaction.extra);
-    transactionHash = getBinaryArrayHash(ba); // avoid serialization if we already have blob
+    transactionHash = BinaryArray::getHash(ba); // avoid serialization if we already have blob
   }
 
   TransactionImpl::TransactionImpl(const cryptonote::transaction_t& tx) : transaction(tx) {

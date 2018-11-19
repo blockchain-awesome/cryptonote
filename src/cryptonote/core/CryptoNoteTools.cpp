@@ -20,16 +20,6 @@ bool toBinaryArray(const binary_array_t& object, binary_array_t& binaryArray) {
   return true;
 }
 
-void getBinaryArrayHash(const binary_array_t& binaryArray, crypto::hash_t& hash) {
-  cn_fast_hash(binaryArray.data(), binaryArray.size(), hash);
-}
-
-crypto::hash_t getBinaryArrayHash(const binary_array_t& binaryArray) {
-  crypto::hash_t hash;
-  getBinaryArrayHash(binaryArray, hash);
-  return hash;
-}
-
 uint64_t getInputAmount(const transaction_t& transaction) {
   uint64_t amount = 0;
   for (auto& input : transaction.inputs) {
