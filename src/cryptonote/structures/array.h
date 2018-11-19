@@ -8,14 +8,6 @@ namespace cryptonote
 {
 using binary_array_t = std::vector<uint8_t>;
 
-namespace binary {
-
-   namespace array {
-     
-   }
-
-}
-
 class BinaryArray
 {
 public:
