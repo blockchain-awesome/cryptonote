@@ -280,14 +280,7 @@ bool BlockAccessor<T>::init()
     return false;
   }
   std::string blockFilename = m_currency.blocksFileName();
-
-  m_itemsFile.open(blockFilename, std::ios::in | std::ios::out | std::ios::binary);
-
-  if (!m_itemsFile) {
-    m_itemsFile.open(blockFilename, std::ios::out | std::ios::binary);
-    m_itemsFile.close();
-    m_itemsFile.open(blockFilename, std::ios::in | std::ios::out | std::ios::binary);
-  }
+  m_itemsFile = std::file::open(blockFilename, true);
 
   m_items.clear();
   m_cache.clear();

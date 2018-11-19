@@ -73,7 +73,7 @@ namespace cryptonote {
     bool haveTransaction(const crypto::hash_t &id);
     bool haveTransactionKeyImagesAsSpent(const transaction_t &tx);
 
-    uint32_t getCurrentBlockchainHeight(); //TODO rename to getCurrentBlockchainSize
+    uint32_t getHeight(); //TODO rename to getCurrentBlockchainSize
     crypto::hash_t getTailId();
     crypto::hash_t getTailId(uint32_t& height);
     difficulty_t getDifficultyForNextBlock();

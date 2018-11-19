@@ -94,7 +94,7 @@ bool Blockchain::checkTransactionInputs(const cryptonote::transaction_t& tx, blo
   //check is ring_signature already checked ?
   if (maxUsedBlock.empty()) {
     //not checked, lets try to check
-    if (!lastFailed.empty() && getCurrentBlockchainHeight() > lastFailed.height && getBlockIdByHeight(lastFailed.height) == lastFailed.id) {
+    if (!lastFailed.empty() && getHeight() > lastFailed.height && getBlockIdByHeight(lastFailed.height) == lastFailed.id) {
       return false; //we already sure that this tx is broken for this height
     }
 
@@ -103,7 +103,7 @@ bool Blockchain::checkTransactionInputs(const cryptonote::transaction_t& tx, blo
       return false;
     }
   } else {
-    if (maxUsedBlock.height >= getCurrentBlockchainHeight()) {
+    if (maxUsedBlock.height >= getHeight()) {
       return false;
     }
 
@@ -151,7 +151,7 @@ bool Blockchain::have_tx_keyimg_as_spent(const crypto::key_image_t &key_im) {
   return  m_spent_keys.find(key_im) != m_spent_keys.end();
 }
 
-uint32_t Blockchain::getCurrentBlockchainHeight() {
+uint32_t Blockchain::getHeight() {
   std::lock_guard<decltype(m_blockchain_lock)> lk(m_blockchain_lock);
   return static_cast<uint32_t>(m_blocks.size());
 }
@@ -301,7 +301,7 @@ bool Blockchain::resetAndSetGenesisBlock(const block_t& b) {
 crypto::hash_t Blockchain::getTailId(uint32_t& height) {
   assert(!m_blocks.empty());
   std::lock_guard<decltype(m_blockchain_lock)> lk(m_blockchain_lock);
-  height = getCurrentBlockchainHeight() - 1;
+  height = getHeight() - 1;
   return getTailId();
 }
 
@@ -678,10 +678,10 @@ bool Blockchain::handle_alternative_block(const block_t& b, const crypto::hash_t
     return false;
   }
 
-  if (!m_checkpoints.isAllowed(getCurrentBlockchainHeight(), block_height)) {
+  if (!m_checkpoints.isAllowed(getHeight(), block_height)) {
     logger(TRACE) << "Block with id: " << id << std::endl <<
       " can't be accepted for alternative chain, block height: " << block_height << std::endl <<
-      " blockchain height: " << getCurrentBlockchainHeight();
+      " blockchain height: " << getHeight();
     bvc.m_verifivation_failed = true;
     return false;
   }
@@ -862,7 +862,7 @@ bool Blockchain::getBlocks(uint32_t start_offset, uint32_t count, std::list<bloc
 
 bool Blockchain::handleGetObjects(NOTIFY_REQUEST_GET_OBJECTS::request& arg, NOTIFY_RESPONSE_GET_OBJECTS::request& rsp) { //Deprecated. Should be removed with CryptoNoteProtocolHandler.
   std::lock_guard<decltype(m_blockchain_lock)> lk(m_blockchain_lock);
-  rsp.current_blockchain_height = getCurrentBlockchainHeight();
+  rsp.current_blockchain_height = getHeight();
   std::list<block_t> blocks;
   getBlocks(arg.blocks, blocks, rsp.missed_ids);
 
@@ -934,7 +934,7 @@ size_t Blockchain::find_end_of_allowed_index(const std::vector<std::pair<transac
   size_t i = amount_outs.size();
   do {
     --i;
-    if (amount_outs[i].first.block + m_currency.minedMoneyUnlockWindow() <= getCurrentBlockchainHeight()) {
+    if (amount_outs[i].first.block + m_currency.minedMoneyUnlockWindow() <= getHeight()) {
       return i + 1;
     }
   } while (i != 0);
@@ -1053,7 +1053,7 @@ std::vector<crypto::hash_t> Blockchain::findBlockchainSupplement(const std::vect
   assert(remoteBlockIds.back() == m_blockIndex.getBlockId(0));
 
   std::lock_guard<decltype(m_blockchain_lock)> lk(m_blockchain_lock);
-  totalBlockCount = getCurrentBlockchainHeight();
+  totalBlockCount = getHeight();
   startBlockIndex = findBlockchainSupplement(remoteBlockIds);
 
   return m_blockIndex.getBlockIds(startBlockIndex, static_cast<uint32_t>(maxCount));
@@ -1191,7 +1191,7 @@ bool Blockchain::checkTransactionInputs(const transaction_t& tx, const crypto::h
 bool Blockchain::is_tx_spendtime_unlocked(uint64_t unlock_time) {
   if (unlock_time < m_currency.maxBlockHeight()) {
     //interpret as block index
-    if (getCurrentBlockchainHeight() - 1 + m_currency.lockedTxAllowedDeltaBlocks() >= unlock_time)
+    if (getHeight() - 1 + m_currency.lockedTxAllowedDeltaBlocks() >= unlock_time)
       return true;
     else
       return false;
@@ -1440,8 +1440,8 @@ bool Blockchain::pushBlock(const block_t& blockData, const std::vector<transacti
 
   auto longhashTimeStart = std::chrono::steady_clock::now();
   crypto::hash_t proof_of_work = NULL_HASH;
-  if (m_checkpoints.isCheckpoint(getCurrentBlockchainHeight())) {
-    if (!m_checkpoints.check(getCurrentBlockchainHeight(), blockHash)) {
+  if (m_checkpoints.isCheckpoint(getHeight())) {
+    if (!m_checkpoints.check(getHeight(), blockHash)) {
       logger(ERROR, BRIGHT_RED) <<
         "CHECKPOINT VALIDATION FAILED";
       bvc.m_verifivation_failed = true;

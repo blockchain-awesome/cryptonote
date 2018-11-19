@@ -78,11 +78,11 @@ void core::set_checkpoints(Checkpoints&& chk_pts) {
 }
 
 uint32_t core::get_current_blockchain_height() {
-  return m_blockchain.getCurrentBlockchainHeight();
+  return m_blockchain.getHeight();
 }
 
 void core::get_blockchain_top(uint32_t& height, crypto::hash_t& top_id) {
-  assert(m_blockchain.getCurrentBlockchainHeight() > 0);
+  assert(m_blockchain.getHeight() > 0);
   top_id = m_blockchain.getTailId(height);
 }
 
@@ -200,7 +200,7 @@ bool core::handle_incoming_tx(const binary_array_t& tx_blob, tx_verification_con
 bool core::get_stat_info(CoreStateInfo& st_inf) {
   st_inf.mining_speed = m_miner->get_speed();
   st_inf.alternative_blocks = m_blockchain.getAlternativeBlocksCount();
-  st_inf.blockchain_height = m_blockchain.getCurrentBlockchainHeight();
+  st_inf.blockchain_height = m_blockchain.getHeight();
   st_inf.tx_pool_size = m_mempool.get_transactions_count();
   st_inf.top_block_id_str = Common::podToHex(m_blockchain.getTailId());
   return true;
@@ -297,7 +297,7 @@ bool core::get_block_template(block_t& b, const account_public_address_t& adr, d
 
   {
     Locker lbs(m_blockchain.getMutex());;
-    height = m_blockchain.getCurrentBlockchainHeight();
+    height = m_blockchain.getHeight();
     diffic = m_blockchain.getDifficultyForNextBlock();
     if (!(diffic)) {
       logger(ERROR, BRIGHT_RED) << "difficulty overhead.";
@@ -502,7 +502,7 @@ bool core::handle_incoming_block(const block_t& b, block_verification_context_t&
 
       NOTIFY_NEW_BLOCK::request arg;
       arg.hop = 0;
-      arg.current_blockchain_height = m_blockchain.getCurrentBlockchainHeight();
+      arg.current_blockchain_height = m_blockchain.getHeight();
       binary_array_t blockBa;
       bool r = toBinaryArray(b, blockBa);
       if (!(r)) { logger(ERROR, BRIGHT_RED) << "failed to serialize block"; return false; }
@@ -550,7 +550,7 @@ std::vector<transaction_t> core::getPoolTransactions() {
 }
 
 std::vector<crypto::hash_t> core::buildSparseChain() {
-  assert(m_blockchain.getCurrentBlockchainHeight() != 0);
+  assert(m_blockchain.getHeight() != 0);
   return m_blockchain.buildSparseChain();
 }
 
@@ -566,7 +566,7 @@ bool core::handle_get_objects(NOTIFY_REQUEST_GET_OBJECTS::request& arg, NOTIFY_R
 
 crypto::hash_t core::getBlockIdByHeight(uint32_t height) {
   Locker lbs(m_blockchain.getMutex());;
-  if (height < m_blockchain.getCurrentBlockchainHeight()) {
+  if (height < m_blockchain.getHeight()) {
     return m_blockchain.getBlockIdByHeight(height);
   } else {
     return NULL_HASH;
@@ -630,7 +630,7 @@ bool core::queryBlocks(const std::vector<crypto::hash_t>& knownBlockIds, uint64_
 
   Locker lbs(m_blockchain.getMutex());;
 
-  uint32_t currentHeight = m_blockchain.getCurrentBlockchainHeight();
+  uint32_t currentHeight = m_blockchain.getHeight();
   uint32_t startOffset = 0;
   uint32_t startFullOffset = 0;
 
@@ -722,7 +722,7 @@ bool core::queryBlocksLite(const std::vector<crypto::hash_t>& knownBlockIds, uin
   uint32_t& resCurrentHeight, uint32_t& resFullOffset, std::vector<block_short_info_t>& entries) {
   Locker lbs(m_blockchain.getMutex());;
 
-  resCurrentHeight = m_blockchain.getCurrentBlockchainHeight();
+  resCurrentHeight = m_blockchain.getHeight();
   resStartHeight = 0;
   resFullOffset = 0;
 
