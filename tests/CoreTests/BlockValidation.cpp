@@ -621,7 +621,7 @@ bool gen_block_invalid_binary_format::generate(std::vector<test_event_entry>& ev
     config::mainnet::data.block.version.major, 0, blk_last.timestamp, crypto::hash_t(), diffic, transaction_t(), tx_hashes, txs_size))
     return false;
 
-  binary_array_t blob = toBinaryArray(blk_test);
+  binary_array_t blob = BinaryArray::to(blk_test);
   for (size_t i = 0; i < blob.size(); ++i)
   {
     for (size_t bit_idx = 0; bit_idx < sizeof(binary_array_t::value_type) * 8; ++bit_idx)

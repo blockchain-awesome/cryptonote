@@ -463,7 +463,7 @@ void NodeRpcProxy::isSynchronized(bool& syncStatus, const Callback& callback) {
 std::error_code NodeRpcProxy::doRelayTransaction(const cryptonote::transaction_t& transaction) {
   COMMAND_RPC_SEND_RAW_TX::request req;
   COMMAND_RPC_SEND_RAW_TX::response rsp;
-  req.tx_as_hex = toHex(toBinaryArray(transaction));
+  req.tx_as_hex = toHex(BinaryArray::to(transaction));
   return jsonCommand("/sendrawtransaction", req, rsp);
 }
 
@@ -536,7 +536,7 @@ std::error_code NodeRpcProxy::doQueryBlocksLite(const std::vector<crypto::hash_t
 
     bse.blockHash = std::move(item.blockId);
     if (!item.block.empty()) {
-      if (!fromBinaryArray(bse.block, asBinaryArray(item.block))) {
+      if (!BinaryArray::from(bse.block, asBinaryArray(item.block))) {
         return std::make_error_code(std::errc::invalid_argument);
       }
 

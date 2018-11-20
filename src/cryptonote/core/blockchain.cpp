@@ -874,10 +874,10 @@ bool Blockchain::handleGetObjects(NOTIFY_REQUEST_GET_OBJECTS::request& arg, NOTI
     rsp.blocks.push_back(block_complete_entry_t());
     block_complete_entry_t& e = rsp.blocks.back();
     //pack block
-    e.block = asString(toBinaryArray(bl));
+    e.block = asString(BinaryArray::to(bl));
     //pack transactions
     for (transaction_t& tx : txs) {
-      e.txs.push_back(asString(toBinaryArray(tx)));
+      e.txs.push_back(asString(BinaryArray::to(tx)));
     }
   }
 
@@ -886,7 +886,7 @@ bool Blockchain::handleGetObjects(NOTIFY_REQUEST_GET_OBJECTS::request& arg, NOTI
   getTransactions(arg.txs, txs, rsp.missed_ids);
   //pack aside transactions
   for (const auto& tx : txs) {
-    rsp.txs.push_back(asString(toBinaryArray(tx)));
+    rsp.txs.push_back(asString(BinaryArray::to(tx)));
   }
 
   return true;
@@ -1484,7 +1484,7 @@ bool Blockchain::pushBlock(const block_t& blockData, const std::vector<transacti
     uint64_t fee = 0;
     block.transactions.back().tx = transactions[i];
 
-    blob_size = toBinaryArray(block.transactions.back().tx).size();
+    blob_size = BinaryArray::to(block.transactions.back().tx).size();
     fee = getInputAmount(block.transactions.back().tx) - getOutputAmount(block.transactions.back().tx);
     if (!checkTransactionInputs(block.transactions.back().tx)) {
       logger(INFO, BRIGHT_WHITE) <<

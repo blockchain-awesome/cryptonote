@@ -115,7 +115,7 @@ public:
   std::error_code submitTransaction(ITransactionReader& tx) {
     auto data = tx.getTransactionData();
     transaction_t outTx;
-    cryptonote::fromBinaryArray(outTx, data);
+    cryptonote::BinaryArray::from(outTx, data);
 
     std::promise<std::error_code> result;
     m_node.relayTransaction(outTx, [&result](std::error_code ec) {

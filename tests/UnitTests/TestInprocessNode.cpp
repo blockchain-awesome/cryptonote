@@ -39,7 +39,7 @@ struct CallbackStatus {
 namespace {
 cryptonote::transaction_t createTx(cryptonote::ITransactionReader& tx) {
   cryptonote::transaction_t outTx;
-  fromBinaryArray(outTx, tx.getTransactionData());
+  BinaryArray::from(outTx, tx.getTransactionData());
   return outTx;
 }
 }

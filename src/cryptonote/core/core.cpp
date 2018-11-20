@@ -468,7 +468,7 @@ bool core::handle_incoming_block_blob(const binary_array_t& block_blob, block_ve
   }
 
   block_t b;
-  if (!fromBinaryArray(b, block_blob)) {
+  if (!BinaryArray::from(b, block_blob)) {
     logger(INFO) << "Failed to parse and validate new block";
     bvc.m_verifivation_failed = true;
     return false;
@@ -504,11 +504,11 @@ bool core::handle_incoming_block(const block_t& b, block_verification_context_t&
       arg.hop = 0;
       arg.current_blockchain_height = m_blockchain.getHeight();
       binary_array_t blockBa;
-      bool r = toBinaryArray(b, blockBa);
+      bool r = BinaryArray::to(b, blockBa);
       if (!(r)) { logger(ERROR, BRIGHT_RED) << "failed to serialize block"; return false; }
       arg.b.block = asString(blockBa);
       for (auto& tx : txs) {
-        arg.b.txs.push_back(asString(toBinaryArray(tx)));
+        arg.b.txs.push_back(asString(BinaryArray::to(tx)));
       }
 
       m_pprotocol->relay_block(arg);
@@ -672,9 +672,9 @@ bool core::queryBlocks(const std::vector<crypto::hash_t>& knownBlockIds, uint64_
 
       // fill data
       block_complete_entry_t& completeEntry = item;
-      completeEntry.block = asString(toBinaryArray(b));
+      completeEntry.block = asString(BinaryArray::to(b));
       for (auto& tx : txs) {
-        completeEntry.txs.push_back(asString(toBinaryArray(tx)));
+        completeEntry.txs.push_back(asString(BinaryArray::to(tx)));
       }
     }
 
@@ -757,7 +757,7 @@ bool core::queryBlocksLite(const std::vector<crypto::hash_t>& knownBlockIds, uin
       std::list<crypto::hash_t> missedTxs;
       m_blockchain.getTransactions(b.transactionHashes, txs, missedTxs);
 
-      item.block = asString(toBinaryArray(b));
+      item.block = asString(BinaryArray::to(b));
 
       for (const auto& tx: txs) {
         transaction_prefix_info_t info;

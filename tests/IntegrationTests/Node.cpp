@@ -34,12 +34,12 @@ namespace cryptonote {
     if (s.type() == ISerializer::INPUT) {
       std::string blockBinary;
       if (s.binary(blockBinary, "block")) {
-        fromBinaryArray(v.block, Common::asBinaryArray(blockBinary));
+        BinaryArray::from(v.block, Common::asBinaryArray(blockBinary));
         v.hasBlock = true;
       }
     } else {
       if (v.hasBlock) {
-        std::string blockBinary(Common::asString(toBinaryArray(v.block)));
+        std::string blockBinary(Common::asString(BinaryArray::to(v.block)));
         s.binary(blockBinary, "block");
       }
     }
@@ -349,7 +349,7 @@ TEST_F(NodeTest, observerHeightNotifications) {
     uint32_t newKnownHeight = 0;
     uint32_t newLocalHeight = 0;
 
-    auto blockData = toBinaryArray(extraBlocks.blocks.begin()->block);
+    auto blockData = BinaryArray::to(extraBlocks.blocks.begin()->block);
     ASSERT_TRUE(daemon.submitBlock(Common::toHex(blockData.data(), blockData.size())));
 
     ASSERT_TRUE(observer.m_localHeight.waitFor(timeout, newLocalHeight));
