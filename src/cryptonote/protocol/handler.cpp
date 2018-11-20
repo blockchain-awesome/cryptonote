@@ -15,6 +15,7 @@
 #include "cryptonote/core/currency.h"
 #include "cryptonote/core/VerificationContext.h"
 #include "p2p/LevinProtocol.h"
+#include "cryptonote/structures/array.hpp"
 
 using namespace Logging;
 using namespace Common;
@@ -587,7 +588,7 @@ int CryptoNoteProtocolHandler::handleRequestTxPool(int command, NOTIFY_REQUEST_T
   if (!addedTransactions.empty()) {
     NOTIFY_NEW_TRANSACTIONS::request notification;
     for (auto& tx : addedTransactions) {
-      notification.txs.push_back(asString(BinaryArray::to(tx)));
+      notification.txs.push_back(BinaryArray::toString(BinaryArray::to(tx)));
     }
 
     bool ok = post_notify<NOTIFY_NEW_TRANSACTIONS>(*m_p2p, notification, context);

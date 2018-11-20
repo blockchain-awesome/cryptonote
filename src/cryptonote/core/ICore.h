@@ -52,7 +52,7 @@ public:
   virtual bool on_idle() = 0;
   virtual void pause_mining() = 0;
   virtual void update_block_template_and_resume_mining() = 0;
-  virtual bool handle_incoming_block_blob(const cryptonote::binary_array_t& block_blob, cryptonote::block_verification_context_t& bvc, bool control_miner, bool relay_block) = 0;
+  virtual bool handle_incoming_block_blob(const binary_array_t& block_blob, cryptonote::block_verification_context_t& bvc, bool control_miner, bool relay_block) = 0;
   virtual bool handle_get_objects(NOTIFY_REQUEST_GET_OBJECTS_request& arg, NOTIFY_RESPONSE_GET_OBJECTS_request& rsp) = 0; //Deprecated. Should be removed with CryptoNoteProtocolHandler.
   virtual void on_synchronized() = 0;
   virtual size_t addChain(const std::vector<const IBlock*>& chain) = 0;

@@ -30,17 +30,9 @@ const uint8_t characterValues[256] = {
 
 }
 
-std::string asString(const void* data, size_t size) {
-  return std::string(static_cast<const char*>(data), size);
-}
-
-std::string asString(const std::vector<uint8_t>& data) {
-  return std::string(reinterpret_cast<const char*>(data.data()), data.size());
-}
-
-std::vector<uint8_t> asBinaryArray(const std::string& data) {
+binary_array_t asBinaryArray(const std::string& data) {
   auto dataPtr = reinterpret_cast<const uint8_t*>(data.data());
-  return std::vector<uint8_t>(dataPtr, dataPtr + data.size());
+  return binary_array_t(dataPtr, dataPtr + data.size());
 }
 
 uint8_t fromHex(char character) {
@@ -104,12 +96,12 @@ bool fromHex(const std::string& text, void* data, size_t bufferSize, size_t& siz
   return true;
 }
 
-std::vector<uint8_t> fromHex(const std::string& text) {
+binary_array_t fromHex(const std::string& text) {
   if ((text.size() & 1) != 0) {
     throw std::runtime_error("fromHex: invalid string size");
   }
 
-  std::vector<uint8_t> data(text.size() >> 1);
+  binary_array_t data(text.size() >> 1);
   for (size_t i = 0; i < data.size(); ++i) {
     data[i] = fromHex(text[i << 1]) << 4 | fromHex(text[(i << 1) + 1]);
   }
@@ -117,7 +109,7 @@ std::vector<uint8_t> fromHex(const std::string& text) {
   return data;
 }
 
-bool fromHex(const std::string& text, std::vector<uint8_t>& data) {
+bool fromHex(const std::string& text, binary_array_t& data) {
   if ((text.size() & 1) != 0) {
     return false;
   }
@@ -156,7 +148,7 @@ void toHex(const void* data, size_t size, std::string& text) {
   }
 }
 
-std::string toHex(const std::vector<uint8_t>& data) {
+std::string toHex(const binary_array_t& data) {
   std::string text;
   for (size_t i = 0; i < data.size(); ++i) {
     text += "0123456789abcdef"[data[i] >> 4];
@@ -166,7 +158,7 @@ std::string toHex(const std::vector<uint8_t>& data) {
   return text;
 }
 
-void toHex(const std::vector<uint8_t>& data, std::string& text) {
+void toHex(const binary_array_t& data, std::string& text) {
   for (size_t i = 0; i < data.size(); ++i) {
     text += "0123456789abcdef"[data[i] >> 4];
     text += "0123456789abcdef"[data[i] & 15];

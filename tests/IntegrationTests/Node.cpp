@@ -39,7 +39,7 @@ namespace cryptonote {
       }
     } else {
       if (v.hasBlock) {
-        std::string blockBinary(Common::asString(BinaryArray::to(v.block)));
+        std::string blockBinary(BinaryArray::toString(BinaryArray::to(v.block)));
         s.binary(blockBinary, "block");
       }
     }

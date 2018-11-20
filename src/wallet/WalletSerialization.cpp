@@ -13,6 +13,7 @@
 #include "stream/StdOutputStream.h"
 #include "cryptonote/core/blockchain/serializer/basics.h"
 #include "cryptonote/core/CryptoNoteTools.h"
+#include "cryptonote/structures/array.hpp"
 
 #include "serialization/BinaryOutputStreamSerializer.h"
 #include "serialization/BinaryInputStreamSerializer.h"

@@ -23,6 +23,7 @@
 #include "rpc/RpcServer.h"
 #include "rpc/RpcServerConfig.h"
 #include "version.h"
+#include "cryptonote/structures/array.hpp"
 
 #include "logging/ConsoleLogger.h"
 #include <logging/LoggerManager.h>

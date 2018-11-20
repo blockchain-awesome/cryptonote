@@ -13,6 +13,7 @@
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/core/TransactionExtra.h"
 #include "CryptoNoteConfig.h"
+#include "cryptonote/structures/array.hpp"
 
 namespace cryptonote {
 

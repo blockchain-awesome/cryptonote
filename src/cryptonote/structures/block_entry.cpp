@@ -1,7 +1,7 @@
 #include "common/varint.h"
 #include "common/StringTools.h"
 #include "block.h"
-#include "array.h"
+#include "array.hpp"
 #include <boost/utility/value_init.hpp>
 #include "config/common.h"
 #include "common/StringTools.h"

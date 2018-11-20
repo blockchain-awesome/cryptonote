@@ -78,7 +78,7 @@ namespace cryptonote
     block_t bl = boost::value_initialized<block_t>();
     difficulty_t di = 0;
     uint32_t height;
-    cryptonote::binary_array_t extra_nonce;
+    binary_array_t extra_nonce;
 
     if(m_extra_messages.size() && m_config.current_extra_message_index < m_extra_messages.size()) {
       extra_nonce = m_extra_messages[m_config.current_extra_message_index];

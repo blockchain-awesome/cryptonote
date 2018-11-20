@@ -17,6 +17,7 @@
 #include "rpc/HttpClient.h"
 #include "rpc/CoreRpcServerCommandsDefinitions.h"
 #include "rpc/JsonRpc.h"
+#include "cryptonote/structures/array.hpp"
 
 using namespace cryptonote;
 

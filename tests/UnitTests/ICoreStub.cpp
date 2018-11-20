@@ -71,7 +71,7 @@ cryptonote::ICryptonoteProtocol* ICoreStub::get_protocol() {
   return nullptr;
 }
 
-bool ICoreStub::handle_incoming_tx(cryptonote::binary_array_t const& tx_blob, cryptonote::tx_verification_context_t& tvc, bool keeped_by_block) {
+bool ICoreStub::handle_incoming_tx(binary_array_t const& tx_blob, cryptonote::tx_verification_context_t& tvc, bool keeped_by_block) {
   return true;
 }
 

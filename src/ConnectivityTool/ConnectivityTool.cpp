@@ -23,7 +23,6 @@
 #include "p2p/LevinProtocol.h"
 #include "rpc/CoreRpcServerCommandsDefinitions.h"
 #include "rpc/HttpClient.h"
-#include "serialization/SerializationTools.h"
 #include "version.h"
 
 namespace po = boost::program_options;

@@ -19,6 +19,7 @@
 #include "cryptonote/core/VerificationContext.h"
 #include "common/StringTools.h"
 #include "cryptonote/structures/block_entry.h"
+#include "cryptonote/structures/array.hpp"
 
 using namespace crypto;
 using namespace cryptonote;

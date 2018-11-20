@@ -32,6 +32,7 @@
 #include "transfers/TransfersContainer.h"
 #include "WalletSerialization.h"
 #include "WalletErrors.h"
+#include "cryptonote/structures/array.hpp"
 
 using namespace Common;
 using namespace crypto;
@@ -996,7 +997,7 @@ bool WalletGreen::updateWalletTransactionInfo(size_t transactionId, const crypto
 
     // Fix LegacyWallet error. Some old versions didn't fill extra field
     if (transaction.extra.empty() && !info.extra.empty()) {
-      transaction.extra = Common::asString(info.extra);
+      transaction.extra = BinaryArray::toString(info.extra);
       updated = true;
     }
 

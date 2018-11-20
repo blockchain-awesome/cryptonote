@@ -19,6 +19,8 @@
 #include "Miner.h"
 #include "TransactionExtra.h"
 #include "IBlock.h"
+#include "cryptonote/structures/array.hpp"
+
 #undef ERROR
 
 using namespace Logging;
@@ -506,9 +508,9 @@ bool core::handle_incoming_block(const block_t& b, block_verification_context_t&
       binary_array_t blockBa;
       bool r = BinaryArray::to(b, blockBa);
       if (!(r)) { logger(ERROR, BRIGHT_RED) << "failed to serialize block"; return false; }
-      arg.b.block = asString(blockBa);
+      arg.b.block = BinaryArray::toString(blockBa);
       for (auto& tx : txs) {
-        arg.b.txs.push_back(asString(BinaryArray::to(tx)));
+        arg.b.txs.push_back(BinaryArray::toString(BinaryArray::to(tx)));
       }
 
       m_pprotocol->relay_block(arg);
@@ -672,9 +674,9 @@ bool core::queryBlocks(const std::vector<crypto::hash_t>& knownBlockIds, uint64_
 
       // fill data
       block_complete_entry_t& completeEntry = item;
-      completeEntry.block = asString(BinaryArray::to(b));
+      completeEntry.block = BinaryArray::toString(BinaryArray::to(b));
       for (auto& tx : txs) {
-        completeEntry.txs.push_back(asString(BinaryArray::to(tx)));
+        completeEntry.txs.push_back(BinaryArray::toString(BinaryArray::to(tx)));
       }
     }
 
@@ -757,7 +759,7 @@ bool core::queryBlocksLite(const std::vector<crypto::hash_t>& knownBlockIds, uin
       std::list<crypto::hash_t> missedTxs;
       m_blockchain.getTransactions(b.transactionHashes, txs, missedTxs);
 
-      item.block = asString(BinaryArray::to(b));
+      item.block = BinaryArray::toString(BinaryArray::to(b));
 
       for (const auto& tx: txs) {
         transaction_prefix_info_t info;

@@ -15,7 +15,7 @@
 #include "cryptonote/core/VerificationContext.h"
 #include "cryptonote/protocol/handler_common.h"
 #include "InProcessNodeErrors.h"
-#include "common/StringTools.h"
+#include "cryptonote/structures/array.hpp"
 
 using namespace crypto;
 using namespace Common;
@@ -150,11 +150,11 @@ std::error_code InProcessNode::doGetNewBlocks(std::vector<crypto::hash_t>&& know
       assert(completeBlock != nullptr);
 
       cryptonote::block_complete_entry_t be;
-      be.block = asString(BinaryArray::to(completeBlock->getBlock()));
+      be.block = BinaryArray::toString(BinaryArray::to(completeBlock->getBlock()));
 
       be.txs.reserve(completeBlock->getTransactionCount());
       for (size_t i = 0; i < completeBlock->getTransactionCount(); ++i) {
-        be.txs.push_back(asString(BinaryArray::to(completeBlock->getTransaction(i))));
+        be.txs.push_back(BinaryArray::toString(BinaryArray::to(completeBlock->getTransaction(i))));
       }
 
       newBlocks.push_back(std::move(be));
@@ -309,7 +309,7 @@ std::error_code InProcessNode::doRelayTransaction(const cryptonote::transaction_
   }
 
   try {
-    cryptonote::binary_array_t transactionBinaryArray = BinaryArray::to(transaction);
+    binary_array_t transactionBinaryArray = BinaryArray::to(transaction);
     cryptonote::tx_verification_context_t tvc = boost::value_initialized<cryptonote::tx_verification_context_t>();
 
     if (!core.handle_incoming_tx(transactionBinaryArray, tvc, false)) {
@@ -325,7 +325,7 @@ std::error_code InProcessNode::doRelayTransaction(const cryptonote::transaction_
     }
 
     cryptonote::NOTIFY_NEW_TRANSACTIONS::request r;
-    r.txs.push_back(asString(transactionBinaryArray));
+    r.txs.push_back(BinaryArray::toString(transactionBinaryArray));
     core.get_protocol()->relay_transactions(r);
   } catch (std::system_error& e) {
     return e.code();

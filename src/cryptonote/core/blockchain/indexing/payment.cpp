@@ -1,9 +1,8 @@
 #include "payment.h"
-#include "cryptonote/core/CryptoNoteTools.h"
+#include "cryptonote/structures/array.hpp"
 #include "blockchain_explorer/BlockchainExplorerDataBuilder.h"
 
 namespace cryptonote {
-
 bool PaymentIdIndex::add(const transaction_t& transaction) {
   crypto::hash_t paymentId;
   crypto::hash_t transactionHash = BinaryArray::objectHash(transaction);

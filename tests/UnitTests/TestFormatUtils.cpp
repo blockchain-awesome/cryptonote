@@ -117,7 +117,7 @@ TEST(parse_and_validate_tx_extra, is_valid_tx_extra_parsed)
   cryptonote::transaction_t tx = AUTO_VAL_INIT(tx);
   cryptonote::Account acc;
   acc.generate();
-  cryptonote::binary_array_t b = Common::asBinaryArray("dsdsdfsdfsf");
+  binary_array_t b = Common::asBinaryArray("dsdsdfsdfsf");
   ASSERT_TRUE(currency.constructMinerTx(0, 0, 10000000000000, 1000, currency.minimumFee(), acc.getAccountKeys().address, tx, b, 1));
   crypto::public_key_t tx_pub_key = cryptonote::getTransactionPublicKeyFromExtra(tx.extra);
   ASSERT_NE(tx_pub_key, cryptonote::NULL_PUBLIC_KEY);
@@ -129,7 +129,7 @@ TEST(parse_and_validate_tx_extra, fails_on_big_extra_nonce)
   cryptonote::transaction_t tx = AUTO_VAL_INIT(tx);
   cryptonote::Account acc;
   acc.generate();
-  cryptonote::binary_array_t b(TX_EXTRA_NONCE_MAX_COUNT + 1, 0);
+  binary_array_t b(TX_EXTRA_NONCE_MAX_COUNT + 1, 0);
   ASSERT_FALSE(currency.constructMinerTx(0, 0, 10000000000000, 1000, currency.minimumFee(), acc.getAccountKeys().address, tx, b, 1));
 }
 TEST(parse_and_validate_tx_extra, fails_on_wrong_size_in_extra_nonce)

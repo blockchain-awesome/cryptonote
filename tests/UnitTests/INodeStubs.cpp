@@ -5,6 +5,7 @@
 #include "INodeStubs.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/CryptoNoteTools.h"
+#include "cryptonote/structures/array.hpp"
 #include "cryptonote/core/TransactionApi.h"
 #include "wallet/WalletErrors.h"
 
@@ -94,7 +95,7 @@ void INodeTrivialRefreshStub::doGetNewBlocks(std::vector<crypto::hash_t> knownBl
   for (; m_lastHeight < blockchain.size(); ++m_lastHeight)
   {
     block_complete_entry_t e;
-    e.block = asString(BinaryArray::to(blockchain[m_lastHeight]));
+    e.block = BinaryArray::toString(BinaryArray::to(blockchain[m_lastHeight]));
 
     for (auto hash : blockchain[m_lastHeight].transactionHashes)
     {
@@ -102,7 +103,7 @@ void INodeTrivialRefreshStub::doGetNewBlocks(std::vector<crypto::hash_t> knownBl
       if (!m_blockchainGenerator.getTransactionByHash(hash, tx))
         continue;
 
-      e.txs.push_back(asString(BinaryArray::to(tx)));
+      e.txs.push_back(BinaryArray::toString(BinaryArray::to(tx)));
     }
 
     newBlocks.push_back(e);

@@ -7,6 +7,7 @@
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "common/base58.h"
 #include "common/StringTools.h"
+#include "cryptonote/structures/array.hpp"
 
 namespace cryptonote
 {
@@ -50,7 +51,7 @@ std::string Account::getAddress(const account_public_address_t &adr, uint64_t pr
   binary_array_t ba;
   bool r = BinaryArray::to(adr, ba);
   assert(r);
-  return Tools::Base58::encode_addr(prefix, Common::asString(ba));
+  return Tools::Base58::encode_addr(prefix, BinaryArray::toString(ba));
 }
 
 std::string Account::toAddress()
@@ -58,7 +59,7 @@ std::string Account::toAddress()
   binary_array_t ba;
   bool r = BinaryArray::to(m_keys.address, ba);
   assert(r);
-  return Tools::Base58::encode_addr(m_publicAddressBase58Prefix, Common::asString(ba));
+  return Tools::Base58::encode_addr(m_publicAddressBase58Prefix, BinaryArray::toString(ba));
 }
 
 bool Account::parseAddress(uint64_t &prefix, account_public_address_t &adr, const std::string &str)

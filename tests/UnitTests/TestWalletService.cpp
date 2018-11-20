@@ -406,7 +406,7 @@ public:
   }
 
   WalletTransactionBuilder& extra(const std::string& extra) {
-    transaction.extra = Common::asString(Common::fromHex(extra));
+    transaction.extra = BinaryArray::toString(Common::fromHex(extra));
     return *this;
   }
 

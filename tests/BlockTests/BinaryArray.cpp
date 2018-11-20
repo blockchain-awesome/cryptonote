@@ -22,7 +22,7 @@ public:
 
 TEST_F(BinaryArrayTest, create)
 {
-  cryptonote::binary_array_t bat;
+  binary_array_t bat;
   // cryptonote::transaction_t add;
   bat.push_back('h');
   bat.push_back('e');
@@ -34,7 +34,7 @@ TEST_F(BinaryArrayTest, create)
   crypto::hash_t hash = ba.getHash();
   std::string hex = ba.toString();
 
-  cryptonote::binary_array_t bat1;
+  binary_array_t bat1;
   
   cryptonote::BinaryArray::to(bat, bat1);
   // cryptonote::BinaryArray::to(add);

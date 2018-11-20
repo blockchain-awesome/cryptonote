@@ -8,6 +8,7 @@
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "serialization/ISerializer.h"
 #include "serialization/SerializationOverloads.h"
+#include "cryptonote/structures/array.hpp"
 
 using namespace crypto;
 

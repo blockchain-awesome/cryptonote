@@ -23,6 +23,7 @@
 #include "rpc/CoreRpcServerCommandsDefinitions.h"
 #include "rpc/HttpClient.h"
 #include "rpc/JsonRpc.h"
+#include "cryptonote/structures/array.hpp"
 
 #ifndef AUTO_VAL_INIT
 #define AUTO_VAL_INIT(n) boost::value_initialized<decltype(n)>()

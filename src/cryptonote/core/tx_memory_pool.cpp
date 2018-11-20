@@ -20,6 +20,7 @@
 #include "CryptoNoteFormatUtils.h"
 #include "CryptoNoteTools.h"
 #include "CryptoNoteConfig.h"
+#include "cryptonote/structures/array.hpp"
 
 using namespace Logging;
 

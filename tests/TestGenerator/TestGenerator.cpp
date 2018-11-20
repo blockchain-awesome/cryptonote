@@ -289,7 +289,7 @@ bool constructMinerTxBySize(const cryptonote::Currency& currency, cryptonote::tr
                             std::vector<size_t>& blockSizes, size_t targetTxSize, size_t targetBlockSize,
                             uint64_t fee/* = 0*/) {
   if (!currency.constructMinerTx(height, Common::medianValue(blockSizes), alreadyGeneratedCoins, targetBlockSize,
-      fee, minerAddress, baseTransaction, cryptonote::binary_array_t(), 1)) {
+      fee, minerAddress, baseTransaction, binary_array_t(), 1)) {
     return false;
   }
 

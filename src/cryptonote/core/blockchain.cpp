@@ -15,6 +15,7 @@
 #include "rpc/CoreRpcServerCommandsDefinitions.h"
 #include "serialization/BinarySerializationTools.h"
 #include "CryptoNoteTools.h"
+#include "cryptonote/structures/array.hpp"
 
 #include <cryptonote/core/blockchain/defines.h>
 #include "cryptonote/core/blockchain/serializer/block_cache.hpp"
@@ -874,10 +875,10 @@ bool Blockchain::handleGetObjects(NOTIFY_REQUEST_GET_OBJECTS::request& arg, NOTI
     rsp.blocks.push_back(block_complete_entry_t());
     block_complete_entry_t& e = rsp.blocks.back();
     //pack block
-    e.block = asString(BinaryArray::to(bl));
+    e.block = BinaryArray::toString(BinaryArray::to(bl));
     //pack transactions
     for (transaction_t& tx : txs) {
-      e.txs.push_back(asString(BinaryArray::to(tx)));
+      e.txs.push_back(BinaryArray::toString(BinaryArray::to(tx)));
     }
   }
 
@@ -886,7 +887,7 @@ bool Blockchain::handleGetObjects(NOTIFY_REQUEST_GET_OBJECTS::request& arg, NOTI
   getTransactions(arg.txs, txs, rsp.missed_ids);
   //pack aside transactions
   for (const auto& tx : txs) {
-    rsp.txs.push_back(asString(BinaryArray::to(tx)));
+    rsp.txs.push_back(BinaryArray::toString(BinaryArray::to(tx)));
   }
 
   return true;

@@ -18,6 +18,7 @@
 #include "CryptoNoteTools.h"
 #include "TransactionExtra.h"
 #include "../structures/block_entry.h"
+#include "cryptonote/structures/array.hpp"
 
 #undef ERROR
 

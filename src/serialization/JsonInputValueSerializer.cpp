@@ -149,7 +149,7 @@ bool JsonInputValueSerializer::binary(std::string& value, Common::StringView nam
   }
 
   std::string valueHex = ptr->getString();
-  value = Common::asString(Common::fromHex(valueHex));
+  value = array::toString(Common::fromHex(valueHex));
 
   return true;
 }
