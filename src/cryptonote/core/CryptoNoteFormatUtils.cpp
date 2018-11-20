@@ -24,7 +24,7 @@ using namespace Common;
 namespace cryptonote {
 
 bool parseAndValidateTransactionFromBinaryArray(const binary_array_t& tx_blob, transaction_t& tx, hash_t& tx_hash, hash_t& tx_prefix_hash) {
-  if (!fromBinaryArray(tx, tx_blob)) {
+  if (!BinaryArray::from(tx, tx_blob)) {
     return false;
   }
 

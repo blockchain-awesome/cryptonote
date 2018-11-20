@@ -159,7 +159,7 @@ namespace cryptonote {
   }
 
   TransactionImpl::TransactionImpl(const binary_array_t& ba) {
-    if (!fromBinaryArray(transaction, ba)) {
+    if (!BinaryArray::from(transaction, ba)) {
       throw std::runtime_error("Invalid transaction data");
     }
     
@@ -387,7 +387,7 @@ namespace cryptonote {
   }
 
   binary_array_t TransactionImpl::getTransactionData() const {
-    return toBinaryArray(transaction);
+    return BinaryArray::to(transaction);
   }
 
   void TransactionImpl::setPaymentId(const hash_t& hash) {

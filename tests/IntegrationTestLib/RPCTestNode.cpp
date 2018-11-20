@@ -65,7 +65,7 @@ bool RPCTestNode::getBlockTemplate(const std::string& minerAddress, cryptonote::
     difficulty = rsp.difficulty;
 
     binary_array_t blockBlob = (::Common::fromHex(rsp.blocktemplate_blob));
-    return fromBinaryArray(blockTemplate, blockBlob);
+    return BinaryArray::from(blockTemplate, blockBlob);
   } catch (std::exception& e) {
     LOG_ERROR("JSON-RPC call startMining() failed: " + std::string(e.what()));
     return false;

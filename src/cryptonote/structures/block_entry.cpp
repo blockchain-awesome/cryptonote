@@ -32,7 +32,7 @@ std::string Block::toString(const block_entry_t &block)
 }
 
 bool Block::getBlob(const block_t& b, binary_array_t& ba) {
-  if (!toBinaryArray(static_cast<const block_header_t&>(b), ba)) {
+  if (!BinaryArray::to(static_cast<const block_header_t&>(b), ba)) {
     return false;
   }
 
@@ -76,7 +76,7 @@ block_t Block::genesis(config::config_t &conf)
 
   bool r =
       Common::fromHex(genesisCoinbaseTxHex, minerTxBlob) &&
-      fromBinaryArray(block.baseTransaction, minerTxBlob);
+      BinaryArray::from(block.baseTransaction, minerTxBlob);
 
   if (!r)
   {

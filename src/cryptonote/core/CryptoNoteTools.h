@@ -13,67 +13,10 @@
 #include "cryptonote/core/blockchain/serializer/basics.h"
 
 namespace cryptonote {
-
-template<class T>
-bool toBinaryArray(const T& object, binary_array_t& binaryArray) {
-  try {
-    ::Common::VectorOutputStream stream(binaryArray);
-    BinaryOutputStreamSerializer serializer(stream);
-    serialize(const_cast<T&>(object), serializer);
-  } catch (std::exception&) {
-    return false;
-  }
-
-  return true;
-}
-
-template<>
-bool toBinaryArray(const binary_array_t& object, binary_array_t& binaryArray); 
-
-template<class T>
-binary_array_t toBinaryArray(const T& object) {
-  binary_array_t ba;
-  toBinaryArray(object, ba);
-  return ba;
-}
-
-template<class T>
-bool fromBinaryArray(T& object, const binary_array_t& binaryArray) {
-  bool result = false;
-  try {
-    Common::MemoryInputStream stream(binaryArray.data(), binaryArray.size());
-    BinaryInputStreamSerializer serializer(stream);
-    serialize(object, serializer);
-    result = stream.endOfStream(); // check that all data was consumed
-  } catch (std::exception&) {
-  }
-
-  return result;
-}
-
-template<class T>
-bool getObjectBinarySize(const T& object, size_t& size) {
-  binary_array_t ba;
-  if (!toBinaryArray(object, ba)) {
-    size = (std::numeric_limits<size_t>::max)();
-    return false;
-  }
-
-  size = ba.size();
-  return true;
-}
-
-template<class T>
-size_t getObjectBinarySize(const T& object) {
-  size_t size;
-  getObjectBinarySize(object, size);
-  return size;
-}
-
 template<class T>
 bool getObjectHash(const T& object, crypto::hash_t& hash) {
   binary_array_t ba;
-  if (!toBinaryArray(object, ba)) {
+  if (!BinaryArray::to(object, ba)) {
     hash = NULL_HASH;
     return false;
   }
@@ -85,7 +28,7 @@ bool getObjectHash(const T& object, crypto::hash_t& hash) {
 template<class T>
 bool getObjectHash(const T& object, crypto::hash_t& hash, size_t& size) {
   binary_array_t ba;
-  if (!toBinaryArray(object, ba)) {
+  if (!BinaryArray::to(object, ba)) {
     hash = NULL_HASH;
     size = (std::numeric_limits<size_t>::max)();
     return false;

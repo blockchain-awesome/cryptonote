@@ -195,7 +195,7 @@ bool TransactionPrefixImpl::validateSignatures() const {
 }
 
 binary_array_t TransactionPrefixImpl::getTransactionData() const {
-  return toBinaryArray(m_txPrefix);
+  return BinaryArray::to(m_txPrefix);
 }
 
 bool TransactionPrefixImpl::getTransactionSecretKey(secret_key_t& key) const {

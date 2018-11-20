@@ -25,7 +25,7 @@ using namespace cryptonote;
 namespace {
 transaction_t createTx(ITransactionReader& tx) {
   transaction_t outTx;
-  fromBinaryArray(outTx, tx.getTransactionData());
+  BinaryArray::from(outTx, tx.getTransactionData());
 
   return outTx;
 }

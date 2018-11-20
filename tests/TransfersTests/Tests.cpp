@@ -408,7 +408,7 @@ std::error_code submitTransaction(INode& node, ITransactionReader& tx) {
   auto data = tx.getTransactionData();
 
   cryptonote::transaction_t outTx;
-  fromBinaryArray(outTx, data);
+  BinaryArray::from(outTx, data);
 
 
   LOG_DEBUG("Submitting transaction " + Common::toHex(tx.getTransactionHash().data, 32));

@@ -7,6 +7,7 @@
 #include <fstream>
 #include <cstring>
 
+#include "crypto/crypto.h"
 #include "cryptonote/structures/array.h"
 #include "cryptonote/core/key.h"
 
@@ -22,6 +23,7 @@ public:
 TEST_F(BinaryArrayTest, create)
 {
   cryptonote::binary_array_t bat;
+  // cryptonote::transaction_t add;
   bat.push_back('h');
   bat.push_back('e');
   bat.push_back('l');
@@ -35,6 +37,7 @@ TEST_F(BinaryArrayTest, create)
   cryptonote::binary_array_t bat1;
   
   cryptonote::BinaryArray::to(bat, bat1);
+  // cryptonote::BinaryArray::to(add);
   cryptonote::BinaryArray ba1(bat1);
 
   ASSERT_TRUE(ba.toString() == "hello");

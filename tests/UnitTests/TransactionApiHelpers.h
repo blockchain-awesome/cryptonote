@@ -97,7 +97,7 @@ namespace {
 
   inline transaction_t convertTx(ITransactionReader& tx) {
     transaction_t oldTx;
-    fromBinaryArray(oldTx, tx.getTransactionData()); // ignore return code
+    BinaryArray::from(oldTx, tx.getTransactionData()); // ignore return code
     return oldTx;
   }
 }

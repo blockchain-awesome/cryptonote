@@ -94,7 +94,7 @@ void INodeTrivialRefreshStub::doGetNewBlocks(std::vector<crypto::hash_t> knownBl
   for (; m_lastHeight < blockchain.size(); ++m_lastHeight)
   {
     block_complete_entry_t e;
-    e.block = asString(toBinaryArray(blockchain[m_lastHeight]));
+    e.block = asString(BinaryArray::to(blockchain[m_lastHeight]));
 
     for (auto hash : blockchain[m_lastHeight].transactionHashes)
     {
@@ -102,7 +102,7 @@ void INodeTrivialRefreshStub::doGetNewBlocks(std::vector<crypto::hash_t> knownBl
       if (!m_blockchainGenerator.getTransactionByHash(hash, tx))
         continue;
 
-      e.txs.push_back(asString(toBinaryArray(tx)));
+      e.txs.push_back(asString(BinaryArray::to(tx)));
     }
 
     newBlocks.push_back(e);
@@ -238,7 +238,7 @@ void INodeTrivialRefreshStub::queryBlocks(std::vector<crypto::hash_t>&& knownBlo
     for (const auto& item : *resultHolder) {
       BlockShortEntry entry;
 
-      if (!fromBinaryArray(entry.block, asBinaryArray(item.block))) {
+      if (!BinaryArray::from(entry.block, asBinaryArray(item.block))) {
         callback(std::make_error_code(std::errc::invalid_argument));
         return;
       }
@@ -248,7 +248,7 @@ void INodeTrivialRefreshStub::queryBlocks(std::vector<crypto::hash_t>&& knownBlo
 
       for (const auto& txBlob: item.txs) {
         transaction_t tx;
-        if (!fromBinaryArray(tx, asBinaryArray(txBlob))) {
+        if (!BinaryArray::from(tx, asBinaryArray(txBlob))) {
           callback(std::make_error_code(std::errc::invalid_argument));
           return;
         }

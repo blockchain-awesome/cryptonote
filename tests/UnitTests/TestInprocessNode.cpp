@@ -39,7 +39,7 @@ struct CallbackStatus {
 namespace {
 cryptonote::transaction_t createTx(cryptonote::ITransactionReader& tx) {
   cryptonote::transaction_t outTx;
-  fromBinaryArray(outTx, tx.getTransactionData());
+  BinaryArray::from(outTx, tx.getTransactionData());
   return outTx;
 }
 }
@@ -686,7 +686,7 @@ TEST_F(InProcessNodeTests, getPoolDiffereceActualBC) {
     transactionHashes.insert(cryptonote::getObjectHash(tx));
     cryptonote::tx_verification_context_t tvc = boost::value_initialized<tx_verification_context_t>();
     bool keptByBlock = false;
-    coreStub.handleIncomingTransaction(tx, cryptonote::getObjectHash(tx), cryptonote::getObjectBinarySize(tx), tvc, keptByBlock);
+    coreStub.handleIncomingTransaction(tx, cryptonote::getObjectHash(tx), cryptonote::BinaryArray::size(tx), tvc, keptByBlock);
     ASSERT_TRUE(tvc.m_added_to_pool);
     ASSERT_FALSE(tvc.m_verifivation_failed);
   }
@@ -725,7 +725,7 @@ TEST_F(InProcessNodeTests, getPoolDiffereceNotActualBC) {
     transactionHashes.insert(cryptonote::getObjectHash(tx));
     cryptonote::tx_verification_context_t tvc = boost::value_initialized<tx_verification_context_t>();
     bool keptByBlock = false;
-    coreStub.handleIncomingTransaction(tx, cryptonote::getObjectHash(tx), cryptonote::getObjectBinarySize(tx), tvc, keptByBlock);
+    coreStub.handleIncomingTransaction(tx, cryptonote::getObjectHash(tx), cryptonote::BinaryArray::size(tx), tvc, keptByBlock);
     ASSERT_TRUE(tvc.m_added_to_pool);
     ASSERT_FALSE(tvc.m_verifivation_failed);
   }

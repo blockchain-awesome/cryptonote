@@ -9,14 +9,20 @@ std::string BinaryArray::toString()
 {
   return Common::asString(m_ba);
 }
-
+template <>
 bool BinaryArray::to(const binary_array_t &object, binary_array_t &binaryArray)
 {
-  Common::VectorOutputStream stream(binaryArray);
-  BinaryOutputStreamSerializer serializer(stream);
-  std::string oldBlob = Common::asString(object);
-  serializer(oldBlob, "");
-
+  try
+  {
+    Common::VectorOutputStream stream(binaryArray);
+    BinaryOutputStreamSerializer serializer(stream);
+    std::string oldBlob = Common::asString(object);
+    serializer(oldBlob, "");
+  }
+  catch (std::exception &)
+  {
+    return false;
+  }
   return true;
 }
 

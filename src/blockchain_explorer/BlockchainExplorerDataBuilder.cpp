@@ -116,8 +116,8 @@ bool BlockchainExplorerDataBuilder::fillBlockDetails(const block_t&block, BlockD
   }
   blockDetails.transactionsCumulativeSize = blockSize;
 
-  size_t blokBlobSize = getObjectBinarySize(block);
-  size_t minerTxBlobSize = getObjectBinarySize(block.baseTransaction);
+  size_t blokBlobSize = BinaryArray::size(block);
+  size_t minerTxBlobSize = BinaryArray::size(block.baseTransaction);
   blockDetails.blockSize = blokBlobSize + blockDetails.transactionsCumulativeSize - minerTxBlobSize;
 
   if (!core.getAlreadyGeneratedCoins(hash, blockDetails.alreadyGeneratedCoins)) {
@@ -207,7 +207,7 @@ bool BlockchainExplorerDataBuilder::fillTransactionDetails(const transaction_t& 
     }
   }
 
-  transactionDetails.size = getObjectBinarySize(transaction);
+  transactionDetails.size = BinaryArray::size(transaction);
   transactionDetails.unlockTime = transaction.unlockTime;
   transactionDetails.totalOutputsAmount = get_outs_money_amount(transaction);
 

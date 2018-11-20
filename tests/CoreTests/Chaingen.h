@@ -285,7 +285,7 @@ public:
 
     cryptonote::tx_verification_context_t tvc = boost::value_initialized<decltype(tvc)>();
     size_t pool_size = m_c.get_pool_transactions_count();
-    m_c.handle_incoming_tx(toBinaryArray(tx), tvc, m_txs_keeped_by_block);
+    m_c.handle_incoming_tx(BinaryArray::to(tx), tvc, m_txs_keeped_by_block);
     bool tx_added = pool_size + 1 == m_c.get_pool_transactions_count();
     bool r = check_tx_verification_context_t(tvc, tx_added, m_ev_index, tx, m_validator);
     CHECK_AND_NO_ASSERT_MES(r, false, "tx verification context check failed");
@@ -297,7 +297,7 @@ public:
     log_event("cryptonote::block_t");
 
     cryptonote::block_verification_context_t bvc = boost::value_initialized<decltype(bvc)>();
-    m_c.handle_incoming_block_blob(toBinaryArray(b), bvc, false, false);
+    m_c.handle_incoming_block_blob(BinaryArray::to(b), bvc, false, false);
     bool r = check_block_verification_context_t(bvc, m_ev_index, b, m_validator);
     CHECK_AND_NO_ASSERT_MES(r, false, "block verification context check failed");
     return r;
@@ -323,7 +323,7 @@ public:
     m_c.handle_incoming_block_blob(sr_block.data, bvc, false, false);
 
     cryptonote::block_t blk;
-    if (!cryptonote::fromBinaryArray(blk, sr_block.data)) {
+    if (!cryptonote::BinaryArray::from(blk, sr_block.data)) {
       blk = cryptonote::block_t();
     }
 
@@ -343,7 +343,7 @@ public:
 
     cryptonote::transaction_t tx;
 
-    if (!cryptonote::fromBinaryArray(tx, sr_tx.data)) {
+    if (!cryptonote::BinaryArray::from(tx, sr_tx.data)) {
       tx = cryptonote::transaction_t();
     }
 

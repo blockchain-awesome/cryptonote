@@ -150,11 +150,11 @@ std::error_code InProcessNode::doGetNewBlocks(std::vector<crypto::hash_t>&& know
       assert(completeBlock != nullptr);
 
       cryptonote::block_complete_entry_t be;
-      be.block = asString(toBinaryArray(completeBlock->getBlock()));
+      be.block = asString(BinaryArray::to(completeBlock->getBlock()));
 
       be.txs.reserve(completeBlock->getTransactionCount());
       for (size_t i = 0; i < completeBlock->getTransactionCount(); ++i) {
-        be.txs.push_back(asString(toBinaryArray(completeBlock->getTransaction(i))));
+        be.txs.push_back(asString(BinaryArray::to(completeBlock->getTransaction(i))));
       }
 
       newBlocks.push_back(std::move(be));
@@ -309,7 +309,7 @@ std::error_code InProcessNode::doRelayTransaction(const cryptonote::transaction_
   }
 
   try {
-    cryptonote::binary_array_t transactionBinaryArray = toBinaryArray(transaction);
+    cryptonote::binary_array_t transactionBinaryArray = BinaryArray::to(transaction);
     cryptonote::tx_verification_context_t tvc = boost::value_initialized<cryptonote::tx_verification_context_t>();
 
     if (!core.handle_incoming_tx(transactionBinaryArray, tvc, false)) {
@@ -487,7 +487,7 @@ std::error_code InProcessNode::doQueryBlocksLite(std::vector<crypto::hash_t>&& k
 
     if (!entry.block.empty()) {
       bse.hasBlock = true;
-      if (!fromBinaryArray(bse.block, asBinaryArray(entry.block))) {
+      if (!BinaryArray::from(bse.block, asBinaryArray(entry.block))) {
         return std::make_error_code(std::errc::invalid_argument);
       }
     }

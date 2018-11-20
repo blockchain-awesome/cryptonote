@@ -1295,7 +1295,7 @@ size_t WalletGreen::validateSaveAndSendTransaction(const ITransactionReader& tra
   }
 
   cryptonote::transaction_t cryptoNoteTransaction;
-  if (!fromBinaryArray(cryptoNoteTransaction, transactionData)) {
+  if (!BinaryArray::from(cryptoNoteTransaction, transactionData)) {
     throw std::system_error(make_error_code(error::INTERNAL_WALLET_ERROR), "Failed to deserialize created transaction");
   }
 

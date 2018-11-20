@@ -553,7 +553,7 @@ bool TestBlockCumulativeSizeExceedsLimit::generate(std::vector<test_event_entry>
 
     prevBlock = block;
 
-    if (getObjectBinarySize(block.baseTransaction) <= m_currency.maxBlockCumulativeSize(height)) {
+    if (BinaryArray::size(block.baseTransaction) <= m_currency.maxBlockCumulativeSize(height)) {
       events.push_back(block);
     } else {
       DO_CALLBACK(events, "markInvalidBlock");
@@ -614,14 +614,14 @@ bool gen_block_invalid_binary_format::generate(std::vector<test_event_entry>& ev
   block_t blk_test;
   std::vector<crypto::hash_t> tx_hashes;
   tx_hashes.push_back(getObjectHash(tx_0));
-  size_t txs_size = getObjectBinarySize(tx_0);
+  size_t txs_size = BinaryArray::size(tx_0);
   diffic = m_currency.nextDifficulty(timestamps, cummulative_difficulties);
   if (!generator.constructBlockManually(blk_test, blk_last, miner_account,
     test_generator::bf_major_ver | test_generator::bf_diffic | test_generator::bf_timestamp | test_generator::bf_tx_hashes, 
     config::mainnet::data.block.version.major, 0, blk_last.timestamp, crypto::hash_t(), diffic, transaction_t(), tx_hashes, txs_size))
     return false;
 
-  binary_array_t blob = toBinaryArray(blk_test);
+  binary_array_t blob = BinaryArray::to(blk_test);
   for (size_t i = 0; i < blob.size(); ++i)
   {
     for (size_t bit_idx = 0; bit_idx < sizeof(binary_array_t::value_type) * 8; ++bit_idx)

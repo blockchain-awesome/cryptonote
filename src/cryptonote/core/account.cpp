@@ -48,7 +48,7 @@ void Account::serialize(ISerializer &s)
 std::string Account::getAddress(const account_public_address_t &adr, uint64_t prefix)
 {
   binary_array_t ba;
-  bool r = toBinaryArray(adr, ba);
+  bool r = BinaryArray::to(adr, ba);
   assert(r);
   return Tools::Base58::encode_addr(prefix, Common::asString(ba));
 }
@@ -56,7 +56,7 @@ std::string Account::getAddress(const account_public_address_t &adr, uint64_t pr
 std::string Account::toAddress()
 {
   binary_array_t ba;
-  bool r = toBinaryArray(m_keys.address, ba);
+  bool r = BinaryArray::to(m_keys.address, ba);
   assert(r);
   return Tools::Base58::encode_addr(m_publicAddressBase58Prefix, Common::asString(ba));
 }
@@ -66,7 +66,7 @@ bool Account::parseAddress(uint64_t &prefix, account_public_address_t &adr, cons
   std::string data;
 
   return Tools::Base58::decode_addr(str, prefix, data) &&
-         fromBinaryArray(adr, Common::asBinaryArray(data)) &&
+         BinaryArray::from(adr, Common::asBinaryArray(data)) &&
          // ::serialization::parse_binary(data, adr) &&
          check_key(adr.spendPublicKey) &&
          check_key(adr.viewPublicKey);

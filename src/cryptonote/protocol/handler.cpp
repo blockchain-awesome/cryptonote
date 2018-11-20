@@ -327,7 +327,7 @@ int CryptoNoteProtocolHandler::handle_response_get_objects(int command, NOTIFY_R
   for (const block_complete_entry_t& block_entry : arg.blocks) {
     ++count;
     block_t b;
-    if (!fromBinaryArray(b, asBinaryArray(block_entry.block))) {
+    if (!BinaryArray::from(b, asBinaryArray(block_entry.block))) {
       logger(Logging::ERROR) << context << "sent wrong block: failed to parse and validate block: \r\n"
         << toHex(asBinaryArray(block_entry.block)) << "\r\n dropping connection";
       context.m_state = CryptoNoteConnectionContext::state_shutdown;
@@ -587,7 +587,7 @@ int CryptoNoteProtocolHandler::handleRequestTxPool(int command, NOTIFY_REQUEST_T
   if (!addedTransactions.empty()) {
     NOTIFY_NEW_TRANSACTIONS::request notification;
     for (auto& tx : addedTransactions) {
-      notification.txs.push_back(asString(toBinaryArray(tx)));
+      notification.txs.push_back(asString(BinaryArray::to(tx)));
     }
 
     bool ok = post_notify<NOTIFY_NEW_TRANSACTIONS>(*m_p2p, notification, context);

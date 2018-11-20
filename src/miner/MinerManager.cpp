@@ -183,7 +183,7 @@ bool MinerManager::submitBlock(const block_t& minedBlock, const std::string& dae
     HttpClient client(m_dispatcher, daemonHost, daemonPort);
 
     COMMAND_RPC_SUBMITBLOCK::request request;
-    request.emplace_back(Common::toHex(toBinaryArray(minedBlock)));
+    request.emplace_back(Common::toHex(BinaryArray::to(minedBlock)));
 
     COMMAND_RPC_SUBMITBLOCK::response response;
 
@@ -218,7 +218,7 @@ BlockMiningParameters MinerManager::requestMiningParameters(System::Dispatcher& 
     BlockMiningParameters params;
     params.difficulty = response.difficulty;
 
-    if(!fromBinaryArray(params.blockTemplate, Common::fromHex(response.blocktemplate_blob))) {
+    if(!BinaryArray::from(params.blockTemplate, Common::fromHex(response.blocktemplate_blob))) {
       throw std::runtime_error("Couldn't deserialize block template");
     }
 
