@@ -59,7 +59,7 @@ bool Block::getHash(const block_t& block, crypto::hash_t& hash) {
     return false;
   }
 
-  return getObjectHash(ba, hash);
+  return BinaryArray::objectHash(ba, hash);
 }
 
 hash_t Block::getHash(const block_t&block) {

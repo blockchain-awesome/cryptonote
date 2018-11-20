@@ -40,7 +40,7 @@ public:
     if (!constructTransaction(this->m_miners[this->real_source_idx].getAccountKeys(), this->m_sources, destinations, std::vector<uint8_t>(), m_tx, 0, this->m_logger))
       return false;
 
-    getObjectHash(*static_cast<transaction_prefix_t*>(&m_tx), m_tx_prefix_hash);
+    BinaryArray::objectHash(*static_cast<transaction_prefix_t*>(&m_tx), m_tx_prefix_hash);
 
     return true;
   }

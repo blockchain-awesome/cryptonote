@@ -213,7 +213,7 @@ namespace cryptonote {
   bool TxMemoryPool::add_tx(const transaction_t &tx, tx_verification_context_t& tvc, bool keeped_by_block) {
     crypto::hash_t h = NULL_HASH;
     size_t blobSize = 0;
-    getObjectHash(tx, h, blobSize);
+    BinaryArray::objectHash(tx, h, blobSize);
     return add_tx(tx, h, blobSize, tvc, keeped_by_block);
   }
   //---------------------------------------------------------------------------------

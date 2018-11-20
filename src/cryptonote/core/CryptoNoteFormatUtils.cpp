@@ -30,7 +30,7 @@ bool parseAndValidateTransactionFromBinaryArray(const binary_array_t& tx_blob, t
 
   //TODO: validate tx
   cn_fast_hash(tx_blob.data(), tx_blob.size(), tx_hash);
-  getObjectHash(*static_cast<transaction_prefix_t*>(&tx), tx_prefix_hash);
+  BinaryArray::objectHash(*static_cast<transaction_prefix_t*>(&tx), tx_prefix_hash);
   return true;
 }
 
@@ -216,7 +216,7 @@ bool constructTransaction(
 
   //generate ring signatures
   hash_t tx_prefix_hash;
-  getObjectHash(*static_cast<transaction_prefix_t*>(&tx), tx_prefix_hash);
+  BinaryArray::objectHash(*static_cast<transaction_prefix_t*>(&tx), tx_prefix_hash);
 
   size_t i = 0;
   for (const transaction_source_entry_t& src_entr : sources) {
@@ -459,7 +459,7 @@ hash_t get_tx_tree_hash(const std::vector<hash_t>& tx_hashes) {
 hash_t get_tx_tree_hash(const block_t& b) {
   std::vector<hash_t> txs_ids;
   hash_t h = NULL_HASH;
-  getObjectHash(b.baseTransaction, h);
+  BinaryArray::objectHash(b.baseTransaction, h);
   txs_ids.push_back(h);
   for (auto& th : b.transactionHashes) {
     txs_ids.push_back(th);

@@ -179,14 +179,14 @@ namespace cryptonote {
 
   hash_t TransactionImpl::getTransactionHash() const {
     if (!transactionHash.is_initialized()) {
-      transactionHash = getObjectHash(transaction);
+      transactionHash = BinaryArray::objectHash(transaction);
     }
 
     return transactionHash.get();   
   }
 
   hash_t TransactionImpl::getTransactionPrefixHash() const {
-    return getObjectHash(*static_cast<const transaction_prefix_t*>(&transaction));
+    return BinaryArray::objectHash(*static_cast<const transaction_prefix_t*>(&transaction));
   }
 
   public_key_t TransactionImpl::getTransactionPublicKey() const {

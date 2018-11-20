@@ -144,7 +144,7 @@ size_t core::addChain(const std::vector<const IBlock*>& chain) {
 
       crypto::hash_t txHash = NULL_HASH;
       size_t blobSize = 0;
-      getObjectHash(tx, txHash, blobSize);
+      BinaryArray::objectHash(tx, txHash, blobSize);
       tx_verification_context_t tvc = boost::value_initialized<tx_verification_context_t>();
 
       if (!handleIncomingTransaction(tx, txHash, blobSize, tvc, true)) {
@@ -209,23 +209,23 @@ bool core::get_stat_info(CoreStateInfo& st_inf) {
 
 bool core::check_tx_semantic(const transaction_t& tx, bool keeped_by_block) {
   if (!tx.inputs.size()) {
-    logger(ERROR) << "tx with empty inputs, rejected for tx id= " << getObjectHash(tx);
+    logger(ERROR) << "tx with empty inputs, rejected for tx id= " << BinaryArray::objectHash(tx);
     return false;
   }
 
   if (!check_inputs_types_supported(tx)) {
-    logger(ERROR) << "unsupported input types for tx id= " << getObjectHash(tx);
+    logger(ERROR) << "unsupported input types for tx id= " << BinaryArray::objectHash(tx);
     return false;
   }
 
   std::string errmsg;
   if (!check_outs_valid(tx, &errmsg)) {
-    logger(ERROR) << "tx with invalid outputs, rejected for tx id= " << getObjectHash(tx) << ": " << errmsg;
+    logger(ERROR) << "tx with invalid outputs, rejected for tx id= " << BinaryArray::objectHash(tx) << ": " << errmsg;
     return false;
   }
 
   if (!check_money_overflow(tx)) {
-    logger(ERROR) << "tx have money overflow, rejected for tx id= " << getObjectHash(tx);
+    logger(ERROR) << "tx have money overflow, rejected for tx id= " << BinaryArray::objectHash(tx);
     return false;
   }
 
@@ -234,7 +234,7 @@ bool core::check_tx_semantic(const transaction_t& tx, bool keeped_by_block) {
   uint64_t amount_out = get_outs_money_amount(tx);
 
   if (amount_in < amount_out) {
-    logger(ERROR) << "tx with wrong amounts: ins " << amount_in << ", outs " << amount_out << ", rejected for tx id= " << getObjectHash(tx);
+    logger(ERROR) << "tx with wrong amounts: ins " << amount_in << ", outs " << amount_out << ", rejected for tx id= " << BinaryArray::objectHash(tx);
     return false;
   }
 
@@ -442,7 +442,7 @@ bool core::getPoolChangesLite(const crypto::hash_t& tailBlockId, const std::vect
   for (const auto& tx: added) {
     transaction_prefix_info_t tpi;
     tpi.txPrefix = tx;
-    tpi.txHash = getObjectHash(tx);
+    tpi.txHash = BinaryArray::objectHash(tx);
 
     addedTxs.push_back(std::move(tpi));
   }
@@ -762,7 +762,7 @@ bool core::queryBlocksLite(const std::vector<crypto::hash_t>& knownBlockIds, uin
       for (const auto& tx: txs) {
         transaction_prefix_info_t info;
         info.txPrefix = tx;
-        info.txHash = getObjectHash(tx);
+        info.txHash = BinaryArray::objectHash(tx);
 
         item.txPrefixes.push_back(std::move(info));
       }
@@ -798,7 +798,7 @@ bool core::scanOutputkeysForIndices(const key_input_t& txInToKey, std::list<std:
     outputs_visitor(std::list<std::pair<crypto::hash_t, size_t>>& resultsCollector):m_resultsCollector(resultsCollector){}
     bool handle_output(const transaction_t& tx, const transaction_output_t& out, size_t transactionOutputIndex)
     {
-      m_resultsCollector.push_back(std::make_pair(getObjectHash(tx), transactionOutputIndex));
+      m_resultsCollector.push_back(std::make_pair(BinaryArray::objectHash(tx), transactionOutputIndex));
       return true;
     }
   };

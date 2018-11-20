@@ -257,7 +257,7 @@ void TestBlockchainGenerator::getPoolSymmetricDifference(std::vector<crypto::has
 void TestBlockchainGenerator::putTxToPool(const cryptonote::transaction_t& tx) {
   std::unique_lock<std::mutex> lock(m_mutex);
 
-  crypto::hash_t txHash = cryptonote::getObjectHash(tx);
+  crypto::hash_t txHash = cryptonote::BinaryArray::objectHash(tx);
   m_txPool[txHash] = tx;
 }
 
@@ -332,7 +332,7 @@ bool TestBlockchainGenerator::getPoolTransactionIdsByTimestamp(uint64_t timestam
     if (c >= transactionsNumberLimit) {
       return true;
     }
-    hashes.push_back(cryptonote::getObjectHash(i.second));
+    hashes.push_back(cryptonote::BinaryArray::objectHash(i.second));
     ++c;
   }
   return true;
@@ -343,7 +343,7 @@ bool TestBlockchainGenerator::getTransactionIdsByPaymentId(const crypto::hash_t&
 }
 
 void TestBlockchainGenerator::addTx(const cryptonote::transaction_t& tx) {
-  crypto::hash_t txHash = getObjectHash(tx);
+  crypto::hash_t txHash = BinaryArray::objectHash(tx);
   m_txs[txHash] = tx;
   auto& globalIndexes = transactionGlobalOuts[txHash];
   for (uint16_t outIndex = 0; outIndex < tx.outputs.size(); ++outIndex) {

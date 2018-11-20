@@ -71,7 +71,7 @@ namespace
 
     void step4_calc_hash()
     {
-      getObjectHash(*static_cast<transaction_prefix_t*>(&m_tx), m_tx_prefix_hash);
+      BinaryArray::objectHash(*static_cast<transaction_prefix_t*>(&m_tx), m_tx_prefix_hash);
     }
 
     void step5_sign(const std::vector<transaction_source_entry_t>& sources)

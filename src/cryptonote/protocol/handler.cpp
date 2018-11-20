@@ -619,7 +619,7 @@ void CryptoNoteProtocolHandler::requestMissingPoolTransactions(const CryptoNoteC
 
   NOTIFY_REQUEST_TX_POOL::request notification;
   for (auto& tx : poolTxs) {
-    notification.txs.emplace_back(getObjectHash(tx));
+    notification.txs.emplace_back(BinaryArray::objectHash(tx));
   }
 
   bool ok = post_notify<NOTIFY_REQUEST_TX_POOL>(*m_p2p, notification, context);

@@ -913,7 +913,7 @@ void WalletGreen::rollbackUncommitedTransaction(size_t transactionId) {
     throw std::system_error(make_error_code(error::TX_CANCEL_IMPOSSIBLE));
   }
 
-  removeUnconfirmedTransaction(getObjectHash(m_uncommitedTransactions[transactionId]));
+  removeUnconfirmedTransaction(BinaryArray::objectHash(m_uncommitedTransactions[transactionId]));
   m_uncommitedTransactions.erase(transactionId);
 }
 

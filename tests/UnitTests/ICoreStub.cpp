@@ -8,6 +8,7 @@
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/core/IBlock.h"
 #include "cryptonote/core/VerificationContext.h"
+#include "cryptonote/structures/array.h"
 #include "cryptonote/structures/block_entry.h"
 
 ICoreStub::ICoreStub() :
@@ -122,7 +123,7 @@ bool ICoreStub::getPoolChangesLite(const crypto::hash_t& tailBlockId, const std:
   for (const auto& tx : added) {
     cryptonote::transaction_prefix_info_t tpi;
     tpi.txPrefix = tx;
-    tpi.txHash = getObjectHash(tx);
+    tpi.txHash = cryptonote::BinaryArray::objectHash(tx);
 
     addedTxs.push_back(std::move(tpi));
   }
@@ -172,7 +173,7 @@ size_t ICoreStub::addChain(const std::vector<const cryptonote::IBlock*>& chain) 
       const cryptonote::transaction_t& tx = block->getTransaction(txNumber);
       crypto::hash_t txHash = cryptonote::NULL_HASH;
       size_t blobSize = 0;
-      getObjectHash(tx, txHash, blobSize);
+      cryptonote::BinaryArray::objectHash(tx, txHash, blobSize);
       addTransaction(tx);
     }
     addBlock(block->getBlock());
@@ -276,14 +277,14 @@ void ICoreStub::addBlock(const cryptonote::block_t& block) {
   blocks.emplace(std::make_pair(hash, block));
   blockHashByHeightIndex.emplace(std::make_pair(height, hash));
 
-  blockHashByTxHashIndex.emplace(std::make_pair(cryptonote::getObjectHash(block.baseTransaction), hash));
+  blockHashByTxHashIndex.emplace(std::make_pair(cryptonote::BinaryArray::objectHash(block.baseTransaction), hash));
   for (auto txHash : block.transactionHashes) {
     blockHashByTxHashIndex.emplace(std::make_pair(txHash, hash));
   }
 }
 
 void ICoreStub::addTransaction(const cryptonote::transaction_t& tx) {
-  crypto::hash_t hash = cryptonote::getObjectHash(tx);
+  crypto::hash_t hash = cryptonote::BinaryArray::objectHash(tx);
   transactions.emplace(std::make_pair(hash, tx));
 }
 

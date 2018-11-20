@@ -183,7 +183,7 @@ bool BlockchainExplorerDataBuilder::fillBlockDetails(const block_t&block, BlockD
 }
 
 bool BlockchainExplorerDataBuilder::fillTransactionDetails(const transaction_t& transaction, transaction_details_t& transactionDetails, uint64_t timestamp) {
-  crypto::hash_t hash = getObjectHash(transaction);
+  crypto::hash_t hash = BinaryArray::objectHash(transaction);
   transactionDetails.hash = hash;
 
   transactionDetails.timestamp = timestamp;

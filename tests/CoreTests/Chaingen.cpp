@@ -355,7 +355,7 @@ bool find_block_chain(const std::vector<test_event_entry>& events, std::vector<c
         else if (typeid(transaction_t) == ev.type())
         {
             const transaction_t& tx = boost::get<transaction_t>(ev);
-            mtx[getObjectHash(tx)] = &tx;
+            mtx[BinaryArray::objectHash(tx)] = &tx;
         }
     }
 

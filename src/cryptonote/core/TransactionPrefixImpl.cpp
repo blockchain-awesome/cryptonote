@@ -82,7 +82,7 @@ hash_t TransactionPrefixImpl::getTransactionHash() const {
 }
 
 hash_t TransactionPrefixImpl::getTransactionPrefixHash() const {
-  return getObjectHash(m_txPrefix);
+  return BinaryArray::objectHash(m_txPrefix);
 }
 
 public_key_t TransactionPrefixImpl::getTransactionPublicKey() const {
@@ -208,7 +208,7 @@ std::unique_ptr<ITransactionReader> createTransactionPrefix(const transaction_pr
 }
 
 std::unique_ptr<ITransactionReader> createTransactionPrefix(const transaction_t& fullTransaction) {
-  return std::unique_ptr<ITransactionReader> (new TransactionPrefixImpl(fullTransaction, getObjectHash(fullTransaction)));
+  return std::unique_ptr<ITransactionReader> (new TransactionPrefixImpl(fullTransaction, BinaryArray::objectHash(fullTransaction)));
 }
 
 }

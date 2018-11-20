@@ -75,7 +75,7 @@ transaction_t TransactionBuilder::build() const {
   fillInputs(tx, contexts);
   fillOutputs(tx);
 
-  getObjectHash(*static_cast<transaction_prefix_t*>(&tx), prefixHash);
+  BinaryArray::objectHash(*static_cast<transaction_prefix_t*>(&tx), prefixHash);
 
   signSources(prefixHash, contexts, tx);
 

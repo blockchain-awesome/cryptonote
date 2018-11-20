@@ -12,7 +12,7 @@ bool operator ==(const cryptonote::block_t& a, const cryptonote::block_t& b) {
 }
 
 bool operator ==(const cryptonote::transaction_t& a, const cryptonote::transaction_t& b) {
-  return getObjectHash(a) == getObjectHash(b);
+  return BinaryArray::objectHash(a) == BinaryArray::objectHash(b);
 }
 
 }

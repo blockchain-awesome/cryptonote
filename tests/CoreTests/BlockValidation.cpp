@@ -613,7 +613,7 @@ bool gen_block_invalid_binary_format::generate(std::vector<test_event_entry>& ev
 
   block_t blk_test;
   std::vector<crypto::hash_t> tx_hashes;
-  tx_hashes.push_back(getObjectHash(tx_0));
+  tx_hashes.push_back(BinaryArray::objectHash(tx_0));
   size_t txs_size = BinaryArray::size(tx_0);
   diffic = m_currency.nextDifficulty(timestamps, cummulative_difficulties);
   if (!generator.constructBlockManually(blk_test, blk_last, miner_account,

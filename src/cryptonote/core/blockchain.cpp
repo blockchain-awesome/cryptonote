@@ -227,7 +227,7 @@ void Blockchain::rebuildCache() {
     m_blockIndex.push(blockHash);
     for (uint16_t t = 0; t < block.transactions.size(); ++t) {
       const transaction_entry_t& transaction = block.transactions[t];
-      crypto::hash_t transactionHash = getObjectHash(transaction.tx);
+      crypto::hash_t transactionHash = BinaryArray::objectHash(transaction.tx);
       transaction_index_t transactionIndex = { b, t };
       m_transactionMap.insert(std::make_pair(transactionHash, transactionIndex));
 
@@ -911,7 +911,7 @@ bool Blockchain::add_out_to_get_random_outs(std::vector<std::pair<transaction_in
   const transaction_t& tx = transactionByIndex(amount_outs[i].first).tx;
   if (!(tx.outputs.size() > amount_outs[i].second)) {
     logger(ERROR, BRIGHT_RED) << "internal error: in global outs index, transaction out index="
-      << amount_outs[i].second << " more than transaction outputs = " << tx.outputs.size() << ", for tx id = " << getObjectHash(tx); return false;
+      << amount_outs[i].second << " more than transaction outputs = " << tx.outputs.size() << ", for tx id = " << BinaryArray::objectHash(tx); return false;
   }
   if (!(tx.outputs[amount_outs[i].second].target.type() == typeid(key_output_t))) { logger(ERROR, BRIGHT_RED) << "unknown tx out type"; return false; }
 
@@ -1032,7 +1032,7 @@ void Blockchain::print_blockchain_outs(const std::string& file) {
     if (!vals.empty()) {
       ss << "amount: " << v.first << ENDL;
       for (size_t i = 0; i != vals.size(); i++) {
-        ss << "\t" << getObjectHash(transactionByIndex(vals[i].first).tx) << ": " << vals[i].second << ENDL;
+        ss << "\t" << BinaryArray::objectHash(transactionByIndex(vals[i].first).tx) << ": " << vals[i].second << ENDL;
       }
     }
   }
@@ -1142,7 +1142,7 @@ bool Blockchain::haveTransactionKeyImagesAsSpent(const transaction_t &tx) {
 }
 
 bool Blockchain::checkTransactionInputs(const transaction_t& tx, uint32_t* pmax_used_block_height) {
-  crypto::hash_t tx_prefix_hash = getObjectHash(*static_cast<const transaction_prefix_t*>(&tx));
+  crypto::hash_t tx_prefix_hash = BinaryArray::objectHash(*static_cast<const transaction_prefix_t*>(&tx));
   return checkTransactionInputs(tx, tx_prefix_hash, pmax_used_block_height);
 }
 
@@ -1152,12 +1152,12 @@ bool Blockchain::checkTransactionInputs(const transaction_t& tx, const crypto::h
     *pmax_used_block_height = 0;
   }
 
-  crypto::hash_t transactionHash = getObjectHash(tx);
+  crypto::hash_t transactionHash = BinaryArray::objectHash(tx);
   for (const auto& txin : tx.inputs) {
     assert(inputIndex < tx.signatures.size());
     if (txin.type() == typeid(key_input_t)) {
       const key_input_t& in_to_key = boost::get<key_input_t>(txin);
-      if (!(!in_to_key.outputIndexes.empty())) { logger(ERROR, BRIGHT_RED) << "empty in_to_key.outputIndexes in transaction with id " << getObjectHash(tx); return false; }
+      if (!(!in_to_key.outputIndexes.empty())) { logger(ERROR, BRIGHT_RED) << "empty in_to_key.outputIndexes in transaction with id " << BinaryArray::objectHash(tx); return false; }
 
       if (have_tx_keyimg_as_spent(in_to_key.keyImage)) {
         logger(DEBUGGING) <<
@@ -1465,7 +1465,7 @@ bool Blockchain::pushBlock(const block_t& blockData, const std::vector<transacti
     return false;
   }
 
-  crypto::hash_t minerTransactionHash = getObjectHash(blockData.baseTransaction);
+  crypto::hash_t minerTransactionHash = BinaryArray::objectHash(blockData.baseTransaction);
 
   block_entry_t block;
   block.bl = blockData;
@@ -1573,7 +1573,7 @@ void Blockchain::popBlock(const crypto::hash_t& blockHash) {
 
   saveTransactions(transactions);
 
-  popTransactions(m_blocks.back(), getObjectHash(m_blocks.back().bl.baseTransaction));
+  popTransactions(m_blocks.back(), BinaryArray::objectHash(m_blocks.back().bl.baseTransaction));
 
   m_timestampIndex.remove(m_blocks.back().bl.timestamp, blockHash);
   m_generatedTransactionsIndex.remove(m_blocks.back().bl);
@@ -1898,7 +1898,7 @@ bool Blockchain::getMultisigOutputReference(const multi_signature_input_t& txInM
   }
   const multisignature_output_usage_t& outputIndex = amountIter->second[txInMultisig.outputIndex];
   const transaction_t& outputTransaction = m_blocks[outputIndex.transactionIndex.block].transactions[outputIndex.transactionIndex.transaction].tx;
-  outputReference.first = getObjectHash(outputTransaction);
+  outputReference.first = BinaryArray::objectHash(outputTransaction);
   outputReference.second = outputIndex.outputIndex;
   return true;
 }

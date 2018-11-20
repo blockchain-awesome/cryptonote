@@ -790,7 +790,7 @@ void WalletSerializer::initTransactionPool() {
   std::unordered_set<crypto::hash_t> uncommitedTransactionsSet;
   std::transform(uncommitedTransactions.begin(), uncommitedTransactions.end(), std::inserter(uncommitedTransactionsSet, uncommitedTransactionsSet.end()),
     [](const UncommitedTransactions::value_type& pair) {
-      return getObjectHash(pair.second);
+      return BinaryArray::objectHash(pair.second);
     });
   m_synchronizer.initTransactionPool(uncommitedTransactionsSet);
 }

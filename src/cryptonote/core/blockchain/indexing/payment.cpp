@@ -6,7 +6,7 @@ namespace cryptonote {
 
 bool PaymentIdIndex::add(const transaction_t& transaction) {
   crypto::hash_t paymentId;
-  crypto::hash_t transactionHash = getObjectHash(transaction);
+  crypto::hash_t transactionHash = BinaryArray::objectHash(transaction);
   if (!BlockchainExplorerDataBuilder::getPaymentId(transaction, paymentId)) {
     return false;
   }
@@ -18,7 +18,7 @@ bool PaymentIdIndex::add(const transaction_t& transaction) {
 
 bool PaymentIdIndex::remove(const transaction_t& transaction) {
   crypto::hash_t paymentId;
-  crypto::hash_t transactionHash = getObjectHash(transaction);
+  crypto::hash_t transactionHash = BinaryArray::objectHash(transaction);
   if (!BlockchainExplorerDataBuilder::getPaymentId(transaction, paymentId)) {
     return false;
   }

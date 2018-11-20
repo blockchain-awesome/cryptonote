@@ -254,7 +254,7 @@ void INodeTrivialRefreshStub::queryBlocks(std::vector<crypto::hash_t>&& knownBlo
         }
 
         TransactionShortInfo tsi;
-        tsi.txId = getObjectHash(tx);
+        tsi.txId = BinaryArray::objectHash(tx);
         tsi.txPrefix = tx;
 
         entry.txsShortInfo.push_back(std::move(tsi));
@@ -522,11 +522,11 @@ void INodeTrivialRefreshStub::doGetTransactions(const std::vector<crypto::hash_t
     transaction_t tx;
     transaction_details_t txDetails = transaction_details_t();
     if (m_blockchainGenerator.getTransactionByHash(hash, tx, false)) {
-      crypto::hash_t actualHash = getObjectHash(tx);
+      crypto::hash_t actualHash = BinaryArray::objectHash(tx);
       txDetails.hash = actualHash;
       txDetails.inBlockchain = true;
     } else if (m_blockchainGenerator.getTransactionByHash(hash, tx, true)) {
-      crypto::hash_t actualHash = getObjectHash(tx);
+      crypto::hash_t actualHash = BinaryArray::objectHash(tx);
       txDetails.hash = actualHash;
       txDetails.inBlockchain = false;
     } else {
@@ -574,11 +574,11 @@ void INodeTrivialRefreshStub::doGetPoolTransactions(uint64_t timestampBegin, uin
     transaction_t tx;
     transaction_details_t txDetails = transaction_details_t();
     if (m_blockchainGenerator.getTransactionByHash(hash, tx, false)) {
-      crypto::hash_t actualHash = getObjectHash(tx);
+      crypto::hash_t actualHash = BinaryArray::objectHash(tx);
       txDetails.hash = actualHash;
       txDetails.inBlockchain = true;
     } else if (m_blockchainGenerator.getTransactionByHash(hash, tx, true)) {
-      crypto::hash_t actualHash = getObjectHash(tx);
+      crypto::hash_t actualHash = BinaryArray::objectHash(tx);
       txDetails.hash = actualHash;
       txDetails.inBlockchain = false;
     } else {
@@ -621,14 +621,14 @@ void INodeTrivialRefreshStub::doGetTransactionsByPaymentId(const crypto::hash_t&
     transaction_t tx;
     transaction_details_t txDetails = transaction_details_t();
     if (m_blockchainGenerator.getTransactionByHash(hash, tx, false)) {
-      crypto::hash_t actualHash = getObjectHash(tx);
+      crypto::hash_t actualHash = BinaryArray::objectHash(tx);
       txDetails.hash = actualHash;
       txDetails.inBlockchain = true;
       crypto::hash_t paymentId;
       BlockchainExplorerDataBuilder::getPaymentId(tx, paymentId);
       txDetails.paymentId = paymentId;
     } else if (m_blockchainGenerator.getTransactionByHash(hash, tx, true)) {
-      crypto::hash_t actualHash = getObjectHash(tx);
+      crypto::hash_t actualHash = BinaryArray::objectHash(tx);
       txDetails.hash =actualHash;
       txDetails.inBlockchain = false;
       crypto::hash_t paymentId;

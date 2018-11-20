@@ -13,38 +13,6 @@
 #include "cryptonote/core/blockchain/serializer/basics.h"
 
 namespace cryptonote {
-template<class T>
-bool getObjectHash(const T& object, crypto::hash_t& hash) {
-  binary_array_t ba;
-  if (!BinaryArray::to(object, ba)) {
-    hash = NULL_HASH;
-    return false;
-  }
-
-  hash = BinaryArray::getHash(ba);
-  return true;
-}
-
-template<class T>
-bool getObjectHash(const T& object, crypto::hash_t& hash, size_t& size) {
-  binary_array_t ba;
-  if (!BinaryArray::to(object, ba)) {
-    hash = NULL_HASH;
-    size = (std::numeric_limits<size_t>::max)();
-    return false;
-  }
-
-  size = ba.size();
-  hash = BinaryArray::getHash(ba);
-  return true;
-}
-
-template<class T>
-crypto::hash_t getObjectHash(const T& object) {
-  crypto::hash_t hash;
-  getObjectHash(object, hash);
-  return hash;
-}
 
 uint64_t getInputAmount(const transaction_t& transaction);
 std::vector<uint64_t> getInputsAmounts(const transaction_t& transaction);

@@ -78,7 +78,7 @@ bool test_generator::constructBlock(cryptonote::block_t& blk, uint32_t height, c
   blk.transactionHashes.reserve(txList.size());
   for (const transaction_t &tx : txList) {
     crypto::hash_t tx_hash;
-    getObjectHash(tx, tx_hash);
+    BinaryArray::objectHash(tx, tx_hash);
     blk.transactionHashes.push_back(tx_hash);
   }
 
@@ -223,7 +223,7 @@ bool test_generator::constructMaxSizeBlock(cryptonote::block_t& blk, const crypt
     CHECK_AND_ASSERT_MES(r, false, "wrong transaction passed to construct_max_size_block");
     totalFee += fee;
     txsSize += BinaryArray::size(tx);
-    transactionHashes.push_back(getObjectHash(tx));
+    transactionHashes.push_back(BinaryArray::objectHash(tx));
   }
 
   transaction_t baseTransaction;

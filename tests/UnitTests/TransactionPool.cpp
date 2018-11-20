@@ -223,7 +223,7 @@ namespace
 
 //   test.construct(test.m_currency.minimumFee(), 1, tx);
 
-//   auto txhash = getObjectHash(tx);
+//   auto txhash = BinaryArray::objectHash(tx);
 
 //   tx_verification_context_t tvc = boost::value_initialized<tx_verification_context_t>();
 
@@ -281,7 +281,7 @@ namespace
 //     ASSERT_TRUE(pool.add_tx(tx, tvc, false));
 //     ASSERT_TRUE(tvc.m_added_to_pool);
 
-//     transactions[getObjectHash(tx)] = std::move(txptr);
+//     transactions[BinaryArray::objectHash(tx)] = std::move(txptr);
 //   }
 
 //   block_t bl;
@@ -340,7 +340,7 @@ namespace
 //     ASSERT_TRUE(pool.add_tx(tx, tvc, false));
 //     ASSERT_TRUE(tvc.m_added_to_pool);
 
-//     transactions[getObjectHash(tx)] = std::move(txptr);
+//     transactions[BinaryArray::objectHash(tx)] = std::move(txptr);
 //   }
 
 
@@ -741,13 +741,13 @@ public:
     std::unordered_map<crypto::hash_t, transaction_t> ordinaryTxs;
     for (size_t i = 0; i < poolOrdinaryTxCount; ++i) {
       auto tx = createTestOrdinaryTransaction(currency);
-      ordinaryTxs.emplace(getObjectHash(tx), std::move(tx));
+      ordinaryTxs.emplace(BinaryArray::objectHash(tx), std::move(tx));
     }
 
     std::unordered_map<crypto::hash_t, transaction_t> fusionTxs;
     for (size_t i = 0; i < poolFusionTxCount; ++i) {
       auto tx = createTestFusionTransaction(currency);
-      fusionTxs.emplace(getObjectHash(tx), std::move(tx));
+      fusionTxs.emplace(BinaryArray::objectHash(tx), std::move(tx));
     }
 
     for (auto pair : ordinaryTxs) {

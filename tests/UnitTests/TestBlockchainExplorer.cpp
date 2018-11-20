@@ -318,7 +318,7 @@ TEST_F(BlockchainExplorerTests, getTransactionFromBlockchain) {
   ASSERT_GE(generator.getBlockchain().size(), 1);
 
   std::vector<hash_t> transactionHashes;
-  hash_t hash = getObjectHash(tx);
+  hash_t hash = BinaryArray::objectHash(tx);
   transactionHashes.push_back(hash);
 
   std::vector<transaction_details_t> transactions;
@@ -339,7 +339,7 @@ TEST_F(BlockchainExplorerTests, getTransactionFromPool) {
   ASSERT_GE(generator.getBlockchain().size(), 1);
 
   std::vector<hash_t> transactionHashes;
-  hash_t hash = getObjectHash(tx);
+  hash_t hash = BinaryArray::objectHash(tx);
   transactionHashes.push_back(hash);
 
   std::vector<transaction_details_t> transactions;
@@ -361,7 +361,7 @@ TEST_F(BlockchainExplorerTests, getTransactionsMany) {
   for (size_t i = 0; i < POOL_TX_NUMBER; ++i) {
     auto txptr = createTransaction();
     auto tx = ::createTx(*txptr.get());
-    hash_t hash = getObjectHash(tx);
+    hash_t hash = BinaryArray::objectHash(tx);
     poolTxs.push_back(hash);
     generator.putTxToPool(tx);
   }
@@ -369,7 +369,7 @@ TEST_F(BlockchainExplorerTests, getTransactionsMany) {
   for (size_t i = 0; i < BLOCKCHAIN_TX_NUMBER; ++i) {
     auto txptr = createTransaction();
     auto tx = ::createTx(*txptr.get());
-    hash_t hash = getObjectHash(tx);
+    hash_t hash = BinaryArray::objectHash(tx);
     blockchainTxs.push_back(hash);
     generator.addTxToBlockchain(tx);
   }
@@ -422,7 +422,7 @@ TEST_F(BlockchainExplorerTests, getTransactionsFail) {
   for (size_t i = 0; i < POOL_TX_NUMBER; ++i) {
     auto txptr = createTransaction();
     auto tx = ::createTx(*txptr.get());
-    hash_t hash = getObjectHash(tx);
+    hash_t hash = BinaryArray::objectHash(tx);
     poolTxs.push_back(hash);
     generator.putTxToPool(tx);
   }
@@ -430,7 +430,7 @@ TEST_F(BlockchainExplorerTests, getTransactionsFail) {
   for (size_t i = 0; i < BLOCKCHAIN_TX_NUMBER; ++i) {
     auto txptr = createTransaction();
     auto tx = ::createTx(*txptr.get());
-    hash_t hash = getObjectHash(tx);
+    hash_t hash = BinaryArray::objectHash(tx);
     blockchainTxs.push_back(hash);
     generator.addTxToBlockchain(tx);
   }
@@ -453,7 +453,7 @@ TEST_F(BlockchainExplorerTests, getTransactionsNotInited) {
   ASSERT_GE(generator.getBlockchain().size(), 1);
 
   std::vector<hash_t> transactionHashes;
-  hash_t hash = getObjectHash(tx);
+  hash_t hash = BinaryArray::objectHash(tx);
   transactionHashes.push_back(hash);
 
   std::vector<transaction_details_t> transactions;
@@ -493,7 +493,7 @@ TEST_F(BlockchainExplorerTests, getPoolStateMany) {
   for (size_t i = 0; i < POOL_TX_NUMBER; ++i) {
     auto txptr = createTransaction();
     auto tx = ::createTx(*txptr.get());
-    hash_t hash = getObjectHash(tx);
+    hash_t hash = BinaryArray::objectHash(tx);
     poolTxs.push_back(hash);
     generator.putTxToPool(tx);
   }
@@ -594,7 +594,7 @@ TEST_F(BlockchainExplorerTests, getPoolStateMany) {
 
   auto txptr = createTransaction();
   auto tx = ::createTx(*txptr.get());
-  hash_t newTxHash = getObjectHash(tx);
+  hash_t newTxHash = BinaryArray::objectHash(tx);
   generator.putTxToPool(tx);
 
   {
@@ -794,7 +794,7 @@ TEST_F(BlockchainExplorerTests, poolUpdatedMany) {
   for (size_t i = 0; i < POOL_TX_NUMBER; ++i) {
     auto txptr = createTransaction();
     auto tx = ::createTx(*txptr.get());
-    hash_t hash = getObjectHash(tx);
+    hash_t hash = BinaryArray::objectHash(tx);
     poolTxs.push_back(hash);
     generator.putTxToPool(tx);
   }
@@ -918,7 +918,7 @@ TEST_F(BlockchainExplorerTests, poolUpdatedManyNotSynchronized) {
   for (size_t i = 0; i < POOL_TX_NUMBER; ++i) {
     auto txptr = createTransaction();
     auto tx = ::createTx(*txptr.get());
-    hash_t hash = getObjectHash(tx);
+    hash_t hash = BinaryArray::objectHash(tx);
     poolTxs.push_back(hash);
     generator.putTxToPool(tx);
   }
@@ -1149,7 +1149,7 @@ TEST_F(BlockchainExplorerTests, getPoolTransactionsByTimestampMany) {
   for (uint32_t i = 0; i < POOL_TX_NUMBER; ++i) {
     auto txptr = createTransaction();
     auto tx = ::createTx(*txptr.get());
-    hash_t hash = getObjectHash(tx);
+    hash_t hash = BinaryArray::objectHash(tx);
     poolTxs.push_back(hash);
     generator.putTxToPool(tx);
   }
@@ -1208,7 +1208,7 @@ TEST_F(BlockchainExplorerTests, getTransactionsByPaymentId) {
       txptr->setPaymentId(randomPaymentId);
       auto tx = ::createTx(*txptr.get());
 
-      hash_t hash = getObjectHash(tx);
+      hash_t hash = BinaryArray::objectHash(tx);
       txs.emplace(hash, randomPaymentId);
 
       generator.addTxToBlockchain(tx);

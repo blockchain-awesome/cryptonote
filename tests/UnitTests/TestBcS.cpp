@@ -504,9 +504,9 @@ TEST_F(BcSTest, firstPoolSynchronizationCheck) {
   auto tx2 = ::createTx(*tx2ptr.get());
   auto tx3 = ::createTx(*tx3ptr.get());
 
-  auto tx1hash = getObjectHash(tx1);
-  auto tx2hash = getObjectHash(tx2);
-  auto tx3hash = getObjectHash(tx3);
+  auto tx1hash = BinaryArray::objectHash(tx1);
+  auto tx2hash = BinaryArray::objectHash(tx2);
+  auto tx3hash = BinaryArray::objectHash(tx3);
 
   std::unordered_set<hash_t> firstExpectedPool = { tx1hash, tx2hash, tx3hash };
   std::unordered_set<hash_t> secondExpectedPool = { tx2hash };
@@ -757,7 +757,7 @@ TEST_F(BcSTest, poolSynchronizationCheckError) {
 TEST_F(BcSTest, poolSynchronizationCheckTxAdded) {
   auto tx1ptr = createTransaction();
   auto tx1 = ::createTx(*tx1ptr.get());
-  auto tx1hash = getObjectHash(tx1);
+  auto tx1hash = BinaryArray::objectHash(tx1);
 
   std::vector<transaction_t> newPoolAnswer = { tx1 };
   std::vector<hash_t> expectedKnownPoolHashes = { tx1hash };
@@ -813,7 +813,7 @@ TEST_F(BcSTest, poolSynchronizationCheckTxAdded) {
 TEST_F(BcSTest, poolSynchronizationCheckTxDeleted) {
   auto tx1ptr = createTransaction();
   auto tx1 = ::createTx(*tx1ptr.get());
-  auto tx1hash = getObjectHash(tx1);
+  auto tx1hash = BinaryArray::objectHash(tx1);
 
   std::vector<transaction_t> newPoolAnswer = { tx1 };
   std::vector<hash_t> deletedPoolAnswer = { tx1hash };
@@ -1326,9 +1326,9 @@ TEST_F(BcSTest, checkTxOrder) {
   auto tx2 = ::createTx(*tx2ptr.get());
   auto tx3 = ::createTx(*tx3ptr.get());
 
-  auto tx1hash = getObjectHash(tx1);
-  auto tx2hash = getObjectHash(tx2);
-  auto tx3hash = getObjectHash(tx3);
+  auto tx1hash = BinaryArray::objectHash(tx1);
+  auto tx2hash = BinaryArray::objectHash(tx2);
+  auto tx3hash = BinaryArray::objectHash(tx3);
 
   generator.generateEmptyBlocks(2);
 
@@ -1342,7 +1342,7 @@ TEST_F(BcSTest, checkTxOrder) {
   bse.txsShortInfo.push_back({tx2hash, tx2});
   bse.txsShortInfo.push_back({tx3hash, tx3});
 
-  std::vector<hash_t> expectedTxHashes = { getObjectHash(last_block.baseTransaction), tx1hash, tx2hash, tx3hash };
+  std::vector<hash_t> expectedTxHashes = { BinaryArray::objectHash(last_block.baseTransaction), tx1hash, tx2hash, tx3hash };
 
   int requestNumber = 0;
 

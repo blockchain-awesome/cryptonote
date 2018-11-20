@@ -140,7 +140,7 @@ void NodeTest::readBlockchainInfo(INode& node, BlockchainInfo& bc) {
         // detach no expected
         ASSERT_EQ(entry.blockHash, history[currentHeight]);
       } else {
-        auto txHash = getObjectHash(entry.block.baseTransaction);
+        auto txHash = BinaryArray::objectHash(entry.block.baseTransaction);
 
         std::vector<uint32_t> globalIndices;
         node.getTransactionOutsGlobalIndices(txHash, globalIndices, cb.callback());
