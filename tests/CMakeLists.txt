@@ -59,7 +59,7 @@ target_link_libraries(BlockTests gtest_main PaymentGate Wallet TestGenerator InP
 target_link_libraries(AccountTests gtest_main PaymentGate Wallet TestGenerator InProcessNode NodeRpcProxy Rpc Http Transfers System CryptoNoteCore BlockchainExplorer  Serialization CommandLine  Logging Common Crypto Config ${Boost_LIBRARIES})
 target_link_libraries(CliTests gtest_main PaymentGate Wallet TestGenerator InProcessNode NodeRpcProxy Rpc Http Transfers   CommandLine CryptoNoteCore  BlockchainExplorer Serialization System  Logging Common Crypto Config ${Boost_LIBRARIES})
 
-target_link_libraries(DifficultyTests CryptoNoteCore BlockchainExplorer Serialization Crypto CommandLine  Logging Common Config ${Boost_LIBRARIES})
+target_link_libraries(DifficultyTests CryptoNoteCore BlockchainExplorer Serialization Crypto CommandLine  Logging Common System Config ${Boost_LIBRARIES})
 target_link_libraries(HashTargetTests CryptoNoteCore BlockchainExplorer Crypto)
 target_link_libraries(HashTests Crypto)
 
