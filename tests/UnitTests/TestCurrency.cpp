@@ -45,14 +45,14 @@ TEST_F(Currency_isFusionTransactionTest, succeedsOnFusionTransaction) {
 TEST_F(Currency_isFusionTransactionTest, succeedsIfFusionTransactionSizeEqMaxSize) {
   FusionTransactionBuilder builder(m_currency, TEST_AMOUNT);
   auto tx = builder.createFusionTransactionBySize(m_currency.fusionTxMaxSize());
-  ASSERT_EQ(m_currency.fusionTxMaxSize(), getObjectBinarySize(tx));
+  ASSERT_EQ(m_currency.fusionTxMaxSize(), BinaryArray::size(tx));
   ASSERT_TRUE(m_currency.isFusionTransaction(tx));
 }
 
 TEST_F(Currency_isFusionTransactionTest, failsIfFusionTransactionSizeGreaterThanMaxSize) {
   FusionTransactionBuilder builder(m_currency, TEST_AMOUNT);
   auto tx = builder.createFusionTransactionBySize(m_currency.fusionTxMaxSize() + 1);
-  ASSERT_EQ(m_currency.fusionTxMaxSize() + 1, getObjectBinarySize(tx));
+  ASSERT_EQ(m_currency.fusionTxMaxSize() + 1, BinaryArray::size(tx));
   ASSERT_FALSE(m_currency.isFusionTransaction(tx));
 }
 

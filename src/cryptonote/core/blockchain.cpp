@@ -1316,9 +1316,9 @@ bool Blockchain::getBlockCumulativeSize(const block_t& block, size_t& cumulative
   std::vector<crypto::hash_t> missedTxs;
   getTransactions(block.transactionHashes, blockTxs, missedTxs, true);
 
-  cumulativeSize = getObjectBinarySize(block.baseTransaction);
+  cumulativeSize = BinaryArray::size(block.baseTransaction);
   for (const transaction_t& tx : blockTxs) {
-    cumulativeSize += getObjectBinarySize(tx);
+    cumulativeSize += BinaryArray::size(tx);
   }
 
   return missedTxs.empty();
@@ -1474,7 +1474,7 @@ bool Blockchain::pushBlock(const block_t& blockData, const std::vector<transacti
   transaction_index_t transactionIndex = { static_cast<uint32_t>(m_blocks.size()), static_cast<uint16_t>(0) };
   pushTransaction(block, minerTransactionHash, transactionIndex);
 
-  size_t coinbase_blob_size = getObjectBinarySize(blockData.baseTransaction);
+  size_t coinbase_blob_size = BinaryArray::size(blockData.baseTransaction);
   size_t cumulative_block_size = coinbase_blob_size;
   uint64_t fee_summary = 0;
   for (size_t i = 0; i < transactions.size(); ++i) {

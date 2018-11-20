@@ -59,7 +59,7 @@ uint64_t test_generator::getAlreadyGeneratedCoins(const cryptonote::block_t& blk
 
 void test_generator::addBlock(const cryptonote::block_t& blk, size_t tsxSize, uint64_t fee,
                               std::vector<size_t>& blockSizes, uint64_t alreadyGeneratedCoins) {
-  const size_t blockSize = tsxSize + getObjectBinarySize(blk.baseTransaction);
+  const size_t blockSize = tsxSize + BinaryArray::size(blk.baseTransaction);
   int64_t emissionChange;
   uint64_t blockReward;
   m_currency.getBlockReward(Common::medianValue(blockSizes), blockSize, alreadyGeneratedCoins, fee,
@@ -90,37 +90,37 @@ bool test_generator::constructBlock(cryptonote::block_t& blk, uint32_t height, c
     bool r = get_tx_fee(tx, fee);
     CHECK_AND_ASSERT_MES(r, false, "wrong transaction passed to construct_block");
     totalFee += fee;
-    txsSize += getObjectBinarySize(tx);
+    txsSize += BinaryArray::size(tx);
   }
 
   blk.baseTransaction = boost::value_initialized<transaction_t>();
-  size_t targetBlockSize = txsSize + getObjectBinarySize(blk.baseTransaction);
+  size_t targetBlockSize = txsSize + BinaryArray::size(blk.baseTransaction);
   while (true) {
     if (!m_currency.constructMinerTx(height, Common::medianValue(blockSizes), alreadyGeneratedCoins, targetBlockSize,
       totalFee, minerAcc.getAccountKeys().address, blk.baseTransaction, binary_array_t(), 10)) {
       return false;
     }
 
-    size_t actualBlockSize = txsSize + getObjectBinarySize(blk.baseTransaction);
+    size_t actualBlockSize = txsSize + BinaryArray::size(blk.baseTransaction);
     if (targetBlockSize < actualBlockSize) {
       targetBlockSize = actualBlockSize;
     } else if (actualBlockSize < targetBlockSize) {
       size_t delta = targetBlockSize - actualBlockSize;
       blk.baseTransaction.extra.resize(blk.baseTransaction.extra.size() + delta, 0);
-      actualBlockSize = txsSize + getObjectBinarySize(blk.baseTransaction);
+      actualBlockSize = txsSize + BinaryArray::size(blk.baseTransaction);
       if (actualBlockSize == targetBlockSize) {
         break;
       } else {
         CHECK_AND_ASSERT_MES(targetBlockSize < actualBlockSize, false, "Unexpected block size");
         delta = actualBlockSize - targetBlockSize;
         blk.baseTransaction.extra.resize(blk.baseTransaction.extra.size() - delta);
-        actualBlockSize = txsSize + getObjectBinarySize(blk.baseTransaction);
+        actualBlockSize = txsSize + BinaryArray::size(blk.baseTransaction);
         if (actualBlockSize == targetBlockSize) {
           break;
         } else {
           CHECK_AND_ASSERT_MES(actualBlockSize < targetBlockSize, false, "Unexpected block size");
           blk.baseTransaction.extra.resize(blk.baseTransaction.extra.size() + delta, 0);
-          targetBlockSize = txsSize + getObjectBinarySize(blk.baseTransaction);
+          targetBlockSize = txsSize + BinaryArray::size(blk.baseTransaction);
         }
       }
     } else {
@@ -180,7 +180,7 @@ bool test_generator::constructBlockManually(block_t& blk, const block_t& prevBlo
     blk.baseTransaction = baseTransaction;
   } else {
     blk.baseTransaction = boost::value_initialized<transaction_t>();
-    size_t currentBlockSize = txsSizes + getObjectBinarySize(blk.baseTransaction);
+    size_t currentBlockSize = txsSizes + BinaryArray::size(blk.baseTransaction);
     // TODO: This will work, until size of constructed block is less then m_currency.blockGrantedFullRewardZone()
     if (!m_currency.constructMinerTx(height, Common::medianValue(blockSizes), alreadyGeneratedCoins, currentBlockSize, 0,
       minerAcc.getAccountKeys().address, blk.baseTransaction, binary_array_t(), 1)) {
@@ -222,7 +222,7 @@ bool test_generator::constructMaxSizeBlock(cryptonote::block_t& blk, const crypt
     bool r = get_tx_fee(tx, fee);
     CHECK_AND_ASSERT_MES(r, false, "wrong transaction passed to construct_max_size_block");
     totalFee += fee;
-    txsSize += getObjectBinarySize(tx);
+    txsSize += BinaryArray::size(tx);
     transactionHashes.push_back(getObjectHash(tx));
   }
 
@@ -293,7 +293,7 @@ bool constructMinerTxBySize(const cryptonote::Currency& currency, cryptonote::tr
     return false;
   }
 
-  size_t currentSize = getObjectBinarySize(baseTransaction);
+  size_t currentSize = BinaryArray::size(baseTransaction);
   size_t tryCount = 0;
   while (targetTxSize != currentSize) {
     ++tryCount;
@@ -313,7 +313,7 @@ bool constructMinerTxBySize(const cryptonote::Currency& currency, cryptonote::tr
       baseTransaction.extra.resize(baseTransaction.extra.size() + diff);
     }
 
-    currentSize = getObjectBinarySize(baseTransaction);
+    currentSize = BinaryArray::size(baseTransaction);
   }
 
   return true;

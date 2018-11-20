@@ -710,12 +710,12 @@ transaction_t createTestOrdinaryTransactionWithExtra(const Currency& currency, s
 
 transaction_t createTestOrdinaryTransaction(const Currency& currency) {
   auto tx = createTestOrdinaryTransactionWithExtra(currency, 0);
-  size_t realSize = getObjectBinarySize(tx);
+  size_t realSize = BinaryArray::size(tx);
   if (realSize < TEST_TRANSACTION_SIZE) {
     size_t extraSize = TEST_TRANSACTION_SIZE - realSize;
     tx = createTestOrdinaryTransactionWithExtra(currency, extraSize);
 
-    realSize = getObjectBinarySize(tx);
+    realSize = BinaryArray::size(tx);
     if (realSize > TEST_TRANSACTION_SIZE) {
       extraSize -= realSize - TEST_TRANSACTION_SIZE;
       tx = createTestOrdinaryTransactionWithExtra(currency, extraSize);

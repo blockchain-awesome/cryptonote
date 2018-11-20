@@ -13,26 +13,6 @@
 #include "cryptonote/core/blockchain/serializer/basics.h"
 
 namespace cryptonote {
-
-template<class T>
-bool getObjectBinarySize(const T& object, size_t& size) {
-  binary_array_t ba;
-  if (!BinaryArray::to(object, ba)) {
-    size = (std::numeric_limits<size_t>::max)();
-    return false;
-  }
-
-  size = ba.size();
-  return true;
-}
-
-template<class T>
-size_t getObjectBinarySize(const T& object) {
-  size_t size;
-  getObjectBinarySize(object, size);
-  return size;
-}
-
 template<class T>
 bool getObjectHash(const T& object, crypto::hash_t& hash) {
   binary_array_t ba;

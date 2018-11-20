@@ -29,6 +29,11 @@ public:
   static bool to(const T &object, binary_array_t &binaryArray);
   template <class T>
   static binary_array_t to(const T &object);
+
+  template <class T>
+  static bool size(const T &object, size_t &size);
+  template <class T>
+  static size_t size(const T &object);
   crypto::hash_t getHash();
 
 private:
@@ -80,5 +85,27 @@ binary_array_t BinaryArray::to(const T &object)
 
 template <>
 bool BinaryArray::to(const binary_array_t &object, binary_array_t &binaryArray);
+
+template <class T>
+bool BinaryArray::size(const T &object, size_t &size)
+{
+  binary_array_t ba;
+  if (!BinaryArray::to(object, ba))
+  {
+    size = (std::numeric_limits<size_t>::max)();
+    return false;
+  }
+
+  size = ba.size();
+  return true;
+}
+
+template <class T>
+size_t BinaryArray::size(const T &object)
+{
+  size_t size;
+  BinaryArray::size(object, size);
+  return size;
+}
 
 } // namespace cryptonote
