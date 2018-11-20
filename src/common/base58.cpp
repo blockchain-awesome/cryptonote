@@ -212,7 +212,7 @@ namespace Tools
 
     std::string encode_addr(uint64_t tag, const std::string& data)
     {
-      std::string buf = get_varint_data(tag);
+      std::string buf = varint::get(tag);
       buf += data;
       crypto::hash_t hash = crypto::cn_fast_hash(buf.data(), buf.size());
       const char* hash_data = reinterpret_cast<const char*>(&hash);
@@ -235,7 +235,7 @@ namespace Tools
       std::string expected_checksum(reinterpret_cast<const char*>(&hash), addr_checksum_size);
       if (expected_checksum != checksum) return false;
 
-      int read = Tools::read_varint(addr_data.begin(), addr_data.end(), tag);
+      int read = varint::read(addr_data.begin(), addr_data.end(), tag);
       if (read <= 0) return false;
 
       data = addr_data.substr(read);

@@ -86,7 +86,7 @@ namespace crypto {
     } buf;
     char *end = buf.output_index;
     buf.derivation = derivation;
-    Tools::write_varint(end, output_index);
+    varint::write(end, output_index);
     assert(end <= buf.output_index + sizeof buf.output_index);
     hash_to_scalar(&buf, end - reinterpret_cast<char *>(&buf), res);
   }
@@ -99,7 +99,7 @@ namespace crypto {
     } buf;
     char *end = buf.output_index;
     buf.derivation = derivation;
-    Tools::write_varint(end, output_index);
+    varint::write(end, output_index);
     assert(end <= buf.output_index + sizeof buf.output_index);
     size_t bufSize = end - reinterpret_cast<char *>(&buf);
     memcpy(end, suffix, suffixLength);
