@@ -30,11 +30,6 @@ const uint8_t characterValues[256] = {
 
 }
 
-binary_array_t asBinaryArray(const std::string& data) {
-  auto dataPtr = reinterpret_cast<const uint8_t*>(data.data());
-  return binary_array_t(dataPtr, dataPtr + data.size());
-}
-
 uint8_t fromHex(char character) {
   uint8_t value = characterValues[static_cast<unsigned char>(character)];
   if (value > 0x0f) {

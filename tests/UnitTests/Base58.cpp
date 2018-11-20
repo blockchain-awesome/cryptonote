@@ -458,7 +458,7 @@ TEST(getAccountAddressAsStr, works_correctly)
 {
   cryptonote::account_public_address_t addr;
 
-  ASSERT_NO_THROW(cryptonote::loadFromBinary(addr, Common::asBinaryArray(test_serialized_keys)));
+  ASSERT_NO_THROW(cryptonote::loadFromBinary(addr, array::fromString(test_serialized_keys)));
   std::string addr_str = Account::getAddress(addr, TEST_PUBLIC_ADDRESS_BASE58_PREFIX);
   ASSERT_EQ(addr_str, test_keys_addr_str);
 }

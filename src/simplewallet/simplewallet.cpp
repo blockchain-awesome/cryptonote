@@ -368,7 +368,7 @@ void printListTransfersHeader(LoggerRef& logger) {
 }
 
 void printListTransfersItem(LoggerRef& logger, const WalletLegacyTransaction& txInfo, IWalletLegacy& wallet, const Currency& currency) {
-  std::vector<uint8_t> extraVec = Common::asBinaryArray(txInfo.extra);
+  std::vector<uint8_t> extraVec = array::fromString(txInfo.extra);
 
   crypto::hash_t paymentId;
   std::string paymentIdStr = (getPaymentIdFromTxExtra(extraVec, paymentId) && paymentId != NULL_HASH ? Common::podToHex(paymentId) : "");

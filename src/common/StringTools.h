@@ -12,7 +12,6 @@
 #include "binary_array.h"
 
 namespace Common {
-binary_array_t asBinaryArray(const std::string& data);
 
 uint8_t fromHex(char character); // Returns value of hex 'character', throws on error
 bool fromHex(char character, uint8_t& value); // Assigns value of hex 'character' to 'value', returns false on error, does not throw

@@ -154,7 +154,7 @@ namespace cryptonote
         boost::algorithm::trim(extra_vec[i]);
         if(!extra_vec[i].size())
           continue;
-        binary_array_t ba = Common::asBinaryArray(Common::base64Decode(extra_vec[i]));
+        binary_array_t ba = array::fromString(Common::base64Decode(extra_vec[i]));
         if(buff != "0")
           m_extra_messages[i] = ba;
       }

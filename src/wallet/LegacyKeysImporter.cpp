@@ -48,7 +48,7 @@ void loadKeysFromFile(const std::string& filename, const std::string& password, 
     throw std::system_error(make_error_code(cryptonote::error::INTERNAL_WALLET_ERROR), "failed to load \"" + filename + '\"');
   }
 
-  if (!cryptonote::BinaryArray::from(keys_file_data, Common::asBinaryArray(buf))) {
+  if (!cryptonote::BinaryArray::from(keys_file_data, array::fromString(buf))) {
     throw std::system_error(make_error_code(cryptonote::error::INTERNAL_WALLET_ERROR), "failed to deserialize \"" + filename + '\"');
   }
 

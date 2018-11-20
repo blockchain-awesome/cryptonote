@@ -487,7 +487,7 @@ std::error_code InProcessNode::doQueryBlocksLite(std::vector<crypto::hash_t>&& k
 
     if (!entry.block.empty()) {
       bse.hasBlock = true;
-      if (!BinaryArray::from(bse.block, asBinaryArray(entry.block))) {
+      if (!BinaryArray::from(bse.block, array::fromString(entry.block))) {
         return std::make_error_code(std::errc::invalid_argument);
       }
     }
