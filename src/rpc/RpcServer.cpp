@@ -337,7 +337,7 @@ bool RpcServer::on_get_transactions(const COMMAND_RPC_GET_TRANSACTIONS::request&
   std::vector<hash_t> vh;
   for (const auto& tx_hex_str : req.txs_hashes) {
     binary_array_t b;
-    if (!hex::toString(tx_hex_str, b))
+    if (!hex::fromString(tx_hex_str, b))
     {
       res.status = "Failed to parse hex representation of transaction hash";
       return true;
@@ -366,7 +366,7 @@ bool RpcServer::on_get_transactions(const COMMAND_RPC_GET_TRANSACTIONS::request&
 
 bool RpcServer::on_send_raw_tx(const COMMAND_RPC_SEND_RAW_TX::request& req, COMMAND_RPC_SEND_RAW_TX::response& res) {
   binary_array_t tx_blob;
-  if (!hex::toString(req.tx_as_hex, tx_blob))
+  if (!hex::fromString(req.tx_as_hex, tx_blob))
   {
     logger(INFO) << "[on_send_raw_tx]: Failed to parse tx from hexbuff: " << req.tx_as_hex;
     res.status = "Failed";
@@ -543,7 +543,7 @@ bool RpcServer::on_submitblock(const COMMAND_RPC_SUBMITBLOCK::request& req, COMM
   }
 
   binary_array_t blockblob;
-  if (!hex::toString(req[0], blockblob)) {
+  if (!hex::fromString(req[0], blockblob)) {
     throw JsonRpc::JsonRpcError{ CORE_RPC_ERROR_CODE_WRONG_BLOCKBLOB, "Wrong block blob" };
   }
 

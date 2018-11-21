@@ -163,7 +163,7 @@ bool getPaymentIdFromTransactionExtraNonce(const std::vector<uint8_t>& extra_non
 }
 
 bool parsePaymentId(const std::string& paymentIdString, hash_t& paymentId) {
-  return hex::podToString(paymentIdString, paymentId);
+  return hex::podFromString(paymentIdString, paymentId);
 }
 
 bool createTxExtraWithPaymentId(const std::string& paymentIdString, std::vector<uint8_t>& extra) {

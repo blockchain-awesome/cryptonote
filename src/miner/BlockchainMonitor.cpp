@@ -78,7 +78,7 @@ crypto::hash_t BlockchainMonitor::requestLastBlockHash() {
     }
 
     crypto::hash_t blockHash;
-    if (!hex::podToString(response.block_header.hash, blockHash)) {
+    if (!hex::podFromString(response.block_header.hash, blockHash)) {
       throw std::runtime_error("Couldn't parse block hash: " + response.block_header.hash);
     }
 

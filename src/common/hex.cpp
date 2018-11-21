@@ -46,17 +46,17 @@ uint8_t isHex(char c)
   return -1;
 }
 
-uint8_t toString(char c)
+uint8_t fromString(char c)
 {
   uint8_t v = isHex(c);
   if (v != -1)
   {
     return v;
   }
-  throw std::runtime_error("toString: invalid character");
+  throw std::runtime_error("fromString: invalid character");
 }
 
-bool toString(char c, uint8_t &value)
+bool fromString(char c, uint8_t &value)
 {
   uint8_t v = isHex(c);
   if (v == -1)
@@ -68,27 +68,27 @@ bool toString(char c, uint8_t &value)
   return true;
 }
 
-size_t toString(const std::string &text, void *data, size_t bufferSize)
+size_t fromString(const std::string &text, void *data, size_t bufferSize)
 {
   if ((text.size() & 1) != 0)
   {
-    throw std::runtime_error("toString: invalid string size");
+    throw std::runtime_error("fromString: invalid string size");
   }
 
   if (text.size() >> 1 > bufferSize)
   {
-    throw std::runtime_error("toString: invalid buffer size");
+    throw std::runtime_error("fromString: invalid buffer size");
   }
 
   for (size_t i = 0; i < text.size() >> 1; ++i)
   {
-    static_cast<uint8_t *>(data)[i] = toString(text[i << 1]) << 4 | toString(text[(i << 1) + 1]);
+    static_cast<uint8_t *>(data)[i] = fromString(text[i << 1]) << 4 | fromString(text[(i << 1) + 1]);
   }
 
   return text.size() >> 1;
 }
 
-bool toString(const std::string &text, void *data, size_t bufferSize, size_t &size)
+bool fromString(const std::string &text, void *data, size_t bufferSize, size_t &size)
 {
   if ((text.size() & 1) != 0)
   {
@@ -103,13 +103,13 @@ bool toString(const std::string &text, void *data, size_t bufferSize, size_t &si
   for (size_t i = 0; i < text.size() >> 1; ++i)
   {
     uint8_t value1;
-    if (!toString(text[i << 1], value1))
+    if (!fromString(text[i << 1], value1))
     {
       return false;
     }
 
     uint8_t value2;
-    if (!toString(text[(i << 1) + 1], value2))
+    if (!fromString(text[(i << 1) + 1], value2))
     {
       return false;
     }
@@ -121,23 +121,23 @@ bool toString(const std::string &text, void *data, size_t bufferSize, size_t &si
   return true;
 }
 
-binary_array_t toString(const std::string &text)
+binary_array_t fromString(const std::string &text)
 {
   if ((text.size() & 1) != 0)
   {
-    throw std::runtime_error("toString: invalid string size");
+    throw std::runtime_error("fromString: invalid string size");
   }
 
   binary_array_t data(text.size() >> 1);
   for (size_t i = 0; i < data.size(); ++i)
   {
-    data[i] = toString(text[i << 1]) << 4 | toString(text[(i << 1) + 1]);
+    data[i] = fromString(text[i << 1]) << 4 | fromString(text[(i << 1) + 1]);
   }
 
   return data;
 }
 
-bool toString(const std::string &text, binary_array_t &data)
+bool fromString(const std::string &text, binary_array_t &data)
 {
   if ((text.size() & 1) != 0)
   {
@@ -147,13 +147,13 @@ bool toString(const std::string &text, binary_array_t &data)
   for (size_t i = 0; i<text.size()>> 1; ++i)
   {
     uint8_t value1;
-    if (!toString(text[i << 1], value1))
+    if (!fromString(text[i << 1], value1))
     {
       return false;
     }
 
     uint8_t value2;
-    if (!toString(text[(i << 1) + 1], value2))
+    if (!fromString(text[(i << 1) + 1], value2))
     {
       return false;
     }

@@ -22,12 +22,12 @@ using namespace cryptonote;
   Logging::LoggerRef &logger) {
   crypto::secret_key_t viewSecretKey;
   crypto::secret_key_t sendSecretKey;
-  if (!hex::podToString(viewKey, viewSecretKey))
+  if (!hex::podFromString(viewKey, viewSecretKey))
   {
     logger(Logging::ERROR) << "Cannot parse view secret key: " << viewKey;
     return false;
   }
-  if (!hex::podToString(spendKey, sendSecretKey))
+  if (!hex::podFromString(spendKey, sendSecretKey))
   {
     logger(Logging::ERROR) << "Cannot parse send secret key: " << spendKey;
     return false;

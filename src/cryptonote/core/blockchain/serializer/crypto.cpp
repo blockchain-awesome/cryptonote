@@ -1,7 +1,7 @@
 #include "crypto.h"
 
 bool parse_hash256(const std::string& str_hash, crypto::hash_t& hash) {
-  return hex::podToString(str_hash, hash);
+  return hex::podFromString(str_hash, hash);
 }
 
 namespace crypto {

@@ -50,10 +50,10 @@ TEST_F(CheckPointsTest, isCheckpoint)
 TEST_F(CheckPointsTest, check)
 {
   crypto::hash_t h = NULL_HASH;
-  ASSERT_TRUE(hex::podToString("84b6345731e2702cdaadc6ce5e5238c4ca5ecf48e3447136b2ed829b8a95f3ad", h));
+  ASSERT_TRUE(hex::podFromString("84b6345731e2702cdaadc6ce5e5238c4ca5ecf48e3447136b2ed829b8a95f3ad", h));
   ASSERT_TRUE(cp->check(1, h));
   ASSERT_TRUE(!cp->check(2, h));
-  ASSERT_TRUE(hex::podToString("84b6315731e2702cdaadc6ce5e5238c4ca5ecf48e3447136b2ed829b8a95f3ad", h));
+  ASSERT_TRUE(hex::podFromString("84b6315731e2702cdaadc6ce5e5238c4ca5ecf48e3447136b2ed829b8a95f3ad", h));
   ASSERT_TRUE(cp->check(2, h));
   ASSERT_TRUE(!cp->check(1, h));
 }

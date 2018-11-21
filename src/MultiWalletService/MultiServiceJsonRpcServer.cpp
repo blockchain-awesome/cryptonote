@@ -169,13 +169,13 @@ std::error_code MultiServiceJsonRpcServer::handleLogin(const Login::Request &req
 
   logger(Logging::INFO) << "before 2: ";
 
-  if (!hex::toString(request.viewSecretKey, &keys.viewSecretKey, sizeof(keys.viewSecretKey)))
+  if (!hex::fromString(request.viewSecretKey, &keys.viewSecretKey, sizeof(keys.viewSecretKey)))
   {
     return make_error_code(MultiWalletErrorCode::INVALID_SEND_SECRET_KEY);
   }
   logger(Logging::INFO) << "before 3: ";
 
-  if (!hex::toString(request.sendSecretKey, &keys.spendSecretKey, sizeof(keys.spendSecretKey)))
+  if (!hex::fromString(request.sendSecretKey, &keys.spendSecretKey, sizeof(keys.spendSecretKey)))
   {
     return make_error_code(MultiWalletErrorCode::INVALID_VIEW_SECRET_KEY);
   }

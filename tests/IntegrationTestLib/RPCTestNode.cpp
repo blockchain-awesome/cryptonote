@@ -64,7 +64,7 @@ bool RPCTestNode::getBlockTemplate(const std::string& minerAddress, cryptonote::
 
     difficulty = rsp.difficulty;
 
-    binary_array_t blockBlob = (::hex::toString(rsp.blocktemplate_blob));
+    binary_array_t blockBlob = (::hex::fromString(rsp.blocktemplate_blob));
     return BinaryArray::from(blockTemplate, blockBlob);
   } catch (std::exception& e) {
     LOG_ERROR("JSON-RPC call startMining() failed: " + std::string(e.what()));
@@ -122,7 +122,7 @@ bool RPCTestNode::getTailBlockId(crypto::hash_t& tailBlockId) {
       throw std::runtime_error(rsp.status);
     }
 
-    return ::hex::podToString(rsp.block_header.hash, tailBlockId);
+    return ::hex::podFromString(rsp.block_header.hash, tailBlockId);
   } catch (std::exception& e) {
     LOG_ERROR("JSON-RPC call getTailBlockId() failed: " + std::string(e.what()));
     return false;

@@ -65,7 +65,7 @@ crypto::hash_t parsePaymentId(const std::string& paymentIdStr) {
   }
 
   crypto::hash_t paymentId;
-  bool r = hex::podToString(paymentIdStr, paymentId);
+  bool r = hex::podFromString(paymentIdStr, paymentId);
   assert(r);
 
   return paymentId;
@@ -193,7 +193,7 @@ void replaceWalletFiles(const std::string &path, const std::string &tempFilePath
 crypto::hash_t parseHash(const std::string& hashString, Logging::LoggerRef logger) {
   crypto::hash_t hash;
 
-  if (!hex::podToString(hashString, hash)) {
+  if (!hex::podFromString(hashString, hash)) {
     logger(Logging::WARNING) << "Can't parse hash string " << hashString;
     throw std::system_error(make_error_code(cryptonote::error::WalletServiceErrorCode::WRONG_HASH_FORMAT));
   }
@@ -486,7 +486,7 @@ std::error_code WalletService::replaceWithNewWallet(const std::string& viewSecre
     System::EventLock lk(readyEvent);
 
     crypto::secret_key_t viewSecretKey;
-    if (!hex::podToString(viewSecretKeyText, viewSecretKey)) {
+    if (!hex::podFromString(viewSecretKeyText, viewSecretKey)) {
       logger(Logging::WARNING) << "Cannot restore view secret key: " << viewSecretKeyText;
       return make_error_code(cryptonote::error::WalletServiceErrorCode::WRONG_KEY_FORMAT);
     }
@@ -517,7 +517,7 @@ std::error_code WalletService::createAddress(const std::string& spendSecretKeyTe
     logger(Logging::DEBUGGING) << "Creating address";
 
     crypto::secret_key_t secretKey;
-    if (!hex::podToString(spendSecretKeyText, secretKey)) {
+    if (!hex::podFromString(spendSecretKeyText, secretKey)) {
       logger(Logging::WARNING) << "Wrong key format: " << spendSecretKeyText;
       return make_error_code(cryptonote::error::WalletServiceErrorCode::WRONG_KEY_FORMAT);
     }
@@ -557,7 +557,7 @@ std::error_code WalletService::createTrackingAddress(const std::string& spendPub
     logger(Logging::DEBUGGING) << "Creating tracking address";
 
     crypto::public_key_t publicKey;
-    if (!hex::podToString(spendPublicKeyText, publicKey)) {
+    if (!hex::podFromString(spendPublicKeyText, publicKey)) {
       logger(Logging::WARNING) << "Wrong key format: " << spendPublicKeyText;
       return make_error_code(cryptonote::error::WalletServiceErrorCode::WRONG_KEY_FORMAT);
     }
@@ -821,7 +821,7 @@ std::error_code WalletService::sendTransaction(const SendTransaction::Request& r
     if (!request.paymentId.empty()) {
       addPaymentIdToExtra(request.paymentId, sendParams.extra);
     } else {
-      sendParams.extra = BinaryArray::toString(hex::toString(request.extra));
+      sendParams.extra = BinaryArray::toString(hex::fromString(request.extra));
     }
 
     sendParams.sourceAddresses = request.sourceAddresses;
@@ -860,7 +860,7 @@ std::error_code WalletService::createDelayedTransaction(const CreateDelayedTrans
     if (!request.paymentId.empty()) {
       addPaymentIdToExtra(request.paymentId, sendParams.extra);
     } else {
-      sendParams.extra = BinaryArray::toString(hex::toString(request.extra));
+      sendParams.extra = BinaryArray::toString(hex::fromString(request.extra));
     }
 
     sendParams.sourceAddresses = request.addresses;
