@@ -35,7 +35,7 @@ TEST_F(BinaryArrayTest, create)
   std::string hex = ba.toString();
 
   binary_array_t bat1;
-  
+
   cryptonote::BinaryArray::to(bat, bat1);
   // cryptonote::BinaryArray::to(add);
   cryptonote::BinaryArray ba1(bat1);
@@ -43,8 +43,15 @@ TEST_F(BinaryArrayTest, create)
   ASSERT_TRUE(ba.toString() == "hello");
   // ASSERT_TRUE(ba1.toString() == "hello");
   ASSERT_TRUE(hex.length() > 0);
-  ASSERT_TRUE(memcmp(&hash, &cryptonote::NULL_HASH, sizeof (crypto::hash_t)) != 0);
+  ASSERT_TRUE(memcmp(&hash, &cryptonote::NULL_HASH, sizeof(crypto::hash_t)) != 0);
 
+  ASSERT_TRUE(array::toString(bat).compare("hello") == 0);
+
+  char a[] = "hello world";
+  std::string out = array::toString(a, sizeof(a));
+  std::cout << "out:" << out << std::endl;
+  std::cout << "length:" << out.length() << std::endl;
+  ASSERT_TRUE(out.compare(std::string("hello world", sizeof(a))) == 0);
 }
 
 } // namespace

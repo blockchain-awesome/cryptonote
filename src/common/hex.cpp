@@ -23,7 +23,7 @@ uint8_t isHex(char c)
   }
   
   if (isRange(c, 'A', 'F')) {
-    return 10 + c - 'a';
+    return 10 + c - 'A';
   }
   return -1;
 }
@@ -31,7 +31,7 @@ uint8_t isHex(char c)
 uint8_t fromString(char c)
 {
   uint8_t v = isHex(c);
-  if (v != -1)
+  if (v != 0xFF)
   {
     return v;
   }
@@ -41,7 +41,7 @@ uint8_t fromString(char c)
 bool fromString(char c, uint8_t &value)
 {
   uint8_t v = isHex(c);
-  if (v == -1)
+  if (v == 0xFF)
   {
     return false;
   }
