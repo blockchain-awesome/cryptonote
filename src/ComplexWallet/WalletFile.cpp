@@ -55,7 +55,7 @@ using namespace cryptonote;
 
   using namespace parameters;
   const uint64_t prefix = CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX;
-  std::string addressStr = Tools::Base58::encode_addr(prefix, std::string(keyStore, sizeof(crypto::public_key_t) * 2));
+  std::string addressStr = tools::base58::encode_addr(prefix, std::string(keyStore, sizeof(crypto::public_key_t) * 2));
   if (addressStr != address)
   {
     logger(Logging::ERROR) << "Addresses mismatch!" << addressStr;
