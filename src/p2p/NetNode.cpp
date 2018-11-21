@@ -405,7 +405,7 @@ namespace cryptonote
     std::string host = addr.substr(0, pos);
 
     try {
-      uint32_t port = Common::fromString<uint32_t>(addr.substr(pos + 1));
+      uint32_t port = stream::fromString<uint32_t>(addr.substr(pos + 1));
 
       System::Ipv4Resolver resolver(m_dispatcher);
       auto addr = resolver.resolve(host);
@@ -465,7 +465,7 @@ namespace cryptonote
 
     //try to bind
     logger(INFO) << "Binding on " << m_bind_ip << ":" << m_port;
-    m_listeningPort = Common::fromString<uint16_t>(m_port);
+    m_listeningPort = stream::fromString<uint16_t>(m_port);
 
     m_listener = System::TcpListener(m_dispatcher, System::Ipv4Address(m_bind_ip), static_cast<uint16_t>(m_listeningPort));
 

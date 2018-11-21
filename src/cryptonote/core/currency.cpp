@@ -425,7 +425,7 @@ bool Currency::parseAmount(const std::string &str, uint64_t &amount) const
     strAmount.append(m_numberOfDecimalPlaces - fractionSize, '0');
   }
 
-  return Common::fromString(strAmount, amount);
+  return stream::fromString(strAmount, amount);
 }
 
 difficulty_t Currency::nextDifficulty(std::vector<uint64_t> timestamps,

@@ -7,7 +7,7 @@ jobs:
       - checkout
       - run:
           name: Get building tools
-          command: apt update && apt install -y build-essential curl cmake libboost-all-dev libssl-dev libsodium-dev python-pip python-dev lcov
+          command: apt update && apt install -y build-essential curl cmake libboost-all-dev libssl-dev libsodium-dev python-pip python-dev lcov git
       - run:
           name: Prepare conan
           command: python -m pip install --upgrade pip

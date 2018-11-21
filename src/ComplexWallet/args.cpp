@@ -130,7 +130,7 @@ bool TransferCommand::parseArguments(LoggerRef &logger, const std::vector<std::s
 
     auto mixin_str = ar.next();
 
-    if (!Common::fromString(mixin_str, fake_outs_count))
+    if (!stream::fromString(mixin_str, fake_outs_count))
     {
       logger(ERROR, BRIGHT_RED) << "mixin_count should be non-negative integer, got " << mixin_str;
       return false;
@@ -340,7 +340,7 @@ bool parseUrlAddress(const std::string &url, std::string &address, uint16_t &por
   if (addrEnd != std::string::npos)
   {
     auto portEnd = url.find('/', addrEnd);
-    port = Common::fromString<uint16_t>(url.substr(
+    port = stream::fromString<uint16_t>(url.substr(
         addrEnd + 1, portEnd == std::string::npos ? std::string::npos : portEnd - addrEnd - 1));
   }
   else

@@ -143,7 +143,7 @@ namespace cryptonote
   bool miner::init(const MinerConfig& config) {
     if (!config.extraMessages.empty()) {
       std::string buff;
-      if (!Common::loadFileToString(config.extraMessages, buff)) {
+      if (!stream::load(config.extraMessages, buff)) {
         logger(ERROR, BRIGHT_RED) << "Failed to load file with extra messages: " << config.extraMessages; 
         return false; 
       }
@@ -162,7 +162,7 @@ namespace cryptonote
       m_config = boost::value_initialized<decltype(m_config)>();
 
       std::string filebuf;
-      if (Common::loadFileToString(m_config_folder_path + "/" + cryptonote::parameters::MINER_CONFIG_FILE_NAME, filebuf)) {
+      if (stream::load(m_config_folder_path + "/" + cryptonote::parameters::MINER_CONFIG_FILE_NAME, filebuf)) {
         loadFromJson(m_config, filebuf);
       }
 
@@ -387,7 +387,7 @@ namespace cryptonote
           --m_config.current_extra_message_index;
         } else {
           //success update, lets update config
-          Common::saveStringToFile(m_config_folder_path + "/" + cryptonote::parameters::MINER_CONFIG_FILE_NAME, storeToJson(m_config));
+          stream::save(m_config_folder_path + "/" + cryptonote::parameters::MINER_CONFIG_FILE_NAME, storeToJson(m_config));
         }
       }
 

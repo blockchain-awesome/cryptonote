@@ -1038,7 +1038,7 @@ void Blockchain::print_blockchain_outs(const std::string& file) {
     }
   }
 
-  if (Common::saveStringToFile(file, ss.str())) {
+  if (stream::save(file, ss.str())) {
     logger(INFO, BRIGHT_WHITE) <<
       "Current outputs index writen to file: " << file;
   } else {

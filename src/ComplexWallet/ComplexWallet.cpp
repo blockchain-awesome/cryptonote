@@ -127,7 +127,7 @@ bool complex_wallet::set_log(const std::vector<std::string> &args)
   }
 
   uint16_t l = 0;
-  if (!Common::fromString(args[0], l))
+  if (!stream::fromString(args[0], l))
   {
     fail_msg_writer() << "wrong number format, use: set_log <log_level_number_0-4>";
     return true;
@@ -355,7 +355,7 @@ bool complex_wallet::start_mining(const std::vector<std::string> &args)
   else if (1 == args.size())
   {
     uint16_t num = 1;
-    ok = Common::fromString(args[0], num);
+    ok = stream::fromString(args[0], num);
     ok = ok && (1 <= num && num <= max_mining_threads_count);
     req.threads_count = num;
   }
