@@ -187,7 +187,7 @@ bool wallet_rpc_server::on_get_payments(const wallet_rpc::COMMAND_RPC_GET_PAYMEN
   crypto::hash_t expectedPaymentId;
   binary_array_t payment_id_blob;
 
-  if (!Common::fromHex(req.payment_id, payment_id_blob)) {
+  if (!hex::toString(req.payment_id, payment_id_blob)) {
     throw JsonRpc::JsonRpcError(WALLET_RPC_ERROR_CODE_WRONG_PAYMENT_ID, "Payment ID has invald format");
   }
 

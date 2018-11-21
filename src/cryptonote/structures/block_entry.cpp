@@ -75,7 +75,7 @@ block_t Block::genesis(config::config_t &conf)
   binary_array_t minerTxBlob;
 
   bool r =
-      Common::fromHex(genesisCoinbaseTxHex, minerTxBlob) &&
+      hex::toString(genesisCoinbaseTxHex, minerTxBlob) &&
       BinaryArray::from(block.baseTransaction, minerTxBlob);
 
   if (!r)

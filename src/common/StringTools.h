@@ -3,29 +3,9 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #pragma once
-
-#include <cstdint>
-#include <sstream>
-#include <stdexcept>
-#include <vector>
-
-#include "binary_array.h"
+#include "hex.h"
 
 namespace Common {
-
-uint8_t fromHex(char character); // Returns value of hex 'character', throws on error
-bool fromHex(char character, uint8_t& value); // Assigns value of hex 'character' to 'value', returns false on error, does not throw
-size_t fromHex(const std::string& text, void* data, size_t bufferSize); // Assigns values of hex 'text' to buffer 'data' up to 'bufferSize', returns actual data size, throws on error
-bool fromHex(const std::string& text, void* data, size_t bufferSize, size_t& size); // Assigns values of hex 'text' to buffer 'data' up to 'bufferSize', assigns actual data size to 'size', returns false on error, does not throw
-binary_array_t fromHex(const std::string& text); // Returns values of hex 'text', throws on error
-bool fromHex(const std::string& text, binary_array_t& data); // Appends values of hex 'text' to 'data', returns false on error, does not throw
-
-template <typename T>
-bool podFromHex(const std::string& text, T& val) {
-  size_t outSize;
-  return fromHex(text, &val, sizeof(val), outSize) && outSize == sizeof(val);
-}
-
 std::string toHex(const void* data, size_t size); // Returns hex representation of ('data', 'size'), does not throw
 void toHex(const void* data, size_t size, std::string& text); // Appends hex representation of ('data', 'size') to 'text', does not throw
 std::string toHex(const binary_array_t& data); // Returns hex representation of 'data', does not throw

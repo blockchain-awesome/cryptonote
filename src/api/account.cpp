@@ -26,12 +26,12 @@ Account::Account(std::string spend_key, std::string view_key)
 }
 bool Account::init()
 {
-  if (!Common::podFromHex(m_view_key, m_secret_keys.view))
+  if (!hex::podToString(m_view_key, m_secret_keys.view))
   {
     return false;
   }
 
-  if (!Common::podFromHex(m_spend_key, m_secret_keys.spend))
+  if (!hex::podToString(m_spend_key, m_secret_keys.spend))
   {
     return false;
   }

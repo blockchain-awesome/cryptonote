@@ -336,7 +336,7 @@ protected:
 
     std::for_each(hashes.begin(), hashes.end(), [&result] (const std::string& str) {
       crypto::hash_t hash;
-      Common::podFromHex(str, hash);
+      hex::podToString(str, hash);
       result.push_back(hash);
     });
 
@@ -406,7 +406,7 @@ public:
   }
 
   WalletTransactionBuilder& extra(const std::string& extra) {
-    transaction.extra = BinaryArray::toString(Common::fromHex(extra));
+    transaction.extra = BinaryArray::toString(hex::toString(extra));
     return *this;
   }
 

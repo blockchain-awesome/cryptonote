@@ -193,13 +193,13 @@ std::error_code ComplexWalletServer::handleLogin(const Login::Request &request, 
 
   logger(Logging::INFO) << "before 2: ";
 
-  if (!Common::fromHex(request.viewSecretKey, &keys.viewSecretKey, sizeof(keys.viewSecretKey)))
+  if (!hex::toString(request.viewSecretKey, &keys.viewSecretKey, sizeof(keys.viewSecretKey)))
   {
     return make_error_code(MultiWalletErrorCode::INVALID_SEND_SECRET_KEY);
   }
   logger(Logging::INFO) << "before 3: ";
 
-  if (!Common::fromHex(request.sendSecretKey, &keys.spendSecretKey, sizeof(keys.spendSecretKey)))
+  if (!hex::toString(request.sendSecretKey, &keys.spendSecretKey, sizeof(keys.spendSecretKey)))
   {
     return make_error_code(MultiWalletErrorCode::INVALID_VIEW_SECRET_KEY);
   }

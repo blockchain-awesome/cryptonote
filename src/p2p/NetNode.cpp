@@ -985,8 +985,8 @@ namespace cryptonote
     const Currency& currency = m_payload_handler.m_currency;
     const config::config_t &conf = currency.getConfig();
 
-    Common::podFromHex(conf.net.p2p_stat_trusted_pub_key, pk);
-    // Common::podFromHex(cryptonote::P2P_STAT_TRUSTED_PUB_KEY, pk);
+    hex::podToString(conf.net.p2p_stat_trusted_pub_key, pk);
+    // hex::podToString(cryptonote::P2P_STAT_TRUSTED_PUB_KEY, pk);
     crypto::hash_t h = get_proof_of_trust_t_hash(tr);
     if (!crypto::check_signature(h, pk, tr.sign)) {
       logger(ERROR) << "check_trust failed: sign check failed";

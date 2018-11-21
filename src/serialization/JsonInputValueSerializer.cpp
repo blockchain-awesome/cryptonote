@@ -138,7 +138,7 @@ bool JsonInputValueSerializer::binary(void* value, size_t size, Common::StringVi
     return false;
   }
 
-  Common::fromHex(ptr->getString(), value, size);
+  hex::toString(ptr->getString(), value, size);
   return true;
 }
 
@@ -149,7 +149,7 @@ bool JsonInputValueSerializer::binary(std::string& value, Common::StringView nam
   }
 
   std::string valueHex = ptr->getString();
-  value = array::toString(Common::fromHex(valueHex));
+  value = array::toString(hex::toString(valueHex));
 
   return true;
 }

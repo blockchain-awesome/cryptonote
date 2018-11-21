@@ -219,7 +219,7 @@ BlockMiningParameters MinerManager::requestMiningParameters(System::Dispatcher& 
     BlockMiningParameters params;
     params.difficulty = response.difficulty;
 
-    if(!BinaryArray::from(params.blockTemplate, Common::fromHex(response.blocktemplate_blob))) {
+    if(!BinaryArray::from(params.blockTemplate, hex::toString(response.blocktemplate_blob))) {
       throw std::runtime_error("Couldn't deserialize block template");
     }
 

@@ -212,7 +212,7 @@ bool handle_request_stat(po::variables_map& vm, peer_id_type_t peer_id) {
   }
 
   crypto::secret_key_t prvk;
-  if (!Common::podFromHex(command_line::get_arg(vm, arg_priv_key), prvk)) {
+  if (!hex::podToString(command_line::get_arg(vm, arg_priv_key), prvk)) {
     std::cout << "{" << ENDL << "  \"status\": \"ERROR: " << "wrong secret key set \"" << ENDL << "}";
     return false;
   }
@@ -253,7 +253,7 @@ bool handle_request_stat(po::variables_map& vm, peer_id_type_t peer_id) {
     pot.time = time(NULL);
     crypto::public_key_t pubk;
 
-    Common::podFromHex(config::mainnet::data.net.p2p_stat_trusted_pub_key, pubk);
+    hex::podToString(config::mainnet::data.net.p2p_stat_trusted_pub_key, pubk);
     crypto::hash_t h = get_proof_of_trust_t_hash(pot);
     crypto::generate_signature(h, pubk, prvk, pot.sign);
 
