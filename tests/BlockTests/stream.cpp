@@ -9,6 +9,7 @@
 #include <algorithm>
 #include "common/hex.h"
 #include "common/stream.h"
+#include "common/Math.h"
 
 namespace
 {
@@ -62,6 +63,7 @@ TEST_F(StreamTest, hex)
   {
     ba.push_back(u[i]);
   }
+
   std::string convertedHex1;
   hex::toString(ba, convertedHex1);
   std::transform(convertedHex1.begin(), convertedHex1.end(), convertedHex1.begin(), ::toupper);
@@ -70,6 +72,10 @@ TEST_F(StreamTest, hex)
 
   std::string hex1 = "13030393FACD34ADETFABCDEF";
   ASSERT_FALSE(hex::fromString(hex1, ba));
+
+  uint8_t mv = Common::medianValue(ba);
+  std::cout << "mv = " << std::hex << (int)mv << std::endl;
+  ASSERT_TRUE(mv == 0xac);
 }
 
 } // namespace
