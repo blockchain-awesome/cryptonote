@@ -6,31 +6,6 @@
 #include <fstream>
 
 namespace Common {
-
-std::string extract(std::string& text, char delimiter) {
-  size_t delimiterPosition = text.find(delimiter);
-  std::string subText;
-  if (delimiterPosition != std::string::npos) {
-    subText = text.substr(0, delimiterPosition);
-    text = text.substr(delimiterPosition + 1);
-  } else {
-    subText.swap(text);
-  }
-
-  return subText;
-}
-
-std::string extract(const std::string& text, char delimiter, size_t& offset) {
-  size_t delimiterPosition = text.find(delimiter, offset);
-  if (delimiterPosition != std::string::npos) {
-    offset = delimiterPosition + 1;
-    return text.substr(offset, delimiterPosition);
-  } else {
-    offset = text.size();
-    return text.substr(offset);
-  }
-}
-
 namespace {
 
 static const std::string base64chars =

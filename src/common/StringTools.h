@@ -7,10 +7,6 @@
 #include "stream.h"
 
 namespace Common {
-
-std::string extract(std::string& text, char delimiter); // Does not throw
-std::string extract(const std::string& text, char delimiter, size_t& offset); // Does not throw
-
 std::string base64Decode(std::string const& encoded_string);
 
 std::string ipAddressToString(uint32_t ip);
