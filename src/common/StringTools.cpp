@@ -7,40 +7,6 @@
 
 namespace Common {
 
-std::string toHex(const void* data, size_t size) {
-  std::string text;
-  for (size_t i = 0; i < size; ++i) {
-    text += "0123456789abcdef"[static_cast<const uint8_t*>(data)[i] >> 4];
-    text += "0123456789abcdef"[static_cast<const uint8_t*>(data)[i] & 0xF];
-  }
-
-  return text;
-}
-
-void toHex(const void* data, size_t size, std::string& text) {
-  for (size_t i = 0; i < size; ++i) {
-    text += "0123456789abcdef"[static_cast<const uint8_t*>(data)[i] >> 4];
-    text += "0123456789abcdef"[static_cast<const uint8_t*>(data)[i] & 15];
-  }
-}
-
-std::string toHex(const binary_array_t& data) {
-  std::string text;
-  for (size_t i = 0; i < data.size(); ++i) {
-    text += "0123456789abcdef"[data[i] >> 4];
-    text += "0123456789abcdef"[data[i] & 15];
-  }
-
-  return text;
-}
-
-void toHex(const binary_array_t& data, std::string& text) {
-  for (size_t i = 0; i < data.size(); ++i) {
-    text += "0123456789abcdef"[data[i] >> 4];
-    text += "0123456789abcdef"[data[i] & 15];
-  }
-}
-
 std::string extract(std::string& text, char delimiter) {
   size_t delimiterPosition = text.find(delimiter);
   std::string subText;

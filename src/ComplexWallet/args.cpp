@@ -267,7 +267,7 @@ void printListTransfersItem(LoggerRef &logger, const WalletLegacyTransaction &tx
   std::vector<uint8_t> extraVec = array::fromString(txInfo.extra);
 
   crypto::Hash paymentId;
-  std::string paymentIdStr = (getPaymentIdFromTxExtra(extraVec, paymentId) && paymentId != NULL_HASH ? Common::podToHex(paymentId) : "");
+  std::string paymentIdStr = (getPaymentIdFromTxExtra(extraVec, paymentId) && paymentId != NULL_HASH ? hex::podToString(paymentId) : "");
 
   char timeString[TIMESTAMP_MAX_WIDTH + 1];
   time_t timestamp = static_cast<time_t>(txInfo.timestamp);
@@ -279,7 +279,7 @@ void printListTransfersItem(LoggerRef &logger, const WalletLegacyTransaction &tx
   std::string rowColor = txInfo.totalAmount < 0 ? MAGENTA : GREEN;
   logger(INFO, rowColor)
       << std::setw(TIMESTAMP_MAX_WIDTH) << timeString
-      << "  " << std::setw(HASH_MAX_WIDTH) << Common::podToHex(txInfo.hash)
+      << "  " << std::setw(HASH_MAX_WIDTH) << hex::podToString(txInfo.hash)
       << "  " << std::setw(TOTAL_AMOUNT_MAX_WIDTH) << currency.formatAmount(txInfo.totalAmount)
       << "  " << std::setw(FEE_MAX_WIDTH) << currency.formatAmount(txInfo.fee)
       << "  " << std::setw(BLOCK_MAX_WIDTH) << txInfo.blockHeight

@@ -31,7 +31,7 @@ public:
   std::string getPublicKeys();
   std::string getPrivateKeys();
 
-  std::string toHex();
+  std::string hex::toString();
   cryptonote::account_keys_t &toKeys();
 
 private:

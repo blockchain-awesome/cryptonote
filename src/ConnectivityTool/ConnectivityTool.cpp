@@ -313,8 +313,8 @@ bool generate_and_print_keys() {
   crypto::public_key_t pk;
   crypto::secret_key_t sk;
   generate_keys(pk, sk);
-  std::cout << "PUBLIC KEY: " << Common::podToHex(pk) << ENDL
-            << "PRIVATE KEY: " << Common::podToHex(sk);
+  std::cout << "PUBLIC KEY: " << hex::podToString(pk) << ENDL
+            << "PRIVATE KEY: " << hex::podToString(sk);
   return true;
 }
 

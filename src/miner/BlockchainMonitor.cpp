@@ -82,7 +82,7 @@ crypto::hash_t BlockchainMonitor::requestLastBlockHash() {
       throw std::runtime_error("Couldn't parse block hash: " + response.block_header.hash);
     }
 
-    m_logger(Logging::DEBUGGING) << "Last block hash: " << Common::podToHex(blockHash);
+    m_logger(Logging::DEBUGGING) << "Last block hash: " << hex::podToString(blockHash);
 
     return blockHash;
   } catch (std::exception& e) {

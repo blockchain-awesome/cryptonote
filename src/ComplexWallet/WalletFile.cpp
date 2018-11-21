@@ -131,7 +131,7 @@ using namespace cryptonote;
     file.flush();
     file.close();
     logger(Logging::INFO, Logging::BRIGHT_WHITE) << "Generated new wallet: " << address << std::endl
-                               << "view key: " << Common::podToHex(keys.viewSecretKey);
+                               << "view key: " << hex::podToString(keys.viewSecretKey);
   }
   catch (const std::exception &e)
   {

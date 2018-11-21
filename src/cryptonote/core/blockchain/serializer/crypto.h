@@ -14,7 +14,7 @@ bool serializePod(T &v, Common::StringView name, cryptonote::ISerializer &serial
 template <class T>
 std::ostream &print256(std::ostream &o, const T &v)
 {
-  return o << "<" << Common::podToHex(v) << ">";
+  return o << "<" << hex::podToString(v) << ">";
 }
 
 bool parse_hash256(const std::string &str_hash, crypto::hash_t &hash);

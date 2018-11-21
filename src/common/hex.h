@@ -22,4 +22,14 @@ bool podFromString(const std::string &text, T &val)
   size_t outSize;
   return fromString(text, &val, sizeof(val), outSize) && outSize == sizeof(val);
 }
+
+std::string toString(const void* data, size_t size); // Returns hex representation of ('data', 'size'), does not throw
+void toString(const void* data, size_t size, std::string& text); // Appends hex representation of ('data', 'size') to 'text', does not throw
+std::string toString(const binary_array_t& data); // Returns hex representation of 'data', does not throw
+void toString(const binary_array_t& data, std::string& text); // Appends hex representation of 'data' to 'text', does not throw
+
+template<class T>
+std::string podToString(const T& s) {
+  return toString(&s, sizeof(s));
+}
 } // namespace hex

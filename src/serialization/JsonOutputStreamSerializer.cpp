@@ -122,7 +122,7 @@ bool JsonOutputStreamSerializer::operator()(bool& value, Common::StringView name
 }
 
 bool JsonOutputStreamSerializer::binary(void* value, size_t size, Common::StringView name) {
-  std::string hex = Common::toHex(value, size);
+  std::string hex = hex::toString(value, size);
   return (*this)(hex, name);
 }
 

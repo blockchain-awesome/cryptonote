@@ -281,7 +281,7 @@ bool complex_wallet::new_wallet(const std::string &wallet_file, const std::strin
     m_wallet->getAccountKeys(keys);
 
     logger(INFO, BRIGHT_WHITE) << "Generated new wallet: " << m_wallet->getAddress() << std::endl
-                               << "view key: " << Common::podToHex(keys.viewSecretKey);
+                               << "view key: " << hex::podToString(keys.viewSecretKey);
   }
   catch (const std::exception &e)
   {
@@ -462,11 +462,11 @@ void complex_wallet::externalTransactionCreated(cryptonote::TransactionId transa
 
   if (txInfo.totalAmount >= 0)
   {
-    logger(INFO, GREEN) << logPrefix.str() << " transaction " << Common::podToHex(txInfo.hash) << ", received " << m_currency.formatAmount(txInfo.totalAmount);
+    logger(INFO, GREEN) << logPrefix.str() << " transaction " << hex::podToString(txInfo.hash) << ", received " << m_currency.formatAmount(txInfo.totalAmount);
   }
   else
   {
-    logger(INFO, MAGENTA) << logPrefix.str() << " transaction " << Common::podToHex(txInfo.hash) << ", spent " << m_currency.formatAmount(static_cast<uint64_t>(-txInfo.totalAmount));
+    logger(INFO, MAGENTA) << logPrefix.str() << " transaction " << hex::podToString(txInfo.hash) << ", spent " << m_currency.formatAmount(static_cast<uint64_t>(-txInfo.totalAmount));
   }
 
   if (txInfo.blockHeight == WALLET_LEGACY_UNCONFIRMED_TRANSACTION_HEIGHT)
@@ -515,7 +515,7 @@ bool complex_wallet::show_incoming_transfers(const std::vector<std::string> &arg
     hasTransfers = true;
     logger(INFO) << "        amount       \t                              tx id";
     logger(INFO, GREEN) << // spent - magenta
-        std::setw(21) << m_currency.formatAmount(txInfo.totalAmount) << '\t' << Common::podToHex(txInfo.hash);
+        std::setw(21) << m_currency.formatAmount(txInfo.totalAmount) << '\t' << hex::podToString(txInfo.hash);
   }
 
   if (!hasTransfers)
@@ -587,7 +587,7 @@ bool complex_wallet::show_payments(const std::vector<std::string> &args)
         if (cryptonote::getPaymentIdFromTxExtra(extraVec, paymentId) && paymentId == expectedPaymentId)
         {
           payments_found = true;
-          success_msg_writer(true) << paymentId << "\t\t" << Common::podToHex(txInfo.hash) << std::setw(8) << txInfo.blockHeight << '\t' << std::setw(21) << m_currency.formatAmount(txInfo.totalAmount); // << '\t' <<
+          success_msg_writer(true) << paymentId << "\t\t" << hex::podToString(txInfo.hash) << std::setw(8) << txInfo.blockHeight << '\t' << std::setw(21) << m_currency.formatAmount(txInfo.totalAmount); // << '\t' <<
         }
       }
 
@@ -654,7 +654,7 @@ bool complex_wallet::transfer(const std::vector<std::string> &args)
 
     cryptonote::WalletLegacyTransaction txInfo;
     m_wallet->getTransaction(tx, txInfo);
-    success_msg_writer(true) << "Money successfully sent, transaction " << Common::podToHex(txInfo.hash);
+    success_msg_writer(true) << "Money successfully sent, transaction " << hex::podToString(txInfo.hash);
 
     try
     {

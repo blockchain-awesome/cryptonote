@@ -330,7 +330,7 @@ int CryptoNoteProtocolHandler::handle_response_get_objects(int command, NOTIFY_R
     block_t b;
     if (!BinaryArray::from(b, array::fromString(block_entry.block))) {
       logger(Logging::ERROR) << context << "sent wrong block: failed to parse and validate block: \r\n"
-        << toHex(array::fromString(block_entry.block)) << "\r\n dropping connection";
+        << hex::toString(array::fromString(block_entry.block)) << "\r\n dropping connection";
       context.m_state = CryptoNoteConnectionContext::state_shutdown;
       return 1;
     }
@@ -349,13 +349,13 @@ int CryptoNoteProtocolHandler::handle_response_get_objects(int command, NOTIFY_R
     auto blockHash = Block::getHash(b);
     auto req_it = context.m_requested_objects.find(blockHash);
     if (req_it == context.m_requested_objects.end()) {
-      logger(Logging::ERROR) << context << "sent wrong NOTIFY_RESPONSE_GET_OBJECTS: block with id=" << Common::podToHex(blockHash)
+      logger(Logging::ERROR) << context << "sent wrong NOTIFY_RESPONSE_GET_OBJECTS: block with id=" << hex::podToString(blockHash)
         << " wasn't requested, dropping connection";
       context.m_state = CryptoNoteConnectionContext::state_shutdown;
       return 1;
     }
     if (b.transactionHashes.size() != block_entry.txs.size()) {
-      logger(Logging::ERROR) << context << "sent wrong NOTIFY_RESPONSE_GET_OBJECTS: block with id=" << Common::podToHex(blockHash)
+      logger(Logging::ERROR) << context << "sent wrong NOTIFY_RESPONSE_GET_OBJECTS: block with id=" << hex::podToString(blockHash)
         << ", transactionHashes.size()=" << b.transactionHashes.size() << " mismatch with block_complete_entry_t.m_txs.size()=" << block_entry.txs.size() << ", dropping connection";
       context.m_state = CryptoNoteConnectionContext::state_shutdown;
       return 1;
@@ -408,7 +408,7 @@ int CryptoNoteProtocolHandler::processObjects(CryptoNoteConnectionContext& conte
       m_core.handle_incoming_tx(array::fromString(tx_blob), tvc, true);
       if (tvc.m_verifivation_failed) {
         logger(Logging::ERROR) << context << "transaction verification failed on NOTIFY_RESPONSE_GET_OBJECTS, \r\ntx_id = "
-          << Common::podToHex(BinaryArray::getHash(array::fromString(tx_blob))) << ", dropping connection";
+          << hex::podToString(BinaryArray::getHash(array::fromString(tx_blob))) << ", dropping connection";
         context.m_state = CryptoNoteConnectionContext::state_shutdown;
         return 1;
       }
@@ -550,7 +550,7 @@ int CryptoNoteProtocolHandler::handle_response_chain_entry(int command, NOTIFY_R
   if (!m_core.have_block(arg.m_block_ids.front())) {
     logger(Logging::ERROR)
       << context << "sent m_block_ids starting from unknown id: "
-      << Common::podToHex(arg.m_block_ids.front())
+      << hex::podToString(arg.m_block_ids.front())
       << " , dropping connection";
     context.m_state = CryptoNoteConnectionContext::state_shutdown;
     return 1;

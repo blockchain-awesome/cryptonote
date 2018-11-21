@@ -353,11 +353,11 @@ bool RpcServer::on_get_transactions(const COMMAND_RPC_GET_TRANSACTIONS::request&
   m_core.getTransactions(vh, txs, missed_txs);
 
   for (auto& tx : txs) {
-    res.txs_as_hex.push_back(toHex(BinaryArray::to(tx)));
+    res.txs_as_hex.push_back(hex::toString(BinaryArray::to(tx)));
   }
 
   for (const auto& miss_tx : missed_txs) {
-    res.missed_tx.push_back(Common::podToHex(miss_tx));
+    res.missed_tx.push_back(hex::podToString(miss_tx));
   }
 
   res.status = CORE_RPC_STATUS_OK;
@@ -463,7 +463,7 @@ bool RpcServer::on_getblockhash(const COMMAND_RPC_GETBLOCKHASH::request& req, CO
     };
   }
 
-  res = Common::podToHex(blockId);
+  res = hex::podToString(blockId);
   return true;
 }
 
@@ -525,7 +525,7 @@ bool RpcServer::on_getblocktemplate(const COMMAND_RPC_GETBLOCKTEMPLATE::request&
     res.reserved_offset = 0;
   }
 
-  res.blocktemplate_blob = toHex(block_blob);
+  res.blocktemplate_blob = hex::toString(block_blob);
   res.status = CORE_RPC_STATUS_OK;
 
   return true;
@@ -533,7 +533,7 @@ bool RpcServer::on_getblocktemplate(const COMMAND_RPC_GETBLOCKTEMPLATE::request&
 
 bool RpcServer::on_get_currency_id(const COMMAND_RPC_GET_CURRENCY_ID::request& /*req*/, COMMAND_RPC_GET_CURRENCY_ID::response& res) {
   hash_t currencyId = m_core.currency().genesisBlockHash();
-  res.currency_id_blob = Common::podToHex(currencyId);
+  res.currency_id_blob = hex::podToString(currencyId);
   return true;
 }
 
@@ -574,12 +574,12 @@ void RpcServer::fill_block_header_response(const block_t& blk, bool orphan_statu
   responce.major_version = blk.majorVersion;
   responce.minor_version = blk.minorVersion;
   responce.timestamp = blk.timestamp;
-  responce.prev_hash = Common::podToHex(blk.previousBlockHash);
+  responce.prev_hash = hex::podToString(blk.previousBlockHash);
   responce.nonce = blk.nonce;
   responce.orphan_status = orphan_status;
   responce.height = height;
   responce.depth = m_core.get_current_blockchain_height() - height - 1;
-  responce.hash = Common::podToHex(hash);
+  responce.hash = hex::podToString(hash);
   m_core.getBlockDifficulty(static_cast<uint32_t>(height), responce.difficulty);
   responce.reward = get_block_reward(blk);
 }

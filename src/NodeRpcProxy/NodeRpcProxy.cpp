@@ -464,7 +464,7 @@ void NodeRpcProxy::isSynchronized(bool& syncStatus, const Callback& callback) {
 std::error_code NodeRpcProxy::doRelayTransaction(const cryptonote::transaction_t& transaction) {
   COMMAND_RPC_SEND_RAW_TX::request req;
   COMMAND_RPC_SEND_RAW_TX::response rsp;
-  req.tx_as_hex = toHex(BinaryArray::to(transaction));
+  req.tx_as_hex = hex::toString(BinaryArray::to(transaction));
   return jsonCommand("/sendrawtransaction", req, rsp);
 }
 

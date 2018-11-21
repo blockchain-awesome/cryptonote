@@ -320,7 +320,7 @@ bool BaseFunctionalTests::prepareAndSubmitBlock(TestNode& node, cryptonote::bloc
   m_nextTimestamp += 2 * m_currency.difficultyTarget();
 
   binary_array_t blockBlob = cryptonote::BinaryArray::to(blockTemplate);
-  return node.submitBlock(::Common::toHex(blockBlob.data(), blockBlob.size()));
+  return node.submitBlock(::hex::toString(blockBlob.data(), blockBlob.size()));
 }
 
 bool BaseFunctionalTests::mineBlock(std::unique_ptr<cryptonote::IWalletLegacy> &wallet) {

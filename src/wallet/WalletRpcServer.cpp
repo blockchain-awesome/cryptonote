@@ -165,7 +165,7 @@ bool wallet_rpc_server::on_transfer(const wallet_rpc::COMMAND_RPC_TRANSFER::requ
 
     cryptonote::WalletLegacyTransaction txInfo;
     m_wallet.getTransaction(tx, txInfo);
-    res.tx_hash = Common::podToHex(txInfo.hash);
+    res.tx_hash = hex::podToString(txInfo.hash);
 
   } catch (const std::exception& e) {
     throw JsonRpc::JsonRpcError(WALLET_RPC_ERROR_CODE_GENERIC_TRANSFER_ERROR, e.what());
@@ -212,7 +212,7 @@ bool wallet_rpc_server::on_get_payments(const wallet_rpc::COMMAND_RPC_GET_PAYMEN
     crypto::hash_t paymentId;
     if (getPaymentIdFromTxExtra(extraVec, paymentId) && paymentId == expectedPaymentId) {
       wallet_rpc::payment_details rpc_payment;
-      rpc_payment.tx_hash = Common::podToHex(txInfo.hash);
+      rpc_payment.tx_hash = hex::podToString(txInfo.hash);
       rpc_payment.amount = txInfo.totalAmount;
       rpc_payment.block_height = txInfo.blockHeight;
       rpc_payment.unlock_time = txInfo.unlockTime;
@@ -245,7 +245,7 @@ bool wallet_rpc_server::on_get_transfers(const wallet_rpc::COMMAND_RPC_GET_TRANS
     wallet_rpc::Transfer transfer;
     transfer.time = txInfo.timestamp;
     transfer.output = txInfo.totalAmount < 0;
-    transfer.transactionHash = Common::podToHex(txInfo.hash);
+    transfer.transactionHash = hex::podToString(txInfo.hash);
     transfer.amount = std::abs(txInfo.totalAmount);
     transfer.fee = txInfo.fee;
     transfer.address = address;
@@ -258,7 +258,7 @@ bool wallet_rpc_server::on_get_transfers(const wallet_rpc::COMMAND_RPC_GET_TRANS
     std::for_each(txInfo.extra.begin(), txInfo.extra.end(), [&extraVec](const char el) { extraVec.push_back(el); });
 
     crypto::hash_t paymentId;
-    transfer.paymentId = (getPaymentIdFromTxExtra(extraVec, paymentId) && paymentId != NULL_HASH ? Common::podToHex(paymentId) : "");
+    transfer.paymentId = (getPaymentIdFromTxExtra(extraVec, paymentId) && paymentId != NULL_HASH ? hex::podToString(paymentId) : "");
 
     res.transfers.push_back(transfer);
   }

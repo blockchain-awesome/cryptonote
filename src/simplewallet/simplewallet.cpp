@@ -371,7 +371,7 @@ void printListTransfersItem(LoggerRef& logger, const WalletLegacyTransaction& tx
   std::vector<uint8_t> extraVec = array::fromString(txInfo.extra);
 
   crypto::hash_t paymentId;
-  std::string paymentIdStr = (getPaymentIdFromTxExtra(extraVec, paymentId) && paymentId != NULL_HASH ? Common::podToHex(paymentId) : "");
+  std::string paymentIdStr = (getPaymentIdFromTxExtra(extraVec, paymentId) && paymentId != NULL_HASH ? hex::podToString(paymentId) : "");
 
   char timeString[TIMESTAMP_MAX_WIDTH + 1];
   time_t timestamp = static_cast<time_t>(txInfo.timestamp);
@@ -382,7 +382,7 @@ void printListTransfersItem(LoggerRef& logger, const WalletLegacyTransaction& tx
   std::string rowColor = txInfo.totalAmount < 0 ? MAGENTA : GREEN;
   logger(INFO, rowColor)
     << std::setw(TIMESTAMP_MAX_WIDTH) << timeString
-    << "  " << std::setw(HASH_MAX_WIDTH) << Common::podToHex(txInfo.hash)
+    << "  " << std::setw(HASH_MAX_WIDTH) << hex::podToString(txInfo.hash)
     << "  " << std::setw(TOTAL_AMOUNT_MAX_WIDTH) << currency.formatAmount(txInfo.totalAmount)
     << "  " << std::setw(FEE_MAX_WIDTH) << currency.formatAmount(txInfo.fee)
     << "  " << std::setw(BLOCK_MAX_WIDTH) << txInfo.blockHeight
@@ -674,7 +674,7 @@ bool simple_wallet::new_wallet(const std::string &wallet_file, const std::string
 
     logger(INFO, BRIGHT_WHITE) <<
       "Generated new wallet: " << m_wallet->getAddress() << std::endl <<
-      "view key: " << Common::podToHex(keys.viewSecretKey);
+      "view key: " << hex::podToString(keys.viewSecretKey);
   }
   catch (const std::exception& e) {
     fail_msg_writer() << "failed to generate new wallet: " << e.what();
@@ -835,11 +835,11 @@ void simple_wallet::externalTransactionCreated(cryptonote::TransactionId transac
 
   if (txInfo.totalAmount >= 0) {
     logger(INFO, GREEN) <<
-      logPrefix.str() << " transaction " << Common::podToHex(txInfo.hash) <<
+      logPrefix.str() << " transaction " << hex::podToString(txInfo.hash) <<
       ", received " << m_currency.formatAmount(txInfo.totalAmount);
   } else {
     logger(INFO, MAGENTA) <<
-      logPrefix.str() << " transaction " << Common::podToHex(txInfo.hash) <<
+      logPrefix.str() << " transaction " << hex::podToString(txInfo.hash) <<
       ", spent " << m_currency.formatAmount(static_cast<uint64_t>(-txInfo.totalAmount));
   }
 
@@ -880,7 +880,7 @@ bool simple_wallet::show_incoming_transfers(const std::vector<std::string>& args
     hasTransfers = true;
     logger(INFO) << "        amount       \t                              tx id";
     logger(INFO, GREEN) <<  // spent - magenta
-      std::setw(21) << m_currency.formatAmount(txInfo.totalAmount) << '\t' << Common::podToHex(txInfo.hash);
+      std::setw(21) << m_currency.formatAmount(txInfo.totalAmount) << '\t' << hex::podToString(txInfo.hash);
   }
 
   if (!hasTransfers) success_msg_writer() << "No incoming transfers";
@@ -941,7 +941,7 @@ bool simple_wallet::show_payments(const std::vector<std::string> &args) {
           payments_found = true;
           success_msg_writer(true) <<
             paymentId << "\t\t" <<
-            Common::podToHex(txInfo.hash) <<
+            hex::podToString(txInfo.hash) <<
             std::setw(8) << txInfo.blockHeight << '\t' <<
             std::setw(21) << m_currency.formatAmount(txInfo.totalAmount);// << '\t' <<
         }
@@ -999,7 +999,7 @@ bool simple_wallet::transfer(const std::vector<std::string> &args) {
 
     cryptonote::WalletLegacyTransaction txInfo;
     m_wallet->getTransaction(tx, txInfo);
-    success_msg_writer(true) << "Money successfully sent, transaction " << Common::podToHex(txInfo.hash);
+    success_msg_writer(true) << "Money successfully sent, transaction " << hex::podToString(txInfo.hash);
 
     try {
       cryptonote::WalletHelper::storeWallet(*m_wallet, m_wallet_file);

@@ -350,7 +350,7 @@ TEST_F(NodeTest, observerHeightNotifications) {
     uint32_t newLocalHeight = 0;
 
     auto blockData = BinaryArray::to(extraBlocks.blocks.begin()->block);
-    ASSERT_TRUE(daemon.submitBlock(Common::toHex(blockData.data(), blockData.size())));
+    ASSERT_TRUE(daemon.submitBlock(hex::toString(blockData.data(), blockData.size())));
 
     ASSERT_TRUE(observer.m_localHeight.waitFor(timeout, newLocalHeight));
     ASSERT_TRUE(observer.m_knownHeight.waitFor(timeout, newKnownHeight));

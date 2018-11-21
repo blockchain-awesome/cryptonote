@@ -184,17 +184,17 @@ bool MinerManager::submitBlock(const block_t& minedBlock, const std::string& dae
     HttpClient client(m_dispatcher, daemonHost, daemonPort);
 
     COMMAND_RPC_SUBMITBLOCK::request request;
-    request.emplace_back(Common::toHex(BinaryArray::to(minedBlock)));
+    request.emplace_back(hex::toString(BinaryArray::to(minedBlock)));
 
     COMMAND_RPC_SUBMITBLOCK::response response;
 
     System::EventLock lk(m_httpEvent);
     JsonRpc::invokeJsonRpcCommand(client, "submitblock", request, response);
 
-    m_logger(Logging::INFO) << "Block has been successfully submitted. block_t hash: " << Common::podToHex(Block::getHash(minedBlock));
+    m_logger(Logging::INFO) << "Block has been successfully submitted. block_t hash: " << hex::podToString(Block::getHash(minedBlock));
     return true;
   } catch (std::exception& e) {
-    m_logger(Logging::WARNING) << "Couldn't submit block: " << Common::podToHex(Block::getHash(minedBlock)) << ", reason: " << e.what();
+    m_logger(Logging::WARNING) << "Couldn't submit block: " << hex::podToString(Block::getHash(minedBlock)) << ", reason: " << e.what();
     return false;
   }
 }
@@ -223,7 +223,7 @@ BlockMiningParameters MinerManager::requestMiningParameters(System::Dispatcher& 
       throw std::runtime_error("Couldn't deserialize block template");
     }
 
-    m_logger(Logging::DEBUGGING) << "Requested block template with previous block hash: " << Common::podToHex(params.blockTemplate.previousBlockHash);
+    m_logger(Logging::DEBUGGING) << "Requested block template with previous block hash: " << hex::podToString(params.blockTemplate.previousBlockHash);
     return params;
   } catch (std::exception& e) {
     m_logger(Logging::WARNING) << "Couldn't get block template: " << e.what();

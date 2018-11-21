@@ -6,15 +6,6 @@
 #include "hex.h"
 
 namespace Common {
-std::string toHex(const void* data, size_t size); // Returns hex representation of ('data', 'size'), does not throw
-void toHex(const void* data, size_t size, std::string& text); // Appends hex representation of ('data', 'size') to 'text', does not throw
-std::string toHex(const binary_array_t& data); // Returns hex representation of 'data', does not throw
-void toHex(const binary_array_t& data, std::string& text); // Appends hex representation of 'data' to 'text', does not throw
-
-template<class T>
-std::string podToHex(const T& s) {
-  return toHex(&s, sizeof(s));
-}
 
 std::string extract(std::string& text, char delimiter); // Does not throw
 std::string extract(const std::string& text, char delimiter, size_t& offset); // Does not throw
