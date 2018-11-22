@@ -134,7 +134,7 @@ public:
   }
 
 private:
-  Currency(std::string path, config::config_t &config, Logging::ILogger& log) : m_path(path), logger(log, "currency"), m_config(config){
+  Currency(const std::string &path, config::config_t &config, Logging::ILogger& log) : m_path(path), logger(log, "currency"), m_config(config){
 
   }
 
@@ -205,7 +205,7 @@ private:
 
 class CurrencyBuilder : boost::noncopyable {
 public:
-  CurrencyBuilder(std::string path, config::config_t& config, Logging::ILogger &log);
+  CurrencyBuilder(const std::string &path, config::config_t& config, Logging::ILogger &log);
 
   Currency currency() {
     if (!m_currency.init()) {

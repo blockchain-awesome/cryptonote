@@ -11,9 +11,8 @@
 namespace cryptonote
 {
 
-CoreConfig::CoreConfig()
+CoreConfig::CoreConfig() : configFolder(os::appdata::path())
 {
-  configFolder = os::appdata::path();
 }
 
 void CoreConfig::init(const boost::program_options::variables_map &options)

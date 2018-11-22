@@ -37,11 +37,11 @@ public:
 
   bool checkAddress(const std::string &address, account_public_address_t &keys);
 
-  cryptonote::IWalletLegacy *getWallet(const std::string token);
+  cryptonote::IWalletLegacy *getWallet(const std::string &token);
 
   std::string getAddressesByKeys(const account_public_address_t &keys);
 
-  std::string sha256(const std::string str);
+  std::string sha256(const std::string &str);
 
 private:
   Logging::LoggerGroup &m_logger;

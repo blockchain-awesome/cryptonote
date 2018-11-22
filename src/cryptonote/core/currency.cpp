@@ -505,7 +505,7 @@ size_t Currency::getApproximateMaximumInputCount(size_t transactionSize, size_t 
   return (transactionSize - headerSize - outputsSize) / inputSize;
 }
 
-CurrencyBuilder::CurrencyBuilder(std::string path, config::config_t& config, Logging::ILogger &log) : m_currency(path, config, log)
+CurrencyBuilder::CurrencyBuilder(const std::string &path, config::config_t& config, Logging::ILogger &log) : m_currency(path, config, log)
 {
   maxBlockNumber(parameters::CRYPTONOTE_MAX_BLOCK_NUMBER);
   maxBlockBlobSize(parameters::CRYPTONOTE_MAX_BLOCK_BLOB_SIZE);

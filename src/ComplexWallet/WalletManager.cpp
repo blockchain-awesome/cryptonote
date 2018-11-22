@@ -101,7 +101,7 @@ bool WalletManager::checkAddress(const std::string &address, account_public_addr
   return true;
 }
 
-cryptonote::IWalletLegacy *WalletManager::getWallet(const std::string address)
+cryptonote::IWalletLegacy *WalletManager::getWallet(const std::string &address)
 {
   std::map<std::string, void *>::iterator it;
   it = m_wallets.find(address);
@@ -117,7 +117,7 @@ std::string WalletManager::getAddressesByKeys(const account_public_address_t &ke
   return m_currency.accountAddressAsString(keys);
 }
 
-std::string WalletManager::sha256(const std::string str)
+std::string WalletManager::sha256(const std::string &str)
 {
   unsigned char hash[SHA256_DIGEST_LENGTH];
   SHA256_CTX sha256;

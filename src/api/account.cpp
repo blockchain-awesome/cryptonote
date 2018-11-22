@@ -20,7 +20,7 @@
 namespace api
 {
 
-Account::Account(std::string spend_key, std::string view_key)
+Account::Account(std::string &spend_key, std::string &view_key)
     : m_view_key(view_key), m_spend_key(spend_key)
 {
 }

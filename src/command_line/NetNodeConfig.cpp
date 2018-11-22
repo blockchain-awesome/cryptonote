@@ -62,14 +62,9 @@ void NetNodeConfig::initOptions(boost::program_options::options_description& des
   add_arg(desc, arg_p2p_hide_my_port);
 }
 
-NetNodeConfig::NetNodeConfig() {
-  bindIp = "";
-  bindPort = 0;
-  externalPort = 0;
-  allowLocalIp = false;
-  hideMyPort = false;
-  configFolder = os::appdata::path();
-  testnet = false;
+NetNodeConfig::NetNodeConfig():bindIp(""), bindPort(0),
+ externalPort(0), allowLocalIp(false), hideMyPort(false), configFolder(os::appdata::path()), testnet(false)
+{
 }
 
 bool NetNodeConfig::init(const boost::program_options::variables_map& vm)

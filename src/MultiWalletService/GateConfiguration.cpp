@@ -17,12 +17,11 @@ using namespace cryptonote;
 
 namespace MultiWalletService {
 
-Configuration::Configuration() {
+Configuration::Configuration(): logFile("multi_wallet_gate.log"), bindAddress("") {
   daemonize = false;
-  logFile = "multi_wallet_gate.log";
+  logFile = ;
   testnet = false;
   logLevel = Logging::INFO;
-  bindAddress = "";
   bindPort = 0;
 }
 

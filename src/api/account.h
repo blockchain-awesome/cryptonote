@@ -21,7 +21,7 @@ struct PublicKeyPair
 class Account
 {
 public:
-  Account(std::string spend_key, std::string view_key);
+  Account(std::string &spend_key, std::string &view_key);
   bool init();
 
   std::string getAddress()

@@ -11,9 +11,7 @@ namespace MultiWalletService {
 
 namespace po = boost::program_options;
 
-RpcNodeConfiguration::RpcNodeConfiguration() {
-  daemonHost = "";
-  daemonPort = 0;
+RpcNodeConfiguration::RpcNodeConfiguration() : daemonHost(""), daemonPort(0) {
 }
 
 void RpcNodeConfiguration::initOptions(boost::program_options::options_description& desc) {
