@@ -9,7 +9,6 @@
 #include <serialization/BinaryOutputStreamSerializer.h>
 #include <fstream>
 #include <chrono>
-#include <cryptonote/core/blockchain/defines.h>
 #include <cryptonote/core/blockchain.h>
 
 using namespace Logging;
@@ -76,13 +75,14 @@ public:
   {
     auto start = std::chrono::steady_clock::now();
 
-    uint8_t version = CURRENT_BLOCKCACHE_STORAGE_ARCHIVE_VER;
+    uint8_t version = config::mainnet::storage::blockcache_archive.major;
+
     s(version, "version");
 
     std::cout << "Blockchain version: " << (int)version << std::endl;
 
     // ignore old versions, do rebuild
-    if (version < CURRENT_BLOCKCACHE_STORAGE_ARCHIVE_VER)
+    if (version < config::mainnet::storage::blockcache_archive.major)
       return;
 
     std::string operation;

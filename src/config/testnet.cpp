@@ -11,6 +11,12 @@ const uint8_t BLOCK_MAJOR_VERSION_1 = 1;
 const uint8_t BLOCK_MINOR_VERSION_0 = 0;
 const uint8_t CURRENT_TRANSACTION_VERSION = 1;
 
+namespace storage
+{
+const version_t blockcache_archive = {1, 0, 0};
+const version_t blockcache_indices_archive = {1, 0, 0};
+} // namespace storage
+
 //TODO This port will be used by the daemon to establish connections with p2p network
 const uint16_t P2P_DEFAULT_PORT = 29800;
 //TODO This port will be used by the daemon to interact with simlewallet

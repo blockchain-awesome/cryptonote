@@ -31,12 +31,12 @@ class BlockchainIndicesSerializer
     void serialize(ISerializer &s)
     {
 
-        uint8_t version = CURRENT_BLOCKCHAININDICES_STORAGE_ARCHIVE_VER;
+        uint8_t version = config::mainnet::storage::blockcache_indices_archive.major;
 
         KV_MEMBER(version);
 
         // ignore old versions, do rebuild
-        if (version != CURRENT_BLOCKCHAININDICES_STORAGE_ARCHIVE_VER)
+        if (version != config::mainnet::storage::blockcache_indices_archive.major)
             return;
 
         std::string operation;
@@ -76,7 +76,7 @@ class BlockchainIndicesSerializer
     {
 
         // ignore old versions, do rebuild
-        if (version < CURRENT_BLOCKCHAININDICES_STORAGE_ARCHIVE_VER)
+        if (version < config::mainnet::storage::blockcache_indices_archive.major)
             return;
 
         std::string operation;
