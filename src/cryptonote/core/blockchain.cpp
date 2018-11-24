@@ -202,7 +202,7 @@ bool Blockchain::init(bool load_existing) {
 
   uint64_t timestamp_diff = time(NULL) - m_blocks.back().bl.timestamp;
   if (!m_blocks.back().bl.timestamp) {
-    timestamp_diff = time(NULL) - CRYPTONOTE_CREATION_TIME;
+    timestamp_diff = time(NULL) - config::get().createTime;
   }
 
   logger(INFO, BRIGHT_GREEN)

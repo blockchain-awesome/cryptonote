@@ -27,6 +27,8 @@ const uint16_t RPC_WALLET_PORT = 19888;
 //TODO Put here the name of your currency
 const char CRYPTONOTE_NAME[] = "vigcoin";
 
+const uint64_t CRYPTONOTE_CREATION_TIME                      = 1520035200000;
+
 seeds_t seeds = {
     "69.171.73.252:19800",
     "39.108.160.252:19800",
@@ -37,6 +39,7 @@ checkpoints_t checkpoints = {};
 
 config_t data = {
     CRYPTONOTE_NAME,
+    CRYPTONOTE_CREATION_TIME,
     // Block Info
     {GENESIS_COINBASE_TX_HEX,
      {BLOCK_MAJOR_VERSION_1, BLOCK_MINOR_VERSION_0, 0}},
@@ -49,5 +52,16 @@ config_t data = {
      {1, 0, 0}},
     seeds,
     checkpoints};
+
+// struct hard_fork_t {
+//   uint8_t version;
+//   uint64_t height;
+//   uint8_t threshold;
+//   time_t time;
+// };
+
+const hard_fork_t hardforks[] = {
+  { 1, 1, 0, 1341378000 },
+};
 }; // namespace mainnet
 } // namespace config

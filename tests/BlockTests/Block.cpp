@@ -44,6 +44,7 @@ seeds_t seeds = {
 checkpoints_t checkpoints = {};
 config_t data = {
     "vigcointest",
+    0,
     {GENESIS_COINBASE_TX_HEX,
      {1, 0, 0}},
     {1, 0, 0},

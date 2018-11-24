@@ -248,9 +248,10 @@ bool BlockAccessor<T>::initIndex() {
   std::string blockIndexesFilename = m_currency.blockIndexesFileName();
   std::fstream fs;
 
-  fs.open(blockIndexesFilename, std::ios::in | std::ios::out | std::ios::binary);
-  if (fs) {
+  // fs.open(blockIndexesFilename, std::ios::in | std::ios::out | std::ios::binary);
 
+  fs = std::file::open(blockIndexesFilename);
+  if (fs) {
     uint64_t count;
     if (!readHeight(fs, count)) {
       return false;

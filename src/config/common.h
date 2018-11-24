@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <cstddef>
+#include <ctime>
 #include <initializer_list>
 
 namespace config
@@ -47,6 +48,7 @@ typedef std::initializer_list<checkpoint_data_t> checkpoints_t;
 struct config_t
 {
     const char *name;
+    uint64_t createTime;
     config_block_t block;
     config_trasaction_t transaction;
     config_net_t net;
@@ -58,6 +60,13 @@ enum config_enum_t
 {
     MAINNET,
     TESTNET
+};
+
+struct hard_fork_t {
+  uint8_t version;
+  uint64_t height;
+  uint8_t threshold;
+  time_t time;
 };
 
 extern void setType(config_enum_t t);

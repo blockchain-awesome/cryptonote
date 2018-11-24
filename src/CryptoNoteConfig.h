@@ -79,9 +79,6 @@ const size_t   BLOCKS_IDS_SYNCHRONIZING_DEFAULT_COUNT        =  10000;  //by def
 const size_t   BLOCKS_SYNCHRONIZING_DEFAULT_COUNT            =  200;    //by default, blocks count in blocks downloading
 const size_t   COMMAND_RPC_GET_BLOCKS_FAST_MAX_COUNT         =  1000;
 
-const uint64_t CRYPTONOTE_CREATION_TIME                      = 1520035200000;
-
-
 // //TODO This port will be used by the daemon to establish connections with p2p network
 // const int      P2P_DEFAULT_PORT                              = 19800;
 // //TODO This port will be used by the daemon to interact with simlewallet
