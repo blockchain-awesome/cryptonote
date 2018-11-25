@@ -51,7 +51,7 @@ struct block_entry_t
 class Block
 {
   public:
-    Block(block_entry_t &block) : m_block(block){};
+    Block(block_entry_t &block) : m_block(block) {};
 
     //Static tool functions
     static bool getBlob(const block_t &b, binary_array_t &ba);

@@ -74,10 +74,13 @@ class BlockchainIndicesSerializer
     template <class Archive>
     void serialize(Archive &ar, unsigned int version)
     {
-        config::config_t &data = config::get();
+        uint8_t ver = config::get().storage.blockcache_indices_archive.major;
+
+        std::cout << "indexes version: " << ver 
+        << " current version: " << version << std::endl;
 
         // ignore old versions, do rebuild
-        if (version < data.storage.blockcache_indices_archive.major)
+        if (version < ver)
             return;
 
         std::string operation;

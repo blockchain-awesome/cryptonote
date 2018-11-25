@@ -41,7 +41,7 @@ namespace crypto {
     chacha8(data, length, reinterpret_cast<const uint8_t*>(&key), reinterpret_cast<const uint8_t*>(&iv), cipher);
   }
 
-  inline void generate_chacha_key_t(const std::string& password, chacha_key_t& key) {
+  inline void generate_chacha_key(const std::string& password, chacha_key_t& key) {
     static_assert(sizeof(chacha_key_t) <= sizeof(hash_t), "Size of hash must be at least that of chacha_key_t");
     hash_t pwd_hash;
     cn_slow_hash(password.data(), password.size(), (char *)&pwd_hash, 0, 0);

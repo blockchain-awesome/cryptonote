@@ -17,6 +17,11 @@ public:
 
 TEST_F(HardForkTest, create)
 {
-
+  config::setType(config::TESTNET);
   HardFork * hf = new HardFork(config::get().hardforks);
+
+  ASSERT_TRUE(hf->getMajorVersion(1) == 1);
+  ASSERT_TRUE(hf->getMajorVersion(99) == 1);
+  ASSERT_TRUE(hf->getMajorVersion(100) == 2);
+  ASSERT_TRUE(hf->getMajorVersion(101) == 2);
 }

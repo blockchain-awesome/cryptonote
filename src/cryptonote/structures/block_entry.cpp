@@ -9,6 +9,8 @@
 #include <boost/system/system_error.hpp>
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "block_entry.h"
+#include "cryptonote/core/hardfork.h"
+
 
 namespace cryptonote
 {
@@ -48,8 +50,8 @@ bool Block::getLongHash(const block_t& b, crypto::hash_t& res) {
   if (!Block::getBlob(b, bd)) {
     return false;
   }
-
-  cn_slow_hash(bd.data(), bd.size(), res);
+  const HardFork hf = HardFork(config::get().hardforks);
+  cn_slow_hash(bd.data(), bd.size(), res, hf.getCNVariant(b));
   return true;
 }
 
@@ -93,7 +95,6 @@ block_t Block::genesis(config::config_t &conf)
 bool Block::checkProofOfWork(const block_t &block, difficulty_t currentDiffic,
                              crypto::hash_t &proofOfWork)
 {
-
   Block::getLongHash(block, proofOfWork);
   return check_hash(proofOfWork, currentDiffic);
 }
