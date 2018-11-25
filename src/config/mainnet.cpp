@@ -60,7 +60,7 @@ config_t data = {
 //   time_t time;
 // };
 
-const hard_fork_t hardforks[] = {
+const std::vector<hard_fork_t> hardforks = {
   { 1, 1, 0, 1341378000 },
 };
 }; // namespace mainnet

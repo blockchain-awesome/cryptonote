@@ -17,7 +17,6 @@
 #include "CryptoNoteTools.h"
 #include "cryptonote/structures/array.hpp"
 
-#include <cryptonote/core/blockchain/defines.h>
 #include "cryptonote/core/blockchain/serializer/block_cache.hpp"
 #include "cryptonote/core/blockchain/serializer/blockchain_indices.hpp"
 

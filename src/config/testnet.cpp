@@ -27,7 +27,7 @@ const uint16_t RPC_WALLET_PORT = 29888;
 //TODO Put here the name of your currency
 const char CRYPTONOTE_NAME[] = "vigcointest";
 
-const uint64_t CRYPTONOTE_CREATION_TIME                      = 1520035200000;
+const uint64_t CRYPTONOTE_CREATION_TIME = 1520035200000;
 
 seeds_t seeds = {
     "69.171.73.252:19800",
@@ -51,5 +51,8 @@ config_t data = {
      {1, 0, 0}},
     seeds,
     checkpoints};
+const std::vector<hard_fork_t> hardforks = {
+    {1, 1, 0, 1341378000},
+};
 }; // namespace testnet
 } // namespace config

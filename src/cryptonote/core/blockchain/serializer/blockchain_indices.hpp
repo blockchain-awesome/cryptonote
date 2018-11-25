@@ -9,7 +9,6 @@
 #include <serialization/BinaryOutputStreamSerializer.h>
 #include <fstream>
 #include <chrono>
-#include <cryptonote/core/blockchain/defines.h>
 #include <cryptonote/core/blockchain.h>
 
 using namespace Logging;
