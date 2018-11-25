@@ -75,14 +75,15 @@ public:
   {
     auto start = std::chrono::steady_clock::now();
 
-    uint8_t version = config::mainnet::storage::blockcache_archive.major;
+    config::config_t &data = config::get();
+    uint8_t version = data.storage.blockcache_archive.major;
 
     s(version, "version");
 
     std::cout << "Blockchain version: " << (int)version << std::endl;
 
     // ignore old versions, do rebuild
-    if (version < config::mainnet::storage::blockcache_archive.major)
+    if (version < data.storage.blockcache_archive.major)
       return;
 
     std::string operation;

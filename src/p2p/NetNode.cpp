@@ -427,7 +427,7 @@ namespace cryptonote
   bool NodeServer::init(const NetNodeConfig& conf) {
     
     if (!conf.getTestnet()) {
-      for (auto seed : config::mainnet::seeds) {
+      for (auto seed : config::get().seeds) {
         append_net_address(m_seed_nodes, seed);
       }
     } else {

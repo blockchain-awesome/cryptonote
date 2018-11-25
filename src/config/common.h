@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <ctime>
 #include <initializer_list>
+#include <vector>
 
 namespace config
 {
@@ -45,6 +46,21 @@ typedef std::initializer_list<const char *> seeds_t;
 
 typedef std::initializer_list<checkpoint_data_t> checkpoints_t;
 
+struct hard_fork_t {
+  uint8_t version;
+  uint64_t height;
+  uint8_t threshold;
+  time_t time;
+};
+
+typedef std::vector<hard_fork_t> hard_fork_list_t;
+
+
+struct storage_t {
+    version_t blockcache_archive;
+    version_t blockcache_indices_archive;
+};
+
 struct config_t
 {
     const char *name;
@@ -54,6 +70,8 @@ struct config_t
     config_net_t net;
     seeds_t seeds;
     checkpoints_t checkpoints;
+    hard_fork_list_t hardforks;
+    storage_t storage;
 };
 
 enum config_enum_t
@@ -62,12 +80,6 @@ enum config_enum_t
     TESTNET
 };
 
-struct hard_fork_t {
-  uint8_t version;
-  uint64_t height;
-  uint8_t threshold;
-  time_t time;
-};
 
 extern void setType(config_enum_t t);
 extern config_t &get();

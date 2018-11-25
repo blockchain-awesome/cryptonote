@@ -30,12 +30,13 @@ class BlockchainIndicesSerializer
     void serialize(ISerializer &s)
     {
 
-        uint8_t version = config::mainnet::storage::blockcache_indices_archive.major;
+        config::config_t &data = config::get();
+        uint8_t version = data.storage.blockcache_archive.major;
 
         KV_MEMBER(version);
 
         // ignore old versions, do rebuild
-        if (version != config::mainnet::storage::blockcache_indices_archive.major)
+        if (version != data.storage.blockcache_indices_archive.major)
             return;
 
         std::string operation;
@@ -73,9 +74,10 @@ class BlockchainIndicesSerializer
     template <class Archive>
     void serialize(Archive &ar, unsigned int version)
     {
+        config::config_t &data = config::get();
 
         // ignore old versions, do rebuild
-        if (version < config::mainnet::storage::blockcache_indices_archive.major)
+        if (version < data.storage.blockcache_indices_archive.major)
             return;
 
         std::string operation;
