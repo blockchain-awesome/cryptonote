@@ -16,6 +16,7 @@
 
 #include "cryptonote/core/currency.h"
 #include "cryptonote/core/CryptoNoteTools.h"
+#include "cryptonote/structures/array.hpp"
 #include "wallet/WalletGreen.h"
 
 #include "../IntegrationTestLib/TestNetwork.h"

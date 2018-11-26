@@ -14,6 +14,7 @@
 #include "rpc/CoreRpcServerCommandsDefinitions.h"
 #include "rpc/HttpClient.h"
 #include "rpc/JsonRpc.h"
+#include "cryptonote/structures/array.hpp"
 
 #include "Logger.h"
 #include "NodeCallback.h"

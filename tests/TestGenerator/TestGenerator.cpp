@@ -10,6 +10,7 @@
 #include "cryptonote/core/TransactionExtra.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/structures/block_entry.h"
+#include "cryptonote/structures/array.hpp"
 
 using namespace std;
 using namespace cryptonote;

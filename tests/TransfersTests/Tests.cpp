@@ -7,6 +7,7 @@
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/core/TransactionApi.h"
+#include "cryptonote/structures/array.hpp"
 
 #include "transfers/TransfersSynchronizer.h"
 #include "transfers/BlockchainSynchronizer.h"

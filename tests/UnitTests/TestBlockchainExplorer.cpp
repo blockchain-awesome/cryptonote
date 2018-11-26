@@ -17,6 +17,7 @@
 
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/structures/block_entry.h"
+#include "cryptonote/structures/array.hpp"
 
 #include "logging/FileLogger.h"
 

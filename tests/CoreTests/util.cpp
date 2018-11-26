@@ -3,6 +3,7 @@
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/core/blockchain/serializer/basics.h"
 #include "cryptonote/structures/block_entry.h"
+#include "cryptonote/structures/array.hpp"
 
 
 namespace cryptonote {
