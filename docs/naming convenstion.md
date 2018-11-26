@@ -3,12 +3,13 @@ Naming Convensions
 
 # Types
 
-`xxx_t` or `xx` for C types/structures or System libs
+`xxx_t`for C types/structures
+`xx`  for system libs or namespaces
 `XxxYyy` for C++ Application class
 
 # Variables
 
-`m_xxYyy` for member variables
+`m_xxYyy` or `m_xxx_yyy_zzz` for member variables
 `xxYyyZzz` for local variables
 
 `g_xxYyy` for global/static variables

@@ -162,7 +162,3 @@ endif()
 add_subdirectory(external)
 add_subdirectory(src)
 add_subdirectory(tests)
-
-# Adding conan support
-include(${CMAKE_SOURCE_DIR}/conanbuildinfo.cmake)
-conan_basic_setup()

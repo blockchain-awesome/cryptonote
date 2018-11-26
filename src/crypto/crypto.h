@@ -23,11 +23,11 @@ namespace crypto {
 
   extern std::mutex random_lock;
 
-struct EllipticCurvePoint {
+struct elliptic_curve_point_t {
   uint8_t data[32];
 };
 
-struct EllipticCurveScalar {
+struct elliptic_curve_scalar_t {
   uint8_t data[32];
 };
 
@@ -50,10 +50,10 @@ struct EllipticCurveScalar {
     friend bool derive_public_key(const key_derivation_t &, size_t, const public_key_t &, const uint8_t*, size_t, public_key_t &);
     static bool derive_public_key(const key_derivation_t &, size_t, const public_key_t &, const uint8_t*, size_t, public_key_t &);
     //hack for pg
-    static bool underive_public_key_and_get_scalar(const key_derivation_t &, std::size_t, const public_key_t &, public_key_t &, EllipticCurveScalar &);
-    friend bool underive_public_key_and_get_scalar(const key_derivation_t &, std::size_t, const public_key_t &, public_key_t &, EllipticCurveScalar &);
-    static void generate_incomplete_key_image(const public_key_t &, EllipticCurvePoint &);
-    friend void generate_incomplete_key_image(const public_key_t &, EllipticCurvePoint &);
+    static bool underive_public_key_and_get_scalar(const key_derivation_t &, std::size_t, const public_key_t &, public_key_t &, elliptic_curve_scalar_t &);
+    friend bool underive_public_key_and_get_scalar(const key_derivation_t &, std::size_t, const public_key_t &, public_key_t &, elliptic_curve_scalar_t &);
+    static void generate_incomplete_key_image(const public_key_t &, elliptic_curve_point_t &);
+    friend void generate_incomplete_key_image(const public_key_t &, elliptic_curve_point_t &);
     //
     static void derive_secret_key(const key_derivation_t &, size_t, const secret_key_t &, secret_key_t &);
     friend void derive_secret_key(const key_derivation_t &, size_t, const secret_key_t &, secret_key_t &);
@@ -160,7 +160,7 @@ struct EllipticCurveScalar {
 
 
   inline bool underive_public_key_and_get_scalar(const key_derivation_t &derivation, std::size_t output_index,
-    const public_key_t &derived_key, public_key_t &base, EllipticCurveScalar &hashed_derivation) {
+    const public_key_t &derived_key, public_key_t &base, elliptic_curve_scalar_t &hashed_derivation) {
     return crypto_ops::underive_public_key_and_get_scalar(derivation, output_index, derived_key, base, hashed_derivation);
   }
   

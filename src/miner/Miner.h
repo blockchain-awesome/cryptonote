@@ -12,7 +12,7 @@
 #include <system/RemoteContext.h>
 
 #include "cryptonote.h"
-#include "cryptonote/core/Difficulty.h"
+#include "cryptonote/core/difficulty.h"
 
 #include "logging/LoggerRef.h"
 
@@ -20,7 +20,7 @@ namespace cryptonote {
 
 struct BlockMiningParameters {
   block_t blockTemplate;
-  difficulty_type difficulty;
+  difficulty_t difficulty;
 };
 
 class Miner {
@@ -47,7 +47,7 @@ private:
   Logging::LoggerRef m_logger;
 
   void runWorkers(BlockMiningParameters blockMiningParameters, size_t threadCount);
-  void workerFunc(const block_t& blockTemplate, difficulty_type difficulty, uint32_t nonceStep);
+  void workerFunc(const block_t& blockTemplate, difficulty_t difficulty, uint32_t nonceStep);
   bool setStateBlockFound();
 };
 

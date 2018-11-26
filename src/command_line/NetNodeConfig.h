@@ -25,10 +25,10 @@ public:
   uint16_t getBindPort() const;
   uint16_t getExternalPort() const;
   bool getAllowLocalIp() const;
-  std::vector<PeerlistEntry> getPeers() const;
-  std::vector<NetworkAddress> getPriorityNodes() const;
-  std::vector<NetworkAddress> getExclusiveNodes() const;
-  std::vector<NetworkAddress> getSeedNodes() const;
+  std::vector<peerlist_entry_t> getPeers() const;
+  std::vector<network_address_t> getPriorityNodes() const;
+  std::vector<network_address_t> getExclusiveNodes() const;
+  std::vector<network_address_t> getSeedNodes() const;
   bool getHideMyPort() const;
   std::string getConfigFolder() const;
 
@@ -38,10 +38,10 @@ public:
   void setBindPort(uint16_t port);
   void setExternalPort(uint16_t port);
   void setAllowLocalIp(bool allow);
-  void setPeers(const std::vector<PeerlistEntry>& peerList);
-  void setPriorityNodes(const std::vector<NetworkAddress>& addresses);
-  void setExclusiveNodes(const std::vector<NetworkAddress>& addresses);
-  void setSeedNodes(const std::vector<NetworkAddress>& addresses);
+  void setPeers(const std::vector<peerlist_entry_t>& peerList);
+  void setPriorityNodes(const std::vector<network_address_t>& addresses);
+  void setExclusiveNodes(const std::vector<network_address_t>& addresses);
+  void setSeedNodes(const std::vector<network_address_t>& addresses);
   void setHideMyPort(bool hide);
   void setConfigFolder(const std::string& folder);
 
@@ -50,10 +50,10 @@ private:
   uint16_t bindPort;
   uint16_t externalPort;
   bool allowLocalIp;
-  std::vector<PeerlistEntry> peers;
-  std::vector<NetworkAddress> priorityNodes;
-  std::vector<NetworkAddress> exclusiveNodes;
-  std::vector<NetworkAddress> seedNodes;
+  std::vector<peerlist_entry_t> peers;
+  std::vector<network_address_t> priorityNodes;
+  std::vector<network_address_t> exclusiveNodes;
+  std::vector<network_address_t> seedNodes;
   bool hideMyPort;
   std::string configFolder;
   std::string p2pStateFilename;

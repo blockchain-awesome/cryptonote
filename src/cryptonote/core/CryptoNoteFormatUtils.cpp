@@ -11,7 +11,7 @@
 #include "serialization/BinaryOutputStreamSerializer.h"
 #include "serialization/BinaryInputStreamSerializer.h"
 
-#include "Account.h"
+#include "account.h"
 #include "TransactionExtra.h"
 #include "CryptoNoteTools.h"
 
@@ -23,14 +23,14 @@ using namespace Common;
 
 namespace cryptonote {
 
-bool parseAndValidateTransactionFromBinaryArray(const BinaryArray& tx_blob, transaction_t& tx, hash_t& tx_hash, hash_t& tx_prefix_hash) {
-  if (!fromBinaryArray(tx, tx_blob)) {
+bool parseAndValidateTransactionFromBinaryArray(const binary_array_t& tx_blob, transaction_t& tx, hash_t& tx_hash, hash_t& tx_prefix_hash) {
+  if (!BinaryArray::from(tx, tx_blob)) {
     return false;
   }
 
   //TODO: validate tx
   cn_fast_hash(tx_blob.data(), tx_blob.size(), tx_hash);
-  getObjectHash(*static_cast<transaction_prefix_t*>(&tx), tx_prefix_hash);
+  BinaryArray::objectHash(*static_cast<transaction_prefix_t*>(&tx), tx_prefix_hash);
   return true;
 }
 
@@ -112,7 +112,7 @@ bool constructTransaction(
   tx.outputs.clear();
   tx.signatures.clear();
 
-  tx.version = CURRENT_TRANSACTION_VERSION;
+  tx.version = config::get().transaction.version.major;
   tx.unlockTime = unlock_time;
 
   tx.extra = extra;
@@ -145,8 +145,8 @@ bool constructTransaction(
     //check that derived key is equal with real output key
     if (!(in_ephemeral.publicKey == src_entr.outputs[src_entr.realOutput].second)) {
       logger(ERROR) << "derived public key mismatch with output public key! " << ENDL << "derived_key:"
-        << Common::podToHex(in_ephemeral.publicKey) << ENDL << "real output_public_key:"
-        << Common::podToHex(src_entr.outputs[src_entr.realOutput].second);
+        << hex::podToString(in_ephemeral.publicKey) << ENDL << "real output_public_key:"
+        << hex::podToString(src_entr.outputs[src_entr.realOutput].second);
       return false;
     }
 
@@ -216,7 +216,7 @@ bool constructTransaction(
 
   //generate ring signatures
   hash_t tx_prefix_hash;
-  getObjectHash(*static_cast<transaction_prefix_t*>(&tx), tx_prefix_hash);
+  BinaryArray::objectHash(*static_cast<transaction_prefix_t*>(&tx), tx_prefix_hash);
 
   size_t i = 0;
   for (const transaction_source_entry_t& src_entr : sources) {
@@ -373,7 +373,7 @@ uint64_t get_outs_money_amount(const transaction_t& tx) {
 }
 
 std::string short_hash_str(const hash_t& h) {
-  std::string res = Common::podToHex(h);
+  std::string res = hex::podToString(h);
 
   if (res.size() == 64) {
     auto erased_pos = res.erase(8, 48);
@@ -428,52 +428,6 @@ bool lookup_acc_outs(const account_keys_t& acc, const transaction_t& tx, const p
   return true;
 }
 
-bool get_block_hashing_blob(const block_t& b, BinaryArray& ba) {
-  if (!toBinaryArray(static_cast<const block_header_t&>(b), ba)) {
-    return false;
-  }
-
-  hash_t treeRootHash = get_tx_tree_hash(b);
-  ba.insert(ba.end(), treeRootHash.data, treeRootHash.data + 32);
-  auto transactionCount = asBinaryArray(Tools::get_varint_data(b.transactionHashes.size() + 1));
-  ba.insert(ba.end(), transactionCount.begin(), transactionCount.end());
-  return true;
-}
-
-bool get_block_hash(const block_t& b, hash_t& res) {
-  BinaryArray ba;
-  if (!get_block_hashing_blob(b, ba)) {
-    return false;
-  }
-
-  return getObjectHash(ba, res);
-}
-
-hash_t get_block_hash(const block_t& b) {
-  hash_t p = NULL_HASH;
-  get_block_hash(b, p);
-  return p;
-}
-
-bool get_aux_block_header_hash(const block_t& b, hash_t& res) {
-  BinaryArray blob;
-  if (!get_block_hashing_blob(b, blob)) {
-    return false;
-  }
-
-  return getObjectHash(blob, res);
-}
-
-bool get_block_longhash(const block_t& b, hash_t& res) {
-  BinaryArray bd;
-  if (!get_block_hashing_blob(b, bd)) {
-    return false;
-  }
-
-  cn_slow_hash(bd.data(), bd.size(), res);
-  return true;
-}
-
 std::vector<uint32_t> relative_output_offsets_to_absolute(const std::vector<uint32_t>& off) {
   std::vector<uint32_t> res = off;
   for (size_t i = 1; i < res.size(); i++)
@@ -505,7 +459,7 @@ hash_t get_tx_tree_hash(const std::vector<hash_t>& tx_hashes) {
 hash_t get_tx_tree_hash(const block_t& b) {
   std::vector<hash_t> txs_ids;
   hash_t h = NULL_HASH;
-  getObjectHash(b.baseTransaction, h);
+  BinaryArray::objectHash(b.baseTransaction, h);
   txs_ids.push_back(h);
   for (auto& th : b.transactionHashes) {
     txs_ids.push_back(th);

@@ -19,7 +19,7 @@
 #include "stream/StringOutputStream.h"
 #include "crypto/crypto.h"
 
-#include "cryptonote/core/Account.h"
+#include "cryptonote/core/account.h"
 
 #include "CryptoNoteConfig.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
@@ -132,9 +132,9 @@ namespace cryptonote {
 void serialize(transaction_prefix_t& txP, ISerializer& serializer) {
   serializer(txP.version, "version");
 
-  if (CURRENT_TRANSACTION_VERSION < txP.version) {
-    throw std::runtime_error("Wrong transaction version");
-  }
+  // if (CURRENT_TRANSACTION_VERSION < txP.version) {
+  //   throw std::runtime_error("Wrong transaction version");
+  // }
 
   serializer(txP.unlockTime, "unlock_time");
   serializer(txP.inputs, "vin");
@@ -253,9 +253,9 @@ void serialize(multi_signature_output_t& multisignature, ISerializer& serializer
 
 void serializeBlockHeader(block_header_t& header, ISerializer& serializer) {
   serializer(header.majorVersion, "major_version");
-  if (header.majorVersion > BLOCK_MAJOR_VERSION_1) {
-    throw std::runtime_error("Wrong major version");
-  }
+  // if (header.majorVersion > BLOCK_MAJOR_VERSION_1) {
+  //   throw std::runtime_error("Wrong major version");
+  // }
 
   serializer(header.minorVersion, "minor_version");
   serializer(header.timestamp, "timestamp");

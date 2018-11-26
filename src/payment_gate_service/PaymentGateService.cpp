@@ -13,7 +13,7 @@
 #include "payment_gate/PaymentServiceJsonRpcServer.h"
 
 #include "command_line/CoreConfig.h"
-#include "cryptonote/core/Core.h"
+#include "cryptonote/core/core.h"
 #include "cryptonote/protocol/handler.h"
 #include "p2p/NetNode.h"
 #include "payment_gate/WalletFactory.h"

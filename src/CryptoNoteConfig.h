@@ -4,9 +4,9 @@
 
 #pragma once
 
-#include <cstdint>
-#include <cstddef>
-#include <initializer_list>
+#include "config/common.h"
+#include "config/mainnet.h"
+#include "config/testnet.h"
 
 namespace cryptonote {
 namespace parameters {
@@ -73,24 +73,18 @@ const char     CRYPTONOTE_BLOCKCHAIN_INDICES_FILENAME[]      = "blockchainindice
 const char     MINER_CONFIG_FILE_NAME[]                      = "miner_conf.json";
 } // parameters
 
-//TODO Put here the name of your currency
-const char     CRYPTONOTE_NAME[]                             = "vigcoin";
-const char     GENESIS_COINBASE_TX_HEX[]                     = "013c01ff000101029b2e4c0281c0b02e7c53291a94d1d0cbff8883f8024f5142ee494ffbbd0880712101a9a4569f7e10164a32324b2b878ae32d98be0949ce6e0150ba1d7e54d60969e5";
-
-const uint8_t  CURRENT_TRANSACTION_VERSION                   =  1;
-const uint8_t  BLOCK_MAJOR_VERSION_1                         =  1;
-const uint8_t  BLOCK_MINOR_VERSION_0                         =  0;
+// const uint8_t  CURRENT_TRANSACTION_VERSION                   =  1;
 
 const size_t   BLOCKS_IDS_SYNCHRONIZING_DEFAULT_COUNT        =  10000;  //by default, blocks ids count in synchronizing
 const size_t   BLOCKS_SYNCHRONIZING_DEFAULT_COUNT            =  200;    //by default, blocks count in blocks downloading
 const size_t   COMMAND_RPC_GET_BLOCKS_FAST_MAX_COUNT         =  1000;
 
-//TODO This port will be used by the daemon to establish connections with p2p network
-const int      P2P_DEFAULT_PORT                              = 19800;
-//TODO This port will be used by the daemon to interact with simlewallet
-const int      RPC_DEFAULT_PORT                              = 19801;
-//TODO This port will be used by the client wallets to interact with a service node
-const int      RPC_WALLET_PORT                              = 19888;
+// //TODO This port will be used by the daemon to establish connections with p2p network
+// const int      P2P_DEFAULT_PORT                              = 19800;
+// //TODO This port will be used by the daemon to interact with simlewallet
+// const int      RPC_DEFAULT_PORT                              = 19801;
+// //TODO This port will be used by the client wallets to interact with a service node
+// const int      RPC_WALLET_PORT                              = 19888;
 
 
 const size_t   P2P_LOCAL_WHITE_PEERLIST_LIMIT                =  1000;
@@ -106,29 +100,7 @@ const uint32_t P2P_DEFAULT_CONNECTION_TIMEOUT                = 5000;          //
 const uint32_t P2P_DEFAULT_PING_CONNECTION_TIMEOUT           = 2000;          // 2 seconds
 const uint64_t P2P_DEFAULT_INVOKE_TIMEOUT                    = 60 * 2 * 1000; // 2 minutes
 const size_t   P2P_DEFAULT_HANDSHAKE_INVOKE_TIMEOUT          = 5000;          // 5 seconds
-const char     P2P_STAT_TRUSTED_PUB_KEY[]                    = "8f80f9a5a434a9f1510d13336228debfee9c918ce505efe225d8c94d045fa115";
 
-//TODO Add here your network seed nodes
-const std::initializer_list<const char*> SEED_NODES = {
-  "69.171.73.252:19800",
-  "39.108.160.252:19800",
-  "144.202.10.183:19800",
-};
-
-struct CheckpointData {
-  uint32_t height;
-  const char* blockId;
-};
-
-#ifdef __GNUC__
-__attribute__((unused))
-#endif
-
-// You may add here other checkpoints using the following format:
-// {<block height>, "<block hash>"},
-const std::initializer_list<CheckpointData> CHECKPOINTS = {
-  //{ 10000, "84b6345731e2702cdaadc6ce5e5238c4ca5ecf48e3447136b2ed829b8a95f3ad" },
-};
 } // CryptoNote
 
 #define ALLOW_DEBUG_COMMANDS

@@ -6,10 +6,10 @@
 
 #include <vector>
 
-#include "cryptonote/core/Account.h"
+#include "cryptonote/core/account.h"
 #include "cryptonote/core/key.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
-#include "cryptonote/core/Currency.h"
+#include "cryptonote/core/currency.h"
 #include "cryptonote/core/TransactionExtra.h"
 
 #include "crypto/crypto.h"
@@ -29,7 +29,7 @@ public:
   {
     using namespace cryptonote;
 
-    Currency currency = CurrencyBuilder(m_logger, os::appdata::path()).currency();
+    Currency currency = CurrencyBuilder(os::appdata::path(), config::testnet::data, m_logger).currency();
 
     std::vector<transaction_source_entry_t::output_entry_t> output_entries;
     for (uint32_t i = 0; i < ring_size; ++i)
@@ -60,7 +60,7 @@ public:
   }
 
 protected:
-  cryptonote::AccountBase m_miners[ring_size];
+  cryptonote::Account m_miners[ring_size];
   cryptonote::transaction_t m_miner_txs[ring_size];
   uint64_t m_source_amount;
   Logging::ConsoleLogger m_logger;

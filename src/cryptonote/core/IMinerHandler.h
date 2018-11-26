@@ -5,12 +5,12 @@
 #pragma once
 
 #include "cryptonote/core/key.h"
-#include "cryptonote/core/Difficulty.h"
+#include "cryptonote/core/difficulty.h"
 
 namespace cryptonote {
   struct IMinerHandler {
     virtual bool handle_block_found(block_t& b) = 0;
-    virtual bool get_block_template(block_t& b, const account_public_address_t& adr, difficulty_type& diffic, uint32_t& height, const BinaryArray& ex_nonce) = 0;
+    virtual bool get_block_template(block_t& b, const account_public_address_t& adr, difficulty_t& diffic, uint32_t& height, const binary_array_t& ex_nonce) = 0;
 
   protected:
     ~IMinerHandler(){};

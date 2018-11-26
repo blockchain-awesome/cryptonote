@@ -57,18 +57,18 @@ public:
     uint32_t command;
     bool isNotify;
     bool isResponse;
-    BinaryArray buf;
+    binary_array_t buf;
 
     bool needReply() const;
   };
 
   bool readCommand(Command& cmd);
 
-  void sendMessage(uint32_t command, const BinaryArray& out, bool needResponse);
-  void sendReply(uint32_t command, const BinaryArray& out, int32_t returnCode);
+  void sendMessage(uint32_t command, const binary_array_t& out, bool needResponse);
+  void sendReply(uint32_t command, const binary_array_t& out, int32_t returnCode);
 
   template <typename T>
-  static bool decode(const BinaryArray& buf, T& value) {
+  static bool decode(const binary_array_t& buf, T& value) {
     try {
       Common::MemoryInputStream stream(buf.data(), buf.size());
       KVBinaryInputStreamSerializer serializer(stream);
@@ -81,8 +81,8 @@ public:
   }
 
   template <typename T>
-  static BinaryArray encode(const T& value) {
-    BinaryArray result;
+  static binary_array_t encode(const T& value) {
+    binary_array_t result;
     KVBinaryOutputStreamSerializer serializer;
     serialize(const_cast<T&>(value), serializer);
     Common::VectorOutputStream stream(result);

@@ -9,8 +9,9 @@
 
 #include "common/StringTools.h"
 
-#include "cryptonote/core/Currency.h"
-#include "cryptonote/core/Account.h"
+#include "cryptonote/core/currency.h"
+#include "cryptonote/core/account.h"
+#include "cryptonote/structures/array.hpp"
 #include "cryptonote/core/CryptoNoteTools.h"
 
 #include "serialization/SerializationTools.h"
@@ -24,7 +25,7 @@ using namespace crypto;
 namespace {
 
 struct keys_file_data {
-  chacha_iv iv;
+  chacha_iv_t iv;
   std::string account_data;
 
   void serialize(cryptonote::ISerializer& s) {
@@ -39,19 +40,19 @@ bool verify_keys(const secret_key_t& sec, const public_key_t& expected_pub) {
   return r && expected_pub == pub;
 }
 
-void loadKeysFromFile(const std::string& filename, const std::string& password, cryptonote::AccountBase& account) {
+void loadKeysFromFile(const std::string& filename, const std::string& password, cryptonote::Account& account) {
   keys_file_data keys_file_data;
   std::string buf;
 
-  if (!Common::loadFileToString(filename, buf)) {
+  if (!stream::load(filename, buf)) {
     throw std::system_error(make_error_code(cryptonote::error::INTERNAL_WALLET_ERROR), "failed to load \"" + filename + '\"');
   }
 
-  if (!cryptonote::fromBinaryArray(keys_file_data, Common::asBinaryArray(buf))) {
+  if (!cryptonote::BinaryArray::from(keys_file_data, array::fromString(buf))) {
     throw std::system_error(make_error_code(cryptonote::error::INTERNAL_WALLET_ERROR), "failed to deserialize \"" + filename + '\"');
   }
 
-  chacha_key key;
+  chacha_key_t key;
   generate_chacha_key(password, key);
   std::string account_data;
   account_data.resize(keys_file_data.account_data.size());
@@ -73,7 +74,7 @@ void loadKeysFromFile(const std::string& filename, const std::string& password, 
 namespace cryptonote {
 
 void importLegacyKeys(const std::string& legacyKeysFilename, const std::string& password, std::ostream& destination) {
-  cryptonote::AccountBase account;
+  cryptonote::Account account;
 
   loadKeysFromFile(legacyKeysFilename, password, account);
 

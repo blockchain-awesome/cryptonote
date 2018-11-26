@@ -38,7 +38,7 @@ bool LevinProtocol::Command::needReply() const {
 LevinProtocol::LevinProtocol(System::TcpConnection& connection) 
   : m_conn(connection) {}
 
-void LevinProtocol::sendMessage(uint32_t command, const BinaryArray& out, bool needResponse) {
+void LevinProtocol::sendMessage(uint32_t command, const binary_array_t& out, bool needResponse) {
   bucket_head2 head = { 0 };
   head.m_signature = LEVIN_SIGNATURE;
   head.m_cb = out.size();
@@ -48,7 +48,7 @@ void LevinProtocol::sendMessage(uint32_t command, const BinaryArray& out, bool n
   head.m_flags = LEVIN_PACKET_REQUEST;
 
   // write header and body in one operation
-  BinaryArray writeBuffer;
+  binary_array_t writeBuffer;
   writeBuffer.reserve(sizeof(head) + out.size());
 
   Common::VectorOutputStream stream(writeBuffer);
@@ -73,7 +73,7 @@ bool LevinProtocol::readCommand(Command& cmd) {
     throw std::runtime_error("Levin packet size is too big");
   }
 
-  BinaryArray buf;
+  binary_array_t buf;
 
   if (head.m_cb != 0) {
     buf.resize(head.m_cb);
@@ -90,7 +90,7 @@ bool LevinProtocol::readCommand(Command& cmd) {
   return true;
 }
 
-void LevinProtocol::sendReply(uint32_t command, const BinaryArray& out, int32_t returnCode) {
+void LevinProtocol::sendReply(uint32_t command, const binary_array_t& out, int32_t returnCode) {
   bucket_head2 head = { 0 };
   head.m_signature = LEVIN_SIGNATURE;
   head.m_cb = out.size();
@@ -100,7 +100,7 @@ void LevinProtocol::sendReply(uint32_t command, const BinaryArray& out, int32_t 
   head.m_flags = LEVIN_PACKET_RESPONSE;
   head.m_return_code = returnCode;
 
-  BinaryArray writeBuffer;
+  binary_array_t writeBuffer;
   writeBuffer.reserve(sizeof(head) + out.size());
 
   Common::VectorOutputStream stream(writeBuffer);

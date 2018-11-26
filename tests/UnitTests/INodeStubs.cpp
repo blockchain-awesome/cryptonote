@@ -5,6 +5,7 @@
 #include "INodeStubs.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/CryptoNoteTools.h"
+#include "cryptonote/structures/array.hpp"
 #include "cryptonote/core/TransactionApi.h"
 #include "wallet/WalletErrors.h"
 
@@ -17,6 +18,7 @@
 #include <system_error>
 
 #include "crypto/crypto.h"
+#include "cryptonote/structures/block_entry.h"
 
 #include "blockchain_explorer/BlockchainExplorerDataBuilder.h"
 
@@ -49,7 +51,7 @@ bool INodeDummyStub::removeObserver(INodeObserver* observer) {
   return observerManager.remove(observer);
 }
 
-void INodeTrivialRefreshStub::getNewBlocks(std::vector<crypto::hash_t>&& knownBlockIds, std::vector<block_complete_entry>& newBlocks, uint32_t& startHeight, const Callback& callback)
+void INodeTrivialRefreshStub::getNewBlocks(std::vector<crypto::hash_t>&& knownBlockIds, std::vector<block_complete_entry_t>& newBlocks, uint32_t& startHeight, const Callback& callback)
 {
   m_asyncCounter.addAsyncContext();
 
@@ -66,7 +68,7 @@ void INodeTrivialRefreshStub::waitForAsyncContexts() {
   m_asyncCounter.waitAsyncContextsFinish();
 }
 
-void INodeTrivialRefreshStub::doGetNewBlocks(std::vector<crypto::hash_t> knownBlockIds, std::vector<block_complete_entry>& newBlocks,
+void INodeTrivialRefreshStub::doGetNewBlocks(std::vector<crypto::hash_t> knownBlockIds, std::vector<block_complete_entry_t>& newBlocks,
         uint32_t& startHeight, std::vector<block_t> blockchain, const Callback& callback)
 {
   ContextCounterHolder counterHolder(m_asyncCounter);
@@ -76,7 +78,7 @@ void INodeTrivialRefreshStub::doGetNewBlocks(std::vector<crypto::hash_t> knownBl
 
   for (const auto& id : knownBlockIds) {
     start = std::find_if(blockchain.begin(), blockchain.end(), 
-      [&id](block_t& block) { return get_block_hash(block) == id; });
+      [&id](block_t& block) { return Block::getHash(block) == id; });
     if (start != blockchain.end())
       break;
   }
@@ -92,8 +94,8 @@ void INodeTrivialRefreshStub::doGetNewBlocks(std::vector<crypto::hash_t> knownBl
 
   for (; m_lastHeight < blockchain.size(); ++m_lastHeight)
   {
-    block_complete_entry e;
-    e.block = asString(toBinaryArray(blockchain[m_lastHeight]));
+    block_complete_entry_t e;
+    e.block = BinaryArray::toString(BinaryArray::to(blockchain[m_lastHeight]));
 
     for (auto hash : blockchain[m_lastHeight].transactionHashes)
     {
@@ -101,7 +103,7 @@ void INodeTrivialRefreshStub::doGetNewBlocks(std::vector<crypto::hash_t> knownBl
       if (!m_blockchainGenerator.getTransactionByHash(hash, tx))
         continue;
 
-      e.txs.push_back(asString(toBinaryArray(tx)));
+      e.txs.push_back(BinaryArray::toString(BinaryArray::to(tx)));
     }
 
     newBlocks.push_back(e);
@@ -225,7 +227,7 @@ void INodeTrivialRefreshStub::doGetRandomOutsByAmounts(std::vector<uint64_t> amo
 
 void INodeTrivialRefreshStub::queryBlocks(std::vector<crypto::hash_t>&& knownBlockIds, uint64_t timestamp,
         std::vector<BlockShortEntry>& newBlocks, uint32_t& startHeight, const Callback& callback) {
-  auto resultHolder = std::make_shared<std::vector<block_complete_entry>>();
+  auto resultHolder = std::make_shared<std::vector<block_complete_entry_t>>();
 
   getNewBlocks(std::move(knownBlockIds), *resultHolder, startHeight, [resultHolder, callback, &newBlocks](std::error_code ec)
   {
@@ -237,23 +239,23 @@ void INodeTrivialRefreshStub::queryBlocks(std::vector<crypto::hash_t>&& knownBlo
     for (const auto& item : *resultHolder) {
       BlockShortEntry entry;
 
-      if (!fromBinaryArray(entry.block, asBinaryArray(item.block))) {
+      if (!BinaryArray::from(entry.block, array::fromString(item.block))) {
         callback(std::make_error_code(std::errc::invalid_argument));
         return;
       }
 
       entry.hasBlock = true;
-      entry.blockHash = get_block_hash(entry.block);
+      entry.blockHash = Block::getHash(entry.block);
 
       for (const auto& txBlob: item.txs) {
         transaction_t tx;
-        if (!fromBinaryArray(tx, asBinaryArray(txBlob))) {
+        if (!BinaryArray::from(tx, array::fromString(txBlob))) {
           callback(std::make_error_code(std::errc::invalid_argument));
           return;
         }
 
         TransactionShortInfo tsi;
-        tsi.txId = getObjectHash(tx);
+        tsi.txId = BinaryArray::objectHash(tx);
         tsi.txPrefix = tx;
 
         entry.txsShortInfo.push_back(std::move(tsi));
@@ -368,7 +370,7 @@ void INodeTrivialRefreshStub::doGetBlocks(const std::vector<uint32_t>& blockHeig
     BlockDetails b = BlockDetails();
     b.height = height;
     b.isOrphaned = false;
-    crypto::hash_t hash = get_block_hash(m_blockchainGenerator.getBlockchain()[height]);
+    crypto::hash_t hash = Block::getHash(m_blockchainGenerator.getBlockchain()[height]);
     b.hash = hash;
     if (!m_blockchainGenerator.getGeneratedTransactionsNumber(height, b.alreadyGeneratedTransactions)) {
       callback(std::error_code(EDOM, std::generic_category()));
@@ -413,7 +415,7 @@ void INodeTrivialRefreshStub::doGetBlocks(const std::vector<crypto::hash_t>& blo
         m_blockchainGenerator.getBlockchain().begin(), 
         m_blockchainGenerator.getBlockchain().end(), 
         [&hash](const block_t& block) -> bool {
-          return hash == get_block_hash(block);
+          return hash == Block::getHash(block);
         }
     );
     if (iter == m_blockchainGenerator.getBlockchain().end()) {
@@ -422,7 +424,7 @@ void INodeTrivialRefreshStub::doGetBlocks(const std::vector<crypto::hash_t>& blo
       return;
     }
     BlockDetails b = BlockDetails();
-    crypto::hash_t actualHash = get_block_hash(*iter);
+    crypto::hash_t actualHash = Block::getHash(*iter);
     b.hash = actualHash;
     b.isOrphaned = false;
     blocks.push_back(b);
@@ -474,7 +476,7 @@ void INodeTrivialRefreshStub::doGetBlocks(uint64_t timestampBegin, uint64_t time
         m_blockchainGenerator.getBlockchain().begin(), 
         m_blockchainGenerator.getBlockchain().end(), 
         [&hash](const block_t& block) -> bool {
-          return hash == get_block_hash(block);
+          return hash == Block::getHash(block);
         }
     );
     if (iter == m_blockchainGenerator.getBlockchain().end()) {
@@ -482,7 +484,7 @@ void INodeTrivialRefreshStub::doGetBlocks(uint64_t timestampBegin, uint64_t time
       return;
     }
     BlockDetails b = BlockDetails();
-    crypto::hash_t actualHash = get_block_hash(*iter);
+    crypto::hash_t actualHash = Block::getHash(*iter);
     b.hash = actualHash;
     b.isOrphaned = false;
     b.timestamp = iter->timestamp;
@@ -521,11 +523,11 @@ void INodeTrivialRefreshStub::doGetTransactions(const std::vector<crypto::hash_t
     transaction_t tx;
     transaction_details_t txDetails = transaction_details_t();
     if (m_blockchainGenerator.getTransactionByHash(hash, tx, false)) {
-      crypto::hash_t actualHash = getObjectHash(tx);
+      crypto::hash_t actualHash = BinaryArray::objectHash(tx);
       txDetails.hash = actualHash;
       txDetails.inBlockchain = true;
     } else if (m_blockchainGenerator.getTransactionByHash(hash, tx, true)) {
-      crypto::hash_t actualHash = getObjectHash(tx);
+      crypto::hash_t actualHash = BinaryArray::objectHash(tx);
       txDetails.hash = actualHash;
       txDetails.inBlockchain = false;
     } else {
@@ -573,11 +575,11 @@ void INodeTrivialRefreshStub::doGetPoolTransactions(uint64_t timestampBegin, uin
     transaction_t tx;
     transaction_details_t txDetails = transaction_details_t();
     if (m_blockchainGenerator.getTransactionByHash(hash, tx, false)) {
-      crypto::hash_t actualHash = getObjectHash(tx);
+      crypto::hash_t actualHash = BinaryArray::objectHash(tx);
       txDetails.hash = actualHash;
       txDetails.inBlockchain = true;
     } else if (m_blockchainGenerator.getTransactionByHash(hash, tx, true)) {
-      crypto::hash_t actualHash = getObjectHash(tx);
+      crypto::hash_t actualHash = BinaryArray::objectHash(tx);
       txDetails.hash = actualHash;
       txDetails.inBlockchain = false;
     } else {
@@ -620,14 +622,14 @@ void INodeTrivialRefreshStub::doGetTransactionsByPaymentId(const crypto::hash_t&
     transaction_t tx;
     transaction_details_t txDetails = transaction_details_t();
     if (m_blockchainGenerator.getTransactionByHash(hash, tx, false)) {
-      crypto::hash_t actualHash = getObjectHash(tx);
+      crypto::hash_t actualHash = BinaryArray::objectHash(tx);
       txDetails.hash = actualHash;
       txDetails.inBlockchain = true;
       crypto::hash_t paymentId;
       BlockchainExplorerDataBuilder::getPaymentId(tx, paymentId);
       txDetails.paymentId = paymentId;
     } else if (m_blockchainGenerator.getTransactionByHash(hash, tx, true)) {
-      crypto::hash_t actualHash = getObjectHash(tx);
+      crypto::hash_t actualHash = BinaryArray::objectHash(tx);
       txDetails.hash =actualHash;
       txDetails.inBlockchain = false;
       crypto::hash_t paymentId;

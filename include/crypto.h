@@ -6,30 +6,37 @@
 
 #include <cstdint>
 
-namespace crypto {
+namespace crypto
+{
 
-struct hash_t {
+struct hash_t
+{
   uint8_t data[32];
 };
 
-struct public_key_t {
+struct public_key_t
+{
   uint8_t data[32];
 };
 
-struct secret_key_t {
+struct secret_key_t
+{
   uint8_t data[32];
 };
 
-struct key_derivation_t {
+struct key_derivation_t
+{
   uint8_t data[32];
 };
 
-struct key_image_t {
+struct key_image_t
+{
   uint8_t data[32];
 };
 
-struct signature_t {
+struct signature_t
+{
   uint8_t data[64];
 };
 
-}
+} // namespace crypto

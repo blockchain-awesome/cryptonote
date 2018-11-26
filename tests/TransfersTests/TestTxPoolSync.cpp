@@ -4,10 +4,10 @@
 
 #include "gtest/gtest.h"
 
-#include "cryptonote/core/Account.h"
+#include "cryptonote/core/account.h"
 #include "command_line/CoreConfig.h"
-#include "cryptonote/core/Core.h"
-#include "cryptonote/core/Currency.h"
+#include "cryptonote/core/core.h"
+#include "cryptonote/core/currency.h"
 #include "logging/LoggerManager.h"
 #include "command_line/NetNodeConfig.h"
 #include "system/Dispatcher.h"
@@ -23,15 +23,15 @@ using namespace Tests::Common;
 using namespace crypto;
 
 extern System::Dispatcher globalSystem;
-extern Tests::Common::BaseFunctionalTestsConfig config;
+extern Tests::Common::BaseFunctionalTestsConfig testConfig;
 
 namespace {
   class NodeTxPoolSyncTest : public Tests::Common::BaseFunctionalTests, public ::testing::Test {
   public:
     NodeTxPoolSyncTest() :
-        BaseFunctionalTests(m_currency, globalSystem, config),
+        BaseFunctionalTests(m_currency, globalSystem, testConfig),
         m_dispatcher(globalSystem),
-        m_currency(CurrencyBuilder(m_logManager, os::appdata::path())
+        m_currency(CurrencyBuilder(os::appdata::path(), config::testnet::data, m_logManager)
         // .testnet(true)
         .currency()) {
     }
@@ -69,7 +69,7 @@ namespace {
     nodeDaemons[NODE_2]->makeINode(node2);
     nodeDaemons[NODE_3]->makeINode(node3);
 
-    cryptonote::AccountBase minerAccount;
+    cryptonote::Account minerAccount;
     minerAccount.generate();
 
     TestWalletLegacy wallet1(m_dispatcher, m_currency, *node1);
@@ -159,7 +159,7 @@ namespace {
     nodeDaemons[NODE_2]->makeINode(node2);
     nodeDaemons[NODE_3]->makeINode(node3);
 
-    cryptonote::AccountBase minerAccount;
+    cryptonote::Account minerAccount;
     minerAccount.generate();
 
     TestWalletLegacy wallet1(m_dispatcher, m_currency, *node1);
@@ -257,7 +257,7 @@ namespace {
     nodeDaemons[NODE_3]->makeINode(node3);
     nodeDaemons[NODE_4]->makeINode(node4);
 
-    cryptonote::AccountBase minerAccount;
+    cryptonote::Account minerAccount;
     minerAccount.generate();
 
     TestWalletLegacy wallet1(m_dispatcher, m_currency, *node1);

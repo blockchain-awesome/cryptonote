@@ -7,8 +7,8 @@
 #include "IWalletLegacy.h"
 
 #include "crypto/crypto.h"
-#include "cryptonote/core/Account.h"
-#include "cryptonote/core/Currency.h"
+#include "cryptonote/core/account.h"
+#include "cryptonote/core/currency.h"
 #include "cryptonote/core/TransactionApi.h"
 #include "logging/ConsoleLogger.h"
 #include "transfers/TransfersContainer.h"
@@ -30,7 +30,7 @@ namespace {
   public:
 
     TransfersContainerKeyImage() :
-      currency(CurrencyBuilder(logger, os::appdata::path()).currency()), 
+      currency(CurrencyBuilder(os::appdata::path(), config::testnet::data, logger).currency()), 
       container(currency, TEST_TRANSACTION_SPENDABLE_AGE), 
       account(generateAccountKeys()),
       txTemplate(createTransaction()) {

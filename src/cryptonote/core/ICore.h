@@ -11,7 +11,7 @@
 #include <system_error>
 
 #include <cryptonote.h>
-#include "cryptonote/core/Difficulty.h"
+#include "cryptonote/core/difficulty.h"
 
 #include "cryptonote/core/template/MessageQueue.h"
 #include "cryptonote/core/BlockchainMessages.h"
@@ -52,7 +52,7 @@ public:
   virtual bool on_idle() = 0;
   virtual void pause_mining() = 0;
   virtual void update_block_template_and_resume_mining() = 0;
-  virtual bool handle_incoming_block_blob(const cryptonote::BinaryArray& block_blob, cryptonote::block_verification_context_t& bvc, bool control_miner, bool relay_block) = 0;
+  virtual bool handle_incoming_block_blob(const binary_array_t& block_blob, cryptonote::block_verification_context_t& bvc, bool control_miner, bool relay_block) = 0;
   virtual bool handle_get_objects(NOTIFY_REQUEST_GET_OBJECTS_request& arg, NOTIFY_RESPONSE_GET_OBJECTS_request& rsp) = 0; //Deprecated. Should be removed with CryptoNoteProtocolHandler.
   virtual void on_synchronized() = 0;
   virtual size_t addChain(const std::vector<const IBlock*>& chain) = 0;
@@ -64,7 +64,7 @@ public:
   virtual bool get_tx_outputs_gindexs(const crypto::hash_t& tx_id, std::vector<uint32_t>& indexs) = 0;
   virtual bool getOutByMSigGIndex(uint64_t amount, uint64_t gindex, multi_signature_output_t& out) = 0;
   virtual ICryptonoteProtocol* get_protocol() = 0;
-  virtual bool handle_incoming_tx(const BinaryArray& tx_blob, tx_verification_context_t& tvc, bool keeped_by_block) = 0; //Deprecated. Should be removed with CryptoNoteProtocolHandler.
+  virtual bool handle_incoming_tx(const binary_array_t& tx_blob, tx_verification_context_t& tvc, bool keeped_by_block) = 0; //Deprecated. Should be removed with CryptoNoteProtocolHandler.
   virtual std::vector<transaction_t> getPoolTransactions() = 0;
   virtual bool getPoolChanges(const crypto::hash_t& tailBlockId, const std::vector<crypto::hash_t>& knownTxsIds,
                               std::vector<transaction_t>& addedTxs, std::vector<crypto::hash_t>& deletedTxsIds) = 0;
@@ -79,7 +79,6 @@ public:
 
   virtual crypto::hash_t getBlockIdByHeight(uint32_t height) = 0;
   virtual bool getBlockByHash(const crypto::hash_t &h, block_t &blk) = 0;
-  virtual bool getBlockHeight(const crypto::hash_t& blockId, uint32_t& blockHeight) = 0;
   virtual void getTransactions(const std::vector<crypto::hash_t>& txs_ids, std::list<transaction_t>& txs, std::list<crypto::hash_t>& missed_txs, bool checkTxPool = false) = 0;
   virtual bool getBackwardBlocksSizes(uint32_t fromHeight, std::vector<size_t>& sizes, size_t count) = 0;
   virtual bool getBlockSize(const crypto::hash_t& hash, size_t& size) = 0;
@@ -87,7 +86,7 @@ public:
   virtual bool getBlockReward(size_t medianSize, size_t currentBlockSize, uint64_t alreadyGeneratedCoins, uint64_t fee,
                               uint64_t& reward, int64_t& emissionChange) = 0;
   virtual bool scanOutputkeysForIndices(const key_input_t& txInToKey, std::list<std::pair<crypto::hash_t, size_t>>& outputReferences) = 0;
-  virtual bool getBlockDifficulty(uint32_t height, difficulty_type& difficulty) = 0;
+  virtual bool getBlockDifficulty(uint32_t height, difficulty_t& difficulty) = 0;
   virtual bool getBlockContainingTx(const crypto::hash_t& txId, crypto::hash_t& blockId, uint32_t& blockHeight) = 0;
   virtual bool getMultisigOutputReference(const multi_signature_input_t& txInMultisig, std::pair<crypto::hash_t, size_t>& outputReference) = 0;
 

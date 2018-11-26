@@ -39,7 +39,7 @@ public:
     System::Dispatcher& dispatcher, 
     Logging::ILogger& log, 
     const crypto::hash_t& genesisHash, 
-    PeerIdType peerId);
+    peer_id_type_t peerId);
 
   ~P2pNode();
   
@@ -62,7 +62,7 @@ private:
   Logging::LoggerRef logger;
   bool m_stopRequested;
   const P2pNodeConfig m_cfg;
-  const PeerIdType m_myPeerId;
+  const peer_id_type_t m_myPeerId;
   const crypto::hash_t m_genesisHash;
   const CORE_SYNC_DATA m_genesisPayload;
 
@@ -77,12 +77,12 @@ private:
 
   // IP2pNodeInternal
   virtual const CORE_SYNC_DATA& getGenesisPayload() const override;
-  virtual std::list<PeerlistEntry> getLocalPeerList() const override;
+  virtual std::list<peerlist_entry_t> getLocalPeerList() const override;
   virtual basic_node_data getNodeData() const override;
-  virtual PeerIdType getPeerId() const override;
+  virtual peer_id_type_t getPeerId() const override;
 
   virtual void handleNodeData(const basic_node_data& node, P2pContext& ctx) override;
-  virtual bool handleRemotePeerList(const std::list<PeerlistEntry>& peerlist, time_t local_time) override;
+  virtual bool handleRemotePeerList(const std::list<peerlist_entry_t>& peerlist, time_t local_time) override;
   virtual void tryPing(P2pContext& ctx) override;
 
   // spawns
@@ -91,10 +91,10 @@ private:
 
   // connection related
   void connectPeers();
-  void connectPeerList(const std::vector<NetworkAddress>& peers);
-  bool isPeerConnected(const NetworkAddress& address);
-  bool isPeerUsed(const PeerlistEntry& peer);
-  ContextPtr tryToConnectPeer(const NetworkAddress& address);
+  void connectPeerList(const std::vector<network_address_t>& peers);
+  bool isPeerConnected(const network_address_t& address);
+  bool isPeerUsed(const peerlist_entry_t& peer);
+  ContextPtr tryToConnectPeer(const network_address_t& address);
   bool fetchPeerList(ContextPtr connection);
 
   // making and processing connections

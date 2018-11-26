@@ -79,7 +79,7 @@ protected:
 };
 
 TransfersConsumerTest::TransfersConsumerTest() :
-  m_currency(cryptonote::CurrencyBuilder(m_logger, os::appdata::path()).currency()),
+  m_currency(cryptonote::CurrencyBuilder(os::appdata::path(), config::testnet::data, m_logger).currency()),
   m_generator(m_currency),
   m_node(m_generator, true),
   m_accountKeys(generateAccountKeys()),
@@ -1039,7 +1039,7 @@ TEST_F(TransfersConsumerPerformanceTest, DISABLED_memory) {
   addAndSubscribeAccounts(10000);
   size_t txcount = generateBlocks(1000, 50, 1);
 
-  std::cout << "Blocks generated, calling onNewBlocks" << std::endl;
+  std::cout << "blocks_t generated, calling onNewBlocks" << std::endl;
 
   {
     AutoPrintTimer t;

@@ -10,13 +10,13 @@
 
 extern System::Dispatcher globalSystem;
 extern cryptonote::Currency currency;
-extern Tests::Common::BaseFunctionalTestsConfig config;
+extern Tests::Common::BaseFunctionalTestsConfig testConfig;
 
 class TransfersTest :
   public Tests::Common::BaseFunctionalTests,
   public ::testing::Test {
 
 public:
-  TransfersTest() : BaseFunctionalTests(currency, globalSystem, config) {
+  TransfersTest() : BaseFunctionalTests(currency, globalSystem, testConfig) {
   }
 };

@@ -20,7 +20,7 @@ namespace cryptonote
   /************************************************************************/
   /*                                                                      */
   /************************************************************************/
-  struct block_complete_entry
+  struct block_complete_entry_t
   {
     std::string block;
     std::vector<std::string> txs;
@@ -32,7 +32,7 @@ namespace cryptonote
 
   };
 
-  struct block_full_info_t : public block_complete_entry
+  struct block_full_info_t : public block_complete_entry_t
   {
     crypto::hash_t block_id;
 
@@ -70,7 +70,7 @@ namespace cryptonote
   /************************************************************************/
   struct NOTIFY_NEW_BLOCK_request
   {
-    block_complete_entry b;
+    block_complete_entry_t b;
     uint32_t current_blockchain_height;
     uint32_t hop;
 
@@ -129,7 +129,7 @@ namespace cryptonote
   struct NOTIFY_RESPONSE_GET_OBJECTS_request
   {
     std::vector<std::string> txs;
-    std::vector<block_complete_entry> blocks;
+    std::vector<block_complete_entry_t> blocks;
     std::vector<crypto::hash_t> missed_ids;
     uint32_t current_blockchain_height;
 

@@ -5,7 +5,7 @@
 #pragma once
 
 #include "cryptonote/core/key.h"
-#include "cryptonote/core/blockchain/structures.h"
+#include "cryptonote/structures/block_entry.h"
 
 namespace cryptonote {
   class ITransactionValidator {

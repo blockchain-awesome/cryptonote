@@ -23,8 +23,8 @@
 #include "stream/StdInputStream.h"
 #include "stream/StdOutputStream.h"
 #include "common/StringTools.h"
-#include "cryptonote/core/Account.h"
-#include "cryptonote/core/Currency.h"
+#include "cryptonote/core/account.h"
+#include "cryptonote/core/currency.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/core/TransactionApi.h"
@@ -32,6 +32,7 @@
 #include "transfers/TransfersContainer.h"
 #include "WalletSerialization.h"
 #include "WalletErrors.h"
+#include "cryptonote/structures/array.hpp"
 
 using namespace Common;
 using namespace crypto;
@@ -913,7 +914,7 @@ void WalletGreen::rollbackUncommitedTransaction(size_t transactionId) {
     throw std::system_error(make_error_code(error::TX_CANCEL_IMPOSSIBLE));
   }
 
-  removeUnconfirmedTransaction(getObjectHash(m_uncommitedTransactions[transactionId]));
+  removeUnconfirmedTransaction(BinaryArray::objectHash(m_uncommitedTransactions[transactionId]));
   m_uncommitedTransactions.erase(transactionId);
 }
 
@@ -929,7 +930,7 @@ void WalletGreen::pushBackOutgoingTransfers(size_t txId, const std::vector<Walle
   }
 }
 
-size_t WalletGreen::insertOutgoingTransactionAndPushEvent(const hash_t& transactionHash, uint64_t fee, const BinaryArray& extra, uint64_t unlockTimestamp) {
+size_t WalletGreen::insertOutgoingTransactionAndPushEvent(const hash_t& transactionHash, uint64_t fee, const binary_array_t& extra, uint64_t unlockTimestamp) {
   WalletTransaction insertTx;
   insertTx.state = WalletTransactionState::CREATED;
   insertTx.creationTime = static_cast<uint64_t>(time(nullptr));
@@ -996,7 +997,7 @@ bool WalletGreen::updateWalletTransactionInfo(size_t transactionId, const crypto
 
     // Fix LegacyWallet error. Some old versions didn't fill extra field
     if (transaction.extra.empty() && !info.extra.empty()) {
-      transaction.extra = Common::asString(info.extra);
+      transaction.extra = BinaryArray::toString(info.extra);
       updated = true;
     }
 
@@ -1257,7 +1258,7 @@ std::unique_ptr<cryptonote::ITransaction> WalletGreen::makeTransaction(const std
   }
 
   tx->setUnlockTime(unlockTimestamp);
-  tx->appendExtra(Common::asBinaryArray(extra));
+  tx->appendExtra(array::fromString(extra));
 
   for (auto& input: keysInfo) {
     tx->addInput(makeAccountKeys(*input.walletRecord), input.keyInfo, input.ephKeys);
@@ -1288,14 +1289,14 @@ void WalletGreen::sendTransaction(const cryptonote::transaction_t& cryptoNoteTra
 }
 
 size_t WalletGreen::validateSaveAndSendTransaction(const ITransactionReader& transaction, const std::vector<WalletTransfer>& destinations, bool isFusion, bool send) {
-  BinaryArray transactionData = transaction.getTransactionData();
+  binary_array_t transactionData = transaction.getTransactionData();
 
   if (transactionData.size() > m_upperTransactionSizeLimit) {
     throw std::system_error(make_error_code(error::TRANSACTION_SIZE_TOO_BIG));
   }
 
   cryptonote::transaction_t cryptoNoteTransaction;
-  if (!fromBinaryArray(cryptoNoteTransaction, transactionData)) {
+  if (!BinaryArray::from(cryptoNoteTransaction, transactionData)) {
     throw std::system_error(make_error_code(error::INTERNAL_WALLET_ERROR), "Failed to deserialize created transaction");
   }
 
@@ -1560,7 +1561,7 @@ WalletTransactionWithTransfers WalletGreen::getTransaction(const crypto::hash_t&
   throwIfNotInitialized();
   throwIfStopped();
 
-  auto& hashIndex = m_transactions.get<TransactionIndex>();
+  auto& hashIndex = m_transactions.get<transaction_index_t>();
   auto it = hashIndex.find(transactionHash);
   if (it == hashIndex.end()) {
     throw std::system_error(make_error_code(error::OBJECT_NOT_FOUND), "transaction_t not found");
@@ -1826,7 +1827,7 @@ void WalletGreen::transactionUpdated(const TransactionInformation& transactionIn
     [](int64_t sum, const ContainerAmounts& containerAmounts) { return sum + containerAmounts.amounts.input + containerAmounts.amounts.output; });
 
   size_t transactionId;
-  auto& hashIndex = m_transactions.get<TransactionIndex>();
+  auto& hashIndex = m_transactions.get<transaction_index_t>();
   auto it = hashIndex.find(transactionInfo.transactionHash);
   if (it != hashIndex.end()) {
     transactionId = std::distance(m_transactions.get<RandomAccessIndex>().begin(), m_transactions.project<RandomAccessIndex>(it));
@@ -1868,9 +1869,9 @@ void WalletGreen::pushEvent(const WalletEvent& event) {
 }
 
 size_t WalletGreen::getTransactionId(const hash_t& transactionHash) const {
-  auto it = m_transactions.get<TransactionIndex>().find(transactionHash);
+  auto it = m_transactions.get<transaction_index_t>().find(transactionHash);
 
-  if (it == m_transactions.get<TransactionIndex>().end()) {
+  if (it == m_transactions.get<transaction_index_t>().end()) {
     throw std::system_error(make_error_code(std::errc::invalid_argument));
   }
 
@@ -1892,8 +1893,8 @@ void WalletGreen::transactionDeleted(ITransfersSubscription* object, const hash_
     return;
   }
 
-  auto it = m_transactions.get<TransactionIndex>().find(transactionHash);
-  if (it == m_transactions.get<TransactionIndex>().end()) {
+  auto it = m_transactions.get<transaction_index_t>().find(transactionHash);
+  if (it == m_transactions.get<transaction_index_t>().end()) {
     return;
   }
 
@@ -1902,7 +1903,7 @@ void WalletGreen::transactionDeleted(ITransfersSubscription* object, const hash_
   deleteUnlockTransactionJob(transactionHash);
 
   bool updated = false;
-  m_transactions.get<TransactionIndex>().modify(it, [&updated](cryptonote::WalletTransaction& tx) {
+  m_transactions.get<transaction_index_t>().modify(it, [&updated](cryptonote::WalletTransaction& tx) {
     if (tx.state == WalletTransactionState::CREATED || tx.state == WalletTransactionState::SUCCEEDED) {
       tx.state = WalletTransactionState::CANCELLED;
       updated = true;
@@ -2089,7 +2090,6 @@ size_t WalletGreen::createFusionTransaction(uint64_t threshold, uint64_t mixin) 
   std::unique_ptr<ITransaction> fusionTransaction;
   size_t transactionSize;
   int round = 0;
-  uint64_t transactionAmount;
   do {
     if (round != 0) {
       fusionInputs.pop_back();
@@ -2099,8 +2099,6 @@ size_t WalletGreen::createFusionTransaction(uint64_t threshold, uint64_t mixin) 
     uint64_t inputsAmount = std::accumulate(fusionInputs.begin(), fusionInputs.end(), static_cast<uint64_t>(0), [] (uint64_t amount, const OutputToTransfer& input) {
       return amount + input.out.amount;
     });
-
-    transactionAmount = inputsAmount;
 
     ReceiverAmounts decomposedOutputs = decomposeFusionOutputs(inputsAmount);
     assert(decomposedOutputs.amounts.size() <= MAX_FUSION_OUTPUT_COUNT);

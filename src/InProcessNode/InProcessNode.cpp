@@ -15,7 +15,7 @@
 #include "cryptonote/core/VerificationContext.h"
 #include "cryptonote/protocol/handler_common.h"
 #include "InProcessNodeErrors.h"
-#include "common/StringTools.h"
+#include "cryptonote/structures/array.hpp"
 
 using namespace crypto;
 using namespace Common;
@@ -94,7 +94,7 @@ void InProcessNode::workerFunc() {
   ioService.run();
 }
 
-void InProcessNode::getNewBlocks(std::vector<crypto::hash_t>&& knownBlockIds, std::vector<cryptonote::block_complete_entry>& newBlocks,
+void InProcessNode::getNewBlocks(std::vector<crypto::hash_t>&& knownBlockIds, std::vector<cryptonote::block_complete_entry_t>& newBlocks,
   uint32_t& startHeight, const Callback& callback)
 {
   std::unique_lock<std::mutex> lock(mutex);
@@ -115,7 +115,7 @@ void InProcessNode::getNewBlocks(std::vector<crypto::hash_t>&& knownBlockIds, st
   );
 }
 
-void InProcessNode::getNewBlocksAsync(std::vector<crypto::hash_t>& knownBlockIds, std::vector<cryptonote::block_complete_entry>& newBlocks,
+void InProcessNode::getNewBlocksAsync(std::vector<crypto::hash_t>& knownBlockIds, std::vector<cryptonote::block_complete_entry_t>& newBlocks,
   uint32_t& startHeight, const Callback& callback)
 {
   std::error_code ec = doGetNewBlocks(std::move(knownBlockIds), newBlocks, startHeight);
@@ -123,7 +123,7 @@ void InProcessNode::getNewBlocksAsync(std::vector<crypto::hash_t>& knownBlockIds
 }
 
 //it's always protected with mutex
-std::error_code InProcessNode::doGetNewBlocks(std::vector<crypto::hash_t>&& knownBlockIds, std::vector<cryptonote::block_complete_entry>& newBlocks, uint32_t& startHeight) {
+std::error_code InProcessNode::doGetNewBlocks(std::vector<crypto::hash_t>&& knownBlockIds, std::vector<cryptonote::block_complete_entry_t>& newBlocks, uint32_t& startHeight) {
   {
     std::unique_lock<std::mutex> lock(mutex);
     if (state != INITIALIZED) {
@@ -149,12 +149,12 @@ std::error_code InProcessNode::doGetNewBlocks(std::vector<crypto::hash_t>&& know
       auto completeBlock = core.getBlock(blockId);
       assert(completeBlock != nullptr);
 
-      cryptonote::block_complete_entry be;
-      be.block = asString(toBinaryArray(completeBlock->getBlock()));
+      cryptonote::block_complete_entry_t be;
+      be.block = BinaryArray::toString(BinaryArray::to(completeBlock->getBlock()));
 
       be.txs.reserve(completeBlock->getTransactionCount());
       for (size_t i = 0; i < completeBlock->getTransactionCount(); ++i) {
-        be.txs.push_back(asString(toBinaryArray(completeBlock->getTransaction(i))));
+        be.txs.push_back(BinaryArray::toString(BinaryArray::to(completeBlock->getTransaction(i))));
       }
 
       newBlocks.push_back(std::move(be));
@@ -309,7 +309,7 @@ std::error_code InProcessNode::doRelayTransaction(const cryptonote::transaction_
   }
 
   try {
-    cryptonote::BinaryArray transactionBinaryArray = toBinaryArray(transaction);
+    binary_array_t transactionBinaryArray = BinaryArray::to(transaction);
     cryptonote::tx_verification_context_t tvc = boost::value_initialized<cryptonote::tx_verification_context_t>();
 
     if (!core.handle_incoming_tx(transactionBinaryArray, tvc, false)) {
@@ -325,7 +325,7 @@ std::error_code InProcessNode::doRelayTransaction(const cryptonote::transaction_
     }
 
     cryptonote::NOTIFY_NEW_TRANSACTIONS::request r;
-    r.txs.push_back(asString(transactionBinaryArray));
+    r.txs.push_back(BinaryArray::toString(transactionBinaryArray));
     core.get_protocol()->relay_transactions(r);
   } catch (std::system_error& e) {
     return e.code();
@@ -487,7 +487,7 @@ std::error_code InProcessNode::doQueryBlocksLite(std::vector<crypto::hash_t>&& k
 
     if (!entry.block.empty()) {
       bse.hasBlock = true;
-      if (!fromBinaryArray(bse.block, asBinaryArray(entry.block))) {
+      if (!BinaryArray::from(bse.block, array::fromString(entry.block))) {
         return std::make_error_code(std::errc::invalid_argument);
       }
     }

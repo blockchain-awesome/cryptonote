@@ -9,9 +9,11 @@
 
 #include "common/StringTools.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
+#include "cryptonote/structures/block_entry.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/core/TransactionExtra.h"
 #include "CryptoNoteConfig.h"
+#include "cryptonote/structures/array.hpp"
 
 namespace cryptonote {
 
@@ -35,9 +37,9 @@ bool BlockchainExplorerDataBuilder::getMixin(const transaction_t& transaction, u
 }
 
 bool BlockchainExplorerDataBuilder::getPaymentId(const transaction_t& transaction, crypto::hash_t& paymentId) {
-  std::vector<TransactionExtraField> txExtraFields;
+  std::vector<transaction_extra_field_t> txExtraFields;
   parseTransactionExtra(transaction.extra, txExtraFields);
-  TransactionExtraNonce extraNonce;
+  transaction_extra_nonce_t extraNonce;
   if (!findTransactionExtraFieldByType(txExtraFields, extraNonce)) {
     return false;
   }
@@ -46,15 +48,15 @@ bool BlockchainExplorerDataBuilder::getPaymentId(const transaction_t& transactio
 
 bool BlockchainExplorerDataBuilder::fillTxExtra(const std::vector<uint8_t>& rawExtra, TransactionExtraDetails& extraDetails) {
   extraDetails.raw = rawExtra;
-  std::vector<TransactionExtraField> txExtraFields;
+  std::vector<transaction_extra_field_t> txExtraFields;
   parseTransactionExtra(rawExtra, txExtraFields);
-  for (const TransactionExtraField& field : txExtraFields) {
-    if (typeid(TransactionExtraPadding) == field.type()) {
-      extraDetails.padding.push_back(std::move(boost::get<TransactionExtraPadding>(field).size));
-    } else if (typeid(TransactionExtraPublicKey) == field.type()) {
-      extraDetails.publicKey.push_back(std::move(boost::get<TransactionExtraPublicKey>(field).publicKey));
-    } else if (typeid(TransactionExtraNonce) == field.type()) {
-      extraDetails.nonce.push_back(Common::toHex(boost::get<TransactionExtraNonce>(field).nonce.data(), boost::get<TransactionExtraNonce>(field).nonce.size()));
+  for (const transaction_extra_field_t& field : txExtraFields) {
+    if (typeid(transaction_extra_padding_t) == field.type()) {
+      extraDetails.padding.push_back(std::move(boost::get<transaction_extra_padding_t>(field).size));
+    } else if (typeid(transaction_extra_public_key_t) == field.type()) {
+      extraDetails.publicKey.push_back(std::move(boost::get<transaction_extra_public_key_t>(field).publicKey));
+    } else if (typeid(transaction_extra_nonce_t) == field.type()) {
+      extraDetails.nonce.push_back(hex::toString(boost::get<transaction_extra_nonce_t>(field).nonce.data(), boost::get<transaction_extra_nonce_t>(field).nonce.size()));
     }
   }
   return true;
@@ -78,7 +80,7 @@ size_t BlockchainExplorerDataBuilder::median(std::vector<size_t>& v) {
 }
 
 bool BlockchainExplorerDataBuilder::fillBlockDetails(const block_t&block, BlockDetails& blockDetails) {
-  crypto::hash_t hash = get_block_hash(block);
+  crypto::hash_t hash = Block::getHash(block);
 
   blockDetails.majorVersion = block.majorVersion;
   blockDetails.minorVersion = block.minorVersion;
@@ -115,8 +117,8 @@ bool BlockchainExplorerDataBuilder::fillBlockDetails(const block_t&block, BlockD
   }
   blockDetails.transactionsCumulativeSize = blockSize;
 
-  size_t blokBlobSize = getObjectBinarySize(block);
-  size_t minerTxBlobSize = getObjectBinarySize(block.baseTransaction);
+  size_t blokBlobSize = BinaryArray::size(block);
+  size_t minerTxBlobSize = BinaryArray::size(block.baseTransaction);
   blockDetails.blockSize = blokBlobSize + blockDetails.transactionsCumulativeSize - minerTxBlobSize;
 
   if (!core.getAlreadyGeneratedCoins(hash, blockDetails.alreadyGeneratedCoins)) {
@@ -182,7 +184,7 @@ bool BlockchainExplorerDataBuilder::fillBlockDetails(const block_t&block, BlockD
 }
 
 bool BlockchainExplorerDataBuilder::fillTransactionDetails(const transaction_t& transaction, transaction_details_t& transactionDetails, uint64_t timestamp) {
-  crypto::hash_t hash = getObjectHash(transaction);
+  crypto::hash_t hash = BinaryArray::objectHash(transaction);
   transactionDetails.hash = hash;
 
   transactionDetails.timestamp = timestamp;
@@ -206,7 +208,7 @@ bool BlockchainExplorerDataBuilder::fillTransactionDetails(const transaction_t& 
     }
   }
 
-  transactionDetails.size = getObjectBinarySize(transaction);
+  transactionDetails.size = BinaryArray::size(transaction);
   transactionDetails.unlockTime = transaction.unlockTime;
   transactionDetails.totalOutputsAmount = get_outs_money_amount(transaction);
 

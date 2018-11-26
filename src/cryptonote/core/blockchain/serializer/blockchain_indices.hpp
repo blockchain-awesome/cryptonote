@@ -9,8 +9,7 @@
 #include <serialization/BinaryOutputStreamSerializer.h>
 #include <fstream>
 #include <chrono>
-#include <cryptonote/core/blockchain/defines.h>
-#include <cryptonote/core/Blockchain.h>
+#include <cryptonote/core/blockchain.h>
 
 using namespace Logging;
 using namespace Common;
@@ -31,12 +30,13 @@ class BlockchainIndicesSerializer
     void serialize(ISerializer &s)
     {
 
-        uint8_t version = CURRENT_BLOCKCHAININDICES_STORAGE_ARCHIVE_VER;
+        config::config_t &data = config::get();
+        uint8_t version = data.storage.blockcache_archive.major;
 
         KV_MEMBER(version);
 
         // ignore old versions, do rebuild
-        if (version != CURRENT_BLOCKCHAININDICES_STORAGE_ARCHIVE_VER)
+        if (version != data.storage.blockcache_indices_archive.major)
             return;
 
         std::string operation;
@@ -74,9 +74,13 @@ class BlockchainIndicesSerializer
     template <class Archive>
     void serialize(Archive &ar, unsigned int version)
     {
+        uint8_t ver = config::get().storage.blockcache_indices_archive.major;
+
+        std::cout << "indexes version: " << ver 
+        << " current version: " << version << std::endl;
 
         // ignore old versions, do rebuild
-        if (version < CURRENT_BLOCKCHAININDICES_STORAGE_ARCHIVE_VER)
+        if (version < ver)
             return;
 
         std::string operation;

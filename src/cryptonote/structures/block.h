@@ -1,6 +1,8 @@
 #pragma once
 
+#include "config/common.h"
 #include "cryptonote/core/transaction/transaction.h"
+#include "cryptonote/core/difficulty.h"
 
 namespace cryptonote
 {

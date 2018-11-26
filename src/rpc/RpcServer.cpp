@@ -10,8 +10,8 @@
 // CryptoNote
 #include "common/StringTools.h"
 #include "cryptonote/core/CryptoNoteTools.h"
-#include "cryptonote/core/Core.h"
-#include "cryptonote/core/Account.h"
+#include "cryptonote/core/core.h"
+#include "cryptonote/core/account.h"
 #include "cryptonote/core/IBlock.h"
 #include "cryptonote/core/Miner.h"
 #include "cryptonote/core/TransactionExtra.h"
@@ -196,11 +196,11 @@ bool RpcServer::on_get_blocks(const COMMAND_RPC_GET_BLOCKS_FAST::request& req, C
     assert(completeBlock != nullptr);
 
     res.blocks.resize(res.blocks.size() + 1);
-    res.blocks.back().block = asString(toBinaryArray(completeBlock->getBlock()));
+    res.blocks.back().block = BinaryArray::toString(BinaryArray::to(completeBlock->getBlock()));
 
     res.blocks.back().txs.reserve(completeBlock->getTransactionCount());
     for (size_t i = 0; i < completeBlock->getTransactionCount(); ++i) {
-      res.blocks.back().txs.push_back(asString(toBinaryArray(completeBlock->getTransaction(i))));
+      res.blocks.back().txs.push_back(BinaryArray::toString(BinaryArray::to(completeBlock->getTransaction(i))));
     }
   }
 
@@ -288,8 +288,8 @@ bool RpcServer::onGetPoolChanges(const COMMAND_RPC_GET_POOL_CHANGES::request& re
   std::vector<cryptonote::transaction_t> addedTransactions;
   rsp.isTailBlockActual = m_core.getPoolChanges(req.tailBlockId, req.knownTxsIds, addedTransactions, rsp.deletedTxsIds);
   for (auto& tx : addedTransactions) {
-    BinaryArray txBlob;
-    if (!toBinaryArray(tx, txBlob)) {
+    binary_array_t txBlob;
+    if (!BinaryArray::to(tx, txBlob)) {
       rsp.status = "Internal error";
       break;;
     }
@@ -336,8 +336,8 @@ bool RpcServer::on_get_height(const COMMAND_RPC_GET_HEIGHT::request& req, COMMAN
 bool RpcServer::on_get_transactions(const COMMAND_RPC_GET_TRANSACTIONS::request& req, COMMAND_RPC_GET_TRANSACTIONS::response& res) {
   std::vector<hash_t> vh;
   for (const auto& tx_hex_str : req.txs_hashes) {
-    BinaryArray b;
-    if (!fromHex(tx_hex_str, b))
+    binary_array_t b;
+    if (!hex::fromString(tx_hex_str, b))
     {
       res.status = "Failed to parse hex representation of transaction hash";
       return true;
@@ -353,11 +353,11 @@ bool RpcServer::on_get_transactions(const COMMAND_RPC_GET_TRANSACTIONS::request&
   m_core.getTransactions(vh, txs, missed_txs);
 
   for (auto& tx : txs) {
-    res.txs_as_hex.push_back(toHex(toBinaryArray(tx)));
+    res.txs_as_hex.push_back(hex::toString(BinaryArray::to(tx)));
   }
 
   for (const auto& miss_tx : missed_txs) {
-    res.missed_tx.push_back(Common::podToHex(miss_tx));
+    res.missed_tx.push_back(hex::podToString(miss_tx));
   }
 
   res.status = CORE_RPC_STATUS_OK;
@@ -365,8 +365,8 @@ bool RpcServer::on_get_transactions(const COMMAND_RPC_GET_TRANSACTIONS::request&
 }
 
 bool RpcServer::on_send_raw_tx(const COMMAND_RPC_SEND_RAW_TX::request& req, COMMAND_RPC_SEND_RAW_TX::response& res) {
-  BinaryArray tx_blob;
-  if (!fromHex(req.tx_as_hex, tx_blob))
+  binary_array_t tx_blob;
+  if (!hex::fromString(req.tx_as_hex, tx_blob))
   {
     logger(INFO) << "[on_send_raw_tx]: Failed to parse tx from hexbuff: " << req.tx_as_hex;
     res.status = "Failed";
@@ -397,7 +397,7 @@ bool RpcServer::on_send_raw_tx(const COMMAND_RPC_SEND_RAW_TX::request& req, COMM
 
 
   NOTIFY_NEW_TRANSACTIONS::request r;
-  r.txs.push_back(asString(tx_blob));
+  r.txs.push_back(BinaryArray::toString(tx_blob));
   m_core.get_protocol()->relay_transactions(r);
   //TODO: make sure that tx has reached other nodes here, probably wait to receive reflections from other nodes
   res.status = CORE_RPC_STATUS_OK;
@@ -463,7 +463,7 @@ bool RpcServer::on_getblockhash(const COMMAND_RPC_GETBLOCKHASH::request& req, CO
     };
   }
 
-  res = Common::podToHex(blockId);
+  res = hex::podToString(blockId);
   return true;
 }
 
@@ -496,14 +496,14 @@ bool RpcServer::on_getblocktemplate(const COMMAND_RPC_GETBLOCKTEMPLATE::request&
   }
 
   block_t b = boost::value_initialized<block_t>();
-  cryptonote::BinaryArray blob_reserve;
+  binary_array_t blob_reserve;
   blob_reserve.resize(req.reserve_size, 0);
   if (!m_core.get_block_template(b, acc, res.difficulty, res.height, blob_reserve)) {
     logger(ERROR) << "Failed to create block template";
     throw JsonRpc::JsonRpcError{ CORE_RPC_ERROR_CODE_INTERNAL_ERROR, "Internal error: failed to create block template" };
   }
 
-  BinaryArray block_blob = toBinaryArray(b);
+  binary_array_t block_blob = BinaryArray::to(b);
   public_key_t tx_pub_key = cryptonote::getTransactionPublicKeyFromExtra(b.baseTransaction.extra);
   if (tx_pub_key == NULL_PUBLIC_KEY) {
     logger(ERROR) << "Failed to find tx pub key in coinbase extra";
@@ -525,7 +525,7 @@ bool RpcServer::on_getblocktemplate(const COMMAND_RPC_GETBLOCKTEMPLATE::request&
     res.reserved_offset = 0;
   }
 
-  res.blocktemplate_blob = toHex(block_blob);
+  res.blocktemplate_blob = hex::toString(block_blob);
   res.status = CORE_RPC_STATUS_OK;
 
   return true;
@@ -533,7 +533,7 @@ bool RpcServer::on_getblocktemplate(const COMMAND_RPC_GETBLOCKTEMPLATE::request&
 
 bool RpcServer::on_get_currency_id(const COMMAND_RPC_GET_CURRENCY_ID::request& /*req*/, COMMAND_RPC_GET_CURRENCY_ID::response& res) {
   hash_t currencyId = m_core.currency().genesisBlockHash();
-  res.currency_id_blob = Common::podToHex(currencyId);
+  res.currency_id_blob = hex::podToString(currencyId);
   return true;
 }
 
@@ -542,8 +542,8 @@ bool RpcServer::on_submitblock(const COMMAND_RPC_SUBMITBLOCK::request& req, COMM
     throw JsonRpc::JsonRpcError{ CORE_RPC_ERROR_CODE_WRONG_PARAM, "Wrong param" };
   }
 
-  BinaryArray blockblob;
-  if (!fromHex(req[0], blockblob)) {
+  binary_array_t blockblob;
+  if (!hex::fromString(req[0], blockblob)) {
     throw JsonRpc::JsonRpcError{ CORE_RPC_ERROR_CODE_WRONG_BLOCKBLOB, "Wrong block blob" };
   }
 
@@ -574,12 +574,12 @@ void RpcServer::fill_block_header_response(const block_t& blk, bool orphan_statu
   responce.major_version = blk.majorVersion;
   responce.minor_version = blk.minorVersion;
   responce.timestamp = blk.timestamp;
-  responce.prev_hash = Common::podToHex(blk.previousBlockHash);
+  responce.prev_hash = hex::podToString(blk.previousBlockHash);
   responce.nonce = blk.nonce;
   responce.orphan_status = orphan_status;
   responce.height = height;
   responce.depth = m_core.get_current_blockchain_height() - height - 1;
-  responce.hash = Common::podToHex(hash);
+  responce.hash = hex::podToString(hash);
   m_core.getBlockDifficulty(static_cast<uint32_t>(height), responce.difficulty);
   responce.reward = get_block_reward(blk);
 }

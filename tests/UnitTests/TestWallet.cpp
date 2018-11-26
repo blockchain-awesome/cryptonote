@@ -11,7 +11,7 @@
 
 #include "common/StringTools.h"
 #include "crypto/hash.h"
-#include "cryptonote/core/Currency.h"
+#include "cryptonote/core/currency.h"
 #include "cryptonote/core/TransactionApi.h"
 #include "cryptonote/core/TransactionApiExtra.h"
 #include "INodeStubs.h"
@@ -25,6 +25,7 @@
 #include <system/Dispatcher.h>
 #include <system/Timer.h>
 #include <system/Context.h>
+#include "cryptonote/structures/block_entry.h"
 
 #include "TransactionApiHelpers.h"
 
@@ -144,7 +145,7 @@ class WalletApi: public ::testing::Test {
 public:
   WalletApi() :
     TRANSACTION_SOFTLOCK_TIME(10),
-    currency(cryptonote::CurrencyBuilder(logger, os::appdata::path()).currency()),
+    currency(cryptonote::CurrencyBuilder(os::appdata::path(), config::testnet::data, logger).currency()),
     generator(currency),
     node(generator),
     alice(dispatcher, currency, node),
@@ -230,7 +231,7 @@ void WalletApi::SetUp() {
 }
 
 void WalletApi::setMinerTo(cryptonote::WalletGreen& wallet) {
-  AccountBase base;
+  Account base;
   account_keys_t keys;
   auto viewKey = wallet.getViewKey();
   auto spendKey = wallet.getAddressSpendKey(0);
@@ -741,7 +742,7 @@ TEST_F(WalletApi, transferTooBigTransaction) {
   const size_t outputSize = 32 + 1;
   const size_t bigTxOutputCount = 2 * testBlockGrantedFullRewardZone / outputSize;
 
-  cryptonote::Currency cur = cryptonote::CurrencyBuilder(logger, os::appdata::path()).blockGrantedFullRewardZone(testBlockGrantedFullRewardZone).currency();
+  cryptonote::Currency cur = cryptonote::CurrencyBuilder(os::appdata::path(), config::testnet::data, logger).blockGrantedFullRewardZone(testBlockGrantedFullRewardZone).currency();
   TestBlockchainGenerator gen(cur);
   INodeTrivialRefreshStub n(gen);
 
@@ -1039,7 +1040,7 @@ TEST_F(WalletApi, loadWithWrongPassword) {
 
 void WalletApi::testIWalletDataCompatibility(bool details, const std::string& cache, const std::vector<WalletLegacyTransaction>& txs,
     const std::vector<WalletLegacyTransfer>& trs, const std::vector<std::pair<TransactionInformation, int64_t>>& externalTxs) {
-  cryptonote::AccountBase account;
+  cryptonote::Account account;
   account.generate();
 
   WalletUserTransactionsCache iWalletCache;
@@ -1263,8 +1264,8 @@ std::string removeTxPublicKey(const std::string& txExtra) {
 
 std::string createExtraNonce(const std::string& nonce) {
   cryptonote::TransactionExtra txExtra;
-  cryptonote::TransactionExtraNonce extraNonce;
-  extraNonce.nonce = asBinaryArray(nonce);
+  cryptonote::transaction_extra_nonce_t extraNonce;
+  extraNonce.nonce = array::fromString(nonce);
   txExtra.set(extraNonce);
   auto vec = txExtra.serialize();
   return std::string(vec.begin(), vec.end());
@@ -2973,7 +2974,7 @@ TEST_F(WalletApi, getTransactionsReturnsBlockWithCorrectHash) {
   node.updateObservers();
   waitForWalletEvent(alice, cryptonote::WalletEventType::SYNC_COMPLETED, std::chrono::seconds(3));
 
-  crypto::hash_t lastBlockHash = get_block_hash(generator.getBlockchain().back());
+  crypto::hash_t lastBlockHash = Block::getHash(generator.getBlockchain().back());
   auto transactions = alice.getTransactions(lastBlockHash, 1);
 
   ASSERT_EQ(1, transactions.size());
@@ -2990,7 +2991,7 @@ TEST_F(WalletApi, getTransactionsReturnsBlockWithCorrectHash) {
 //   node.updateObservers();
 //   waitForWalletEvent(alice, cryptonote::WalletEventType::SYNC_COMPLETED, std::chrono::seconds(3));
 
-//   crypto::hash_t lastBlockHash = get_block_hash(generator.getBlockchain().back());
+//   crypto::hash_t lastBlockHash = Block::getHash(generator.getBlockchain().back());
 //   auto transactions = alice.getTransactions(lastBlockHash, 1);
 
 //   ASSERT_TRUE(transactionWithTransfersFound(alice, transactions, transactionId));
@@ -3104,13 +3105,13 @@ TEST_F(WalletApi, getTransactionsReturnsBlockWithCorrectHash) {
 
 TEST_F(WalletApi, getTransactionsByBlockHashThrowsIfNotInitialized) {
   cryptonote::WalletGreen bob(dispatcher, currency, node, TRANSACTION_SOFTLOCK_TIME);
-  auto hash = get_block_hash(generator.getBlockchain().back());
+  auto hash = Block::getHash(generator.getBlockchain().back());
   ASSERT_ANY_THROW(bob.getTransactions(hash, 1));
 }
 
 TEST_F(WalletApi, getTransactionsByBlockHashThrowsIfStopped) {
   alice.stop();
-  auto hash = get_block_hash(generator.getBlockchain().back());
+  auto hash = Block::getHash(generator.getBlockchain().back());
   ASSERT_ANY_THROW(alice.getTransactions(hash, 1));
   alice.start();
 }
@@ -3136,7 +3137,7 @@ TEST_F(WalletApi, getBlockHashesReturnsNewBlocks) {
 
   waitForWalletEvent(alice, cryptonote::WalletEventType::SYNC_COMPLETED, std::chrono::seconds(3));
 
-  auto hash = get_block_hash(generator.getBlockchain().back());
+  auto hash = Block::getHash(generator.getBlockchain().back());
   auto hashes = alice.getBlockHashes(0, generator.getBlockchain().size());
 
   ASSERT_EQ(generator.getBlockchain().size(), hashes.size());
@@ -3154,7 +3155,7 @@ TEST_F(WalletApi, getBlockHashesReturnsCorrectBlockHashesAfterDetach) {
 
   waitForWalletEvent(alice, cryptonote::WalletEventType::SYNC_COMPLETED, std::chrono::seconds(3));
 
-  auto hash = get_block_hash(generator.getBlockchain()[1]);
+  auto hash = Block::getHash(generator.getBlockchain()[1]);
   auto hashes = alice.getBlockHashes(0, 2);
 
   ASSERT_EQ(2, hashes.size());
@@ -3528,7 +3529,7 @@ TEST_F(WalletApi, transferFailsIfNoChangeDestinationAndMultipleSourceAddressesSe
 
 TEST_F(WalletApi, checkBaseTransaction) {
   cryptonote::account_keys_t keys{ parseAddress(alice.getAddress(0)), alice.getAddressSpendKey(0).secretKey, alice.getViewKey().secretKey };
-  cryptonote::AccountBase acc;
+  cryptonote::Account acc;
   acc.setAccountKeys(keys);
   acc.setCreatetime(0);
   generator.generateFromBaseTx(acc);

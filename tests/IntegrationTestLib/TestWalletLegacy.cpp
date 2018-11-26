@@ -31,7 +31,7 @@ TestWalletLegacy::~TestWalletLegacy() {
 }
 
 std::error_code TestWalletLegacy::init() {
-  cryptonote::AccountBase walletAccount;
+  cryptonote::Account walletAccount;
   walletAccount.generate();
 
   m_wallet->initWithKeys(walletAccount.getAccountKeys(), TEST_PASSWORD);

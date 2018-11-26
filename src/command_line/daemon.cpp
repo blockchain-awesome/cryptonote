@@ -7,7 +7,7 @@
 #include "logging/ConsoleLogger.h"
 #include "common/StringTools.h"
 #include "version.h"
-#include "cryptonote/core/Core.h"
+#include "cryptonote/core/core.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "CryptoNoteConfig.h"
 
@@ -71,9 +71,9 @@ fs::path Daemon::getLogFile()
 void Daemon::printGenesisTx()
 {
   Logging::ConsoleLogger logger;
-  cryptonote::transaction_t tx = cryptonote::CurrencyBuilder(logger, os::appdata::path()).generateGenesisTransaction();
-  cryptonote::BinaryArray txb = cryptonote::toBinaryArray(tx);
-  std::string tx_hex = Common::toHex(txb);
+  cryptonote::transaction_t tx = cryptonote::CurrencyBuilder(os::appdata::path(), m_config, logger).generateGenesisTransaction();
+  binary_array_t txb = cryptonote::BinaryArray::to(tx);
+  std::string tx_hex = hex::toString(txb);
 
   std::cout << "Insert this line into your coin configuration file as is: " << std::endl;
   std::cout << "const char GENESIS_COINBASE_TX_HEX[] = \"" << tx_hex << "\";" << std::endl;
@@ -102,7 +102,7 @@ bool Daemon::checkVersion()
 
   if (get_arg(vm, arg_version))
   {
-    std::cout << cryptonote::CRYPTONOTE_NAME << " v" << PROJECT_VERSION_LONG << ENDL;
+    std::cout << config::get().name << " v" << PROJECT_VERSION_LONG << ENDL;
     exit = true;
   }
   if (get_arg(vm, arg_os_version))
@@ -123,7 +123,7 @@ bool Daemon::parseHelp()
 {
   if (get_arg(vm, arg_help))
   {
-    std::cout << cryptonote::CRYPTONOTE_NAME << " v" << PROJECT_VERSION_LONG << ENDL << ENDL;
+    std::cout << config::get().name << " v" << PROJECT_VERSION_LONG << ENDL << ENDL;
     std::cout << desc_options << std::endl;
     return false;
   }

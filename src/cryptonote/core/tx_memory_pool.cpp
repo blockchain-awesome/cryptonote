@@ -20,6 +20,7 @@
 #include "CryptoNoteFormatUtils.h"
 #include "CryptoNoteTools.h"
 #include "CryptoNoteConfig.h"
+#include "cryptonote/structures/array.hpp"
 
 using namespace Logging;
 
@@ -213,7 +214,7 @@ namespace cryptonote {
   bool TxMemoryPool::add_tx(const transaction_t &tx, tx_verification_context_t& tvc, bool keeped_by_block) {
     crypto::hash_t h = NULL_HASH;
     size_t blobSize = 0;
-    getObjectHash(tx, h, blobSize);
+    BinaryArray::objectHash(tx, h, blobSize);
     return add_tx(tx, h, blobSize, tvc, keeped_by_block);
   }
   //---------------------------------------------------------------------------------
@@ -441,6 +442,8 @@ namespace cryptonote {
     uint8_t version = CURRENT_MEMPOOL_ARCHIVE_VER;
 
     s(version, "version");
+
+    std::cout << "Mempool version: " << (uint32_t) version << std::endl;
 
     if (version != CURRENT_MEMPOOL_ARCHIVE_VER) {
       return;

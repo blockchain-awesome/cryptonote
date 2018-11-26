@@ -12,7 +12,7 @@ namespace
 {
   struct tx_builder
   {
-    void step1_init(size_t version = CURRENT_TRANSACTION_VERSION, uint64_t unlock_time = 0)
+    void step1_init(size_t version = config::get().transaction.version.major, uint64_t unlock_time = 0)
     {
       m_tx.inputs.clear();
       m_tx.outputs.clear();
@@ -71,7 +71,7 @@ namespace
 
     void step4_calc_hash()
     {
-      getObjectHash(*static_cast<transaction_prefix_t*>(&m_tx), m_tx_prefix_hash);
+      BinaryArray::objectHash(*static_cast<transaction_prefix_t*>(&m_tx), m_tx_prefix_hash);
     }
 
     void step5_sign(const std::vector<transaction_source_entry_t>& sources)
@@ -103,7 +103,7 @@ namespace
   };
 
   transaction_t make_simple_tx_with_unlock_time(const std::vector<test_event_entry>& events,
-    const cryptonote::block_t& blk_head, const cryptonote::AccountBase& from, const cryptonote::AccountBase& to,
+    const cryptonote::block_t& blk_head, const cryptonote::Account& from, const cryptonote::Account& to,
     uint64_t amount, uint64_t fee, uint64_t unlock_time)
   {
     std::vector<transaction_source_entry_t> sources;
@@ -111,7 +111,7 @@ namespace
     fill_tx_sources_and_destinations(events, blk_head, from, to, amount, fee, 0, sources, destinations);
 
     tx_builder builder;
-    builder.step1_init(CURRENT_TRANSACTION_VERSION, unlock_time);
+    builder.step1_init(config::get().transaction.version.major, unlock_time);
     builder.step2_fill_inputs(from.getAccountKeys(), sources);
     builder.step3_fill_outputs(destinations);
     builder.step4_calc_hash();
@@ -152,7 +152,7 @@ bool gen_tx_big_version::generate(std::vector<test_event_entry>& events) const
   fill_tx_sources_and_destinations(events, blk_0, miner_account, miner_account, MK_COINS(1), m_currency.minimumFee(), 0, sources, destinations);
 
   tx_builder builder;
-  builder.step1_init(CURRENT_TRANSACTION_VERSION + 1, 0);
+  builder.step1_init(config::get().transaction.version.major + 1, 0);
   builder.step2_fill_inputs(miner_account.getAccountKeys(), sources);
   builder.step3_fill_outputs(destinations);
   builder.step4_calc_hash();
@@ -479,7 +479,7 @@ bool gen_tx_key_image_is_invalid::generate(std::vector<test_event_entry>& events
 
   key_input_t& in_to_key = boost::get<key_input_t>(builder.m_tx.inputs.front());
   crypto::public_key_t pub = generate_invalid_pub_key();
-  memcpy(&in_to_key.keyImage, &pub, sizeof(crypto::EllipticCurvePoint));
+  memcpy(&in_to_key.keyImage, &pub, sizeof(crypto::elliptic_curve_point_t));
 
   builder.step3_fill_outputs(destinations);
   builder.step4_calc_hash();
@@ -506,7 +506,7 @@ bool gen_tx_check_input_unlock_time::generate(std::vector<test_event_entry>& eve
   REWIND_BLOCKS_N(events, blk_1, blk_0, miner_account, tests_count - 1);
   REWIND_BLOCKS(events, blk_1r, blk_1, miner_account);
 
-  std::array<AccountBase, tests_count> accounts;
+  std::array<Account, tests_count> accounts;
   for (size_t i = 0; i < tests_count; ++i)
   {
     MAKE_ACCOUNT(events, acc);
@@ -636,35 +636,35 @@ bool gen_tx_signatures_are_invalid::generate(std::vector<test_event_entry>& even
 
   // Tx with nmix = 0 without signatures
   DO_CALLBACK(events, "mark_invalid_tx");
-  BinaryArray sr_tx = toBinaryArray(static_cast<transaction_prefix_t>(tx_0));
+  binary_array_t sr_tx = BinaryArray::to(static_cast<transaction_prefix_t>(tx_0));
   events.push_back(serialized_transaction(sr_tx));
 
   // Tx with nmix = 0 have a few inputs, and not enough signatures
   DO_CALLBACK(events, "mark_invalid_tx");
-  sr_tx = toBinaryArray(tx_0);
+  sr_tx = BinaryArray::to(tx_0);
   sr_tx.resize(sr_tx.size() - sizeof(crypto::signature_t));
   events.push_back(serialized_transaction(sr_tx));
 
   // Tx with nmix = 0 have a few inputs, and too many signatures
   DO_CALLBACK(events, "mark_invalid_tx");
-  sr_tx = toBinaryArray(tx_0);
+  sr_tx = BinaryArray::to(tx_0);
   sr_tx.insert(sr_tx.end(), sr_tx.end() - sizeof(crypto::signature_t), sr_tx.end());
   events.push_back(serialized_transaction(sr_tx));
 
   // Tx with nmix = 1 without signatures
   DO_CALLBACK(events, "mark_invalid_tx");
-  sr_tx = toBinaryArray(static_cast<transaction_prefix_t>(tx_1));
+  sr_tx = BinaryArray::to(static_cast<transaction_prefix_t>(tx_1));
   events.push_back(serialized_transaction(sr_tx));
 
   // Tx with nmix = 1 have not enough signatures
   DO_CALLBACK(events, "mark_invalid_tx");
-  sr_tx = toBinaryArray(tx_1);
+  sr_tx = BinaryArray::to(tx_1);
   sr_tx.resize(sr_tx.size() - sizeof(crypto::signature_t));
   events.push_back(serialized_transaction(sr_tx));
 
   // Tx with nmix = 1 have too many signatures
   DO_CALLBACK(events, "mark_invalid_tx");
-  sr_tx = toBinaryArray(tx_1);
+  sr_tx = BinaryArray::to(tx_1);
   sr_tx.insert(sr_tx.end(), sr_tx.end() - sizeof(crypto::signature_t), sr_tx.end());
   events.push_back(serialized_transaction(sr_tx));
 
@@ -703,7 +703,7 @@ MultiSigTx_OutputSignatures::MultiSigTx_OutputSignatures(size_t givenKeys, uint3
   m_givenKeys(givenKeys), m_requiredSignatures(requiredSignatures), m_shouldSucceed(shouldSucceed) {
 
   for (size_t i = 0; i < m_givenKeys; ++i) {
-    AccountBase acc;
+    Account acc;
     acc.generate();
     m_outputAccounts.push_back(acc);
   }

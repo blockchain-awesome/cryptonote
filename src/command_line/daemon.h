@@ -7,26 +7,32 @@
 #include <string>
 #include <boost/program_options.hpp>
 #include "options.h"
+#include "config/common.h"
 
 namespace command_line
 {
 
 namespace po = boost::program_options;
 namespace fs = boost::filesystem;
-class Daemon: public CommandParser
+class Daemon : public CommandParser
 {
 public:
-Daemon(OptionsNames& names): CommandParser(names) {};
-virtual bool innerParse();
+  Daemon(OptionsNames &names, config::config_t &config) : CommandParser(names), m_config(config){};
+  virtual bool innerParse();
 
-void init();
-bool checkVersion();
-void printGenesisTx();
+  void init();
+  bool checkVersion();
+  void printGenesisTx();
 
-bool parseHelp();
-void parseConfigFile();
+  bool parseHelp();
+  void parseConfigFile();
 
-fs::path getLogFile();
+  fs::path getLogFile();
+
+  void setConfig(config::config_t &config) {
+    m_config = config;
+  };
+  config::config_t &m_config;
 };
 
 } // namespace command_line

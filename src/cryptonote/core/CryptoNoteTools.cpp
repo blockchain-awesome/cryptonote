@@ -6,29 +6,6 @@
 #include "CryptoNoteFormatUtils.h"
 
 namespace cryptonote {
-template<>
-bool toBinaryArray(const BinaryArray& object, BinaryArray& binaryArray) {
-  try {
-    Common::VectorOutputStream stream(binaryArray);
-    BinaryOutputStreamSerializer serializer(stream);
-    std::string oldBlob = Common::asString(object);
-    serializer(oldBlob, "");
-  } catch (std::exception&) {
-    return false;
-  }
-
-  return true;
-}
-
-void getBinaryArrayHash(const BinaryArray& binaryArray, crypto::hash_t& hash) {
-  cn_fast_hash(binaryArray.data(), binaryArray.size(), hash);
-}
-
-crypto::hash_t getBinaryArrayHash(const BinaryArray& binaryArray) {
-  crypto::hash_t hash;
-  getBinaryArrayHash(binaryArray, hash);
-  return hash;
-}
 
 uint64_t getInputAmount(const transaction_t& transaction) {
   uint64_t amount = 0;

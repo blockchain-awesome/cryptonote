@@ -94,10 +94,10 @@ bool gen_chain_switch_1::check_split_not_switched(cryptonote::core& c, size_t ev
 {
   DEFINE_TESTS_ERROR_CONTEXT("gen_chain_switch_1::check_split_not_switched");
 
-  m_recipient_account_1 = boost::get<AccountBase>(events[1]);
-  m_recipient_account_2 = boost::get<AccountBase>(events[2]);
-  m_recipient_account_3 = boost::get<AccountBase>(events[3]);
-  m_recipient_account_4 = boost::get<AccountBase>(events[4]);
+  m_recipient_account_1 = boost::get<Account>(events[1]);
+  m_recipient_account_2 = boost::get<Account>(events[2]);
+  m_recipient_account_3 = boost::get<Account>(events[3]);
+  m_recipient_account_4 = boost::get<Account>(events[4]);
 
   std::list<block_t> blocks;
   bool r = c.get_blocks(0, 10000, blocks);
@@ -109,7 +109,7 @@ bool gen_chain_switch_1::check_split_not_switched(cryptonote::core& c, size_t ev
 
   std::vector<cryptonote::block_t> chain;
   map_hash2tx_t mtx;
-  r = find_block_chain(events, chain, mtx, get_block_hash(blocks.back()));
+  r = find_block_chain(events, chain, mtx, Block::getHash(blocks.back()));
   CHECK_TEST_CONDITION(r);
   CHECK_EQ(MK_COINS(8),  get_balance(m_recipient_account_1, chain, mtx));
   CHECK_EQ(MK_COINS(10), get_balance(m_recipient_account_2, chain, mtx));
@@ -157,7 +157,7 @@ bool gen_chain_switch_1::check_split_switched(cryptonote::core& c, size_t ev_ind
 
   std::vector<cryptonote::block_t> chain;
   map_hash2tx_t mtx;
-  r = find_block_chain(events, chain, mtx, get_block_hash(blocks.back()));
+  r = find_block_chain(events, chain, mtx, Block::getHash(blocks.back()));
   CHECK_TEST_CONDITION(r);
   CHECK_EQ(MK_COINS(8),  get_balance(m_recipient_account_1, chain, mtx));
   CHECK_EQ(MK_COINS(3),  get_balance(m_recipient_account_2, chain, mtx));

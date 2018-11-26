@@ -3,6 +3,7 @@
 
 ## Building a decentralized, easy to use, high available coin for everyone
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/497da3ae05b8439abb75a8d18e0beb0e)](https://app.codacy.com/app/calidion/coin?utm_source=github.com&utm_medium=referral&utm_content=vigcoin/coin&utm_campaign=Badge_Grade_Dashboard)
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/16947/badge.svg)](https://scan.coverity.com/projects/vigcoin-coin) [![LICENSE](https://img.shields.io/badge/license-GPL%20v3-blue.svg?longCache=true)](https://opensource.org/licenses/GPL-3.0)
 
 [![Gitter Chat](https://img.shields.io/gitter/room/badges/shields.svg?logo=gitter)](https://gitter.im/vigcoin/development)

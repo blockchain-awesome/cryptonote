@@ -6,10 +6,10 @@
 #include "crypto/hash.h"
 #include "cryptonote/core/key.h"
 #include "cryptonote/core/blockchain/serializer/crypto.h"
-#include "cryptonote/core/Account.h"
+#include "cryptonote/core/account.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/CryptoNoteTools.h"
-#include "cryptonote/core/Currency.h"
+#include "cryptonote/core/currency.h"
 
 #include <common/Math.h>
 
@@ -20,26 +20,26 @@ using namespace cryptonote;
 bool test_transaction_generation_and_ring_signature()
 {
   Logging::ConsoleLogger logger;
-  cryptonote::Currency currency = cryptonote::CurrencyBuilder(logger, os::appdata::path()).currency();
+  cryptonote::Currency currency = cryptonote::CurrencyBuilder(os::appdata::path(), config::testnet::data, logger).currency();
 
-  AccountBase miner_acc1;
+  Account miner_acc1;
   miner_acc1.generate();
-  AccountBase miner_acc2;
+  Account miner_acc2;
   miner_acc2.generate();
-  AccountBase miner_acc3;
+  Account miner_acc3;
   miner_acc3.generate();
-  AccountBase miner_acc4;
+  Account miner_acc4;
   miner_acc4.generate();
-  AccountBase miner_acc5;
+  Account miner_acc5;
   miner_acc5.generate();
-  AccountBase miner_acc6;
+  Account miner_acc6;
   miner_acc6.generate();
 
   std::string add_str = miner_acc3.toAddress();
 
-  AccountBase rv_acc;
+  Account rv_acc;
   rv_acc.generate();
-  AccountBase rv_acc2;
+  Account rv_acc2;
   rv_acc2.generate();
   transaction_t tx_mine_1;
   currency.constructMinerTx(0, 0, 0, 10, 0, miner_acc1.getAccountKeys().address, tx_mine_1);
@@ -101,7 +101,7 @@ bool test_transaction_generation_and_ring_signature()
   bool r = constructTransaction(miner_acc2.getAccountKeys(), sources, destinations, std::vector<uint8_t>(), tx_rc1, 0, logger);
   CHECK_AND_ASSERT_MES(r, false, "failed to construct transaction");
 
-  crypto::hash_t pref_hash = getObjectHash(*static_cast<transaction_prefix_t*>(&tx_rc1));
+  crypto::hash_t pref_hash = BinaryArray::objectHash(*static_cast<transaction_prefix_t*>(&tx_rc1));
   std::vector<const crypto::public_key_t *> output_keys;
   output_keys.push_back(&boost::get<key_output_t>(tx_mine_1.outputs[0].target).key);
   output_keys.push_back(&boost::get<key_output_t>(tx_mine_2.outputs[0].target).key);
@@ -132,13 +132,13 @@ bool test_block_creation()
 
   uint64_t vszs[] = {80,476,476,475,475,474,475,474,474,475,472,476,476,475,475,474,475,474,474,475,472,476,476,475,475,474,475,474,474,475,9391,476,476,475,475,474,475,8819,8301,475,472,4302,5316,14347,16620,19583,19403,19728,19442,19852,19015,19000,19016,19795,19749,18087,19787,19704,19750,19267,19006,19050,19445,19407,19522,19546,19788,19369,19486,19329,19370,18853,19600,19110,19320,19746,19474,19474,19743,19494,19755,19715,19769,19620,19368,19839,19532,23424,28287,30707};
   std::vector<uint64_t> szs(&vszs[0], &vszs[90]);
-  cryptonote::Currency currency = cryptonote::CurrencyBuilder(logger, os::appdata::path()).currency();
+  cryptonote::Currency currency = cryptonote::CurrencyBuilder(os::appdata::path(), config::testnet::data, logger).currency();
 
   account_public_address_t adr;
   bool r = Account::parseAddress("272xWzbWsP4cfNFfxY5ETN5moU8x81PKfWPwynrrqsNGDBQGLmD1kCkKCvPeDUXu5XfmZkCrQ53wsWmdfvHBGLNjGcRiDcK", adr);
   CHECK_AND_ASSERT_MES(r, false, "failed to import");
   block_t b;
-  r = currency.constructMinerTx(90, Common::medianValue(szs), 3553616528562147, 33094, 10000000, adr, b.baseTransaction, BinaryArray(), 11);
+  r = currency.constructMinerTx(90, Common::medianValue(szs), 3553616528562147, 33094, 10000000, adr, b.baseTransaction, binary_array_t(), 11);
   return r;
 }
 

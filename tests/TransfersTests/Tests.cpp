@@ -3,7 +3,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "Globals.h"
-#include "cryptonote/core/Account.h"
+#include "cryptonote/core/account.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/core/TransactionApi.h"
@@ -132,7 +132,7 @@ public:
       m_transfers.push_back(transactionHash);
 
       auto key = object->getAddress().spendPublicKey;
-      std::string address = Common::toHex(&key, sizeof(key));
+      std::string address = hex::toString(&key, sizeof(key));
       LOG_DEBUG("Transfer to " + address);
     }
     m_cv.notify_all();
@@ -194,7 +194,7 @@ public:
     m_sync(sync) {}
 
   void generateAccounts(size_t count) {
-    cryptonote::AccountBase acc;
+    cryptonote::Account acc;
 
     while (count--) {
       acc.generate();
@@ -298,7 +298,7 @@ TEST_F(TransfersTest, base) {
   nodeDaemons[0]->makeINode(node1);
   nodeDaemons[1]->makeINode(node2);
 
-  cryptonote::AccountBase dstAcc;
+  cryptonote::Account dstAcc;
   dstAcc.generate();
 
   account_keys_t dstKeys = reinterpret_cast<const account_keys_t&>(dstAcc.getAccountKeys());
@@ -408,10 +408,10 @@ std::error_code submitTransaction(INode& node, ITransactionReader& tx) {
   auto data = tx.getTransactionData();
 
   cryptonote::transaction_t outTx;
-  fromBinaryArray(outTx, data);
+  BinaryArray::from(outTx, data);
 
 
-  LOG_DEBUG("Submitting transaction " + Common::toHex(tx.getTransactionHash().data, 32));
+  LOG_DEBUG("Submitting transaction " + hex::toString(tx.getTransactionHash().data, 32));
 
   std::promise<std::error_code> result;
   node.relayTransaction(outTx, [&result](std::error_code ec) { result.set_value(ec); });

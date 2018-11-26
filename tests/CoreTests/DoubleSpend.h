@@ -144,8 +144,8 @@ public:
 
 protected:
 
-  cryptonote::AccountBase m_bob_account;
-  cryptonote::AccountBase m_alice_account;
+  cryptonote::Account m_bob_account;
+  cryptonote::Account m_alice_account;
   cryptonote::key_pair_t m_outputTxKey;
 
 private:

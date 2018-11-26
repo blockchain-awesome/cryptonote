@@ -11,7 +11,7 @@ public:
   CheckBlockPurged(size_t invalidBlockIdx) :
     m_invalidBlockIdx(invalidBlockIdx) {
 
-    cryptonote::CurrencyBuilder currencyBuilder(m_logger, os::appdata::path());
+    cryptonote::CurrencyBuilder currencyBuilder(os::appdata::path(), config::testnet::data, m_logger);
     m_currency = currencyBuilder.currency();
 
     REGISTER_CALLBACK("check_block_purged", CheckBlockPurged::check_block_purged);
@@ -50,7 +50,7 @@ struct CheckBlockAccepted : public test_chain_unit_base {
   CheckBlockAccepted(size_t expectedBlockchainHeight) :
     m_expectedBlockchainHeight(expectedBlockchainHeight) {
 
-    cryptonote::CurrencyBuilder currencyBuilder(m_logger, os::appdata::path());
+    cryptonote::CurrencyBuilder currencyBuilder(os::appdata::path(), config::testnet::data, m_logger);
     m_currency = currencyBuilder.currency();
 
     REGISTER_CALLBACK("check_block_accepted", CheckBlockAccepted::check_block_accepted);
@@ -273,7 +273,7 @@ struct gen_block_is_too_big : public CheckBlockPurged
 {
   gen_block_is_too_big()
       : CheckBlockPurged(1) {
-    cryptonote::CurrencyBuilder currencyBuilder(m_logger, os::appdata::path());
+    cryptonote::CurrencyBuilder currencyBuilder(os::appdata::path(), config::testnet::data, m_logger);
     currencyBuilder.maxBlockSizeInitial(std::numeric_limits<size_t>::max() / 2);
     m_currency = currencyBuilder.currency();
   }

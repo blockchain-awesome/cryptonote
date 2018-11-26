@@ -12,7 +12,7 @@
 #include "crypto/chacha.h"
 
 namespace cryptonote {
-class AccountBase;
+class Account;
 class ISerializer;
 }
 
@@ -22,7 +22,7 @@ class WalletUserTransactionsCache;
 
 class WalletLegacySerializer {
 public:
-  WalletLegacySerializer(cryptonote::AccountBase& account, WalletUserTransactionsCache& transactionsCache);
+  WalletLegacySerializer(cryptonote::Account& account, WalletUserTransactionsCache& transactionsCache);
 
   void serialize(std::ostream& stream, const std::string& password, bool saveDetailed, const std::string& cache);
   void deserialize(std::istream& stream, const std::string& password, std::string& cache);
@@ -31,10 +31,10 @@ private:
   void saveKeys(cryptonote::ISerializer& serializer);
   void loadKeys(cryptonote::ISerializer& serializer);
 
-  crypto::chacha_iv encrypt(const std::string& plain, const std::string& password, std::string& cipher);
-  void decrypt(const std::string& cipher, std::string& plain, crypto::chacha_iv iv, const std::string& password);
+  crypto::chacha_iv_t encrypt(const std::string& plain, const std::string& password, std::string& cipher);
+  void decrypt(const std::string& cipher, std::string& plain, crypto::chacha_iv_t iv, const std::string& password);
 
-  cryptonote::AccountBase& account;
+  cryptonote::Account& account;
   WalletUserTransactionsCache& transactionsCache;
   const uint32_t walletSerializationVersion;
 };

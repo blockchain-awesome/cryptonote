@@ -9,7 +9,7 @@
 #include "stream/StdOutputStream.h"
 #include "serialization/BinaryInputStreamSerializer.h"
 #include "serialization/BinaryOutputStreamSerializer.h"
-#include "cryptonote/core/Currency.h"
+#include "cryptonote/core/currency.h"
 #include <logging/LoggerManager.h>
 
 using namespace cryptonote;
@@ -28,7 +28,7 @@ public:
 TEST_F(CurrencyTest, create)
 {
   LoggerManager logManager;
-  cryptonote::CurrencyBuilder currencyBuilder(logManager, "./data");
+  cryptonote::CurrencyBuilder currencyBuilder("./data", config::testnet::data, logManager);
 
   Currency c = currencyBuilder.currency();
 
@@ -49,6 +49,9 @@ TEST_F(CurrencyTest, create)
   ASSERT_TRUE(tx.version > 0);
   ASSERT_TRUE(tx.inputs.size() == 1);
   ASSERT_TRUE(tx.outputs.size() == 1);
-  
+  ASSERT_TRUE(boost::filesystem::exists(c.blockchainIndexesFileName()));
+  ASSERT_TRUE(boost::filesystem::exists(c.blockIndexesFileName()));
+  ASSERT_TRUE(boost::filesystem::exists(c.blocksCacheFileName()));
+  ASSERT_TRUE(boost::filesystem::exists(c.blocksFileName()));
 }
 } // namespace

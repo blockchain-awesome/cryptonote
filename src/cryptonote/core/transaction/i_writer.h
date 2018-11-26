@@ -27,8 +27,8 @@ class ITransactionWriter
 
     // extra
     virtual void setPaymentId(const crypto::hash_t &paymentId) = 0;
-    virtual void setExtraNonce(const BinaryArray &nonce) = 0;
-    virtual void appendExtra(const BinaryArray &extraData) = 0;
+    virtual void setExtraNonce(const binary_array_t &nonce) = 0;
+    virtual void appendExtra(const binary_array_t &extraData) = 0;
 
     // Inputs/Outputs
     virtual size_t addInput(const key_input_t &input) = 0;

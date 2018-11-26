@@ -5,7 +5,7 @@
 #include "gtest/gtest.h"
 
 #include "crypto/crypto.h"
-#include "cryptonote/core/Currency.h"
+#include "cryptonote/core/currency.h"
 #include "cryptonote/core/TransactionApi.h"
 #include "logging/ConsoleLogger.h"
 
@@ -23,7 +23,7 @@ const uint64_t TEST_AMOUNT = 370 * TEST_DUST_THRESHOLD;
 class Currency_isFusionTransactionTest : public ::testing::Test {
 public:
   Currency_isFusionTransactionTest() :
-    m_currency(CurrencyBuilder(m_logger, os::appdata::path()).
+    m_currency(CurrencyBuilder(os::appdata::path(), config::testnet::data, m_logger).
       defaultDustThreshold(TEST_DUST_THRESHOLD).
       fusionTxMaxSize(TEST_FUSION_TX_MAX_SIZE).
       fusionTxMinInputCount(TEST_FUSION_TX_MIN_INPUT_COUNT).
@@ -45,14 +45,14 @@ TEST_F(Currency_isFusionTransactionTest, succeedsOnFusionTransaction) {
 TEST_F(Currency_isFusionTransactionTest, succeedsIfFusionTransactionSizeEqMaxSize) {
   FusionTransactionBuilder builder(m_currency, TEST_AMOUNT);
   auto tx = builder.createFusionTransactionBySize(m_currency.fusionTxMaxSize());
-  ASSERT_EQ(m_currency.fusionTxMaxSize(), getObjectBinarySize(tx));
+  ASSERT_EQ(m_currency.fusionTxMaxSize(), BinaryArray::size(tx));
   ASSERT_TRUE(m_currency.isFusionTransaction(tx));
 }
 
 TEST_F(Currency_isFusionTransactionTest, failsIfFusionTransactionSizeGreaterThanMaxSize) {
   FusionTransactionBuilder builder(m_currency, TEST_AMOUNT);
   auto tx = builder.createFusionTransactionBySize(m_currency.fusionTxMaxSize() + 1);
-  ASSERT_EQ(m_currency.fusionTxMaxSize() + 1, getObjectBinarySize(tx));
+  ASSERT_EQ(m_currency.fusionTxMaxSize() + 1, BinaryArray::size(tx));
   ASSERT_FALSE(m_currency.isFusionTransaction(tx));
 }
 

@@ -8,10 +8,10 @@
 
 #include <boost/filesystem/operations.hpp>
 
-#include "cryptonote/core/Account.h"
+#include "cryptonote/core/account.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/CryptoNoteTools.h"
-#include "cryptonote/core/Currency.h"
+#include "cryptonote/core/currency.h"
 #include "cryptonote/core/TransactionExtra.h"
 #include "cryptonote/core/tx_memory_pool.h"
 
@@ -113,7 +113,7 @@ public:
     constructTransaction(m_realSenderKeys, m_sources, destinations, std::vector<uint8_t>(), tx, 0, m_logger);
   }
 
-  std::vector<AccountBase> m_miners;
+  std::vector<Account> m_miners;
   std::vector<transaction_t> m_miner_txs;
   std::vector<transaction_source_entry_t> m_sources;
   std::vector<crypto::public_key_t> m_public_keys;
@@ -124,14 +124,14 @@ public:
   const size_t m_ringSize;
   account_keys_t m_realSenderKeys;
   uint64_t m_source_amount;
-  AccountBase rv_acc;
+  Account rv_acc;
 };
 
 class tx_pool : public ::testing::Test {
 public:
 
   tx_pool() : 
-    currency(cryptonote::CurrencyBuilder(logger, os::appdata::path()).currency()) {}
+    currency(cryptonote::CurrencyBuilder(os::appdata::path(), config::testnet::data, logger).currency()) {}
 
 protected:
   virtual void SetUp() override {
@@ -174,7 +174,7 @@ namespace
   class TxTestBase {
   public:
     TxTestBase(size_t ringSize) :
-      m_currency(cryptonote::CurrencyBuilder(m_logger, os::appdata::path()).currency()),
+      m_currency(cryptonote::CurrencyBuilder(os::appdata::path(), config::testnet::data, m_logger).currency()),
       txGenerator(m_currency, ringSize),
       pool(m_currency, validator, m_time, m_logger)
     {
@@ -193,7 +193,7 @@ namespace
     TxMemoryPool pool;
   };
 
-  void InitBlock(block_t& bl, uint8_t majorVersion = BLOCK_MAJOR_VERSION_1) {
+  void InitBlock(block_t& bl, uint8_t majorVersion = config::mainnet::data.block.version.major) {
     bl.majorVersion = majorVersion;
     bl.minorVersion = 0;
     bl.nonce = 0;
@@ -223,7 +223,7 @@ namespace
 
 //   test.construct(test.m_currency.minimumFee(), 1, tx);
 
-//   auto txhash = getObjectHash(tx);
+//   auto txhash = BinaryArray::objectHash(tx);
 
 //   tx_verification_context_t tvc = boost::value_initialized<tx_verification_context_t>();
 
@@ -281,7 +281,7 @@ namespace
 //     ASSERT_TRUE(pool.add_tx(tx, tvc, false));
 //     ASSERT_TRUE(tvc.m_added_to_pool);
 
-//     transactions[getObjectHash(tx)] = std::move(txptr);
+//     transactions[BinaryArray::objectHash(tx)] = std::move(txptr);
 //   }
 
 //   block_t bl;
@@ -340,7 +340,7 @@ namespace
 //     ASSERT_TRUE(pool.add_tx(tx, tvc, false));
 //     ASSERT_TRUE(tvc.m_added_to_pool);
 
-//     transactions[getObjectHash(tx)] = std::move(txptr);
+//     transactions[BinaryArray::objectHash(tx)] = std::move(txptr);
 //   }
 
 
@@ -700,7 +700,7 @@ transaction_t createTestFusionTransaction(const Currency& currency) {
 transaction_t createTestOrdinaryTransactionWithExtra(const Currency& currency, size_t extraSize) {
   TestTransactionBuilder builder;
   if (extraSize != 0) {
-    builder.appendExtra(BinaryArray(extraSize, 0));
+    builder.appendExtra(binary_array_t(extraSize, 0));
   }
 
   builder.addTestInput(100 * currency.minimumFee());
@@ -710,12 +710,12 @@ transaction_t createTestOrdinaryTransactionWithExtra(const Currency& currency, s
 
 transaction_t createTestOrdinaryTransaction(const Currency& currency) {
   auto tx = createTestOrdinaryTransactionWithExtra(currency, 0);
-  size_t realSize = getObjectBinarySize(tx);
+  size_t realSize = BinaryArray::size(tx);
   if (realSize < TEST_TRANSACTION_SIZE) {
     size_t extraSize = TEST_TRANSACTION_SIZE - realSize;
     tx = createTestOrdinaryTransactionWithExtra(currency, extraSize);
 
-    realSize = getObjectBinarySize(tx);
+    realSize = BinaryArray::size(tx);
     if (realSize > TEST_TRANSACTION_SIZE) {
       extraSize -= realSize - TEST_TRANSACTION_SIZE;
       tx = createTestOrdinaryTransactionWithExtra(currency, extraSize);
@@ -729,7 +729,7 @@ class TxPool_FillBlockTemplate : public tx_pool {
 public:
   TxPool_FillBlockTemplate() :
     tx_pool() {
-    currency = cryptonote::CurrencyBuilder(logger, os::appdata::path()).fusionTxMaxSize(TEST_FUSION_TX_MAX_SIZE).blockGrantedFullRewardZone(TEST_MEDIAN_SIZE).currency();
+    currency = cryptonote::CurrencyBuilder(os::appdata::path(), config::testnet::data, logger).fusionTxMaxSize(TEST_FUSION_TX_MAX_SIZE).blockGrantedFullRewardZone(TEST_MEDIAN_SIZE).currency();
   }
 
   void doTest(size_t poolOrdinaryTxCount, size_t poolFusionTxCount, size_t expectedBlockOrdinaryTxCount, size_t expectedBlockFusionTxCount) {
@@ -741,13 +741,13 @@ public:
     std::unordered_map<crypto::hash_t, transaction_t> ordinaryTxs;
     for (size_t i = 0; i < poolOrdinaryTxCount; ++i) {
       auto tx = createTestOrdinaryTransaction(currency);
-      ordinaryTxs.emplace(getObjectHash(tx), std::move(tx));
+      ordinaryTxs.emplace(BinaryArray::objectHash(tx), std::move(tx));
     }
 
     std::unordered_map<crypto::hash_t, transaction_t> fusionTxs;
     for (size_t i = 0; i < poolFusionTxCount; ++i) {
       auto tx = createTestFusionTransaction(currency);
-      fusionTxs.emplace(getObjectHash(tx), std::move(tx));
+      fusionTxs.emplace(BinaryArray::objectHash(tx), std::move(tx));
     }
 
     for (auto pair : ordinaryTxs) {

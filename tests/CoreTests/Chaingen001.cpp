@@ -30,12 +30,12 @@ bool one_block::verify_1(cryptonote::core& c, size_t ev_index, const std::vector
 {
     DEFINE_TESTS_ERROR_CONTEXT("one_block::verify_1");
 
-    alice = boost::get<cryptonote::AccountBase>(events[1]);
+    alice = boost::get<cryptonote::Account>(events[1]);
 
     // check balances
     //std::vector<const cryptonote::Block*> chain;
     //map_hash2tx_t mtx;
-    //CHECK_TEST_CONDITION(find_block_chain(events, chain, mtx, get_block_hash(boost::get<cryptonote::block_t>(events[1]))));
+    //CHECK_TEST_CONDITION(find_block_chain(events, chain, mtx, Block::getHash(boost::get<cryptonote::block_t>(events[1]))));
     //CHECK_TEST_CONDITION(get_block_reward(0) == get_balance(alice, events, chain, mtx));
 
     // check height
@@ -77,7 +77,7 @@ bool gen_simple_chain_001::generate(std::vector<test_event_entry> &events)
 
     std::vector<cryptonote::block_t> chain;
     map_hash2tx_t mtx;
-    /*bool r = */find_block_chain(events, chain, mtx, get_block_hash(boost::get<cryptonote::block_t>(events[3])));
+    /*bool r = */find_block_chain(events, chain, mtx, Block::getHash(boost::get<cryptonote::block_t>(events[3])));
     std::cout << "BALANCE = " << get_balance(miner, chain, mtx) << std::endl;
 
     REWIND_BLOCKS(events, blk_2r, blk_2, miner);
@@ -97,13 +97,13 @@ bool gen_simple_chain_001::generate(std::vector<test_event_entry> &events)
 
     DO_CALLBACK(events, "verify_callback_1");
     //e.t.c.
-    //MAKE_BLOCK_TX1(events, blk_3, 3, get_block_hash(blk_0), get_test_target(), first_miner_account, ts_start + 10, tx_0);
-    //MAKE_BLOCK_TX1(events, blk_3, 3, get_block_hash(blk_0), get_test_target(), first_miner_account, ts_start + 10, tx_0);
+    //MAKE_BLOCK_TX1(events, blk_3, 3, Block::getHash(blk_0), get_test_target(), first_miner_account, ts_start + 10, tx_0);
+    //MAKE_BLOCK_TX1(events, blk_3, 3, Block::getHash(blk_0), get_test_target(), first_miner_account, ts_start + 10, tx_0);
     //DO_CALLBACK(events, "verify_callback_2");
 
 /*    std::vector<const cryptonote::Block*> chain;
     map_hash2tx_t mtx;
-    if (!find_block_chain(events, chain, mtx, get_block_hash(blk_6)))
+    if (!find_block_chain(events, chain, mtx, Block::getHash(blk_6)))
         throw;
     cout << "miner = " << get_balance(first_miner_account, events, chain, mtx) << endl;
     cout << "alice = " << get_balance(alice, events, chain, mtx) << endl;*/

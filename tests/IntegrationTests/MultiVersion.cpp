@@ -7,7 +7,7 @@
 #include <thread>
 #include <logging/ConsoleLogger.h>
 
-#include "cryptonote/core/Account.h"
+#include "cryptonote/core/account.h"
 #include "WalletLegacyObserver.h"
 
 #undef ERROR
@@ -39,7 +39,7 @@ public:
     miningTest();
 
     // create some address for mining
-    cryptonote::AccountBase stashAddress;
+    cryptonote::Account stashAddress;
     stashAddress.generate();
     auto stashAddressStr = stashAddress.toAddress();
 

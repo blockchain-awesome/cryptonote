@@ -13,7 +13,7 @@ namespace cryptonote {
 
 struct P2pMessage {
   uint32_t type;
-  BinaryArray data;
+  binary_array_t data;
 };
 
 class IP2pConnection {

@@ -27,8 +27,8 @@ class ITransactionReader
 
     // extra
     virtual bool getPaymentId(crypto::hash_t &paymentId) const = 0;
-    virtual bool getExtraNonce(BinaryArray &nonce) const = 0;
-    virtual BinaryArray getExtra() const = 0;
+    virtual bool getExtraNonce(binary_array_t &nonce) const = 0;
+    virtual binary_array_t getExtra() const = 0;
 
     // inputs
     virtual size_t getInputCount() const = 0;
@@ -54,7 +54,7 @@ class ITransactionReader
     virtual bool validateSignatures() const = 0;
 
     // serialized transaction
-    virtual BinaryArray getTransactionData() const = 0;
+    virtual binary_array_t getTransactionData() const = 0;
 };
 
 } // namespace cryptonote

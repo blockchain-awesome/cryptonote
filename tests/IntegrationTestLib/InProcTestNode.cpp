@@ -9,8 +9,8 @@
 #include <common/StringTools.h>
 #include <logging/ConsoleLogger.h>
 
-#include "cryptonote/core/Core.h"
-#include "cryptonote/core/Account.h"
+#include "cryptonote/core/core.h"
+#include "cryptonote/core/account.h"
 #include "command_line/CoreConfig.h"
 #include "cryptonote/core/Miner.h"
 #include "cryptonote/protocol/handler.h"
@@ -24,7 +24,7 @@ using namespace cryptonote;
 namespace Tests {
 
 namespace {
-bool parse_peer_from_string(NetworkAddress &pe, const std::string &node_addr) {
+bool parse_peer_from_string(network_address_t &pe, const std::string &node_addr) {
   return ::Common::parseIpAddressAndPort(pe.ip, pe.port, node_addr);
 }
 }
@@ -76,9 +76,9 @@ void InProcTestNode::workerThread(std::promise<std::string>& initPromise) {
     p2pConfig.setHideMyPort(false);
     p2pConfig.setConfigFolder(m_cfg.dataDir);
 
-    std::vector<NetworkAddress> exclusiveNodes;
+    std::vector<network_address_t> exclusiveNodes;
     for (const auto& en : m_cfg.exclusiveNodes) {
-      NetworkAddress na;
+      network_address_t na;
       parse_peer_from_string(na, en);
       exclusiveNodes.push_back(na);
     }
@@ -148,12 +148,12 @@ bool InProcTestNode::getBlockTemplate(const std::string &minerAddress, cryptonot
   account_public_address_t addr;
   Account::parseAddress(minerAddress, addr);
   uint32_t height = 0;
-  return core->get_block_template(blockTemplate, addr, difficulty, height, BinaryArray());
+  return core->get_block_template(blockTemplate, addr, difficulty, height, binary_array_t());
 }
 
 bool InProcTestNode::submitBlock(const std::string& block) {
   block_verification_context_t bvc = boost::value_initialized<block_verification_context_t>();
-  core->handle_incoming_block_blob(Common::fromHex(block), bvc, true, true);
+  core->handle_incoming_block_blob(hex::fromString(block), bvc, true, true);
   return bvc.m_added_to_main_chain;
 }
 

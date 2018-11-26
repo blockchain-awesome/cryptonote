@@ -6,7 +6,7 @@
 
 #include "cryptonote/protocol/definitions.h"
 #include "cryptonote/core/key.h"
-#include "cryptonote/core/Difficulty.h"
+#include "cryptonote/core/difficulty.h"
 #include "crypto/hash.h"
 
 #include "serialization/SerializationOverloads.h"
@@ -53,7 +53,7 @@ struct COMMAND_RPC_GET_BLOCKS_FAST {
   };
 
   struct response {
-    std::vector<block_complete_entry> blocks;
+    std::vector<block_complete_entry_t> blocks;
     uint64_t start_height;
     uint64_t current_height;
     std::string status;
@@ -102,7 +102,7 @@ struct COMMAND_RPC_GET_POOL_CHANGES {
 
   struct response {
     bool isTailBlockActual;
-    std::vector<BinaryArray> addedTxs;          // Added transactions blobs
+    std::vector<binary_array_t> addedTxs;          // Added transactions blobs
     std::vector<crypto::hash_t> deletedTxsIds; // IDs of not found transactions
     std::string status;
 
@@ -369,7 +369,7 @@ struct block_header_response {
   uint64_t height;
   uint64_t depth;
   std::string hash;
-  difficulty_type difficulty;
+  difficulty_t difficulty;
   uint64_t reward;
 
   void serialize(ISerializer &s) {

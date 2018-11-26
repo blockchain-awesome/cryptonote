@@ -11,6 +11,7 @@
 #include "cryptonote/core/TransactionApiExtra.h"
 #include "TransactionUtils.h"
 #include "cryptonote/core/CryptoNoteTools.h"
+#include "cryptonote/structures/array.hpp"
 
 using namespace crypto;
 
@@ -30,8 +31,8 @@ public:
 
   // extra
   virtual bool getPaymentId(hash_t& paymentId) const override;
-  virtual bool getExtraNonce(BinaryArray& nonce) const override;
-  virtual BinaryArray getExtra() const override;
+  virtual bool getExtraNonce(binary_array_t& nonce) const override;
+  virtual binary_array_t getExtra() const override;
 
   // inputs
   virtual size_t getInputCount() const override;
@@ -57,7 +58,7 @@ public:
   virtual bool validateSignatures() const override;
 
   // serialized transaction
-  virtual BinaryArray getTransactionData() const override;
+  virtual binary_array_t getTransactionData() const override;
 
   virtual bool getTransactionSecretKey(secret_key_t& key) const override;
 
@@ -82,7 +83,7 @@ hash_t TransactionPrefixImpl::getTransactionHash() const {
 }
 
 hash_t TransactionPrefixImpl::getTransactionPrefixHash() const {
-  return getObjectHash(m_txPrefix);
+  return BinaryArray::objectHash(m_txPrefix);
 }
 
 public_key_t TransactionPrefixImpl::getTransactionPublicKey() const {
@@ -96,7 +97,7 @@ uint64_t TransactionPrefixImpl::getUnlockTime() const {
 }
 
 bool TransactionPrefixImpl::getPaymentId(hash_t& hash) const {
-  BinaryArray nonce;
+  binary_array_t nonce;
 
   if (getExtraNonce(nonce)) {
     crypto::hash_t paymentId;
@@ -109,8 +110,8 @@ bool TransactionPrefixImpl::getPaymentId(hash_t& hash) const {
   return false;
 }
 
-bool TransactionPrefixImpl::getExtraNonce(BinaryArray& nonce) const {
-  TransactionExtraNonce extraNonce;
+bool TransactionPrefixImpl::getExtraNonce(binary_array_t& nonce) const {
+  transaction_extra_nonce_t extraNonce;
 
   if (m_extra.get(extraNonce)) {
     nonce = extraNonce.nonce;
@@ -120,7 +121,7 @@ bool TransactionPrefixImpl::getExtraNonce(BinaryArray& nonce) const {
   return false;
 }
 
-BinaryArray TransactionPrefixImpl::getExtra() const {
+binary_array_t TransactionPrefixImpl::getExtra() const {
   return m_txPrefix.extra;
 }
 
@@ -194,8 +195,8 @@ bool TransactionPrefixImpl::validateSignatures() const {
   throw std::system_error(std::make_error_code(std::errc::function_not_supported), "Validating signatures is not supported for transaction prefix");
 }
 
-BinaryArray TransactionPrefixImpl::getTransactionData() const {
-  return toBinaryArray(m_txPrefix);
+binary_array_t TransactionPrefixImpl::getTransactionData() const {
+  return BinaryArray::to(m_txPrefix);
 }
 
 bool TransactionPrefixImpl::getTransactionSecretKey(secret_key_t& key) const {
@@ -208,7 +209,7 @@ std::unique_ptr<ITransactionReader> createTransactionPrefix(const transaction_pr
 }
 
 std::unique_ptr<ITransactionReader> createTransactionPrefix(const transaction_t& fullTransaction) {
-  return std::unique_ptr<ITransactionReader> (new TransactionPrefixImpl(fullTransaction, getObjectHash(fullTransaction)));
+  return std::unique_ptr<ITransactionReader> (new TransactionPrefixImpl(fullTransaction, BinaryArray::objectHash(fullTransaction)));
 }
 
 }

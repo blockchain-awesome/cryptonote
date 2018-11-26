@@ -9,7 +9,7 @@
 #include <system/Event.h>
 #include "IWallet.h"
 #include "INode.h"
-#include "cryptonote/core/Currency.h"
+#include "cryptonote/core/currency.h"
 #include "PaymentServiceJsonRpcMessages.h"
 #undef ERROR //TODO: workaround for windows build. fix it
 #include "logging/LoggerRef.h"

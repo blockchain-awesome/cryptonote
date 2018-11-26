@@ -22,8 +22,9 @@
 #include "serialization/SerializationTools.h"
 
 #include "CryptoNoteFormatUtils.h"
+#include "cryptonote/structures/block_entry.h"
 #include "TransactionExtra.h"
-#include "cryptonote/core/Account.h"
+#include "cryptonote/core/account.h"
 
 using namespace Logging;
 
@@ -55,7 +56,7 @@ namespace cryptonote
     stop();
   }
   //-----------------------------------------------------------------------------------------------------
-  bool miner::set_block_template(const block_t& bl, const difficulty_type& di) {
+  bool miner::set_block_template(const block_t& bl, const difficulty_t& di) {
     std::lock_guard<decltype(m_template_lock)> lk(m_template_lock);
 
     m_template = bl;
@@ -75,9 +76,9 @@ namespace cryptonote
   //-----------------------------------------------------------------------------------------------------
   bool miner::request_block_template() {
     block_t bl = boost::value_initialized<block_t>();
-    difficulty_type di = 0;
+    difficulty_t di = 0;
     uint32_t height;
-    cryptonote::BinaryArray extra_nonce;
+    binary_array_t extra_nonce;
 
     if(m_extra_messages.size() && m_config.current_extra_message_index < m_extra_messages.size()) {
       extra_nonce = m_extra_messages[m_config.current_extra_message_index];
@@ -142,7 +143,7 @@ namespace cryptonote
   bool miner::init(const MinerConfig& config) {
     if (!config.extraMessages.empty()) {
       std::string buff;
-      if (!Common::loadFileToString(config.extraMessages, buff)) {
+      if (!stream::load(config.extraMessages, buff)) {
         logger(ERROR, BRIGHT_RED) << "Failed to load file with extra messages: " << config.extraMessages; 
         return false; 
       }
@@ -153,7 +154,7 @@ namespace cryptonote
         boost::algorithm::trim(extra_vec[i]);
         if(!extra_vec[i].size())
           continue;
-        BinaryArray ba = Common::asBinaryArray(Common::base64Decode(extra_vec[i]));
+        binary_array_t ba = array::fromString(Common::base64Decode(extra_vec[i]));
         if(buff != "0")
           m_extra_messages[i] = ba;
       }
@@ -161,7 +162,7 @@ namespace cryptonote
       m_config = boost::value_initialized<decltype(m_config)>();
 
       std::string filebuf;
-      if (Common::loadFileToString(m_config_folder_path + "/" + cryptonote::parameters::MINER_CONFIG_FILE_NAME, filebuf)) {
+      if (stream::load(m_config_folder_path + "/" + cryptonote::parameters::MINER_CONFIG_FILE_NAME, filebuf)) {
         loadFromJson(m_config, filebuf);
       }
 
@@ -250,7 +251,7 @@ namespace cryptonote
     return true;
   }
   //-----------------------------------------------------------------------------------------------------
-  bool miner::find_nonce_for_given_block(block_t& bl, const difficulty_type& diffic) {
+  bool miner::find_nonce_for_given_block(block_t& bl, const difficulty_t& diffic) {
 
     unsigned nthreads = std::thread::hardware_concurrency();
 
@@ -269,7 +270,7 @@ namespace cryptonote
           for (uint32_t nonce = startNonce + i; !found; nonce += nthreads) {
             lb.nonce = nonce;
 
-            if (!get_block_longhash(lb, h)) {
+            if (!Block::getLongHash(lb, h)) {
               return;
             }
 
@@ -294,7 +295,7 @@ namespace cryptonote
     } else {
       for (; bl.nonce != std::numeric_limits<uint32_t>::max(); bl.nonce++) {
         crypto::hash_t h;
-        if (!get_block_longhash(bl, h)) {
+        if (!Block::getLongHash(bl, h)) {
           return false;
         }
 
@@ -339,7 +340,7 @@ namespace cryptonote
   {
     logger(INFO) << "Miner thread was started ["<< th_local_index << "]";
     uint32_t nonce = m_starter_nonce + th_local_index;
-    difficulty_type local_diff = 0;
+    difficulty_t local_diff = 0;
     uint32_t local_template_ver = 0;
     block_t b;
 
@@ -370,7 +371,7 @@ namespace cryptonote
 
       b.nonce = nonce;
       crypto::hash_t h;
-      if (!m_stop && !get_block_longhash(b, h)) {
+      if (!m_stop && !Block::getLongHash(b, h)) {
         logger(ERROR) << "Failed to get block long hash";
         m_stop = true;
       }
@@ -386,7 +387,7 @@ namespace cryptonote
           --m_config.current_extra_message_index;
         } else {
           //success update, lets update config
-          Common::saveStringToFile(m_config_folder_path + "/" + cryptonote::parameters::MINER_CONFIG_FILE_NAME, storeToJson(m_config));
+          stream::save(m_config_folder_path + "/" + cryptonote::parameters::MINER_CONFIG_FILE_NAME, storeToJson(m_config));
         }
       }
 

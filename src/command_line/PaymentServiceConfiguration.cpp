@@ -14,17 +14,10 @@ namespace po = boost::program_options;
 
 namespace PaymentService {
 
-Configuration::Configuration() {
-  generateNewContainer = false;
-  daemonize = false;
-  registerService = false;
-  unregisterService = false;
-  logFile = "payment_gate.log";
-  testnet = false;
-  printAddresses = false;
-  logLevel = Logging::INFO;
-  bindAddress = "";
-  bindPort = 0;
+Configuration::Configuration():generateNewContainer(false), daemonize(false), registerService(false), 
+unregisterService(false), logFile("payment_gate.log"), testnet(false), printAddresses(false), logLevel(Logging::INFO),
+bindAddress(""), bindPort(0)
+{
 }
 
 void Configuration::initOptions(boost::program_options::options_description& desc) {

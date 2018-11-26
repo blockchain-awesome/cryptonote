@@ -55,10 +55,11 @@ namespace cryptonote
     bool get_stat_info(CoreStateInfo& stat_inf);
     bool get_payload_sync_data(CORE_SYNC_DATA& hshd);
     bool process_payload_sync_data(const CORE_SYNC_DATA& hshd, CryptoNoteConnectionContext& context, bool is_inital);
-    int handleCommand(bool is_notify, int command, const BinaryArray& in_buff, BinaryArray& buff_out, CryptoNoteConnectionContext& context, bool& handled);
+    int handleCommand(bool is_notify, int command, const binary_array_t& in_buff, binary_array_t& buff_out, CryptoNoteConnectionContext& context, bool& handled);
     virtual size_t getPeerCount() const override;
     virtual uint32_t getObservedHeight() const override;
     void requestMissingPoolTransactions(const CryptoNoteConnectionContext& context);
+    const Currency& m_currency;
 
   private:
     //----------------- commands handlers ----------------------------------------------
@@ -80,14 +81,12 @@ namespace cryptonote
     bool on_connection_synchronized();
     void updateObservedHeight(uint32_t peerHeight, const CryptoNoteConnectionContext& context);
     void recalculateMaxObservedHeight(const CryptoNoteConnectionContext& context);
-    int processObjects(CryptoNoteConnectionContext& context, const std::vector<block_complete_entry>& blocks);
+    int processObjects(CryptoNoteConnectionContext& context, const std::vector<block_complete_entry_t>& blocks);
     Logging::LoggerRef logger;
 
   private:
-
     System::Dispatcher& m_dispatcher;
     ICore& m_core;
-    const Currency& m_currency;
 
     p2p_endpoint_stub m_p2p_stub;
     IP2pEndpoint* m_p2p;

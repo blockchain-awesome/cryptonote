@@ -8,7 +8,7 @@
 #include "crypto/hash.h"
 #include "cryptonote/core/key.h"
 #include "cryptonote/core/blockchain/serializer/crypto.h"
-#include "cryptonote/core/Currency.h"
+#include "cryptonote/core/currency.h"
 #include <logging/LoggerGroup.h>
 #include "common/os.h"
 
@@ -25,7 +25,7 @@ namespace
   public:
     getBlockReward_and_already_generated_coins() :
       ::testing::Test(),
-      m_currency(cryptonote::CurrencyBuilder(m_logger, os::appdata::path()).
+      m_currency(cryptonote::CurrencyBuilder(os::appdata::path(), config::testnet::data, m_logger).
         blockGrantedFullRewardZone(TEST_GRANTED_FULL_REWARD_ZONE).
         moneySupply(TEST_MONEY_SUPPLY).
         emissionSpeedFactor(TEST_EMISSION_SPEED_FACTOR).
@@ -75,7 +75,7 @@ namespace
   public:
     getBlockReward_and_median_and_blockSize() :
       ::testing::Test(),
-      m_currency(cryptonote::CurrencyBuilder(m_logger, os::appdata::path()).
+      m_currency(cryptonote::CurrencyBuilder(os::appdata::path(), config::testnet::data, m_logger).
         blockGrantedFullRewardZone(TEST_GRANTED_FULL_REWARD_ZONE).
         moneySupply(TEST_MONEY_SUPPLY).
         emissionSpeedFactor(TEST_EMISSION_SPEED_FACTOR).
@@ -171,7 +171,7 @@ namespace
   public:
     getBlockReward_and_currentBlockSize() :
       ::testing::Test(),
-      m_currency(cryptonote::CurrencyBuilder(m_logger, os::appdata::path()).
+      m_currency(cryptonote::CurrencyBuilder(os::appdata::path(), config::testnet::data, m_logger).
         blockGrantedFullRewardZone(TEST_GRANTED_FULL_REWARD_ZONE).
         moneySupply(TEST_MONEY_SUPPLY).
         emissionSpeedFactor(TEST_EMISSION_SPEED_FACTOR).
@@ -277,7 +277,7 @@ namespace
   public:
     getBlockReward_fee_and_penalizeFee_test() :
       ::testing::Test(),
-      m_currency(cryptonote::CurrencyBuilder(m_logger, os::appdata::path()).
+      m_currency(cryptonote::CurrencyBuilder(os::appdata::path(), config::testnet::data, m_logger).
         blockGrantedFullRewardZone(testGrantedFullRewardZone).
         moneySupply(testMoneySupply).
         emissionSpeedFactor(testEmissionSpeedFactor).

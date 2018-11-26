@@ -31,7 +31,7 @@ public:
   virtual uint32_t getKnownBlockCount() const override { return 0; };
   virtual uint64_t getLastLocalBlockTimestamp() const override { return 0; }
 
-  virtual void getNewBlocks(std::vector<crypto::hash_t>&& knownBlockIds, std::vector<cryptonote::block_complete_entry>& newBlocks, uint32_t& height, const Callback& callback) override { callback(std::error_code()); };
+  virtual void getNewBlocks(std::vector<crypto::hash_t>&& knownBlockIds, std::vector<cryptonote::block_complete_entry_t>& newBlocks, uint32_t& height, const Callback& callback) override { callback(std::error_code()); };
 
   virtual void relayTransaction(const cryptonote::transaction_t& transaction, const Callback& callback) override { callback(std::error_code()); };
   virtual void getRandomOutsByAmounts(std::vector<uint64_t>&& amounts, uint64_t outsCount, std::vector<cryptonote::COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS::outs_for_amount>& result, const Callback& callback) override { callback(std::error_code()); };
@@ -72,7 +72,7 @@ public:
   virtual uint32_t getLocalBlockCount() const override { return static_cast<uint32_t>(m_blockchainGenerator.getBlockchain().size()); }
   virtual uint32_t getKnownBlockCount() const override { return static_cast<uint32_t>(m_blockchainGenerator.getBlockchain().size()); }
 
-  virtual void getNewBlocks(std::vector<crypto::hash_t>&& knownBlockIds, std::vector<cryptonote::block_complete_entry>& newBlocks, uint32_t& startHeight, const Callback& callback) override;
+  virtual void getNewBlocks(std::vector<crypto::hash_t>&& knownBlockIds, std::vector<cryptonote::block_complete_entry_t>& newBlocks, uint32_t& startHeight, const Callback& callback) override;
 
   virtual void relayTransaction(const cryptonote::transaction_t& transaction, const Callback& callback) override;
   virtual void getRandomOutsByAmounts(std::vector<uint64_t>&& amounts, uint64_t outsCount, std::vector<cryptonote::COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS::outs_for_amount>& result, const Callback& callback) override;
@@ -112,7 +112,7 @@ public:
   void waitForAsyncContexts();
 
 protected:
-  void doGetNewBlocks(std::vector<crypto::hash_t> knownBlockIds, std::vector<cryptonote::block_complete_entry>& newBlocks,
+  void doGetNewBlocks(std::vector<crypto::hash_t> knownBlockIds, std::vector<cryptonote::block_complete_entry_t>& newBlocks,
           uint32_t& startHeight, std::vector<cryptonote::block_t> blockchain, const Callback& callback);
   void doGetTransactionOutsGlobalIndices(const crypto::hash_t& transactionHash, std::vector<uint32_t>& outsGlobalIndices, const Callback& callback);
   void doRelayTransaction(const cryptonote::transaction_t& transaction, const Callback& callback);

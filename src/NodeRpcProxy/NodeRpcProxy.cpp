@@ -23,6 +23,7 @@
 #include "rpc/CoreRpcServerCommandsDefinitions.h"
 #include "rpc/HttpClient.h"
 #include "rpc/JsonRpc.h"
+#include "cryptonote/structures/array.hpp"
 
 #ifndef AUTO_VAL_INIT
 #define AUTO_VAL_INIT(n) boost::value_initialized<decltype(n)>()
@@ -323,7 +324,7 @@ void NodeRpcProxy::getRandomOutsByAmounts(std::vector<uint64_t>&& amounts, uint6
 }
 
 void NodeRpcProxy::getNewBlocks(std::vector<crypto::hash_t>&& knownBlockIds,
-                                std::vector<cryptonote::block_complete_entry>& newBlocks,
+                                std::vector<cryptonote::block_complete_entry_t>& newBlocks,
                                 uint32_t& startHeight,
                                 const Callback& callback) {
   std::lock_guard<std::mutex> lock(m_mutex);
@@ -463,7 +464,7 @@ void NodeRpcProxy::isSynchronized(bool& syncStatus, const Callback& callback) {
 std::error_code NodeRpcProxy::doRelayTransaction(const cryptonote::transaction_t& transaction) {
   COMMAND_RPC_SEND_RAW_TX::request req;
   COMMAND_RPC_SEND_RAW_TX::response rsp;
-  req.tx_as_hex = toHex(toBinaryArray(transaction));
+  req.tx_as_hex = hex::toString(BinaryArray::to(transaction));
   return jsonCommand("/sendrawtransaction", req, rsp);
 }
 
@@ -483,7 +484,7 @@ std::error_code NodeRpcProxy::doGetRandomOutsByAmounts(std::vector<uint64_t>& am
 }
 
 std::error_code NodeRpcProxy::doGetNewBlocks(std::vector<crypto::hash_t>& knownBlockIds,
-                                             std::vector<cryptonote::block_complete_entry>& newBlocks,
+                                             std::vector<cryptonote::block_complete_entry_t>& newBlocks,
                                              uint32_t& startHeight) {
   cryptonote::COMMAND_RPC_GET_BLOCKS_FAST::request req = AUTO_VAL_INIT(req);
   cryptonote::COMMAND_RPC_GET_BLOCKS_FAST::response rsp = AUTO_VAL_INIT(rsp);
@@ -536,7 +537,7 @@ std::error_code NodeRpcProxy::doQueryBlocksLite(const std::vector<crypto::hash_t
 
     bse.blockHash = std::move(item.blockId);
     if (!item.block.empty()) {
-      if (!fromBinaryArray(bse.block, asBinaryArray(item.block))) {
+      if (!BinaryArray::from(bse.block, array::fromString(item.block))) {
         return std::make_error_code(std::errc::invalid_argument);
       }
 

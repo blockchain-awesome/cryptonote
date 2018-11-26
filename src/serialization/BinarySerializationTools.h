@@ -15,8 +15,8 @@
 namespace cryptonote {
 
 template <typename T>
-BinaryArray storeToBinary(const T& obj) {
-  BinaryArray result;
+binary_array_t storeToBinary(const T& obj) {
+  binary_array_t result;
   Common::VectorOutputStream stream(result);
   BinaryOutputStreamSerializer ba(stream);
   serialize(const_cast<T&>(obj), ba);
@@ -24,7 +24,7 @@ BinaryArray storeToBinary(const T& obj) {
 }
 
 template <typename T>
-void loadFromBinary(T& obj, const BinaryArray& blob) {
+void loadFromBinary(T& obj, const binary_array_t& blob) {
   Common::MemoryInputStream stream(blob.data(), blob.size());
   BinaryInputStreamSerializer ba(stream);
   serialize(obj, ba);

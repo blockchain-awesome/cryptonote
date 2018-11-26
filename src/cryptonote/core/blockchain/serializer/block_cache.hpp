@@ -9,8 +9,7 @@
 #include <serialization/BinaryOutputStreamSerializer.h>
 #include <fstream>
 #include <chrono>
-#include <cryptonote/core/blockchain/defines.h>
-#include <cryptonote/core/Blockchain.h>
+#include <cryptonote/core/blockchain.h>
 
 using namespace Logging;
 using namespace Common;
@@ -32,9 +31,11 @@ public:
   {
     try
     {
+      std::cout << "Loading cache from file: " << filename << std::endl;
       std::ifstream stdStream(filename, std::ios::binary);
       if (!stdStream)
       {
+        std::cout << "Failed to open cached file: " << filename << std::endl;
         return;
       }
 
@@ -74,13 +75,15 @@ public:
   {
     auto start = std::chrono::steady_clock::now();
 
-    uint8_t version = CURRENT_BLOCKCACHE_STORAGE_ARCHIVE_VER;
+    config::config_t &data = config::get();
+    uint8_t version = data.storage.blockcache_archive.major;
+
     s(version, "version");
 
     std::cout << "Blockchain version: " << (int)version << std::endl;
 
     // ignore old versions, do rebuild
-    if (version < CURRENT_BLOCKCACHE_STORAGE_ARCHIVE_VER)
+    if (version < data.storage.blockcache_archive.major)
       return;
 
     std::string operation;

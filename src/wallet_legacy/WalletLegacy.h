@@ -17,7 +17,7 @@
 #include "common/ObserverManager.h"
 #include "cryptonote/core/TransactionExtra.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
-#include "cryptonote/core/Currency.h"
+#include "cryptonote/core/currency.h"
 #include "wallet_legacy/WalletUserTransactionsCache.h"
 #include "wallet_legacy/WalletUnconfirmedTransactions.h"
 
@@ -105,7 +105,7 @@ private:
 
   WalletState m_state;
   std::mutex m_cacheMutex;
-  cryptonote::AccountBase m_account;
+  cryptonote::Account m_account;
   std::string m_password;
   const cryptonote::Currency& m_currency;
   INode& m_node;

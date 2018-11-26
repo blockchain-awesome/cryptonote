@@ -22,10 +22,10 @@ public:
 private:
   std::list<cryptonote::block_t> m_chain_1;
 
-  cryptonote::AccountBase m_recipient_account_1;
-  cryptonote::AccountBase m_recipient_account_2;
-  cryptonote::AccountBase m_recipient_account_3;
-  cryptonote::AccountBase m_recipient_account_4;
+  cryptonote::Account m_recipient_account_1;
+  cryptonote::Account m_recipient_account_2;
+  cryptonote::Account m_recipient_account_3;
+  cryptonote::Account m_recipient_account_4;
 
   std::vector<cryptonote::transaction_t> m_tx_pool;
 };

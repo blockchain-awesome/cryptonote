@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "cryptonote/core/Account.h"
+#include "cryptonote/core/account.h"
 #include "cryptonote/core/key.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 
@@ -46,7 +46,7 @@ public:
   }
 
 private:
-  cryptonote::AccountBase m_alice;
+  cryptonote::Account m_alice;
   std::vector<cryptonote::transaction_destination_entry_t> m_destinations;
   cryptonote::transaction_t m_tx;
 };

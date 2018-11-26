@@ -71,7 +71,7 @@ public:
 
   virtual void relayTransaction(const transaction_t& transaction, const Callback& callback) = 0;
   virtual void getRandomOutsByAmounts(std::vector<uint64_t>&& amounts, uint64_t outsCount, std::vector<cryptonote::COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS::outs_for_amount>& result, const Callback& callback) = 0;
-  virtual void getNewBlocks(std::vector<crypto::hash_t>&& knownBlockIds, std::vector<cryptonote::block_complete_entry>& newBlocks, uint32_t& startHeight, const Callback& callback) = 0;
+  virtual void getNewBlocks(std::vector<crypto::hash_t>&& knownBlockIds, std::vector<cryptonote::block_complete_entry_t>& newBlocks, uint32_t& startHeight, const Callback& callback) = 0;
   virtual void getTransactionOutsGlobalIndices(const crypto::hash_t& transactionHash, std::vector<uint32_t>& outsGlobalIndices, const Callback& callback) = 0;
   virtual void queryBlocks(std::vector<crypto::hash_t>&& knownBlockIds, uint64_t timestamp, std::vector<BlockShortEntry>& newBlocks, uint32_t& startHeight, const Callback& callback) = 0;
   virtual void getPoolSymmetricDifference(std::vector<crypto::hash_t>&& knownPoolTxIds, crypto::hash_t knownBlockId, bool& isBcActual, std::vector<std::unique_ptr<ITransactionReader>>& newTxs, std::vector<crypto::hash_t>& deletedTxIds, const Callback& callback) = 0;

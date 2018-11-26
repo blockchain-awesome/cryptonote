@@ -6,8 +6,8 @@
 
 #include "p2p/NetNode.h"
 #include "cryptonote/core/Miner.h"
-#include "cryptonote/core/Core.h"
-#include "cryptonote/core/Account.h"
+#include "cryptonote/core/core.h"
+#include "cryptonote/core/account.h"
 #include "cryptonote/protocol/handler.h"
 #include "serialization/SerializationTools.h"
 #include "version.h"
@@ -48,7 +48,7 @@ DaemonCommandsHandler::DaemonCommandsHandler(cryptonote::core& core, cryptonote:
 std::string DaemonCommandsHandler::get_commands_str()
 {
   std::stringstream ss;
-  ss << cryptonote::CRYPTONOTE_NAME << " v" << PROJECT_VERSION_LONG << ENDL;
+  ss << config::get().name << " v" << PROJECT_VERSION_LONG << ENDL;
   ss << "Commands: " << ENDL;
   std::string usage = m_consoleHandler.getUsage();
   boost::replace_all(usage, "\n", "\n  ");
@@ -119,12 +119,12 @@ bool DaemonCommandsHandler::print_bc(const std::vector<std::string> &args) {
   uint32_t start_index = 0;
   uint32_t end_index = 0;
   uint32_t end_block_parametr = m_core.get_current_blockchain_height();
-  if (!Common::fromString(args[0], start_index)) {
+  if (!stream::fromString(args[0], start_index)) {
     std::cout << "wrong starter block index parameter" << ENDL;
     return false;
   }
 
-  if (args.size() > 1 && !Common::fromString(args[1], end_index)) {
+  if (args.size() > 1 && !stream::fromString(args[1], end_index)) {
     std::cout << "wrong end block index parameter" << ENDL;
     return false;
   }
@@ -161,7 +161,7 @@ bool DaemonCommandsHandler::set_log(const std::vector<std::string>& args)
   }
 
   uint16_t l = 0;
-  if (!Common::fromString(args[0], l)) {
+  if (!stream::fromString(args[0], l)) {
     std::cout << "wrong number format, use: set_log <log_level_number_0-4>" << ENDL;
     return true;
   }
@@ -184,7 +184,7 @@ bool DaemonCommandsHandler::print_block_by_height(uint32_t height)
   m_core.get_blocks(height, 1, blocks);
 
   if (1 == blocks.size()) {
-    std::cout << "block_id: " << get_block_hash(blocks.front()) << ENDL;
+    std::cout << "block_id: " << Block::getHash(blocks.front()) << ENDL;
     print_as_json(blocks.front());
   } else {
     uint32_t current_height;
@@ -293,7 +293,7 @@ bool DaemonCommandsHandler::start_mining(const std::vector<std::string> &args) {
 
   size_t threads_count = 1;
   if (args.size() > 1) {
-    bool ok = Common::fromString(args[1], threads_count);
+    bool ok = stream::fromString(args[1], threads_count);
     threads_count = (ok && 0 < threads_count) ? threads_count : 1;
   }
 

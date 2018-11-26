@@ -8,7 +8,7 @@
 
 #include "crypto/crypto.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
-
+#include "cryptonote/structures/block_entry.h"
 #include <system/InterruptedException.h>
 
 namespace cryptonote {
@@ -83,13 +83,13 @@ void Miner::runWorkers(BlockMiningParameters blockMiningParameters, size_t threa
   m_miningStopped.set();
 }
 
-void Miner::workerFunc(const block_t& blockTemplate, difficulty_type difficulty, uint32_t nonceStep) {
+void Miner::workerFunc(const block_t& blockTemplate, difficulty_t difficulty, uint32_t nonceStep) {
   try {
     block_t block = blockTemplate;
 
     while (m_state == MiningState::MINING_IN_PROGRESS) {
       crypto::hash_t hash;
-      if (!get_block_longhash(block, hash)) {
+      if (!Block::getLongHash(block, hash)) {
         //error occured
         m_logger(Logging::DEBUGGING) << "calculating long hash error occured";
         m_state = MiningState::MINING_STOPPED;

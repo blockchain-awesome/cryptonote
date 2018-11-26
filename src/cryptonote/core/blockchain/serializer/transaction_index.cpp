@@ -7,9 +7,9 @@
 namespace cryptonote
 {
 
-bool serialize(std::vector<std::pair<TransactionIndex, uint16_t>> &value, Common::StringView name, cryptonote::ISerializer &s)
+bool serialize(std::vector<std::pair<transaction_index_t, uint16_t>> &value, Common::StringView name, cryptonote::ISerializer &s)
 {
-    const size_t elementSize = sizeof(std::pair<TransactionIndex, uint16_t>);
+    const size_t elementSize = sizeof(std::pair<transaction_index_t, uint16_t>);
     size_t size = value.size() * elementSize;
 
     if (!s.beginArray(size, name))

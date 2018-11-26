@@ -12,8 +12,8 @@
 #include "INode.h"
 #include "wallet_legacy/WalletLegacy.h"
 #include "wallet_legacy/WalletHelper.h"
-#include "cryptonote/core/Account.h"
-#include "cryptonote/core/Currency.h"
+#include "cryptonote/core/account.h"
+#include "cryptonote/core/currency.h"
 #include "cryptonote.h"
 
 #include "INodeStubs.h"
@@ -144,7 +144,7 @@ void WaitWalletLoad(TrivialWalletObserver* observer) {
 class WalletLegacyApi : public ::testing::Test
 {
 public:
-  WalletLegacyApi() : m_currency(cryptonote::CurrencyBuilder(m_logger, os::appdata::path()).currency()), generator(m_currency) {
+  WalletLegacyApi() : m_currency(cryptonote::CurrencyBuilder(os::appdata::path(), config::testnet::data, m_logger).currency()), generator(m_currency) {
   }
 
   void SetUp() override;

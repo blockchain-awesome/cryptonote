@@ -790,7 +790,7 @@ class SimpleTestCase : public ::testing::Test {
 public:
 
   SimpleTestCase() : 
-    currency(cryptonote::CurrencyBuilder(logger, os::appdata::path())
+    currency(cryptonote::CurrencyBuilder(os::appdata::path(), config::testnet::data, logger)
     // .testnet(true)
     .currency()), 
     test(currency, dispatcher, baseCfg) {
@@ -819,7 +819,7 @@ TEST_F(SimpleTestCase, TESTPOOLANDINPROCNODE) {
 }
 
 TEST_F(SimpleTestCase, TESTPOOLDELETION) {
-  currency = cryptonote::CurrencyBuilder(logger, os::appdata::path())
+  currency = cryptonote::CurrencyBuilder(os::appdata::path(), config::testnet::data, logger)
   // .testnet(true)
   .mempoolTxLiveTime(60).currency();
   ASSERT_TRUE(test.perform6());

@@ -9,7 +9,7 @@
 #include "stream/StdOutputStream.h"
 #include "serialization/BinaryInputStreamSerializer.h"
 #include "serialization/BinaryOutputStreamSerializer.h"
-#include "cryptonote/core/Account.h"
+#include "cryptonote/core/account.h"
 
 using namespace cryptonote;
 using namespace Common;
@@ -25,15 +25,15 @@ public:
 
 TEST_F(AccountTest, create)
 {
-  AccountBase *acc = NULL;
+  Account *acc = NULL;
   EXPECT_EQ(NULL, acc);
-  acc = new AccountBase();
+  acc = new Account();
   EXPECT_EQ(true, !!acc);
 }
 
 TEST_F(AccountTest, generate)
 {
-  AccountBase *acc = new AccountBase();
+  Account *acc = new Account();
   acc->generate();
   uint64_t time = acc->getCreatetime();
 
@@ -42,7 +42,7 @@ TEST_F(AccountTest, generate)
 
 TEST_F(AccountTest, serialize)
 {
-  AccountBase *acc = new AccountBase();
+  Account *acc = new Account();
   acc->generate();
 
   std::string filename = "temp.txt";
@@ -63,7 +63,7 @@ TEST_F(AccountTest, serialize)
   ASSERT_TRUE(sizeof(keys.viewSecretKey) == 32);
   fstream.close();
 
-  AccountBase *acc1 = new AccountBase();
+  Account *acc1 = new Account();
 
   std::fstream of;
   of.open(filename, std::fstream::in);

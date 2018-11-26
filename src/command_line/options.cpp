@@ -4,6 +4,7 @@
 
 #include "CryptoNoteConfig.h"
 #include "options.h"
+#include "config/common.h"
 
 namespace command_line
 {
@@ -13,7 +14,7 @@ const arg_descriptor<bool> arg_os_version = {"os-version", ""};
 
 // Storage
 const arg_descriptor<std::string> arg_data_dir = {"data-dir", "Specify data directory"};
-const arg_descriptor<std::string> arg_config_file = {"config-file", "Specify configuration file", std::string(cryptonote::CRYPTONOTE_NAME) + ".conf"};
+const arg_descriptor<std::string> arg_config_file = {"config-file", "Specify configuration file", std::string(config::get().name) + ".conf"};
 
 // Log info
 const arg_descriptor<std::string> arg_log_file = {"log-file", "", ""};
@@ -36,10 +37,9 @@ const arg_descriptor<uint32_t>    arg_mining_threads =  {"mining-threads", "Spec
 
 
 const std::string DEFAULT_RPC_IP = "127.0.0.1";
-const uint16_t DEFAULT_RPC_PORT = cryptonote::RPC_DEFAULT_PORT;
 
 // RPC
 const arg_descriptor<std::string> arg_rpc_bind_ip = {"rpc-bind-ip", "", DEFAULT_RPC_IP};
-const arg_descriptor<uint16_t> arg_rpc_bind_port = {"rpc-bind-port", "", DEFAULT_RPC_PORT};
+const arg_descriptor<uint16_t> arg_rpc_bind_port = {"rpc-bind-port", "", config::get().net.rpc_port};
 
 } // namespace command_line

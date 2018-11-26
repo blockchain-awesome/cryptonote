@@ -11,15 +11,14 @@
 #include "crypto/hash.h"
 #include "cryptonote/core/key.h"
 #include "cryptonote/core/blockchain/serializer/crypto.h"
-#include "cryptonote/core/Account.h"
-#include "cryptonote/core/Currency.h"
+#include "cryptonote/core/account.h"
+#include "cryptonote/core/currency.h"
 #include "cryptonote/core/blockchain/serializer/basics.h"
 #include "common/os.h"
 
 #include "serialization/BinarySerializationTools.h"
 #include "common/base58.cpp"
 
-using namespace Tools;
 using namespace cryptonote;
 
 #define MAKE_STR(arr) std::string(arr, sizeof(arr) - 1)
@@ -28,73 +27,73 @@ namespace
 {
   void do_test_uint_8be_to_64(uint64_t expected, const uint8_t* data, size_t size)
   {
-    uint64_t val = Base58::uint_8be_to_64(data, size);
+    uint64_t val = tools::base58::uint_8be_to_64(data, size);
     ASSERT_EQ(val, expected);
   }
 
   void do_test_uint_64_to_8be(uint64_t num, const std::string& expected_str)
   {
     std::string data(expected_str.size(), '\x0');
-    Base58::uint_64_to_8be(num, data.size(), reinterpret_cast<uint8_t*>(&data[0]));
+    tools::base58::uint_64_to_8be(num, data.size(), reinterpret_cast<uint8_t*>(&data[0]));
     ASSERT_EQ(data, expected_str);
   }
 
   void do_test_encode_block(const std::string& block, const std::string& expected)
   {
-    ASSERT_TRUE(1 <= block.size() && block.size() <= Base58::full_block_size);
-    std::string enc(Base58::encoded_block_sizes[block.size()], Base58::alphabet[0]);
-    Base58::encode_block(block.data(), block.size(), &enc[0]);
+    ASSERT_TRUE(1 <= block.size() && block.size() <= tools::base58::full_block_size);
+    std::string enc(tools::base58::encoded_block_sizes[block.size()], tools::base58::alphabet[0]);
+    tools::base58::encode_block(block.data(), block.size(), &enc[0]);
     ASSERT_EQ(enc, expected);
 
     std::string dec(block.size(), '\0');
-    ASSERT_TRUE(Base58::decode_block(enc.data(), enc.size(), &dec[0]));
+    ASSERT_TRUE(tools::base58::decode_block(enc.data(), enc.size(), &dec[0]));
     ASSERT_EQ(block, dec);
   }
 
   void do_test_decode_block_pos(const std::string& enc, const std::string& expected)
   {
-    std::string data(Base58::decoded_block_sizes::instance(enc.size()), '\0');
-    ASSERT_TRUE(Base58::decode_block(enc.data(), enc.size(), &data[0]));
+    std::string data(tools::base58::decoded_block_sizes::instance(enc.size()), '\0');
+    ASSERT_TRUE(tools::base58::decode_block(enc.data(), enc.size(), &data[0]));
     ASSERT_EQ(data, expected);
   }
 
   void do_test_decode_block_neg(const std::string& enc)
   {
-    std::string data(Base58::full_block_size, '\0');
-    ASSERT_FALSE(Base58::decode_block(enc.data(), enc.size(), &data[0]));
+    std::string data(tools::base58::full_block_size, '\0');
+    ASSERT_FALSE(tools::base58::decode_block(enc.data(), enc.size(), &data[0]));
   }
 
   void do_test_encode(const std::string& data, const std::string& expected)
   {
-    std::string enc = Base58::encode(data);
+    std::string enc = tools::base58::encode(data);
     ASSERT_EQ(enc, expected);
 
     std::string dec;
-    ASSERT_TRUE(Base58::decode(enc, dec));
+    ASSERT_TRUE(tools::base58::decode(enc, dec));
     ASSERT_EQ(dec, data);
   }
 
   void do_test_decode_pos(const std::string& enc, const std::string& expected)
   {
     std::string dec;
-    ASSERT_TRUE(Base58::decode(enc, dec));
+    ASSERT_TRUE(tools::base58::decode(enc, dec));
     ASSERT_EQ(dec, expected);
   }
 
   void do_test_decode_neg(const std::string& enc)
   {
     std::string dec;
-    ASSERT_FALSE(Base58::decode(enc, dec));
+    ASSERT_FALSE(tools::base58::decode(enc, dec));
   }
 
   void do_test_encode_decode_addr(uint64_t tag, const std::string& data, const std::string& expected)
   {
-    std::string addr = Base58::encode_addr(tag, data);
+    std::string addr = tools::base58::encode_addr(tag, data);
     ASSERT_EQ(addr, expected);
 
     uint64_t dec_tag;
     std::string dec_data;
-    ASSERT_TRUE(Base58::decode_addr(addr, dec_tag, dec_data));
+    ASSERT_TRUE(tools::base58::decode_addr(addr, dec_tag, dec_data));
     ASSERT_EQ(tag, dec_tag);
     ASSERT_EQ(data, dec_data);
   }
@@ -134,18 +133,18 @@ TEST_uint_64_to_8be(0x0102030405060708, "\x1\x2\x3\x4\x5\x6\x7\x8");
 
 TEST(reverse_alphabet, is_correct)
 {
-  ASSERT_EQ(-1, Base58::reverse_alphabet::instance(0));
-  ASSERT_EQ(-1, Base58::reverse_alphabet::instance(std::numeric_limits<char>::min()));
-  ASSERT_EQ(-1, Base58::reverse_alphabet::instance(std::numeric_limits<char>::max()));
-  ASSERT_EQ(-1, Base58::reverse_alphabet::instance('1' - 1));
-  ASSERT_EQ(-1, Base58::reverse_alphabet::instance('z' + 1));
-  ASSERT_EQ(-1, Base58::reverse_alphabet::instance('0'));
-  ASSERT_EQ(-1, Base58::reverse_alphabet::instance('I'));
-  ASSERT_EQ(-1, Base58::reverse_alphabet::instance('O'));
-  ASSERT_EQ(-1, Base58::reverse_alphabet::instance('l'));
-  ASSERT_EQ(0,  Base58::reverse_alphabet::instance('1'));
-  ASSERT_EQ(8,  Base58::reverse_alphabet::instance('9'));
-  ASSERT_EQ(Base58::alphabet_size - 1, Base58::reverse_alphabet::instance('z'));
+  ASSERT_EQ(-1, tools::base58::reverse_alphabet::instance(0));
+  ASSERT_EQ(-1, tools::base58::reverse_alphabet::instance(std::numeric_limits<char>::min()));
+  ASSERT_EQ(-1, tools::base58::reverse_alphabet::instance(std::numeric_limits<char>::max()));
+  ASSERT_EQ(-1, tools::base58::reverse_alphabet::instance('1' - 1));
+  ASSERT_EQ(-1, tools::base58::reverse_alphabet::instance('z' + 1));
+  ASSERT_EQ(-1, tools::base58::reverse_alphabet::instance('0'));
+  ASSERT_EQ(-1, tools::base58::reverse_alphabet::instance('I'));
+  ASSERT_EQ(-1, tools::base58::reverse_alphabet::instance('O'));
+  ASSERT_EQ(-1, tools::base58::reverse_alphabet::instance('l'));
+  ASSERT_EQ(0,  tools::base58::reverse_alphabet::instance('1'));
+  ASSERT_EQ(8,  tools::base58::reverse_alphabet::instance('9'));
+  ASSERT_EQ(tools::base58::alphabet_size - 1, tools::base58::reverse_alphabet::instance('z'));
 }
 
 
@@ -422,7 +421,7 @@ TEST_encode_decode_addr(21rhHRT48LN4PriP9,               6, "\x11\x22\x33\x44\x5
   {                                                               \
     uint64_t tag;                                                 \
     std::string data;                                             \
-    ASSERT_FALSE(Base58::decode_addr(MAKE_STR(addr), tag, data)); \
+    ASSERT_FALSE(tools::base58::decode_addr(MAKE_STR(addr), tag, data)); \
   }
 
 TEST_decode_addr_neg("zuT7GAdgbA819VwdWVDP", decode_fails_due_overflow);
@@ -458,7 +457,7 @@ TEST(getAccountAddressAsStr, works_correctly)
 {
   cryptonote::account_public_address_t addr;
 
-  ASSERT_NO_THROW(cryptonote::loadFromBinary(addr, Common::asBinaryArray(test_serialized_keys)));
+  ASSERT_NO_THROW(cryptonote::loadFromBinary(addr, array::fromString(test_serialized_keys)));
   std::string addr_str = Account::getAddress(addr, TEST_PUBLIC_ADDRESS_BASE58_PREFIX);
   ASSERT_EQ(addr_str, test_keys_addr_str);
 }
@@ -470,9 +469,9 @@ TEST(parseAccountAddressString, handles_valid_address)
   ASSERT_TRUE(Account::parseAddress(prefix, addr, test_keys_addr_str));
   ASSERT_EQ(TEST_PUBLIC_ADDRESS_BASE58_PREFIX, prefix);
 
-  BinaryArray blob;
+  binary_array_t blob;
   ASSERT_NO_THROW(blob = cryptonote::storeToBinary(addr));
-  ASSERT_EQ(Common::asString(blob), test_serialized_keys);
+  ASSERT_EQ(BinaryArray::toString(blob), test_serialized_keys);
 }
 
 TEST(parseAccountAddressString, fails_on_invalid_address_format)
@@ -487,11 +486,11 @@ TEST(parseAccountAddressString, fails_on_invalid_address_format)
 
 TEST(parseAccountAddressString, fails_on_invalid_address_prefix)
 {
-  std::string addr_str = Base58::encode_addr(0, test_serialized_keys);
+  std::string addr_str = tools::base58::encode_addr(0, test_serialized_keys);
 
   Logging::LoggerGroup logger;
   // cryptonote::Currency currency = cryptonote::CurrencyBuilder(logger).currency();
-  cryptonote::Currency currency = cryptonote::CurrencyBuilder(logger, os::appdata::path()).currency();
+  cryptonote::Currency currency = cryptonote::CurrencyBuilder(os::appdata::path(), config::testnet::data, logger).currency();
 
   cryptonote::account_public_address_t addr;
   
@@ -500,7 +499,7 @@ TEST(parseAccountAddressString, fails_on_invalid_address_prefix)
 
 TEST(parseAccountAddressString, fails_on_invalid_address_content)
 {
-  std::string addr_str = Base58::encode_addr(TEST_PUBLIC_ADDRESS_BASE58_PREFIX, test_serialized_keys.substr(1));
+  std::string addr_str = tools::base58::encode_addr(TEST_PUBLIC_ADDRESS_BASE58_PREFIX, test_serialized_keys.substr(1));
 
   uint64_t prefix;
   cryptonote::account_public_address_t addr;
@@ -511,7 +510,7 @@ TEST(parseAccountAddressString, fails_on_invalid_address_spend_key)
 {
   std::string serialized_keys_copy = test_serialized_keys;
   serialized_keys_copy[0] = '\0';
-  std::string addr_str = Base58::encode_addr(TEST_PUBLIC_ADDRESS_BASE58_PREFIX, serialized_keys_copy);
+  std::string addr_str = tools::base58::encode_addr(TEST_PUBLIC_ADDRESS_BASE58_PREFIX, serialized_keys_copy);
 
   uint64_t prefix;
   cryptonote::account_public_address_t addr;
@@ -522,7 +521,7 @@ TEST(parseAccountAddressString, fails_on_invalid_address_view_key)
 {
   std::string serialized_keys_copy = test_serialized_keys;
   serialized_keys_copy.back() = '\x01';
-  std::string addr_str = Base58::encode_addr(TEST_PUBLIC_ADDRESS_BASE58_PREFIX, serialized_keys_copy);
+  std::string addr_str = tools::base58::encode_addr(TEST_PUBLIC_ADDRESS_BASE58_PREFIX, serialized_keys_copy);
 
   uint64_t prefix;
   cryptonote::account_public_address_t addr;

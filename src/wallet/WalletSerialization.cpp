@@ -13,6 +13,7 @@
 #include "stream/StdOutputStream.h"
 #include "cryptonote/core/blockchain/serializer/basics.h"
 #include "cryptonote/core/CryptoNoteTools.h"
+#include "cryptonote/structures/array.hpp"
 
 #include "serialization/BinaryOutputStreamSerializer.h"
 #include "serialization/BinaryInputStreamSerializer.h"
@@ -329,7 +330,7 @@ CryptoContext WalletSerializer::generateCryptoContext(const std::string& passwor
 
   crypto::generate_chacha_key(password, context.key);
 
-  context.iv = crypto::rand<crypto::chacha_iv>();
+  context.iv = crypto::rand<crypto::chacha_iv_t>();
 
   return context;
 }
@@ -341,9 +342,9 @@ void WalletSerializer::saveVersion(Common::IOutputStream& destination) {
   s(version, "version");
 }
 
-void WalletSerializer::saveIv(Common::IOutputStream& destination, crypto::chacha_iv& iv) {
+void WalletSerializer::saveIv(Common::IOutputStream& destination, crypto::chacha_iv_t& iv) {
   BinaryOutputStreamSerializer s(destination);
-  s.binary(reinterpret_cast<void *>(&iv.data), sizeof(iv.data), "chacha_iv");
+  s.binary(reinterpret_cast<void *>(&iv.data), sizeof(iv.data), "chacha_iv_t");
 }
 
 void WalletSerializer::saveKeys(Common::IOutputStream& destination, CryptoContext& cryptoContext) {
@@ -609,13 +610,13 @@ uint32_t WalletSerializer::loadVersion(Common::IInputStream& source) {
   return version;
 }
 
-void WalletSerializer::loadIv(Common::IInputStream& source, crypto::chacha_iv& iv) {
+void WalletSerializer::loadIv(Common::IInputStream& source, crypto::chacha_iv_t& iv) {
   cryptonote::BinaryInputStreamSerializer s(source);
 
-  s.binary(static_cast<void *>(&iv.data), sizeof(iv.data), "chacha_iv");
+  s.binary(static_cast<void *>(&iv.data), sizeof(iv.data), "chacha_iv_t");
 }
 
-void WalletSerializer::generateKey(const std::string& password, crypto::chacha_key& key) {
+void WalletSerializer::generateKey(const std::string& password, crypto::chacha_key_t& key) {
   crypto::generate_chacha_key(password, key);
 }
 
@@ -790,7 +791,7 @@ void WalletSerializer::initTransactionPool() {
   std::unordered_set<crypto::hash_t> uncommitedTransactionsSet;
   std::transform(uncommitedTransactions.begin(), uncommitedTransactions.end(), std::inserter(uncommitedTransactionsSet, uncommitedTransactionsSet.end()),
     [](const UncommitedTransactions::value_type& pair) {
-      return getObjectHash(pair.second);
+      return BinaryArray::objectHash(pair.second);
     });
   m_synchronizer.initTransactionPool(uncommitedTransactionsSet);
 }

@@ -41,15 +41,15 @@ public:
   };
 
   P2pContext(System::Dispatcher& dispatcher, System::TcpConnection&& conn, 
-    bool isIncoming, const NetworkAddress& remoteAddress, std::chrono::nanoseconds timedSyncInterval, const CORE_SYNC_DATA& timedSyncData);
+    bool isIncoming, const network_address_t& remoteAddress, std::chrono::nanoseconds timedSyncInterval, const CORE_SYNC_DATA& timedSyncData);
   ~P2pContext();
 
-  PeerIdType getPeerId() const;
+  peer_id_type_t getPeerId() const;
   uint16_t getPeerPort() const;
-  const NetworkAddress& getRemoteAddress() const;
+  const network_address_t& getRemoteAddress() const;
   bool isIncoming() const;
 
-  void setPeerInfo(uint8_t protocolVersion, PeerIdType id, uint16_t port);
+  void setPeerInfo(uint8_t protocolVersion, peer_id_type_t id, uint16_t port);
   bool readCommand(LevinProtocol::Command& cmd);
   void writeMessage(const Message& msg);
  
@@ -60,8 +60,8 @@ private:
 
   uint8_t version = 0;
   const bool incoming;
-  const NetworkAddress remoteAddress;
-  PeerIdType peerId = 0;
+  const network_address_t remoteAddress;
+  peer_id_type_t peerId = 0;
   uint16_t peerPort = 0;
 
   System::Dispatcher& dispatcher;
@@ -83,8 +83,8 @@ private:
   void timedSyncLoop();
 };
 
-P2pContext::Message makeReply(uint32_t command, const BinaryArray& data, uint32_t returnCode);
-P2pContext::Message makeRequest(uint32_t command, const BinaryArray& data);
+P2pContext::Message makeReply(uint32_t command, const binary_array_t& data, uint32_t returnCode);
+P2pContext::Message makeRequest(uint32_t command, const binary_array_t& data);
 
 std::ostream& operator <<(std::ostream& s, const P2pContext& conn);
 

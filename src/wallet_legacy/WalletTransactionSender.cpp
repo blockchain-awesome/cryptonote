@@ -3,9 +3,10 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "crypto/crypto.h" //for rand()
-#include "cryptonote/core/Account.h"
+#include "cryptonote/core/account.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/CryptoNoteTools.h"
+#include "cryptonote/structures/array.hpp"
 
 #include "wallet_legacy/WalletTransactionSender.h"
 #include "wallet_legacy/WalletUtils.h"
@@ -50,7 +51,7 @@ void constructTx(const account_keys_t keys, const std::vector<transaction_source
   bool r = constructTransaction(keys, sources, splittedDests, extraVec, tx, unlockTimestamp, nullLog);
 
   throwIf(!r, error::INTERNAL_WALLET_ERROR);
-  throwIf(getObjectBinarySize(tx) >= sizeLimit, error::TRANSACTION_SIZE_TOO_BIG);
+  throwIf(BinaryArray::size(tx) >= sizeLimit, error::TRANSACTION_SIZE_TOO_BIG);
 }
 
 std::shared_ptr<WalletLegacyEvent> makeCompleteEvent(WalletUserTransactionsCache& transactionCache, size_t transactionId, std::error_code ec) {
@@ -174,7 +175,7 @@ std::shared_ptr<WalletRequest> WalletTransactionSender::doSendTransaction(std::s
     transaction_t tx;
     constructTx(m_keys, sources, splittedDests, transaction.extra, transaction.unlockTime, m_upperTransactionSizeLimit, tx);
 
-    getObjectHash(tx, transaction.hash);
+    BinaryArray::objectHash(tx, transaction.hash);
 
     m_transactionsCache.updateTransaction(context->transactionId, tx, totalAmount, context->selectedTransfers);
 

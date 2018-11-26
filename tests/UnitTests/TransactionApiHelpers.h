@@ -9,7 +9,7 @@
 #include "crypto/crypto.h"
 #include "crypto/hash.h"
 
-#include "cryptonote/core/Account.h"
+#include "cryptonote/core/account.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 
@@ -39,8 +39,8 @@ namespace {
     return accountKeysFromKeypairs(p1, p2);
   }
 
-  AccountBase generateAccount() {
-    AccountBase account;
+  Account generateAccount() {
+    Account account;
     account.generate();
     return account;
   }
@@ -97,7 +97,7 @@ namespace {
 
   inline transaction_t convertTx(ITransactionReader& tx) {
     transaction_t oldTx;
-    fromBinaryArray(oldTx, tx.getTransactionData()); // ignore return code
+    BinaryArray::from(oldTx, tx.getTransactionData()); // ignore return code
     return oldTx;
   }
 }
@@ -108,10 +108,10 @@ class TestTransactionBuilder {
 public:
 
   TestTransactionBuilder();
-  TestTransactionBuilder(const BinaryArray& txTemplate, const crypto::secret_key_t& secretKey);
+  TestTransactionBuilder(const binary_array_t& txTemplate, const crypto::secret_key_t& secretKey);
 
   public_key_t getTransactionPublicKey() const;
-  void appendExtra(const BinaryArray& extraData);
+  void appendExtra(const binary_array_t& extraData);
   void setUnlockTime(uint64_t time);
 
   // inputs
@@ -148,7 +148,7 @@ private:
   struct MsigInfo {
     public_key_t transactionKey;
     size_t outputIndex;
-    std::vector<AccountBase> accounts;
+    std::vector<Account> accounts;
   };
 
   std::unordered_map<size_t, std::pair<TransactionTypes::input_key_info_t, key_pair_t>> keys;

@@ -17,14 +17,14 @@ using namespace crypto;
 using namespace Tests::Common;
 
 extern System::Dispatcher globalSystem;
-extern Tests::Common::BaseFunctionalTestsConfig config;
+extern Tests::Common::BaseFunctionalTestsConfig testConfig;
 
 namespace {
   class NodeRpcProxyTest : public Tests::Common::BaseFunctionalTests, public ::testing::Test {
   public:
     NodeRpcProxyTest() :
-      BaseFunctionalTests(m_currency, globalSystem, config),
-      m_currency(CurrencyBuilder(m_logManager, os::appdata::path())
+      BaseFunctionalTests(m_currency, globalSystem, testConfig),
+      m_currency(CurrencyBuilder(os::appdata::path(), config::testnet::data, m_logManager)
       // .testnet(true)
       .currency()) {
     }

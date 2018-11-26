@@ -8,7 +8,8 @@
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/core/IBlock.h"
 #include "cryptonote/core/VerificationContext.h"
-
+#include "cryptonote/structures/array.h"
+#include "cryptonote/structures/block_entry.h"
 
 ICoreStub::ICoreStub() :
     topHeight(0),
@@ -70,7 +71,7 @@ cryptonote::ICryptonoteProtocol* ICoreStub::get_protocol() {
   return nullptr;
 }
 
-bool ICoreStub::handle_incoming_tx(cryptonote::BinaryArray const& tx_blob, cryptonote::tx_verification_context_t& tvc, bool keeped_by_block) {
+bool ICoreStub::handle_incoming_tx(binary_array_t const& tx_blob, cryptonote::tx_verification_context_t& tvc, bool keeped_by_block) {
   return true;
 }
 
@@ -122,7 +123,7 @@ bool ICoreStub::getPoolChangesLite(const crypto::hash_t& tailBlockId, const std:
   for (const auto& tx : added) {
     cryptonote::transaction_prefix_info_t tpi;
     tpi.txPrefix = tx;
-    tpi.txHash = getObjectHash(tx);
+    tpi.txHash = cryptonote::BinaryArray::objectHash(tx);
 
     addedTxs.push_back(std::move(tpi));
   }
@@ -172,7 +173,7 @@ size_t ICoreStub::addChain(const std::vector<const cryptonote::IBlock*>& chain) 
       const cryptonote::transaction_t& tx = block->getTransaction(txNumber);
       crypto::hash_t txHash = cryptonote::NULL_HASH;
       size_t blobSize = 0;
-      getObjectHash(tx, txHash, blobSize);
+      cryptonote::BinaryArray::objectHash(tx, txHash, blobSize);
       addTransaction(tx);
     }
     addBlock(block->getBlock());
@@ -196,15 +197,6 @@ bool ICoreStub::getBlockByHash(const crypto::hash_t &h, cryptonote::block_t &blk
     return false;
   }
   blk = iter->second;
-  return true;
-}
-
-bool ICoreStub::getBlockHeight(const crypto::hash_t& blockId, uint32_t& blockHeight) {
-  auto it = blocks.find(blockId);
-  if (it == blocks.end()) {
-    return false;
-  }
-  blockHeight = get_block_height(it->second);
   return true;
 }
 
@@ -253,7 +245,7 @@ bool ICoreStub::scanOutputkeysForIndices(const cryptonote::key_input_t& txInToKe
   return true;
 }
 
-bool ICoreStub::getBlockDifficulty(uint32_t height, cryptonote::difficulty_type& difficulty) {
+bool ICoreStub::getBlockDifficulty(uint32_t height, cryptonote::difficulty_t& difficulty) {
   return true;
 }
 
@@ -277,7 +269,7 @@ bool ICoreStub::getMultisigOutputReference(const cryptonote::multi_signature_inp
 
 void ICoreStub::addBlock(const cryptonote::block_t& block) {
   uint32_t height = boost::get<cryptonote::base_input_t>(block.baseTransaction.inputs.front()).blockIndex;
-  crypto::hash_t hash = cryptonote::get_block_hash(block);
+  crypto::hash_t hash = cryptonote::Block::getHash(block);
   if (height > topHeight) {
     topHeight = height;
     topId = hash;
@@ -285,14 +277,14 @@ void ICoreStub::addBlock(const cryptonote::block_t& block) {
   blocks.emplace(std::make_pair(hash, block));
   blockHashByHeightIndex.emplace(std::make_pair(height, hash));
 
-  blockHashByTxHashIndex.emplace(std::make_pair(cryptonote::getObjectHash(block.baseTransaction), hash));
+  blockHashByTxHashIndex.emplace(std::make_pair(cryptonote::BinaryArray::objectHash(block.baseTransaction), hash));
   for (auto txHash : block.transactionHashes) {
     blockHashByTxHashIndex.emplace(std::make_pair(txHash, hash));
   }
 }
 
 void ICoreStub::addTransaction(const cryptonote::transaction_t& tx) {
-  crypto::hash_t hash = cryptonote::getObjectHash(tx);
+  crypto::hash_t hash = cryptonote::BinaryArray::objectHash(tx);
   transactions.emplace(std::make_pair(hash, tx));
 }
 

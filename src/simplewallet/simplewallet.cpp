@@ -75,7 +75,7 @@ bool parseUrlAddress(const std::string& url, std::string& address, uint16_t& por
 
   if (addrEnd != std::string::npos) {
     auto portEnd = url.find('/', addrEnd);
-    port = Common::fromString<uint16_t>(url.substr(
+    port = stream::fromString<uint16_t>(url.substr(
       addrEnd + 1, portEnd == std::string::npos ? std::string::npos : portEnd - addrEnd - 1));
   } else {
     addrEnd = url.find('/');
@@ -147,7 +147,7 @@ struct TransferCommand {
 
       auto mixin_str = ar.next();
 
-      if (!Common::fromString(mixin_str, fake_outs_count)) {
+      if (!stream::fromString(mixin_str, fake_outs_count)) {
         logger(ERROR, BRIGHT_RED) << "mixin_count should be non-negative integer, got " << mixin_str;
         return false;
       }
@@ -368,10 +368,10 @@ void printListTransfersHeader(LoggerRef& logger) {
 }
 
 void printListTransfersItem(LoggerRef& logger, const WalletLegacyTransaction& txInfo, IWalletLegacy& wallet, const Currency& currency) {
-  std::vector<uint8_t> extraVec = Common::asBinaryArray(txInfo.extra);
+  std::vector<uint8_t> extraVec = array::fromString(txInfo.extra);
 
   crypto::hash_t paymentId;
-  std::string paymentIdStr = (getPaymentIdFromTxExtra(extraVec, paymentId) && paymentId != NULL_HASH ? Common::podToHex(paymentId) : "");
+  std::string paymentIdStr = (getPaymentIdFromTxExtra(extraVec, paymentId) && paymentId != NULL_HASH ? hex::podToString(paymentId) : "");
 
   char timeString[TIMESTAMP_MAX_WIDTH + 1];
   time_t timestamp = static_cast<time_t>(txInfo.timestamp);
@@ -382,7 +382,7 @@ void printListTransfersItem(LoggerRef& logger, const WalletLegacyTransaction& tx
   std::string rowColor = txInfo.totalAmount < 0 ? MAGENTA : GREEN;
   logger(INFO, rowColor)
     << std::setw(TIMESTAMP_MAX_WIDTH) << timeString
-    << "  " << std::setw(HASH_MAX_WIDTH) << Common::podToHex(txInfo.hash)
+    << "  " << std::setw(HASH_MAX_WIDTH) << hex::podToString(txInfo.hash)
     << "  " << std::setw(TOTAL_AMOUNT_MAX_WIDTH) << currency.formatAmount(txInfo.totalAmount)
     << "  " << std::setw(FEE_MAX_WIDTH) << currency.formatAmount(txInfo.fee)
     << "  " << std::setw(BLOCK_MAX_WIDTH) << txInfo.blockHeight
@@ -479,7 +479,7 @@ bool simple_wallet::set_log(const std::vector<std::string> &args) {
   }
 
   uint16_t l = 0;
-  if (!Common::fromString(args[0], l)) {
+  if (!stream::fromString(args[0], l)) {
     fail_msg_writer() << "wrong number format, use: set_log <log_level_number_0-4>";
     return true;
   }
@@ -553,7 +553,7 @@ bool simple_wallet::init(const boost::program_options::variables_map& vm) {
   if (m_daemon_host.empty())
     m_daemon_host = "localhost";
   if (!m_daemon_port)
-    m_daemon_port = RPC_DEFAULT_PORT;
+    m_daemon_port = config::get().net.rpc_port;
   
   if (!m_daemon_address.empty()) {
     if (!parseUrlAddress(m_daemon_address, m_daemon_host, m_daemon_port)) {
@@ -674,7 +674,7 @@ bool simple_wallet::new_wallet(const std::string &wallet_file, const std::string
 
     logger(INFO, BRIGHT_WHITE) <<
       "Generated new wallet: " << m_wallet->getAddress() << std::endl <<
-      "view key: " << Common::podToHex(keys.viewSecretKey);
+      "view key: " << hex::podToString(keys.viewSecretKey);
   }
   catch (const std::exception& e) {
     fail_msg_writer() << "failed to generate new wallet: " << e.what();
@@ -749,7 +749,7 @@ bool simple_wallet::start_mining(const std::vector<std::string>& args) {
     req.threads_count = 1;
   } else if (1 == args.size()) {
     uint16_t num = 1;
-    ok = Common::fromString(args[0], num);
+    ok = stream::fromString(args[0], num);
     ok = ok && (1 <= num && num <= max_mining_threads_count);
     req.threads_count = num;
   } else {
@@ -835,11 +835,11 @@ void simple_wallet::externalTransactionCreated(cryptonote::TransactionId transac
 
   if (txInfo.totalAmount >= 0) {
     logger(INFO, GREEN) <<
-      logPrefix.str() << " transaction " << Common::podToHex(txInfo.hash) <<
+      logPrefix.str() << " transaction " << hex::podToString(txInfo.hash) <<
       ", received " << m_currency.formatAmount(txInfo.totalAmount);
   } else {
     logger(INFO, MAGENTA) <<
-      logPrefix.str() << " transaction " << Common::podToHex(txInfo.hash) <<
+      logPrefix.str() << " transaction " << hex::podToString(txInfo.hash) <<
       ", spent " << m_currency.formatAmount(static_cast<uint64_t>(-txInfo.totalAmount));
   }
 
@@ -880,7 +880,7 @@ bool simple_wallet::show_incoming_transfers(const std::vector<std::string>& args
     hasTransfers = true;
     logger(INFO) << "        amount       \t                              tx id";
     logger(INFO, GREEN) <<  // spent - magenta
-      std::setw(21) << m_currency.formatAmount(txInfo.totalAmount) << '\t' << Common::podToHex(txInfo.hash);
+      std::setw(21) << m_currency.formatAmount(txInfo.totalAmount) << '\t' << hex::podToString(txInfo.hash);
   }
 
   if (!hasTransfers) success_msg_writer() << "No incoming transfers";
@@ -941,7 +941,7 @@ bool simple_wallet::show_payments(const std::vector<std::string> &args) {
           payments_found = true;
           success_msg_writer(true) <<
             paymentId << "\t\t" <<
-            Common::podToHex(txInfo.hash) <<
+            hex::podToString(txInfo.hash) <<
             std::setw(8) << txInfo.blockHeight << '\t' <<
             std::setw(21) << m_currency.formatAmount(txInfo.totalAmount);// << '\t' <<
         }
@@ -999,7 +999,7 @@ bool simple_wallet::transfer(const std::vector<std::string> &args) {
 
     cryptonote::WalletLegacyTransaction txInfo;
     m_wallet->getTransaction(tx, txInfo);
-    success_msg_writer(true) << "Money successfully sent, transaction " << Common::podToHex(txInfo.hash);
+    success_msg_writer(true) << "Money successfully sent, transaction " << hex::podToString(txInfo.hash);
 
     try {
       cryptonote::WalletHelper::storeWallet(*m_wallet, m_wallet_file);
@@ -1084,19 +1084,24 @@ int main(int argc, char* argv[]) {
 
   po::variables_map vm;
 
+  config::config_t & conf = config::mainnet::data;
+
   bool r = command_line::handle_error_helper(desc_all, [&]() {
     po::store(command_line::parse_command_line(argc, argv, desc_general, true), vm);
 
+    if (command_line::get_arg(vm, command_line::arg_testnet_on)) {
+      conf = config::testnet::data;
+    }
     if (command_line::get_arg(vm, command_line::arg_help)) {
-      cryptonote::Currency tmp_currency = cryptonote::CurrencyBuilder(logManager, os::appdata::path()).currency();
+      cryptonote::Currency tmp_currency = cryptonote::CurrencyBuilder(os::appdata::path(), conf, logManager).currency();
       cryptonote::simple_wallet tmp_wallet(dispatcher, tmp_currency, logManager);
 
-      std::cout << CRYPTONOTE_NAME << " wallet v" << PROJECT_VERSION_LONG << std::endl;
+      std::cout << config::get().name << " wallet v" << PROJECT_VERSION_LONG << std::endl;
       std::cout << "Usage: simplewallet [--wallet-file=<file>|--generate-new-wallet=<file>] [--daemon-address=<host>:<port>] [<COMMAND>]";
       std::cout << desc_all << '\n' << tmp_wallet.get_commands_str();
       return false;
     } else if (command_line::get_arg(vm, command_line::arg_version))  {
-      std::cout << CRYPTONOTE_NAME << " wallet v" << PROJECT_VERSION_LONG;
+      std::cout << config::get().name << " wallet v" << PROJECT_VERSION_LONG;
       return false;
     }
 
@@ -1118,9 +1123,9 @@ int main(int argc, char* argv[]) {
 
   logManager.configure(buildLoggerConfiguration(logLevel, boost::filesystem::change_extension(argv[0], ".log").string()));
 
-  logger(INFO, BRIGHT_WHITE) << CRYPTONOTE_NAME << " wallet v" << PROJECT_VERSION_LONG;
+  logger(INFO, BRIGHT_WHITE) << config::get().name << " wallet v" << PROJECT_VERSION_LONG;
 
-  cryptonote::Currency currency = cryptonote::CurrencyBuilder(logManager, os::appdata::path()).
+  cryptonote::Currency currency = cryptonote::CurrencyBuilder(os::appdata::path(), conf, logManager).
     // testnet(command_line::get_arg(vm, arg_testnet)).currency();
     currency();
 
@@ -1149,7 +1154,7 @@ int main(int argc, char* argv[]) {
     if (daemon_host.empty())
       daemon_host = "localhost";
     if (!daemon_port)
-      daemon_port = RPC_DEFAULT_PORT;
+      daemon_port = config::get().net.rpc_port;
 
     if (!daemon_address.empty()) {
       if (!parseUrlAddress(daemon_address, daemon_host, daemon_port)) {

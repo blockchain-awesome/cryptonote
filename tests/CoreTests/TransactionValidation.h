@@ -149,7 +149,7 @@ struct MultiSigTx_OutputSignatures : public get_tx_validation_base {
   const size_t m_givenKeys;
   const uint32_t m_requiredSignatures;
   const bool m_shouldSucceed;
-  std::vector<cryptonote::AccountBase> m_outputAccounts;
+  std::vector<cryptonote::Account> m_outputAccounts;
 };
 
 struct MultiSigTx_InvalidOutputSignature : public get_tx_validation_base {

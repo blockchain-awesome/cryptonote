@@ -9,7 +9,7 @@
 
 #include "cryptonote/core/TransactionApi.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h" // TODO: delete
-#include "cryptonote/core/Account.h"
+#include "cryptonote/core/account.h"
 #include "crypto/crypto.h"
 #include "TransactionApiHelpers.h"
 
@@ -275,8 +275,8 @@ TEST_F(TransactionApi, setGetPaymentId) {
 }
 
 TEST_F(TransactionApi, setExtraNonce) {
-  BinaryArray extraNonce = Common::asBinaryArray("Hello, world"); // just a sequence of bytes
-  BinaryArray s;
+  binary_array_t extraNonce = array::fromString("Hello, world"); // just a sequence of bytes
+  binary_array_t s;
 
   ASSERT_FALSE(tx->getExtraNonce(s));
   tx->setExtraNonce(extraNonce);
@@ -291,7 +291,7 @@ TEST_F(TransactionApi, setExtraNonce) {
 }
 
 TEST_F(TransactionApi, appendExtra) {
-  BinaryArray ba;
+  binary_array_t ba;
 
   ba.resize(100);
   std::iota(ba.begin(), ba.end(), 0);
@@ -354,7 +354,7 @@ TEST_F(TransactionApi, unableToModifySignedTransaction) {
 
   hash_t paymentId;
   ASSERT_ANY_THROW(tx->setPaymentId(paymentId));
-  ASSERT_ANY_THROW(tx->setExtraNonce(Common::asBinaryArray("smth")));
+  ASSERT_ANY_THROW(tx->setExtraNonce(array::fromString("smth")));
 
   // but can add more signatures
   tx->signInputMultisignature(index, srcTxKey, 0, generateAccountKeys());

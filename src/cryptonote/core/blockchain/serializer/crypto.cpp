@@ -1,7 +1,7 @@
 #include "crypto.h"
 
 bool parse_hash256(const std::string& str_hash, crypto::hash_t& hash) {
-  return Common::podFromHex(str_hash, hash);
+  return hex::podFromString(str_hash, hash);
 }
 
 namespace crypto {
@@ -22,7 +22,7 @@ bool serialize(key_image_t& keyImage, Common::StringView name, cryptonote::ISeri
   return serializePod(keyImage, name, serializer);
 }
 
-bool serialize(chacha_iv& chacha, Common::StringView name, cryptonote::ISerializer& serializer) {
+bool serialize(chacha_iv_t& chacha, Common::StringView name, cryptonote::ISerializer& serializer) {
   return serializePod(chacha, name, serializer);
 }
 
@@ -30,11 +30,11 @@ bool serialize(signature_t& sig, Common::StringView name, cryptonote::ISerialize
   return serializePod(sig, name, serializer);
 }
 
-bool serialize(EllipticCurveScalar& ecScalar, Common::StringView name, cryptonote::ISerializer& serializer) {
+bool serialize(elliptic_curve_scalar_t& ecScalar, Common::StringView name, cryptonote::ISerializer& serializer) {
   return serializePod(ecScalar, name, serializer);
 }
 
-bool serialize(EllipticCurvePoint& ecPoint, Common::StringView name, cryptonote::ISerializer& serializer) {
+bool serialize(elliptic_curve_point_t& ecPoint, Common::StringView name, cryptonote::ISerializer& serializer) {
   return serializePod(ecPoint, name, serializer);
 }
 

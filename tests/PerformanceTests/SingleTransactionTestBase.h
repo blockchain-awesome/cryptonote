@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "cryptonote/core/Account.h"
+#include "cryptonote/core/account.h"
 #include "cryptonote/core/key.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 
@@ -17,7 +17,7 @@ public:
   {
     using namespace cryptonote;
 
-    Currency currency = CurrencyBuilder(m_nullLog, os::appdata::path()).currency();
+    Currency currency = CurrencyBuilder(os::appdata::path(), config::testnet::data, m_nullLog).currency();
     m_bob.generate();
 
     if (!currency.constructMinerTx(0, 0, 0, 2, 0, m_bob.getAccountKeys().address, m_tx))
@@ -30,7 +30,7 @@ public:
 protected:
 
   Logging::LoggerGroup m_nullLog;
-  cryptonote::AccountBase m_bob;
+  cryptonote::Account m_bob;
   cryptonote::transaction_t m_tx;
   crypto::public_key_t m_tx_pub_key;
 };
