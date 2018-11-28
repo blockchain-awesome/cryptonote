@@ -21,7 +21,7 @@
 #include "p2p/NetNode.h"
 #include "command_line/NetNodeConfig.h"
 #include "rpc/RpcServer.h"
-#include "rpc/RpcServerConfig.h"
+#include "command_line/RpcServerConfig.h"
 #include "version.h"
 #include "cryptonote/structures/array.hpp"
 
@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
   names.command = "Command line options";
   names.setting = "Command line options and settings options";
   names.full = "Allowed options";
-  Daemon cli(names, config::mainnet::data);
+  Daemon cli(names);
 
   try
   {
@@ -96,6 +96,15 @@ int main(int argc, char *argv[])
     {
       std::cerr << "Command parsing error!" << std::endl;
       return 1;
+    }
+    bool testnet_mode = get_arg(vm, arg_testnet_on);
+
+    std::cout << "test net = " << testnet_mode << std::endl;
+
+    if (testnet_mode)
+    {
+      config::setType(testnet_mode ? config::TESTNET : config::MAINNET);
+      logger(INFO) << "Starting in testnet mode!";
     }
 
     CoreConfig coreConfig;
@@ -126,21 +135,10 @@ int main(int argc, char *argv[])
 
     logger(INFO) << "Module folder: " << argv[0];
 
-    bool testnet_mode = get_arg(vm, arg_testnet_on);
-    config::config_t &conf = config::mainnet::data;
 
-    if (testnet_mode)
-    {
-      conf = config::testnet::data;
-      cli.setConfig(conf);
-      logger(INFO) << "Starting in testnet mode!";
-    }
-    netNodeConfig.setTestnet(testnet_mode);
-
-    // config::config_t &config = coreConfig.getConfig(vm);
 
     //create objects and link them
-    cryptonote::CurrencyBuilder currencyBuilder(coreConfig.configFolder, conf, logManager);
+    cryptonote::CurrencyBuilder currencyBuilder(coreConfig.getDir(), config::get(), logManager);
 
     try
     {
@@ -156,15 +154,13 @@ int main(int argc, char *argv[])
     cryptonote::core ccore(currency, nullptr, logManager);
 
     cryptonote::Checkpoints checkpoints(logManager);
-    for (const auto &cp : conf.checkpoints)
+    for (const auto &cp : config::get().checkpoints)
     {
       checkpoints.add(cp.height, cp.blockId);
     }
 
-    if (!testnet_mode)
-    {
-      ccore.set_checkpoints(std::move(checkpoints));
-    }
+
+    ccore.set_checkpoints(std::move(checkpoints));
 
     System::Dispatcher dispatcher;
 

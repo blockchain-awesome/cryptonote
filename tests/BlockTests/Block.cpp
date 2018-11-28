@@ -93,6 +93,11 @@ config_t data = {
 //   return true;
 // }
 
+TEST_F(BlockTest, types) {
+  block_info_t bi = block_info_t();
+  ASSERT_TRUE(bi.empty());
+}
+
 TEST_F(BlockTest, create)
 {
   LoggerManager logManager;
@@ -146,12 +151,14 @@ TEST_F(BlockTest, create)
   setType(config::MAINNET);
   const config::config_t *conf = &config::get();
   ASSERT_TRUE(&config::mainnet::data == conf);
+  ASSERT_TRUE(isType(config::MAINNET));
   setType(config::TESTNET);
   const config::config_t *conf1 = &config::get();
 
   ASSERT_TRUE(&config::testnet::data == conf1);
 
   ASSERT_TRUE(!os::version::get().empty());
+  ASSERT_TRUE(isType(config::TESTNET));
 
   // ASSERT_TRUE(tx.outputs.size() == 1);
   // ASSERT_TRUE(boost::filesystem::exists(c.blockchainIndexesFileName()));

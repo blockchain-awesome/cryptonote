@@ -8,6 +8,7 @@
 #include <boost/program_options.hpp>
 
 #include "common/os.h"
+#include "config/common.h"
 #include "command_line/options.h"
 
 namespace PaymentService {
@@ -77,7 +78,7 @@ bool ConfigurationManager::init(int argc, char** argv) {
     coreConfig.init(confOptions);
     remoteNodeConfig.init(confOptions);
 
-    netNodeConfig.setTestnet(confOptions["testnet"].as<bool>());
+    config::setType(confOptions["testnet"].as<bool>() ? config::TESTNET : config::MAINNET);
     startInprocess = confOptions["local"].as<bool>();
   }
 
@@ -87,9 +88,7 @@ bool ConfigurationManager::init(int argc, char** argv) {
   coreConfig.init(cmdOptions);
   remoteNodeConfig.init(cmdOptions);
 
-  if (cmdOptions["testnet"].as<bool>()) {
-    netNodeConfig.setTestnet(true);
-  }
+  config::setType(cmdOptions["testnet"].as<bool>() ? config::TESTNET : config::MAINNET);
 
   if (cmdOptions["local"].as<bool>()) {
     startInprocess = true;

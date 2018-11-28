@@ -72,7 +72,7 @@ void addPortMapping(Logging::LoggerRef& logger, uint32_t port) {
       portString << port;
       if (UPNP_AddPortMapping(urls.controlURL, igdData.first.servicetype, portString.str().c_str(),
         portString.str().c_str(), lanAddress, config::get().name, "TCP", 0, "0") != 0) {
-        logger(ERROR) << "UPNP_AddPortMapping failed.";
+        logger(ERROR) << "UPNP_AddPortMapping failed. Port = " << port;
       } else {
         logger(INFO, BRIGHT_GREEN) << "Added IGD port mapping.";
       }
@@ -426,7 +426,8 @@ namespace cryptonote
   
   bool NodeServer::init(const NetNodeConfig& conf) {
     
-    if (!conf.getTestnet()) {
+    if (config::isType(config::MAINNET)) {
+      std::cout << "init seeds for node Server" << std::endl;
       for (auto seed : config::get().seeds) {
         append_net_address(m_seed_nodes, seed);
       }
@@ -983,7 +984,7 @@ namespace cryptonote
 
     crypto::public_key_t pk;
     const Currency& currency = m_payload_handler.m_currency;
-    const config::config_t &conf = currency.getConfig();
+    const config::config_t &conf = config::get();
 
     hex::podFromString(conf.net.p2p_stat_trusted_pub_key, pk);
     // hex::podFromString(cryptonote::P2P_STAT_TRUSTED_PUB_KEY, pk);

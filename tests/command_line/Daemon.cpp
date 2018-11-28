@@ -25,7 +25,7 @@ TEST_F(DaemonTest, run)
   names.command = "Command line options";
   names.setting = "Command line options and settings options";
   names.full = "Allowed options";
-  Daemon cli(names, config::testnet::data);
+  Daemon cli(names);
   cli.init();
   cli.setup();
   // bool r = cli.parse(my_argc, my_argv, [] {

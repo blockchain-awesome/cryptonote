@@ -12,6 +12,7 @@
 #include "cryptonote/core/core.h"
 #include "cryptonote/core/account.h"
 #include "command_line/CoreConfig.h"
+#include "command_line/NetNodeConfig.h"
 #include "cryptonote/core/Miner.h"
 #include "cryptonote/protocol/handler.h"
 #include "p2p/NetNode.h"
@@ -92,7 +93,7 @@ void InProcTestNode::workerThread(std::promise<std::string>& initPromise) {
     cryptonote::MinerConfig emptyMiner;
     cryptonote::CoreConfig coreConfig;
 
-    coreConfig.configFolder = m_cfg.dataDir;
+    coreConfig.setDir(m_cfg.dataDir);
     
     if (!core->init(emptyMiner, true)) {
       throw std::runtime_error("Core failed to initialize");

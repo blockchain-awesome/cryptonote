@@ -113,20 +113,20 @@ bool Currency::getPathAndFilesReady()
       return false;
     }
   }
-  std::string files[] = {
-      blocksFileName(),
-      blocksCacheFileName(),
-      blockIndexesFileName(),
-      txPoolFileName(),
-      blockchainIndexesFileName()};
-  for (std::string file : files)
-  {
-    if (!boost::filesystem::exists(file))
-    {
-      std::ofstream savefile(file);
-      savefile.close();
-    }
-  }
+  // std::string files[] = {
+  //     blocksFileName(),
+  //     blocksCacheFileName(),
+  //     blockIndexesFileName(),
+  //     txPoolFileName(),
+  //     blockchainIndexesFileName()};
+  // for (std::string file : files)
+  // {
+  //   if (!boost::filesystem::exists(file))
+  //   {
+  //     std::ofstream savefile(file);
+  //     savefile.close();
+  //   }
+  // }
   return true;
 }
 

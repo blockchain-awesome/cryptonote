@@ -21,6 +21,9 @@ void CoreConfig::init(const boost::program_options::variables_map &options)
   {
     configFolder = command_line::get_arg(options, command_line::arg_data_dir);
     configFolderDefaulted = options[command_line::arg_data_dir.name].defaulted();
+    if (configFolderDefaulted) {
+      configFolder = os::appdata::path();
+    }
   }
 }
 
@@ -47,6 +50,14 @@ void CoreConfig::checkDataDir()
     }
   }
 }
+
+std::string &CoreConfig::getDir() {
+    if (configFolderDefaulted) {
+      configFolder = os::appdata::path();
+    }
+    return configFolder;
+  }
+
 
 void CoreConfig::initOptions(boost::program_options::options_description &desc)
 {

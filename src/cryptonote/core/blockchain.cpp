@@ -159,6 +159,7 @@ uint32_t Blockchain::getHeight() {
 bool Blockchain::init(bool load_existing) {
   std::lock_guard<decltype(m_blockchain_lock)> lk(m_blockchain_lock);
   if (!m_blocks.init()) {
+    logger(INFO, BRIGHT_RED) << "Fail to load blocks...";
     return false;
   }
 

@@ -19,7 +19,7 @@ class PaymentGateService {
 public:
   PaymentGateService() : dispatcher(nullptr), stopEvent(nullptr), config(), service(nullptr), logger(), currencyBuilder(
     os::appdata::path(),
-    config::mainnet::data,
+    config::get(),
     logger
     ) {
   }

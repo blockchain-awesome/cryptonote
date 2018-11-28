@@ -106,9 +106,9 @@ bool core::get_alternative_blocks(std::list<block_t>& blocks) {
 
 size_t core::get_alternative_blocks_count() {
   return m_blockchain.getAlternativeBlocksCount();
-  }
+}
   //-----------------------------------------------------------------------------------------------
-  bool core::init(const MinerConfig& minerConfig, bool load_existing) {
+bool core::init(const MinerConfig& minerConfig, bool load_existing) {
   bool r = m_mempool.init();
   if (!(r)) { logger(ERROR, BRIGHT_RED) << "Failed to initialize memory pool"; return false; }
 
@@ -296,7 +296,7 @@ bool core::add_new_tx(const transaction_t& tx, const crypto::hash_t& tx_hash, si
 bool core::get_block_template(block_t& b, const account_public_address_t& adr, difficulty_t& diffic, uint32_t& height, const binary_array_t& ex_nonce) {
   size_t median_size;
   uint64_t already_generated_coins;
-  config::config_t conf = m_currency.getConfig();
+  config::config_t conf = config::get();
 
   {
     Locker lbs(m_blockchain.getMutex());;

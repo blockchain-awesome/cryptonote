@@ -3,7 +3,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "P2pNodeConfig.h"
-#include "P2pNetworks.h"
+#include "p2p/P2pNetworks.h"
 
 #include <CryptoNoteConfig.h>
 
@@ -56,7 +56,7 @@ size_t P2pNodeConfig::getWhiteListConnectionsPercent() const {
 }
 
 boost::uuids::uuid P2pNodeConfig::getNetworkId() const {
-  if (getTestnet()) {
+  if (config::isType(config::TESTNET)) {
     boost::uuids::uuid copy = networkId;
     copy.data[0] += 1;
     return copy;

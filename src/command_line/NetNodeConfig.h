@@ -20,7 +20,6 @@ public:
   bool init(const boost::program_options::variables_map& vm);
 
   std::string getP2pStateFilename() const;
-  bool getTestnet() const;
   std::string getBindIp() const;
   uint16_t getBindPort() const;
   uint16_t getExternalPort() const;
@@ -33,7 +32,6 @@ public:
   std::string getConfigFolder() const;
 
   void setP2pStateFilename(const std::string& filename);
-  void setTestnet(bool isTestnet);
   void setBindIp(const std::string& ip);
   void setBindPort(uint16_t port);
   void setExternalPort(uint16_t port);
@@ -57,7 +55,6 @@ private:
   bool hideMyPort;
   std::string configFolder;
   std::string p2pStateFilename;
-  bool testnet;
 };
 
 } //namespace nodetool

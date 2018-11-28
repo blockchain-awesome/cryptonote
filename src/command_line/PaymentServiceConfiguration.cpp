@@ -9,13 +9,14 @@
 #include <boost/program_options.hpp>
 
 #include "logging/ILogger.h"
+#include "config/common.h"
 
 namespace po = boost::program_options;
 
 namespace PaymentService {
 
 Configuration::Configuration():generateNewContainer(false), daemonize(false), registerService(false), 
-unregisterService(false), logFile("payment_gate.log"), testnet(false), printAddresses(false), logLevel(Logging::INFO),
+unregisterService(false), logFile("payment_gate.log"), printAddresses(false), logLevel(Logging::INFO),
 bindAddress(""), bindPort(0)
 {
 }
@@ -56,7 +57,7 @@ void Configuration::init(const boost::program_options::variables_map& options) {
   }
 
   if (options["testnet"].as<bool>()) {
-    testnet = true;
+    config::setType(config::TESTNET);
   }
 
   if (options.count("log-file") != 0) {

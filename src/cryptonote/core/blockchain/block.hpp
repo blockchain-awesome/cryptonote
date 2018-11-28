@@ -254,16 +254,20 @@ bool BlockAccessor<T>::initIndex() {
   if (fs) {
     uint64_t count;
     if (!readHeight(fs, count)) {
+      std::cout << "Fail to read block height!" << std::endl;
       return false;
     }
 
     if (!readItems(fs, count)) {
+      std::cout << "Fail to read items!" << std::endl;
+
       return false;
     }
   } else {
     fs.open(blockIndexesFilename, std::ios::out | std::ios::binary);
     uint64_t count = 0;
     if (!writeHeight(fs, count)) {
+      std::cout << "Fail to write block height!" << std::endl;
       return false;
     }
 
@@ -278,6 +282,7 @@ template <class T>
 bool BlockAccessor<T>::init()
 {
   if (!initIndex()) {
+    std::cout << "Fail to init block index!" << std::endl;
     return false;
   }
   std::string blockFilename = m_currency.blocksFileName();

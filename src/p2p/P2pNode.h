@@ -18,7 +18,7 @@
 #include "IStreamSerializable.h"
 #include "command_line/NetNodeConfig.h"
 #include "P2pInterfaces.h"
-#include "P2pNodeConfig.h"
+#include "command_line/P2pNodeConfig.h"
 #include "P2pProtocolDefinitions.h"
 #include "PeerListManager.h"
 

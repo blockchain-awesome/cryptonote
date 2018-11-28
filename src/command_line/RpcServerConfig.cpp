@@ -33,6 +33,10 @@ namespace cryptonote {
   void RpcServerConfig::init(const boost::program_options::variables_map& vm)  {
     bindIp = command_line::get_arg(vm, arg_rpc_bind_ip);
     bindPort = command_line::get_arg(vm, arg_rpc_bind_port);
+    bool defaulted = vm[command_line::arg_data_dir.name].defaulted();
+    if (defaulted) {
+      bindPort = config::get().net.rpc_port;
+    }
   }
 
 }

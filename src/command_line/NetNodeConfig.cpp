@@ -63,18 +63,23 @@ void NetNodeConfig::initOptions(boost::program_options::options_description& des
 }
 
 NetNodeConfig::NetNodeConfig():bindIp(""), bindPort(0),
- externalPort(0), allowLocalIp(false), hideMyPort(false), configFolder(os::appdata::path()), testnet(false)
+ externalPort(0), allowLocalIp(false), hideMyPort(false), configFolder("")
 {
 }
 
 bool NetNodeConfig::init(const boost::program_options::variables_map& vm)
 {
+  
   if (vm.count(arg_p2p_bind_ip.name) != 0 && (!vm[arg_p2p_bind_ip.name].defaulted() || bindIp.empty())) {
     bindIp = get_arg(vm, arg_p2p_bind_ip);
   }
 
-  if (vm.count(arg_p2p_bind_port.name) != 0 && (!vm[arg_p2p_bind_port.name].defaulted() || bindPort == 0)) {
+
+
+  if (vm.count(arg_p2p_bind_port.name) != 0 && (!vm[arg_p2p_bind_port.name].defaulted())) {
     bindPort = get_arg(vm, arg_p2p_bind_port);
+  } else {
+    bindPort = config::get().net.p2p_port;
   }
 
   if (vm.count(arg_p2p_external_port.name) != 0 && (!vm[arg_p2p_external_port.name].defaulted() || externalPort == 0)) {
@@ -85,8 +90,10 @@ bool NetNodeConfig::init(const boost::program_options::variables_map& vm)
     allowLocalIp = get_arg(vm, arg_p2p_allow_local_ip);
   }
 
-  if (vm.count(arg_data_dir.name) != 0 && (!vm[arg_data_dir.name].defaulted() || configFolder == os::appdata::path())) {
+  if (vm.count(arg_data_dir.name) != 0 && (!vm[arg_data_dir.name].defaulted())) {
     configFolder = get_arg(vm, arg_data_dir);
+  } else {
+    configFolder == os::appdata::path();
   }
 
   p2pStateFilename = cryptonote::parameters::P2P_NET_DATA_FILENAME;
@@ -126,20 +133,8 @@ bool NetNodeConfig::init(const boost::program_options::variables_map& vm)
   return true;
 }
 
-void NetNodeConfig::setTestnet(bool isTestnet) {
-  testnet = isTestnet;
-}
-
 std::string NetNodeConfig::getP2pStateFilename() const {
-  if (testnet) {
-    return "testnet_" + p2pStateFilename;
-  }
-
   return p2pStateFilename;
-}
-
-bool NetNodeConfig::getTestnet() const {
-  return testnet;
 }
 
 std::string NetNodeConfig::getBindIp() const {

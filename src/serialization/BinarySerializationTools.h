@@ -61,6 +61,7 @@ bool loadFromBinaryFile(T& obj, const std::string& filename) {
     std::ifstream dataFile;
     dataFile.open(filename, std::ios_base::binary | std::ios_base::in);
     if (dataFile.fail()) {
+      std::cout << "Fail to open a binary file!" << std::endl;
       return false;
     }
 
@@ -68,7 +69,8 @@ bool loadFromBinaryFile(T& obj, const std::string& filename) {
     BinaryInputStreamSerializer in(stream);
     serialize(obj, in);
     return !dataFile.fail();
-  } catch (std::exception&) {
+  } catch (std::exception& e) {
+    std::cout << "Load exception :" << e.what() << std::endl;
     return false;
   }
 }

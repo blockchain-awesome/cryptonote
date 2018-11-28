@@ -49,9 +49,9 @@ TEST_F(CurrencyTest, create)
   ASSERT_TRUE(tx.version > 0);
   ASSERT_TRUE(tx.inputs.size() == 1);
   ASSERT_TRUE(tx.outputs.size() == 1);
-  ASSERT_TRUE(boost::filesystem::exists(c.blockchainIndexesFileName()));
-  ASSERT_TRUE(boost::filesystem::exists(c.blockIndexesFileName()));
-  ASSERT_TRUE(boost::filesystem::exists(c.blocksCacheFileName()));
-  ASSERT_TRUE(boost::filesystem::exists(c.blocksFileName()));
+  ASSERT_TRUE(!boost::filesystem::exists(c.blockchainIndexesFileName()));
+  ASSERT_TRUE(!boost::filesystem::exists(c.blockIndexesFileName()));
+  ASSERT_TRUE(!boost::filesystem::exists(c.blocksCacheFileName()));
+  ASSERT_TRUE(!boost::filesystem::exists(c.blocksFileName()));
 }
 } // namespace

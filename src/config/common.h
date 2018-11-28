@@ -76,12 +76,13 @@ struct config_t
 
 enum config_enum_t
 {
-    MAINNET,
+    MAINNET = 1,
     TESTNET
 };
 
 
 extern void setType(config_enum_t t);
+extern bool isType(config_enum_t t);
 extern config_t &get();
 
 } // namespace config

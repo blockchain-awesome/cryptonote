@@ -17,7 +17,16 @@ public:
   static void initOptions(boost::program_options::options_description& desc);
   void init(const boost::program_options::variables_map& options);
 
+  void setDir(std::string dir) {
+    if (configFolderDefaulted) {
+      configFolder = dir;
+    }
+  }
+
   void checkDataDir();
+  std::string &getDir();
+
+  private:
   std::string configFolder;
   bool configFolderDefaulted = true;
 };
