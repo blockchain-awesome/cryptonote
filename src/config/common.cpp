@@ -19,7 +19,6 @@ bool isType(config_enum_t t)
 
 config_t &get()
 {
-  std::cout << "get config tyep : " << type << std::endl;
   switch (type)
   {
   case MAINNET:

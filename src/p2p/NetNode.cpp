@@ -35,7 +35,6 @@
 #include "CryptoNoteConfig.h"
 #include "LevinProtocol.h"
 #include "P2pProtocolDefinitions.h"
-#include "cryptonote/core/currency.h"
 
 #include "serialization/BinaryInputStreamSerializer.h"
 #include "serialization/BinaryOutputStreamSerializer.h"
@@ -983,7 +982,6 @@ namespace cryptonote
     }
 
     crypto::public_key_t pk;
-    const Currency& currency = m_payload_handler.m_currency;
     const config::config_t &conf = config::get();
 
     hex::podFromString(conf.net.p2p_stat_trusted_pub_key, pk);

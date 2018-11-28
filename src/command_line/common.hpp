@@ -230,6 +230,11 @@ public:
     po::notify(vm);
   }
 
+  void help()
+  {
+    std::cout << desc_options << std::endl;
+  }
+
   template <typename T>
   bool parse(int argc, char *argv[], T f)
   {
@@ -247,13 +252,13 @@ public:
     catch (std::exception &e)
     {
       std::cerr << "Failed to parse arguments: " << e.what() << std::endl;
-      std::cerr << desc_options << std::endl;
+      help();
       return false;
     }
     catch (...)
     {
       std::cerr << "Failed to parse arguments: unknown exception" << std::endl;
-      std::cerr << desc_options << std::endl;
+      help();
       return false;
     }
   };
