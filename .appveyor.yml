@@ -6,4 +6,4 @@ build_script:
 test_script:
 - env CTEST_OUTPUT_ON_FAILURE=1 make test
 - lcov --capture --directory src --output-file temp.info && lcov --remove temp.info "/usr/include/*" "*/google/*" "*/include/*" "*/tests/*" > coverage.info && lcov --list coverage.info
-- python -m pip install --upgrade pip && pip install codecov && codecov --token 2a2cf36f-81d6-43b9-abba-d5955cb0cafe --root src
+- python -m pip install --upgrade pip && pip install --user codecov && codecov --token 2a2cf36f-81d6-43b9-abba-d5955cb0cafe --root src

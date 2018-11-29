@@ -55,7 +55,7 @@ endif ()
 
 target_link_libraries(TransfersTests IntegrationTestLibrary Wallet gtest_main InProcessNode NodeRpcProxy P2P Rpc Http CryptoNoteCore BlockchainExplorer Serialization System CommandLine  Logging Transfers Common Crypto Config upnpc-static ${Boost_LIBRARIES})
 target_link_libraries(UnitTests gtest_main PaymentGate Wallet TestGenerator InProcessNode NodeRpcProxy Rpc Http Transfers System CryptoNoteCore BlockchainExplorer  Serialization CommandLine  Logging Common Crypto Config ${Boost_LIBRARIES})
-target_link_libraries(BlockTests gtest_main PaymentGate Wallet TestGenerator InProcessNode NodeRpcProxy Rpc Http Transfers System CryptoNoteCore BlockchainExplorer  Serialization CommandLine  Logging Common Crypto Config ${Boost_LIBRARIES})
+target_link_libraries(BlockTests gtest_main PaymentGate Wallet TestGenerator InProcessNode NodeRpcProxy Rpc Http Transfers CryptoNoteCore System BlockchainExplorer  Serialization CommandLine  Logging Common Crypto Config ${Boost_LIBRARIES})
 target_link_libraries(AccountTests gtest_main PaymentGate Wallet TestGenerator InProcessNode NodeRpcProxy Rpc Http Transfers System CryptoNoteCore BlockchainExplorer  Serialization CommandLine  Logging Common Crypto Config ${Boost_LIBRARIES})
 target_link_libraries(CliTests gtest_main PaymentGate Wallet TestGenerator InProcessNode NodeRpcProxy Rpc Http Transfers   CommandLine CryptoNoteCore  BlockchainExplorer Serialization System  Logging Common Crypto Config ${Boost_LIBRARIES})
 

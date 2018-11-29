@@ -17,6 +17,7 @@
 #include "config/common.h"
 
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
+#include "system/Event.h"
 
 using namespace cryptonote;
 using namespace config;
@@ -36,9 +37,7 @@ const char GENESIS_COINBASE_TX_HEX[] = "011c01f00101029b2e4c0281c0b02e7c53291a94
 const char P2P_STAT_TRUSTED_PUB_KEY[] = "8f80f9a5a434a9f1510d13336228debfee9c918ce505efe225d8c94d045fa115";
 
 seeds_t seeds = {
-    "69.171.73.252:19800",
-    "39.108.160.252:19800",
-    "144.202.10.183:19800",
+    "127.0.0.1:19800"
 };
 
 checkpoints_t checkpoints = {};
