@@ -122,12 +122,13 @@ size_t TcpConnection::read(uint8_t* data, size_t size) {
 
           if (epoll_ctl(dispatcher->getEpoll(), EPOLL_CTL_MOD, connection, &connectionEvent) == -1) {
             message = "epoll_ctl failed, " + lastErrorMessage();
-            throw std::runtime_error("TcpConnection::read");
+            throw std::runtime_error("TcpConnection::read: " + message);
           }
         }
 
         if((operationContext.events & (EPOLLERR | EPOLLHUP)) != 0) {
-          throw std::runtime_error("TcpConnection::read");
+          message = "Event failed, " + lastErrorMessage();
+          throw std::runtime_error("TcpConnection::read event error : " + message);
         }
 
         ssize_t transferred = ::recv(connection, (void *)data, size, 0);
@@ -140,7 +141,7 @@ size_t TcpConnection::read(uint8_t* data, size_t size) {
       }
     }
 
-    throw std::runtime_error("TcpConnection::read, "+ message);
+    throw std::runtime_error("TcpConnection::read: "+ message);
   }
 
   assert(transferred <= static_cast<ssize_t>(size));

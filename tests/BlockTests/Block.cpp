@@ -18,6 +18,7 @@
 
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "system/Event.h"
+#include "cryptonote/core/transaction/types.h"
 
 using namespace cryptonote;
 using namespace config;
@@ -37,8 +38,7 @@ const char GENESIS_COINBASE_TX_HEX[] = "011c01f00101029b2e4c0281c0b02e7c53291a94
 const char P2P_STAT_TRUSTED_PUB_KEY[] = "8f80f9a5a434a9f1510d13336228debfee9c918ce505efe225d8c94d045fa115";
 
 seeds_t seeds = {
-    "127.0.0.1:19800"
-};
+    "127.0.0.1:19800"};
 
 checkpoints_t checkpoints = {};
 config_t data = {
@@ -92,9 +92,12 @@ config_t data = {
 //   return true;
 // }
 
-TEST_F(BlockTest, types) {
+TEST_F(BlockTest, types)
+{
   block_info_t bi = block_info_t();
   ASSERT_TRUE(bi.empty());
+  TransactionTypes::input_key_info_t ikit = TransactionTypes::input_key_info_t();
+  ASSERT_TRUE(sizeof(ikit) > 0);
 }
 
 TEST_F(BlockTest, create)
