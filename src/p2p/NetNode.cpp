@@ -425,13 +425,9 @@ namespace cryptonote
   
   bool NodeServer::init(const NetNodeConfig& conf) {
     
-    if (config::isType(config::MAINNET)) {
-      std::cout << "init seeds for node Server" << std::endl;
-      for (auto seed : config::get().seeds) {
-        append_net_address(m_seed_nodes, seed);
-      }
-    } else {
-      m_network_id.data[0] += 1;
+    std::cout << "Init seeds for node servers" << std::endl;
+    for (auto seed : config::get().seeds) {
+      append_net_address(m_seed_nodes, seed);
     }
 
     if (!handleConfig(conf)) { 
@@ -520,7 +516,11 @@ namespace cryptonote
   bool NodeServer::store_config()
   {
     try {
+      if (m_config_folder.empty()) {
+        m_config_folder = os::appdata::path();
+      }
       boost::filesystem::path path(m_config_folder);
+      std::cout << "Store path: " << m_config_folder << std::endl;
       bool exists = boost::filesystem::exists(path) ? true : boost::filesystem::create_directory(path);
       if (!exists) {
         logger(INFO) << "Failed to create data directory: " << m_config_folder;
@@ -528,6 +528,7 @@ namespace cryptonote
       }
 
       std::string state_file_path = m_config_folder + "/" + m_p2p_state_filename;
+      std::cout << "p2p store file" << state_file_path << std::endl;
       std::ofstream p2p_data;
       p2p_data.open(state_file_path, std::ios_base::binary | std::ios_base::out | std::ios::trunc);
       if (p2p_data.fail())  {

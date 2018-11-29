@@ -24,7 +24,8 @@ const char CRYPTONOTE_NAME[] = "vigcointest";
 const uint64_t CRYPTONOTE_CREATION_TIME = 1520035200000;
 
 seeds_t seeds = {
-    // "127.0.0.1:29800"
+    "192.168.9.5:29800",
+    "192.168.9.3:29800"
 };
 
 checkpoints_t checkpoints = {};

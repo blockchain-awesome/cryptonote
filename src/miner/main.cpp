@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
 
     System::Dispatcher dispatcher;
     Miner::MinerManager app(dispatcher, config, loggerGroup);
-
+    std::cout << "Mining started" << std::endl;
     app.start();
   } catch (std::exception& e) {
     std::cerr << "Fatal: " << e.what() << std::endl;

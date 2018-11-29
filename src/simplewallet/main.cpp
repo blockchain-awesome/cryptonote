@@ -105,7 +105,6 @@ int main(int argc, char *argv[])
   logger(INFO, BRIGHT_WHITE) << config::get().name << " wallet v" << PROJECT_VERSION_LONG;
 
   cryptonote::Currency currency = cryptonote::CurrencyBuilder(os::appdata::path(), config::get(), logManager).
-                                  // testnet(command_line::get_arg(vm, arg_testnet)).currency();
                                   currency();
 
   if (command_line::has_arg(vm, Tools::wallet_rpc_server::arg_rpc_bind_port))

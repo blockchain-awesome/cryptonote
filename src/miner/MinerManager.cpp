@@ -65,6 +65,9 @@ void MinerManager::start() {
 
     try {
       params = requestMiningParameters(m_dispatcher, m_config.daemonHost, m_config.daemonPort, m_config.miningAddress);
+      m_logger(Logging::INFO) << "Connected to daemon: " << m_config.daemonHost << ":" << m_config.daemonPort;
+      m_logger(Logging::INFO) << "Wallet Address: " << m_config.miningAddress;
+
     } catch (ConnectException& e) {
       m_logger(Logging::WARNING) << "Couldn't connect to daemon: " << e.what();
       System::Timer timer(m_dispatcher);
