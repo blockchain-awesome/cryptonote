@@ -363,6 +363,10 @@ namespace cryptonote
     if (command_line::has_arg(vm, arg_p2p_seed_node)) {
       if (!parse_peers_and_add_to_container(vm, arg_p2p_seed_node, m_seed_nodes))
         return false;
+    } else {
+      for (auto seed : config::get().seeds) {
+        append_net_address(m_seed_nodes, seed);
+      }
     }
 
     if (command_line::has_arg(vm, arg_p2p_hide_my_port)) {
@@ -420,16 +424,9 @@ namespace cryptonote
     return true;
   }
 
-
   //-----------------------------------------------------------------------------------
   
   bool NodeServer::init(const NetNodeConfig& conf) {
-    
-    std::cout << "Init seeds for node servers" << std::endl;
-    for (auto seed : config::get().seeds) {
-      append_net_address(m_seed_nodes, seed);
-    }
-
     if (!handleConfig(conf)) { 
       logger(ERROR, BRIGHT_RED) << "Failed to handle command line"; 
       return false; 

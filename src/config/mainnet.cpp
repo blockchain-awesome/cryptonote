@@ -29,10 +29,13 @@ seeds_t seeds = {
     "144.202.10.183:19800",
 };
 
-checkpoints_t checkpoints = {};
+checkpoints_t checkpoints = {
+    
+};
 
 const hard_fork_list_t hardforks = {
     {1, 1, 0, 1341378000},
+    {2, 173029, 0, 1544644329342}
 };
 
 storage_t storage = {

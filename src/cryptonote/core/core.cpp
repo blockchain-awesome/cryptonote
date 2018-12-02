@@ -308,10 +308,8 @@ bool core::get_block_template(block_t& b, const account_public_address_t& adr, d
     }
 
     b = boost::value_initialized<block_t>();
-    // b.majorVersion = conf.block.version.major;
     const HardFork hf = HardFork(config::get().hardforks);
     b.majorVersion = hf.getMajorVersion(height);
-    // b.minorVersion = conf.block.version.miner;
     b.minorVersion = hf.getMinorVersion(height);
 
     b.previousBlockHash = get_tail_id();
