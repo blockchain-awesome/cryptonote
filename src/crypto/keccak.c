@@ -4,7 +4,11 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#ifdef WIN32
+#include <io.h>
+#else
 #include <unistd.h>
+#endif
 #include "common/int-util.h"
 #include "hash-ops.h"
 #include "keccak.h"

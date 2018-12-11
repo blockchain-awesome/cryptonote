@@ -33,7 +33,9 @@
 #include <cstddef>
 #include <cstring>
 #include <functional>
+#ifndef WIN32
 #include <sodium/crypto_verify_32.h>
+#endif
 
 #define CRYPTO_MAKE_COMPARABLE(type) \
 namespace crypto { \
