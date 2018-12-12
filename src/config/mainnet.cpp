@@ -35,7 +35,7 @@ checkpoints_t checkpoints = {
 
 const hard_fork_list_t hardforks = {
     {1, 1, 0, 1341378000},
-    {2, 173029, 0, 1544644329342}
+    {2, 175734, 0, 1545444675759}
 };
 
 storage_t storage = {
