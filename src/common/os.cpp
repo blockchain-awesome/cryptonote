@@ -297,7 +297,7 @@ std::string path()
     std::string config_folder;
 #ifdef WIN32
     // Windows
-    config_folder = get_special_folder_path(CSIDL_APPDATA, true) + "/" + config::get().name;
+    config_folder = get_special_folder_path(CSIDL_APPDATA, true) + "\\" + config::get().name;
 #else
     std::string pathRet;
     char *pszHome = getenv("HOME");
