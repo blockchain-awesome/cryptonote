@@ -51,6 +51,7 @@ namespace cryptonote {
       cryptonote::ITransactionValidator& validator,
       cryptonote::ITimeProvider& timeProvider,
       Logging::ILogger& log);
+      ~TxMemoryPool();
 
     bool addObserver(ITxPoolObserver* observer);
     bool removeObserver(ITxPoolObserver* observer);

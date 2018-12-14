@@ -107,10 +107,28 @@ bool Currency::getPathAndFilesReady()
 {
   if (!boost::filesystem::exists(m_path))
   {
-    std::cout << "Dir not found!" << std::endl;
+    std::cout << "Dir: `" << m_path << "` not found! Creating..." << std::endl;
     if (!boost::filesystem::create_directory(m_path))
     {
+      std::cout << "Failed to create dir: " << m_path << "." << std::endl;
       return false;
+    }
+    std::cout << "Success creating dir: " << m_path << "." << std::endl;
+  }
+  std::string files[] = {
+      // blocksFileName(),
+      // blocksCacheFileName(),
+      // blockIndexesFileName(),
+      // txPoolFileName(),
+      blockchainIndexesFileName()
+      };
+  for (std::string file : files)
+  {
+    if (!boost::filesystem::exists(file))
+    {
+      std::cout << "Creating File: " << file << "." << std::endl;
+      std::ofstream savefile(file);
+      savefile.close();
     }
   }
   return true;

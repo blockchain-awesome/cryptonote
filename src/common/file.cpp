@@ -1,5 +1,6 @@
 #include "file.h"
 #include <iostream>
+#include <string>
 #include <cstdio>
 
 namespace std
@@ -7,13 +8,30 @@ namespace std
 namespace file
 {
 
-bool exists(string filename)
+bool exists(const string &filename)
 {
   ifstream f(filename.c_str());
   return f.good();
 }
 
-bool unlink(string filename)
+bool create(const string &filename)
+{
+  fstream fs;
+  try
+  {
+    fs.open(filename, fstream::binary | fstream::trunc | fstream::out);
+    fs.close();
+  }
+  catch (std::exception &e)
+  {
+    std::cout << "Error creating file: " << filename << std::endl;
+    std::cout << "Error reason: " << e.what() << std::endl;
+    return false;
+  }
+  return true;
+}
+
+bool unlink(const string &filename)
 {
   if (!exists(filename))
   {
@@ -26,7 +44,7 @@ bool unlink(string filename)
   return true;
 }
 
-fstream open(const string filename, bool forceCreate)
+fstream open(const string &filename, bool forceCreate)
 {
   fstream fs;
   fs.open(filename, fstream::binary | fstream::in | fstream::out);
@@ -47,7 +65,7 @@ fstream open(const string filename, bool forceCreate)
   }
   return fs;
 }
-bool write(const string filename, const char *data, size_t size, size_t offset, bool forceCreate)
+bool write(const string &filename, const char *data, size_t size, size_t offset, bool forceCreate)
 {
   fstream fs = open(filename, forceCreate);
   if (!fs)
@@ -58,7 +76,7 @@ bool write(const string filename, const char *data, size_t size, size_t offset, 
   return !!fs.write(data, size);
 }
 
-bool read(const string filename, char *data, size_t size, bool forceCreate)
+bool read(const string &filename, char *data, size_t size, bool forceCreate)
 {
   fstream fs = open(filename, forceCreate);
   if (!fs)

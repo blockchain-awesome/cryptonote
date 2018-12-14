@@ -61,7 +61,8 @@ bool loadFromBinaryFile(T& obj, const std::string& filename) {
     std::ifstream dataFile;
     dataFile.open(filename, std::ios_base::binary | std::ios_base::in);
     if (dataFile.fail()) {
-      std::cout << "Fail to open a binary file!" << std::endl;
+      std::cout << "Fail to open a binary file: " << filename << "!" << std::endl;
+      std::cout << "Error Reason: " << strerror(errno) << "!" << std::endl;
       return false;
     }
 

@@ -26,7 +26,7 @@ struct NOTIFY_REQUEST_GET_OBJECTS_request;
 class Currency;
 class IBlock;
 class ICoreObserver;
-struct Block;
+class Block;
 struct block_verification_context_t;
 struct block_full_info_t;
 struct block_short_info_t;

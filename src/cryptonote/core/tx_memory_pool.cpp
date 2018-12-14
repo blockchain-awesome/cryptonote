@@ -12,6 +12,7 @@
 #include <boost/filesystem.hpp>
 
 #include "common/int-util.h"
+#include "common/file.h"
 #include "crypto/hash.h"
 
 #include "serialization/SerializationTools.h"
@@ -96,6 +97,10 @@ namespace cryptonote {
     m_txCheckInterval(60, timeProvider),
     m_fee_index(boost::get<1>(m_transactions)),
     logger(log, "txpool") {
+  }
+
+  TxMemoryPool::~TxMemoryPool() {
+    deinit();
   }
   //---------------------------------------------------------------------------------
   bool TxMemoryPool::add_tx(const transaction_t &tx, /*const crypto::hash_t& tx_prefix_hash,*/ const crypto::hash_t &id, size_t blobSize, tx_verification_context_t& tvc, bool keptByBlock) {
@@ -390,6 +395,7 @@ namespace cryptonote {
   }
   //---------------------------------------------------------------------------------
   bool TxMemoryPool::init() {
+    std::cout << "Tx Memory Pool init" << std::endl;
     std::lock_guard<std::recursive_mutex> lock(m_transactions_lock);
     if (!loadFromBinaryFile(*this, m_currency.txPoolFileName())) {
       logger(ERROR) << "Failed to load memory pool from file " << m_currency.txPoolFileName();
@@ -411,6 +417,10 @@ namespace cryptonote {
   }
   //---------------------------------------------------------------------------------
   bool TxMemoryPool::deinit() {
+    std::cout << "Tx Memory Pool deinit" << std::endl;
+    if (!std::file::exists(m_currency.txPoolFileName())) {
+      std::file::create(m_currency.txPoolFileName());
+    }
     if (!storeToBinaryFile(*this, m_currency.txPoolFileName())) {
       logger(INFO) << "Failed to serialize memory pool to file " << m_currency.txPoolFileName();
     }
