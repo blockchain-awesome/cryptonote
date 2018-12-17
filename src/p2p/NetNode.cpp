@@ -30,6 +30,7 @@
 #include "stream/StdOutputStream.h"
 #include "crypto/crypto.h"
 #include "common/os.h"
+#include "command_line/options.h"
 
 #include "ConnectionContext.h"
 #include "CryptoNoteConfig.h"
@@ -100,17 +101,6 @@ namespace cryptonote
 {
   namespace
   {
-    const command_line::arg_descriptor<std::string> arg_p2p_bind_ip        = {"p2p-bind-ip", "Interface for p2p network protocol", "0.0.0.0"};
-    const command_line::arg_descriptor<std::string> arg_p2p_bind_port      = {"p2p-bind-port", "Port for p2p network protocol", std::to_string(config::get().net.p2p_port)};
-    const command_line::arg_descriptor<uint32_t>    arg_p2p_external_port  = {"p2p-external-port", "External port for p2p network protocol (if port forwarding used with NAT)", 0};
-    const command_line::arg_descriptor<bool>        arg_p2p_allow_local_ip = {"allow-local-ip", "Allow local ip add to peer list, mostly in debug purposes"};
-    const command_line::arg_descriptor<std::vector<std::string> > arg_p2p_add_peer   = {"add-peer", "Manually add peer to local peerlist"};
-    const command_line::arg_descriptor<std::vector<std::string> > arg_p2p_add_priority_node   = {"add-priority-node", "Specify list of peers to connect to and attempt to keep the connection open"};
-    const command_line::arg_descriptor<std::vector<std::string> > arg_p2p_add_exclusive_node   = {"add-exclusive-node", "Specify list of peers to connect to only."
-                                                                                                  " If this option is given the options add-priority-node and seed-node are ignored"};
-    const command_line::arg_descriptor<std::vector<std::string> > arg_p2p_seed_node   = {"seed-node", "Connect to a node to retrieve peer addresses, and disconnect"};
-    const command_line::arg_descriptor<bool> arg_p2p_hide_my_port   =    {"hide-my-port", "Do not announce yourself as peerlist candidate", false, true};
-
     std::string print_peerlist_to_string(const std::list<peerlist_entry_t>& pl) {
       time_t now_time = 0;
       time(&now_time);
@@ -257,15 +247,16 @@ namespace cryptonote
   
   void NodeServer::init_options(boost::program_options::options_description& desc)
   {
-    command_line::add_arg(desc, arg_p2p_bind_ip);
-    command_line::add_arg(desc, arg_p2p_bind_port);
-    command_line::add_arg(desc, arg_p2p_external_port);
-    command_line::add_arg(desc, arg_p2p_allow_local_ip);
-    command_line::add_arg(desc, arg_p2p_add_peer);
-    command_line::add_arg(desc, arg_p2p_add_priority_node);
-    command_line::add_arg(desc, arg_p2p_add_exclusive_node);
-    command_line::add_arg(desc, arg_p2p_seed_node);    
-    command_line::add_arg(desc, arg_p2p_hide_my_port);
+    command_line::init();
+    command_line::add_arg(desc, command_line::arg_p2p_bind_ip);
+    command_line::add_arg(desc, command_line::arg_p2p_bind_port);
+    command_line::add_arg(desc, command_line::arg_p2p_external_port);
+    command_line::add_arg(desc, command_line::arg_p2p_allow_local_ip);
+    command_line::add_arg(desc, command_line::arg_p2p_add_peer);
+    command_line::add_arg(desc, command_line::arg_p2p_add_priority_node);
+    command_line::add_arg(desc, command_line::arg_p2p_add_exclusive_node);
+    command_line::add_arg(desc, command_line::arg_p2p_seed_node);
+    command_line::add_arg(desc, command_line::arg_p2p_hide_my_port);
   }
   //-----------------------------------------------------------------------------------
   
@@ -334,14 +325,14 @@ namespace cryptonote
   
   bool NodeServer::handle_command_line(const boost::program_options::variables_map& vm)
   {
-    m_bind_ip = command_line::get_arg(vm, arg_p2p_bind_ip);
-    m_port = command_line::get_arg(vm, arg_p2p_bind_port);
-    m_external_port = command_line::get_arg(vm, arg_p2p_external_port);
-    m_allow_local_ip = command_line::get_arg(vm, arg_p2p_allow_local_ip);
+    m_bind_ip = command_line::get_arg(vm, command_line::arg_p2p_bind_ip);
+    m_port = command_line::get_arg(vm, command_line::arg_p2p_bind_port);
+    m_external_port = command_line::get_arg(vm, command_line::arg_p2p_external_port);
+    m_allow_local_ip = command_line::get_arg(vm, command_line::arg_p2p_allow_local_ip);
 
-    if (command_line::has_arg(vm, arg_p2p_add_peer))
+    if (command_line::has_arg(vm, command_line::arg_p2p_add_peer))
     {       
-      std::vector<std::string> perrs = command_line::get_arg(vm, arg_p2p_add_peer);
+      std::vector<std::string> perrs = command_line::get_arg(vm, command_line::arg_p2p_add_peer);
       for(const std::string& pr_str: perrs)
       {
         peerlist_entry_t pe = boost::value_initialized<peerlist_entry_t>();
@@ -352,16 +343,16 @@ namespace cryptonote
       }
     }
 
-    if (command_line::has_arg(vm,arg_p2p_add_exclusive_node)) {
-      if (!parse_peers_and_add_to_container(vm, arg_p2p_add_exclusive_node, m_exclusive_peers))
+    if (command_line::has_arg(vm, command_line::arg_p2p_add_exclusive_node)) {
+      if (!parse_peers_and_add_to_container(vm, command_line::arg_p2p_add_exclusive_node, m_exclusive_peers))
         return false;
     }
-    if (command_line::has_arg(vm, arg_p2p_add_priority_node)) {
-      if (!parse_peers_and_add_to_container(vm, arg_p2p_add_priority_node, m_priority_peers))
+    if (command_line::has_arg(vm, command_line::arg_p2p_add_priority_node)) {
+      if (!parse_peers_and_add_to_container(vm, command_line::arg_p2p_add_priority_node, m_priority_peers))
         return false;
     }
-    if (command_line::has_arg(vm, arg_p2p_seed_node)) {
-      if (!parse_peers_and_add_to_container(vm, arg_p2p_seed_node, m_seed_nodes))
+    if (command_line::has_arg(vm, command_line::arg_p2p_seed_node)) {
+      if (!parse_peers_and_add_to_container(vm, command_line::arg_p2p_seed_node, m_seed_nodes))
         return false;
     } else {
       for (auto seed : config::get().seeds) {
@@ -369,7 +360,7 @@ namespace cryptonote
       }
     }
 
-    if (command_line::has_arg(vm, arg_p2p_hide_my_port)) {
+    if (command_line::has_arg(vm, command_line::arg_p2p_hide_my_port)) {
       m_hide_my_port = true;
     }
 

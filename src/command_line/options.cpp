@@ -14,7 +14,7 @@ const arg_descriptor<bool> arg_os_version = {"os-version", ""};
 
 // Storage
 const arg_descriptor<std::string> arg_data_dir = {"data-dir", "Specify data directory"};
-const arg_descriptor<std::string> arg_config_file = {"config-file", "Specify configuration file", std::string(config::get().name) + ".conf"};
+arg_descriptor<std::string> arg_config_file;
 
 // Log info
 const arg_descriptor<std::string> arg_log_file = {"log-file", "", ""};
@@ -40,6 +40,31 @@ const std::string DEFAULT_RPC_IP = "127.0.0.1";
 
 // RPC
 const arg_descriptor<std::string> arg_rpc_bind_ip = {"rpc-bind-ip", "", DEFAULT_RPC_IP};
-const arg_descriptor<uint16_t> arg_rpc_bind_port = {"rpc-bind-port", "", config::get().net.rpc_port};
+arg_descriptor<uint16_t> arg_rpc_bind_port;
+
+
+// P2P
+const arg_descriptor<std::string> arg_p2p_bind_ip        = {"p2p-bind-ip", "Interface for p2p network protocol", "0.0.0.0"};
+arg_descriptor<uint16_t>    arg_p2p_bind_port;
+const arg_descriptor<uint16_t>    arg_p2p_external_port = { "p2p-external-port", "External port for p2p network protocol (if port forwarding used with NAT)", 0 };
+const arg_descriptor<bool>        arg_p2p_allow_local_ip = {"allow-local-ip", "Allow local ip add to peer list, mostly in debug purposes"};
+const arg_descriptor<std::vector<std::string> > arg_p2p_add_peer   = {"add-peer", "Manually add peer to local peerlist"};
+const arg_descriptor<std::vector<std::string> > arg_p2p_add_priority_node   = {"add-priority-node", "Specify list of peers to connect to and attempt to keep the connection open"};
+const arg_descriptor<std::vector<std::string> > arg_p2p_add_exclusive_node   = {"add-exclusive-node", "Specify list of peers to connect to only."
+      " If this option is given the options add-priority-node and seed-node are ignored"};
+const arg_descriptor<std::vector<std::string> > arg_p2p_seed_node   = {"seed-node", "Connect to a node to retrieve peer addresses, and disconnect"};
+const arg_descriptor<bool> arg_p2p_hide_my_port   =    {"hide-my-port", "Do not announce yourself as peerlist candidate", false, true};
+
+bool initialized = false;
+
+void init() {
+	if (initialized) {
+		return;
+	}
+    arg_rpc_bind_port = {"rpc-bind-port", "", config::get().net.rpc_port};
+    arg_config_file = {"config-file", "Specify configuration file", std::string(config::get().name) + ".conf"};
+    arg_p2p_bind_port      = {"p2p-bind-port", "Port for p2p network protocol", config::get().net.p2p_port};
+	initialized = true;
+}
 
 } // namespace command_line

@@ -35,6 +35,7 @@ bool ConfigurationManager::init(int argc, char** argv) {
       ("local", po::bool_switch(), "start with local node (remote is default)")
       ("testnet", po::bool_switch(), "testnet mode");
 
+  command_line::init();
   command_line::add_arg(cmdGeneralOptions, command_line::arg_data_dir, os::appdata::path());
   command_line::add_arg(confGeneralOptions, command_line::arg_data_dir, os::appdata::path());
 

@@ -37,7 +37,7 @@ void Daemon::parseConfigFile()
   fs::path config_path(config);
   if (!config_path.has_parent_path())
   {
-    config_path = data_dir_path.string() + fs::path::preferred_separator + config_path.string();
+    config_path = data_dir_path / config_path;
   }
 
   boost::system::error_code ec;
@@ -83,6 +83,7 @@ void Daemon::printGenesisTx()
 
 void Daemon::init()
 {
+  command_line::init();
   addCommand(arg_help);
   addCommand(arg_version);
   addCommand(arg_os_version);

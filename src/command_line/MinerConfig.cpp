@@ -18,6 +18,7 @@ MinerConfig::MinerConfig()
 
 void MinerConfig::initOptions(boost::program_options::options_description &desc)
 {
+  command_line::init();
   add_arg(desc, arg_extra_messages);
   add_arg(desc, arg_start_mining);
   add_arg(desc, arg_mining_threads);
