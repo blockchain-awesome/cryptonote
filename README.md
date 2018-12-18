@@ -108,57 +108,37 @@ make test
 
 # Windows
 
-1. Install boost 1.58 +
-
-Download one of the Release from Here:
-
+1. Install boost 1.58 +  
+Download one of the Release from Here:  
 https://dl.bintray.com/boostorg/release/
 
-2. Install Visual Studio community version 
-
-Currently vs2015 is Recommended.
-
-Download vs 2015 from here:
-
+2. Install Visual Studio community version   
+Currently vs2015 is Recommended.  
+Download vs 2015 from here:  
 https://visualstudio.microsoft.com/vs/older-downloads/
-
-
-3. Install CMake from
-
+3. Install CMake from  
 https://cmake.org/download/
 
-4. Compile Boost
-
-a. Click `Deverloper Command Prompt for VS2015` from `Start Menu` -> `Visual Studio 2015`
-
-b. Go to your boost directory, `c:/local/boost_1_69_0` i.e.
-
-C. then execute:
-
-```
+4. Compile Boost  
+a. Click `Deverloper Command Prompt for VS2015` from `Start Menu` -> `Visual Studio 2015`  
+b. Go to your boost directory. i.e, `c:/local/boost_1_69_0`.  
+c. Execute:  
+`
 $ boostrap  # or boostrap.bat
-```
-then
-
-``
+`  
+then  
+`
 $ .\b2 threading=multi link=static runtime-link=static address-model=64
-```
-
+`  
 `address-model=64` is optional in accordance with your compiler. 
 
-5. Create solution for Visual Studio.
-
-a. Open cmake, browser to the source directory `SRC`.
-
-b. Create `$SRC\build` for solution working directory
-
-c. Click 'Configure' to configure the project, Make sure the configure process is successful. 
-
-This process will require you to choose compile type, make sure your compile type are in accordance with the boost library you've just compiled.
-
-b. Click 'Generate' to generate all slolution files for `Visual Studio`.
-
-c. Click `Open Project` will start `Visual Studio` for you to start.
+5. Create solution for Visual Studio.  
+a. Open cmake, browser to the source directory `SRC`.  
+b. Create `$SRC\build` for solution working directory  
+c. Click 'Configure' to configure the project, Make sure the configure process is successful.   
+This process will require you to choose compile type, make sure your compile type are in accordance with the boost library you've just compiled.  
+d. Click 'Generate' to generate all slolution files for `Visual Studio`.  
+e. Click `Open Project` will start `Visual Studio` for you to start.
 
 6. Enjoy.
 
@@ -167,7 +147,8 @@ c. Click `Open Project` will start `Visual Studio` for you to start.
 
 BTC:   
 1MhPwnodHSTvptYLdF6d8c5NZkfqVdhfMS  
-Monero: 4AeKZo1hZAg4MypBNesAsphdGJRwJtU2n68qbbeeNtH8QgdFRJVpQ3tNpXy6KtsKekXzRTMpGZjRWb2MKRxDc7w86rcZJZJ
+Monero: 
+4AeKZo1hZAg4MypBNesAsphdGJRwJtU2n68qbbeeNtH8QgdFRJVpQ3tNpXy6KtsKekXzRTMpGZjRWb2MKRxDc7w86rcZJZJ
 
 ## License
 
