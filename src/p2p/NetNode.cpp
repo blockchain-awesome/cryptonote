@@ -383,7 +383,17 @@ namespace cryptonote
     std::copy(priorityNodes.begin(), priorityNodes.end(), std::back_inserter(m_priority_peers));
 
     auto seedNodes = conf.getSeedNodes();
-    std::copy(seedNodes.begin(), seedNodes.end(), std::back_inserter(m_seed_nodes));
+    if (seedNodes.size() > 0)
+    {
+      std::copy(seedNodes.begin(), seedNodes.end(), std::back_inserter(m_seed_nodes));
+    }
+    else
+    {
+      for (auto seed : config::get().seeds)
+      {
+        append_net_address(m_seed_nodes, seed);
+      }
+    }
 
     m_hide_my_port = conf.getHideMyPort();
     return true;
