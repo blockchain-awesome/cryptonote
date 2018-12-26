@@ -81,7 +81,7 @@ bool NetNodeConfig::init(const boost::program_options::variables_map& vm)
     configFolder = get_arg(vm, arg_data_dir);
   }
 
-  p2pStateFilename = cryptonote::parameters::P2P_NET_DATA_FILENAME;
+  p2pStateFilename = config::get().filenames.p2p;
 
   if (has_arg(vm, arg_p2p_add_peer)) {
     std::vector<std::string> perrs = get_arg(vm, arg_p2p_add_peer);

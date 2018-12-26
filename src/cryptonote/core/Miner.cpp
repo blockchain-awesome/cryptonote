@@ -25,6 +25,7 @@
 #include "cryptonote/structures/block_entry.h"
 #include "TransactionExtra.h"
 #include "cryptonote/core/account.h"
+#include "os.h"
 
 using namespace Logging;
 
@@ -162,7 +163,7 @@ namespace cryptonote
       m_config = boost::value_initialized<decltype(m_config)>();
 
       std::string filebuf;
-      if (stream::load(m_config_folder_path + "/" + cryptonote::parameters::MINER_CONFIG_FILE_NAME, filebuf)) {
+      if (stream::load(os::getCoinFile(std::string(config::get().filenames.miner)), filebuf)) {
         loadFromJson(m_config, filebuf);
       }
 
@@ -387,7 +388,7 @@ namespace cryptonote
           --m_config.current_extra_message_index;
         } else {
           //success update, lets update config
-          stream::save(m_config_folder_path + "/" + cryptonote::parameters::MINER_CONFIG_FILE_NAME, storeToJson(m_config));
+          stream::save(os::getCoinFile(std::string(config::get().filenames.miner)), storeToJson(m_config));
         }
       }
 

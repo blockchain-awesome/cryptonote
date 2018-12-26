@@ -12,4 +12,7 @@ namespace appdata
 {
 std::string path();
 }
+
+extern const std::string getCoinFile(const std::string &filename);
+
 } // namespace os

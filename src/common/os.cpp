@@ -2,6 +2,7 @@
 #include <cstdio>
 #include <boost/filesystem.hpp>
 #include "CryptoNoteConfig.h"
+#include <boost/filesystem.hpp>
 
 #ifdef WIN32
 #include <windows.h>
@@ -318,4 +319,8 @@ std::string path()
     return config_folder;
 }
 } // namespace appdata
+const std::string getCoinFile(const std::string &filename) {
+  boost::filesystem::path p(os::appdata::path());
+  return std::string(p.append(filename).c_str());
+}
 } // namespace os

@@ -64,13 +64,13 @@ const size_t   FUSION_TX_MAX_SIZE                            = CRYPTONOTE_BLOCK_
 const size_t   FUSION_TX_MIN_INPUT_COUNT                     = 12;
 const size_t   FUSION_TX_MIN_IN_OUT_COUNT_RATIO              = 4;
 
-const char     CRYPTONOTE_BLOCKS_FILENAME[]                  = "blocks.dat";
-const char     CRYPTONOTE_BLOCKINDEXES_FILENAME[]            = "blockindexes.dat";
-const char     CRYPTONOTE_BLOCKSCACHE_FILENAME[]             = "blockscache.dat";
-const char     CRYPTONOTE_POOLDATA_FILENAME[]                = "poolstate.bin";
-const char     P2P_NET_DATA_FILENAME[]                       = "p2pstate.bin";
-const char     CRYPTONOTE_BLOCKCHAIN_INDICES_FILENAME[]      = "blockchainindices.dat";
-const char     MINER_CONFIG_FILE_NAME[]                      = "miner_conf.json";
+// const char     CRYPTONOTE_BLOCKS_FILENAME[]                  = "blocks.dat";
+// const char     CRYPTONOTE_BLOCKINDEXES_FILENAME[]            = "blockindexes.dat";
+// const char     CRYPTONOTE_BLOCKSCACHE_FILENAME[]             = "blockscache.dat";
+// const char     CRYPTONOTE_POOLDATA_FILENAME[]                = "poolstate.bin";
+// const char     P2P_NET_DATA_FILENAME[]                       = "p2pstate.bin";
+// const char     CRYPTONOTE_BLOCKCHAIN_INDICES_FILENAME[]      = "blockchainindices.dat";
+// const char     MINER_CONFIG_FILE_NAME[]                      = "miner_conf.json";
 } // parameters
 
 // const uint8_t  CURRENT_TRANSACTION_VERSION                   =  1;
@@ -101,6 +101,6 @@ const uint32_t P2P_DEFAULT_PING_CONNECTION_TIMEOUT           = 2000;          //
 const uint64_t P2P_DEFAULT_INVOKE_TIMEOUT                    = 60 * 2 * 1000; // 2 minutes
 const size_t   P2P_DEFAULT_HANDSHAKE_INVOKE_TIMEOUT          = 5000;          // 5 seconds
 
-} // CryptoNote
+} // cryptonote
 
 #define ALLOW_DEBUG_COMMANDS

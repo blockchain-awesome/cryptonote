@@ -553,11 +553,12 @@ CurrencyBuilder::CurrencyBuilder(const std::string &path, config::config_t& conf
   fusionTxMinInOutCountRatio(parameters::FUSION_TX_MIN_IN_OUT_COUNT_RATIO);
 
   coin::storage_files_t files;
-  files.blocks = parameters::CRYPTONOTE_BLOCKS_FILENAME;
-  files.blocksCache = parameters::CRYPTONOTE_BLOCKSCACHE_FILENAME;
-  files.blocksIndexes = parameters::CRYPTONOTE_BLOCKINDEXES_FILENAME;
-  files.txPool = parameters::CRYPTONOTE_POOLDATA_FILENAME;
-  files.blockchainIndexes = parameters::CRYPTONOTE_BLOCKCHAIN_INDICES_FILENAME;
+  
+  files.blocks = config.filenames.block;
+  files.blocksCache = config.filenames.blockCache;
+  files.blocksIndexes = config.filenames.blockIndex;
+  files.txPool = config.filenames.pool;
+  files.blockchainIndexes = config.filenames.blockChainIndex;
   m_currency.setFiles(files);
 }
 

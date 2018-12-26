@@ -44,8 +44,8 @@ TEST_F(CurrencyTest, create)
   std::cout << b.majorVersion << std::endl;
   std::cout << b.minorVersion << std::endl;
   std::cout << tx.inputs.size() << std::endl;
-  ASSERT_TRUE(filename == parameters::CRYPTONOTE_POOLDATA_FILENAME);
-  ASSERT_TRUE(fullname != parameters::CRYPTONOTE_POOLDATA_FILENAME);
+  ASSERT_TRUE(filename == config::get().filenames.pool);
+  ASSERT_TRUE(fullname != config::get().filenames.pool);
   ASSERT_TRUE(tx.version > 0);
   ASSERT_TRUE(tx.inputs.size() == 1);
   ASSERT_TRUE(tx.outputs.size() == 1);
