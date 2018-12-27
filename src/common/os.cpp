@@ -321,6 +321,6 @@ std::string path()
 } // namespace appdata
 const std::string getCoinFile(const std::string &filename) {
   boost::filesystem::path p(os::appdata::path());
-  return std::string(p.append(filename).c_str());
+  return p.append(filename).string();
 }
 } // namespace os

@@ -25,7 +25,7 @@
 #include "cryptonote/structures/block_entry.h"
 #include "TransactionExtra.h"
 #include "cryptonote/core/account.h"
-#include "os.h"
+#include "common/os.h"
 
 using namespace Logging;
 
