@@ -31,6 +31,50 @@ TEST_F(StreamTest, saveload)
   ASSERT_TRUE(readString.compare(saveString) == 0);
 }
 
+TEST_F(StreamTest, toString) {
+  char data[4] = {
+    (char)0xDF, (char)0xAA, (char)0xDF, (char)0x11
+  };
+
+  std::string str;
+  ASSERT_TRUE(hex::toString(data, sizeof(data)) == "dfaadf11");
+  hex::toString(data, sizeof(data), str);
+
+  binary_array_t ba;
+  ba.push_back(0xDF);
+  ba.push_back(0xAA);
+  ba.push_back(0xDF);
+  ba.push_back(0x11);
+  ASSERT_TRUE(hex::toString(ba) == "dfaadf11");
+  hex::toString(ba, str);
+}
+TEST_F(StreamTest, podString) 
+{
+  char data[4];
+  std::string str("0d0d0d0d");
+  ASSERT_TRUE(hex::podFromString(str, data));
+  ASSERT_TRUE(hex::podToString(data) == str);
+}
+
+TEST_F(StreamTest, hexFailure)
+{
+  std::string str("0");
+  char data[100];
+  size_t size;
+  ASSERT_ANY_THROW(hex::fromString(str, data, sizeof(data)));
+  ASSERT_ANY_THROW(hex::fromString(str));
+  std::string str1("0d0d0d0d");
+  char data1[3];
+  char data2[5];
+  ASSERT_TRUE(hex::fromString(str1).size() == 4);
+  ASSERT_ANY_THROW(hex::fromString(str1, data1, sizeof(data1)));
+  ASSERT_TRUE(hex::fromString(str1, data2, sizeof(data2)) > 0);
+
+  std::string str2("0d-,0d0d");
+  binary_array_t ba;
+  ASSERT_FALSE(hex::fromString(str2, ba));
+}
+
 TEST_F(StreamTest, hex)
 {
   uint8_t z = hex::fromString('0');
