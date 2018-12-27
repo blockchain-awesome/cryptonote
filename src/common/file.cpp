@@ -17,17 +17,13 @@ bool exists(const string &filename)
 bool create(const string &filename)
 {
   fstream fs;
-  try
+
+  fs.open(filename, fstream::binary | fstream::trunc | fstream::out);
+  if (fs.fail())
   {
-    fs.open(filename, fstream::binary | fstream::trunc | fstream::out);
-    fs.close();
-  }
-  catch (std::exception &e)
-  {
-    std::cout << "Error creating file: " << filename << std::endl;
-    std::cout << "Error reason: " << e.what() << std::endl;
     return false;
   }
+  fs.close();
   return true;
 }
 

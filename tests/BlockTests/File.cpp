@@ -19,6 +19,13 @@ public:
 
 TEST_F(FileTest, create)
 {
+  std::string filename = "/aaaa";
+  ASSERT_FALSE(std::file::create(filename));
+  filename = "./aaa";
+  ASSERT_TRUE(std::file::create(filename));
+}
+TEST_F(FileTest, ALL)
+{
   std::string filename = "./temp.file";
   std::file::unlink(filename);
   ASSERT_FALSE(std::file::open(filename));
