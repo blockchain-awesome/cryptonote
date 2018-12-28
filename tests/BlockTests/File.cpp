@@ -8,9 +8,9 @@
 
 #include "common/file.h"
 
-#ifdefine __linux
+#ifdef __linux
 #include <unistd.h>
-#end
+#endif
 
 namespace
 {
@@ -23,12 +23,14 @@ public:
 
 TEST_F(FileTest, create)
 {
-#ifdefine __linux
   std::string filename = "/aaaa";
-  if (!getuid()) {
-  ASSERT_FALSE(std::file::create(filename));
+#ifdef __linux
+  if (getuid())
+  {
+    //Should Not be root to executed this code
+    ASSERT_FALSE(std::file::create(filename));
   }
-#end
+#endif
   filename = "./aaa";
   ASSERT_TRUE(std::file::create(filename));
 }
