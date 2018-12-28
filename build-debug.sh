@@ -15,7 +15,7 @@ find . -name "*.gcda" -type f -delete
 
 # codecov --token 2a2cf36f-81d6-43b9-abba-d5955cb0cafe --root src
 
-# bash <(curl -s https://codecov.io/bash) -t 2a2cf36f-81d6-43b9-abba-d5955cb0cafe || exit 1
+bash <(curl -s https://codecov.io/bash) -t 2a2cf36f-81d6-43b9-abba-d5955cb0cafe || exit 1
 
 if [ -x "$(command -v xdg-open)" ]; then
 xdg-open ./html/index.html

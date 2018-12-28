@@ -5,8 +5,10 @@
 #include "gtest/gtest.h"
 
 #include <fstream>
+#include <boost/filesystem.hpp>
 
 #include "common/file.h"
+#include "common/os.h"
 
 #ifdef __linux
 #include <unistd.h>
@@ -48,6 +50,17 @@ TEST_F(FileTest, ALL)
   ASSERT_TRUE(outCount == 0);
   std::cout << "reopened " << std::endl;
   std::file::unlink(filename);
+}
+
+TEST_F(FileTest, coinfile)
+{
+  std::string filename = "coin.name";
+  std::string str = os::getCoinFile(filename);
+  boost::filesystem::path p(os::appdata::path());
+  std::string path = p.append(filename).string();
+  std::cout << "str = " << str << std::endl;
+  std::cout << "path = " << path << std::endl;
+  ASSERT_TRUE(str == path);
 }
 
 } // namespace

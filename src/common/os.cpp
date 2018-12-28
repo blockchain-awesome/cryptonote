@@ -1,8 +1,8 @@
 #include "os.h"
 #include <cstdio>
+#include <cassert>
 #include <boost/filesystem.hpp>
 #include "CryptoNoteConfig.h"
-#include <boost/filesystem.hpp>
 
 #ifdef WIN32
 #include <windows.h>
@@ -254,9 +254,7 @@ std::string get_windows_version_display_string()
 std::string get_nix_version_display_string()
 {
     utsname un;
-
-    if (uname(&un) < 0)
-        return std::string("*nix: failed to get os version");
+    assert(uname(&un) >= 0);
     return std::string() + un.sysname + " " + un.version + " " + un.release;
 }
 #endif
