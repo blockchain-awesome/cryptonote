@@ -1,6 +1,6 @@
 version: 1.0.{build}
 image: 
-# - Visual Studio 2017
+- Visual Studio 2017
 - ubuntu
 - ubuntu1804
 platform:
@@ -14,6 +14,12 @@ build_script:
 - sh: mkdir -p build && cd build && cmake .. -DCMAKE_BUILD_TYPE=Debug -DENABLE_GCOV=1 && make
 
 for:
+  -
+    matrix:
+      only:
+        - image: Visual Studio 2017
+    build:
+      project: $(APPVEYOR_BUILD_FOLDER)\build\vigcoin.sln
   -
     matrix:
       only:
