@@ -27,7 +27,7 @@ IF (ENABLE_GCOV AND APPLE)
   SET(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG} --coverage")
 ENDIF()
 
-include_directories(include src src/crypto src/cryptonote/core src/cryptonote/protocol external contrib/epee/include "${CMAKE_BINARY_DIR}/version")
+include_directories(include src src/crypto src/cryptonote/core src/cryptonote/protocol external contrib/epee/include "${CMAKE_BINARY_DIR}/version" "${CMAKE_CACHEFILE_DIR}/version")
 if(APPLE)
   include_directories(SYSTEM /usr/include/malloc)
   enable_language(ASM)
