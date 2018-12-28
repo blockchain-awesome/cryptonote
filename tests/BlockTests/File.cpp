@@ -27,7 +27,7 @@ TEST_F(FileTest, create)
 #ifdef __linux
   if (getuid())
   {
-    //Should Not be root to executed this code
+    //Should not be root to execute this code
     ASSERT_FALSE(std::file::create(filename));
   }
 #endif
