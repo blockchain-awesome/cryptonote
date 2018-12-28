@@ -8,6 +8,10 @@
 
 #include "common/file.h"
 
+#ifdefine __linux
+#include <unistd.h>
+#end
+
 namespace
 {
 
@@ -19,8 +23,12 @@ public:
 
 TEST_F(FileTest, create)
 {
+#ifdefine __linux
   std::string filename = "/aaaa";
+  if (!getuid()) {
   ASSERT_FALSE(std::file::create(filename));
+  }
+#end
   filename = "./aaa";
   ASSERT_TRUE(std::file::create(filename));
 }
