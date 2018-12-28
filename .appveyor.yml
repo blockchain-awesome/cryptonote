@@ -1,41 +1,62 @@
 version: 1.0.{build}
-image:
-- Visual Studio 2017
+image: 
+# - Visual Studio 2017
 - ubuntu
 - ubuntu1804
 platform:
   - x64
-configuration:
-  - Release
-  # - Debug
 install:
-    - git submodule update --init --recursive
-    - cmd: set QTDIR=C:\Qt\5.11\msvc2017_64
-    - cmd: set BOOST_ROOT=C:\Libraries\boost_1_67_0
-    - cmd: set PATH=%PATH%;%QTDIR%\bin
-    - sh: sudo apt-get update
-    - sh: sudo apt install -y build-essential curl cmake libboost-all-dev libssl-dev libsodium-dev qt5-default python-pip python-dev lcov git mercurial
-before_build:
-    - mkdir build
-    - cd build
-    - cmd: cmake -G "Visual Studio 15 2017 Win64" ..
-    - cmd: dir
-    - sh: cmake .. -DENABLE_GCOV=1
-    - sh: ls
+  - cmd: set QTDIR=C:\Qt\5.11\msvc2017_64
+  - cmd: set BOOST_ROOT=C:\Libraries\boost_1_67_0
+  - cmd: set PATH=%PATH%;%QTDIR%\bin
+  - sh: sudo apt update && sudo apt install -y build-essential curl cmake libboost-all-dev libssl-dev libsodium-dev python-pip python-dev lcov git mercurial
+build_script:
+- sh: mkdir -p build && cd build && cmake .. -DCMAKE_BUILD_TYPE=Debug -DENABLE_GCOV=1 && make
+
 for:
   -
     matrix:
       only:
-        - image: Visual Studio 2017
-    build:
-      project: $(APPVEYOR_BUILD_FOLDER)\build\vigcoin.sln
-  -
-    matrix:
-      only:
         - image: ubuntu
-    build_script:
-      - sh: make
     test_script:
       - env CTEST_OUTPUT_ON_FAILURE=1 make test
       - lcov --capture --directory src --output-file temp.info && lcov --remove temp.info "/usr/include/*" "*/google/*" "*/include/*" "*/tests/*" > coverage.info && lcov --list coverage.info
       - bash <(curl -s https://codecov.io/bash) -t 2a2cf36f-81d6-43b9-abba-d5955cb0cafe --root src
+
+
+# install:
+#     - git submodule update --init --recursive
+#     - cmd: set QTDIR=C:\Qt\5.11\msvc2017_64
+#     - cmd: set BOOST_ROOT=C:\Libraries\boost_1_67_0
+#     - cmd: set PATH=%PATH%;%QTDIR%\bin
+#     - sh: sudo apt-get update
+#     - sh: sudo apt install -y build-essential curl cmake libboost-all-dev libssl-dev libsodium-dev qt5-default python-pip python-dev lcov git mercurial
+# before_build:
+#     - mkdir build
+#     - cd build
+#     - cmd: cmake -G "Visual Studio 15 2017 Win64" ..
+#     - cmd: dir
+#     - sh: cmake .. -DENABLE_GCOV=1
+#     - sh: ls
+# for:
+#   -
+#     matrix:
+#       only:
+#         - image: Visual Studio 2017
+#     build:
+#       project: $(APPVEYOR_BUILD_FOLDER)\build\vigcoin.sln
+#   -
+#     matrix:
+#       only:
+#         - image: ubuntu
+#         - image: ubuntu1804
+#     build_script:
+#       - sh: make
+#   -
+#     matrix:
+#       only:
+#         - image: ubuntu
+#     test_script:
+#       - env CTEST_OUTPUT_ON_FAILURE=1 make test
+#       - lcov --capture --directory src --output-file temp.info && lcov --remove temp.info "/usr/include/*" "*/google/*" "*/include/*" "*/tests/*" > coverage.info && lcov --list coverage.info
+#       - bash <(curl -s https://codecov.io/bash) -t 2a2cf36f-81d6-43b9-abba-d5955cb0cafe --root src
