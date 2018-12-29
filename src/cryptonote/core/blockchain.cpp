@@ -8,7 +8,7 @@
 #include <algorithm>
 #include <cstdio>
 #include <boost/foreach.hpp>
-#include "common/Math.h"
+#include "common/math.hpp"
 #include "common/ShuffleGenerator.h"
 #include "stream/StdInputStream.h"
 #include "stream/StdOutputStream.h"
@@ -602,7 +602,7 @@ bool Blockchain::validate_miner_transaction(const block_t& b, uint32_t height, s
 
   std::vector<size_t> lastBlocksSizes;
   get_last_n_blocks_sizes(lastBlocksSizes, m_currency.rewardBlocksWindow());
-  size_t blocksSizeMedian = Common::medianValue(lastBlocksSizes);
+  size_t blocksSizeMedian = math::medianValue(lastBlocksSizes);
 
   if (!m_currency.getBlockReward(blocksSizeMedian, cumulativeBlockSize, alreadyGeneratedCoins, fee, reward, emissionChange)) {
     logger(INFO, BRIGHT_WHITE) << "block size " << cumulativeBlockSize << " is bigger than allowed for this blockchain";
@@ -1287,7 +1287,7 @@ bool Blockchain::check_block_timestamp(std::vector<uint64_t> timestamps, const b
     return true;
   }
 
-  uint64_t median_ts = Common::medianValue(timestamps);
+  uint64_t median_ts = math::medianValue(timestamps);
 
   if (b.timestamp < median_ts) {
     logger(INFO, BRIGHT_WHITE) <<
@@ -1330,7 +1330,7 @@ bool Blockchain::update_next_comulative_size_limit() {
   std::vector<size_t> sz;
   get_last_n_blocks_sizes(sz, m_currency.rewardBlocksWindow());
 
-  uint64_t median = Common::medianValue(sz);
+  uint64_t median = math::medianValue(sz);
   if (median <= m_currency.blockGrantedFullRewardZone()) {
     median = m_currency.blockGrantedFullRewardZone();
   }

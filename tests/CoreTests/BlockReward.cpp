@@ -4,7 +4,7 @@
 
 #include "BlockReward.h"
 #include "cryptonote/core/CryptoNoteTools.h"
-#include <common/Math.h>
+#include <common/math.hpp>
 
 using namespace cryptonote;
 
@@ -121,7 +121,7 @@ bool gen_block_reward::generate(std::vector<test_event_entry>& events) const
 
     std::vector<size_t> block_sizes;
     generator.getLastNBlockSizes(block_sizes, Block::getHash(blk_7), m_currency.rewardBlocksWindow());
-    size_t median = Common::medianValue(block_sizes);
+    size_t median = math::medianValue(block_sizes);
 
     transaction_t miner_tx;
     bool r = constructMinerTxBySize(m_currency, miner_tx, get_block_height(blk_7) + 1, generator.getAlreadyGeneratedCoins(blk_7),

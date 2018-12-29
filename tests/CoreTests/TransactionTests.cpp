@@ -11,7 +11,7 @@
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/core/currency.h"
 
-#include <common/Math.h>
+#include <common/math.hpp>
 
 #include "Chaingen.h"
 
@@ -138,7 +138,7 @@ bool test_block_creation()
   bool r = Account::parseAddress("272xWzbWsP4cfNFfxY5ETN5moU8x81PKfWPwynrrqsNGDBQGLmD1kCkKCvPeDUXu5XfmZkCrQ53wsWmdfvHBGLNjGcRiDcK", adr);
   CHECK_AND_ASSERT_MES(r, false, "failed to import");
   block_t b;
-  r = currency.constructMinerTx(90, Common::medianValue(szs), 3553616528562147, 33094, 10000000, adr, b.baseTransaction, binary_array_t(), 11);
+  r = currency.constructMinerTx(90, math::medianValue(szs), 3553616528562147, 33094, 10000000, adr, b.baseTransaction, binary_array_t(), 11);
   return r;
 }
 

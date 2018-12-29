@@ -9,7 +9,7 @@
 #include <algorithm>
 #include "common/hex.h"
 #include "common/stream.h"
-#include "common/Math.h"
+#include "common/math.hpp"
 
 namespace
 {
@@ -126,7 +126,7 @@ TEST_F(StreamTest, hex)
   std::string hex1 = "13030393FACD34ADETFABCDEF";
   ASSERT_FALSE(hex::fromString(hex1, ba));
 
-  uint8_t mv = Common::medianValue(ba);
+  uint8_t mv = math::medianValue(ba);
   std::cout << "mv = " << std::hex << (int)mv << std::endl;
   ASSERT_TRUE(mv == 0xac);
 }
