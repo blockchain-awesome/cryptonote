@@ -11,6 +11,10 @@
 #include "common/stream.h"
 #include "common/math.hpp"
 
+#ifdef __linux
+#include <unistd.h>
+#endif
+
 namespace
 {
 
@@ -31,19 +35,26 @@ TEST_F(StreamTest, saveload)
   ASSERT_TRUE(readString.compare(saveString) == 0);
 }
 
+#ifdef __linux
+
 TEST_F(StreamTest, EXCEPTION)
 {
   std::string filename = "/stream1.txt";
   std::string saveString = "hello world";
   std::string readString = "";
-  ASSERT_FALSE(stream::save(filename, saveString));
-  ASSERT_FALSE(stream::load(filename, readString));
+  if (getuid())
+  {
+    ASSERT_FALSE(stream::save(filename, saveString));
+    ASSERT_FALSE(stream::load(filename, readString));
+  }
 }
 
-TEST_F(StreamTest, toString) {
+#endif
+
+TEST_F(StreamTest, toString)
+{
   char data[4] = {
-    (char)0xDF, (char)0xAA, (char)0xDF, (char)0x11
-  };
+      (char)0xDF, (char)0xAA, (char)0xDF, (char)0x11};
 
   std::string str;
   ASSERT_TRUE(hex::toString(data, sizeof(data)) == "dfaadf11");
@@ -57,7 +68,7 @@ TEST_F(StreamTest, toString) {
   ASSERT_TRUE(hex::toString(ba) == "dfaadf11");
   hex::toString(ba, str);
 }
-TEST_F(StreamTest, podString) 
+TEST_F(StreamTest, podString)
 {
   char data[4];
   std::string str("0d0d0d0d");
