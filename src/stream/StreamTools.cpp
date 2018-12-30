@@ -4,6 +4,7 @@
 
 #include "StreamTools.h"
 #include <stdexcept>
+#include <iostream>
 #include "IInputStream.h"
 #include "IOutputStream.h"
 
@@ -13,7 +14,7 @@ void read(IInputStream& in, void* data, size_t size) {
   while (size > 0) {
     size_t readSize = in.readSome(data, size);
     if (readSize == 0) {
-      throw std::runtime_error("Failed to read from IInputStream");
+		throw std::string("Failed to read from IInputStream");
     }
 
     data = static_cast<uint8_t*>(data) + readSize;
@@ -76,13 +77,13 @@ void readVarint(IInputStream& in, uint8_t& value) {
     uint8_t piece;
     read(in, piece);
     if (shift >= sizeof(temp) * 8 - 7 && piece >= 1 << (sizeof(temp) * 8 - shift)) {
-      throw std::runtime_error("readVarint, value overflow");
+      throw std::string("readVarint, value overflow");
     }
 
     temp |= static_cast<size_t>(piece & 0x7f) << shift;
     if ((piece & 0x80) == 0) {
       if (piece == 0 && shift != 0) {
-        throw std::runtime_error("readVarint, invalid value representation");
+        throw std::string("readVarint, invalid value representation");
       }
 
       break;
@@ -98,13 +99,13 @@ void readVarint(IInputStream& in, uint16_t& value) {
     uint8_t piece;
     read(in, piece);
     if (shift >= sizeof(temp) * 8 - 7 && piece >= 1 << (sizeof(temp) * 8 - shift)) {
-      throw std::runtime_error("readVarint, value overflow");
+      throw std::string("readVarint, value overflow");
     }
 
     temp |= static_cast<size_t>(piece & 0x7f) << shift;
     if ((piece & 0x80) == 0) {
       if (piece == 0 && shift != 0) {
-        throw std::runtime_error("readVarint, invalid value representation");
+        throw std::string("readVarint, invalid value representation");
       }
 
       break;
@@ -120,13 +121,13 @@ void readVarint(IInputStream& in, uint32_t& value) {
     uint8_t piece;
     read(in, piece);
     if (shift >= sizeof(temp) * 8 - 7 && piece >= 1 << (sizeof(temp) * 8 - shift)) {
-      throw std::runtime_error("readVarint, value overflow");
+      throw std::string("readVarint, value overflow");
     }
 
     temp |= static_cast<size_t>(piece & 0x7f) << shift;
     if ((piece & 0x80) == 0) {
       if (piece == 0 && shift != 0) {
-        throw std::runtime_error("readVarint, invalid value representation");
+        throw std::string("readVarint, invalid value representation");
       }
 
       break;
@@ -142,13 +143,13 @@ void readVarint(IInputStream& in, uint64_t& value) {
     uint8_t piece;
     read(in, piece);
     if (shift >= sizeof(temp) * 8 - 7 && piece >= 1 << (sizeof(temp) * 8 - shift)) {
-      throw std::runtime_error("readVarint, value overflow");
+      throw std::string("readVarint, value overflow");
     }
 
     temp |= static_cast<uint64_t>(piece & 0x7f) << shift;
     if ((piece & 0x80) == 0) {
       if (piece == 0 && shift != 0) {
-        throw std::runtime_error("readVarint, invalid value representation");
+        throw std::string("readVarint, invalid value representation");
       }
 
       break;
@@ -162,7 +163,7 @@ void write(IOutputStream& out, const void* data, size_t size) {
   while (size > 0) {
     size_t writtenSize = out.writeSome(data, size);
     if (writtenSize == 0) {
-      throw std::runtime_error("Failed to write to IOutputStream");
+      throw std::string("Failed to write to IOutputStream");
     }
 
     data = static_cast<const uint8_t*>(data) + writtenSize;
