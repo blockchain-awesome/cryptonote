@@ -164,27 +164,16 @@ bool Blockchain::init(bool load_existing) {
   }
 
   if (load_existing && !m_blocks.empty()) {
-    try
-    {
-      logger(INFO, BRIGHT_WHITE) << "Loading blockchain...";
-      BlockCacheSerializer loader(*this, Block::getHash(m_blocks.back().bl), logger.getLogger());
-      loader.load(m_currency.blocksCacheFileName());
+    logger(INFO, BRIGHT_WHITE) << "Loading blockchain...";
+    BlockCacheSerializer loader(*this, Block::getHash(m_blocks.back().bl), logger.getLogger());
+    loader.load(m_currency.blocksCacheFileName());
 
-      if (!loader.loaded())
-      {
-		  m_blocks.clear();
-
-        logger(WARNING, BRIGHT_YELLOW) << "No actual blockchain cache found, rebuilding internal structures...";
-        // rebuildCache();
-      }
-
-      //loadBlockchainIndices();
+    if (!loader.loaded()) {
+      logger(WARNING, BRIGHT_YELLOW) << "No actual blockchain cache found, rebuilding internal structures...";
+      rebuildCache();
     }
-    catch (...)
-    {
-      logger(INFO, BRIGHT_RED) << "Fail to load blocks...";
-      m_blocks.clear();
-    }
+
+    loadBlockchainIndices();
   } else {
     m_blocks.clear();
   }
