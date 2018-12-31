@@ -47,7 +47,7 @@ checkpoints_t checkpoints = {
 
 const hard_fork_list_t hardforks = {
     {1, 1, 0, 1341378000},
-    {2, 185643, 0, 1546171542010}};
+    {2, 198000, 0, 1547693038060}};
 
 filename_t filenames =
     {CRYPTONOTE_BLOCKS_FILENAME,
