@@ -67,7 +67,7 @@ void HttpResponse::setBody(const std::string& b) {
 }
 
 std::ostream& HttpResponse::printHttpResponse(std::ostream& os) const {
-  os << "http/1.1 " << getStatusString(status) << "\r\n";
+  os << "HTTP/1.1 " << getStatusString(status) << "\r\n";
 
   for (auto pair: headers) {
     os << pair.first << ": " << pair.second << "\r\n";
