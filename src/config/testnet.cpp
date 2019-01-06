@@ -40,8 +40,7 @@ seeds_t seeds = {
 checkpoints_t checkpoints = {};
 
 const hard_fork_list_t hardforks = {
-    {1, 1, 0, 1341378000},
-    {2, 2, 0, 1341378000 + 3600 * 1000},
+    {7, 1, 0, 1341378000},
 };
 
 filename_t filenames =

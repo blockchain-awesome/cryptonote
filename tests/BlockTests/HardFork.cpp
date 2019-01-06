@@ -20,9 +20,9 @@ TEST_F(HardForkTest, create)
   config::setType(config::TESTNET);
   HardFork * hf = new HardFork(config::get().hardforks);
 
-  ASSERT_TRUE(hf->getMajorVersion(1) == 1);
+  ASSERT_TRUE(hf->getMajorVersion(1) == 7);
   // ASSERT_TRUE(hf->getMajorVersion(99) == 1);
-  ASSERT_TRUE(hf->getMajorVersion(2) == 2);
-  ASSERT_TRUE(hf->getMajorVersion(3) == 2);
-  ASSERT_TRUE(hf->getMajorVersion(4) == 2);
+  ASSERT_TRUE(hf->getMajorVersion(2) == 7);
+  ASSERT_TRUE(hf->getMajorVersion(3) == 7);
+  ASSERT_TRUE(hf->getMajorVersion(4) == 7);
 }
