@@ -205,6 +205,7 @@ int main(int argc, char *argv[])
 
     logger(INFO) << "Starting core rpc server on address " << rpcConfig.getBindAddress();
     rpcServer.start(rpcConfig.bindIp, rpcConfig.bindPort);
+    rpcServer.enableCors(rpcConfig.enableCORS);
     logger(INFO) << "Core rpc server started ok";
 
     Tools::SignalHandler::install([&dch, &p2psrv] {

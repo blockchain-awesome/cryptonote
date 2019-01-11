@@ -41,7 +41,7 @@ const std::string DEFAULT_RPC_IP = "127.0.0.1";
 // RPC
 const arg_descriptor<std::string> arg_rpc_bind_ip = {"rpc-bind-ip", "", DEFAULT_RPC_IP};
 arg_descriptor<uint16_t> arg_rpc_bind_port;
-
+const arg_descriptor<std::vector<std::string>> arg_enable_cors = { "enable-cors", "Adds header 'Access-Control-Allow-Origin' to the daemon's RPC responses. Uses the value as domain. Use * for all" };
 
 // P2P
 const arg_descriptor<std::string> arg_p2p_bind_ip        = {"p2p-bind-ip", "Interface for p2p network protocol", "0.0.0.0"};

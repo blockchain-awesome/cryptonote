@@ -18,6 +18,7 @@ extern arg_descriptor<std::string> arg_config_file;
 // RPC arguments
 extern const arg_descriptor<std::string> arg_rpc_bind_ip;
 extern arg_descriptor<uint16_t> arg_rpc_bind_port;
+extern const arg_descriptor<std::vector<std::string>> arg_enable_cors;
 
 // Log/console arguments
 extern const arg_descriptor<std::string> arg_log_file;

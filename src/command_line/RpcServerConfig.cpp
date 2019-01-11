@@ -19,11 +19,13 @@ namespace cryptonote {
 	command_line::init();
     command_line::add_arg(desc, command_line::arg_rpc_bind_ip);
     command_line::add_arg(desc, command_line::arg_rpc_bind_port);
+    command_line::add_arg(desc, command_line::arg_enable_cors);
   }
 
   void RpcServerConfig::init(const boost::program_options::variables_map& vm)  {
     bindIp = command_line::get_arg(vm, command_line::arg_rpc_bind_ip);
     bindPort = command_line::get_arg(vm, command_line::arg_rpc_bind_port);
+    enableCORS = command_line::get_arg(vm, command_line::arg_enable_cors);
     bool defaulted = vm[command_line::arg_data_dir.name].defaulted();
     if (defaulted) {
       bindPort = config::get().net.rpc_port;
