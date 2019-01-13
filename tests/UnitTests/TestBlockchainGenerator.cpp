@@ -10,6 +10,7 @@
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/structures/block_entry.h"
+#include "cryptonote/structures/array.hpp"
 
 #include "../PerformanceTests/MultiTransactionTestBase.h"
 

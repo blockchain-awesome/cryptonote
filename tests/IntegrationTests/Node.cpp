@@ -21,6 +21,7 @@
 #include "../IntegrationTestLib/TestNetwork.h"
 #include "../IntegrationTestLib/NodeObserver.h"
 #include "../IntegrationTestLib/NodeCallback.h"
+#include "cryptonote/structures/array.hpp"
 
 #include "BaseTests.h"
 

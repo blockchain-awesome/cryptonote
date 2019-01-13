@@ -22,6 +22,7 @@
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/core/core.h"
 #include "cryptonote/core/currency.h"
+#include "cryptonote/structures/array.hpp"
 
 //#include "AccountBoostSerialization.h"
 //#include "cryptonote_boost_serialization.h"

@@ -10,6 +10,7 @@
 
 #include "common/StringTools.h"
 #include "cryptonote/core/CryptoNoteTools.h"
+#include "cryptonote/structures/array.hpp"
 #include "NodeRpcProxy/NodeRpcProxy.h"
 #include "rpc/CoreRpcServerCommandsDefinitions.h"
 #include "rpc/HttpClient.h"
