@@ -86,7 +86,7 @@ block_t Block::genesis(config::config_t &conf)
   }
 
   block.majorVersion = conf.block.version.major;
-  block.minorVersion = conf.block.version.miner;
+  block.minorVersion = conf.block.version.minor;
   block.timestamp = 0;
   block.nonce = 70;
   return block;

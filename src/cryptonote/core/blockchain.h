@@ -56,6 +56,10 @@ namespace cryptonote {
     bool init(bool load_existing = true);
     bool deinit();
 
+    block_entry_t getLastBlock() {
+      return m_blocks.back();
+    }
+
     bool getLowerBound(uint64_t timestamp, uint64_t startOffset, uint32_t& height);
     std::vector<crypto::hash_t> getBlockIds(uint32_t startHeight, uint32_t maxCount);
 

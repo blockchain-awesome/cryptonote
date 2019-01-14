@@ -22,6 +22,7 @@
 
 #include "CoreRpcServerErrorCodes.h"
 #include "JsonRpc.h"
+#include "version.h"
 
 #undef ERROR
 
@@ -323,6 +324,17 @@ bool RpcServer::onGetPoolChangesLite(const COMMAND_RPC_GET_POOL_CHANGES_LITE::re
 //
 
 bool RpcServer::on_get_info(const COMMAND_RPC_GET_INFO::request& req, COMMAND_RPC_GET_INFO::response& res) {
+  res.already_generated_coins = m_core.getAlreadyGeneratedCoins();
+  Blockchain& bc = m_core.getBlockChain();
+  block_entry_t bet = bc.getLastBlock();
+  res.block_major_version = config::get().block.version.major;
+  res.block_minor_version = config::get().block.version.minor;
+  res.last_block_difficulty = bc.blockDifficulty(bet.height);
+  res.last_block_timestamp = bet.bl.timestamp;
+  // res.last_block_reward = bet.bl.timestamp;
+  res.min_tx_fee = cryptonote::parameters::MINIMUM_FEE;
+  res.version = PROJECT_VERSION_LONG;
+
   res.height = m_core.get_current_blockchain_height();
   res.difficulty = m_core.getNextBlockDifficulty();
   res.tx_count = m_core.get_blockchain_total_transactions() - res.height; //without coinbase

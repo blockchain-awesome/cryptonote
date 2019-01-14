@@ -255,29 +255,42 @@ struct COMMAND_RPC_GET_INFO {
 
   struct response {
     std::string status;
+    std::string already_generated_coins;
+    uint8_t block_major_version;
+    uint8_t block_minor_version;
+    difficulty_t last_block_difficulty;
+    uint64_t last_block_timestamp;
+    uint64_t alt_blocks_count;
     uint64_t height;
     uint64_t difficulty;
     uint64_t tx_count;
     uint64_t tx_pool_size;
-    uint64_t alt_blocks_count;
     uint64_t outgoing_connections_count;
     uint64_t incoming_connections_count;
     uint64_t white_peerlist_size;
     uint64_t grey_peerlist_size;
     uint32_t last_known_block_index;
+    uint64_t min_tx_fee;
+    std::string version;
 
     void serialize(ISerializer &s) {
       KV_MEMBER(status)
+      KV_MEMBER(already_generated_coins)
+      KV_MEMBER(block_major_version)
+      KV_MEMBER(block_minor_version)
+      KV_MEMBER(last_block_difficulty)
+      KV_MEMBER(alt_blocks_count)
       KV_MEMBER(height)
       KV_MEMBER(difficulty)
       KV_MEMBER(tx_count)
       KV_MEMBER(tx_pool_size)
-      KV_MEMBER(alt_blocks_count)
       KV_MEMBER(outgoing_connections_count)
       KV_MEMBER(incoming_connections_count)
       KV_MEMBER(white_peerlist_size)
       KV_MEMBER(grey_peerlist_size)
       KV_MEMBER(last_known_block_index)
+      KV_MEMBER(min_tx_fee)
+      KV_MEMBER(version)
     }
   };
 };

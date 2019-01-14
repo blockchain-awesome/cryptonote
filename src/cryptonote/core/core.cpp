@@ -786,6 +786,11 @@ bool core::getBlockSize(const crypto::hash_t& hash, size_t& size) {
   return m_blockchain.getBlockSize(hash, size);
 }
 
+
+uint64_t core::getAlreadyGeneratedCoins() {
+  return m_blockchain.getCoinsInCirculation();
+}
+
 bool core::getAlreadyGeneratedCoins(const crypto::hash_t& hash, uint64_t& generatedCoins) {
   return m_blockchain.getAlreadyGeneratedCoins(hash, generatedCoins);
 }
