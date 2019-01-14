@@ -8,6 +8,7 @@
 #include "cryptonote/core/currency.h"
 #include "cryptonote/core/TransactionApi.h"
 #include "logging/ConsoleLogger.h"
+#include "cryptonote/structures/array.hpp"
 
 #include "TransactionApiHelpers.h"
 

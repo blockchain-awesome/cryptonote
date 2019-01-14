@@ -10,6 +10,7 @@
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/core/currency.h"
+#include "cryptonote/structures/array.hpp"
 
 #include <common/math.hpp>
 

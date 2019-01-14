@@ -13,6 +13,7 @@
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "logging/ConsoleLogger.h"
 #include "cryptonote/structures/block_entry.h"
+#include "cryptonote/structures/array.hpp"
 
 #include "INodeStubs.h"
 #include "TestBlockchainGenerator.h"
