@@ -243,7 +243,7 @@ TEST_F(InProcessNodeTests, relayTransactionUninitialized) {
 
 TEST_F(InProcessNodeTests, getBlocksByHeightEmpty) {
   std::vector<uint32_t> blockHeights;
-  std::vector<std::vector<cryptonote::BlockDetails>> blocks;
+  std::vector<std::vector<cryptonote::block_details_t>> blocks;
   ASSERT_EQ(blockHeights.size(), 0);
   ASSERT_EQ(blocks.size(), 0);
 
@@ -259,7 +259,7 @@ TEST_F(InProcessNodeTests, getBlocksByHeightMany) {
   const size_t NUMBER_OF_BLOCKS = 10;
 
   std::vector<uint32_t> blockHeights;
-  std::vector<std::vector<cryptonote::BlockDetails>> actualBlocks;
+  std::vector<std::vector<cryptonote::block_details_t>> actualBlocks;
 
   std::vector<cryptonote::block_t> expectedBlocks;
 
@@ -287,9 +287,9 @@ TEST_F(InProcessNodeTests, getBlocksByHeightMany) {
   ASSERT_EQ(blockHeights.size(), actualBlocks.size());
   auto range1 = boost::combine(blockHeights, expectedBlocks);
   auto range = boost::combine(range1, actualBlocks);
-  for (const boost::tuple<boost::tuple<size_t, cryptonote::block_t>, std::vector<cryptonote::BlockDetails>>& sameHeight : range) {
+  for (const boost::tuple<boost::tuple<size_t, cryptonote::block_t>, std::vector<cryptonote::block_details_t>>& sameHeight : range) {
     EXPECT_EQ(sameHeight.get<1>().size(), 1);
-    for (const cryptonote::BlockDetails& block : sameHeight.get<1>()) {
+    for (const cryptonote::block_details_t& block : sameHeight.get<1>()) {
       EXPECT_EQ(block.height, sameHeight.get<0>().get<0>());
       crypto::hash_t expectedCryptoHash = cryptonote::Block::getHash(sameHeight.get<0>().get<1>());
       hash_t expectedHash = reinterpret_cast<const hash_t&>(expectedCryptoHash);
@@ -303,7 +303,7 @@ TEST_F(InProcessNodeTests, getBlocksByHeightFail) {
   const size_t NUMBER_OF_BLOCKS = 10;
 
   std::vector<uint32_t> blockHeights;
-  std::vector<std::vector<cryptonote::BlockDetails>> actualBlocks;
+  std::vector<std::vector<cryptonote::block_details_t>> actualBlocks;
 
   coreStub.set_blockchain_top(0, boost::value_initialized<crypto::hash_t>());
 
@@ -330,7 +330,7 @@ TEST_F(InProcessNodeTests, getBlocksByHeightNotInited) {
   cryptonote::InProcessNode newNode(coreStub, protocolQueryStub);
 
   std::vector<uint32_t> blockHeights;
-  std::vector<std::vector<cryptonote::BlockDetails>> blocks;
+  std::vector<std::vector<cryptonote::block_details_t>> blocks;
   ASSERT_EQ(blockHeights.size(), 0);
   ASSERT_EQ(blocks.size(), 0);
 
@@ -342,7 +342,7 @@ TEST_F(InProcessNodeTests, getBlocksByHeightNotInited) {
 
 TEST_F(InProcessNodeTests, getBlocksByHashEmpty) {
   std::vector<crypto::hash_t> blockHashes;
-  std::vector<cryptonote::BlockDetails> blocks;
+  std::vector<cryptonote::block_details_t> blocks;
   ASSERT_EQ(blockHashes.size(), 0);
   ASSERT_EQ(blocks.size(), 0);
 
@@ -358,7 +358,7 @@ TEST_F(InProcessNodeTests, getBlocksByHashMany) {
   const size_t NUMBER_OF_BLOCKS = 10;
 
   std::vector<crypto::hash_t> blockHashes;
-  std::vector<cryptonote::BlockDetails> actualBlocks;
+  std::vector<cryptonote::block_details_t> actualBlocks;
 
   std::vector<cryptonote::block_t> expectedBlocks;
 
@@ -386,7 +386,7 @@ TEST_F(InProcessNodeTests, getBlocksByHashMany) {
   ASSERT_EQ(blockHashes.size(), actualBlocks.size());
   auto range1 = boost::combine(blockHashes, expectedBlocks);
   auto range = boost::combine(range1, actualBlocks);
-  for (const boost::tuple<boost::tuple<crypto::hash_t, cryptonote::block_t>, cryptonote::BlockDetails>& sameHeight : range) {
+  for (const boost::tuple<boost::tuple<crypto::hash_t, cryptonote::block_t>, cryptonote::block_details_t>& sameHeight : range) {
     crypto::hash_t expectedCryptoHash = cryptonote::Block::getHash(sameHeight.get<0>().get<1>());
     EXPECT_EQ(expectedCryptoHash, sameHeight.get<0>().get<0>());
     hash_t expectedHash = reinterpret_cast<const hash_t&>(expectedCryptoHash);
@@ -399,7 +399,7 @@ TEST_F(InProcessNodeTests, getBlocksByHashFail) {
   const size_t NUMBER_OF_BLOCKS = 10;
 
   std::vector<crypto::hash_t> blockHashes;
-  std::vector<cryptonote::BlockDetails> actualBlocks;
+  std::vector<cryptonote::block_details_t> actualBlocks;
 
   coreStub.set_blockchain_top(0, boost::value_initialized<crypto::hash_t>());
 
@@ -426,7 +426,7 @@ TEST_F(InProcessNodeTests, getBlocksByHashNotInited) {
   cryptonote::InProcessNode newNode(coreStub, protocolQueryStub);
 
   std::vector<crypto::hash_t> blockHashes;
-  std::vector<cryptonote::BlockDetails> blocks;
+  std::vector<cryptonote::block_details_t> blocks;
   ASSERT_EQ(blockHashes.size(), 0);
   ASSERT_EQ(blocks.size(), 0);
 

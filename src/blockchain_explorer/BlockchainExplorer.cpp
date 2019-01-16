@@ -187,7 +187,7 @@ void BlockchainExplorer::shutdown() {
   state.store(NOT_INITIALIZED);
 }
 
-bool BlockchainExplorer::getBlocks(const std::vector<uint32_t>& blockHeights, std::vector<std::vector<BlockDetails>>& blocks) {
+bool BlockchainExplorer::getBlocks(const std::vector<uint32_t>& blockHeights, std::vector<std::vector<block_details_t>>& blocks) {
   if (state.load() != INITIALIZED) {
     throw std::system_error(make_error_code(cryptonote::error::BlockchainExplorerErrorCodes::NOT_INITIALIZED));
   }
@@ -198,7 +198,7 @@ bool BlockchainExplorer::getBlocks(const std::vector<uint32_t>& blockHeights, st
       static_cast<
         void(INode::*)(
         const std::vector<uint32_t>&,
-          std::vector<std::vector<BlockDetails>>&, 
+          std::vector<std::vector<block_details_t>>&, 
           const INode::Callback&
         )
       >(&INode::getBlocks), 
@@ -217,7 +217,7 @@ bool BlockchainExplorer::getBlocks(const std::vector<uint32_t>& blockHeights, st
   return true;
 }
 
-bool BlockchainExplorer::getBlocks(const std::vector<hash_t>& blockHashes, std::vector<BlockDetails>& blocks) {
+bool BlockchainExplorer::getBlocks(const std::vector<hash_t>& blockHashes, std::vector<block_details_t>& blocks) {
   if (state.load() != INITIALIZED) {
     throw std::system_error(make_error_code(cryptonote::error::BlockchainExplorerErrorCodes::NOT_INITIALIZED));
   }
@@ -228,7 +228,7 @@ bool BlockchainExplorer::getBlocks(const std::vector<hash_t>& blockHashes, std::
       static_cast<
         void(INode::*)(
           const std::vector<hash_t>&, 
-          std::vector<BlockDetails>&, 
+          std::vector<block_details_t>&, 
           const INode::Callback&
         )
       >(&INode::getBlocks), 
@@ -247,7 +247,7 @@ bool BlockchainExplorer::getBlocks(const std::vector<hash_t>& blockHashes, std::
   return true;
 }
 
-bool BlockchainExplorer::getBlocks(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t blocksNumberLimit, std::vector<BlockDetails>& blocks, uint32_t& blocksNumberWithinTimestamps) {
+bool BlockchainExplorer::getBlocks(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t blocksNumberLimit, std::vector<block_details_t>& blocks, uint32_t& blocksNumberWithinTimestamps) {
   if (state.load() != INITIALIZED) {
     throw std::system_error(make_error_code(cryptonote::error::BlockchainExplorerErrorCodes::NOT_INITIALIZED));
   }
@@ -260,7 +260,7 @@ bool BlockchainExplorer::getBlocks(uint64_t timestampBegin, uint64_t timestampEn
           uint64_t,
           uint64_t, 
           uint32_t,
-          std::vector<BlockDetails>&, 
+          std::vector<block_details_t>&, 
           uint32_t&,
           const INode::Callback&
         )
@@ -282,7 +282,7 @@ bool BlockchainExplorer::getBlocks(uint64_t timestampBegin, uint64_t timestampEn
   return true;
 }
 
-bool BlockchainExplorer::getBlockchainTop(BlockDetails& topBlock) {
+bool BlockchainExplorer::getBlockchainTop(block_details_t& topBlock) {
   if (state.load() != INITIALIZED) {
     throw std::system_error(make_error_code(cryptonote::error::BlockchainExplorerErrorCodes::NOT_INITIALIZED));
   }
@@ -293,7 +293,7 @@ bool BlockchainExplorer::getBlockchainTop(BlockDetails& topBlock) {
   std::vector<uint32_t> heights;
   heights.push_back(std::move(lastHeight));
 
-  std::vector<std::vector<BlockDetails>> blocks;
+  std::vector<std::vector<block_details_t>> blocks;
   if (!getBlocks(heights, blocks)) {
     logger(ERROR) << "Can't get blockchain top.";
     throw std::system_error(make_error_code(cryptonote::error::BlockchainExplorerErrorCodes::INTERNAL_ERROR));
@@ -301,7 +301,7 @@ bool BlockchainExplorer::getBlockchainTop(BlockDetails& topBlock) {
   assert(blocks.size() == heights.size() && blocks.size() == 1);
 
   bool gotMainchainBlock = false;
-  for (const BlockDetails& block : blocks.back()) {
+  for (const block_details_t& block : blocks.back()) {
     if (!block.isOrphaned) {
       topBlock = block;
       gotMainchainBlock = true;
@@ -530,13 +530,13 @@ void BlockchainExplorer::poolChanged() {
         }
       }
       
-      std::shared_ptr<std::vector<std::pair<hash_t, TransactionRemoveReason>>> removedTransactionsHashesPtr = std::make_shared<std::vector<std::pair<hash_t, TransactionRemoveReason>>>();
+      std::shared_ptr<std::vector<std::pair<hash_t, transaction_remove_reason_t>>> removedTransactionsHashesPtr = std::make_shared<std::vector<std::pair<hash_t, transaction_remove_reason_t>>>();
       for (const hash_t hash : *removedTransactionsPtr) {
         auto iter = knownPoolState.find(hash);
         if (iter != knownPoolState.end()) {
           removedTransactionsHashesPtr->push_back({
               hash,
-              TransactionRemoveReason::INCLUDED_IN_BLOCK // Can't have real reason here.
+              transaction_remove_reason_t::INCLUDED_IN_BLOCK // Can't have real reason here.
           });
           knownPoolState.erase(iter);
         }
@@ -598,7 +598,7 @@ void BlockchainExplorer::blockchainSynchronized(uint32_t topHeight) {
   }
 
   std::shared_ptr<std::vector<uint32_t>> blockHeightsPtr = std::make_shared<std::vector<uint32_t>>();
-  std::shared_ptr<std::vector<std::vector<BlockDetails>>> blocksPtr = std::make_shared<std::vector<std::vector<BlockDetails>>>();
+  std::shared_ptr<std::vector<std::vector<block_details_t>>> blocksPtr = std::make_shared<std::vector<std::vector<block_details_t>>>();
 
   blockHeightsPtr->push_back(topHeight);
 
@@ -607,7 +607,7 @@ void BlockchainExplorer::blockchainSynchronized(uint32_t topHeight) {
       static_cast<
         void(INode::*)(
         const std::vector<uint32_t>&,
-          std::vector<std::vector<BlockDetails>>&, 
+          std::vector<std::vector<block_details_t>>&, 
           const INode::Callback&
         )
       >(&INode::getBlocks), 
@@ -626,9 +626,9 @@ void BlockchainExplorer::blockchainSynchronized(uint32_t topHeight) {
       }
       assert(blocksPtr->size() == blockHeightsPtr->size() && blocksPtr->size() == 1);
 
-      BlockDetails topMainchainBlock;
+      block_details_t topMainchainBlock;
       bool gotMainchainBlock = false;
-      for (const BlockDetails& block : blocksPtr->back()) {
+      for (const block_details_t& block : blocksPtr->back()) {
         if (!block.isOrphaned) {
           topMainchainBlock = block;
           gotMainchainBlock = true;
@@ -660,7 +660,7 @@ void BlockchainExplorer::localBlockchainUpdated(uint32_t height) {
   assert(height >= knownBlockchainTopHeight);
 
   std::shared_ptr<std::vector<uint32_t>> blockHeightsPtr = std::make_shared<std::vector<uint32_t>>();
-  std::shared_ptr<std::vector<std::vector<BlockDetails>>> blocksPtr = std::make_shared<std::vector<std::vector<BlockDetails>>>();
+  std::shared_ptr<std::vector<std::vector<block_details_t>>> blocksPtr = std::make_shared<std::vector<std::vector<block_details_t>>>();
 
   for (uint32_t i = knownBlockchainTopHeight; i <= height; ++i) {
     blockHeightsPtr->push_back(i);
@@ -673,7 +673,7 @@ void BlockchainExplorer::localBlockchainUpdated(uint32_t height) {
       static_cast<
         void(INode::*)(
         const std::vector<uint32_t>&,
-          std::vector<std::vector<BlockDetails>>&, 
+          std::vector<std::vector<block_details_t>>&, 
           const INode::Callback&
         )
       >(&INode::getBlocks), 
@@ -694,14 +694,14 @@ void BlockchainExplorer::localBlockchainUpdated(uint32_t height) {
 
       std::unique_lock<std::mutex> lock(mutex);
 
-      BlockDetails topMainchainBlock;
+      block_details_t topMainchainBlock;
       bool gotTopMainchainBlock = false;
       uint64_t topHeight = 0;
 
-      std::vector<BlockDetails> newBlocks;
-      std::vector<BlockDetails> orphanedBlocks;
-      for (const std::vector<BlockDetails>& sameHeightBlocks : *blocksPtr) {
-        for (const BlockDetails& block : sameHeightBlocks) {
+      std::vector<block_details_t> newBlocks;
+      std::vector<block_details_t> orphanedBlocks;
+      for (const std::vector<block_details_t>& sameHeightBlocks : *blocksPtr) {
+        for (const block_details_t& block : sameHeightBlocks) {
           if (topHeight < block.height) {
             topHeight = block.height;
             gotTopMainchainBlock = false;

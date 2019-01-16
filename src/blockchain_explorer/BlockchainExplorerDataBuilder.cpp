@@ -46,7 +46,7 @@ bool BlockchainExplorerDataBuilder::getPaymentId(const transaction_t& transactio
   return getPaymentIdFromTransactionExtraNonce(extraNonce.nonce, paymentId);
 }
 
-bool BlockchainExplorerDataBuilder::fillTxExtra(const std::vector<uint8_t>& rawExtra, TransactionExtraDetails& extraDetails) {
+bool BlockchainExplorerDataBuilder::fillTxExtra(const std::vector<uint8_t>& rawExtra, transaction_extra_details_t& extraDetails) {
   extraDetails.raw = rawExtra;
   std::vector<transaction_extra_field_t> txExtraFields;
   parseTransactionExtra(rawExtra, txExtraFields);
@@ -79,7 +79,7 @@ size_t BlockchainExplorerDataBuilder::median(std::vector<size_t>& v) {
 
 }
 
-bool BlockchainExplorerDataBuilder::fillBlockDetails(const block_t&block, BlockDetails& blockDetails) {
+bool BlockchainExplorerDataBuilder::fillBlockDetails(const block_t&block, block_details_t& blockDetails) {
   crypto::hash_t hash = Block::getHash(block);
 
   blockDetails.majorVersion = block.majorVersion;
@@ -256,7 +256,7 @@ bool BlockchainExplorerDataBuilder::fillTransactionDetails(const transaction_t& 
 
   transactionDetails.inputs.reserve(transaction.inputs.size());
   for (const transaction_input_t& txIn : transaction.inputs) {
-    TransactionInputDetails txInDetails;
+    transaction_input_details_t txInDetails;
 
     if (txIn.type() == typeid(base_input_t)) {
       TransactionInputGenerateDetails txInGenDetails;
@@ -310,16 +310,16 @@ bool BlockchainExplorerDataBuilder::fillTransactionDetails(const transaction_t& 
   typedef boost::tuple<transaction_output_t, uint32_t> outputWithIndex;
   auto range = boost::combine(transaction.outputs, globalIndices);
   for (const outputWithIndex& txOutput : range) {
-    TransactionOutputDetails txOutDetails;
+    transaction_output_details_t txOutDetails;
     txOutDetails.amount = txOutput.get<0>().amount;
     txOutDetails.globalIndex = txOutput.get<1>();
 
     if (txOutput.get<0>().target.type() == typeid(key_output_t)) {
-      TransactionOutputToKeyDetails txOutToKeyDetails;
+      transaction_output_to_key_details_t txOutToKeyDetails;
       txOutToKeyDetails.txOutKey = boost::get<key_output_t>(txOutput.get<0>().target).key;
       txOutDetails.output = txOutToKeyDetails;
     } else if (txOutput.get<0>().target.type() == typeid(multi_signature_output_t)) {
-      TransactionOutputMultisignatureDetails txOutMultisigDetails;
+      transaction_output_multi_signature_details_t txOutMultisigDetails;
       multi_signature_output_t txOutMultisig = boost::get<multi_signature_output_t>(txOutput.get<0>().target);
       txOutMultisigDetails.keys.reserve(txOutMultisig.keys.size());
       for (const crypto::public_key_t& key : txOutMultisig.keys) {

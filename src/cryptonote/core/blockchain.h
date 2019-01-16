@@ -6,6 +6,7 @@
 
 #include <atomic>
 
+#include "BlockchainExplorerData.h"
 #include "google/sparse_hash_set"
 #include "google/sparse_hash_map"
 
@@ -170,6 +171,7 @@ namespace cryptonote {
     std::recursive_mutex & getMutex() {
       return m_blockchain_lock;
     }
+    block_details_t getBlockDetails(const crypto::hash_t & blockHash);
 
   private:
     typedef google::sparse_hash_set<crypto::key_image_t> key_images_container_t;

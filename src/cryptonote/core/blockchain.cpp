@@ -2020,4 +2020,78 @@ bool Blockchain::isBlockInMainChain(const crypto::hash_t& blockId) {
   return m_blockIndex.hasBlock(blockId);
 }
 
+block_details_t Blockchain::getBlockDetails(const crypto::hash_t & blockHash) {
+  uint32_t height;
+  if (getBlockHeight(blockHash, height)) {
+    throw std::runtime_error("Blockchain::getBlockDetails, failed to add get block details!");
+
+  }
+  // blockt_t block = getBlockIdByHeight(height);
+  
+  block_details_t blockDetails;
+  // blockDetails.majorVersion = blockTemplate.majorVersion;
+  // blockDetails.minorVersion = blockTemplate.minorVersion;
+  // blockDetails.timestamp = blockTemplate.timestamp;
+  // blockDetails.prevBlockHash = blockTemplate.previousBlockHash;
+  // blockDetails.nonce = blockTemplate.nonce;
+  // blockDetails.hash = blockHash;
+
+  // blockDetails.reward = 0;
+  // for (const TransactionOutput& out : blockTemplate.baseTransaction.outputs) {
+  //   blockDetails.reward += out.amount;
+  // }
+
+  // blockDetails.index = blockIndex;
+  // blockDetails.isAlternative = mainChainSet.count(segment) == 0;
+
+  // blockDetails.difficulty = getBlockDifficulty(blockIndex);
+
+  // std::vector<uint64_t> sizes = segment->getLastBlocksSizes(1, blockDetails.index, addGenesisBlock);
+  // assert(sizes.size() == 1);
+  // blockDetails.transactionsCumulativeSize = sizes.front();
+
+  // uint64_t blockBlobSize = getObjectBinarySize(blockTemplate);
+  // uint64_t coinbaseTransactionSize = getObjectBinarySize(blockTemplate.baseTransaction);
+  // blockDetails.blockSize = blockBlobSize + blockDetails.transactionsCumulativeSize - coinbaseTransactionSize;
+
+  // blockDetails.alreadyGeneratedCoins = segment->getAlreadyGeneratedCoins(blockDetails.index);
+  // blockDetails.alreadyGeneratedTransactions = segment->getAlreadyGeneratedTransactions(blockDetails.index);
+
+  // uint64_t prevBlockGeneratedCoins = 0;
+  // blockDetails.sizeMedian = 0;
+  // if (blockDetails.index > 0) {
+  //   auto lastBlocksSizes = segment->getLastBlocksSizes(currency.rewardBlocksWindow(), blockDetails.index - 1, addGenesisBlock);
+  //   blockDetails.sizeMedian = Common::medianValue(lastBlocksSizes);
+  //   prevBlockGeneratedCoins = segment->getAlreadyGeneratedCoins(blockDetails.index - 1);
+  // }
+
+  // int64_t emissionChange = 0;
+  // bool result = currency.getBlockReward(blockDetails.majorVersion, blockDetails.sizeMedian, 0, prevBlockGeneratedCoins, 0, blockDetails.baseReward, emissionChange);
+  // assert(result);
+
+  // uint64_t currentReward = 0;
+  // result = currency.getBlockReward(blockDetails.majorVersion, blockDetails.sizeMedian, blockDetails.transactionsCumulativeSize,
+  //                                  prevBlockGeneratedCoins, 0, currentReward, emissionChange);
+  // assert(result);
+
+  // if (blockDetails.baseReward == 0 && currentReward == 0) {
+  //   blockDetails.penalty = static_cast<double>(0);
+  // } else {
+  //   assert(blockDetails.baseReward >= currentReward);
+  //   blockDetails.penalty = static_cast<double>(blockDetails.baseReward - currentReward) / static_cast<double>(blockDetails.baseReward);
+  // }
+
+  // blockDetails.transactions.reserve(blockTemplate.transactionHashes.size() + 1);
+  // CachedTransaction cachedBaseTx(std::move(blockTemplate.baseTransaction));
+  // blockDetails.transactions.push_back(getTransactionDetails(cachedBaseTx.getTransactionHash(), segment, false));
+
+  // blockDetails.totalFeeAmount = 0;
+  // for (const Crypto::Hash& transactionHash : blockTemplate.transactionHashes) {
+  //   blockDetails.transactions.push_back(getTransactionDetails(transactionHash, segment, false));
+  //   blockDetails.totalFeeAmount += blockDetails.transactions.back().fee;
+  // }
+
+  return blockDetails;
+}
+
 }

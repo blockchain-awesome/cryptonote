@@ -35,11 +35,11 @@ public:
   virtual bool addObserver(IBlockchainObserver* observer) override;
   virtual bool removeObserver(IBlockchainObserver* observer) override;
 
-  virtual bool getBlocks(const std::vector<uint32_t>& blockHeights, std::vector<std::vector<BlockDetails>>& blocks) override;
-  virtual bool getBlocks(const std::vector<crypto::hash_t>& blockHashes, std::vector<BlockDetails>& blocks) override;
-  virtual bool getBlocks(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t blocksNumberLimit, std::vector<BlockDetails>& blocks, uint32_t& blocksNumberWithinTimestamps) override;
+  virtual bool getBlocks(const std::vector<uint32_t>& blockHeights, std::vector<std::vector<block_details_t>>& blocks) override;
+  virtual bool getBlocks(const std::vector<crypto::hash_t>& blockHashes, std::vector<block_details_t>& blocks) override;
+  virtual bool getBlocks(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t blocksNumberLimit, std::vector<block_details_t>& blocks, uint32_t& blocksNumberWithinTimestamps) override;
 
-  virtual bool getBlockchainTop(BlockDetails& topBlock) override;
+  virtual bool getBlockchainTop(block_details_t& topBlock) override;
 
   virtual bool getTransactions(const std::vector<crypto::hash_t>& transactionHashes, std::vector<transaction_details_t>& transactions) override;
   virtual bool getTransactionsByPaymentId(const crypto::hash_t& paymentId, std::vector<transaction_details_t>& transactions) override;
@@ -85,7 +85,7 @@ private:
     INITIALIZED
   };
 
-  BlockDetails knownBlockchainTop;
+  block_details_t knownBlockchainTop;
   uint32_t knownBlockchainTopHeight;
   std::unordered_set<crypto::hash_t> knownPoolState;
 

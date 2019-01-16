@@ -336,7 +336,7 @@ void INodeTrivialRefreshStub::setMaxMixinCount(uint64_t maxMixin) {
   m_maxMixin = maxMixin;
 }
 
-void INodeTrivialRefreshStub::getBlocks(const std::vector<uint32_t>& blockHeights, std::vector<std::vector<BlockDetails>>& blocks, const Callback& callback) {
+void INodeTrivialRefreshStub::getBlocks(const std::vector<uint32_t>& blockHeights, std::vector<std::vector<block_details_t>>& blocks, const Callback& callback) {
   m_asyncCounter.addAsyncContext();
 
   std::thread task(
@@ -344,7 +344,7 @@ void INodeTrivialRefreshStub::getBlocks(const std::vector<uint32_t>& blockHeight
       static_cast<
         void(INodeTrivialRefreshStub::*)(
         const std::vector<uint32_t>&,
-          std::vector<std::vector<BlockDetails>>&, 
+          std::vector<std::vector<block_details_t>>&, 
           const Callback&
         )
       >(&INodeTrivialRefreshStub::doGetBlocks),
@@ -357,7 +357,7 @@ void INodeTrivialRefreshStub::getBlocks(const std::vector<uint32_t>& blockHeight
   task.detach();
 }
 
-void INodeTrivialRefreshStub::doGetBlocks(const std::vector<uint32_t>& blockHeights, std::vector<std::vector<BlockDetails>>& blocks, const Callback& callback) {
+void INodeTrivialRefreshStub::doGetBlocks(const std::vector<uint32_t>& blockHeights, std::vector<std::vector<block_details_t>>& blocks, const Callback& callback) {
   ContextCounterHolder counterHolder(m_asyncCounter);
   std::unique_lock<std::mutex> lock(m_walletLock);
 
@@ -367,7 +367,7 @@ void INodeTrivialRefreshStub::doGetBlocks(const std::vector<uint32_t>& blockHeig
       callback(std::error_code(EDOM, std::generic_category()));
       return;
     }
-    BlockDetails b = BlockDetails();
+    block_details_t b = block_details_t();
     b.height = height;
     b.isOrphaned = false;
     crypto::hash_t hash = Block::getHash(m_blockchainGenerator.getBlockchain()[height]);
@@ -376,7 +376,7 @@ void INodeTrivialRefreshStub::doGetBlocks(const std::vector<uint32_t>& blockHeig
       callback(std::error_code(EDOM, std::generic_category()));
       return;
     }
-    std::vector<BlockDetails> v;
+    std::vector<block_details_t> v;
     v.push_back(b);
     blocks.push_back(v);
   }
@@ -385,7 +385,7 @@ void INodeTrivialRefreshStub::doGetBlocks(const std::vector<uint32_t>& blockHeig
   callback(std::error_code());
 }
 
-void INodeTrivialRefreshStub::getBlocks(const std::vector<crypto::hash_t>& blockHashes, std::vector<BlockDetails>& blocks, const Callback& callback) {
+void INodeTrivialRefreshStub::getBlocks(const std::vector<crypto::hash_t>& blockHashes, std::vector<block_details_t>& blocks, const Callback& callback) {
   m_asyncCounter.addAsyncContext();
 
   std::thread task(
@@ -393,7 +393,7 @@ void INodeTrivialRefreshStub::getBlocks(const std::vector<crypto::hash_t>& block
       static_cast<
         void(INodeTrivialRefreshStub::*)(
           const std::vector<crypto::hash_t>&, 
-          std::vector<BlockDetails>&, 
+          std::vector<block_details_t>&, 
           const Callback&
         )
       >(&INodeTrivialRefreshStub::doGetBlocks),
@@ -406,7 +406,7 @@ void INodeTrivialRefreshStub::getBlocks(const std::vector<crypto::hash_t>& block
   task.detach();
 }
 
-void INodeTrivialRefreshStub::doGetBlocks(const std::vector<crypto::hash_t>& blockHashes, std::vector<BlockDetails>& blocks, const Callback& callback) {
+void INodeTrivialRefreshStub::doGetBlocks(const std::vector<crypto::hash_t>& blockHashes, std::vector<block_details_t>& blocks, const Callback& callback) {
   ContextCounterHolder counterHolder(m_asyncCounter);
   std::unique_lock<std::mutex> lock(m_walletLock);
 
@@ -423,7 +423,7 @@ void INodeTrivialRefreshStub::doGetBlocks(const std::vector<crypto::hash_t>& blo
       callback(std::error_code(EDOM, std::generic_category()));
       return;
     }
-    BlockDetails b = BlockDetails();
+    block_details_t b = block_details_t();
     crypto::hash_t actualHash = Block::getHash(*iter);
     b.hash = actualHash;
     b.isOrphaned = false;
@@ -434,7 +434,7 @@ void INodeTrivialRefreshStub::doGetBlocks(const std::vector<crypto::hash_t>& blo
   callback(std::error_code());
 }
 
-void INodeTrivialRefreshStub::getBlocks(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t blocksNumberLimit, std::vector<BlockDetails>& blocks, uint32_t& blocksNumberWithinTimestamps, const Callback& callback) {
+void INodeTrivialRefreshStub::getBlocks(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t blocksNumberLimit, std::vector<block_details_t>& blocks, uint32_t& blocksNumberWithinTimestamps, const Callback& callback) {
   m_asyncCounter.addAsyncContext();
 
   std::thread task(
@@ -444,7 +444,7 @@ void INodeTrivialRefreshStub::getBlocks(uint64_t timestampBegin, uint64_t timest
           uint64_t, 
           uint64_t,
           uint32_t,
-          std::vector<BlockDetails>&, 
+          std::vector<block_details_t>&, 
           uint32_t&,
           const Callback&
         )
@@ -461,7 +461,7 @@ void INodeTrivialRefreshStub::getBlocks(uint64_t timestampBegin, uint64_t timest
   task.detach();
 }
 
-void INodeTrivialRefreshStub::doGetBlocks(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t blocksNumberLimit, std::vector<BlockDetails>& blocks, uint32_t& blocksNumberWithinTimestamps, const Callback& callback) {
+void INodeTrivialRefreshStub::doGetBlocks(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t blocksNumberLimit, std::vector<block_details_t>& blocks, uint32_t& blocksNumberWithinTimestamps, const Callback& callback) {
   ContextCounterHolder counterHolder(m_asyncCounter);
   std::unique_lock<std::mutex> lock(m_walletLock);
 
@@ -483,7 +483,7 @@ void INodeTrivialRefreshStub::doGetBlocks(uint64_t timestampBegin, uint64_t time
       callback(std::error_code(EDOM, std::generic_category()));
       return;
     }
-    BlockDetails b = BlockDetails();
+    block_details_t b = block_details_t();
     crypto::hash_t actualHash = Block::getHash(*iter);
     b.hash = actualHash;
     b.isOrphaned = false;

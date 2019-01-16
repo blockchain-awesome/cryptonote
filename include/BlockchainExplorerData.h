@@ -14,31 +14,31 @@
 
 namespace cryptonote {
 
-enum class TransactionRemoveReason : uint8_t 
+enum class transaction_remove_reason_t : uint8_t 
 { 
   INCLUDED_IN_BLOCK = 0, 
   TIMEOUT = 1
 };
 
-struct TransactionOutputToKeyDetails {
+struct transaction_output_to_key_details_t {
   crypto::public_key_t txOutKey;
 };
 
-struct TransactionOutputMultisignatureDetails {
+struct transaction_output_multi_signature_details_t {
   std::vector<crypto::public_key_t> keys;
   uint32_t requiredSignatures;
 };
 
-struct TransactionOutputDetails {
+struct transaction_output_details_t {
   uint64_t amount;
   uint32_t globalIndex;
 
   boost::variant<
-    TransactionOutputToKeyDetails,
-    TransactionOutputMultisignatureDetails> output;
+    transaction_output_to_key_details_t,
+    transaction_output_multi_signature_details_t> output;
 };
 
-struct TransactionOutputReferenceDetails {
+struct transaction_output_reference_details_t {
   crypto::hash_t transactionHash;
   size_t number;
 };
@@ -51,15 +51,15 @@ struct TransactionInputToKeyDetails {
   std::vector<uint32_t> outputIndexes;
   crypto::key_image_t keyImage;
   uint64_t mixin;
-  TransactionOutputReferenceDetails output;
+  transaction_output_reference_details_t output;
 };
 
 struct TransactionInputMultisignatureDetails {
   uint32_t signatures;
-  TransactionOutputReferenceDetails output;
+  transaction_output_reference_details_t output;
 };
 
-struct TransactionInputDetails {
+struct transaction_input_details_t {
   uint64_t amount;
 
   boost::variant<
@@ -68,7 +68,7 @@ struct TransactionInputDetails {
     TransactionInputMultisignatureDetails> input;
 };
 
-struct TransactionExtraDetails {
+struct transaction_extra_details_t {
   std::vector<size_t> padding;
   std::vector<crypto::public_key_t> publicKey; 
   std::vector<std::string> nonce;
@@ -88,13 +88,13 @@ struct transaction_details_t {
   bool inBlockchain;
   crypto::hash_t blockHash;
   uint32_t blockHeight;
-  TransactionExtraDetails extra;
+  transaction_extra_details_t extra;
   std::vector<std::vector<crypto::signature_t>> signatures;
-  std::vector<TransactionInputDetails> inputs;
-  std::vector<TransactionOutputDetails> outputs;
+  std::vector<transaction_input_details_t> inputs;
+  std::vector<transaction_output_details_t> outputs;
 };
 
-struct BlockDetails {
+struct block_details_t {
   uint8_t majorVersion;
   uint8_t minorVersion;
   uint64_t timestamp;
