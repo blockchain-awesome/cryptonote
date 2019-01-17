@@ -681,135 +681,143 @@ bool RpcServer::on_get_block_header_by_height(const COMMAND_RPC_GET_BLOCK_HEADER
 // JSON RPC methods
 //------------------------------------------------------------------------------------------------------------------------------
 
-bool RpcServer::f_on_blocks_list_json(const F_COMMAND_RPC_GET_BLOCKS_LIST::request& req, F_COMMAND_RPC_GET_BLOCKS_LIST::response& res) {
+bool RpcServer::f_on_blocks_list_json(const F_COMMAND_RPC_GET_BLOCKS_LIST::request &req, F_COMMAND_RPC_GET_BLOCKS_LIST::response &res)
+{
   Blockchain &bc = m_core.getBlockChain();
-  
-  if (bc.getHeight() < req.height) {
-    throw JsonRpc::JsonRpcError{ CORE_RPC_ERROR_CODE_TOO_BIG_HEIGHT,
-      std::string("To big height: ") + std::to_string(req.height) + ", current blockchain height = " + std::to_string(bc.getHeight()) };
+
+  if (bc.getHeight() < req.height)
+  {
+    throw JsonRpc::JsonRpcError{CORE_RPC_ERROR_CODE_TOO_BIG_HEIGHT,
+                                std::string("To big height: ") + std::to_string(req.height) + ", current blockchain height = " + std::to_string(bc.getHeight())};
   }
 
   uint32_t print_blocks_count = 30;
   uint32_t last_height = req.height - print_blocks_count;
-  if (req.height <= print_blocks_count)  {
+  if (req.height <= print_blocks_count)
+  {
     last_height = 0;
-  } 
+  }
 
-  // for (uint32_t i = req.height; i >= last_height; i--) {
-  //   hash_t block_hash = bc.getBlockIdByHeight(static_cast<uint32_t>(i));
-  //   block_t blk ;
-  //   if (bc.getBlockByHash(block_hash, blk)) {
-  //     throw JsonRpc::JsonRpcError{
-  //       CORE_RPC_ERROR_CODE_INTERNAL_ERROR,
-  //       "Internal error: can't get block by height. Height = " + std::to_string(i) + '.' };
-  //   }
-  //   block_details_t blkDetails = bc.getBlockDetails(block_hash);
+  for (uint32_t i = req.height; i >= last_height; i--)
+  {
+    hash_t block_hash = bc.getBlockIdByHeight(static_cast<uint32_t>(i));
+    block_t blk;
+    if (bc.getBlockByHash(block_hash, blk))
+    {
+      throw JsonRpc::JsonRpcError{
+          CORE_RPC_ERROR_CODE_INTERNAL_ERROR,
+          "Internal error: can't get block by height. Height = " + std::to_string(i) + '.'};
+    }
+    block_details_t blkDetails = bc.getBlockDetails(block_hash);
 
-  //   f_block_short_response block_short;
-  //   block_short.cumul_size = blkDetails.blockSize;
-  //   block_short.timestamp = blk.timestamp;
-  //   block_short.height = i;
-  //   block_short.hash = Common::podToHex(block_hash);
-  //   block_short.tx_count = blk.transactionHashes.size() + 1;
+    f_block_short_response block_short;
+    block_short.cumul_size = blkDetails.blockSize;
+    block_short.timestamp = blk.timestamp;
+    block_short.height = i;
+    block_short.hash = hex::podToString(block_hash);
+    block_short.tx_count = blk.transactionHashes.size() + 1;
 
-  //   res.blocks.push_back(block_short);
+    res.blocks.push_back(block_short);
 
-  //   if (i == 0)
-  //     break;
-  // }
+    if (i == 0)
+    {
+      break;
+    }
+  }
 
   res.status = CORE_RPC_STATUS_OK;
   return true;
 }
 
-// bool RpcServer::f_on_block_json(const F_COMMAND_RPC_GET_BLOCK_DETAILS::request& req, F_COMMAND_RPC_GET_BLOCK_DETAILS::response& res) {
-//   hash_t hash;
+// bool RpcServer::f_on_block_json(const F_COMMAND_RPC_GET_BLOCK_DETAILS::request &req, F_COMMAND_RPC_GET_BLOCK_DETAILS::response &res)
+// {
+  //   hash_t hash;
 
-//   try {
-//     uint32_t height = boost::lexical_cast<uint32_t>(req.hash);
-//     hash = m_core.getBlockHashByIndex(height);
-//   } catch (boost::bad_lexical_cast &) {
-//     if (!parse_hash256(req.hash, hash)) {
-//       throw JsonRpc::JsonRpcError{
-//         CORE_RPC_ERROR_CODE_WRONG_PARAM,
-//         "Failed to parse hex representation of block hash. Hex = " + req.hash + '.' };
-//     }
-//   }
+  //   try {
+  //     uint32_t height = boost::lexical_cast<uint32_t>(req.hash);
+  //     hash = m_core.getBlockHashByIndex(height);
+  //   } catch (boost::bad_lexical_cast &) {
+  //     if (!parse_hash256(req.hash, hash)) {
+  //       throw JsonRpc::JsonRpcError{
+  //         CORE_RPC_ERROR_CODE_WRONG_PARAM,
+  //         "Failed to parse hex representation of block hash. Hex = " + req.hash + '.' };
+  //     }
+  //   }
 
-//   if (!m_core.hasBlock(hash)) {
-//     throw JsonRpc::JsonRpcError{
-//       CORE_RPC_ERROR_CODE_INTERNAL_ERROR,
-//       "Internal error: can't get block by hash. hash_t = " + req.hash + '.' };
-//   }
-//   block_t blk = m_core.getBlockByHash(hash);
-//   block_details_t blkDetails = m_core.getBlockDetails(hash);
+  //   if (!m_core.hasBlock(hash)) {
+  //     throw JsonRpc::JsonRpcError{
+  //       CORE_RPC_ERROR_CODE_INTERNAL_ERROR,
+  //       "Internal error: can't get block by hash. hash_t = " + req.hash + '.' };
+  //   }
+  //   block_t blk = m_core.getBlockByHash(hash);
+  //   block_details_t blkDetails = m_core.getBlockDetails(hash);
 
-//   if (blk.baseTransaction.inputs.front().type() != typeid(BaseInput)) {
-//     throw JsonRpc::JsonRpcError{
-//       CORE_RPC_ERROR_CODE_INTERNAL_ERROR,
-//       "Internal error: coinbase transaction in the block has the wrong type" };
-//   }
+  //   if (blk.baseTransaction.inputs.front().type() != typeid(BaseInput)) {
+  //     throw JsonRpc::JsonRpcError{
+  //       CORE_RPC_ERROR_CODE_INTERNAL_ERROR,
+  //       "Internal error: coinbase transaction in the block has the wrong type" };
+  //   }
 
-//   block_header_response block_header;
-//   res.block.height = boost::get<BaseInput>(blk.baseTransaction.inputs.front()).blockIndex;
-//   fill_block_header_response(blk, false, res.block.height, hash, block_header);
+  //   block_header_response block_header;
+  //   res.block.height = boost::get<BaseInput>(blk.baseTransaction.inputs.front()).blockIndex;
+  //   fill_block_header_response(blk, false, res.block.height, hash, block_header);
 
-//   res.block.major_version = block_header.major_version;
-//   res.block.minor_version = block_header.minor_version;
-//   res.block.timestamp = block_header.timestamp;
-//   res.block.prev_hash = block_header.prev_hash;
-//   res.block.nonce = block_header.nonce;
-//   res.block.hash = Common::podToHex(hash);
-//   res.block.depth = m_core.getTopBlockIndex() - res.block.height;
-//   res.block.difficulty = m_core.getBlockDifficulty(res.block.height);
-//   res.block.transactionsCumulativeSize = blkDetails.transactionsCumulativeSize;
-//   res.block.alreadyGeneratedCoins = std::to_string(blkDetails.alreadyGeneratedCoins);
-//   res.block.alreadyGeneratedTransactions = blkDetails.alreadyGeneratedTransactions;
-//   res.block.reward = block_header.reward;
-//   res.block.sizeMedian = blkDetails.sizeMedian;
-//   res.block.blockSize = blkDetails.blockSize;
-//   res.block.orphan_status = blkDetails.isAlternative;
+  //   res.block.major_version = block_header.major_version;
+  //   res.block.minor_version = block_header.minor_version;
+  //   res.block.timestamp = block_header.timestamp;
+  //   res.block.prev_hash = block_header.prev_hash;
+  //   res.block.nonce = block_header.nonce;
+  //   res.block.hash = Common::podToHex(hash);
+  //   res.block.depth = m_core.getTopBlockIndex() - res.block.height;
+  //   res.block.difficulty = m_core.getBlockDifficulty(res.block.height);
+  //   res.block.transactionsCumulativeSize = blkDetails.transactionsCumulativeSize;
+  //   res.block.alreadyGeneratedCoins = std::to_string(blkDetails.alreadyGeneratedCoins);
+  //   res.block.alreadyGeneratedTransactions = blkDetails.alreadyGeneratedTransactions;
+  //   res.block.reward = block_header.reward;
+  //   res.block.sizeMedian = blkDetails.sizeMedian;
+  //   res.block.blockSize = blkDetails.blockSize;
+  //   res.block.orphan_status = blkDetails.isAlternative;
 
-//   uint64_t maxReward = 0;
-//   uint64_t currentReward = 0;
-//   int64_t emissionChange = 0;
-//   size_t blockGrantedFullRewardZone = m_core.getCurrency().blockGrantedFullRewardZoneByBlockVersion(block_header.major_version);
-//   res.block.effectiveSizeMedian = std::max(res.block.sizeMedian, blockGrantedFullRewardZone);
+  //   uint64_t maxReward = 0;
+  //   uint64_t currentReward = 0;
+  //   int64_t emissionChange = 0;
+  //   size_t blockGrantedFullRewardZone = m_core.getCurrency().blockGrantedFullRewardZoneByBlockVersion(block_header.major_version);
+  //   res.block.effectiveSizeMedian = std::max(res.block.sizeMedian, blockGrantedFullRewardZone);
 
-//   res.block.baseReward = blkDetails.baseReward;
-//   res.block.penalty = blkDetails.penalty;
+  //   res.block.baseReward = blkDetails.baseReward;
+  //   res.block.penalty = blkDetails.penalty;
 
-//   // Base transaction adding
-//   f_transaction_short_response transaction_short;
-//   transaction_short.hash = Common::podToHex(getObjectHash(blk.baseTransaction));
-//   transaction_short.fee = 0;
-//   transaction_short.amount_out = getOutputAmount(blk.baseTransaction);
-//   transaction_short.size = getObjectBinarySize(blk.baseTransaction);
-//   res.block.transactions.push_back(transaction_short);
+  //   // Base transaction adding
+  //   f_transaction_short_response transaction_short;
+  //   transaction_short.hash = Common::podToHex(getObjectHash(blk.baseTransaction));
+  //   transaction_short.fee = 0;
+  //   transaction_short.amount_out = getOutputAmount(blk.baseTransaction);
+  //   transaction_short.size = getObjectBinarySize(blk.baseTransaction);
+  //   res.block.transactions.push_back(transaction_short);
 
-//   std::vector<crypto::hash_t> missed_txs;
-//   std::vector<binary_array_t> txs;
-//   m_core.getTransactions(blk.transactionHashes, txs, missed_txs);
+  //   std::vector<crypto::hash_t> missed_txs;
+  //   std::vector<binary_array_t> txs;
+  //   m_core.getTransactions(blk.transactionHashes, txs, missed_txs);
 
-//   res.block.totalFeeAmount = 0;
+  //   res.block.totalFeeAmount = 0;
 
-//   for (const binary_array_t& ba : txs) {
-//     transaction_t tx;
-//     if (!fromBinaryArray(tx, ba)) {
-//       throw std::runtime_error("Couldn't deserialize transaction");
-//     }
-//     f_transaction_short_response transaction_short;
-//     uint64_t amount_in = getInputAmount(tx);
-//     uint64_t amount_out = getOutputAmount(tx);
+  //   for (const binary_array_t& ba : txs) {
+  //     transaction_t tx;
+  //     if (!fromBinaryArray(tx, ba)) {
+  //       throw std::runtime_error("Couldn't deserialize transaction");
+  //     }
+  //     f_transaction_short_response transaction_short;
+  //     uint64_t amount_in = getInputAmount(tx);
+  //     uint64_t amount_out = getOutputAmount(tx);
 
-//     transaction_short.hash = Common::podToHex(getObjectHash(tx));
-//     transaction_short.fee = amount_in - amount_out;
-//     transaction_short.amount_out = amount_out;
-//     transaction_short.size = getObjectBinarySize(tx);
-//     res.block.transactions.push_back(transaction_short);
+  //     transaction_short.hash = Common::podToHex(getObjectHash(tx));
+  //     transaction_short.fee = amount_in - amount_out;
+  //     transaction_short.amount_out = amount_out;
+  //     transaction_short.size = getObjectBinarySize(tx);
+  //     res.block.transactions.push_back(transaction_short);
 
-//     res.block.totalFeeAmount += transaction_short.fee;
-//   }
+  //     res.block.totalFeeAmount += transaction_short.fee;
+  //   }
 
 //   res.status = CORE_RPC_STATUS_OK;
 //   return true;
