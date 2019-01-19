@@ -171,10 +171,9 @@ bool Blockchain::init(bool load_existing) {
     if (!loader.loaded())
     {
       logger(WARNING, BRIGHT_YELLOW) << "No actual blockchain cache found, rebuilding internal structures...";
-      rebuildCache();
-      loader.save(m_currency.blocksCacheFileName());
+	  rebuildCache();
+	  // loader.save(m_currency.blocksCacheFileName());
     }
-
     loadBlockchainIndices();
   } else {
     m_blocks.clear();
