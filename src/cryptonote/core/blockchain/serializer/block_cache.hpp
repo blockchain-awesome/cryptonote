@@ -33,7 +33,7 @@ public:
     {
       std::cout << "Loading cache from file: " << filename << std::endl;
       std::ifstream stdStream(filename, std::ios::binary);
-      if (!stdStream)
+      if (stdStream.fail())
       {
         std::cout << "Failed to open cached file: " << filename << std::endl;
         return;
@@ -54,7 +54,7 @@ public:
     try
     {
       std::ofstream file(filename, std::ios::binary);
-      if (!file)
+      if (file.fail())
       {
         return false;
       }

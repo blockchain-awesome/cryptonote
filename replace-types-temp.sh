@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # #Namespace Update
 
 # ./replace-types.sh Crypto crypto
