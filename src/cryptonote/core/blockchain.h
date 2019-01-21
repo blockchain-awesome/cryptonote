@@ -72,6 +72,9 @@ namespace cryptonote {
     crypto::hash_t getBlockIdByHeight(uint32_t height);
     bool getBlockByHash(const crypto::hash_t &h, block_t &blk);
     bool getBlockHeight(const crypto::hash_t& blockId, uint32_t& blockHeight);
+    block_entry_t getBlock(uint32_t& height) {
+      return m_blocks[height];
+    }
 
     template<class archive_t> void serialize(archive_t & ar, const unsigned int version);
 
@@ -171,7 +174,9 @@ namespace cryptonote {
     std::recursive_mutex & getMutex() {
       return m_blockchain_lock;
     }
-    block_details_t getBlockDetails(const crypto::hash_t & blockHash);
+    difficulty_t getDifficulty(const uint32_t height) {
+      return m_blocks[height].cumulative_difficulty;
+    }
 
   private:
     typedef google::sparse_hash_set<crypto::key_image_t> key_images_container_t;

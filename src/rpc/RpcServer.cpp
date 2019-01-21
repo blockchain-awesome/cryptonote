@@ -708,10 +708,8 @@ bool RpcServer::f_on_blocks_list_json(const F_COMMAND_RPC_GET_BLOCKS_LIST::reque
           CORE_RPC_ERROR_CODE_INTERNAL_ERROR,
           "Internal error: can't get block by height. Height = " + std::to_string(i) + '.'};
     }
-    block_details_t blkDetails = bc.getBlockDetails(block_hash);
-
     f_block_short_response block_short;
-    block_short.cumul_size = blkDetails.blockSize;
+    block_short.cumul_size = 0;
     block_short.timestamp = blk.timestamp;
     block_short.height = i;
     block_short.hash = hex::podToString(block_hash);
@@ -789,7 +787,7 @@ bool RpcServer::f_on_blocks_list_json(const F_COMMAND_RPC_GET_BLOCKS_LIST::reque
 
   //   // Base transaction adding
   //   f_transaction_short_response transaction_short;
-  //   transaction_short.hash = Common::podToHex(getObjectHash(blk.baseTransaction));
+  //   transaction_short.hash = Common::podToHex(BinaryArray::objectHash(blk.baseTransaction));
   //   transaction_short.fee = 0;
   //   transaction_short.amount_out = getOutputAmount(blk.baseTransaction);
   //   transaction_short.size = getObjectBinarySize(blk.baseTransaction);
@@ -877,7 +875,7 @@ bool RpcServer::f_on_blocks_list_json(const F_COMMAND_RPC_GET_BLOCKS_LIST::reque
 //   uint64_t amount_in = getInputAmount(res.tx);
 //   uint64_t amount_out = getOutputAmount(res.tx);
 
-//   res.txDetails.hash = Common::podToHex(getObjectHash(res.tx));
+//   res.txDetails.hash = Common::podToHex(BinaryArray::objectHash(res.tx));
 //   res.txDetails.fee = amount_in - amount_out;
 //   if (amount_in == 0)
 //     res.txDetails.fee = 0;
