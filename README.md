@@ -1,4 +1,4 @@
-# The VIG Coin Project
+# <img src="./images/logo.png" alt="alt text" width="20px" height="20px">&nbsp;The VIG Coin Project
 
 ## Building a decentralized, easy to use, high available coin for everyone
 

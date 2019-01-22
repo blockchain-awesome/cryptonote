@@ -2,8 +2,10 @@
 
 # #Namespace Update
 
-# ./replace-types.sh Crypto crypto
-# ./replace-types.sh CryptoNote cryptonote
+Namespaces=(\
+Crypto crypto \
+CryptoNote cryptonote
+)
 
 # #Block Info update
 
@@ -24,8 +26,7 @@
 # ./replace-types.sh TransactionOutputDetails transaction_output_details_t
 # ./replace-types.sh TransactionOutputReferenceDetails transaction_output_reference_details_t
 # ./replace-types.sh TransactionExtraDetails transaction_extra_details_t
-./replace-types.sh TransactionOutputMultisignatureDetails transaction_output_multi_signature_details_t
-
+# ./replace-types.sh TransactionOutputMultisignatureDetails transaction_output_multi_signature_details_t
 
 # ./replace-types.sh BinaryArray binary_array_t
 # ./replace-types.sh Signature signature_t
@@ -40,3 +41,20 @@
 # ./replace-types.sh EllipticCurveScalar elliptic_curve_scalar_t
 # ./replace-types.sh EllipticCurveScalar elliptic_curve_scalar_t
 # ./replace-types.sh EllipticCurveScalar elliptic_curve_scalar_t
+
+replacements1=(\
+# getObjectHash BinaryArray::objectHash \
+getObjectBinarySize BinaryArray::size\
+)
+function replaceArray() {
+cmd=$1
+shift
+replacements=("$@")
+len=${#replacements[@]}
+echo $len
+for (( i=0; i<$len; i+=2 )); do
+$cmd ${replacements[$i]} ${replacements[$i+1]}
+done
+}
+# replaceArray ./replace-types.sh "${Namespaces[@]}"
+replaceArray ./replace-types.sh "${replacements1[@]}"
