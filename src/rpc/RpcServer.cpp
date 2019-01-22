@@ -785,7 +785,7 @@ bool RpcServer::f_on_block_json(const F_COMMAND_RPC_GET_BLOCK_DETAILS::request &
   //   res.block.baseReward = blkDetails.baseReward;
     // res.block.penalty = be.bl.;
 
-  //   // Base transaction adding
+    // Base transaction adding
     f_transaction_short_response transaction_short;
     transaction_short.hash = hex::podToString(BinaryArray::objectHash(blk.baseTransaction));
     transaction_short.fee = 0;
@@ -812,7 +812,6 @@ bool RpcServer::f_on_block_json(const F_COMMAND_RPC_GET_BLOCK_DETAILS::request &
 
       res.block.totalFeeAmount += transaction_short.fee;
     }
-
   res.status = CORE_RPC_STATUS_OK;
   return true;
 }
