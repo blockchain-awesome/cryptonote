@@ -442,13 +442,36 @@ struct f_transaction_short_response {
   }
 };
 
+struct f_ransaction_extra_details
+{
+  crypto::public_key_t publicKey;
+  binary_array_t nonce;
+  binary_array_t raw;
+  void serialize(ISerializer &s)
+  {
+    KV_MEMBER(publicKey)
+    KV_MEMBER(nonce)
+    KV_MEMBER(raw)
+  }
+};
+
 struct f_transaction_details_response {
   std::string hash;
   size_t size;
   std::string paymentId;
   uint64_t mixin;
   uint64_t fee;
-  uint64_t amount_out;
+  uint64_t totalOutputsAmount;
+  uint64_t totalInputsAmount;
+  bool inBlockchain;
+  crypto::hash_t blockHash;
+  uint32_t blockIndex;
+  uint64_t timestamp;
+  uint64_t unlockTime;
+  bool hasPaymentId;
+  f_ransaction_extra_details extra;
+  std::vector<std::vector<crypto::signature_t>> signatures;
+  // std::vector<TransactionInputDetails> inputs;
 
   void serialize(ISerializer &s) {
     KV_MEMBER(hash)
@@ -456,7 +479,16 @@ struct f_transaction_details_response {
     KV_MEMBER(paymentId)
     KV_MEMBER(mixin)
     KV_MEMBER(fee)
-    KV_MEMBER(amount_out)
+    KV_MEMBER(totalOutputsAmount)
+    KV_MEMBER(totalInputsAmount)
+    KV_MEMBER(inBlockchain)
+    KV_MEMBER(blockHash)
+    KV_MEMBER(blockIndex)
+    KV_MEMBER(timestamp)
+    KV_MEMBER(unlockTime)
+    KV_MEMBER(hasPaymentId)
+    KV_MEMBER(extra)
+    KV_MEMBER(signatures)
   }
 };
 
