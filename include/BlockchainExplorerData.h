@@ -43,18 +43,18 @@ struct transaction_output_reference_details_t {
   size_t number;
 };
 
-struct TransactionInputGenerateDetails {
+struct transaction_input_generate_details_t {
   uint32_t height;
 };
 
-struct TransactionInputToKeyDetails {
+struct transaction_input_to_key_details_t {
   std::vector<uint32_t> outputIndexes;
   crypto::key_image_t keyImage;
   uint64_t mixin;
   transaction_output_reference_details_t output;
 };
 
-struct TransactionInputMultisignatureDetails {
+struct transaction_input_multisignature_details_t {
   uint32_t signatures;
   transaction_output_reference_details_t output;
 };
@@ -63,9 +63,9 @@ struct transaction_input_details_t {
   uint64_t amount;
 
   boost::variant<
-    TransactionInputGenerateDetails,
-    TransactionInputToKeyDetails,
-    TransactionInputMultisignatureDetails> input;
+    transaction_input_generate_details_t,
+    transaction_input_to_key_details_t,
+    transaction_input_multisignature_details_t> input;
 };
 
 struct transaction_extra_details_t {

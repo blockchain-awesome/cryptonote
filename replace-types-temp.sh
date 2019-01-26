@@ -44,7 +44,10 @@ CryptoNote cryptonote
 
 replacements1=(\
 # getObjectHash BinaryArray::objectHash \
-getObjectBinarySize BinaryArray::size\
+# getObjectBinarySize BinaryArray::size \
+TransactionInputGenerateDetails transaction_input_generate_details_t \
+TransactionInputToKeyDetails transaction_input_to_key_details_t \
+TransactionInputMultisignatureDetails transaction_input_multisignature_details_t
 )
 function replaceArray() {
 cmd=$1
