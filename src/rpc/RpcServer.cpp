@@ -17,6 +17,7 @@
 #include "cryptonote/core/TransactionExtra.h"
 #include "cryptonote/core/TransactionApiExtra.h"
 #include "cryptonote/core/transaction/transaction.h"
+#include "cryptonote/structures/array.hpp"
 
 #include "cryptonote/protocol/i_query.h"
 
