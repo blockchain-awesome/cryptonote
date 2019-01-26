@@ -48,6 +48,10 @@ namespace cryptonote {
      bool init(const MinerConfig& minerConfig, bool load_existing);
      bool set_genesis_block(const block_t& b);
      bool deinit();
+     virtual uint64_t getAlreadyGeneratedCoins();
+     virtual Blockchain& getBlockChain() {
+       return m_blockchain;
+     }
 
      // ICore
      virtual size_t addChain(const std::vector<const IBlock*>& chain) override;

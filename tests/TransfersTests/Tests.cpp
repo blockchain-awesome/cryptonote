@@ -17,6 +17,7 @@
 #include <atomic>
 
 #include "../IntegrationTestLib/TestWalletLegacy.h"
+#include "cryptonote/structures/array.hpp"
 
 using namespace cryptonote;
 using namespace crypto;

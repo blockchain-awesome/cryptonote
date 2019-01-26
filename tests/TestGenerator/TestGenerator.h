@@ -51,7 +51,7 @@ public:
   };
 
   test_generator(const cryptonote::Currency& currency, uint8_t majorVersion = config::mainnet::data.block.version.major,
-                 uint8_t minorVersion = config::mainnet::data.block.version.miner)
+                 uint8_t minorVersion = config::mainnet::data.block.version.minor)
     : m_currency(currency), defaultMajorVersion(majorVersion), defaultMinorVersion(minorVersion) {
   }
 

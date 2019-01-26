@@ -17,6 +17,7 @@
 #include "TransactionTests.h"
 #include "TransactionValidation.h"
 #include "RandomOuts.h"
+#include "cryptonote/structures/array.hpp"
 
 namespace po = boost::program_options;
 

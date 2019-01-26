@@ -5,6 +5,7 @@
 #include "TransactionValidation.h"
 #include "TestGenerator.h"
 #include "cryptonote/core/CryptoNoteTools.h"
+#include "cryptonote/structures/array.hpp"
 
 using namespace cryptonote;
 

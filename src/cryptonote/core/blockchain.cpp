@@ -168,11 +168,12 @@ bool Blockchain::init(bool load_existing) {
     BlockCacheSerializer loader(*this, Block::getHash(m_blocks.back().bl), logger.getLogger());
     loader.load(m_currency.blocksCacheFileName());
 
-    if (!loader.loaded()) {
+    if (!loader.loaded())
+    {
       logger(WARNING, BRIGHT_YELLOW) << "No actual blockchain cache found, rebuilding internal structures...";
-      rebuildCache();
+	  rebuildCache();
+	  // loader.save(m_currency.blocksCacheFileName());
     }
-
     loadBlockchainIndices();
   } else {
     m_blocks.clear();
@@ -2019,5 +2020,4 @@ void Blockchain::sendMessage(const BlockchainMessage& message) {
 bool Blockchain::isBlockInMainChain(const crypto::hash_t& blockId) {
   return m_blockIndex.hasBlock(blockId);
 }
-
 }

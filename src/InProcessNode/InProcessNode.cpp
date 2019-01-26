@@ -566,7 +566,7 @@ void InProcessNode::getOutByMSigGIndexAsync(uint64_t amount, uint32_t gindex, mu
   callback(ec);
 }
 
-void InProcessNode::getBlocks(const std::vector<uint32_t>& blockHeights, std::vector<std::vector<BlockDetails>>& blocks, const Callback& callback) {
+void InProcessNode::getBlocks(const std::vector<uint32_t>& blockHeights, std::vector<std::vector<block_details_t>>& blocks, const Callback& callback) {
   std::unique_lock<std::mutex> lock(mutex);
   if (state != INITIALIZED) {
     lock.unlock();
@@ -579,7 +579,7 @@ void InProcessNode::getBlocks(const std::vector<uint32_t>& blockHeights, std::ve
       static_cast<
         void(InProcessNode::*)(
         const std::vector<uint32_t>&,
-          std::vector<std::vector<BlockDetails>>&, 
+          std::vector<std::vector<block_details_t>>&, 
           const Callback&
         )
       >(&InProcessNode::getBlocksAsync),
@@ -591,13 +591,13 @@ void InProcessNode::getBlocks(const std::vector<uint32_t>& blockHeights, std::ve
   );
 }
 
-void InProcessNode::getBlocksAsync(const std::vector<uint32_t>& blockHeights, std::vector<std::vector<BlockDetails>>& blocks, const Callback& callback) {
+void InProcessNode::getBlocksAsync(const std::vector<uint32_t>& blockHeights, std::vector<std::vector<block_details_t>>& blocks, const Callback& callback) {
   std::error_code ec = core.executeLocked(
     std::bind(
       static_cast<
         std::error_code(InProcessNode::*)(
         const std::vector<uint32_t>&,
-          std::vector<std::vector<BlockDetails>>&
+          std::vector<std::vector<block_details_t>>&
         )
       >(&InProcessNode::doGetBlocks),
       this,
@@ -608,7 +608,7 @@ void InProcessNode::getBlocksAsync(const std::vector<uint32_t>& blockHeights, st
   callback(ec);
 }
 
-std::error_code InProcessNode::doGetBlocks(const std::vector<uint32_t>& blockHeights, std::vector<std::vector<BlockDetails>>& blocks) {
+std::error_code InProcessNode::doGetBlocks(const std::vector<uint32_t>& blockHeights, std::vector<std::vector<block_details_t>>& blocks) {
   try {
     uint32_t topHeight = 0;
     crypto::hash_t topHash = boost::value_initialized<crypto::hash_t>();
@@ -622,18 +622,18 @@ std::error_code InProcessNode::doGetBlocks(const std::vector<uint32_t>& blockHei
       if (!core.getBlockByHash(hash, block)) {
         return make_error_code(cryptonote::error::INTERNAL_NODE_ERROR);
       }
-      BlockDetails blockDetails;
+      block_details_t blockDetails;
       if (!blockchainExplorerDataBuilder.fillBlockDetails(block, blockDetails)) {
         return make_error_code(cryptonote::error::INTERNAL_NODE_ERROR);
       }
-      std::vector<BlockDetails> blocksOnSameHeight;
+      std::vector<block_details_t> blocksOnSameHeight;
       blocksOnSameHeight.push_back(std::move(blockDetails));
 
       //Getting orphans
       std::vector<block_t> orphanBlocks;
       core.getOrphanBlocksByHeight(height, orphanBlocks);
       for (const block_t& orphanBlock : orphanBlocks) {
-        BlockDetails orphanBlockDetails;
+        block_details_t orphanBlockDetails;
         if (!blockchainExplorerDataBuilder.fillBlockDetails(orphanBlock, orphanBlockDetails)) {
           return make_error_code(cryptonote::error::INTERNAL_NODE_ERROR);
         }
@@ -650,7 +650,7 @@ std::error_code InProcessNode::doGetBlocks(const std::vector<uint32_t>& blockHei
   return std::error_code();
 }
 
-void InProcessNode::getBlocks(const std::vector<crypto::hash_t>& blockHashes, std::vector<BlockDetails>& blocks, const Callback& callback) {
+void InProcessNode::getBlocks(const std::vector<crypto::hash_t>& blockHashes, std::vector<block_details_t>& blocks, const Callback& callback) {
   std::unique_lock<std::mutex> lock(mutex);
   if (state != INITIALIZED) {
     lock.unlock();
@@ -663,7 +663,7 @@ void InProcessNode::getBlocks(const std::vector<crypto::hash_t>& blockHashes, st
       static_cast<
         void(InProcessNode::*)(
           const std::vector<crypto::hash_t>&, 
-          std::vector<BlockDetails>&, 
+          std::vector<block_details_t>&, 
           const Callback&
         )
       >(&InProcessNode::getBlocksAsync),
@@ -675,13 +675,13 @@ void InProcessNode::getBlocks(const std::vector<crypto::hash_t>& blockHashes, st
   );
 }
 
-void InProcessNode::getBlocksAsync(const std::vector<crypto::hash_t>& blockHashes, std::vector<BlockDetails>& blocks, const Callback& callback) {
+void InProcessNode::getBlocksAsync(const std::vector<crypto::hash_t>& blockHashes, std::vector<block_details_t>& blocks, const Callback& callback) {
   std::error_code ec = core.executeLocked(
     std::bind(
       static_cast<
         std::error_code(InProcessNode::*)(
           const std::vector<crypto::hash_t>&, 
-          std::vector<BlockDetails>&
+          std::vector<block_details_t>&
         )
       >(&InProcessNode::doGetBlocks),
       this,
@@ -692,14 +692,14 @@ void InProcessNode::getBlocksAsync(const std::vector<crypto::hash_t>& blockHashe
   callback(ec);
 }
 
-std::error_code InProcessNode::doGetBlocks(const std::vector<crypto::hash_t>& blockHashes, std::vector<BlockDetails>& blocks) {
+std::error_code InProcessNode::doGetBlocks(const std::vector<crypto::hash_t>& blockHashes, std::vector<block_details_t>& blocks) {
   try {
     for (const crypto::hash_t& hash : blockHashes) {
       block_t block;
       if (!core.getBlockByHash(hash, block)) {
         return make_error_code(cryptonote::error::REQUEST_ERROR);
       }
-      BlockDetails blockDetails;
+      block_details_t blockDetails;
       if (!blockchainExplorerDataBuilder.fillBlockDetails(block, blockDetails)) {
         return make_error_code(cryptonote::error::INTERNAL_NODE_ERROR);
       }
@@ -713,7 +713,7 @@ std::error_code InProcessNode::doGetBlocks(const std::vector<crypto::hash_t>& bl
   return std::error_code();
 }
 
-void InProcessNode::getBlocks(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t blocksNumberLimit, std::vector<BlockDetails>& blocks, uint32_t& blocksNumberWithinTimestamps, const Callback& callback) {
+void InProcessNode::getBlocks(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t blocksNumberLimit, std::vector<block_details_t>& blocks, uint32_t& blocksNumberWithinTimestamps, const Callback& callback) {
   std::unique_lock<std::mutex> lock(mutex);
   if (state != INITIALIZED) {
     lock.unlock();
@@ -728,7 +728,7 @@ void InProcessNode::getBlocks(uint64_t timestampBegin, uint64_t timestampEnd, ui
           uint64_t, 
           uint64_t, 
           uint32_t,
-          std::vector<BlockDetails>&, 
+          std::vector<block_details_t>&, 
           uint32_t&,
           const Callback&
         )
@@ -744,7 +744,7 @@ void InProcessNode::getBlocks(uint64_t timestampBegin, uint64_t timestampEnd, ui
   );
 }
 
-void InProcessNode::getBlocksAsync(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t blocksNumberLimit, std::vector<BlockDetails>& blocks, uint32_t& blocksNumberWithinTimestamps, const Callback& callback) {
+void InProcessNode::getBlocksAsync(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t blocksNumberLimit, std::vector<block_details_t>& blocks, uint32_t& blocksNumberWithinTimestamps, const Callback& callback) {
   std::error_code ec = core.executeLocked(
     std::bind(
       static_cast<
@@ -752,7 +752,7 @@ void InProcessNode::getBlocksAsync(uint64_t timestampBegin, uint64_t timestampEn
           uint64_t, 
           uint64_t, 
           uint32_t,
-          std::vector<BlockDetails>&,
+          std::vector<block_details_t>&,
           uint32_t&
         )
       >(&InProcessNode::doGetBlocks),
@@ -768,14 +768,14 @@ void InProcessNode::getBlocksAsync(uint64_t timestampBegin, uint64_t timestampEn
   callback(ec);
 }
 
-std::error_code InProcessNode::doGetBlocks(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t blocksNumberLimit, std::vector<BlockDetails>& blocks, uint32_t& blocksNumberWithinTimestamps) {
+std::error_code InProcessNode::doGetBlocks(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t blocksNumberLimit, std::vector<block_details_t>& blocks, uint32_t& blocksNumberWithinTimestamps) {
   try {
     std::vector<block_t> rawBlocks;
     if (!core.getBlocksByTimestamp(timestampBegin, timestampEnd, blocksNumberLimit, rawBlocks, blocksNumberWithinTimestamps)) {
       return make_error_code(cryptonote::error::REQUEST_ERROR);
     }
     for (const block_t& rawBlock : rawBlocks) {
-      BlockDetails block;
+      block_details_t block;
       if (!blockchainExplorerDataBuilder.fillBlockDetails(rawBlock, block)) {
         return make_error_code(cryptonote::error::INTERNAL_NODE_ERROR);
       }

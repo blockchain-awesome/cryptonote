@@ -20,6 +20,7 @@ public:
 
   std::string bindIp;
   uint16_t bindPort;
+  std::vector<std::string> enableCORS;
 };
 
 }

@@ -10,6 +10,7 @@
 #include "cryptonote/core/VerificationContext.h"
 #include "cryptonote/structures/array.h"
 #include "cryptonote/structures/block_entry.h"
+#include "cryptonote/structures/array.hpp"
 
 ICoreStub::ICoreStub() :
     topHeight(0),

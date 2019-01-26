@@ -18,7 +18,7 @@ public:
   uint8_t getMinorVersion(const uint64_t height) const;
   inline uint8_t getCNVariant(const block_t &b) const
   {
-    const int cn_variant = b.majorVersion >= 2 ? b.majorVersion - 2 : 0;
+    const int cn_variant = b.majorVersion >= 7 ? b.majorVersion - 6 : 0;
     return cn_variant;
   }
 

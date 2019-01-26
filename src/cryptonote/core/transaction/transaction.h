@@ -61,4 +61,14 @@ struct transaction_t : public transaction_prefix_t
     std::vector<std::vector<crypto::signature_t>> signatures;
 };
 
+class Transaction
+{
+  public:
+    Transaction(transaction_t &tr) : m_transaction(tr) {}
+    transaction_t m_transaction;
+    uint64_t getInputAmount();
+    uint64_t getOutputAmount();
+    uint64_t getInputAmount(const transaction_input_t &in);
+    uint64_t getMixin(uint64_t mixin = 0);
+};
 } // namespace cryptonote

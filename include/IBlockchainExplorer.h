@@ -15,10 +15,10 @@ class IBlockchainObserver {
 public:
   virtual ~IBlockchainObserver() {}
 
-  virtual void blockchainUpdated(const std::vector<BlockDetails>& newBlocks, const std::vector<BlockDetails>& orphanedBlocks) {}
-  virtual void poolUpdated(const std::vector<transaction_details_t>& newTransactions, const std::vector<std::pair<crypto::hash_t, TransactionRemoveReason>>& removedTransactions) {}
+  virtual void blockchainUpdated(const std::vector<block_details_t>& newBlocks, const std::vector<block_details_t>& orphanedBlocks) {}
+  virtual void poolUpdated(const std::vector<transaction_details_t>& newTransactions, const std::vector<std::pair<crypto::hash_t, transaction_remove_reason_t>>& removedTransactions) {}
 
-  virtual void blockchainSynchronized(const BlockDetails& topBlock) {}
+  virtual void blockchainSynchronized(const block_details_t& topBlock) {}
 };
 
 class IBlockchainExplorer {
@@ -31,11 +31,11 @@ public:
   virtual void init() = 0;
   virtual void shutdown() = 0;
 
-  virtual bool getBlocks(const std::vector<uint32_t>& blockHeights, std::vector<std::vector<BlockDetails>>& blocks) = 0;
-  virtual bool getBlocks(const std::vector<crypto::hash_t>& blockHashes, std::vector<BlockDetails>& blocks) = 0;
-  virtual bool getBlocks(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t blocksNumberLimit, std::vector<BlockDetails>& blocks, uint32_t& blocksNumberWithinTimestamps) = 0;
+  virtual bool getBlocks(const std::vector<uint32_t>& blockHeights, std::vector<std::vector<block_details_t>>& blocks) = 0;
+  virtual bool getBlocks(const std::vector<crypto::hash_t>& blockHashes, std::vector<block_details_t>& blocks) = 0;
+  virtual bool getBlocks(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t blocksNumberLimit, std::vector<block_details_t>& blocks, uint32_t& blocksNumberWithinTimestamps) = 0;
 
-  virtual bool getBlockchainTop(BlockDetails& topBlock) = 0;
+  virtual bool getBlockchainTop(block_details_t& topBlock) = 0;
 
   virtual bool getTransactions(const std::vector<crypto::hash_t>& transactionHashes, std::vector<transaction_details_t>& transactions) = 0;
   virtual bool getTransactionsByPaymentId(const crypto::hash_t& paymentId, std::vector<transaction_details_t>& transactions) = 0;

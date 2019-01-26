@@ -13,7 +13,7 @@ namespace config
 struct version_t
 {
   uint8_t major;
-  uint8_t miner;
+  uint8_t minor;
   uint8_t patch;
 };
 

@@ -5,6 +5,7 @@
 #include "BlockValidation.h"
 #include "TestGenerator.h"
 #include "cryptonote/core/CryptoNoteTools.h"
+#include "cryptonote/structures/array.hpp"
 #include "common/StringTools.h"
 
 using namespace Common;
@@ -78,7 +79,7 @@ bool TestBlockBigMinorVersion::generate(std::vector<test_event_entry>& events) c
 
   cryptonote::block_t blk_1;
   generator.constructBlockManually(blk_1, blk_0, miner_account,
-    test_generator::bf_major_ver | test_generator::bf_minor_ver, config::mainnet::data.block.version.major, config::mainnet::data.block.version.miner + 1);
+    test_generator::bf_major_ver | test_generator::bf_minor_ver, config::mainnet::data.block.version.major, config::mainnet::data.block.version.minor + 1);
 
   events.push_back(blk_1);
 

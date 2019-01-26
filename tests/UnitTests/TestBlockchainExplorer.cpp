@@ -13,6 +13,7 @@
 #include "ICryptoNoteProtocolQueryStub.h"
 #include "INodeStubs.h"
 #include "cryptonote/core/TransactionApi.h"
+#include "cryptonote/structures/array.hpp"
 #include "TestBlockchainGenerator.h"
 
 #include "cryptonote/core/CryptoNoteTools.h"
@@ -54,34 +55,34 @@ class smartObserver : public IBlockchainObserver {
 public:
   virtual ~smartObserver() {}
 
-  virtual void blockchainUpdated(const std::vector<BlockDetails>& newBlocks, const std::vector<BlockDetails>& orphanedBlocks) override {
+  virtual void blockchainUpdated(const std::vector<block_details_t>& newBlocks, const std::vector<block_details_t>& orphanedBlocks) override {
     blockchainUpdatedCallback(newBlocks, orphanedBlocks);
   }
 
-  virtual void poolUpdated(const std::vector<transaction_details_t>& newTransactions, const std::vector<std::pair<hash_t, TransactionRemoveReason>>& removedTransactions) override {
+  virtual void poolUpdated(const std::vector<transaction_details_t>& newTransactions, const std::vector<std::pair<hash_t, transaction_remove_reason_t>>& removedTransactions) override {
     poolUpdatedCallback(newTransactions, removedTransactions);
   }
 
-  virtual void blockchainSynchronized(const BlockDetails& topBlock) override {
+  virtual void blockchainSynchronized(const block_details_t& topBlock) override {
     blockchainSynchronizedCallback(topBlock);
   }
 
-  void setCallback(const std::function<void(const std::vector<BlockDetails>& newBlocks, const std::vector<BlockDetails>& orphanedBlocks)>& cb) {
+  void setCallback(const std::function<void(const std::vector<block_details_t>& newBlocks, const std::vector<block_details_t>& orphanedBlocks)>& cb) {
     blockchainUpdatedCallback = cb;
   }
 
-  void setCallback(const std::function<void(const std::vector<transaction_details_t>& newTransactions, const std::vector<std::pair<hash_t, TransactionRemoveReason>>& removedTransactions)>& cb) {
+  void setCallback(const std::function<void(const std::vector<transaction_details_t>& newTransactions, const std::vector<std::pair<hash_t, transaction_remove_reason_t>>& removedTransactions)>& cb) {
     poolUpdatedCallback = cb;
   }
 
-  void setCallback(std::function<void(const BlockDetails& topBlock)>& cb) {
+  void setCallback(std::function<void(const block_details_t& topBlock)>& cb) {
     blockchainSynchronizedCallback = cb;
   }
 
 private:
-  std::function<void(const std::vector<BlockDetails>& newBlocks, const std::vector<BlockDetails>& orphanedBlocks)> blockchainUpdatedCallback;
-  std::function<void(const std::vector<transaction_details_t>& newTransactions, const std::vector<std::pair<hash_t, TransactionRemoveReason>>& removedTransactions)> poolUpdatedCallback;
-  std::function<void(const BlockDetails& topBlock)> blockchainSynchronizedCallback;
+  std::function<void(const std::vector<block_details_t>& newBlocks, const std::vector<block_details_t>& orphanedBlocks)> blockchainUpdatedCallback;
+  std::function<void(const std::vector<transaction_details_t>& newTransactions, const std::vector<std::pair<hash_t, transaction_remove_reason_t>>& removedTransactions)> poolUpdatedCallback;
+  std::function<void(const block_details_t& topBlock)> blockchainSynchronizedCallback;
 };
 
 class BlockchainExplorerTests : public ::testing::Test {
@@ -163,7 +164,7 @@ TEST_F(BlockchainExplorerTests, removeObserverNotAdded) {
 TEST_F(BlockchainExplorerTests, getBlocksByHeightGenesis) {
   std::vector<uint32_t> blockHeights;
   blockHeights.push_back(0);
-  std::vector<std::vector<BlockDetails>> blocks;
+  std::vector<std::vector<block_details_t>> blocks;
 
   ASSERT_GE(generator.getBlockchain().size(), 1);
 
@@ -181,7 +182,7 @@ TEST_F(BlockchainExplorerTests, getBlocksByHeightMany) {
   for (uint32_t i = 0; i < NUMBER_OF_BLOCKS; ++i) {
     blockHeights.push_back(i);
   }
-  std::vector<std::vector<BlockDetails>> blocks;
+  std::vector<std::vector<block_details_t>> blocks;
 
   generator.generateEmptyBlocks(NUMBER_OF_BLOCKS);
   ASSERT_GE(generator.getBlockchain().size(), NUMBER_OF_BLOCKS);
@@ -191,9 +192,9 @@ TEST_F(BlockchainExplorerTests, getBlocksByHeightMany) {
   ASSERT_EQ(blockHeights.size(), blocks.size());
 
   auto range = boost::combine(blockHeights, blocks);
-  for (const boost::tuple<size_t, std::vector<BlockDetails>>& sameHeight : range) {
+  for (const boost::tuple<size_t, std::vector<block_details_t>>& sameHeight : range) {
     EXPECT_EQ(sameHeight.get<1>().size(), 1);
-    for (const BlockDetails& block : sameHeight.get<1>()) {
+    for (const block_details_t& block : sameHeight.get<1>()) {
       EXPECT_EQ(block.height, sameHeight.get<0>());
       EXPECT_FALSE(block.isOrphaned);
     }
@@ -206,7 +207,7 @@ TEST_F(BlockchainExplorerTests, getBlocksByHeightFail) {
   for (uint32_t i = 0; i < NUMBER_OF_BLOCKS; ++i) {
     blockHeights.push_back(i);
   }
-  std::vector<std::vector<BlockDetails>> blocks;
+  std::vector<std::vector<block_details_t>> blocks;
 
   EXPECT_LT(generator.getBlockchain().size(), NUMBER_OF_BLOCKS);
 
@@ -217,7 +218,7 @@ TEST_F(BlockchainExplorerTests, getBlocksByHeightNotInited) {
   BlockchainExplorer newExplorer(nodeStub, logger);
   std::vector<uint32_t> blockHeights;
   blockHeights.push_back(0);
-  std::vector<std::vector<BlockDetails>> blocks;
+  std::vector<std::vector<block_details_t>> blocks;
   ASSERT_ANY_THROW(newExplorer.getBlocks(blockHeights, blocks));
 }
 
@@ -227,7 +228,7 @@ TEST_F(BlockchainExplorerTests, getBlocksByHashGenesis) {
 
   hash_t genesisHash = Block::getHash(generator.getBlockchain().front());
   blockHashes.push_back(genesisHash);
-  std::vector<BlockDetails> blocks;
+  std::vector<block_details_t> blocks;
 
   ASSERT_TRUE(blockchainExplorer.getBlocks(blockHashes, blocks));
   ASSERT_EQ(blocks.size(), 1);
@@ -254,14 +255,14 @@ TEST_F(BlockchainExplorerTests, getBlocksByHashMany) {
     blockHashes.push_back(hash);
   }
 
-  std::vector<BlockDetails> blocks;
+  std::vector<block_details_t> blocks;
 
   ASSERT_TRUE(blockchainExplorer.getBlocks(blockHashes, blocks));
   EXPECT_EQ(blocks.size(), NUMBER_OF_BLOCKS);
   ASSERT_EQ(blockHashes.size(), blocks.size());
 
   auto range = boost::combine(blockHashes, blocks);
-  for (const boost::tuple<hash_t, BlockDetails>& hashWithBlock : range) {
+  for (const boost::tuple<hash_t, block_details_t>& hashWithBlock : range) {
     EXPECT_EQ(hashWithBlock.get<0>(), hashWithBlock.get<1>().hash);
     EXPECT_FALSE(hashWithBlock.get<1>().isOrphaned);
   }
@@ -275,7 +276,7 @@ TEST_F(BlockchainExplorerTests, getBlocksByHashFail) {
     blockHashes.push_back(boost::value_initialized<hash_t>());
   }
 
-  std::vector<BlockDetails> blocks;
+  std::vector<block_details_t> blocks;
 
   EXPECT_LT(generator.getBlockchain().size(), NUMBER_OF_BLOCKS);
   ASSERT_ANY_THROW(blockchainExplorer.getBlocks(blockHashes, blocks));
@@ -287,12 +288,12 @@ TEST_F(BlockchainExplorerTests, getBlocksByHashNotInited) {
   std::vector<hash_t> blockHashes;
   hash_t genesisHash = Block::getHash(generator.getBlockchain().front());
   blockHashes.push_back(genesisHash);
-  std::vector<BlockDetails> blocks;
+  std::vector<block_details_t> blocks;
   ASSERT_ANY_THROW(newExplorer.getBlocks(blockHashes, blocks));
 }
 
 TEST_F(BlockchainExplorerTests, getBlockchainTop) {
-  BlockDetails topBlock;
+  block_details_t topBlock;
 
   ASSERT_GE(generator.getBlockchain().size(), 1);
 
@@ -303,7 +304,7 @@ TEST_F(BlockchainExplorerTests, getBlockchainTop) {
 
 TEST_F(BlockchainExplorerTests, getBlockchainTopNotInited) {
   BlockchainExplorer newExplorer(nodeStub, logger);
-  BlockDetails topBlock;
+  block_details_t topBlock;
 
   ASSERT_GE(generator.getBlockchain().size(), 1);
 
@@ -464,7 +465,7 @@ TEST_F(BlockchainExplorerTests, getTransactionsNotInited) {
 }
 
 TEST_F(BlockchainExplorerTests, getPoolStateEmpty) {
-  BlockDetails topBlock;
+  block_details_t topBlock;
 
   ASSERT_GE(generator.getBlockchain().size(), 1);
 
@@ -499,7 +500,7 @@ TEST_F(BlockchainExplorerTests, getPoolStateMany) {
   }
 
   {
-    BlockDetails topBlock;
+    block_details_t topBlock;
 
     ASSERT_GE(generator.getBlockchain().size(), 1);
 
@@ -537,7 +538,7 @@ TEST_F(BlockchainExplorerTests, getPoolStateMany) {
   generator.putTxPoolToBlockchain();
 
   {
-    BlockDetails topBlock;
+    block_details_t topBlock;
 
     ASSERT_GE(generator.getBlockchain().size(), 1);
 
@@ -560,7 +561,7 @@ TEST_F(BlockchainExplorerTests, getPoolStateMany) {
   }
 
   {
-    BlockDetails topBlock;
+    block_details_t topBlock;
 
     ASSERT_GE(generator.getBlockchain().size(), 1);
 
@@ -598,7 +599,7 @@ TEST_F(BlockchainExplorerTests, getPoolStateMany) {
   generator.putTxToPool(tx);
 
   {
-    BlockDetails topBlock;
+    block_details_t topBlock;
 
     ASSERT_GE(generator.getBlockchain().size(), 1);
 
@@ -632,7 +633,7 @@ TEST_F(BlockchainExplorerTests, getPoolStateMany) {
   }
 
   {
-    BlockDetails topBlock;
+    block_details_t topBlock;
 
     ASSERT_GE(generator.getBlockchain().size(), 1);
 
@@ -694,7 +695,7 @@ TEST_F(BlockchainExplorerTests, isSynchronizedNotification) {
   smartObserver observer;
   CallbackStatus status;
 
-  std::function<void(const BlockDetails& topBlock)> cb = [&status, this](const BlockDetails& topBlock) {
+  std::function<void(const block_details_t& topBlock)> cb = [&status, this](const block_details_t& topBlock) {
     EXPECT_EQ(topBlock.height, generator.getBlockchain().size() - 1);
     status.setStatus(std::error_code());
   };
@@ -711,10 +712,10 @@ TEST_F(BlockchainExplorerTests, blockchainUpdatedEmpty) {
   CallbackStatus status;
 
   std::function<
-    void(const std::vector<BlockDetails>& newBlocks,
-    const std::vector<BlockDetails>& orphanedBlocks)
-  > cb = [&status](const std::vector<BlockDetails>& newBlocks,
-  const std::vector<BlockDetails>& orphanedBlocks) {
+    void(const std::vector<block_details_t>& newBlocks,
+    const std::vector<block_details_t>& orphanedBlocks)
+  > cb = [&status](const std::vector<block_details_t>& newBlocks,
+  const std::vector<block_details_t>& orphanedBlocks) {
     EXPECT_EQ(newBlocks.size(), 0);
     EXPECT_EQ(orphanedBlocks.size(), 0);
     status.setStatus(std::error_code());
@@ -745,15 +746,15 @@ TEST_F(BlockchainExplorerTests, blockchainUpdatedMany) {
   CallbackStatus status;
 
   std::function<
-    void(const std::vector<BlockDetails>& newBlocks,
-    const std::vector<BlockDetails>& orphanedBlocks)
-  > cb = [&status, &blockHashes, NUMBER_OF_BLOCKS](const std::vector<BlockDetails>& newBlocks,
-  const std::vector<BlockDetails>& orphanedBlocks) {
+    void(const std::vector<block_details_t>& newBlocks,
+    const std::vector<block_details_t>& orphanedBlocks)
+  > cb = [&status, &blockHashes, NUMBER_OF_BLOCKS](const std::vector<block_details_t>& newBlocks,
+  const std::vector<block_details_t>& orphanedBlocks) {
     EXPECT_EQ(newBlocks.size(), NUMBER_OF_BLOCKS);
     EXPECT_EQ(orphanedBlocks.size(), 0);
 
     auto range = boost::combine(blockHashes, newBlocks);
-    for (const boost::tuple<hash_t, BlockDetails>& hashWithBlock : range) {
+    for (const boost::tuple<hash_t, block_details_t>& hashWithBlock : range) {
       EXPECT_EQ(hashWithBlock.get<0>(), hashWithBlock.get<1>().hash);
       EXPECT_FALSE(hashWithBlock.get<1>().isOrphaned);
     }
@@ -773,9 +774,9 @@ TEST_F(BlockchainExplorerTests, poolUpdatedEmpty) {
 
   std::function<
     void(const std::vector<transaction_details_t>& newTransactions,
-    const std::vector<std::pair<hash_t, TransactionRemoveReason>>& removedTransactions)
+    const std::vector<std::pair<hash_t, transaction_remove_reason_t>>& removedTransactions)
   > cb = [&status](const std::vector<transaction_details_t>& newTransactions,
-  const std::vector<std::pair<hash_t, TransactionRemoveReason>>& removedTransactions) {
+  const std::vector<std::pair<hash_t, transaction_remove_reason_t>>& removedTransactions) {
     EXPECT_EQ(newTransactions.size(), 0);
     EXPECT_EQ(removedTransactions.size(), 0);
     status.setStatus(std::error_code());
@@ -800,7 +801,7 @@ TEST_F(BlockchainExplorerTests, poolUpdatedMany) {
   }
   nodeStub.setSynchronizedStatus(true);
   {
-    BlockDetails topBlock;
+    block_details_t topBlock;
 
     ASSERT_GE(generator.getBlockchain().size(), 1);
 
@@ -813,9 +814,9 @@ TEST_F(BlockchainExplorerTests, poolUpdatedMany) {
 
     std::function<
       void(const std::vector<transaction_details_t>& newTransactions,
-      const std::vector<std::pair<hash_t, TransactionRemoveReason>>& removedTransactions)
+      const std::vector<std::pair<hash_t, transaction_remove_reason_t>>& removedTransactions)
     > cb = [&status, &poolTxs, POOL_TX_NUMBER](const std::vector<transaction_details_t>& newTransactions,
-    const std::vector<std::pair<hash_t, TransactionRemoveReason>>& removedTransactions) {
+    const std::vector<std::pair<hash_t, transaction_remove_reason_t>>& removedTransactions) {
       EXPECT_EQ(newTransactions.size(), POOL_TX_NUMBER);
       EXPECT_EQ(removedTransactions.size(), 0);
 
@@ -836,10 +837,10 @@ TEST_F(BlockchainExplorerTests, poolUpdatedMany) {
     observer.setCallback(cb);
 
     std::function<
-      void(const std::vector<BlockDetails>& newBlocks,
-      const std::vector<BlockDetails>& orphanedBlocks)
-    > cb1 = [](const std::vector<BlockDetails>& newBlocks,
-    const std::vector<BlockDetails>& orphanedBlocks) {};
+      void(const std::vector<block_details_t>& newBlocks,
+      const std::vector<block_details_t>& orphanedBlocks)
+    > cb1 = [](const std::vector<block_details_t>& newBlocks,
+    const std::vector<block_details_t>& orphanedBlocks) {};
     observer.setCallback(cb1);
 
     nodeStub.sendLocalBlockchainUpdated();
@@ -854,7 +855,7 @@ TEST_F(BlockchainExplorerTests, poolUpdatedMany) {
   generator.putTxPoolToBlockchain();
 
   {
-    BlockDetails topBlock;
+    block_details_t topBlock;
 
     ASSERT_GE(generator.getBlockchain().size(), 1);
 
@@ -868,9 +869,9 @@ TEST_F(BlockchainExplorerTests, poolUpdatedMany) {
 
     std::function<
       void(const std::vector<transaction_details_t>& newTransactions,
-      const std::vector<std::pair<hash_t, TransactionRemoveReason>>& removedTransactions)
+      const std::vector<std::pair<hash_t, transaction_remove_reason_t>>& removedTransactions)
     > cb = [&status, &poolTxs, POOL_TX_NUMBER](const std::vector<transaction_details_t>& newTransactions,
-    const std::vector<std::pair<hash_t, TransactionRemoveReason>>& removedTransactions) {
+    const std::vector<std::pair<hash_t, transaction_remove_reason_t>>& removedTransactions) {
       EXPECT_EQ(newTransactions.size(), 0);
       EXPECT_EQ(removedTransactions.size(), POOL_TX_NUMBER);
 
@@ -878,23 +879,23 @@ TEST_F(BlockchainExplorerTests, poolUpdatedMany) {
         auto iter = std::find_if(
           removedTransactions.begin(),
           removedTransactions.end(),
-          [&poolTxHash](const std::pair<hash_t, TransactionRemoveReason>& txDetails) -> bool {
+          [&poolTxHash](const std::pair<hash_t, transaction_remove_reason_t>& txDetails) -> bool {
           return poolTxHash == txDetails.first;
         }
         );
         EXPECT_NE(iter, removedTransactions.end());
         EXPECT_EQ(iter->first, poolTxHash);
-        EXPECT_EQ(iter->second, TransactionRemoveReason::INCLUDED_IN_BLOCK);
+        EXPECT_EQ(iter->second, transaction_remove_reason_t::INCLUDED_IN_BLOCK);
       }
       status.setStatus(std::error_code());
     };
     observer.setCallback(cb);
 
     std::function<
-      void(const std::vector<BlockDetails>& newBlocks,
-      const std::vector<BlockDetails>& orphanedBlocks)
-    > cb1 = [&status1](const std::vector<BlockDetails>& newBlocks,
-    const std::vector<BlockDetails>& orphanedBlocks) {
+      void(const std::vector<block_details_t>& newBlocks,
+      const std::vector<block_details_t>& orphanedBlocks)
+    > cb1 = [&status1](const std::vector<block_details_t>& newBlocks,
+    const std::vector<block_details_t>& orphanedBlocks) {
       status1.setStatus(std::error_code());
     };
     observer.setCallback(cb1);
@@ -924,7 +925,7 @@ TEST_F(BlockchainExplorerTests, poolUpdatedManyNotSynchronized) {
   }
   nodeStub.setSynchronizedStatus(false);
 
-  BlockDetails topBlock;
+  block_details_t topBlock;
 
   ASSERT_GE(generator.getBlockchain().size(), 1);
 
@@ -937,9 +938,9 @@ TEST_F(BlockchainExplorerTests, poolUpdatedManyNotSynchronized) {
 
   std::function<
     void(const std::vector<transaction_details_t>& newTransactions,
-    const std::vector<std::pair<hash_t, TransactionRemoveReason>>& removedTransactions)
+    const std::vector<std::pair<hash_t, transaction_remove_reason_t>>& removedTransactions)
   > cb = [&status, &poolTxs, POOL_TX_NUMBER](const std::vector<transaction_details_t>& newTransactions,
-  const std::vector<std::pair<hash_t, TransactionRemoveReason>>& removedTransactions) {
+  const std::vector<std::pair<hash_t, transaction_remove_reason_t>>& removedTransactions) {
     EXPECT_EQ(newTransactions.size(), POOL_TX_NUMBER);
     EXPECT_EQ(removedTransactions.size(), 0);
 
@@ -960,10 +961,10 @@ TEST_F(BlockchainExplorerTests, poolUpdatedManyNotSynchronized) {
   observer.setCallback(cb);
 
   std::function<
-    void(const std::vector<BlockDetails>& newBlocks,
-    const std::vector<BlockDetails>& orphanedBlocks)
-  > cb1 = [](const std::vector<BlockDetails>& newBlocks,
-  const std::vector<BlockDetails>& orphanedBlocks) {};
+    void(const std::vector<block_details_t>& newBlocks,
+    const std::vector<block_details_t>& orphanedBlocks)
+  > cb1 = [](const std::vector<block_details_t>& newBlocks,
+  const std::vector<block_details_t>& orphanedBlocks) {};
   observer.setCallback(cb1);
 
   nodeStub.sendLocalBlockchainUpdated();
@@ -980,10 +981,10 @@ TEST_F(BlockchainExplorerTests, unexpectedTermination) {
   smartObserver observer;
 
   std::function<
-    void(const std::vector<BlockDetails>& newBlocks,
-    const std::vector<BlockDetails>& orphanedBlocks)
-  > cb = [](const std::vector<BlockDetails>& newBlocks,
-  const std::vector<BlockDetails>& orphanedBlocks) {
+    void(const std::vector<block_details_t>& newBlocks,
+    const std::vector<block_details_t>& orphanedBlocks)
+  > cb = [](const std::vector<block_details_t>& newBlocks,
+  const std::vector<block_details_t>& orphanedBlocks) {
     EXPECT_EQ(newBlocks.size(), 0);
     EXPECT_EQ(orphanedBlocks.size(), 0);
   };
@@ -1001,10 +1002,10 @@ TEST_F(BlockchainExplorerTests, unexpectedExeption) {
   CallbackStatus status;
 
   std::function<
-    void(const std::vector<BlockDetails>& newBlocks,
-    const std::vector<BlockDetails>& orphanedBlocks)
-  > cb = [&status](const std::vector<BlockDetails>& newBlocks,
-  const std::vector<BlockDetails>& orphanedBlocks) {
+    void(const std::vector<block_details_t>& newBlocks,
+    const std::vector<block_details_t>& orphanedBlocks)
+  > cb = [&status](const std::vector<block_details_t>& newBlocks,
+  const std::vector<block_details_t>& orphanedBlocks) {
     EXPECT_EQ(newBlocks.size(), 0);
     EXPECT_EQ(orphanedBlocks.size(), 0);
     status.setStatus(std::error_code());
@@ -1023,7 +1024,7 @@ TEST_F(BlockchainExplorerTests, getBlocksByTimestampGenesis) {
 
   hash_t genesisHash = Block::getHash(generator.getBlockchain().front());
 
-  std::vector<BlockDetails> blocks;
+  std::vector<block_details_t> blocks;
 
   uint32_t totalBlocksNumber;
 
@@ -1054,7 +1055,7 @@ TEST_F(BlockchainExplorerTests, getBlocksByTimestampMany) {
     blockHashes.push_back(hash);
   }
 
-  std::vector<BlockDetails> blocks;
+  std::vector<block_details_t> blocks;
 
   uint32_t totalBlocksNumber;
 
@@ -1064,7 +1065,7 @@ TEST_F(BlockchainExplorerTests, getBlocksByTimestampMany) {
   ASSERT_EQ(blockHashes.size(), blocks.size());
 
   auto range = boost::combine(blockHashes, blocks);
-  for (const boost::tuple<hash_t, BlockDetails>& hashWithBlock : range) {
+  for (const boost::tuple<hash_t, block_details_t>& hashWithBlock : range) {
     EXPECT_EQ(hashWithBlock.get<0>(), hashWithBlock.get<1>().hash);
     EXPECT_FALSE(hashWithBlock.get<1>().isOrphaned);
   }
@@ -1074,7 +1075,7 @@ TEST_F(BlockchainExplorerTests, getBlocksByTimestampFail) {
 
   uint64_t startTime = currency.difficultyTarget() + 1;
 
-  std::vector<BlockDetails> blocks;
+  std::vector<block_details_t> blocks;
 
   uint32_t totalBlocksNumber;
 
@@ -1085,7 +1086,7 @@ TEST_F(BlockchainExplorerTests, getBlocksByTimestampFail) {
 TEST_F(BlockchainExplorerTests, getBlocksByTimestampNotInited) {
   BlockchainExplorer newExplorer(nodeStub, logger);
   uint64_t startTime = static_cast<uint64_t>(time(NULL));
-  std::vector<BlockDetails> blocks;
+  std::vector<block_details_t> blocks;
   uint32_t totalBlocksNumber;
   ASSERT_ANY_THROW(newExplorer.getBlocks(startTime, startTime, 1, blocks, totalBlocksNumber));
 }
@@ -1104,7 +1105,7 @@ TEST_F(BlockchainExplorerTests, generatedTransactions) {
     generator.putTxToPool(tx);
   }
 
-  std::vector<std::vector<BlockDetails>> blocks;
+  std::vector<std::vector<block_details_t>> blocks;
 
   generator.generateEmptyBlocks(NUMBER_OF_BLOCKS);
   generator.putTxPoolToBlockchain();
@@ -1116,9 +1117,9 @@ TEST_F(BlockchainExplorerTests, generatedTransactions) {
   ASSERT_EQ(blockHeights.size(), blocks.size());
 
   auto range = boost::combine(blockHeights, blocks);
-  for (const boost::tuple<size_t, std::vector<BlockDetails>>& sameHeight : range) {
+  for (const boost::tuple<size_t, std::vector<block_details_t>>& sameHeight : range) {
     EXPECT_EQ(sameHeight.get<1>().size(), 1);
-    for (const BlockDetails& block : sameHeight.get<1>()) {
+    for (const block_details_t& block : sameHeight.get<1>()) {
       EXPECT_EQ(block.height, sameHeight.get<0>());
       EXPECT_FALSE(block.isOrphaned);
       if (block.height != NUMBER_OF_BLOCKS + 2) {

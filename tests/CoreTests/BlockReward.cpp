@@ -5,6 +5,7 @@
 #include "BlockReward.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include <common/math.hpp>
+#include "cryptonote/structures/array.hpp"
 
 using namespace cryptonote;
 

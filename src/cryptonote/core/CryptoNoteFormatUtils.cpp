@@ -16,6 +16,7 @@
 #include "CryptoNoteTools.h"
 
 #include "CryptoNoteConfig.h"
+#include "cryptonote/structures/array.hpp"
 
 using namespace Logging;
 using namespace crypto;
