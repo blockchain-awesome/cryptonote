@@ -11,71 +11,86 @@
 #include "crypto.h"
 
 #include <boost/variant.hpp>
+#include "serialization/ISerializer.h"
 
-namespace cryptonote {
+namespace cryptonote
+{
 
-enum class transaction_remove_reason_t : uint8_t 
-{ 
-  INCLUDED_IN_BLOCK = 0, 
+enum class transaction_remove_reason_t : uint8_t
+{
+  INCLUDED_IN_BLOCK = 0,
   TIMEOUT = 1
 };
 
-struct transaction_output_to_key_details_t {
+struct transaction_output_to_key_details_t
+{
   crypto::public_key_t txOutKey;
 };
 
-struct transaction_output_multi_signature_details_t {
+struct transaction_output_multi_signature_details_t
+{
   std::vector<crypto::public_key_t> keys;
   uint32_t requiredSignatures;
 };
 
-struct transaction_output_details_t {
+struct transaction_output_details_t
+{
   uint64_t amount;
   uint32_t globalIndex;
 
   boost::variant<
-    transaction_output_to_key_details_t,
-    transaction_output_multi_signature_details_t> output;
+      transaction_output_to_key_details_t,
+      transaction_output_multi_signature_details_t>
+      output;
 };
 
-struct transaction_output_reference_details_t {
+struct transaction_output_reference_details_t
+{
   crypto::hash_t transactionHash;
   size_t number;
 };
 
-struct transaction_input_generate_details_t {
+struct transaction_input_generate_details_t
+{
   uint32_t height;
 };
 
-struct transaction_input_to_key_details_t {
+struct transaction_input_to_key_details_t
+{
   std::vector<uint32_t> outputIndexes;
   crypto::key_image_t keyImage;
   uint64_t mixin;
   transaction_output_reference_details_t output;
 };
 
-struct transaction_input_multisignature_details_t {
+struct transaction_input_multisignature_details_t
+{
   uint32_t signatures;
   transaction_output_reference_details_t output;
 };
 
-struct transaction_input_details_t {
-  uint64_t amount;
-
-  boost::variant<
+typedef boost::variant<
     transaction_input_generate_details_t,
     transaction_input_to_key_details_t,
-    transaction_input_multisignature_details_t> input;
+    transaction_input_multisignature_details_t>
+    transaction_input_details_base_t;
+
+struct transaction_input_details_t
+{
+  uint64_t amount;
+  transaction_input_details_base_t input;
 };
 
-struct transaction_extra_details_t {
+struct transaction_extra_details_t
+{
   std::vector<size_t> padding;
-  std::vector<crypto::public_key_t> publicKey; 
+  std::vector<crypto::public_key_t> publicKey;
   std::vector<std::string> nonce;
   std::vector<uint8_t> raw;
 };
 
-struct transaction_details_t {
+struct transaction_details_t
+{
   crypto::hash_t hash;
   uint64_t size;
   uint64_t fee;
@@ -94,7 +109,8 @@ struct transaction_details_t {
   std::vector<transaction_output_details_t> outputs;
 };
 
-struct block_details_t {
+struct block_details_t
+{
   uint8_t majorVersion;
   uint8_t minorVersion;
   uint64_t timestamp;
@@ -116,4 +132,4 @@ struct block_details_t {
   std::vector<transaction_details_t> transactions;
 };
 
-}
+} // namespace cryptonote

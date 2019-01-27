@@ -874,9 +874,12 @@ bool RpcServer::f_on_transaction_json(const F_COMMAND_RPC_GET_TRANSACTION_DETAIL
   transaction_extra_nonce_t nonce;
   extra.get(nonce);
   res.txDetails.extra.nonce = nonce.nonce;
+
+  tr.getInputDetails(res.txDetails.inputs);
+
 /*
   struct TransactionDetails {
-  Crypto::Hash hash;
+  crypto::hash_t hash;
   uint64_t size = 0;
   uint64_t fee = 0;
   uint64_t totalInputsAmount = 0;
@@ -884,10 +887,10 @@ bool RpcServer::f_on_transaction_json(const F_COMMAND_RPC_GET_TRANSACTION_DETAIL
   uint64_t mixin = 0;
   uint64_t unlockTime = 0;
   uint64_t timestamp = 0;
-  Crypto::Hash paymentId;
+  crypto::hash_t paymentId;
   bool hasPaymentId = false;
   bool inBlockchain = false;
-  Crypto::Hash blockHash;
+  crypto::hash_t blockHash;
   uint32_t blockIndex = 0;
   TransactionExtraDetails extra;
   std::vector<std::vector<Crypto::Signature>> signatures;

@@ -471,7 +471,7 @@ struct f_transaction_details_response {
   bool hasPaymentId;
   f_ransaction_extra_details extra;
   std::vector<std::vector<crypto::signature_t>> signatures;
-  // std::vector<TransactionInputDetails> inputs;
+  std::vector<transaction_input_details_t> inputs;
 
   void serialize(ISerializer &s) {
     KV_MEMBER(hash)
@@ -489,6 +489,7 @@ struct f_transaction_details_response {
     KV_MEMBER(hasPaymentId)
     KV_MEMBER(extra)
     KV_MEMBER(signatures)
+    KV_MEMBER(inputs)
   }
 };
 

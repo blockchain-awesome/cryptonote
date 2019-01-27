@@ -3,6 +3,7 @@
 #include <vector>
 #include <boost/variant.hpp>
 #include "crypto.h"
+#include "BlockchainExplorerData.h"
 
 namespace cryptonote
 {
@@ -70,5 +71,6 @@ class Transaction
     uint64_t getOutputAmount();
     uint64_t getInputAmount(const transaction_input_t &in);
     uint64_t getMixin(uint64_t mixin = 0);
+    void getInputDetails(std::vector<transaction_input_details_t> inputs);
 };
 } // namespace cryptonote
