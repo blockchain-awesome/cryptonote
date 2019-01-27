@@ -16,7 +16,7 @@ namespace cryptonote {
 class BlockchainExplorerDataBuilder
 {
 public:
-  BlockchainExplorerDataBuilder(cryptonote::ICore& core, cryptonote::ICryptoNoteProtocolQuery& protocol);
+  BlockchainExplorerDataBuilder(cryptonote::ICore& core, const cryptonote::ICryptoNoteProtocolQuery& protocol);
 
   BlockchainExplorerDataBuilder(const BlockchainExplorerDataBuilder&) = delete;
   BlockchainExplorerDataBuilder(BlockchainExplorerDataBuilder&&) = delete;
@@ -35,6 +35,6 @@ private:
   size_t median(std::vector<size_t>& v);
 
   cryptonote::ICore& core;
-  cryptonote::ICryptoNoteProtocolQuery& protocol;
+  const cryptonote::ICryptoNoteProtocolQuery& protocol;
 };
 }

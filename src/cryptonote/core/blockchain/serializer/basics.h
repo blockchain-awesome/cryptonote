@@ -42,6 +42,7 @@ void serialize(transaction_output_reference_details_t& tord, ISerializer& serial
 void serialize(transaction_input_generate_details_t& tigd, ISerializer& serializer);
 void serialize(transaction_input_to_key_details_t& titkd, ISerializer& serializer);
 void serialize(transaction_input_multisignature_details_t& timd, ISerializer& serializer);
+void serialize(transaction_input_details_base_t &tid, ISerializer &serializer);
 void serialize(transaction_input_details_t& tid, ISerializer& serializer);
 
 }

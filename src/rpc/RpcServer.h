@@ -9,6 +9,7 @@
 
 #include <logging/LoggerRef.h>
 #include "CoreRpcServerCommandsDefinitions.h"
+#include "blockchain_explorer/BlockchainExplorerDataBuilder.h"
 
 namespace cryptonote {
 
@@ -79,6 +80,7 @@ private:
   NodeServer& m_p2p;
   const ICryptoNoteProtocolQuery& m_protocolQuery;
   std::vector<std::string> m_cors_domains;
+  BlockchainExplorerDataBuilder m_blockchain_explorer;
 };
 
 }

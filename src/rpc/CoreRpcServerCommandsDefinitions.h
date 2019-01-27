@@ -639,8 +639,8 @@ struct F_COMMAND_RPC_GET_TRANSACTION_DETAILS {
 
   struct response {
     transaction_t tx;
-    f_transaction_details_response txDetails;
-    f_block_short_response block;
+    transaction_details_t txDetails;
+    block_details_t block;
     std::string status;
 
     void serialize(ISerializer &s) {

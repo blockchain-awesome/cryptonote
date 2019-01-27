@@ -17,7 +17,7 @@
 
 namespace cryptonote {
 
-BlockchainExplorerDataBuilder::BlockchainExplorerDataBuilder(cryptonote::ICore& core, cryptonote::ICryptoNoteProtocolQuery& protocol) :
+BlockchainExplorerDataBuilder::BlockchainExplorerDataBuilder(cryptonote::ICore& core, const cryptonote::ICryptoNoteProtocolQuery& protocol) :
 core(core),
 protocol(protocol) {
 }
