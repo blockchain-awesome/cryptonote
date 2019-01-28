@@ -710,7 +710,7 @@ bool RpcServer::f_on_blocks_list_json(const F_COMMAND_RPC_GET_BLOCKS_LIST::reque
   {
     hash_t block_hash = bc.getBlockIdByHeight(static_cast<uint32_t>(i));
     block_t blk;
-    if (bc.getBlockByHash(block_hash, blk))
+    if (!bc.getBlockByHash(block_hash, blk))
     {
       throw JsonRpc::JsonRpcError{
           CORE_RPC_ERROR_CODE_INTERNAL_ERROR,

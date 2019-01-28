@@ -257,7 +257,7 @@ struct COMMAND_RPC_GET_INFO {
 
   struct response {
     std::string status;
-    std::string already_generated_coins;
+    uint64_t already_generated_coins;
     uint8_t block_major_version;
     uint8_t block_minor_version;
     difficulty_t last_block_difficulty;
