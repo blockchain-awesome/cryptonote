@@ -36,7 +36,7 @@ const arg_descriptor<std::string> arg_start_mining =    {"start-mining", "Specif
 const arg_descriptor<uint32_t>    arg_mining_threads =  {"mining-threads", "Specify mining threads count", 0, true};
 
 
-const std::string DEFAULT_RPC_IP = "127.0.0.1";
+const std::string DEFAULT_RPC_IP = "0.0.0.0";
 
 // RPC
 const arg_descriptor<std::string> arg_rpc_bind_ip = {"rpc-bind-ip", "", DEFAULT_RPC_IP};
