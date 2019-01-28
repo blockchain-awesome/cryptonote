@@ -38,7 +38,6 @@ void serialize(key_pair_t& keyPair, ISerializer& serializer);
 
 // For block explorer
 
-void serialize(transaction_output_reference_details_t& tord, ISerializer& serializer);
 void serialize(transaction_input_generate_details_t& tigd, ISerializer& serializer);
 void serialize(transaction_input_to_key_details_t& titkd, ISerializer& serializer);
 void serialize(transaction_input_multisignature_details_t& timd, ISerializer& serializer);

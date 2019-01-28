@@ -15,6 +15,7 @@
 #include "serialization/SerializationOverloads.h"
 #include "serialization/BinaryInputStreamSerializer.h"
 #include "serialization/BinaryOutputStreamSerializer.h"
+#include "serialization/BlockchainExplorerDataSerialization.h"
 
 #include "stream/StringOutputStream.h"
 #include "crypto/crypto.h"
@@ -343,12 +344,6 @@ void serialize(key_pair_t &keyPair, ISerializer &serializer)
 }
 
 // For block explorer
-
-void serialize(transaction_output_reference_details_t &tord, ISerializer &serializer)
-{
-  serializer(tord.number, "number");
-  serializer(tord.transactionHash, "transaction_hash");
-}
 
 void serialize(transaction_input_generate_details_t &tigd, ISerializer &serializer)
 {

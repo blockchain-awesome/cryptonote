@@ -26,7 +26,8 @@
 
 #include "serialization/SerializationOverloads.h"
 
-namespace cryptonote {
+namespace cryptonote
+{
 
 // using cryptonote::SerializationTag;
 
@@ -110,29 +111,31 @@ void serialize(transaction_output_reference_details_t& outputReference, ISeriali
 //   serializer(inputMultisig.output, "output");
 // }
 
-void serialize(transaction_input_details_t& input, ISerializer& serializer) {
-  // if (serializer.type() == ISerializer::OUTPUT) {
-  //   BinaryVariantTagGetter tagGetter;
-  //   uint8_t tag = boost::apply_visitor(tagGetter, input);
-  //   serializer.binary(&tag, sizeof(tag), "type");
+// void serialize(transaction_input_details_t& input, ISerializer& serializer) {
+// if (serializer.type() == ISerializer::OUTPUT) {
+//   BinaryVariantTagGetter tagGetter;
+//   uint8_t tag = boost::apply_visitor(tagGetter, input);
+//   serializer.binary(&tag, sizeof(tag), "type");
 
-  //   VariantSerializer visitor(serializer, "data");
-  //   boost::apply_visitor(visitor, input);
-  // } else {
-  //   uint8_t tag;
-  //   serializer.binary(&tag, sizeof(tag), "type");
+//   VariantSerializer visitor(serializer, "data");
+//   boost::apply_visitor(visitor, input);
+// } else {
+//   uint8_t tag;
+//   serializer.binary(&tag, sizeof(tag), "type");
 
-  //   getVariantValue(serializer, tag, input);
-  // }
-}
+//   getVariantValue(serializer, tag, input);
+// }
+// }
 
-void serialize(transaction_extra_details_t& extra, ISerializer& serializer) {
+void serialize(transaction_extra_details_t &extra, ISerializer &serializer)
+{
   serializePod(extra.publicKey, "publicKey", serializer);
   serializer(extra.nonce, "nonce");
   serializeAsBinary(extra.raw, "raw", serializer);
 }
 
-void serialize(transaction_details_t& transaction, ISerializer& serializer) {
+void serialize(transaction_details_t &transaction, ISerializer &serializer)
+{
   serializePod(transaction.hash, "hash", serializer);
   serializer(transaction.size, "size");
   serializer(transaction.fee, "fee");
@@ -144,18 +147,21 @@ void serialize(transaction_details_t& transaction, ISerializer& serializer) {
   serializePod(transaction.paymentId, "paymentId", serializer);
   serializer(transaction.inBlockchain, "inBlockchain");
   serializePod(transaction.blockHash, "blockHash", serializer);
-  // serializer(transaction.blockIndex, "blockIndex");
+  serializer(transaction.blockHeight, "blockHeight");
   serializer(transaction.extra, "extra");
   serializer(transaction.inputs, "inputs");
   serializer(transaction.outputs, "outputs");
 
-  //serializer(transaction.signatures, "signatures");
-  if (serializer.type() == ISerializer::OUTPUT) {
+  serializer(transaction.signatures, "signatures");
+  if (serializer.type() == ISerializer::OUTPUT)
+  {
     std::vector<std::pair<size_t, crypto::signature_t>> signaturesForSerialization;
     signaturesForSerialization.reserve(transaction.signatures.size());
     size_t ctr = 0;
-    for (const auto& signaturesV : transaction.signatures) {
-      for (auto signature : signaturesV) {
+    for (const auto &signaturesV : transaction.signatures)
+    {
+      for (auto signature : signaturesV)
+      {
         signaturesForSerialization.emplace_back(ctr, std::move(signature));
       }
       ++ctr;
@@ -163,7 +169,9 @@ void serialize(transaction_details_t& transaction, ISerializer& serializer) {
     size_t size = transaction.signatures.size();
     serializer(size, "signaturesSize");
     serializer(signaturesForSerialization, "signatures");
-  } else {
+  }
+  else
+  {
     size_t size = 0;
     serializer(size, "signaturesSize");
     transaction.signatures.resize(size);
@@ -171,13 +179,15 @@ void serialize(transaction_details_t& transaction, ISerializer& serializer) {
     std::vector<std::pair<size_t, crypto::signature_t>> signaturesForSerialization;
     serializer(signaturesForSerialization, "signatures");
 
-    for (const auto& signatureWithIndex : signaturesForSerialization) {
+    for (const auto &signatureWithIndex : signaturesForSerialization)
+    {
       transaction.signatures[signatureWithIndex.first].push_back(signatureWithIndex.second);
     }
   }
 }
 
-void serialize(block_details_t& block, ISerializer& serializer) {
+void serialize(block_details_t &block, ISerializer &serializer)
+{
   serializer(block.majorVersion, "majorVersion");
   serializer(block.minorVersion, "minorVersion");
   serializer(block.timestamp, "timestamp");
