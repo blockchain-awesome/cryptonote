@@ -498,6 +498,7 @@ struct f_block_short_response {
   uint32_t height;
   std::string hash;
   uint64_t tx_count;
+  uint64_t difficulty;
   uint64_t cumul_size;
 
   void serialize(ISerializer &s) {
@@ -505,6 +506,7 @@ struct f_block_short_response {
     KV_MEMBER(height)
     KV_MEMBER(hash)
     KV_MEMBER(cumul_size)
+    KV_MEMBER(difficulty)
     KV_MEMBER(tx_count)
   }
 };
@@ -525,7 +527,7 @@ struct f_block_details_response {
   size_t sizeMedian;
   uint64_t effectiveSizeMedian;
   uint64_t transactionsCumulativeSize;
-  std::string alreadyGeneratedCoins;
+  uint64_t alreadyGeneratedCoins;
   uint64_t alreadyGeneratedTransactions;
   uint64_t baseReward;
   double penalty;

@@ -716,11 +716,15 @@ bool RpcServer::f_on_blocks_list_json(const F_COMMAND_RPC_GET_BLOCKS_LIST::reque
           CORE_RPC_ERROR_CODE_INTERNAL_ERROR,
           "Internal error: can't get block by height. Height = " + std::to_string(i) + '.'};
     }
+    block_entry_t be = bc.getBlock(i);
+    uint32_t pre = i - 1;
+    block_entry_t be1 = bc.getBlock(pre);
     f_block_short_response block_short;
     block_short.cumul_size = 0;
     block_short.timestamp = blk.timestamp;
     block_short.height = i;
     block_short.hash = hex::podToString(block_hash);
+    block_short.difficulty = be.cumulative_difficulty - be1.cumulative_difficulty;
     block_short.tx_count = blk.transactionHashes.size() + 1;
 
     res.blocks.push_back(block_short);
@@ -739,21 +743,7 @@ bool RpcServer::f_on_block_json(const F_COMMAND_RPC_GET_BLOCK_DETAILS::request &
 {
   hash_t hash;
   Blockchain &bc = m_core.getBlockChain();
-  uint32_t height = boost::lexical_cast<uint32_t>(req.hash);
-
-  try
-  {
-    hash = bc.getBlockIdByHeight(height);
-  }
-  catch (boost::bad_lexical_cast &)
-  {
-    if (!parse_hash256(req.hash, hash))
-    {
-      throw JsonRpc::JsonRpcError{
-          CORE_RPC_ERROR_CODE_WRONG_PARAM,
-          "Failed to parse hex representation of block hash. Hex = " + req.hash + '.'};
-    }
-  }
+  hex::podFromString(req.hash, hash);
 
   if (!bc.haveBlock(hash))
   {
@@ -761,6 +751,10 @@ bool RpcServer::f_on_block_json(const F_COMMAND_RPC_GET_BLOCK_DETAILS::request &
         CORE_RPC_ERROR_CODE_INTERNAL_ERROR,
         "Internal error: can't get block by hash. hash_t = " + req.hash + '.'};
   }
+  uint32_t height;
+
+  bc.getBlockHeight(hash, height);
+
   block_entry_t be = bc.getBlock(height);
   block_t &blk = be.bl;
   // block_details_t blkDetails = bc.getBlockDetails(hash);
