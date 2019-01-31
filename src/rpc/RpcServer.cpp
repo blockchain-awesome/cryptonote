@@ -720,7 +720,7 @@ bool RpcServer::f_on_blocks_list_json(const F_COMMAND_RPC_GET_BLOCKS_LIST::reque
     uint32_t pre = i - 1;
     block_entry_t be1 = bc.getBlock(pre);
     f_block_short_response block_short;
-    block_short.cumul_size = 0;
+    block_short.cumul_size = be.block_cumulative_size;
     block_short.timestamp = blk.timestamp;
     block_short.height = i;
     block_short.hash = hex::podToString(block_hash);
@@ -757,62 +757,7 @@ bool RpcServer::f_on_block_json(const F_COMMAND_RPC_GET_BLOCK_DETAILS::request &
 
   block_entry_t be = bc.getBlock(height);
   block_t &blk = be.bl;
-  // block_details_t blkDetails = bc.getBlockDetails(hash);
-    block_header_response block_header;
-    res.block.height = height;
-
-    res.block.major_version = blk.majorVersion;
-    res.block.minor_version = blk.minorVersion;
-    res.block.timestamp = blk.timestamp;
-    res.block.prev_hash = hex::podToString(bc.getBlockIdByHeight(height - 1));
-    res.block.nonce = blk.nonce;
-    res.block.hash = hex::podToString(hash);
-    res.block.depth = bc.getHeight() - res.block.height;
-    res.block.difficulty = be.cumulative_difficulty;
-    // res.block.transactionsCumulativeSize = blkDetails.transactionsCumulativeSize;
-    res.block.alreadyGeneratedCoins = be.already_generated_coins;
-  //   res.block.alreadyGeneratedTransactions = blkDetails.alreadyGeneratedTransactions;
-  //   res.block.reward = block_header.reward;
-  //   res.block.sizeMedian = blkDetails.sizeMedian;
-    res.block.blockSize = be.block_cumulative_size;
-  //   res.block.orphan_status = blkDetails.isAlternative;
-
-  //   uint64_t maxReward = 0;
-  //   uint64_t currentReward = 0;
-  //   int64_t emissionChange = 0;
-  //   size_t blockGrantedFullRewardZone = m_core.getCurrency().blockGrantedFullRewardZoneByBlockVersion(block_header.major_version);
-  //   res.block.effectiveSizeMedian = std::max(res.block.sizeMedian, blockGrantedFullRewardZone);
-
-  //   res.block.baseReward = blkDetails.baseReward;
-    // res.block.penalty = be.bl.;
-
-    // Base transaction adding
-    f_transaction_short_response transaction_short;
-    transaction_short.hash = hex::podToString(BinaryArray::objectHash(blk.baseTransaction));
-    transaction_short.fee = 0;
-    transaction_short.amount_out = getOutputAmount(blk.baseTransaction);
-    transaction_short.size = BinaryArray::size(blk.baseTransaction);
-    res.block.transactions.push_back(transaction_short);
-
-    std::list<crypto::hash_t> missed_txs;
-    std::list<transaction_t> txs;
-    bc.getTransactions(blk.transactionHashes, txs, missed_txs);
-
-    res.block.totalFeeAmount = 0;
-
-    for (const transaction_t& tx : txs) {
-      f_transaction_short_response transaction_short;
-      uint64_t amount_in = getInputAmount(tx);
-      uint64_t amount_out = getOutputAmount(tx);
-
-      transaction_short.hash = hex::podToString(BinaryArray::objectHash(tx));
-      transaction_short.fee = amount_in - amount_out;
-      transaction_short.amount_out = amount_out;
-      transaction_short.size = BinaryArray::size(tx);
-      res.block.transactions.push_back(transaction_short);
-
-      res.block.totalFeeAmount += transaction_short.fee;
-    }
+  m_blockchain_explorer.fillBlockDetails(blk, res.block);
   res.status = CORE_RPC_STATUS_OK;
   return true;
 }

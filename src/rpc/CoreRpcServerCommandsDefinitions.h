@@ -511,55 +511,6 @@ struct f_block_short_response {
   }
 };
 
-struct f_block_details_response {
-  uint8_t major_version;
-  uint8_t minor_version;  
-  uint64_t timestamp;
-  std::string prev_hash;
-  uint32_t nonce;
-  bool orphan_status;
-  uint32_t height;
-  uint64_t depth;
-  std::string hash;
-  uint64_t difficulty;
-  uint64_t reward;
-  uint64_t blockSize;
-  size_t sizeMedian;
-  uint64_t effectiveSizeMedian;
-  uint64_t transactionsCumulativeSize;
-  uint64_t alreadyGeneratedCoins;
-  uint64_t alreadyGeneratedTransactions;
-  uint64_t baseReward;
-  double penalty;
-  uint64_t totalFeeAmount;
-  std::vector<f_transaction_short_response> transactions;
-
-  void serialize(ISerializer &s) {
-    KV_MEMBER(major_version)
-    KV_MEMBER(minor_version)
-    KV_MEMBER(timestamp)
-    KV_MEMBER(prev_hash)
-    KV_MEMBER(nonce)
-    KV_MEMBER(orphan_status)
-    KV_MEMBER(height)
-    KV_MEMBER(depth)
-    KV_MEMBER(hash)
-    KV_MEMBER(difficulty)
-    KV_MEMBER(reward)
-    KV_MEMBER(blockSize)
-    KV_MEMBER(sizeMedian)
-    KV_MEMBER(effectiveSizeMedian)
-    KV_MEMBER(transactionsCumulativeSize)
-    KV_MEMBER(alreadyGeneratedCoins)
-    KV_MEMBER(alreadyGeneratedTransactions)
-    KV_MEMBER(baseReward)
-    KV_MEMBER(penalty)
-    KV_MEMBER(transactions)
-    KV_MEMBER(totalFeeAmount)
-  }
-};
-
-
 struct COMMAND_RPC_GET_LAST_BLOCK_HEADER {
   typedef EMPTY_STRUCT request;
   typedef BLOCK_HEADER_RESPONSE response;
@@ -620,7 +571,7 @@ struct F_COMMAND_RPC_GET_BLOCK_DETAILS {
   };
 
   struct response {
-    f_block_details_response block;
+    block_details_t block;
     std::string status;
 
     void serialize(ISerializer &s) {
