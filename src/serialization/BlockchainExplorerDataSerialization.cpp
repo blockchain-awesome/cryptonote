@@ -152,7 +152,6 @@ void serialize(transaction_details_t &transaction, ISerializer &serializer)
   serializer(transaction.inputs, "inputs");
   serializer(transaction.outputs, "outputs");
 
-  serializer(transaction.signatures, "signatures");
   if (serializer.type() == ISerializer::OUTPUT)
   {
     std::vector<std::pair<size_t, crypto::signature_t>> signaturesForSerialization;
@@ -193,7 +192,7 @@ void serialize(block_details_t &block, ISerializer &serializer)
   serializer(block.timestamp, "timestamp");
   serializePod(block.prevBlockHash, "prevBlockHash", serializer);
   serializer(block.nonce, "nonce");
-  // serializer(block.index, "index");
+  serializer(block.height, "height");
   serializePod(block.hash, "hash", serializer);
   serializer(block.difficulty, "difficulty");
   serializer(block.reward, "reward");
