@@ -58,13 +58,16 @@ Currently only Ubuntu 16.04 is officially supported.
 
 2.  Building & testing
 
-
+```
     git clone https://github.com/vigcoin/coin.git
     cd coin
     mkdir -p build
+    cd build
     cmake ..
     make
     make test
+    
+```
 
 3.  Auto building & testing
 
