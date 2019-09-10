@@ -22,24 +22,33 @@ void hash_to_scalar(const uint8_t *scalar, size_t length, uint8_t *hash)
 
 void generate_keys(uint8_t *public_key, uint8_t *secret_key)
 {
+  ge_p3 point;
+  random_scalar(secret_key);
+  ge_scalarmult_base(&point, secret_key);
+  ge_p3_tobytes(public_key, &point);
 }
 
-int check_key(const uint8_t *public_key) {
+int check_key(const uint8_t *public_key)
+{
   return 0;
 }
-int secret_key_to_public_key(const uint8_t *secret_key, uint8_t *public_key) {
+int secret_key_to_public_key(const uint8_t *secret_key, uint8_t *public_key)
+{
   return 0;
 }
-int generate_key_derivation(const uint8_t *public_key, const uint8_t *secret_key, uint8_t *key_derivation) {
+int generate_key_derivation(const uint8_t *public_key, const uint8_t *secret_key, uint8_t *key_derivation)
+{
   return 0;
 }
 
-int derive_public_key(const uint8_t *key_derivation, size_t size, const uint8_t *base, uint8_t *derived_key) {
+int derive_public_key(const uint8_t *key_derivation, size_t size, const uint8_t *base, uint8_t *derived_key)
+{
   return 0;
 }
 
 //hack for pg
-int underive_public_key_and_get_scalar(const uint8_t *key_derivation, size_t size, const uint8_t *public_key, uint8_t *public_key1, uint8_t *scalar) {
+int underive_public_key_and_get_scalar(const uint8_t *key_derivation, size_t size, const uint8_t *public_key, uint8_t *public_key1, uint8_t *scalar)
+{
   return 0;
 }
 
@@ -56,7 +65,8 @@ void derive_secret_key(const uint8_t *key_derivation, size_t size, const uint8_t
 
 void generate_signature(const uint8_t *hash, const uint8_t *public_key, const uint8_t *secret_key, uint8_t *signature) {}
 
-int check_signature(const uint8_t *hash, const uint8_t *public_key, const uint8_t *signature) {
+int check_signature(const uint8_t *hash, const uint8_t *public_key, const uint8_t *signature)
+{
   return 0;
 }
 
@@ -68,6 +78,7 @@ void generate_ring_signature(const uint8_t *hash, const uint8_t *key_image,
                              const uint8_t *const *public_key, size_t public_size, const uint8_t *secret_key, size_t secret_size, uint8_t *signature) {}
 
 int check_ring_signature(const uint8_t *hash, const uint8_t *key_image,
-                         const uint8_t *const *public_key, size_t size, const uint8_t *signature) {
+                         const uint8_t *const *public_key, size_t size, const uint8_t *signature)
+{
   return 0;
 }

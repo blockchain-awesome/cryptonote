@@ -32,7 +32,7 @@ account_keys_t getAccountKeysWithViewKey(const public_key_t& publicViewKey, cons
   viewKp.publicKey = publicViewKey;
   viewKp.secretKey = secretViewKey;
   key_pair_t p1;
-  crypto::generate_keys(p1.publicKey, p1.secretKey);
+  generate_keys((uint8_t*)&p1.publicKey, (uint8_t*)&p1.secretKey);
   account_keys_t accountKeys = accountKeysFromKeypairs(viewKp, p1);
 
   return accountKeys;

@@ -255,8 +255,7 @@ WalletGreen::~WalletGreen() {
 void WalletGreen::initialize(const std::string& password) {
   crypto::public_key_t viewPublicKey;
   crypto::secret_key_t viewSecretKey;
-  crypto::generate_keys(viewPublicKey, viewSecretKey);
-
+  generate_keys((uint8_t *)&viewPublicKey, (uint8_t *)&viewSecretKey);
   initWithKeys(viewPublicKey, viewSecretKey, password);
 }
 
@@ -483,7 +482,7 @@ key_pair_t WalletGreen::getViewKey() const {
 
 std::string WalletGreen::createAddress() {
   key_pair_t spendKey;
-  crypto::generate_keys(spendKey.publicKey, spendKey.secretKey);
+  generate_keys((uint8_t *)&spendKey.publicKey, (uint8_t *)&spendKey.secretKey);
   uint64_t creationTimestamp = static_cast<uint64_t>(time(nullptr));
 
   return doCreateAddress(spendKey.publicKey, spendKey.secretKey, creationTimestamp);

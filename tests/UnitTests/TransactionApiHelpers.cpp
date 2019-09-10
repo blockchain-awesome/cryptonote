@@ -81,7 +81,7 @@ size_t TestTransactionBuilder::addTestInput(uint64_t amount, std::vector<uint32_
   public_key_t pk;
   secret_key_t sk;
   for (auto out : gouts) {
-    crypto::generate_keys(pk, sk);
+    generate_keys((uint8_t*)&pk, (uint8_t*)&sk);
     info.outputs.push_back(TransactionTypes::global_output_t{ pk, out });
   }
 

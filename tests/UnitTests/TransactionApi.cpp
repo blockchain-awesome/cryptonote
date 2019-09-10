@@ -155,7 +155,7 @@ TEST_F(TransactionApi, addAndSignInputMsig) {
   ASSERT_EQ(3, tx->getRequiredSignaturesCount(index));
 
   key_pair_t kp1;
-  crypto::generate_keys(kp1.publicKey, kp1.secretKey );
+  generate_keys((uint8_t*)&kp1.publicKey, (uint8_t*)&kp1.secretKey );
 
   auto srcTxKey = kp1.publicKey;
   account_keys_t accounts[] = { generateAccountKeys(), generateAccountKeys(), generateAccountKeys() };
@@ -217,7 +217,7 @@ TEST_F(TransactionApi, secretKey) {
   ASSERT_TRUE(tx->getTransactionSecretKey(txSecretKey));
   
   key_pair_t kp1;
-  crypto::generate_keys(kp1.publicKey, kp1.secretKey);
+  generate_keys((uint8_t*)&kp1.publicKey, (uint8_t*)&kp1.secretKey);
   secret_key_t sk = kp1.secretKey;
   ASSERT_ANY_THROW(tx2->setTransactionSecretKey(sk)); // unrelated secret key should not be accepted
   
@@ -342,7 +342,7 @@ TEST_F(TransactionApi, unableToModifySignedTransaction) {
   auto index = tx->addInput(inputMsig);
 
   key_pair_t kp1;
-  crypto::generate_keys(kp1.publicKey, kp1.secretKey);
+  generate_keys((uint8_t*)&kp1.publicKey, (uint8_t*)&kp1.secretKey);
 
   auto srcTxKey = kp1.publicKey;
 

@@ -1670,7 +1670,7 @@ TEST_F(WalletApi, initializeWithKeysSucceded) {
   cryptonote::WalletGreen wallet(dispatcher, currency, node);
 
   cryptonote::key_pair_t viewKeys;
-  crypto::generate_keys(viewKeys.publicKey, viewKeys.secretKey);
+  generate_keys((uint8_t*)&viewKeys.publicKey, (uint8_t*)&viewKeys.secretKey);
   ASSERT_NO_THROW(wallet.initializeWithViewKey(viewKeys.secretKey, "pass"));
 
   wallet.shutdown();
@@ -1678,7 +1678,7 @@ TEST_F(WalletApi, initializeWithKeysSucceded) {
 
 TEST_F(WalletApi, initializeWithKeysThrowsIfAlreadInitialized) {
   cryptonote::key_pair_t viewKeys;
-  crypto::generate_keys(viewKeys.publicKey, viewKeys.secretKey);
+  generate_keys((uint8_t*)&viewKeys.publicKey, (uint8_t*)&viewKeys.secretKey);
 
   ASSERT_ANY_THROW(alice.initializeWithViewKey(viewKeys.secretKey, "pass"));
 }
@@ -1688,7 +1688,7 @@ TEST_F(WalletApi, initializeWithKeysThrowsIfStopped) {
   wallet.stop();
 
   cryptonote::key_pair_t viewKeys;
-  crypto::generate_keys(viewKeys.publicKey, viewKeys.secretKey);
+  generate_keys((uint8_t*)&viewKeys.publicKey, (uint8_t*)&viewKeys.secretKey);
   ASSERT_ANY_THROW(wallet.initializeWithViewKey(viewKeys.secretKey, "pass"));
 }
 
@@ -1696,7 +1696,7 @@ TEST_F(WalletApi, getViewKeyReturnsProperKey) {
   cryptonote::WalletGreen wallet(dispatcher, currency, node);
 
   cryptonote::key_pair_t viewKeys;
-  crypto::generate_keys(viewKeys.publicKey, viewKeys.secretKey);
+  generate_keys((uint8_t*)&viewKeys.publicKey, (uint8_t*)&viewKeys.secretKey);
   wallet.initializeWithViewKey(viewKeys.secretKey, "pass");
 
   cryptonote::key_pair_t retrievedKeys = wallet.getViewKey();
@@ -1719,7 +1719,7 @@ TEST_F(WalletApi, getViewKeyThrowsIfStopped) {
 
 TEST_F(WalletApi, getAddressSpendKeyReturnsProperKey) {
   cryptonote::key_pair_t spendKeys;
-  crypto::generate_keys(spendKeys.publicKey, spendKeys.secretKey);
+  generate_keys((uint8_t*)&spendKeys.publicKey, (uint8_t*)&spendKeys.secretKey);
 
   alice.createAddress(spendKeys.secretKey);
 
@@ -1744,7 +1744,7 @@ TEST_F(WalletApi, getAddressSpendKeyThrowsIfStopped) {
 
 crypto::public_key_t generatePublicKey() {
   cryptonote::key_pair_t spendKeys;
-  crypto::generate_keys(spendKeys.publicKey, spendKeys.secretKey);
+  generate_keys((uint8_t*)&spendKeys.publicKey, (uint8_t*)&spendKeys.secretKey);
 
   return spendKeys.publicKey;
 }
@@ -3386,7 +3386,7 @@ TEST_F(WalletApi, getDelayedTransactionIdsThrowsIfInTrackingMode) {
 
   crypto::public_key_t pub;
   crypto::secret_key_t sec;
-  crypto::generate_keys(pub, sec);
+  generate_keys((uint8_t*)&pub, (uint8_t*)&sec);
 
   bob.createAddress(pub);
   ASSERT_ANY_THROW(bob.getDelayedTransactionIds());

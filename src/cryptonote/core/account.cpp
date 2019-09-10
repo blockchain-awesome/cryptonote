@@ -24,8 +24,8 @@ void Account::setNull()
 //-----------------------------------------------------------------
 void Account::generate()
 {
-  crypto::generate_keys(m_keys.address.spendPublicKey, m_keys.spendSecretKey);
-  crypto::generate_keys(m_keys.address.viewPublicKey, m_keys.viewSecretKey);
+  generate_keys((uint8_t *) &m_keys.address.spendPublicKey, (uint8_t *) &m_keys.spendSecretKey);
+  generate_keys((uint8_t *) &m_keys.address.viewPublicKey, (uint8_t *) &m_keys.viewSecretKey);
   m_creation_timestamp = time(NULL);
 }
 //-----------------------------------------------------------------

@@ -52,10 +52,10 @@ public:
 
   void addPaymentAccounts(size_t count) {
     key_pair_t p1;
-    crypto::generate_keys(p1.publicKey, p1.secretKey);
+    generate_keys((uint8_t*)&p1.publicKey, (uint8_t*)&p1.secretKey);
     auto viewKeys = p1;
     while (count--) {
-      crypto::generate_keys(p1.publicKey, p1.secretKey);
+      generate_keys((uint8_t*)&p1.publicKey, (uint8_t*)&p1.secretKey);
       m_accounts.push_back(accountKeysFromKeypairs(viewKeys, p1));
     }
   }

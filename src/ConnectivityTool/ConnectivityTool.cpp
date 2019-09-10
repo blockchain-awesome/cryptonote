@@ -312,7 +312,7 @@ bool handle_request_stat(po::variables_map& vm, peer_id_type_t peer_id) {
 bool generate_and_print_keys() {
   crypto::public_key_t pk;
   crypto::secret_key_t sk;
-  generate_keys(pk, sk);
+  generate_keys((uint8_t *) &pk, (uint8_t *) &sk);
   std::cout << "PUBLIC KEY: " << hex::podToString(pk) << ENDL
             << "PRIVATE KEY: " << hex::podToString(sk);
   return true;

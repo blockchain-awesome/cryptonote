@@ -152,7 +152,7 @@ TEST_F(InProcessNodeTests, getTransactionOutsGlobalIndicesFailure) {
 TEST_F(InProcessNodeTests, getRandomOutsByAmountsSuccess) {
   crypto::public_key_t ignoredPublicKey;
   crypto::secret_key_t ignoredSectetKey;
-  crypto::generate_keys(ignoredPublicKey, ignoredSectetKey);
+  generate_keys((uint8_t*)&ignoredPublicKey, (uint8_t*)&ignoredSectetKey);
 
   cryptonote::COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_response expectedResp;
   cryptonote::COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_outs_for_amount out;

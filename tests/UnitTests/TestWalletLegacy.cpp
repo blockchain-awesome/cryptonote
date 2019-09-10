@@ -1211,8 +1211,8 @@ TEST_F(WalletLegacyApi, sendSeveralTransactions) {
 TEST_F(WalletLegacyApi, initWithKeys) {
   cryptonote::account_keys_t accountKeys;
 
-  crypto::generate_keys(accountKeys.address.spendPublicKey, accountKeys.spendSecretKey);
-  crypto::generate_keys(accountKeys.address.viewPublicKey, accountKeys.viewSecretKey);
+  generate_keys((uint8_t*)&accountKeys.address.spendPublicKey, (uint8_t*)&accountKeys.spendSecretKey);
+  generate_keys((uint8_t*)&accountKeys.address.viewPublicKey, (uint8_t*)&accountKeys.viewSecretKey);
 
   alice->initWithKeys(accountKeys, "pass");
   ASSERT_NO_FATAL_FAILURE(WaitWalletLoad(aliceWalletObserver.get()));
@@ -1811,8 +1811,8 @@ void generateWallet(cryptonote::IWalletLegacy& wallet, TrivialWalletObserver& ob
 TEST_F(WalletLegacyApi, walletLoadsNullSpendSecretKey) {
   cryptonote::account_keys_t accountKeys;
 
-  crypto::generate_keys(accountKeys.address.spendPublicKey, accountKeys.spendSecretKey);
-  crypto::generate_keys(accountKeys.address.viewPublicKey, accountKeys.viewSecretKey);
+  generate_keys((uint8_t*)&accountKeys.address.spendPublicKey, (uint8_t*)&accountKeys.spendSecretKey);
+  generate_keys((uint8_t*)&accountKeys.address.viewPublicKey, (uint8_t*)&accountKeys.viewSecretKey);
   accountKeys.spendSecretKey = cryptonote::NULL_SECRET_KEY;
 
   alice->initWithKeys(accountKeys, "pass");

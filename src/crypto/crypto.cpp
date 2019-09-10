@@ -30,14 +30,6 @@ namespace crypto {
 
   mutex random_lock;
 
-  void crypto_ops::generate_keys(public_key_t &pub, secret_key_t &sec) {
-    lock_guard<mutex> lock(random_lock);
-    ge_p3 point;
-    random_scalar((uint8_t *)&sec);
-    ge_scalarmult_base(&point, reinterpret_cast<unsigned char*>(&sec));
-    ge_p3_tobytes(reinterpret_cast<unsigned char*>(&pub), &point);
-  }
-
   bool crypto_ops::check_key(const public_key_t &key) {
     ge_p3 point;
     return ge_frombytes_vartime(&point, reinterpret_cast<const unsigned char*>(&key)) == 0;

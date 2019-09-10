@@ -34,8 +34,8 @@ namespace {
   inline account_keys_t generateAccountKeys() {
     key_pair_t p1;
     key_pair_t p2;
-    crypto::generate_keys(p2.publicKey, p2.secretKey);
-    crypto::generate_keys(p1.publicKey, p1.secretKey);
+    generate_keys((uint8_t*)&p2.publicKey, (uint8_t*)&p2.secretKey);
+    generate_keys((uint8_t*)&p1.publicKey, (uint8_t*)&p1.secretKey);
     return accountKeysFromKeypairs(p1, p2);
   }
 
