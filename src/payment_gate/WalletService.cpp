@@ -492,7 +492,7 @@ std::error_code WalletService::replaceWithNewWallet(const std::string& viewSecre
     }
 
     crypto::public_key_t viewPublicKey;
-    if (!crypto::secret_key_to_public_key(viewSecretKey, viewPublicKey)) {
+    if (!secret_key_to_public_key((const uint8_t*)&viewSecretKey, (uint8_t*)&viewPublicKey)) {
       logger(Logging::WARNING) << "Cannot derive view public key, wrong secret key: " << viewSecretKeyText;
       return make_error_code(cryptonote::error::WalletServiceErrorCode::WRONG_KEY_FORMAT);
     }

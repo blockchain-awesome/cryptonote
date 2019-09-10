@@ -36,8 +36,16 @@ int check_key(const uint8_t *public_key)
 
 int secret_key_to_public_key(const uint8_t *secret_key, uint8_t *public_key)
 {
-  return 0;
+  ge_p3 point;
+  if (sc_check(secret_key) != 0)
+  {
+    return 0;
+  }
+  ge_scalarmult_base(&point, secret_key);
+  ge_p3_tobytes(public_key, &point);
+  return 1;
 }
+
 int generate_key_derivation(const uint8_t *public_key, const uint8_t *secret_key, uint8_t *key_derivation)
 {
   return 0;

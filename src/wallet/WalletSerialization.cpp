@@ -222,7 +222,7 @@ void deserializeEncrypted(Object& obj, const std::string& name, cryptonote::Cryp
 
 bool verifyKeys(const secret_key_t& sec, const public_key_t& expected_pub) {
   public_key_t pub;
-  bool r = crypto::secret_key_to_public_key(sec, pub);
+  bool r = secret_key_to_public_key((const uint8_t *)&sec, (uint8_t*)&pub);
 
   return r && expected_pub == pub;
 }
@@ -669,7 +669,7 @@ void WalletSerializer::loadWallets(Common::IInputStream& source, CryptoContext& 
 
     if (dto.spendSecretKey != NULL_SECRET_KEY) {
       crypto::public_key_t restoredPublicKey;
-      bool r = crypto::secret_key_to_public_key(dto.spendSecretKey, restoredPublicKey);
+      bool r = secret_key_to_public_key((const uint8_t*)&dto.spendSecretKey, (uint8_t*)&restoredPublicKey);
 
       if (!r || dto.spendPublicKey != restoredPublicKey) {
         throw std::system_error(make_error_code(error::WRONG_PASSWORD), "Restored spend public key doesn't correspond to secret key");

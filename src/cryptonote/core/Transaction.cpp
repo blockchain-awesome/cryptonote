@@ -219,7 +219,7 @@ namespace cryptonote {
     public_key_t pk;
     public_key_t txPubKey;
 
-    secret_key_to_public_key(sk, pk);
+    secret_key_to_public_key((const uint8_t*)&sk, (uint8_t*)&pk);
     extra.getPublicKey(txPubKey);
 
     if (txPubKey != pk) {

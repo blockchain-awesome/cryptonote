@@ -23,7 +23,7 @@ namespace {
 
 bool verifyKeys(const crypto::secret_key_t& sec, const crypto::public_key_t& expected_pub) {
   crypto::public_key_t pub;
-  bool r = crypto::secret_key_to_public_key(sec, pub);
+  bool r = secret_key_to_public_key((const uint8_t*)&sec, (uint8_t*)&pub);
   return r && expected_pub == pub;
 }
 

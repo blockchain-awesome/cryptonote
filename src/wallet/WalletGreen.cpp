@@ -261,7 +261,7 @@ void WalletGreen::initialize(const std::string& password) {
 
 void WalletGreen::initializeWithViewKey(const crypto::secret_key_t& viewSecretKey, const std::string& password) {
   crypto::public_key_t viewPublicKey;
-  if (!crypto::secret_key_to_public_key(viewSecretKey, viewPublicKey)) {
+  if (!secret_key_to_public_key((const uint8_t*)&viewSecretKey, (uint8_t*)&viewPublicKey)) {
     throw std::system_error(make_error_code(cryptonote::error::KEY_GENERATION_ERROR));
   }
 
@@ -490,7 +490,7 @@ std::string WalletGreen::createAddress() {
 
 std::string WalletGreen::createAddress(const crypto::secret_key_t& spendSecretKey) {
   crypto::public_key_t spendPublicKey;
-  if (!crypto::secret_key_to_public_key(spendSecretKey, spendPublicKey) ) {
+  if (!secret_key_to_public_key((const uint8_t*)&spendSecretKey, (uint8_t*)&spendPublicKey) ) {
     throw std::system_error(make_error_code(cryptonote::error::KEY_GENERATION_ERROR));
   }
 

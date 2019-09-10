@@ -121,7 +121,7 @@ int main(int argc, char *argv[])
       {
         get(input, expected2);
       }
-      actual1 = secret_key_to_public_key(sec, actual2);
+      actual1 = secret_key_to_public_key((const uint8_t*)&sec, (uint8_t*)&actual2);
       if (expected1 != actual1 || (expected1 && expected2 != actual2))
       {
         goto error;

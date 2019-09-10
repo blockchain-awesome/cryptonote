@@ -32,8 +32,6 @@ class crypto_ops
   crypto_ops(const crypto_ops &);
   void operator=(const crypto_ops &);
   ~crypto_ops();
-  static bool secret_key_to_public_key(const secret_key_t &, public_key_t &);
-  friend bool secret_key_to_public_key(const secret_key_t &, public_key_t &);
   static bool generate_key_derivation(const public_key_t &, const secret_key_t &, key_derivation_t &);
   friend bool generate_key_derivation(const public_key_t &, const secret_key_t &, key_derivation_t &);
   static bool derive_public_key(const key_derivation_t &, size_t, const public_key_t &, public_key_t &);
@@ -117,13 +115,6 @@ public:
     return rand<T>();
   }
 };
-
-/* Checks a private key and computes the corresponding public key.
-   */
-inline bool secret_key_to_public_key(const secret_key_t &sec, public_key_t &pub)
-{
-  return crypto_ops::secret_key_to_public_key(sec, pub);
-}
 
 /* To generate an ephemeral key used to send money to:
    * * The sender generates a new key pair, which becomes the transaction key. The public transaction key is included in "extra" field.
