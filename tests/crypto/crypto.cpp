@@ -9,10 +9,6 @@ bool check_scalar(const crypto::elliptic_curve_scalar_t &scalar) {
   return crypto::sc_check(reinterpret_cast<const unsigned char*>(&scalar)) == 0;
 }
 
-void hash_to_scalar(const void *data, size_t length, crypto::elliptic_curve_scalar_t &res) {
-  crypto::hash_to_scalar(data, length, res);
-}
-
 void hash_to_point(const crypto::hash_t &h, crypto::elliptic_curve_point_t &res) {
   crypto::ge_p2 point;
   crypto::ge_fromfe_frombytes_vartime(&point, reinterpret_cast<const unsigned char *>(&h));

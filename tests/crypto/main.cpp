@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
       vector<char> data;
       crypto::elliptic_curve_scalar_t expected, actual;
       get(input, data, expected);
-      hash_to_scalar(data.data(), data.size(), actual);
+      hash_to_scalar((const uint8_t *)data.data(), data.size(), (uint8_t *)&actual);
       if (expected != actual)
       {
         goto error;

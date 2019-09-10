@@ -26,17 +26,9 @@ namespace crypto {
     #include "crypto-ops.h"
     #include "random.h"
     #include "crypto-defines.h"
-    extern void random_scalar(uint8_t *res);
   }
-
-
 
   mutex random_lock;
-
-  static inline void hash_to_scalar(const void *data, size_t length, elliptic_curve_scalar_t &res) {
-    cn_fast_hash(data, length, reinterpret_cast<hash_t &>(res));
-    sc_reduce32(reinterpret_cast<unsigned char*>(&res));
-  }
 
   void crypto_ops::generate_keys(public_key_t &pub, secret_key_t &sec) {
     lock_guard<mutex> lock(random_lock);
@@ -85,7 +77,7 @@ namespace crypto {
     buf.derivation = derivation;
     varint::write(end, output_index);
     assert(end <= buf.output_index + sizeof buf.output_index);
-    hash_to_scalar(&buf, end - reinterpret_cast<char *>(&buf), res);
+    hash_to_scalar((const uint8_t *)&buf, end - reinterpret_cast<char *>(&buf), (uint8_t *)&res);
   }
 
   static void derivation_to_scalar(const key_derivation_t &derivation, size_t output_index, const uint8_t* suffix, size_t suffixLength, elliptic_curve_scalar_t &res) {
@@ -100,7 +92,7 @@ namespace crypto {
     assert(end <= buf.output_index + sizeof buf.output_index);
     size_t bufSize = end - reinterpret_cast<char *>(&buf);
     memcpy(end, suffix, suffixLength);
-    hash_to_scalar(&buf, bufSize + suffixLength, res);
+    hash_to_scalar((const uint8_t *)&buf, bufSize + suffixLength, (uint8_t *)&res);
   }
 
   bool crypto_ops::derive_public_key(const key_derivation_t &derivation, size_t output_index,
@@ -247,7 +239,7 @@ namespace crypto {
     random_scalar((uint8_t *)&k);
     ge_scalarmult_base(&tmp3, reinterpret_cast<unsigned char*>(&k));
     ge_p3_tobytes(reinterpret_cast<unsigned char*>(&buf.comm), &tmp3);
-    hash_to_scalar(&buf, sizeof(s_comm), reinterpret_cast<elliptic_curve_scalar_t&>(sig));
+    hash_to_scalar((uint8_t *)&buf, sizeof(s_comm), (uint8_t *)&sig);
     sc_mulsub(reinterpret_cast<unsigned char*>(&sig) + 32, reinterpret_cast<unsigned char*>(&sig), reinterpret_cast<const unsigned char*>(&sec), reinterpret_cast<unsigned char*>(&k));
   }
 
@@ -267,7 +259,7 @@ namespace crypto {
     }
     ge_double_scalarmult_base_vartime(&tmp2, reinterpret_cast<const unsigned char*>(&sig), &tmp3, reinterpret_cast<const unsigned char*>(&sig) + 32);
     ge_tobytes(reinterpret_cast<unsigned char*>(&buf.comm), &tmp2);
-    hash_to_scalar(&buf, sizeof(s_comm), c);
+    hash_to_scalar((const uint8_t *)&buf, sizeof(s_comm), (uint8_t *)&c);
     sc_sub(reinterpret_cast<unsigned char*>(&c), reinterpret_cast<unsigned char*>(&c), reinterpret_cast<const unsigned char*>(&sig));
     return sc_isnonzero(reinterpret_cast<unsigned char*>(&c)) == 0;
   }
@@ -381,7 +373,7 @@ namespace crypto {
         sc_add(reinterpret_cast<unsigned char*>(&sum), reinterpret_cast<unsigned char*>(&sum), reinterpret_cast<unsigned char*>(&sig[i]));
       }
     }
-    hash_to_scalar(buf, rs_comm_size(pubs_count), h);
+    hash_to_scalar((uint8_t *)buf, rs_comm_size(pubs_count), (uint8_t *)&h);
     sc_sub(reinterpret_cast<unsigned char*>(&sig[sec_index]), reinterpret_cast<unsigned char*>(&h), reinterpret_cast<unsigned char*>(&sum));
     sc_mulsub(reinterpret_cast<unsigned char*>(&sig[sec_index]) + 32, reinterpret_cast<unsigned char*>(&sig[sec_index]), reinterpret_cast<const unsigned char*>(&sec), reinterpret_cast<unsigned char*>(&k));
   }
@@ -421,7 +413,7 @@ namespace crypto {
       ge_tobytes(reinterpret_cast<unsigned char*>(&buf->ab[i].b), &tmp2);
       sc_add(reinterpret_cast<unsigned char*>(&sum), reinterpret_cast<unsigned char*>(&sum), reinterpret_cast<const unsigned char*>(&sig[i]));
     }
-    hash_to_scalar(buf, rs_comm_size(pubs_count), h);
+    hash_to_scalar((uint8_t *)buf, rs_comm_size(pubs_count), (uint8_t *)&h);
     sc_sub(reinterpret_cast<unsigned char*>(&h), reinterpret_cast<unsigned char*>(&h), reinterpret_cast<unsigned char*>(&sum));
     return sc_isnonzero(reinterpret_cast<unsigned char*>(&h)) == 0;
   }
