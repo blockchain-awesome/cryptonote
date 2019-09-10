@@ -30,11 +30,6 @@ namespace crypto {
 
   mutex random_lock;
 
-  bool crypto_ops::check_key(const public_key_t &key) {
-    ge_p3 point;
-    return ge_frombytes_vartime(&point, reinterpret_cast<const unsigned char*>(&key)) == 0;
-  }
-
   bool crypto_ops::secret_key_to_public_key(const secret_key_t &sec, public_key_t &pub) {
     ge_p3 point;
     if (sc_check(reinterpret_cast<const unsigned char*>(&sec)) != 0) {
@@ -240,7 +235,7 @@ namespace crypto {
     ge_p3 tmp3;
     elliptic_curve_scalar_t c;
     s_comm buf;
-    assert(check_key(pub));
+    assert(check_key((uint8_t*)&pub));
     buf.h = prefix_hash;
     buf.key = reinterpret_cast<const elliptic_curve_point_t&>(pub);
     if (ge_frombytes_vartime(&tmp3, reinterpret_cast<const unsigned char*>(&pub)) != 0) {
@@ -331,7 +326,7 @@ namespace crypto {
       generate_key_image(*pubs[sec_index], sec, t3);
       assert(image == t3);
       for (i = 0; i < pubs_count; i++) {
-        assert(check_key(*pubs[i]));
+        assert(check_key((uint8_t*)&(*pubs[i])));
       }
     }
 #endif
@@ -380,7 +375,7 @@ namespace crypto {
     rs_comm *const buf = reinterpret_cast<rs_comm *>(alloca(rs_comm_size(pubs_count)));
 #if !defined(NDEBUG)
     for (i = 0; i < pubs_count; i++) {
-      assert(check_key(*pubs[i]));
+      assert(check_key((uint8_t*)&(*pubs[i])));
     }
 #endif
     if (ge_frombytes_vartime(&image_unp, reinterpret_cast<const unsigned char*>(&image)) != 0) {

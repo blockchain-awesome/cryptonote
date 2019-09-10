@@ -129,7 +129,7 @@ void WalletLegacySerializer::deserialize(std::istream& stream, const std::string
   if (account.getAccountKeys().spendSecretKey != NULL_SECRET_KEY) {
     throwIfKeysMissmatch(account.getAccountKeys().spendSecretKey, account.getAccountKeys().address.spendPublicKey);
   } else {
-    if (!crypto::check_key(account.getAccountKeys().address.spendPublicKey)) {
+    if (!check_key((uint8_t*)&account.getAccountKeys().address.spendPublicKey)) {
       throw std::system_error(make_error_code(cryptonote::error::WRONG_PASSWORD));
     }
   }

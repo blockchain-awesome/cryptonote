@@ -30,8 +30,10 @@ void generate_keys(uint8_t *public_key, uint8_t *secret_key)
 
 int check_key(const uint8_t *public_key)
 {
-  return 0;
+  ge_p3 point;
+  return ge_frombytes_vartime(&point, public_key) == 0;
 }
+
 int secret_key_to_public_key(const uint8_t *secret_key, uint8_t *public_key)
 {
   return 0;

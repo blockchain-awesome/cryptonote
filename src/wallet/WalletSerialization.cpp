@@ -675,7 +675,7 @@ void WalletSerializer::loadWallets(Common::IInputStream& source, CryptoContext& 
         throw std::system_error(make_error_code(error::WRONG_PASSWORD), "Restored spend public key doesn't correspond to secret key");
       }
     } else {
-      if (!crypto::check_key(dto.spendPublicKey)) {
+      if (!check_key((uint8_t*)&dto.spendPublicKey)) {
         throw std::system_error(make_error_code(error::WRONG_PASSWORD), "Public spend key is incorrect");
       }
     }

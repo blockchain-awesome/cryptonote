@@ -285,7 +285,7 @@ bool check_outs_valid(const transaction_prefix_t& tx, std::string* error) {
         return false;
       }
 
-      if (!check_key(boost::get<key_output_t>(out.target).key)) {
+      if (!check_key((uint8_t *)&boost::get<key_output_t>(out.target).key)) {
         if (error) {
           *error = "Output with invalid key";
         }
@@ -300,7 +300,7 @@ bool check_outs_valid(const transaction_prefix_t& tx, std::string* error) {
         return false;
       }
       for (const public_key_t& key : multisignatureOutput.keys) {
-        if (!check_key(key)) {
+        if (!check_key((uint8_t *)&key)) {
           if (error) {
             *error = "Multisignature output with invalid public key";
           }

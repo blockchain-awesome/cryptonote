@@ -69,8 +69,8 @@ bool Account::parseAddress(uint64_t &prefix, account_public_address_t &adr, cons
   return tools::base58::decode_addr(str, prefix, data) &&
          BinaryArray::from(adr, array::fromString(data)) &&
          // ::serialization::parse_binary(data, adr) &&
-         check_key(adr.spendPublicKey) &&
-         check_key(adr.viewPublicKey);
+         check_key((uint8_t *)&adr.spendPublicKey) &&
+         check_key((uint8_t *)&adr.viewPublicKey);
 }
 
 bool Account::parseAddress(const std::string &str, account_public_address_t &addr, uint64_t prefixExpected)

@@ -126,7 +126,7 @@ namespace
     {
       crypto::public_key_t key;
       memset(&key, i, sizeof(crypto::public_key_t));
-      if (!crypto::check_key(key))
+      if (!check_key((uint8_t*)&key))
       {
         return key;
       }

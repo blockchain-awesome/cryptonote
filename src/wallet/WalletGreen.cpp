@@ -498,7 +498,7 @@ std::string WalletGreen::createAddress(const crypto::secret_key_t& spendSecretKe
 }
 
 std::string WalletGreen::createAddress(const crypto::public_key_t& spendPublicKey) {
-  if (!crypto::check_key(spendPublicKey)) {
+  if (!check_key((uint8_t*)&spendPublicKey)) {
     throw std::system_error(make_error_code(error::WRONG_PARAMETERS), "Wrong public key format");
   }
 

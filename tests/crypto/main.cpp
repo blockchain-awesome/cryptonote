@@ -105,7 +105,7 @@ int main(int argc, char *argv[])
       crypto::public_key_t key;
       bool expected, actual;
       get(input, key, expected);
-      actual = check_key(key);
+      actual = check_key((uint8_t*)&key);
       if (expected != actual)
       {
         goto error;

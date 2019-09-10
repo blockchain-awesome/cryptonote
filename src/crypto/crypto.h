@@ -32,9 +32,6 @@ class crypto_ops
   crypto_ops(const crypto_ops &);
   void operator=(const crypto_ops &);
   ~crypto_ops();
-
-  static bool check_key(const public_key_t &);
-  friend bool check_key(const public_key_t &);
   static bool secret_key_to_public_key(const secret_key_t &, public_key_t &);
   friend bool secret_key_to_public_key(const secret_key_t &, public_key_t &);
   static bool generate_key_derivation(const public_key_t &, const secret_key_t &, key_derivation_t &);
@@ -120,13 +117,6 @@ public:
     return rand<T>();
   }
 };
-
-/* Check a public key. Returns true if it is valid, false otherwise.
-   */
-inline bool check_key(const public_key_t &key)
-{
-  return crypto_ops::check_key(key);
-}
 
 /* Checks a private key and computes the corresponding public key.
    */
