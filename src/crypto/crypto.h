@@ -18,18 +18,11 @@
 namespace crypto {
 
   extern "C" {
-#include "random.h"
+    #include "random.h"
+    #include "crypto-defines.h"
   }
 
   extern std::mutex random_lock;
-
-struct elliptic_curve_point_t {
-  uint8_t data[32];
-};
-
-struct elliptic_curve_scalar_t {
-  uint8_t data[32];
-};
 
   class crypto_ops {
     crypto_ops();

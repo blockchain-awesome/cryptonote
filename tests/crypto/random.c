@@ -3,6 +3,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "crypto/random.c"
+#include "crypto/crypto-defines.c"
 
 #include "crypto-tests.h"
 

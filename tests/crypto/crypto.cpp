@@ -3,15 +3,10 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "crypto/crypto.cpp"
-
 #include "crypto-tests.h"
 
 bool check_scalar(const crypto::elliptic_curve_scalar_t &scalar) {
   return crypto::sc_check(reinterpret_cast<const unsigned char*>(&scalar)) == 0;
-}
-
-void random_scalar(crypto::elliptic_curve_scalar_t &res) {
-  crypto::random_scalar(res);
 }
 
 void hash_to_scalar(const void *data, size_t length, crypto::elliptic_curve_scalar_t &res) {

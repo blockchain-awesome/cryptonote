@@ -23,18 +23,15 @@ namespace crypto {
   using std::mutex;
 
   extern "C" {
-#include "crypto-ops.h"
-#include "random.h"
+    #include "crypto-ops.h"
+    #include "random.h"
+    #include "crypto-defines.h"
+    extern void random_scalar(uint8_t *res);
   }
+
+
 
   mutex random_lock;
-
-  static inline void random_scalar(elliptic_curve_scalar_t &res) {
-    unsigned char tmp[64];
-    generate_random_bytes_not_thread_safe(64, tmp);
-    sc_reduce(tmp);
-    memcpy(&res, tmp, 32);
-  }
 
   static inline void hash_to_scalar(const void *data, size_t length, elliptic_curve_scalar_t &res) {
     cn_fast_hash(data, length, reinterpret_cast<hash_t &>(res));
@@ -44,7 +41,7 @@ namespace crypto {
   void crypto_ops::generate_keys(public_key_t &pub, secret_key_t &sec) {
     lock_guard<mutex> lock(random_lock);
     ge_p3 point;
-    random_scalar(reinterpret_cast<elliptic_curve_scalar_t&>(sec));
+    random_scalar((uint8_t *)&sec);
     ge_scalarmult_base(&point, reinterpret_cast<unsigned char*>(&sec));
     ge_p3_tobytes(reinterpret_cast<unsigned char*>(&pub), &point);
   }
@@ -247,7 +244,7 @@ namespace crypto {
 #endif
     buf.h = prefix_hash;
     buf.key = reinterpret_cast<const elliptic_curve_point_t&>(pub);
-    random_scalar(k);
+    random_scalar((uint8_t *)&k);
     ge_scalarmult_base(&tmp3, reinterpret_cast<unsigned char*>(&k));
     ge_p3_tobytes(reinterpret_cast<unsigned char*>(&buf.comm), &tmp3);
     hash_to_scalar(&buf, sizeof(s_comm), reinterpret_cast<elliptic_curve_scalar_t&>(sig));
@@ -364,15 +361,15 @@ namespace crypto {
       ge_p2 tmp2;
       ge_p3 tmp3;
       if (i == sec_index) {
-        random_scalar(k);
+        random_scalar((uint8_t *)&k);
         ge_scalarmult_base(&tmp3, reinterpret_cast<unsigned char*>(&k));
         ge_p3_tobytes(reinterpret_cast<unsigned char*>(&buf->ab[i].a), &tmp3);
         hash_to_ec(*pubs[i], tmp3);
         ge_scalarmult(&tmp2, reinterpret_cast<unsigned char*>(&k), &tmp3);
         ge_tobytes(reinterpret_cast<unsigned char*>(&buf->ab[i].b), &tmp2);
       } else {
-        random_scalar(reinterpret_cast<elliptic_curve_scalar_t&>(sig[i]));
-        random_scalar(*reinterpret_cast<elliptic_curve_scalar_t*>(reinterpret_cast<unsigned char*>(&sig[i]) + 32));
+        random_scalar((uint8_t *)&(sig[i]));
+        random_scalar((uint8_t *)(reinterpret_cast<unsigned char*>(&sig[i]) + 32));
         if (ge_frombytes_vartime(&tmp3, reinterpret_cast<const unsigned char*>(&*pubs[i])) != 0) {
           abort();
         }
