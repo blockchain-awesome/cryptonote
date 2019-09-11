@@ -63,11 +63,6 @@ int generate_key_derivation(const uint8_t *public_key, const uint8_t *secret_key
   return 1;
 }
 
-int derive_public_key(const uint8_t *key_derivation, size_t size, const uint8_t *base, uint8_t *derived_key)
-{
-  return 0;
-}
-
 //hack for pg
 int underive_public_key_and_get_scalar(const uint8_t *key_derivation, size_t size, const uint8_t *public_key, uint8_t *public_key1, uint8_t *scalar)
 {

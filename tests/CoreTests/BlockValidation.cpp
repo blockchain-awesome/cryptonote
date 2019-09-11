@@ -491,7 +491,7 @@ bool gen_block_miner_tx_has_out_to_alice::generate(std::vector<test_event_entry>
   crypto::key_derivation_t derivation;
   crypto::public_key_t out_eph_public_key;
   generate_key_derivation((const uint8_t*)&alice.getAccountKeys().address.viewPublicKey, (const uint8_t*)&txkey.secretKey, (uint8_t*)&derivation);
-  crypto::derive_public_key(derivation, 1, alice.getAccountKeys().address.spendPublicKey, out_eph_public_key);
+  crypto::derive_public_key((const uint8_t*)&derivation, 1, (const uint8_t*)&alice.getAccountKeys().address.spendPublicKey, (uint8_t*)&out_eph_public_key);
 
   transaction_output_t out_to_alice;
   out_to_alice.amount = miner_tx.outputs[0].amount / 2;

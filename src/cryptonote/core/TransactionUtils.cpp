@@ -105,7 +105,7 @@ const transaction_output_t& getOutputChecked(const cryptonote::transaction_prefi
 
 bool isOutToKey(const crypto::public_key_t& spendPublicKey, const crypto::public_key_t& outKey, const crypto::key_derivation_t& derivation, size_t keyIndex) {
   crypto::public_key_t pk;
-  derive_public_key(derivation, keyIndex, spendPublicKey, pk);
+  derive_public_key((const uint8_t *)&derivation, keyIndex, (const uint8_t *)&spendPublicKey, (uint8_t *)&pk);
   return pk == outKey;
 }
 

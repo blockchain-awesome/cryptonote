@@ -45,7 +45,7 @@ bool generate_key_image_helper(const account_keys_t& ack, const public_key_t& tx
     return false;
   }
 
-  r = derive_public_key(recv_derivation, real_output_index, ack.address.spendPublicKey, in_ephemeral.publicKey);
+  r = derive_public_key((const uint8_t*)&recv_derivation, real_output_index, (const uint8_t*)&ack.address.spendPublicKey, (uint8_t*)&in_ephemeral.publicKey);
 
   assert(r && "key image helper: failed to derive_public_key");
 
@@ -188,9 +188,9 @@ bool constructTransaction(
       return false;
     }
 
-    r = derive_public_key(derivation, output_index,
-      dst_entr.addr.spendPublicKey,
-      out_eph_public_key);
+    r = derive_public_key((const uint8_t*)&derivation, output_index,
+      (const uint8_t*)&dst_entr.addr.spendPublicKey,
+      (uint8_t*)&out_eph_public_key);
     if (!(r)) {
       logger(ERROR, BRIGHT_RED)
         << "at creation outs: failed to derive_public_key(" << derivation
@@ -386,7 +386,7 @@ std::string short_hash_str(const hash_t& h) {
 
 bool is_out_to_acc(const account_keys_t& acc, const key_output_t& out_key, const key_derivation_t& derivation, size_t keyIndex) {
   public_key_t pk;
-  derive_public_key(derivation, keyIndex, acc.address.spendPublicKey, pk);
+  derive_public_key((const uint8_t*)&derivation, keyIndex, (const uint8_t*)&acc.address.spendPublicKey, (uint8_t*)&pk);
   return pk == out_key.key;
 }
 

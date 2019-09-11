@@ -29,7 +29,7 @@ int check_key(const uint8_t *public_key);
 int secret_key_to_public_key(const uint8_t *secret_key, uint8_t *public_key);
 int generate_key_derivation(const uint8_t *public_key, const uint8_t *secret_key, uint8_t *key_derivation);
 
-int derive_public_key(const uint8_t *key_derivation, size_t, const uint8_t *base, uint8_t *derived_key);
+// int derive_public_key(const uint8_t *key_derivation, size_t, const uint8_t *base, uint8_t *derived_key);
 
 //hack for pg
 int underive_public_key_and_get_scalar(const uint8_t *key_derivation, size_t, const uint8_t *, uint8_t *, uint8_t *);

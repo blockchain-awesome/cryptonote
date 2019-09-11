@@ -249,7 +249,7 @@ bool Currency::constructMinerTx(uint32_t height, size_t medianSize, uint64_t alr
       return false;
     }
 
-    r = crypto::derive_public_key(derivation, no, minerAddress.spendPublicKey, outEphemeralPubKey);
+    r = crypto::derive_public_key((const uint8_t *)&derivation, no, (const uint8_t *)&minerAddress.spendPublicKey, (uint8_t *)&outEphemeralPubKey);
 
     if (!(r))
     {

@@ -69,8 +69,8 @@ static void derivation_to_scalar_suffix(const uint8_t *derivation, size_t output
   hash_to_scalar((const uint8_t *)&buf, bufSize + suffixLength, res);
 }
 
-bool derive_public_key(const key_derivation_t &derivation, size_t output_index,
-                       const public_key_t &base, public_key_t &derived_key)
+bool derive_public_key(const uint8_t *derivation, size_t output_index,
+                       const uint8_t *base, uint8_t *derived_key)
 {
   elliptic_curve_scalar_t scalar;
   ge_p3 point1;
@@ -78,16 +78,16 @@ bool derive_public_key(const key_derivation_t &derivation, size_t output_index,
   ge_cached point3;
   ge_p1p1 point4;
   ge_p2 point5;
-  if (ge_frombytes_vartime(&point1, reinterpret_cast<const unsigned char *>(&base)) != 0)
+  if (ge_frombytes_vartime(&point1, base) != 0)
   {
     return false;
   }
-  derivation_to_scalar((const uint8_t *)&derivation, output_index, (uint8_t *)&scalar);
-  ge_scalarmult_base(&point2, reinterpret_cast<unsigned char *>(&scalar));
+  derivation_to_scalar(derivation, output_index, (uint8_t *)&scalar);
+  ge_scalarmult_base(&point2, (uint8_t *)&scalar);
   ge_p3_to_cached(&point3, &point2);
   ge_add(&point4, &point1, &point3);
   ge_p1p1_to_p2(&point5, &point4);
-  ge_tobytes(reinterpret_cast<unsigned char *>(&derived_key), &point5);
+  ge_tobytes(derived_key, &point5);
   return true;
 }
 
