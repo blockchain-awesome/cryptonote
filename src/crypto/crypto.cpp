@@ -120,7 +120,7 @@ namespace crypto {
     return true;
   }
 
-  void crypto_ops::derive_secret_key(const key_derivation_t &derivation, size_t output_index,
+  void derive_secret_key(const key_derivation_t &derivation, size_t output_index,
     const secret_key_t &base, secret_key_t &derived_key) {
     elliptic_curve_scalar_t scalar;
     assert(sc_check(reinterpret_cast<const unsigned char*>(&base)) == 0);
@@ -128,7 +128,7 @@ namespace crypto {
     sc_add(reinterpret_cast<unsigned char*>(&derived_key), reinterpret_cast<const unsigned char*>(&base), reinterpret_cast<unsigned char*>(&scalar));
   }
 
-  void crypto_ops::derive_secret_key(const key_derivation_t &derivation, size_t output_index,
+  void derive_secret_key_suffix(const key_derivation_t &derivation, size_t output_index,
     const secret_key_t &base, const uint8_t* suffix, size_t suffixLength, secret_key_t &derived_key) {
     elliptic_curve_scalar_t scalar;
     assert(sc_check(reinterpret_cast<const unsigned char*>(&base)) == 0);

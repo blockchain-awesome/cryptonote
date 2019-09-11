@@ -42,10 +42,10 @@ class crypto_ops
   static void generate_incomplete_key_image(const public_key_t &, elliptic_curve_point_t &);
   friend void generate_incomplete_key_image(const public_key_t &, elliptic_curve_point_t &);
   //
-  static void derive_secret_key(const key_derivation_t &, size_t, const secret_key_t &, secret_key_t &);
-  friend void derive_secret_key(const key_derivation_t &, size_t, const secret_key_t &, secret_key_t &);
-  static void derive_secret_key(const key_derivation_t &, size_t, const secret_key_t &, const uint8_t *, size_t, secret_key_t &);
-  friend void derive_secret_key(const key_derivation_t &, size_t, const secret_key_t &, const uint8_t *, size_t, secret_key_t &);
+  // static void derive_secret_key(const key_derivation_t &, size_t, const secret_key_t &, secret_key_t &);
+  // friend void derive_secret_key(const key_derivation_t &, size_t, const secret_key_t &, secret_key_t &);
+  // static void derive_secret_key(const key_derivation_t &, size_t, const secret_key_t &, const uint8_t *, size_t, secret_key_t &);
+  // friend void derive_secret_key(const key_derivation_t &, size_t, const secret_key_t &, const uint8_t *, size_t, secret_key_t &);
   static bool underive_public_key(const key_derivation_t &, size_t, const public_key_t &, public_key_t &);
   friend bool underive_public_key(const key_derivation_t &, size_t, const public_key_t &, public_key_t &);
   static bool underive_public_key(const key_derivation_t &, size_t, const public_key_t &, const uint8_t *, size_t, public_key_t &);
@@ -137,27 +137,16 @@ public:
 //   return crypto_ops::derive_public_key(derivation, output_index, base, derived_key);
 // }
 
-  bool derive_public_key(const key_derivation_t &derivation, size_t output_index,
-    const public_key_t &base, public_key_t &derived_key);
-      bool derive_public_key_suffix(const key_derivation_t &derivation, size_t output_index,
-    const public_key_t &base, const uint8_t* suffix, size_t suffixLength, public_key_t &derived_key) ;
+bool derive_public_key(const key_derivation_t &derivation, size_t output_index, const public_key_t &base, public_key_t &derived_key);
+bool derive_public_key_suffix(const key_derivation_t &derivation, size_t output_index, const public_key_t &base, const uint8_t *suffix, size_t suffixLength, public_key_t &derived_key);
+
+void derive_secret_key(const key_derivation_t &derivation, size_t output_index, const secret_key_t &base, secret_key_t &derived_key);
+void derive_secret_key_suffix(const key_derivation_t &derivation, size_t output_index, const secret_key_t &base, const uint8_t *suffix, size_t suffixLength, secret_key_t &derived_key);
 
 inline bool underive_public_key_and_get_scalar(const key_derivation_t &derivation, std::size_t output_index,
                                                const public_key_t &derived_key, public_key_t &base, elliptic_curve_scalar_t &hashed_derivation)
 {
   return crypto_ops::underive_public_key_and_get_scalar(derivation, output_index, derived_key, base, hashed_derivation);
-}
-
-inline void derive_secret_key(const key_derivation_t &derivation, std::size_t output_index,
-                              const secret_key_t &base, const uint8_t *prefix, size_t prefixLength, secret_key_t &derived_key)
-{
-  crypto_ops::derive_secret_key(derivation, output_index, base, prefix, prefixLength, derived_key);
-}
-
-inline void derive_secret_key(const key_derivation_t &derivation, std::size_t output_index,
-                              const secret_key_t &base, secret_key_t &derived_key)
-{
-  crypto_ops::derive_secret_key(derivation, output_index, base, derived_key);
 }
 
 /* Inverse function of derive_public_key. It can be used by the receiver to find which "spend" key was used to generate a transaction. This may be useful if the receiver used multiple addresses which only differ in "spend" key.
