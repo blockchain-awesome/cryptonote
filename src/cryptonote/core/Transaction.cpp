@@ -330,7 +330,8 @@ namespace cryptonote {
     generate_ring_signature(
       reinterpret_cast<const hash_t&>(prefixHash),
       reinterpret_cast<const key_image_t&>(input.keyImage),
-      keysPtrs,
+      keysPtrs.data(),
+      keysPtrs.size(),
       reinterpret_cast<const secret_key_t&>(ephKeys.secretKey),
       info.realOutput.transactionIndex,
       signatures.data());

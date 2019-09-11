@@ -92,7 +92,7 @@ namespace
         std::vector<crypto::signature_t>& sigs = m_tx.signatures.back();
         sigs.resize(src_entr.outputs.size());
         generate_ring_signature(m_tx_prefix_hash, boost::get<key_input_t>(m_tx.inputs[i]).keyImage,
-          keys_ptrs, m_in_contexts[i].secretKey, src_entr.realOutput, sigs.data());
+          keys_ptrs.data(), keys_ptrs.size(), m_in_contexts[i].secretKey, src_entr.realOutput, sigs.data());
         i++;
       }
     }
