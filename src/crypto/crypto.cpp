@@ -29,7 +29,7 @@ namespace crypto {
 
   mutex random_lock;
 
-  static void derivation_to_scalar(const key_derivation_t &derivation, size_t output_index, elliptic_curve_scalar_t &res) {
+  static void derivation_to_scalar(const uint8_t *derivation, size_t output_index, uint8_t *res) {
     struct {
       struct {
         char data[32];
@@ -37,13 +37,13 @@ namespace crypto {
       char output_index[(sizeof(size_t) * 8 + 6) / 7];
     } buf;
     char *end = buf.output_index;
-    memcpy(&buf.derivation, &derivation, 32);
+    memcpy(&buf.derivation, derivation, 32);
     VARINT_WRITE(end, output_index);
     assert(end <= buf.output_index + sizeof buf.output_index);
-    hash_to_scalar((const uint8_t *)&buf, end - reinterpret_cast<char *>(&buf), (uint8_t *)&res);
+    hash_to_scalar((const uint8_t *)&buf, end - (char *)(&buf), res);
   }
 
-  static void derivation_to_scalar_suffix(const key_derivation_t &derivation, size_t output_index, const uint8_t* suffix, size_t suffixLength, elliptic_curve_scalar_t &res) {
+  static void derivation_to_scalar_suffix(const uint8_t *derivation, size_t output_index, const uint8_t* suffix, size_t suffixLength, uint8_t *res) {
     assert(suffixLength <= 32);
     struct {
       struct {
@@ -52,13 +52,13 @@ namespace crypto {
       char output_index[(sizeof(size_t) * 8 + 6) / 7 + 32];
     } buf;
     char *end = buf.output_index;
-    memcpy(&buf.derivation, &derivation, 32);
+    memcpy(&buf.derivation, derivation, 32);
     VARINT_WRITE(end, output_index);
 
     assert(end <= buf.output_index + sizeof buf.output_index);
-    size_t bufSize = end - reinterpret_cast<char *>(&buf);
+    size_t bufSize = end - (char *)(&buf);
     memcpy(end, suffix, suffixLength);
-    hash_to_scalar((const uint8_t *)&buf, bufSize + suffixLength, (uint8_t *)&res);
+    hash_to_scalar((const uint8_t *)&buf, bufSize + suffixLength, res);
   }
 
   bool crypto_ops::derive_public_key(const key_derivation_t &derivation, size_t output_index,
@@ -72,7 +72,7 @@ namespace crypto {
     if (ge_frombytes_vartime(&point1, reinterpret_cast<const unsigned char*>(&base)) != 0) {
       return false;
     }
-    derivation_to_scalar(derivation, output_index, scalar);
+    derivation_to_scalar((const uint8_t *)&derivation, output_index, (uint8_t *)&scalar);
     ge_scalarmult_base(&point2, reinterpret_cast<unsigned char*>(&scalar));
     ge_p3_to_cached(&point3, &point2);
     ge_add(&point4, &point1, &point3);
@@ -92,7 +92,7 @@ namespace crypto {
     if (ge_frombytes_vartime(&point1, reinterpret_cast<const unsigned char*>(&base)) != 0) {
       return false;
     }
-    derivation_to_scalar_suffix(derivation, output_index, suffix, suffixLength, scalar);
+    derivation_to_scalar_suffix((const uint8_t *)&derivation, output_index, suffix, suffixLength, (uint8_t *)&scalar);
     ge_scalarmult_base(&point2, reinterpret_cast<unsigned char*>(&scalar));
     ge_p3_to_cached(&point3, &point2);
     ge_add(&point4, &point1, &point3);
@@ -111,7 +111,7 @@ namespace crypto {
     if (ge_frombytes_vartime(&point1, reinterpret_cast<const unsigned char*>(&derived_key)) != 0) {
       return false;
     }
-    derivation_to_scalar(derivation, output_index, hashed_derivation);
+    derivation_to_scalar((const uint8_t *)&derivation, output_index, (uint8_t *)&hashed_derivation);
     ge_scalarmult_base(&point2, reinterpret_cast<unsigned char*>(&hashed_derivation));
     ge_p3_to_cached(&point3, &point2);
     ge_sub(&point4, &point1, &point3);
@@ -124,7 +124,7 @@ namespace crypto {
     const secret_key_t &base, secret_key_t &derived_key) {
     elliptic_curve_scalar_t scalar;
     assert(sc_check(reinterpret_cast<const unsigned char*>(&base)) == 0);
-    derivation_to_scalar(derivation, output_index, scalar);
+    derivation_to_scalar((const uint8_t *)&derivation, output_index, (uint8_t *)&scalar);
     sc_add(reinterpret_cast<unsigned char*>(&derived_key), reinterpret_cast<const unsigned char*>(&base), reinterpret_cast<unsigned char*>(&scalar));
   }
 
@@ -132,7 +132,7 @@ namespace crypto {
     const secret_key_t &base, const uint8_t* suffix, size_t suffixLength, secret_key_t &derived_key) {
     elliptic_curve_scalar_t scalar;
     assert(sc_check(reinterpret_cast<const unsigned char*>(&base)) == 0);
-    derivation_to_scalar_suffix(derivation, output_index, suffix, suffixLength, scalar);
+    derivation_to_scalar_suffix((const uint8_t *)&derivation, output_index, suffix, suffixLength, (uint8_t *)&scalar);
     sc_add(reinterpret_cast<unsigned char*>(&derived_key), reinterpret_cast<const unsigned char*>(&base), reinterpret_cast<unsigned char*>(&scalar));
   }
 
@@ -148,7 +148,7 @@ namespace crypto {
     if (ge_frombytes_vartime(&point1, reinterpret_cast<const unsigned char*>(&derived_key)) != 0) {
       return false;
     }
-    derivation_to_scalar(derivation, output_index, scalar);
+    derivation_to_scalar((const uint8_t *)&derivation, output_index, (uint8_t *)&scalar);
     ge_scalarmult_base(&point2, reinterpret_cast<unsigned char*>(&scalar));
     ge_p3_to_cached(&point3, &point2);
     ge_sub(&point4, &point1, &point3);
@@ -169,7 +169,7 @@ namespace crypto {
       return false;
     }
 
-    derivation_to_scalar_suffix(derivation, output_index, suffix, suffixLength, scalar);
+    derivation_to_scalar_suffix((const uint8_t *)&derivation, output_index, suffix, suffixLength, (uint8_t *)&scalar);
     ge_scalarmult_base(&point2, reinterpret_cast<unsigned char*>(&scalar));
     ge_p3_to_cached(&point3, &point2);
     ge_sub(&point4, &point1, &point3);
