@@ -61,7 +61,7 @@ namespace crypto {
     hash_to_scalar((const uint8_t *)&buf, bufSize + suffixLength, res);
   }
 
-  bool crypto_ops::derive_public_key(const key_derivation_t &derivation, size_t output_index,
+  bool derive_public_key(const key_derivation_t &derivation, size_t output_index,
     const public_key_t &base, public_key_t &derived_key) {
     elliptic_curve_scalar_t scalar;
     ge_p3 point1;
@@ -81,7 +81,7 @@ namespace crypto {
     return true;
   }
 
-  bool crypto_ops::derive_public_key(const key_derivation_t &derivation, size_t output_index,
+  bool derive_public_key_suffix(const key_derivation_t &derivation, size_t output_index,
     const public_key_t &base, const uint8_t* suffix, size_t suffixLength, public_key_t &derived_key) {
     elliptic_curve_scalar_t scalar;
     ge_p3 point1;

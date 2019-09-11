@@ -32,10 +32,10 @@ class crypto_ops
   crypto_ops(const crypto_ops &);
   void operator=(const crypto_ops &);
   ~crypto_ops();
-  static bool derive_public_key(const key_derivation_t &, size_t, const public_key_t &, public_key_t &);
-  friend bool derive_public_key(const key_derivation_t &, size_t, const public_key_t &, public_key_t &);
-  friend bool derive_public_key(const key_derivation_t &, size_t, const public_key_t &, const uint8_t *, size_t, public_key_t &);
-  static bool derive_public_key(const key_derivation_t &, size_t, const public_key_t &, const uint8_t *, size_t, public_key_t &);
+  // static bool derive_public_key(const key_derivation_t &, size_t, const public_key_t &, public_key_t &);
+  // friend bool derive_public_key(const key_derivation_t &, size_t, const public_key_t &, public_key_t &);
+  // friend bool derive_public_key(const key_derivation_t &, size_t, const public_key_t &, const uint8_t *, size_t, public_key_t &);
+  // static bool derive_public_key(const key_derivation_t &, size_t, const public_key_t &, const uint8_t *, size_t, public_key_t &);
   //hack for pg
   static bool underive_public_key_and_get_scalar(const key_derivation_t &, std::size_t, const public_key_t &, public_key_t &, elliptic_curve_scalar_t &);
   friend bool underive_public_key_and_get_scalar(const key_derivation_t &, std::size_t, const public_key_t &, public_key_t &, elliptic_curve_scalar_t &);
@@ -125,17 +125,22 @@ public:
 //   return crypto_ops::generate_key_derivation(key1, key2, derivation);
 // }
 
-inline bool derive_public_key(const key_derivation_t &derivation, size_t output_index,
-                              const public_key_t &base, const uint8_t *prefix, size_t prefixLength, public_key_t &derived_key)
-{
-  return crypto_ops::derive_public_key(derivation, output_index, base, prefix, prefixLength, derived_key);
-}
+// inline bool derive_public_key(const key_derivation_t &derivation, size_t output_index,
+//                               const public_key_t &base, const uint8_t *prefix, size_t prefixLength, public_key_t &derived_key)
+// {
+//   return crypto_ops::derive_public_key(derivation, output_index, base, prefix, prefixLength, derived_key);
+// }
 
-inline bool derive_public_key(const key_derivation_t &derivation, size_t output_index,
-                              const public_key_t &base, public_key_t &derived_key)
-{
-  return crypto_ops::derive_public_key(derivation, output_index, base, derived_key);
-}
+// inline bool derive_public_key(const key_derivation_t &derivation, size_t output_index,
+//                               const public_key_t &base, public_key_t &derived_key)
+// {
+//   return crypto_ops::derive_public_key(derivation, output_index, base, derived_key);
+// }
+
+  bool derive_public_key(const key_derivation_t &derivation, size_t output_index,
+    const public_key_t &base, public_key_t &derived_key);
+      bool derive_public_key_suffix(const key_derivation_t &derivation, size_t output_index,
+    const public_key_t &base, const uint8_t* suffix, size_t suffixLength, public_key_t &derived_key) ;
 
 inline bool underive_public_key_and_get_scalar(const key_derivation_t &derivation, std::size_t output_index,
                                                const public_key_t &derived_key, public_key_t &base, elliptic_curve_scalar_t &hashed_derivation)
