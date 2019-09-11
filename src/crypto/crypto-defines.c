@@ -48,7 +48,19 @@ int secret_key_to_public_key(const uint8_t *secret_key, uint8_t *public_key)
 
 int generate_key_derivation(const uint8_t *public_key, const uint8_t *secret_key, uint8_t *key_derivation)
 {
-  return 0;
+  ge_p3 point;
+  ge_p2 point2;
+  ge_p1p1 point3;
+  assert(sc_check(secret_key) == 0);
+  if (ge_frombytes_vartime(&point, public_key) != 0)
+  {
+    return 0;
+  }
+  ge_scalarmult(&point2, secret_key, &point);
+  ge_mul8(&point3, &point2);
+  ge_p1p1_to_p2(&point2, &point3);
+  ge_tobytes(key_derivation, &point2);
+  return 1;
 }
 
 int derive_public_key(const uint8_t *key_derivation, size_t size, const uint8_t *base, uint8_t *derived_key)

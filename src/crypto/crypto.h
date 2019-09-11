@@ -32,8 +32,6 @@ class crypto_ops
   crypto_ops(const crypto_ops &);
   void operator=(const crypto_ops &);
   ~crypto_ops();
-  static bool generate_key_derivation(const public_key_t &, const secret_key_t &, key_derivation_t &);
-  friend bool generate_key_derivation(const public_key_t &, const secret_key_t &, key_derivation_t &);
   static bool derive_public_key(const key_derivation_t &, size_t, const public_key_t &, public_key_t &);
   friend bool derive_public_key(const key_derivation_t &, size_t, const public_key_t &, public_key_t &);
   friend bool derive_public_key(const key_derivation_t &, size_t, const public_key_t &, const uint8_t *, size_t, public_key_t &);
@@ -122,10 +120,10 @@ public:
    * * The sender uses key derivation, the output index, and the receivers' "spend" key to derive an ephemeral public key.
    * * The receiver can either derive the public key (to check that the transaction is addressed to him) or the private key (to spend the money).
    */
-inline bool generate_key_derivation(const public_key_t &key1, const secret_key_t &key2, key_derivation_t &derivation)
-{
-  return crypto_ops::generate_key_derivation(key1, key2, derivation);
-}
+// inline bool generate_key_derivation(const public_key_t &key1, const secret_key_t &key2, key_derivation_t &derivation)
+// {
+//   return crypto_ops::generate_key_derivation(key1, key2, derivation);
+// }
 
 inline bool derive_public_key(const key_derivation_t &derivation, size_t output_index,
                               const public_key_t &base, const uint8_t *prefix, size_t prefixLength, public_key_t &derived_key)

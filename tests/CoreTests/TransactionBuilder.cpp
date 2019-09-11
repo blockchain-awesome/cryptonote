@@ -114,7 +114,7 @@ void TransactionBuilder::fillOutputs(transaction_t& tx) const {
   for(const auto& dst_entr : m_destinations) {
     crypto::key_derivation_t derivation;
     crypto::public_key_t out_eph_public_key;
-    crypto::generate_key_derivation(dst_entr.addr.viewPublicKey, m_txKey.secretKey, derivation);
+    generate_key_derivation((const uint8_t*)&dst_entr.addr.viewPublicKey, (const uint8_t*)&m_txKey.secretKey, (uint8_t*)&derivation);
     crypto::derive_public_key(derivation, output_index, dst_entr.addr.spendPublicKey, out_eph_public_key);
 
     transaction_output_t out;
@@ -135,7 +135,7 @@ void TransactionBuilder::fillOutputs(transaction_t& tx) const {
     for (const auto& key : mdst.keys) {
       crypto::key_derivation_t derivation;
       crypto::public_key_t ephemeralPublicKey;
-      crypto::generate_key_derivation(key.address.viewPublicKey, m_txKey.secretKey, derivation);
+      generate_key_derivation((const uint8_t*)&key.address.viewPublicKey, (const uint8_t*)&m_txKey.secretKey, (uint8_t*)&derivation);
       crypto::derive_public_key(derivation, output_index, key.address.spendPublicKey, ephemeralPublicKey);
       target.keys.push_back(ephemeralPublicKey);
     }
@@ -178,7 +178,7 @@ void TransactionBuilder::signSources(const crypto::hash_t& prefixHash, const std
       crypto::public_key_t ephemeralPublicKey;
       crypto::secret_key_t ephemeralSecretKey;
 
-      crypto::generate_key_derivation(msrc.srcTxPubKey, key.viewSecretKey, derivation);
+      generate_key_derivation((const uint8_t*)&msrc.srcTxPubKey, (const uint8_t*)&key.viewSecretKey, (uint8_t*)&derivation);
       crypto::derive_public_key(derivation, msrc.srcOutputIndex, key.address.spendPublicKey, ephemeralPublicKey);
       crypto::derive_secret_key(derivation, msrc.srcOutputIndex, key.spendSecretKey, ephemeralSecretKey);
 

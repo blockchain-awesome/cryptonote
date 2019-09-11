@@ -239,7 +239,7 @@ bool Currency::constructMinerTx(uint32_t height, size_t medianSize, uint64_t alr
     crypto::key_derivation_t derivation = boost::value_initialized<crypto::key_derivation_t>();
     crypto::public_key_t outEphemeralPubKey = boost::value_initialized<crypto::public_key_t>();
 
-    bool r = crypto::generate_key_derivation(minerAddress.viewPublicKey, txkey.secretKey, derivation);
+    bool r = generate_key_derivation((const uint8_t*)&minerAddress.viewPublicKey, (const uint8_t*)&txkey.secretKey, (uint8_t*)&derivation);
 
     if (!(r))
     {

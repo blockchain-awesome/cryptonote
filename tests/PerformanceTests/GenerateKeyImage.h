@@ -24,7 +24,7 @@ public:
     account_keys_t bob_keys = m_bob.getAccountKeys();
 
     crypto::key_derivation_t recv_derivation;
-    crypto::generate_key_derivation(m_tx_pub_key, bob_keys.viewSecretKey, recv_derivation);
+    generate_key_derivation((const uint8_t*)&m_tx_pub_key, (const uint8_t*)&bob_keys.viewSecretKey, (uint8_t*)&recv_derivation);
 
     crypto::derive_public_key(recv_derivation, 0, bob_keys.address.spendPublicKey, m_in_ephemeral.publicKey);
     crypto::derive_secret_key(recv_derivation, 0, bob_keys.spendSecretKey, m_in_ephemeral.secretKey);

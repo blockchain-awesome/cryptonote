@@ -47,7 +47,7 @@ void findMyOutputs(
   auto txPublicKey = tx.getTransactionPublicKey();
   key_derivation_t derivation;
 
-  if (!generate_key_derivation( txPublicKey, viewSecretKey, derivation)) {
+  if (!generate_key_derivation((const uint8_t*)&txPublicKey, (const uint8_t*)&viewSecretKey, (uint8_t*)&derivation)) {
     return;
   }
 

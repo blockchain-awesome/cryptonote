@@ -37,7 +37,7 @@ bool parseAndValidateTransactionFromBinaryArray(const binary_array_t& tx_blob, t
 
 bool generate_key_image_helper(const account_keys_t& ack, const public_key_t& tx_public_key, size_t real_output_index, key_pair_t& in_ephemeral, key_image_t& ki) {
   key_derivation_t recv_derivation;
-  bool r = generate_key_derivation(tx_public_key, ack.viewSecretKey, recv_derivation);
+  bool r = generate_key_derivation((const uint8_t*)&tx_public_key, (const uint8_t*)&ack.viewSecretKey, (uint8_t*)&recv_derivation);
 
   assert(r && "key image helper: failed to generate_key_derivation");
 
@@ -179,7 +179,7 @@ bool constructTransaction(
     }
     key_derivation_t derivation;
     public_key_t out_eph_public_key;
-    bool r = generate_key_derivation(dst_entr.addr.viewPublicKey, txkey.secretKey, derivation);
+    bool r = generate_key_derivation((const uint8_t*)&dst_entr.addr.viewPublicKey, (const uint8_t*)&txkey.secretKey, (uint8_t*)&derivation);
 
     if (!(r)) {
       logger(ERROR, BRIGHT_RED)
@@ -392,7 +392,7 @@ bool is_out_to_acc(const account_keys_t& acc, const key_output_t& out_key, const
 
 bool is_out_to_acc(const account_keys_t& acc, const key_output_t& out_key, const public_key_t& tx_pub_key, size_t keyIndex) {
   key_derivation_t derivation;
-  generate_key_derivation(tx_pub_key, acc.viewSecretKey, derivation);
+  generate_key_derivation((const uint8_t*)&tx_pub_key, (const uint8_t*)&acc.viewSecretKey, (uint8_t*)&derivation);
   return is_out_to_acc(acc, out_key, derivation, keyIndex);
 }
 
@@ -409,7 +409,7 @@ bool lookup_acc_outs(const account_keys_t& acc, const transaction_t& tx, const p
   size_t outputIndex = 0;
 
   key_derivation_t derivation;
-  generate_key_derivation(tx_pub_key, acc.viewSecretKey, derivation);
+  generate_key_derivation((const uint8_t*)&tx_pub_key, (const uint8_t*)&acc.viewSecretKey, (uint8_t*)&derivation);
 
   for (const transaction_output_t& o : tx.outputs) {
     assert(o.target.type() == typeid(key_output_t) || o.target.type() == typeid(multi_signature_output_t));

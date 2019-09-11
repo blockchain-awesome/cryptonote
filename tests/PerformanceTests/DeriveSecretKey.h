@@ -19,7 +19,7 @@ public:
     if (!single_tx_test_base::init())
       return false;
 
-    crypto::generate_key_derivation(m_tx_pub_key, m_bob.getAccountKeys().viewSecretKey, m_key_derivation);
+    generate_key_derivation((const uint8_t*)&m_tx_pub_key, (const uint8_t*)&(m_bob.getAccountKeys().viewSecretKey), (uint8_t*)&m_key_derivation);
     m_spend_secret_key = m_bob.getAccountKeys().spendSecretKey;
 
     return true;

@@ -123,7 +123,7 @@ bool findOutputsToAccount(const cryptonote::transaction_prefix_t& transaction, c
   uint32_t outputIndex = 0;
 
   crypto::key_derivation_t derivation;
-  generate_key_derivation(txPubKey, keys.viewSecretKey, derivation);
+  generate_key_derivation((const uint8_t*)&txPubKey, (const uint8_t*)&keys.viewSecretKey, (uint8_t*)&derivation);
 
   for (const transaction_output_t& o : transaction.outputs) {
     assert(o.target.type() == typeid(key_output_t) || o.target.type() == typeid(multi_signature_output_t));

@@ -23,7 +23,7 @@ namespace {
 
   void derivePublicKey(const account_public_address_t& to, const secret_key_t& txKey, size_t outputIndex, public_key_t& ephemeralKey) {
     key_derivation_t derivation;
-    generate_key_derivation(to.viewPublicKey, txKey, derivation);
+    generate_key_derivation((const uint8_t*)&to.viewPublicKey, (const uint8_t*)&txKey, (uint8_t*)&derivation);
     derive_public_key(derivation, outputIndex, to.spendPublicKey, ephemeralKey);
   }
 
@@ -345,9 +345,9 @@ namespace cryptonote {
     secret_key_t ephemeralSecretKey;
 
     generate_key_derivation(
-      reinterpret_cast<const public_key_t&>(sourceTransactionKey),
-      reinterpret_cast<const secret_key_t&>(accountKeys.viewSecretKey),
-      derivation);
+      (const uint8_t*)&sourceTransactionKey,
+      (const uint8_t*)&accountKeys.viewSecretKey,
+      (uint8_t*)&derivation);
 
     derive_public_key(derivation, outputIndex,
       reinterpret_cast<const public_key_t&>(accountKeys.address.spendPublicKey), ephemeralPublicKey);

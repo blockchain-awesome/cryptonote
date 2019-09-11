@@ -30,21 +30,6 @@ namespace crypto {
 
   mutex random_lock;
 
-  bool crypto_ops::generate_key_derivation(const public_key_t &key1, const secret_key_t &key2, key_derivation_t &derivation) {
-    ge_p3 point;
-    ge_p2 point2;
-    ge_p1p1 point3;
-    assert(sc_check(reinterpret_cast<const unsigned char*>(&key2)) == 0);
-    if (ge_frombytes_vartime(&point, reinterpret_cast<const unsigned char*>(&key1)) != 0) {
-      return false;
-    }
-    ge_scalarmult(&point2, reinterpret_cast<const unsigned char*>(&key2), &point);
-    ge_mul8(&point3, &point2);
-    ge_p1p1_to_p2(&point2, &point3);
-    ge_tobytes(reinterpret_cast<unsigned char*>(&derivation), &point2);
-    return true;
-  }
-
   static void derivation_to_scalar(const key_derivation_t &derivation, size_t output_index, elliptic_curve_scalar_t &res) {
     struct {
       key_derivation_t derivation;

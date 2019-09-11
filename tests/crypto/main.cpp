@@ -138,7 +138,7 @@ int main(int argc, char *argv[])
       {
         get(input, expected2);
       }
-      actual1 = generate_key_derivation(key1, key2, actual2);
+      actual1 = generate_key_derivation((const uint8_t*)&key1, (const uint8_t*)&key2, (uint8_t*)&actual2);
       if (expected1 != actual1 || (expected1 && expected2 != actual2))
       {
         goto error;
