@@ -13,6 +13,14 @@ typedef struct
   uint8_t data[32];
 } elliptic_curve_scalar_t;
 
+#define VARINT_WRITE(DEST, INT)            \
+  while ((INT) >= 0x80)                      \
+  {                                        \
+    *(DEST)++ = ((char)(INT)&0x7f) | 0x80; \
+    (INT) >>= 7;                           \
+  }                                        \
+  *DEST++ = (char)(INT);
+
 void random_scalar(uint8_t *res);
 void hash_to_scalar(const uint8_t *scalar, size_t length, uint8_t *hash);
 void generate_keys(uint8_t *public_key, uint8_t *secret_key);
