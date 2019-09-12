@@ -180,7 +180,7 @@ void TransactionBuilder::signSources(const crypto::hash_t& prefixHash, const std
 
       generate_key_derivation((const uint8_t*)&msrc.srcTxPubKey, (const uint8_t*)&key.viewSecretKey, (uint8_t*)&derivation);
       crypto::derive_public_key((const uint8_t*)&derivation, msrc.srcOutputIndex, (const uint8_t*)&key.address.spendPublicKey, (uint8_t*)&ephemeralPublicKey);
-      crypto::derive_secret_key(derivation, msrc.srcOutputIndex, key.spendSecretKey, ephemeralSecretKey);
+      crypto::derive_secret_key((const uint8_t*)&derivation, msrc.srcOutputIndex, (const uint8_t*)&key.spendSecretKey, (uint8_t*)&ephemeralSecretKey);
 
       crypto::signature_t sig;
       crypto::generate_signature(prefixHash, ephemeralPublicKey, ephemeralSecretKey, sig);

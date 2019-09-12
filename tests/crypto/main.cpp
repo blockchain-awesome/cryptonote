@@ -169,7 +169,7 @@ int main(int argc, char *argv[])
       crypto::secret_key_t base;
       crypto::secret_key_t expected, actual;
       get(input, derivation, output_index, base, expected);
-      derive_secret_key(derivation, output_index, base, actual);
+      crypto::derive_secret_key((const uint8_t*)&derivation, output_index, (const uint8_t*)&base, (uint8_t*)&actual);
       if (expected != actual)
       {
         goto error;

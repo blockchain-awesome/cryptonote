@@ -53,7 +53,7 @@ bool generate_key_image_helper(const account_keys_t& ack, const public_key_t& tx
     return false;
   }
 
-  derive_secret_key(recv_derivation, real_output_index, ack.spendSecretKey, in_ephemeral.secretKey);
+  derive_secret_key((const uint8_t*)&recv_derivation, real_output_index, (const uint8_t*)&ack.spendSecretKey, (uint8_t*)&in_ephemeral.secretKey);
   generate_key_image(in_ephemeral.publicKey, in_ephemeral.secretKey, ki);
   return true;
 }

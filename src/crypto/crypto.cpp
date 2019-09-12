@@ -134,22 +134,20 @@ bool underive_public_key_and_get_scalar(const key_derivation_t &derivation, size
   return true;
 }
 
-void derive_secret_key(const key_derivation_t &derivation, size_t output_index,
-                       const secret_key_t &base, secret_key_t &derived_key)
+void derive_secret_key(const uint8_t *derivation, size_t output_index, const uint8_t *base, uint8_t *derived_key)
 {
   elliptic_curve_scalar_t scalar;
-  assert(sc_check(reinterpret_cast<const unsigned char *>(&base)) == 0);
-  derivation_to_scalar((const uint8_t *)&derivation, output_index, (uint8_t *)&scalar);
-  sc_add(reinterpret_cast<unsigned char *>(&derived_key), reinterpret_cast<const unsigned char *>(&base), reinterpret_cast<unsigned char *>(&scalar));
+  assert(sc_check(base) == 0);
+  derivation_to_scalar(derivation, output_index, (uint8_t *)&scalar);
+  sc_add(derived_key, base, (uint8_t*)&scalar);
 }
 
-void derive_secret_key_suffix(const key_derivation_t &derivation, size_t output_index,
-                              const secret_key_t &base, const uint8_t *suffix, size_t suffixLength, secret_key_t &derived_key)
+void derive_secret_key_suffix(const uint8_t *derivation, size_t output_index, const uint8_t *base, const uint8_t *suffix, size_t suffixLength, uint8_t *derived_key)
 {
   elliptic_curve_scalar_t scalar;
-  assert(sc_check(reinterpret_cast<const unsigned char *>(&base)) == 0);
-  derivation_to_scalar_suffix((const uint8_t *)&derivation, output_index, suffix, suffixLength, (uint8_t *)&scalar);
-  sc_add(reinterpret_cast<unsigned char *>(&derived_key), reinterpret_cast<const unsigned char *>(&base), reinterpret_cast<unsigned char *>(&scalar));
+  assert(sc_check(base) == 0);
+  derivation_to_scalar_suffix(derivation, output_index, suffix, suffixLength, (uint8_t *)&scalar);
+  sc_add(derived_key, base, (uint8_t *)&scalar);
 }
 
 bool underive_public_key(const key_derivation_t &derivation, size_t output_index,

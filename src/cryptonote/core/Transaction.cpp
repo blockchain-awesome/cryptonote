@@ -352,8 +352,8 @@ namespace cryptonote {
 
     derive_public_key((const uint8_t *)&derivation, outputIndex,
       (const uint8_t *)&(accountKeys.address.spendPublicKey), (uint8_t *)&ephemeralPublicKey);
-    derive_secret_key(derivation, outputIndex,
-      reinterpret_cast<const secret_key_t&>(accountKeys.spendSecretKey), ephemeralSecretKey);
+    derive_secret_key((const uint8_t *)&derivation, outputIndex,
+      (const uint8_t *)&(accountKeys.spendSecretKey), (uint8_t *)&ephemeralSecretKey);
 
     signature_t signature;
     auto txPrefixHash = getTransactionPrefixHash();
