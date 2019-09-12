@@ -1802,7 +1802,7 @@ bool Blockchain::validateInput(const multi_signature_input_t& input, const hash_
       return false;
     }
 
-    if (crypto::check_signature(transactionPrefixHash, output.keys[outputKeyIndex], transactionSignatures[inputSignatureIndex])) {
+    if (crypto::check_signature((const uint8_t *)&transactionPrefixHash, (const uint8_t *)&output.keys[outputKeyIndex], (const uint8_t *)&transactionSignatures[inputSignatureIndex])) {
       ++inputSignatureIndex;
     }
 

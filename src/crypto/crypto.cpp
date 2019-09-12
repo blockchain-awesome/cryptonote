@@ -63,28 +63,28 @@ void generate_signature(const uint8_t *prefix_hash, const uint8_t *pub, const ui
   sc_mulsub(sig + 32, sig, sec, (uint8_t *)&k);
 }
 
-bool check_signature(const hash_t &prefix_hash, const public_key_t &pub, const signature_t &sig)
+bool check_signature(const uint8_t *prefix_hash, const uint8_t *pub, const uint8_t *sig)
 {
   ge_p2 tmp2;
   ge_p3 tmp3;
   elliptic_curve_scalar_t c;
   s_comm buf;
   assert(check_key((uint8_t *)&pub));
-  buf.h = prefix_hash;
-  buf.key = reinterpret_cast<const elliptic_curve_point_t &>(pub);
-  if (ge_frombytes_vartime(&tmp3, reinterpret_cast<const unsigned char *>(&pub)) != 0)
+  buf.h = *(const hash_t *)prefix_hash;
+  buf.key = *(const elliptic_curve_point_t *)pub;
+  if (ge_frombytes_vartime(&tmp3, pub) != 0)
   {
     abort();
   }
-  if (sc_check(reinterpret_cast<const unsigned char *>(&sig)) != 0 || sc_check(reinterpret_cast<const unsigned char *>(&sig) + 32) != 0)
+  if (sc_check(sig) != 0 || sc_check(sig + 32) != 0)
   {
     return false;
   }
-  ge_double_scalarmult_base_vartime(&tmp2, reinterpret_cast<const unsigned char *>(&sig), &tmp3, reinterpret_cast<const unsigned char *>(&sig) + 32);
-  ge_tobytes(reinterpret_cast<unsigned char *>(&buf.comm), &tmp2);
+  ge_double_scalarmult_base_vartime(&tmp2, sig, &tmp3, sig + 32);
+  ge_tobytes((uint8_t *)(&buf.comm), &tmp2);
   hash_to_scalar((const uint8_t *)&buf, sizeof(s_comm), (uint8_t *)&c);
-  sc_sub(reinterpret_cast<unsigned char *>(&c), reinterpret_cast<unsigned char *>(&c), reinterpret_cast<const unsigned char *>(&sig));
-  return sc_isnonzero(reinterpret_cast<unsigned char *>(&c)) == 0;
+  sc_sub((uint8_t *)&c, (const uint8_t *)&c, sig);
+  return sc_isnonzero((const uint8_t *)&c) == 0;
 }
 
 static void hash_to_ec(const public_key_t &key, ge_p3 &res)

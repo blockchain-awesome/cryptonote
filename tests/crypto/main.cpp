@@ -213,7 +213,7 @@ int main(int argc, char *argv[])
       signature_t sig;
       bool expected, actual;
       get(input, prefix_hash, pub, sig, expected);
-      actual = check_signature(prefix_hash, pub, sig);
+      actual = check_signature((const uint8_t *)&prefix_hash, (const uint8_t *)&pub, (const uint8_t *)&sig);
       if (expected != actual)
       {
         goto error;

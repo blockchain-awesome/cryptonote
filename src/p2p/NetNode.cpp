@@ -986,7 +986,7 @@ namespace cryptonote
     hex::podFromString(conf.net.p2p_stat_trusted_pub_key, pk);
     // hex::podFromString(cryptonote::P2P_STAT_TRUSTED_PUB_KEY, pk);
     hash_t h = get_proof_of_trust_t_hash(tr);
-    if (!crypto::check_signature(h, pk, tr.sign)) {
+    if (!crypto::check_signature((const uint8_t *)&h, (const uint8_t *)&pk, (const uint8_t *)&tr.sign)) {
       logger(ERROR) << "check_trust failed: sign check failed";
       return false;
     }

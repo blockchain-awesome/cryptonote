@@ -81,7 +81,7 @@ public:
 
 void generate_signature(const uint8_t *prefix_hash, const uint8_t *pub, const uint8_t *sec, uint8_t *sig);
 
-bool check_signature(const hash_t &prefix_hash, const public_key_t &pub, const signature_t &sig);
+bool check_signature(const uint8_t *prefix_hash, const uint8_t *pub, const uint8_t *sig);
 
 /* To send money to a key:
    * * The sender generates an ephemeral key and includes it in transaction output.
