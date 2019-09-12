@@ -50,8 +50,8 @@ void generate_signature(const uint8_t *prefix_hash, const uint8_t *pub, const ui
     public_key_t t2;
     assert(sc_check(sec) == 0);
     ge_scalarmult_base(&t, sec);
-    ge_p3_tobytes((uint8_t*)&t2, &t);
-    assert(*(public_key_t*)pub == t2);
+    ge_p3_tobytes((uint8_t *)&t2, &t);
+    assert(*(public_key_t *)pub == t2);
   }
 #endif
   buf.h = *(const hash_t *)prefix_hash;
@@ -120,11 +120,11 @@ void generate_key_image(const uint8_t *pub, const uint8_t *sec, uint8_t *image)
   ge_tobytes(image, &point2);
 }
 
-void generate_incomplete_key_image(const public_key_t &pub, elliptic_curve_point_t &incomplete_key_image)
+void generate_incomplete_key_image(const uint8_t *pub, uint8_t *incomplete_key_image)
 {
   ge_p3 point;
-  hash_to_ec(pub, point);
-  ge_p3_tobytes(reinterpret_cast<unsigned char *>(&incomplete_key_image), &point);
+  hash_to_ec(*(const public_key_t *)pub, point);
+  ge_p3_tobytes(incomplete_key_image, &point);
 }
 
 #ifdef _MSC_VER
@@ -216,49 +216,49 @@ void generate_ring_signature(const hash_t &prefix_hash, const key_image_t &image
   sc_mulsub(reinterpret_cast<unsigned char *>(&sig[sec_index]) + 32, reinterpret_cast<unsigned char *>(&sig[sec_index]), reinterpret_cast<const unsigned char *>(&sec), reinterpret_cast<unsigned char *>(&k));
 }
 
-bool check_ring_signature(const hash_t &prefix_hash, const key_image_t &image,
-                          const public_key_t *const *pubs, size_t pubs_count,
-                          const signature_t *sig)
+bool check_ring_signature(const uint8_t *prefix_hash, const uint8_t *image,
+                          const uint8_t *const *pubs, size_t pubs_count,
+                          const uint8_t *sig)
 {
   size_t i;
   ge_p3 image_unp;
   ge_dsmp image_pre;
   elliptic_curve_scalar_t sum, h;
-  rs_comm *const buf = reinterpret_cast<rs_comm *>(alloca(rs_comm_size(pubs_count)));
+  rs_comm *const buf = (rs_comm *)(alloca(rs_comm_size(pubs_count)));
 #if !defined(NDEBUG)
   for (i = 0; i < pubs_count; i++)
   {
-    assert(check_key((uint8_t *)&(*pubs[i])));
+    assert(check_key((uint8_t *)(pubs + i * 32)));
   }
 #endif
-  if (ge_frombytes_vartime(&image_unp, reinterpret_cast<const unsigned char *>(&image)) != 0)
+  if (ge_frombytes_vartime(&image_unp, image) != 0)
   {
     return false;
   }
   ge_dsm_precomp(image_pre, &image_unp);
-  sc_0(reinterpret_cast<unsigned char *>(&sum));
-  buf->h = prefix_hash;
+  sc_0((uint8_t *)(&sum));
+  buf->h = *(const hash_t *)prefix_hash;
   for (i = 0; i < pubs_count; i++)
   {
     ge_p2 tmp2;
     ge_p3 tmp3;
-    if (sc_check(reinterpret_cast<const unsigned char *>(&sig[i])) != 0 || sc_check(reinterpret_cast<const unsigned char *>(&sig[i]) + 32) != 0)
+    if (sc_check(sig + i * 64) != 0 || sc_check(sig + i * 64 + 32) != 0)
     {
       return false;
     }
-    if (ge_frombytes_vartime(&tmp3, reinterpret_cast<const unsigned char *>(&*pubs[i])) != 0)
+    if (ge_frombytes_vartime(&tmp3, sig + i * 64) != 0)
     {
       abort();
     }
-    ge_double_scalarmult_base_vartime(&tmp2, reinterpret_cast<const unsigned char *>(&sig[i]), &tmp3, reinterpret_cast<const unsigned char *>(&sig[i]) + 32);
-    ge_tobytes(reinterpret_cast<unsigned char *>(&buf->ab[i].a), &tmp2);
-    hash_to_ec(*pubs[i], tmp3);
-    ge_double_scalarmult_precomp_vartime(&tmp2, reinterpret_cast<const unsigned char *>(&sig[i]) + 32, &tmp3, reinterpret_cast<const unsigned char *>(&sig[i]), image_pre);
-    ge_tobytes(reinterpret_cast<unsigned char *>(&buf->ab[i].b), &tmp2);
-    sc_add(reinterpret_cast<unsigned char *>(&sum), reinterpret_cast<unsigned char *>(&sum), reinterpret_cast<const unsigned char *>(&sig[i]));
+    ge_double_scalarmult_base_vartime(&tmp2, sig + i * 64, &tmp3, sig + i * 64 + 32);
+    ge_tobytes((uint8_t *)(&buf->ab[i].a), &tmp2);
+    hash_to_ec(*(const public_key_t *)(pubs + i * 32), tmp3);
+    ge_double_scalarmult_precomp_vartime(&tmp2, sig + i * 64 + 32, &tmp3, sig + i * 64, image_pre);
+    ge_tobytes((uint8_t *)(&buf->ab[i].b), &tmp2);
+    sc_add((uint8_t *)(&sum), (const uint8_t *)(&sum), sig + i * 64);
   }
   hash_to_scalar((uint8_t *)buf, rs_comm_size(pubs_count), (uint8_t *)&h);
-  sc_sub(reinterpret_cast<unsigned char *>(&h), reinterpret_cast<unsigned char *>(&h), reinterpret_cast<unsigned char *>(&sum));
-  return sc_isnonzero(reinterpret_cast<unsigned char *>(&h)) == 0;
+  sc_sub((uint8_t *)(&h), (uint8_t *)(&h), (uint8_t *)(&sum));
+  return sc_isnonzero((uint8_t *)(&h)) == 0;
 }
 } // namespace crypto

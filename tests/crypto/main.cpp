@@ -303,7 +303,7 @@ int main(int argc, char *argv[])
       sigs.resize(pubs_count);
       getvar(input, pubs_count * sizeof(signature_t), sigs.data());
       get(input, expected);
-      actual = check_ring_signature(prefix_hash, image, pubs.data(), pubs_count, sigs.data());
+      actual = check_ring_signature((const uint8_t *)&prefix_hash, (const uint8_t *)&image, (const uint8_t *const*)pubs.data(), pubs_count, (const uint8_t *)sigs.data());
       if (expected != actual)
       {
         goto error;

@@ -1259,7 +1259,8 @@ bool Blockchain::check_tx_input(const key_input_t& txin, const hash_t& tx_prefix
     return true;
   }
 
-  return crypto::check_ring_signature(tx_prefix_hash, txin.keyImage, output_keys.data(), output_keys.size(), sig.data());
+  return crypto::check_ring_signature((const uint8_t *)&tx_prefix_hash, (const uint8_t *)&txin.keyImage, 
+  (const uint8_t *const *)output_keys.data(), output_keys.size(), (uint8_t *)sig.data());
 }
 
 uint64_t Blockchain::get_adjusted_time() {

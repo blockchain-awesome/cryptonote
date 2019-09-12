@@ -95,8 +95,9 @@ void hash_data_to_ec(const uint8_t *data, std::size_t len, public_key_t &key);
 
 void generate_ring_signature(const hash_t &prefix_hash, const key_image_t &image, const public_key_t *const *pubs, std::size_t pubs_count, const secret_key_t &sec, std::size_t sec_index, signature_t *sig);
 
-bool check_ring_signature(const hash_t &prefix_hash, const key_image_t &image, const public_key_t *const *pubs, size_t pubs_count, const signature_t *sig);
-
+bool check_ring_signature(const uint8_t *prefix_hash, const uint8_t *image,
+                          const uint8_t *const *pubs, size_t pubs_count,
+                          const uint8_t *sig);
 } // namespace crypto
 
 CRYPTO_MAKE_HASHABLE(public_key_t)
