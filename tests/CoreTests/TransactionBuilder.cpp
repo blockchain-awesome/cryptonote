@@ -115,7 +115,7 @@ void TransactionBuilder::fillOutputs(transaction_t& tx) const {
     crypto::key_derivation_t derivation;
     crypto::public_key_t out_eph_public_key;
     generate_key_derivation((const uint8_t*)&dst_entr.addr.viewPublicKey, (const uint8_t*)&m_txKey.secretKey, (uint8_t*)&derivation);
-    crypto::derive_public_key((const uint8_t*)&derivation, output_index, (const uint8_t*)&dst_entr.addr.spendPublicKey, (uint8_t*)&out_eph_public_key);
+    derive_public_key((const uint8_t*)&derivation, output_index, (const uint8_t*)&dst_entr.addr.spendPublicKey, (uint8_t*)&out_eph_public_key);
 
     transaction_output_t out;
     out.amount = dst_entr.amount;
@@ -136,7 +136,7 @@ void TransactionBuilder::fillOutputs(transaction_t& tx) const {
       crypto::key_derivation_t derivation;
       crypto::public_key_t ephemeralPublicKey;
       generate_key_derivation((const uint8_t*)&key.address.viewPublicKey, (const uint8_t*)&m_txKey.secretKey, (uint8_t*)&derivation);
-      crypto::derive_public_key((const uint8_t*)&derivation, output_index, (const uint8_t*)&key.address.spendPublicKey, (uint8_t*)&ephemeralPublicKey);
+      derive_public_key((const uint8_t*)&derivation, output_index, (const uint8_t*)&key.address.spendPublicKey, (uint8_t*)&ephemeralPublicKey);
       target.keys.push_back(ephemeralPublicKey);
     }
     out.amount = mdst.amount;
@@ -179,8 +179,8 @@ void TransactionBuilder::signSources(const crypto::hash_t& prefixHash, const std
       crypto::secret_key_t ephemeralSecretKey;
 
       generate_key_derivation((const uint8_t*)&msrc.srcTxPubKey, (const uint8_t*)&key.viewSecretKey, (uint8_t*)&derivation);
-      crypto::derive_public_key((const uint8_t*)&derivation, msrc.srcOutputIndex, (const uint8_t*)&key.address.spendPublicKey, (uint8_t*)&ephemeralPublicKey);
-      crypto::derive_secret_key((const uint8_t*)&derivation, msrc.srcOutputIndex, (const uint8_t*)&key.spendSecretKey, (uint8_t*)&ephemeralSecretKey);
+      derive_public_key((const uint8_t*)&derivation, msrc.srcOutputIndex, (const uint8_t*)&key.address.spendPublicKey, (uint8_t*)&ephemeralPublicKey);
+      derive_secret_key((const uint8_t*)&derivation, msrc.srcOutputIndex, (const uint8_t*)&key.spendSecretKey, (uint8_t*)&ephemeralSecretKey);
 
       crypto::signature_t sig;
       crypto::generate_signature(prefixHash, ephemeralPublicKey, ephemeralSecretKey, sig);

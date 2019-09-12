@@ -26,8 +26,8 @@ public:
     crypto::key_derivation_t recv_derivation;
     generate_key_derivation((const uint8_t*)&m_tx_pub_key, (const uint8_t*)&bob_keys.viewSecretKey, (uint8_t*)&recv_derivation);
 
-    crypto::derive_public_key((const uint8_t*)&recv_derivation, 0, (const uint8_t*)&bob_keys.address.spendPublicKey, (uint8_t*)&m_in_ephemeral.publicKey);
-    crypto::derive_secret_key((const uint8_t*)&recv_derivation, 0, (const uint8_t*)&bob_keys.spendSecretKey, (uint8_t*)&m_in_ephemeral.secretKey);
+    derive_public_key((const uint8_t*)&recv_derivation, 0, (const uint8_t*)&bob_keys.address.spendPublicKey, (uint8_t*)&m_in_ephemeral.publicKey);
+    derive_secret_key((const uint8_t*)&recv_derivation, 0, (const uint8_t*)&bob_keys.spendSecretKey, (uint8_t*)&m_in_ephemeral.secretKey);
 
     return true;
   }

@@ -58,7 +58,7 @@ namespace
         crypto::key_derivation_t derivation;
         crypto::public_key_t out_eph_public_key;
         generate_key_derivation((const uint8_t*)&dst_entr.addr.viewPublicKey, (const uint8_t*)&m_tx_key.secretKey, (uint8_t*)&derivation);
-        crypto::derive_public_key((const uint8_t*)&derivation, output_index, (const uint8_t*)&dst_entr.addr.spendPublicKey, (uint8_t*)&out_eph_public_key);
+        derive_public_key((const uint8_t*)&derivation, output_index, (const uint8_t*)&dst_entr.addr.spendPublicKey, (uint8_t*)&out_eph_public_key);
 
         transaction_output_t out;
         out.amount = dst_entr.amount;

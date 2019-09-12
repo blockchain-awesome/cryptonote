@@ -28,3 +28,19 @@ void generate_keys(uint8_t *public_key, uint8_t *secret_key);
 int check_key(const uint8_t *public_key);
 int secret_key_to_public_key(const uint8_t *secret_key, uint8_t *public_key);
 int generate_key_derivation(const uint8_t *public_key, const uint8_t *secret_key, uint8_t *key_derivation);
+
+int derive_public_key(const uint8_t *derivation, size_t output_index,
+                       const uint8_t *base, uint8_t *derived_key);
+int derive_public_key_suffix(const uint8_t *derivation, size_t output_index,
+                              const uint8_t *base, const uint8_t *suffix, size_t suffixLength, uint8_t *derived_key);
+
+void derive_secret_key(const uint8_t *derivation, size_t output_index, const uint8_t *base, uint8_t *derived_key);
+void derive_secret_key_suffix(const uint8_t *derivation, size_t output_index, const uint8_t *base, const uint8_t *suffix, size_t suffixLength, uint8_t *derived_key);
+
+int underive_public_key(const uint8_t *derivation, size_t output_index,
+                         const uint8_t *derived_key, uint8_t *base);
+int underive_public_key_suffix(const uint8_t *derivation, size_t output_index,
+                         const uint8_t *derived_key, const uint8_t *suffix, size_t suffixLength, uint8_t *base);
+
+int underive_public_key_and_get_scalar(const uint8_t *derivation, size_t output_index,
+                                        const uint8_t *derived_key, uint8_t *base, uint8_t *hashed_derivation);

@@ -28,7 +28,7 @@ public:
   bool test()
   {
     cryptonote::key_pair_t in_ephemeral;
-    crypto::derive_secret_key((const uint8_t*)&m_key_derivation, 0, (const uint8_t*)&m_spend_secret_key, (uint8_t*)&in_ephemeral.secretKey);
+    derive_secret_key((const uint8_t*)&m_key_derivation, 0, (const uint8_t*)&m_spend_secret_key, (uint8_t*)&in_ephemeral.secretKey);
     return true;
   }
 

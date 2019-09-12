@@ -156,7 +156,7 @@ int main(int argc, char *argv[])
       {
         get(input, expected2);
       }
-      actual1 = crypto::derive_public_key((const uint8_t*)&derivation, output_index, (const uint8_t*)&base, (uint8_t*)&actual2);
+      actual1 = derive_public_key((const uint8_t*)&derivation, output_index, (const uint8_t*)&base, (uint8_t*)&actual2);
       if (expected1 != actual1 || (expected1 && expected2 != actual2))
       {
         goto error;
@@ -169,7 +169,7 @@ int main(int argc, char *argv[])
       crypto::secret_key_t base;
       crypto::secret_key_t expected, actual;
       get(input, derivation, output_index, base, expected);
-      crypto::derive_secret_key((const uint8_t*)&derivation, output_index, (const uint8_t*)&base, (uint8_t*)&actual);
+      derive_secret_key((const uint8_t*)&derivation, output_index, (const uint8_t*)&base, (uint8_t*)&actual);
       if (expected != actual)
       {
         goto error;
@@ -187,7 +187,7 @@ int main(int argc, char *argv[])
       {
         get(input, expected2);
       }
-      actual1 = crypto::underive_public_key((const uint8_t *)&derivation, output_index, (const uint8_t *)&derived_key, (uint8_t *)&actual2);
+      actual1 = underive_public_key((const uint8_t *)&derivation, output_index, (const uint8_t *)&derived_key, (uint8_t *)&actual2);
       if (expected1 != actual1 || (expected1 && expected2 != actual2))
       {
         goto error;

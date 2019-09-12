@@ -79,22 +79,6 @@ public:
    * * The receiver can either derive the public key (to check that the transaction is addressed to him) or the private key (to spend the money).
    */
 
-bool derive_public_key(const uint8_t *derivation, size_t output_index,
-                       const uint8_t *base, uint8_t *derived_key);
-bool derive_public_key_suffix(const uint8_t *derivation, size_t output_index,
-                              const uint8_t *base, const uint8_t *suffix, size_t suffixLength, uint8_t *derived_key);
-
-void derive_secret_key(const uint8_t *derivation, size_t output_index, const uint8_t *base, uint8_t *derived_key);
-void derive_secret_key_suffix(const uint8_t *derivation, size_t output_index, const uint8_t *base, const uint8_t *suffix, size_t suffixLength, uint8_t *derived_key);
-
-bool underive_public_key(const uint8_t *derivation, size_t output_index,
-                         const uint8_t *derived_key, uint8_t *base);
-bool underive_public_key_suffix(const uint8_t *derivation, size_t output_index,
-                         const uint8_t *derived_key, const uint8_t *suffix, size_t suffixLength, uint8_t *base);
-
-bool underive_public_key_and_get_scalar(const key_derivation_t &derivation, std::size_t output_index,
-                                        const public_key_t &derived_key, public_key_t &base, elliptic_curve_scalar_t &hashed_derivation);
-
 void generate_signature(const hash_t &prefix_hash, const public_key_t &pub, const secret_key_t &sec, signature_t &sig);
 
 bool check_signature(const hash_t &prefix_hash, const public_key_t &pub, const signature_t &sig);

@@ -10,7 +10,6 @@
 #include "common/BlockingQueue.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/TransactionApi.h"
-#include "crypto/crypto.h"
 
 #include "IWallet.h"
 #include "INode.h"
@@ -31,7 +30,7 @@ void checkOutputKey(
   std::unordered_map<public_key_t, std::vector<uint32_t>>& outputs) {
 
   public_key_t spendKey;
-  crypto::underive_public_key((const uint8_t *)&derivation, keyIndex, (const uint8_t *)&key, (uint8_t *)&spendKey);
+  underive_public_key((const uint8_t *)&derivation, keyIndex, (const uint8_t *)&key, (uint8_t *)&spendKey);
 
   if (spendKeys.find(spendKey) != spendKeys.end()) {
     outputs[spendKey].push_back(static_cast<uint32_t>(outputIndex));
