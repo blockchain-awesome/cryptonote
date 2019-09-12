@@ -247,7 +247,7 @@ int main(int argc, char *argv[])
       secret_key_t sec;
       key_image_t expected, actual;
       get(input, pub, sec, expected);
-      generate_key_image(pub, sec, actual);
+      generate_key_image((const uint8_t *)&pub, (const uint8_t *)&sec, (uint8_t *)&actual);
       if (expected != actual)
       {
         goto error;

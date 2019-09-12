@@ -110,14 +110,14 @@ void hash_data_to_ec(const uint8_t *data, std::size_t len, public_key_t &key)
   ge_tobytes(reinterpret_cast<unsigned char *>(&key), &point);
 }
 
-void generate_key_image(const public_key_t &pub, const secret_key_t &sec, key_image_t &image)
+void generate_key_image(const uint8_t *pub, const uint8_t *sec, uint8_t *image)
 {
   ge_p3 point;
   ge_p2 point2;
-  assert(sc_check(reinterpret_cast<const unsigned char *>(&sec)) == 0);
-  hash_to_ec(pub, point);
-  ge_scalarmult(&point2, reinterpret_cast<const unsigned char *>(&sec), &point);
-  ge_tobytes(reinterpret_cast<unsigned char *>(&image), &point2);
+  assert(sc_check(sec) == 0);
+  hash_to_ec(*(const public_key_t *)pub, point);
+  ge_scalarmult(&point2, sec, &point);
+  ge_tobytes(image, &point2);
 }
 
 void generate_incomplete_key_image(const public_key_t &pub, elliptic_curve_point_t &incomplete_key_image)
@@ -167,7 +167,7 @@ void generate_ring_signature(const hash_t &prefix_hash, const key_image_t &image
     ge_scalarmult_base(&t, reinterpret_cast<const unsigned char *>(&sec));
     ge_p3_tobytes(reinterpret_cast<unsigned char *>(&t2), &t);
     assert(*pubs[sec_index] == t2);
-    generate_key_image(*pubs[sec_index], sec, t3);
+    generate_key_image((const uint8_t *)&(*pubs[sec_index]), (const uint8_t *)&sec, (uint8_t *)&t3);
     assert(image == t3);
     for (i = 0; i < pubs_count; i++)
     {

@@ -89,7 +89,7 @@ bool check_signature(const hash_t &prefix_hash, const public_key_t &pub, const s
    * * Then he selects a bunch of outputs, including the one he spends, and uses them to generate a ring signature.
    * To check the signature, it is necessary to collect all the keys that were used to generate it. To detect double spends, it is necessary to check that each key image is used at most once.
    */
-void generate_key_image(const public_key_t &pub, const secret_key_t &sec, key_image_t &image);
+void generate_key_image(const uint8_t *pub, const uint8_t *sec, uint8_t *image);
 
 void hash_data_to_ec(const uint8_t *data, std::size_t len, public_key_t &key);
 

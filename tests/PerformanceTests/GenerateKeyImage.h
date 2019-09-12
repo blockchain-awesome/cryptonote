@@ -35,7 +35,7 @@ public:
   bool test()
   {
     key_image_t ki;
-    crypto::generate_key_image(m_in_ephemeral.publicKey, m_in_ephemeral.secretKey, ki);
+    crypto::generate_key_image((const uint8_t *)&m_in_ephemeral.publicKey, (const uint8_t *)&m_in_ephemeral.secretKey, (uint8_t *)&ki);
     return true;
   }
 
