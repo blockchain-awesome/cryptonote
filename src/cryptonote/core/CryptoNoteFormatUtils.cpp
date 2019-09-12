@@ -452,7 +452,9 @@ std::vector<uint32_t> absolute_output_offsets_to_relative(const std::vector<uint
 }
 
 void get_tx_tree_hash(const std::vector<hash_t>& tx_hashes, hash_t& h) {
-  tree_hash(tx_hashes.data(), tx_hashes.size(), h);
+  tree_hash((const char (*)[HASH_SIZE])tx_hashes.data(), tx_hashes.size(), (char *)&h);
+  //   tree_hash(reinterpret_cast<const char (*)[HASH_SIZE]>(hashes), count, reinterpret_cast<char *>(&root_hash));
+
 }
 
 hash_t get_tx_tree_hash(const std::vector<hash_t>& tx_hashes) {
