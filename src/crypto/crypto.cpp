@@ -93,7 +93,7 @@ static void hash_to_ec(const public_key_t &key, ge_p3 &res)
   ge_p2 point;
   ge_p1p1 point2;
   cn_fast_hash((const uint8_t *)&key, sizeof(public_key_t), (char *)&h);
-  ge_fromfe_frombytes_vartime(&point, reinterpret_cast<const unsigned char *>(&h));
+  ge_fromfe_frombytes_vartime(&point, (const uint8_t *)(&h));
   ge_mul8(&point2, &point);
   ge_p1p1_to_p3(&res, &point2);
 }
