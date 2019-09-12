@@ -8,16 +8,20 @@
 #include <ios>
 #include <string>
 
-#include "crypto/hash.h"
+#include "crypto/crypto.h"
 #include "../io.h"
 
 using namespace std;
 typedef crypto::hash_t chash;
 
+
+
 extern "C" {
 #ifdef _MSC_VER
 #pragma warning(disable: 4297)
 #endif
+
+void cn_fast_hash(const void *data, size_t length, char *hash);
 
   static void hash_tree(const void *data, size_t length, char *hash) {
     if ((length & 31) != 0) {
@@ -35,7 +39,7 @@ extern "C" typedef void hash_f(const void *, size_t, char *);
 struct hash_func {
   const string name;
   hash_f &f;
-} hashes[] = {{"fast", crypto::cn_fast_hash}, {"slow", slow_hash}, {"tree", hash_tree},
+} hashes[] = {{"fast", cn_fast_hash}, {"slow", slow_hash}, {"tree", hash_tree},
   {"extra-blake", crypto::hash_extra_blake}, {"extra-groestl", crypto::hash_extra_groestl},
   {"extra-jh", crypto::hash_extra_jh}, {"extra-skein", crypto::hash_extra_skein}};
 

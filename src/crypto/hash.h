@@ -19,16 +19,6 @@ namespace crypto {
     Cryptonight hash functions
   */
 
-  inline void cn_fast_hash(const void *data, size_t length, hash_t &hash) {
-    cn_fast_hash(data, length, reinterpret_cast<char *>(&hash));
-  }
-
-  inline hash_t cn_fast_hash(const void *data, size_t length) {
-    hash_t h;
-    cn_fast_hash(data, length, reinterpret_cast<char *>(&h));
-    return h;
-  }
-
   inline void cn_slow_hash(const void *data, std::size_t length, hash_t &hash, int variant = 0) {
     cn_slow_hash(data, length, reinterpret_cast<char *>(&hash), variant, 0/*prehashed*/);
   }

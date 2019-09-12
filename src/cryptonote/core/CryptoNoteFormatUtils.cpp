@@ -22,6 +22,10 @@ using namespace Logging;
 using namespace crypto;
 using namespace Common;
 
+extern "C" {
+  extern void cn_fast_hash(const void *data, size_t length, char *hash);
+}
+
 namespace cryptonote {
 
 bool parseAndValidateTransactionFromBinaryArray(const binary_array_t& tx_blob, transaction_t& tx, hash_t& tx_hash, hash_t& tx_prefix_hash) {
@@ -30,7 +34,7 @@ bool parseAndValidateTransactionFromBinaryArray(const binary_array_t& tx_blob, t
   }
 
   //TODO: validate tx
-  cn_fast_hash(tx_blob.data(), tx_blob.size(), tx_hash);
+  cn_fast_hash(tx_blob.data(), tx_blob.size(), (char *)&tx_hash);
   BinaryArray::objectHash(*static_cast<transaction_prefix_t*>(&tx), tx_prefix_hash);
   return true;
 }

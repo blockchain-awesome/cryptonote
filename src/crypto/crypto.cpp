@@ -92,7 +92,7 @@ static void hash_to_ec(const public_key_t &key, ge_p3 &res)
   hash_t h;
   ge_p2 point;
   ge_p1p1 point2;
-  cn_fast_hash(std::addressof(key), sizeof(public_key_t), h);
+  cn_fast_hash((const uint8_t *)&key, sizeof(public_key_t), (char *)&h);
   ge_fromfe_frombytes_vartime(&point, reinterpret_cast<const unsigned char *>(&h));
   ge_mul8(&point2, &point);
   ge_p1p1_to_p3(&res, &point2);
@@ -103,7 +103,7 @@ void hash_data_to_ec(const uint8_t *data, std::size_t len, public_key_t &key)
   hash_t h;
   ge_p2 point;
   ge_p1p1 point2;
-  cn_fast_hash(data, len, h);
+  cn_fast_hash(data, len, (char *)&h);
   ge_fromfe_frombytes_vartime(&point, reinterpret_cast<const unsigned char *>(&h));
   ge_mul8(&point2, &point);
   ge_p1p1_to_p2(&point, &point2);
