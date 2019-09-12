@@ -38,7 +38,7 @@ struct s_comm
   elliptic_curve_point_t comm;
 };
 
-void generate_signature(const hash_t &prefix_hash, const public_key_t &pub, const secret_key_t &sec, signature_t &sig)
+void generate_signature(const uint8_t *prefix_hash, const uint8_t *pub, const uint8_t *sec, uint8_t *sig)
 {
   lock_guard<mutex> lock(random_lock);
   ge_p3 tmp3;
@@ -48,19 +48,19 @@ void generate_signature(const hash_t &prefix_hash, const public_key_t &pub, cons
   {
     ge_p3 t;
     public_key_t t2;
-    assert(sc_check(reinterpret_cast<const unsigned char *>(&sec)) == 0);
-    ge_scalarmult_base(&t, reinterpret_cast<const unsigned char *>(&sec));
-    ge_p3_tobytes(reinterpret_cast<unsigned char *>(&t2), &t);
-    assert(pub == t2);
+    assert(sc_check(sec) == 0);
+    ge_scalarmult_base(&t, sec);
+    ge_p3_tobytes((uint8_t*)&t2, &t);
+    assert(*(public_key_t*)pub == t2);
   }
 #endif
-  buf.h = prefix_hash;
-  buf.key = reinterpret_cast<const elliptic_curve_point_t &>(pub);
+  buf.h = *(const hash_t *)prefix_hash;
+  buf.key = *(const elliptic_curve_point_t *)pub;
   random_scalar((uint8_t *)&k);
-  ge_scalarmult_base(&tmp3, reinterpret_cast<unsigned char *>(&k));
-  ge_p3_tobytes(reinterpret_cast<unsigned char *>(&buf.comm), &tmp3);
-  hash_to_scalar((uint8_t *)&buf, sizeof(s_comm), (uint8_t *)&sig);
-  sc_mulsub(reinterpret_cast<unsigned char *>(&sig) + 32, reinterpret_cast<unsigned char *>(&sig), reinterpret_cast<const unsigned char *>(&sec), reinterpret_cast<unsigned char *>(&k));
+  ge_scalarmult_base(&tmp3, (uint8_t *)&k);
+  ge_p3_tobytes((uint8_t *)(&buf.comm), &tmp3);
+  hash_to_scalar((uint8_t *)&buf, sizeof(s_comm), sig);
+  sc_mulsub(sig + 32, sig, sec, (uint8_t *)&k);
 }
 
 bool check_signature(const hash_t &prefix_hash, const public_key_t &pub, const signature_t &sig)

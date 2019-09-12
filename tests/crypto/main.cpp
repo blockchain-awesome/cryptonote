@@ -200,7 +200,7 @@ int main(int argc, char *argv[])
       secret_key_t sec;
       signature_t expected, actual;
       get(input, prefix_hash, pub, sec, expected);
-      generate_signature(prefix_hash, pub, sec, actual);
+      generate_signature((const uint8_t *)&prefix_hash, (const uint8_t *)&pub, (const uint8_t *)&sec, (uint8_t *)&actual);
       if (expected != actual)
       {
         goto error;

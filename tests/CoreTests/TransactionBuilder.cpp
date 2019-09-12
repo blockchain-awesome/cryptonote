@@ -183,7 +183,7 @@ void TransactionBuilder::signSources(const hash_t& prefixHash, const std::vector
       derive_secret_key((const uint8_t*)&derivation, msrc.srcOutputIndex, (const uint8_t*)&key.spendSecretKey, (uint8_t*)&ephemeralSecretKey);
 
       signature_t sig;
-      crypto::generate_signature(prefixHash, ephemeralPublicKey, ephemeralSecretKey, sig);
+      crypto::generate_signature((const uint8_t *)&prefixHash, (const uint8_t *)&ephemeralPublicKey, (const uint8_t *)&ephemeralSecretKey, (uint8_t *)&sig);
       outsigs.push_back(sig);
     }
   }

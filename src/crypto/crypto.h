@@ -79,7 +79,7 @@ public:
    * * The receiver can either derive the public key (to check that the transaction is addressed to him) or the private key (to spend the money).
    */
 
-void generate_signature(const hash_t &prefix_hash, const public_key_t &pub, const secret_key_t &sec, signature_t &sig);
+void generate_signature(const uint8_t *prefix_hash, const uint8_t *pub, const uint8_t *sec, uint8_t *sig);
 
 bool check_signature(const hash_t &prefix_hash, const public_key_t &pub, const signature_t &sig);
 

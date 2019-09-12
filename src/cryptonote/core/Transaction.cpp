@@ -358,8 +358,8 @@ namespace cryptonote {
     signature_t signature;
     auto txPrefixHash = getTransactionPrefixHash();
 
-    generate_signature(reinterpret_cast<const hash_t&>(txPrefixHash),
-      ephemeralPublicKey, ephemeralSecretKey, signature);
+    generate_signature((const uint8_t *)&txPrefixHash,
+      (const uint8_t *)&ephemeralPublicKey, (const uint8_t *)&ephemeralSecretKey, (uint8_t *)&signature);
 
     getSignatures(index).push_back(signature);
     invalidateHash();
@@ -369,7 +369,7 @@ namespace cryptonote {
     signature_t signature;
     auto txPrefixHash = getTransactionPrefixHash();
 
-    generate_signature(txPrefixHash, ephemeralKeys.publicKey, ephemeralKeys.secretKey, signature);
+    generate_signature((const uint8_t *)&txPrefixHash, (const uint8_t *)&ephemeralKeys.publicKey, (const uint8_t *)&ephemeralKeys.secretKey, (uint8_t *)&signature);
 
     getSignatures(index).push_back(signature);
     invalidateHash();
