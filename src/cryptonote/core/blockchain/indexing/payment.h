@@ -16,7 +16,7 @@ class PaymentIdIndex
 
     bool add(const transaction_t &transaction);
     bool remove(const transaction_t &transaction);
-    bool find(const crypto::hash_t &paymentId, std::vector<crypto::hash_t> &transactionHashes);
+    bool find(const hash_t &paymentId, std::vector<hash_t> &transactionHashes);
     void clear();
 
     void serialize(ISerializer &s);
@@ -28,7 +28,7 @@ class PaymentIdIndex
     }
 
   private:
-    std::unordered_multimap<crypto::hash_t, crypto::hash_t> index;
+    std::unordered_multimap<hash_t, crypto::hash_t> index;
 };
 
 } // namespace cryptonote

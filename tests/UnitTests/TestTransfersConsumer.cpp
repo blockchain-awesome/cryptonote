@@ -402,7 +402,7 @@ TEST_F(TransfersConsumerTest, onNewBlocks_DifferentTimestamps) {
 TEST_F(TransfersConsumerTest, onNewBlocks_getTransactionOutsGlobalIndicesError) {
   class INodeGlobalIndicesStub: public INodeDummyStub {
   public:
-    virtual void getTransactionOutsGlobalIndices(const crypto::hash_t& transactionHash,
+    virtual void getTransactionOutsGlobalIndices(const hash_t& transactionHash,
       std::vector<uint32_t>& outsGlobalIndices, const Callback& callback) override {
       callback(std::make_error_code(std::errc::operation_canceled));
     };
@@ -518,14 +518,14 @@ TEST_F(TransfersConsumerTest, onNewBlocks_MultisignatureTransaction) {
 TEST_F(TransfersConsumerTest, onNewBlocks_getTransactionOutsGlobalIndicesIsProperlyCalled) {
   class INodeGlobalIndicesStub: public INodeDummyStub {
   public:
-    virtual void getTransactionOutsGlobalIndices(const crypto::hash_t& transactionHash,
+    virtual void getTransactionOutsGlobalIndices(const hash_t& transactionHash,
       std::vector<uint32_t>& outsGlobalIndices, const Callback& callback) override {
       outsGlobalIndices.push_back(3);
       hash = transactionHash;
       callback(std::error_code());
     };
 
-    crypto::hash_t hash;
+    hash_t hash;
   };
 
   INodeGlobalIndicesStub node;
@@ -546,8 +546,8 @@ TEST_F(TransfersConsumerTest, onNewBlocks_getTransactionOutsGlobalIndicesIsPrope
   block.transactions.push_back(tx);
 
   ASSERT_TRUE(consumer.onNewBlocks(&block, 1, 1));
-  const crypto::hash_t &hash = tx->getTransactionHash();
-  const crypto::hash_t expectedHash = *reinterpret_cast<const crypto::hash_t*>(&hash);
+  const hash_t &hash = tx->getTransactionHash();
+  const hash_t expectedHash = *reinterpret_cast<const hash_t*>(&hash);
   ASSERT_EQ(expectedHash, node.hash);
 }
 
@@ -556,7 +556,7 @@ TEST_F(TransfersConsumerTest, onNewBlocks_getTransactionOutsGlobalIndicesIsNotCa
   public:
     INodeGlobalIndicesStub() : called(false) {};
 
-    virtual void getTransactionOutsGlobalIndices(const crypto::hash_t& transactionHash,
+    virtual void getTransactionOutsGlobalIndices(const hash_t& transactionHash,
       std::vector<uint32_t>& outsGlobalIndices, const Callback& callback) override {
       outsGlobalIndices.push_back(3);
       called = true;
@@ -624,7 +624,7 @@ TEST_F(TransfersConsumerTest, onNewBlocks_markTransactionConfirmed) {
 class INodeGlobalIndexStub: public INodeDummyStub {
 public:
 
-  virtual void getTransactionOutsGlobalIndices(const crypto::hash_t& transactionHash,
+  virtual void getTransactionOutsGlobalIndices(const hash_t& transactionHash,
     std::vector<uint32_t>& outsGlobalIndices, const Callback& callback) override {
     outsGlobalIndices.push_back(globalIndex);
     callback(std::error_code());
@@ -866,9 +866,9 @@ TEST_F(TransfersConsumerTest, onPoolUpdated_deleteTransactionNotDeleted) {
   TransfersObserver observer;
   sub.addObserver(&observer);
 
-  std::vector<crypto::hash_t> deleted = { 
-    crypto::rand<crypto::hash_t>(), 
-    crypto::rand<crypto::hash_t>() 
+  std::vector<hash_t> deleted = { 
+    crypto::rand<hash_t>(), 
+    crypto::rand<hash_t>() 
   };
 
   m_consumer.onPoolUpdated({}, deleted);
@@ -883,7 +883,7 @@ TEST_F(TransfersConsumerTest, onPoolUpdated_deleteTransaction) {
   sub.addObserver(&observer);
 
   std::vector<std::unique_ptr<ITransactionReader>> added;
-  std::vector<crypto::hash_t> deleted;
+  std::vector<hash_t> deleted;
 
   for (uint8_t i = 0; i < TX_COUNT; ++i) {
     // construct tx
@@ -908,7 +908,7 @@ TEST_F(TransfersConsumerTest, onPoolUpdated_deleteTransaction) {
 
 TEST_F(TransfersConsumerTest, getKnownPoolTxIds_empty) {
   addSubscription();
-  const std::unordered_set<crypto::hash_t>& ids = m_consumer.getKnownPoolTxIds();
+  const std::unordered_set<hash_t>& ids = m_consumer.getKnownPoolTxIds();
   ASSERT_TRUE(ids.empty());
 }
 
@@ -939,7 +939,7 @@ TEST_F(TransfersConsumerTest, getKnownPoolTxIds_returnsUnconfirmed) {
   v.push_back(createTransactionPrefix(convertTx(*txs[2])));
   m_consumer.onPoolUpdated(v, {});
 
-  const std::unordered_set<crypto::hash_t>& ids = m_consumer.getKnownPoolTxIds();
+  const std::unordered_set<hash_t>& ids = m_consumer.getKnownPoolTxIds();
 
   ASSERT_EQ(3, ids.size());
 

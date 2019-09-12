@@ -9,9 +9,11 @@
 
 #include "crypto/hash.h"
 
+using namespace crypto;
+
 namespace cryptonote
 {
     typedef std::uint64_t difficulty_t;
 
-    bool check_hash(const crypto::hash_t &hash, difficulty_t difficulty);
+    bool check_hash(const hash_t &hash, difficulty_t difficulty);
 }

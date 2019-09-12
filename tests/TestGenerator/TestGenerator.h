@@ -28,13 +28,13 @@ public:
       , blockSize(0) {
     }
 
-    block_info_t(crypto::hash_t aPrevId, uint64_t anAlreadyGeneratedCoins, size_t aBlockSize)
+    block_info_t(hash_t aPrevId, uint64_t anAlreadyGeneratedCoins, size_t aBlockSize)
       : previousBlockHash(aPrevId)
       , alreadyGeneratedCoins(anAlreadyGeneratedCoins)
       , blockSize(aBlockSize) {
     }
 
-    crypto::hash_t previousBlockHash;
+    hash_t previousBlockHash;
     uint64_t alreadyGeneratedCoins;
     size_t blockSize;
   };
@@ -61,14 +61,14 @@ public:
 
   const cryptonote::Currency& currency() const { return m_currency; }
 
-  void getBlockchain(std::vector<block_info_t>& blockchain, const crypto::hash_t& head, size_t n) const;
-  void getLastNBlockSizes(std::vector<size_t>& blockSizes, const crypto::hash_t& head, size_t n) const;
-  uint64_t getAlreadyGeneratedCoins(const crypto::hash_t& blockId) const;
+  void getBlockchain(std::vector<block_info_t>& blockchain, const hash_t& head, size_t n) const;
+  void getLastNBlockSizes(std::vector<size_t>& blockSizes, const hash_t& head, size_t n) const;
+  uint64_t getAlreadyGeneratedCoins(const hash_t& blockId) const;
   uint64_t getAlreadyGeneratedCoins(const cryptonote::block_t& blk) const;
 
   void addBlock(const cryptonote::block_t& blk, size_t tsxSize, uint64_t fee, std::vector<size_t>& blockSizes,
     uint64_t alreadyGeneratedCoins);
-  bool constructBlock(cryptonote::block_t& blk, uint32_t height, const crypto::hash_t& previousBlockHash,
+  bool constructBlock(cryptonote::block_t& blk, uint32_t height, const hash_t& previousBlockHash,
     const cryptonote::Account& minerAcc, uint64_t timestamp, uint64_t alreadyGeneratedCoins,
     std::vector<size_t>& blockSizes, const std::list<cryptonote::transaction_t>& txList);
   bool constructBlock(cryptonote::block_t& blk, const cryptonote::Account& minerAcc, uint64_t timestamp);
@@ -77,18 +77,18 @@ public:
 
   bool constructBlockManually(cryptonote::block_t& blk, const cryptonote::block_t& prevBlock,
     const cryptonote::Account& minerAcc, int actualParams = bf_none, uint8_t majorVer = 0,
-    uint8_t minorVer = 0, uint64_t timestamp = 0, const crypto::hash_t& previousBlockHash = crypto::hash_t(),
+    uint8_t minorVer = 0, uint64_t timestamp = 0, const hash_t& previousBlockHash = hash_t(),
     const cryptonote::difficulty_t& diffic = 1, const cryptonote::transaction_t& baseTransaction = cryptonote::transaction_t(),
-    const std::vector<crypto::hash_t>& transactionHashes = std::vector<crypto::hash_t>(), size_t txsSizes = 0, uint64_t fee = 0);
+    const std::vector<hash_t>& transactionHashes = std::vector<hash_t>(), size_t txsSizes = 0, uint64_t fee = 0);
   bool constructBlockManuallyTx(cryptonote::block_t& blk, const cryptonote::block_t& prevBlock,
-    const cryptonote::Account& minerAcc, const std::vector<crypto::hash_t>& transactionHashes, size_t txsSize);
+    const cryptonote::Account& minerAcc, const std::vector<hash_t>& transactionHashes, size_t txsSize);
   bool constructMaxSizeBlock(cryptonote::block_t& blk, const cryptonote::block_t& blkPrev,
     const cryptonote::Account& minerAccount, size_t medianBlockCount = 0,
     const std::list<cryptonote::transaction_t>& txList = std::list<cryptonote::transaction_t>());
 
 private:
   const cryptonote::Currency& m_currency;
-  std::unordered_map<crypto::hash_t, block_info_t> m_blocksInfo;
+  std::unordered_map<hash_t, block_info_t> m_blocksInfo;
 };
 
 inline cryptonote::difficulty_t getTestDifficulty() { return 1; }

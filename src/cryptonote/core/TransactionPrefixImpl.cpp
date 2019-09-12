@@ -87,7 +87,7 @@ hash_t TransactionPrefixImpl::getTransactionPrefixHash() const {
 }
 
 public_key_t TransactionPrefixImpl::getTransactionPublicKey() const {
-  crypto::public_key_t pk(NULL_PUBLIC_KEY);
+  public_key_t pk(NULL_PUBLIC_KEY);
   m_extra.getPublicKey(pk);
   return pk;
 }
@@ -100,7 +100,7 @@ bool TransactionPrefixImpl::getPaymentId(hash_t& hash) const {
   binary_array_t nonce;
 
   if (getExtraNonce(nonce)) {
-    crypto::hash_t paymentId;
+    hash_t paymentId;
     if (getPaymentIdFromTransactionExtraNonce(nonce, paymentId)) {
       hash = reinterpret_cast<const hash_t&>(paymentId);
       return true;

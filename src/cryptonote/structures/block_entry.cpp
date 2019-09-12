@@ -45,7 +45,7 @@ bool Block::getBlob(const block_t& b, binary_array_t& ba) {
   return true;
 }
 
-bool Block::getLongHash(const block_t& b, crypto::hash_t& res) {
+bool Block::getLongHash(const block_t& b, hash_t& res) {
   binary_array_t bd;
   if (!Block::getBlob(b, bd)) {
     return false;
@@ -55,7 +55,7 @@ bool Block::getLongHash(const block_t& b, crypto::hash_t& res) {
   return true;
 }
 
-bool Block::getHash(const block_t& block, crypto::hash_t& hash) {
+bool Block::getHash(const block_t& block, hash_t& hash) {
   binary_array_t ba;
   if (!Block::getBlob(block, ba)) {
     return false;
@@ -93,7 +93,7 @@ block_t Block::genesis(config::config_t &conf)
 }
 
 bool Block::checkProofOfWork(const block_t &block, difficulty_t currentDiffic,
-                             crypto::hash_t &proofOfWork)
+                             hash_t &proofOfWork)
 {
   Block::getLongHash(block, proofOfWork);
   return check_hash(proofOfWork, currentDiffic);

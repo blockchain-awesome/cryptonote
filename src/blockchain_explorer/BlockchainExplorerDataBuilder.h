@@ -27,7 +27,7 @@ public:
   bool fillBlockDetails(const block_t& block, block_details_t& blockDetails);
   bool fillTransactionDetails(const transaction_t &tx, transaction_details_t& txRpcInfo, uint64_t timestamp = 0);
 
-  static bool getPaymentId(const transaction_t& transaction, crypto::hash_t& paymentId);
+  static bool getPaymentId(const transaction_t& transaction, hash_t& paymentId);
 
 private:
   bool getMixin(const transaction_t& transaction, uint64_t& mixin);

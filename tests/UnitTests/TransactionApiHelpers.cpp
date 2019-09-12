@@ -21,7 +21,7 @@ TestTransactionBuilder::TestTransactionBuilder() {
   tx = createTransaction();
 }
 
-TestTransactionBuilder::TestTransactionBuilder(const binary_array_t& txTemplate, const crypto::secret_key_t& secretKey) {
+TestTransactionBuilder::TestTransactionBuilder(const binary_array_t& txTemplate, const secret_key_t& secretKey) {
   tx = createTransaction(txTemplate);
   tx->setTransactionSecretKey(secretKey);
 }
@@ -215,7 +215,7 @@ std::unique_ptr<ITransactionReader> TestTransactionBuilder::build() {
   return std::move(tx);
 }
 
-crypto::hash_t TestTransactionBuilder::getTransactionHash() const {
+hash_t TestTransactionBuilder::getTransactionHash() const {
   return transactionHash;
 }
 

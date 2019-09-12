@@ -17,7 +17,7 @@ struct key_input_t
 {
     uint64_t amount;
     std::vector<uint32_t> outputIndexes;
-    crypto::key_image_t keyImage;
+    key_image_t keyImage;
 };
 
 struct multi_signature_input_t
@@ -29,12 +29,12 @@ struct multi_signature_input_t
 
 struct key_output_t
 {
-    crypto::public_key_t key;
+    public_key_t key;
 };
 
 struct multi_signature_output_t
 {
-    std::vector<crypto::public_key_t> keys;
+    std::vector<public_key_t> keys;
     uint8_t requiredSignatureCount;
 };
 
@@ -59,7 +59,7 @@ struct transaction_prefix_t
 
 struct transaction_t : public transaction_prefix_t
 {
-    std::vector<std::vector<crypto::signature_t>> signatures;
+    std::vector<std::vector<signature_t>> signatures;
 };
 
 class Transaction

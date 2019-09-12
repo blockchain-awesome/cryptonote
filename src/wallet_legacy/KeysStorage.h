@@ -8,6 +8,8 @@
 
 #include <stdint.h>
 
+using namespace crypto;
+
 namespace cryptonote {
 
 class ISerializer;
@@ -16,11 +18,11 @@ class ISerializer;
 struct KeysStorage {
   uint64_t creationTimestamp;
 
-  crypto::public_key_t spendPublicKey;
-  crypto::secret_key_t spendSecretKey;
+  public_key_t spendPublicKey;
+  secret_key_t spendSecretKey;
 
-  crypto::public_key_t viewPublicKey;
-  crypto::secret_key_t viewSecretKey;
+  public_key_t viewPublicKey;
+  secret_key_t viewSecretKey;
 
   void serialize(ISerializer& serializer, const std::string& name);
 };

@@ -4,8 +4,8 @@
 
 namespace cryptonote {
 bool PaymentIdIndex::add(const transaction_t& transaction) {
-  crypto::hash_t paymentId;
-  crypto::hash_t transactionHash = BinaryArray::objectHash(transaction);
+  hash_t paymentId;
+  hash_t transactionHash = BinaryArray::objectHash(transaction);
   if (!BlockchainExplorerDataBuilder::getPaymentId(transaction, paymentId)) {
     return false;
   }
@@ -16,8 +16,8 @@ bool PaymentIdIndex::add(const transaction_t& transaction) {
 }
 
 bool PaymentIdIndex::remove(const transaction_t& transaction) {
-  crypto::hash_t paymentId;
-  crypto::hash_t transactionHash = BinaryArray::objectHash(transaction);
+  hash_t paymentId;
+  hash_t transactionHash = BinaryArray::objectHash(transaction);
   if (!BlockchainExplorerDataBuilder::getPaymentId(transaction, paymentId)) {
     return false;
   }
@@ -33,7 +33,7 @@ bool PaymentIdIndex::remove(const transaction_t& transaction) {
   return false;
 }
 
-bool PaymentIdIndex::find(const crypto::hash_t& paymentId, std::vector<crypto::hash_t>& transactionHashes) {
+bool PaymentIdIndex::find(const hash_t& paymentId, std::vector<hash_t>& transactionHashes) {
   bool found = false;
   auto range = index.equal_range(paymentId);
   for (auto iter = range.first; iter != range.second; ++iter){

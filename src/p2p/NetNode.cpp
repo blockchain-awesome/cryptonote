@@ -980,12 +980,12 @@ namespace cryptonote
       return false;
     }
 
-    crypto::public_key_t pk;
+    public_key_t pk;
     const config::config_t &conf = config::get();
 
     hex::podFromString(conf.net.p2p_stat_trusted_pub_key, pk);
     // hex::podFromString(cryptonote::P2P_STAT_TRUSTED_PUB_KEY, pk);
-    crypto::hash_t h = get_proof_of_trust_t_hash(tr);
+    hash_t h = get_proof_of_trust_t_hash(tr);
     if (!crypto::check_signature(h, pk, tr.sign)) {
       logger(ERROR) << "check_trust failed: sign check failed";
       return false;

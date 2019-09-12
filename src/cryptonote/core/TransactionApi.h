@@ -12,6 +12,6 @@ namespace cryptonote {
   std::unique_ptr<ITransaction> createTransaction(const binary_array_t& transactionBlob);
   std::unique_ptr<ITransaction> createTransaction(const transaction_t& tx);
 
-  std::unique_ptr<ITransactionReader> createTransactionPrefix(const transaction_prefix_t& prefix, const crypto::hash_t& transactionHash);
+  std::unique_ptr<ITransactionReader> createTransactionPrefix(const transaction_prefix_t& prefix, const hash_t& transactionHash);
   std::unique_ptr<ITransactionReader> createTransactionPrefix(const transaction_t& fullTransaction);
 }

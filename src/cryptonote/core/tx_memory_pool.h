@@ -60,14 +60,14 @@ namespace cryptonote {
     bool init();
     bool deinit();
 
-    bool have_tx(const crypto::hash_t &id) const;
-    bool add_tx(const transaction_t &tx, const crypto::hash_t &id, size_t blobSize, tx_verification_context_t& tvc, bool keeped_by_block);
+    bool have_tx(const hash_t &id) const;
+    bool add_tx(const transaction_t &tx, const hash_t &id, size_t blobSize, tx_verification_context_t& tvc, bool keeped_by_block);
     bool add_tx(const transaction_t &tx, tx_verification_context_t& tvc, bool keeped_by_block);
     //gets tx and remove it from pool
-    bool take_tx(const crypto::hash_t &id, transaction_t &tx, size_t& blobSize, uint64_t& fee);
+    bool take_tx(const hash_t &id, transaction_t &tx, size_t& blobSize, uint64_t& fee);
 
-    bool on_blockchain_inc(uint64_t new_block_height, const crypto::hash_t& top_block_id);
-    bool on_blockchain_dec(uint64_t new_block_height, const crypto::hash_t& top_block_id);
+    bool on_blockchain_inc(uint64_t new_block_height, const hash_t& top_block_id);
+    bool on_blockchain_dec(uint64_t new_block_height, const hash_t& top_block_id);
 
     void lock() const;
     void unlock() const;
@@ -76,13 +76,13 @@ namespace cryptonote {
     bool fill_block_template(block_t &bl, size_t median_size, size_t maxCumulativeSize, uint64_t already_generated_coins, size_t &total_size, uint64_t &fee);
 
     void get_transactions(std::list<transaction_t>& txs) const;
-    void get_difference(const std::vector<crypto::hash_t>& known_tx_ids, std::vector<crypto::hash_t>& new_tx_ids, std::vector<crypto::hash_t>& deleted_tx_ids) const;
+    void get_difference(const std::vector<hash_t>& known_tx_ids, std::vector<hash_t>& new_tx_ids, std::vector<hash_t>& deleted_tx_ids) const;
     size_t get_transactions_count() const;
     std::string print_pool(bool short_format) const;
     void on_idle();
 
-    bool getTransactionIdsByPaymentId(const crypto::hash_t& paymentId, std::vector<crypto::hash_t>& transactionIds);
-    bool getTransactionIdsByTimestamp(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t transactionsNumberLimit, std::vector<crypto::hash_t>& hashes, uint64_t& transactionsNumberWithinTimestamps);
+    bool getTransactionIdsByPaymentId(const hash_t& paymentId, std::vector<hash_t>& transactionIds);
+    bool getTransactionIdsByTimestamp(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t transactionsNumberLimit, std::vector<hash_t>& hashes, uint64_t& transactionsNumberWithinTimestamps);
 
     template<class t_ids_container, class t_tx_container, class t_missed_container>
     void getTransactions(const t_ids_container& txsIds, t_tx_container& txs, t_missed_container& missedTxs) {
@@ -102,7 +102,7 @@ namespace cryptonote {
 
   private:
 
-    typedef hashed_unique<BOOST_MULTI_INDEX_MEMBER(transaction::transaction_details_t, crypto::hash_t, id)> main_index_t;
+    typedef hashed_unique<BOOST_MULTI_INDEX_MEMBER(transaction::transaction_details_t, hash_t, id)> main_index_t;
     typedef ordered_non_unique<identity<transaction::transaction_details_t>, transaction::transaction_priority_comparator_t> fee_index_t;
 
     typedef multi_index_container<transaction::transaction_details_t,
@@ -111,13 +111,13 @@ namespace cryptonote {
 
     typedef std::pair<uint64_t, uint64_t> global_output_t;
     typedef std::set<global_output_t> global_output_container_t;
-    typedef std::unordered_map<crypto::key_image_t, std::unordered_set<crypto::hash_t> > key_images_container_t;
+    typedef std::unordered_map<key_image_t, std::unordered_set<hash_t> > key_images_container_t;
 
 
     // double spending checking
-    bool addTransactionInputs(const crypto::hash_t& id, const transaction_t& tx, bool keptByBlock);
+    bool addTransactionInputs(const hash_t& id, const transaction_t& tx, bool keptByBlock);
     bool haveSpentInputs(const transaction_t& tx) const;
-    bool removeTransactionInputs(const crypto::hash_t& id, const transaction_t& tx, bool keptByBlock);
+    bool removeTransactionInputs(const hash_t& id, const transaction_t& tx, bool keptByBlock);
 
     tx_container_t::iterator removeTransaction(tx_container_t::iterator i);
     bool removeExpiredTransactions();
@@ -138,7 +138,7 @@ namespace cryptonote {
 
     tx_container_t m_transactions;  
     tx_container_t::nth_index<1>::type& m_fee_index;
-    std::unordered_map<crypto::hash_t, uint64_t> m_recentlyDeletedTransactions;
+    std::unordered_map<hash_t, uint64_t> m_recentlyDeletedTransactions;
 
     Logging::LoggerRef logger;
 

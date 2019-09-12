@@ -6,6 +6,7 @@
 
 #if defined(__cplusplus)
 #include "crypto/crypto.h"
+using namespace crypto;
 
 extern "C" {
 #endif
@@ -19,6 +20,6 @@ void generate_keys(uint8_t *public_key, uint8_t *secret_key);
 }
 
 bool check_scalar(const elliptic_curve_scalar_t &scalar);
-void hash_to_point(const crypto::hash_t &h, elliptic_curve_point_t &res);
-void hash_to_ec(const crypto::public_key_t &key, elliptic_curve_point_t &res);
+void hash_to_point(const hash_t &h, elliptic_curve_point_t &res);
+void hash_to_ec(const public_key_t &key, elliptic_curve_point_t &res);
 #endif

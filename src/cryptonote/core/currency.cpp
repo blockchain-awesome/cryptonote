@@ -236,8 +236,8 @@ bool Currency::constructMinerTx(uint32_t height, size_t medianSize, uint64_t alr
   uint64_t summaryAmounts = 0;
   for (size_t no = 0; no < outAmounts.size(); no++)
   {
-    crypto::key_derivation_t derivation = boost::value_initialized<crypto::key_derivation_t>();
-    crypto::public_key_t outEphemeralPubKey = boost::value_initialized<crypto::public_key_t>();
+    key_derivation_t derivation = boost::value_initialized<key_derivation_t>();
+    public_key_t outEphemeralPubKey = boost::value_initialized<public_key_t>();
 
     bool r = generate_key_derivation((const uint8_t*)&minerAddress.viewPublicKey, (const uint8_t*)&txkey.secretKey, (uint8_t*)&derivation);
 
@@ -487,17 +487,17 @@ difficulty_t Currency::nextDifficulty(std::vector<uint64_t> timestamps,
 
 size_t Currency::getApproximateMaximumInputCount(size_t transactionSize, size_t outputCount, size_t mixinCount) const
 {
-  const size_t KEY_IMAGE_SIZE = sizeof(crypto::key_image_t);
+  const size_t KEY_IMAGE_SIZE = sizeof(key_image_t);
   const size_t OUTPUT_KEY_SIZE = sizeof(decltype(key_output_t::key));
   const size_t AMOUNT_SIZE = sizeof(uint64_t) + 2;                   //varint
   const size_t GLOBAL_INDEXES_VECTOR_SIZE_SIZE = sizeof(uint8_t);    //varint
   const size_t GLOBAL_INDEXES_INITIAL_VALUE_SIZE = sizeof(uint32_t); //varint
   const size_t GLOBAL_INDEXES_DIFFERENCE_SIZE = sizeof(uint32_t);    //varint
-  const size_t SIGNATURE_SIZE = sizeof(crypto::signature_t);
+  const size_t SIGNATURE_SIZE = sizeof(signature_t);
   const size_t EXTRA_TAG_SIZE = sizeof(uint8_t);
   const size_t INPUT_TAG_SIZE = sizeof(uint8_t);
   const size_t OUTPUT_TAG_SIZE = sizeof(uint8_t);
-  const size_t PUBLIC_KEY_SIZE = sizeof(crypto::public_key_t);
+  const size_t PUBLIC_KEY_SIZE = sizeof(public_key_t);
   const size_t TRANSACTION_VERSION_SIZE = sizeof(uint8_t);
   const size_t TRANSACTION_UNLOCK_TIME_SIZE = sizeof(uint64_t);
 

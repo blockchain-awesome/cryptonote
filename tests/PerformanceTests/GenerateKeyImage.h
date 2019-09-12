@@ -23,7 +23,7 @@ public:
 
     account_keys_t bob_keys = m_bob.getAccountKeys();
 
-    crypto::key_derivation_t recv_derivation;
+    key_derivation_t recv_derivation;
     generate_key_derivation((const uint8_t*)&m_tx_pub_key, (const uint8_t*)&bob_keys.viewSecretKey, (uint8_t*)&recv_derivation);
 
     derive_public_key((const uint8_t*)&recv_derivation, 0, (const uint8_t*)&bob_keys.address.spendPublicKey, (uint8_t*)&m_in_ephemeral.publicKey);
@@ -34,7 +34,7 @@ public:
 
   bool test()
   {
-    crypto::key_image_t ki;
+    key_image_t ki;
     crypto::generate_key_image(m_in_ephemeral.publicKey, m_in_ephemeral.secretKey, ki);
     return true;
   }

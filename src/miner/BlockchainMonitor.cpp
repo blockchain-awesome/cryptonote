@@ -31,7 +31,7 @@ void BlockchainMonitor::waitBlockchainUpdate() {
   m_logger(Logging::DEBUGGING) << "Waiting for blockchain updates";
   m_stopped = false;
 
-  crypto::hash_t lastBlockHash = requestLastBlockHash();
+  hash_t lastBlockHash = requestLastBlockHash();
 
   while(!m_stopped) {
     m_sleepingContext.spawn([this] () {
@@ -61,7 +61,7 @@ void BlockchainMonitor::stop() {
   m_sleepingContext.wait();
 }
 
-crypto::hash_t BlockchainMonitor::requestLastBlockHash() {
+hash_t BlockchainMonitor::requestLastBlockHash() {
   m_logger(Logging::DEBUGGING) << "Requesting last block hash";
 
   try {
@@ -77,7 +77,7 @@ crypto::hash_t BlockchainMonitor::requestLastBlockHash() {
       throw std::runtime_error("Core responded with wrong status: " + response.status);
     }
 
-    crypto::hash_t blockHash;
+    hash_t blockHash;
     if (!hex::podFromString(response.block_header.hash, blockHash)) {
       throw std::runtime_error("Couldn't parse block hash: " + response.block_header.hash);
     }

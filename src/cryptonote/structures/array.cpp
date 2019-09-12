@@ -33,21 +33,21 @@ bool BinaryArray::to(const binary_array_t &object, binary_array_t &binaryArray)
   return true;
 }
 
-crypto::hash_t BinaryArray::getHash()
+hash_t BinaryArray::getHash()
 {
-  crypto::hash_t hash;
+  hash_t hash;
   cn_fast_hash(m_ba.data(), m_ba.size(), (char*)&hash);
   return hash;
 }
 
-void BinaryArray::getHash(const binary_array_t &binaryArray, crypto::hash_t &hash)
+void BinaryArray::getHash(const binary_array_t &binaryArray, hash_t &hash)
 {
   cn_fast_hash(binaryArray.data(), binaryArray.size(), (char*)&hash);
 }
 
-crypto::hash_t BinaryArray::getHash(const binary_array_t &binaryArray)
+hash_t BinaryArray::getHash(const binary_array_t &binaryArray)
 {
-  crypto::hash_t hash;
+  hash_t hash;
   getHash(binaryArray, hash);
   return hash;
 }

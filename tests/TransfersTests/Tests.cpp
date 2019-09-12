@@ -82,14 +82,14 @@ public:
     return true;
   }
 
-  std::error_code onPoolUpdated(const std::vector<std::unique_ptr<ITransactionReader>>& addedTransactions, const std::vector<crypto::hash_t>& deletedTransactions) override {
+  std::error_code onPoolUpdated(const std::vector<std::unique_ptr<ITransactionReader>>& addedTransactions, const std::vector<hash_t>& deletedTransactions) override {
     //stub
     return std::error_code();
   }
 
-  const std::unordered_set<crypto::hash_t>& getKnownPoolTxIds() const override {
+  const std::unordered_set<hash_t>& getKnownPoolTxIds() const override {
     //stub
-    static std::unordered_set<crypto::hash_t> empty;
+    static std::unordered_set<hash_t> empty;
     return empty;
   }
 
@@ -97,7 +97,7 @@ public:
     throw std::runtime_error("Not implemented");
   }
 
-  void removeUnconfirmedTransaction(const crypto::hash_t& /*transactionHash*/) override {
+  void removeUnconfirmedTransaction(const hash_t& /*transactionHash*/) override {
     throw std::runtime_error("Not implemented");
   }
 

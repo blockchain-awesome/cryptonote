@@ -22,9 +22,9 @@ public:
     uint32_t newBlockHeight;
   };
 
-  typedef std::vector<crypto::hash_t> ShortHistory;
+  typedef std::vector<hash_t> ShortHistory;
 
-  explicit SynchronizationState(const crypto::hash_t& genesisBlockHash) {
+  explicit SynchronizationState(const hash_t& genesisBlockHash) {
     m_blockchain.push_back(genesisBlockHash);
   }
   virtual ~SynchronizationState() {};
@@ -33,9 +33,9 @@ public:
   CheckResult checkInterval(const BlockchainInterval& interval) const;
 
   void detach(uint32_t height);
-  void addBlocks(const crypto::hash_t* blockHashes, uint32_t height, uint32_t count);
+  void addBlocks(const hash_t* blockHashes, uint32_t height, uint32_t count);
   uint32_t getHeight() const;
-  const std::vector<crypto::hash_t>& getKnownBlockHashes() const;
+  const std::vector<hash_t>& getKnownBlockHashes() const;
 
   // IStreamSerializable
   virtual void save(std::ostream& os) override;
@@ -46,7 +46,7 @@ public:
 
 private:
 
-  std::vector<crypto::hash_t> m_blockchain;
+  std::vector<hash_t> m_blockchain;
 };
 
 }

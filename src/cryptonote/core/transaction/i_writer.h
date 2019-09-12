@@ -26,7 +26,7 @@ class ITransactionWriter
     virtual void setUnlockTime(uint64_t unlockTime) = 0;
 
     // extra
-    virtual void setPaymentId(const crypto::hash_t &paymentId) = 0;
+    virtual void setPaymentId(const hash_t &paymentId) = 0;
     virtual void setExtraNonce(const binary_array_t &nonce) = 0;
     virtual void appendExtra(const binary_array_t &extraData) = 0;
 
@@ -41,11 +41,11 @@ class ITransactionWriter
     virtual size_t addOutput(uint64_t amount, const multi_signature_output_t &out) = 0;
 
     // transaction info
-    virtual void setTransactionSecretKey(const crypto::secret_key_t &key) = 0;
+    virtual void setTransactionSecretKey(const secret_key_t &key) = 0;
 
     // signing
     virtual void signInputKey(size_t input, const TransactionTypes::input_key_info_t &info, const key_pair_t &ephKeys) = 0;
-    virtual void signInputMultisignature(size_t input, const crypto::public_key_t &sourceTransactionKey, size_t outputIndex, const account_keys_t &accountKeys) = 0;
+    virtual void signInputMultisignature(size_t input, const public_key_t &sourceTransactionKey, size_t outputIndex, const account_keys_t &accountKeys) = 0;
     virtual void signInputMultisignature(size_t input, const key_pair_t &ephemeralKeys) = 0;
 };
 

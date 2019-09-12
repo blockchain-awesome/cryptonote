@@ -34,7 +34,7 @@ public:
   void updateTransactionSendingState(TransactionId transactionId, std::error_code ec);
 
   std::shared_ptr<WalletLegacyEvent> onTransactionUpdated(const TransactionInformation& txInfo, int64_t txBalance);
-  std::shared_ptr<WalletLegacyEvent> onTransactionDeleted(const crypto::hash_t& transactionHash);
+  std::shared_ptr<WalletLegacyEvent> onTransactionDeleted(const hash_t& transactionHash);
 
   TransactionId findTransactionByTransferId(TransferId transferId) const;
 
@@ -50,7 +50,7 @@ public:
 
 private:
 
-  TransactionId findTransactionByHash(const crypto::hash_t& hash);
+  TransactionId findTransactionByHash(const hash_t& hash);
   TransactionId insertTransaction(WalletLegacyTransaction&& transaction_t);
   TransferId insertTransfers(const std::vector<WalletLegacyTransfer>& transfers);
   void updateUnconfirmedTransactions();

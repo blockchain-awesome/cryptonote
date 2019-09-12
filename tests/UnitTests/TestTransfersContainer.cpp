@@ -289,7 +289,7 @@ TEST_F(TransfersContainer_addTransaction, handlesAddingUnconfirmedOutputToKey) {
   ASSERT_EQ(0, amountIn);
   ASSERT_EQ(TEST_OUTPUT_AMOUNT, amountOut);
 
-  std::vector<crypto::hash_t> unconfirmedTransactions;
+  std::vector<hash_t> unconfirmedTransactions;
   container.getUnconfirmedTransactions(unconfirmedTransactions);
   ASSERT_EQ(1, unconfirmedTransactions.size());
 }
@@ -335,7 +335,7 @@ TEST_F(TransfersContainer_addTransaction, handlesAddingConfirmedOutputToKey) {
   ASSERT_EQ(0, amountIn);
   ASSERT_EQ(TEST_OUTPUT_AMOUNT, amountOut);
 
-  std::vector<crypto::hash_t> unconfirmedTransactions;
+  std::vector<hash_t> unconfirmedTransactions;
   container.getUnconfirmedTransactions(unconfirmedTransactions);
   ASSERT_TRUE(unconfirmedTransactions.empty());
 }
@@ -372,7 +372,7 @@ TEST_F(TransfersContainer_addTransaction, addingEmptyTransactionOuptutsDoesNotCh
   TransactionInformation txInfo;
   ASSERT_FALSE(container.getTransactionInformation(tx->getTransactionHash(), txInfo));
 
-  std::vector<crypto::hash_t> unconfirmedTransactions;
+  std::vector<hash_t> unconfirmedTransactions;
   container.getUnconfirmedTransactions(unconfirmedTransactions);
   ASSERT_TRUE(unconfirmedTransactions.empty());
 }
@@ -519,7 +519,7 @@ class TransfersContainer_deleteUnconfirmedTransaction : public TransfersContaine
 TEST_F(TransfersContainer_deleteUnconfirmedTransaction, tryDeleteNonExistingTx) {
   addTransaction();
   ASSERT_EQ(1, container.transactionsCount());
-  ASSERT_FALSE(container.deleteUnconfirmedTransaction(crypto::rand<crypto::hash_t>()));
+  ASSERT_FALSE(container.deleteUnconfirmedTransaction(crypto::rand<hash_t>()));
   ASSERT_EQ(1, container.transactionsCount());
 }
 

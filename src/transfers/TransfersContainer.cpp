@@ -724,12 +724,12 @@ std::vector<TransactionOutputInformation> TransfersContainer::getTransactionInpu
   return result;
 }
 
-void TransfersContainer::getUnconfirmedTransactions(std::vector<crypto::hash_t>& transactions) const {
+void TransfersContainer::getUnconfirmedTransactions(std::vector<hash_t>& transactions) const {
   std::lock_guard<std::mutex> lk(m_mutex);
   transactions.clear();
   for (auto& element : m_transactions) {
     if (element.blockHeight == WALLET_LEGACY_UNCONFIRMED_TRANSACTION_HEIGHT) {
-      transactions.push_back(*reinterpret_cast<const crypto::hash_t*>(&element.transactionHash));
+      transactions.push_back(*reinterpret_cast<const hash_t*>(&element.transactionHash));
     }
   }
 }

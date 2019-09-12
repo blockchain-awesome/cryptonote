@@ -154,7 +154,7 @@ void serialize(transaction_details_t &transaction, ISerializer &serializer)
 
   if (serializer.type() == ISerializer::OUTPUT)
   {
-    std::vector<std::pair<size_t, crypto::signature_t>> signaturesForSerialization;
+    std::vector<std::pair<size_t, signature_t>> signaturesForSerialization;
     signaturesForSerialization.reserve(transaction.signatures.size());
     size_t ctr = 0;
     for (const auto &signaturesV : transaction.signatures)
@@ -175,7 +175,7 @@ void serialize(transaction_details_t &transaction, ISerializer &serializer)
     serializer(size, "signaturesSize");
     transaction.signatures.resize(size);
 
-    std::vector<std::pair<size_t, crypto::signature_t>> signaturesForSerialization;
+    std::vector<std::pair<size_t, signature_t>> signaturesForSerialization;
     serializer(signaturesForSerialization, "signatures");
 
     for (const auto &signatureWithIndex : signaturesForSerialization)

@@ -43,7 +43,7 @@ struct ObsoleteSpentOutputDto {
   hash_t transactionHash;
   uint32_t outputInTransaction;
   uint64_t walletIndex;
-  crypto::hash_t spendingTransactionHash;
+  hash_t spendingTransactionHash;
 };
 
 //DO NOT CHANGE IT
@@ -668,7 +668,7 @@ void WalletSerializer::loadWallets(Common::IInputStream& source, CryptoContext& 
     }
 
     if (dto.spendSecretKey != NULL_SECRET_KEY) {
-      crypto::public_key_t restoredPublicKey;
+      public_key_t restoredPublicKey;
       bool r = secret_key_to_public_key((const uint8_t*)&dto.spendSecretKey, (uint8_t*)&restoredPublicKey);
 
       if (!r || dto.spendPublicKey != restoredPublicKey) {
@@ -788,7 +788,7 @@ void WalletSerializer::loadUncommitedTransactions(Common::IInputStream& source, 
 }
 
 void WalletSerializer::initTransactionPool() {
-  std::unordered_set<crypto::hash_t> uncommitedTransactionsSet;
+  std::unordered_set<hash_t> uncommitedTransactionsSet;
   std::transform(uncommitedTransactions.begin(), uncommitedTransactions.end(), std::inserter(uncommitedTransactionsSet, uncommitedTransactionsSet.end()),
     [](const UncommitedTransactions::value_type& pair) {
       return BinaryArray::objectHash(pair.second);

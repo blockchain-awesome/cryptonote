@@ -57,7 +57,7 @@ struct WalletTransaction {
   WalletTransactionState state;
   uint64_t timestamp;
   uint32_t blockHeight;
-  crypto::hash_t hash;
+  hash_t hash;
   int64_t totalAmount;
   uint64_t fee;
   uint64_t creationTime;
@@ -105,7 +105,7 @@ struct WalletTransactionWithTransfers {
 };
 
 struct TransactionsInBlockInfo {
-  crypto::hash_t blockHash;
+  hash_t blockHash;
   std::vector<WalletTransactionWithTransfers> transactions;
 };
 
@@ -114,7 +114,7 @@ public:
   virtual ~IWallet() {}
 
   virtual void initialize(const std::string& password) = 0;
-  virtual void initializeWithViewKey(const crypto::secret_key_t& viewSecretKey, const std::string& password) = 0;
+  virtual void initializeWithViewKey(const secret_key_t& viewSecretKey, const std::string& password) = 0;
   virtual void load(std::istream& source, const std::string& password) = 0;
   virtual void shutdown() = 0;
 
@@ -127,8 +127,8 @@ public:
   virtual key_pair_t getAddressSpendKey(const std::string& address) const = 0;
   virtual key_pair_t getViewKey() const = 0;
   virtual std::string createAddress() = 0;
-  virtual std::string createAddress(const crypto::secret_key_t& spendSecretKey) = 0;
-  virtual std::string createAddress(const crypto::public_key_t& spendPublicKey) = 0;
+  virtual std::string createAddress(const secret_key_t& spendSecretKey) = 0;
+  virtual std::string createAddress(const public_key_t& spendPublicKey) = 0;
   virtual void deleteAddress(const std::string& address) = 0;
 
   virtual uint64_t getActualBalance() const = 0;
@@ -141,10 +141,10 @@ public:
   virtual size_t getTransactionTransferCount(size_t transactionIndex) const = 0;
   virtual WalletTransfer getTransactionTransfer(size_t transactionIndex, size_t transferIndex) const = 0;
 
-  virtual WalletTransactionWithTransfers getTransaction(const crypto::hash_t& transactionHash) const = 0;
-  virtual std::vector<TransactionsInBlockInfo> getTransactions(const crypto::hash_t& blockHash, size_t count) const = 0;
+  virtual WalletTransactionWithTransfers getTransaction(const hash_t& transactionHash) const = 0;
+  virtual std::vector<TransactionsInBlockInfo> getTransactions(const hash_t& blockHash, size_t count) const = 0;
   virtual std::vector<TransactionsInBlockInfo> getTransactions(uint32_t blockIndex, size_t count) const = 0;
-  virtual std::vector<crypto::hash_t> getBlockHashes(uint32_t blockIndex, size_t count) const = 0;
+  virtual std::vector<hash_t> getBlockHashes(uint32_t blockIndex, size_t count) const = 0;
   virtual uint32_t getBlockCount() const  = 0;
   virtual std::vector<WalletTransactionWithTransfers> getUnconfirmedTransactions() const = 0;
   virtual std::vector<size_t> getDelayedTransactionIds() const = 0;

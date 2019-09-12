@@ -28,37 +28,37 @@ public:
   bool generateTransactionsInOneBlock(const cryptonote::account_public_address_t& address, size_t n);
   bool getSingleOutputTransaction(const cryptonote::account_public_address_t& address, uint64_t amount);
   void addTxToBlockchain(const cryptonote::transaction_t& transaction);
-  bool getTransactionByHash(const crypto::hash_t& hash, cryptonote::transaction_t& tx, bool checkTxPool = false);
+  bool getTransactionByHash(const hash_t& hash, cryptonote::transaction_t& tx, bool checkTxPool = false);
   const cryptonote::Account& getMinerAccount() const;
   bool generateFromBaseTx(const cryptonote::Account& address);
 
   void putTxToPool(const cryptonote::transaction_t& tx);
-  void getPoolSymmetricDifference(std::vector<crypto::hash_t>&& known_pool_tx_ids, crypto::hash_t known_block_id, bool& is_bc_actual,
-    std::vector<cryptonote::transaction_t>& new_txs, std::vector<crypto::hash_t>& deleted_tx_ids);
+  void getPoolSymmetricDifference(std::vector<hash_t>&& known_pool_tx_ids, hash_t known_block_id, bool& is_bc_actual,
+    std::vector<cryptonote::transaction_t>& new_txs, std::vector<hash_t>& deleted_tx_ids);
   void putTxPoolToBlockchain();
   void clearTxPool();
 
   void cutBlockchain(uint32_t height);
 
-  bool addOrphan(const crypto::hash_t& hash, uint32_t height);
+  bool addOrphan(const hash_t& hash, uint32_t height);
   bool getGeneratedTransactionsNumber(uint32_t height, uint64_t& generatedTransactions);
-  bool getOrphanBlockIdsByHeight(uint32_t height, std::vector<crypto::hash_t>& blockHashes);
-  bool getBlockIdsByTimestamp(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t blocksNumberLimit, std::vector<crypto::hash_t>& hashes, uint32_t& blocksNumberWithinTimestamps);
-  bool getPoolTransactionIdsByTimestamp(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t transactionsNumberLimit, std::vector<crypto::hash_t>& hashes, uint64_t& transactionsNumberWithinTimestamps);
-  bool getTransactionIdsByPaymentId(const crypto::hash_t& paymentId, std::vector<crypto::hash_t>& transactionHashes);
+  bool getOrphanBlockIdsByHeight(uint32_t height, std::vector<hash_t>& blockHashes);
+  bool getBlockIdsByTimestamp(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t blocksNumberLimit, std::vector<hash_t>& hashes, uint32_t& blocksNumberWithinTimestamps);
+  bool getPoolTransactionIdsByTimestamp(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t transactionsNumberLimit, std::vector<hash_t>& hashes, uint64_t& transactionsNumberWithinTimestamps);
+  bool getTransactionIdsByPaymentId(const hash_t& paymentId, std::vector<hash_t>& transactionHashes);
 
-  bool getTransactionGlobalIndexesByHash(const crypto::hash_t& transactionHash, std::vector<uint32_t>& globalIndexes);
+  bool getTransactionGlobalIndexesByHash(const hash_t& transactionHash, std::vector<uint32_t>& globalIndexes);
   bool getMultisignatureOutputByGlobalIndex(uint64_t amount, uint32_t globalIndex, cryptonote::multi_signature_output_t& out);
   void setMinerAccount(const cryptonote::Account& account);
 
 private:
   struct MultisignatureOutEntry {
-    crypto::hash_t transactionHash;
+    hash_t transactionHash;
     uint16_t indexOut;
   };
 
   struct KeyOutEntry {
-    crypto::hash_t transactionHash;
+    hash_t transactionHash;
     uint16_t indexOut;
   };
   
@@ -69,12 +69,12 @@ private:
   test_generator generator;
   cryptonote::Account miner_acc;
   std::vector<cryptonote::block_t> m_blockchain;
-  std::unordered_map<crypto::hash_t, cryptonote::transaction_t> m_txs;
-  std::unordered_map<crypto::hash_t, std::vector<uint32_t>> transactionGlobalOuts;
+  std::unordered_map<hash_t, cryptonote::transaction_t> m_txs;
+  std::unordered_map<hash_t, std::vector<uint32_t>> transactionGlobalOuts;
   std::unordered_map<uint64_t, std::vector<MultisignatureOutEntry>> multisignatureOutsIndex;
   std::unordered_map<uint64_t, std::vector<KeyOutEntry>> keyOutsIndex;
 
-  std::unordered_map<crypto::hash_t, cryptonote::transaction_t> m_txPool;
+  std::unordered_map<hash_t, cryptonote::transaction_t> m_txPool;
   mutable std::mutex m_mutex;
 
   cryptonote::PaymentIdIndex m_paymentIdIndex;

@@ -20,7 +20,7 @@ class Key
     }
     static key_pair_t generate();
 };
-extern const crypto::hash_t NULL_HASH;
+extern const hash_t NULL_HASH;
 const public_key_t NULL_PUBLIC_KEY = Key::zero<public_key_t>();
 const secret_key_t NULL_SECRET_KEY = Key::zero<secret_key_t>();
 

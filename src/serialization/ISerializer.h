@@ -68,12 +68,12 @@ void serialize(T& value, ISerializer& serializer) {
   value.serialize(serializer);
 }
 
-#ifdef __clang__
-template<> inline
-bool ISerializer::operator()(size_t& value, Common::StringView name) {
-  return operator()(*reinterpret_cast<uint64_t*>(&value), name);
-}
-#endif
+// #ifdef __clang__
+// template<> inline
+// bool ISerializer::operator()(size_t& value, Common::StringView name) {
+//   return operator()(*reinterpret_cast<uint64_t*>(&value), name);
+// }
+// #endif
 
 #define KV_MEMBER(member) s(member, #member);
 

@@ -212,7 +212,7 @@ bool RpcServer::on_get_blocks(const COMMAND_RPC_GET_BLOCKS_FAST::request& req, C
 
   uint32_t totalBlockCount;
   uint32_t startBlockIndex;
-  std::vector<crypto::hash_t> supplement = m_core.findBlockchainSupplement(req.block_ids, COMMAND_RPC_GET_BLOCKS_FAST_MAX_COUNT, totalBlockCount, startBlockIndex);
+  std::vector<hash_t> supplement = m_core.findBlockchainSupplement(req.block_ids, COMMAND_RPC_GET_BLOCKS_FAST_MAX_COUNT, totalBlockCount, startBlockIndex);
 
   res.current_height = totalBlockCount;
   res.start_height = startBlockIndex;
@@ -493,7 +493,7 @@ bool RpcServer::on_getblockhash(const COMMAND_RPC_GETBLOCKHASH::request& req, CO
   }
 
   uint32_t h = static_cast<uint32_t>(req[0]);
-  crypto::hash_t blockId = m_core.getBlockIdByHeight(h);
+  hash_t blockId = m_core.getBlockIdByHeight(h);
   if (blockId == NULL_HASH) {
     throw JsonRpc::JsonRpcError{ 
       CORE_RPC_ERROR_CODE_TOO_BIG_HEIGHT,
@@ -772,10 +772,10 @@ bool RpcServer::f_on_transaction_json(const F_COMMAND_RPC_GET_TRANSACTION_DETAIL
       "Failed to parse hex representation of transaction hash. Hex = " + req.hash + '.' };
   }
 
-  std::vector<crypto::hash_t> tx_ids;
+  std::vector<hash_t> tx_ids;
   tx_ids.push_back(hash);
 
-  std::list<crypto::hash_t> missed_txs;
+  std::list<hash_t> missed_txs;
   std::list<transaction_t> txs;
   bc.getTransactions(tx_ids, txs, missed_txs);
 

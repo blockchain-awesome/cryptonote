@@ -34,7 +34,7 @@ namespace cryptonote
 
   struct block_full_info_t : public block_complete_entry_t
   {
-    crypto::hash_t block_id;
+    hash_t block_id;
 
     void serialize(ISerializer& s) {
       KV_MEMBER(block_id);
@@ -44,7 +44,7 @@ namespace cryptonote
   };
 
   struct transaction_prefix_info_t {
-    crypto::hash_t txHash;
+    hash_t txHash;
     transaction_prefix_t txPrefix;
 
     void serialize(ISerializer& s) {
@@ -54,7 +54,7 @@ namespace cryptonote
   };
 
   struct block_short_info_t {
-    crypto::hash_t blockId;
+    hash_t blockId;
     std::string block;
     std::vector<transaction_prefix_info_t> txPrefixes;
 
@@ -111,8 +111,8 @@ namespace cryptonote
   /************************************************************************/
   struct NOTIFY_REQUEST_GET_OBJECTS_request
   {
-    std::vector<crypto::hash_t> txs;
-    std::vector<crypto::hash_t> blocks;
+    std::vector<hash_t> txs;
+    std::vector<hash_t> blocks;
 
     void serialize(ISerializer& s) {
       serializeAsBinary(txs, "txs", s);
@@ -130,7 +130,7 @@ namespace cryptonote
   {
     std::vector<std::string> txs;
     std::vector<block_complete_entry_t> blocks;
-    std::vector<crypto::hash_t> missed_ids;
+    std::vector<hash_t> missed_ids;
     uint32_t current_blockchain_height;
 
     void serialize(ISerializer& s) {
@@ -154,7 +154,7 @@ namespace cryptonote
 
     struct request
     {
-      std::vector<crypto::hash_t> block_ids; /*IDs of the first 10 blocks are sequential, next goes with pow(2,n) offset, like 2, 4, 8, 16, 32, 64 and so on, and the last one is always genesis block */
+      std::vector<hash_t> block_ids; /*IDs of the first 10 blocks are sequential, next goes with pow(2,n) offset, like 2, 4, 8, 16, 32, 64 and so on, and the last one is always genesis block */
 
       void serialize(ISerializer& s) {
         serializeAsBinary(block_ids, "block_ids", s);
@@ -166,7 +166,7 @@ namespace cryptonote
   {
     uint32_t start_height;
     uint32_t total_height;
-    std::vector<crypto::hash_t> m_block_ids;
+    std::vector<hash_t> m_block_ids;
 
     void serialize(ISerializer& s) {
       KV_MEMBER(start_height)
@@ -185,7 +185,7 @@ namespace cryptonote
   /*                                                                      */
   /************************************************************************/
   struct NOTIFY_REQUEST_TX_POOL_request {
-    std::vector<crypto::hash_t> txs;
+    std::vector<hash_t> txs;
 
     void serialize(ISerializer& s) {
       serializeAsBinary(txs, "txs", s);

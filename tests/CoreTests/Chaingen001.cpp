@@ -40,7 +40,7 @@ bool one_block::verify_1(cryptonote::core& c, size_t ev_index, const std::vector
 
     // check height
     std::list<cryptonote::block_t> blocks;
-    std::list<crypto::public_key_t> outs;
+    std::list<public_key_t> outs;
     bool r = c.get_blocks(0, 100, blocks);
     //c.get_outs(100, outs);
     CHECK_TEST_CONDITION(r);

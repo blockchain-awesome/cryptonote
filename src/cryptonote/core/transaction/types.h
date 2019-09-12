@@ -6,6 +6,9 @@
 #include <vector>
 #include "crypto.h"
 
+
+using namespace crypto;
+
 namespace cryptonote
 {
 
@@ -28,7 +31,7 @@ enum class output_type_t : uint8_t
 
 struct global_output_t
 {
-    crypto::public_key_t targetKey;
+    public_key_t targetKey;
     uint32_t outputIndex;
 };
 
@@ -36,7 +39,7 @@ typedef std::vector<global_output_t> global_output_container_t;
 
 struct output_key_info_t
 {
-    crypto::public_key_t transactionPublicKey;
+    public_key_t transactionPublicKey;
     size_t transactionIndex;
     size_t outputInTransaction;
 };

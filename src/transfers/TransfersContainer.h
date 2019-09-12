@@ -32,10 +32,10 @@ class SpentOutputDescriptor {
 public:
   SpentOutputDescriptor();
   SpentOutputDescriptor(const TransactionOutputInformationIn& transactionInfo);
-  SpentOutputDescriptor(const crypto::key_image_t* keyImage);
+  SpentOutputDescriptor(const key_image_t* keyImage);
   SpentOutputDescriptor(uint64_t amount, uint32_t globalOutputIndex);
 
-  void assign(const crypto::key_image_t* keyImage);
+  void assign(const key_image_t* keyImage);
   void assign(uint64_t amount, uint32_t globalOutputIndex);
 
   bool isValid() const;
@@ -46,7 +46,7 @@ public:
 private:
   TransactionTypes::output_type_t m_type;
   union {
-    const crypto::key_image_t* m_keyImage;
+    const key_image_t* m_keyImage;
     struct {
       uint64_t m_amount;
       uint32_t m_globalOutputIndex;
@@ -61,7 +61,7 @@ struct SpentOutputDescriptorHasher {
 };
 
 struct TransactionOutputInformationIn : public TransactionOutputInformation {
-  crypto::key_image_t keyImage;  //!< \attention Used only for TransactionTypes::output_type_t::Key
+  key_image_t keyImage;  //!< \attention Used only for TransactionTypes::output_type_t::Key
 };
 
 struct TransactionOutputInformationEx : public TransactionOutputInformationIn {
@@ -71,7 +71,7 @@ struct TransactionOutputInformationEx : public TransactionOutputInformationIn {
   bool visible;
 
   SpentOutputDescriptor getSpentOutputDescriptor() const { return SpentOutputDescriptor(*this); }
-  const crypto::hash_t& getTransactionHash() const { return transactionHash; }
+  const hash_t& getTransactionHash() const { return transactionHash; }
 
   void serialize(cryptonote::ISerializer& s) {
     s(reinterpret_cast<uint8_t&>(type), "type");
@@ -108,10 +108,10 @@ struct TransactionBlockInfo {
 
 struct SpentTransactionOutput : TransactionOutputInformationEx {
   TransactionBlockInfo spendingBlock;
-  crypto::hash_t spendingTransactionHash;
+  hash_t spendingTransactionHash;
   uint32_t inputInTransaction;
 
-  const crypto::hash_t& getSpendingTransactionHash() const {
+  const hash_t& getSpendingTransactionHash() const {
     return spendingTransactionHash;
   }
 
@@ -141,10 +141,10 @@ public:
   TransfersContainer(const cryptonote::Currency& currency, size_t transactionSpendableAge);
 
   bool addTransaction(const TransactionBlockInfo& block, const ITransactionReader& tx, const std::vector<TransactionOutputInformationIn>& transfers);
-  bool deleteUnconfirmedTransaction(const crypto::hash_t& transactionHash);
-  bool markTransactionConfirmed(const TransactionBlockInfo& block, const crypto::hash_t& transactionHash, const std::vector<uint32_t>& globalIndices);
+  bool deleteUnconfirmedTransaction(const hash_t& transactionHash);
+  bool markTransactionConfirmed(const TransactionBlockInfo& block, const hash_t& transactionHash, const std::vector<uint32_t>& globalIndices);
 
-  std::vector<crypto::hash_t> detach(uint32_t height);
+  std::vector<hash_t> detach(uint32_t height);
   bool advanceHeight(uint32_t height);
 
   // ITransfersContainer
@@ -152,12 +152,12 @@ public:
   virtual size_t transactionsCount() const override;
   virtual uint64_t balance(uint32_t flags) const override;
   virtual void getOutputs(std::vector<TransactionOutputInformation>& transfers, uint32_t flags) const override;
-  virtual bool getTransactionInformation(const crypto::hash_t& transactionHash, TransactionInformation& info,
+  virtual bool getTransactionInformation(const hash_t& transactionHash, TransactionInformation& info,
     uint64_t* amountIn = nullptr, uint64_t* amountOut = nullptr) const override;
-  virtual std::vector<TransactionOutputInformation> getTransactionOutputs(const crypto::hash_t& transactionHash, uint32_t flags) const override;
+  virtual std::vector<TransactionOutputInformation> getTransactionOutputs(const hash_t& transactionHash, uint32_t flags) const override;
   //only type flags are feasible for this function
-  virtual std::vector<TransactionOutputInformation> getTransactionInputs(const crypto::hash_t& transactionHash, uint32_t flags) const override;
-  virtual void getUnconfirmedTransactions(std::vector<crypto::hash_t>& transactions) const override;
+  virtual std::vector<TransactionOutputInformation> getTransactionInputs(const hash_t& transactionHash, uint32_t flags) const override;
+  virtual void getUnconfirmedTransactions(std::vector<hash_t>& transactions) const override;
   virtual std::vector<TransactionSpentOutputInformation> getSpentOutputs() const override;
 
   // IStreamSerializable
@@ -172,7 +172,7 @@ private:
   typedef boost::multi_index_container<
     TransactionInformation,
     boost::multi_index::indexed_by<
-    boost::multi_index::hashed_unique<BOOST_MULTI_INDEX_MEMBER(TransactionInformation, crypto::hash_t, transactionHash)>,
+    boost::multi_index::hashed_unique<BOOST_MULTI_INDEX_MEMBER(TransactionInformation, hash_t, transactionHash)>,
     boost::multi_index::ordered_non_unique < BOOST_MULTI_INDEX_MEMBER(TransactionInformation, uint32_t, blockHeight) >
     >
   > TransactionMultiIndex;
@@ -192,7 +192,7 @@ private:
         boost::multi_index::tag<ContainingTransactionIndex>,
         boost::multi_index::const_mem_fun<
           TransactionOutputInformationEx,
-          const crypto::hash_t&,
+          const hash_t&,
           &TransactionOutputInformationEx::getTransactionHash>
       >
     >
@@ -213,7 +213,7 @@ private:
         boost::multi_index::tag<ContainingTransactionIndex>,
         boost::multi_index::const_mem_fun<
           TransactionOutputInformationEx,
-          const crypto::hash_t&,
+          const hash_t&,
           &TransactionOutputInformationEx::getTransactionHash>
       >
     >
@@ -234,14 +234,14 @@ private:
         boost::multi_index::tag<ContainingTransactionIndex>,
         boost::multi_index::const_mem_fun<
           TransactionOutputInformationEx,
-          const crypto::hash_t&,
+          const hash_t&,
           &SpentTransactionOutput::getTransactionHash>
       >,
       boost::multi_index::hashed_non_unique <
         boost::multi_index::tag<SpendingTransactionIndex>,
         boost::multi_index::const_mem_fun <
           SpentTransactionOutput,
-          const crypto::hash_t&,
+          const hash_t&,
           &SpentTransactionOutput::getSpendingTransactionHash>
       >
     >
@@ -252,11 +252,11 @@ private:
   bool addTransactionOutputs(const TransactionBlockInfo& block, const ITransactionReader& tx,
                              const std::vector<TransactionOutputInformationIn>& transfers);
   bool addTransactionInputs(const TransactionBlockInfo& block, const ITransactionReader& tx);
-  void deleteTransactionTransfers(const crypto::hash_t& transactionHash);
+  void deleteTransactionTransfers(const hash_t& transactionHash);
   bool isSpendTimeUnlocked(uint64_t unlockTime) const;
   bool isIncluded(const TransactionOutputInformationEx& info, uint32_t flags) const;
   static bool isIncluded(TransactionTypes::output_type_t type, uint32_t state, uint32_t flags);
-  void updateTransfersVisibility(const crypto::key_image_t& keyImage);
+  void updateTransfersVisibility(const key_image_t& keyImage);
 
   void copyToSpent(const TransactionBlockInfo& block, const ITransactionReader& tx, size_t inputIndex, const TransactionOutputInformationEx& output);
 

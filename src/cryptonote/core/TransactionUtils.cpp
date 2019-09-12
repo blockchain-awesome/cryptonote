@@ -16,7 +16,7 @@ using namespace crypto;
 namespace cryptonote {
 
 bool checkInputsKeyimagesDiff(const cryptonote::transaction_prefix_t& tx) {
-  std::unordered_set<crypto::key_image_t> ki;
+  std::unordered_set<key_image_t> ki;
   for (const auto& in : tx.inputs) {
     if (in.type() == typeid(key_input_t)) {
       if (!ki.insert(boost::get<key_input_t>(in).keyImage).second)
@@ -103,8 +103,8 @@ const transaction_output_t& getOutputChecked(const cryptonote::transaction_prefi
   return output;
 }
 
-bool isOutToKey(const crypto::public_key_t& spendPublicKey, const crypto::public_key_t& outKey, const crypto::key_derivation_t& derivation, size_t keyIndex) {
-  crypto::public_key_t pk;
+bool isOutToKey(const public_key_t& spendPublicKey, const public_key_t& outKey, const key_derivation_t& derivation, size_t keyIndex) {
+  public_key_t pk;
   derive_public_key((const uint8_t *)&derivation, keyIndex, (const uint8_t *)&spendPublicKey, (uint8_t *)&pk);
   return pk == outKey;
 }
@@ -116,13 +116,13 @@ bool findOutputsToAccount(const cryptonote::transaction_prefix_t& transaction, c
   // only view secret key is used, spend key is not needed
   keys.viewSecretKey = viewSecretKey;
 
-  crypto::public_key_t txPubKey = getTransactionPublicKeyFromExtra(transaction.extra);
+  public_key_t txPubKey = getTransactionPublicKeyFromExtra(transaction.extra);
 
   amount = 0;
   size_t keyIndex = 0;
   uint32_t outputIndex = 0;
 
-  crypto::key_derivation_t derivation;
+  key_derivation_t derivation;
   generate_key_derivation((const uint8_t*)&txPubKey, (const uint8_t*)&keys.viewSecretKey, (uint8_t*)&derivation);
 
   for (const transaction_output_t& o : transaction.outputs) {

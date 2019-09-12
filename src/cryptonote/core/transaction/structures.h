@@ -16,7 +16,7 @@ struct transaction_check_info_t
 
 struct transaction_details_t : public transaction_check_info_t
 {
-    crypto::hash_t id;
+    hash_t id;
     transaction_t tx;
     size_t blobSize;
     uint64_t fee;

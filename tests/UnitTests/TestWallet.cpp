@@ -1742,7 +1742,7 @@ TEST_F(WalletApi, getAddressSpendKeyThrowsIfStopped) {
   ASSERT_ANY_THROW(alice.getAddressSpendKey(0));
 }
 
-crypto::public_key_t generatePublicKey() {
+public_key_t generatePublicKey() {
   cryptonote::key_pair_t spendKeys;
   generate_keys((uint8_t*)&spendKeys.publicKey, (uint8_t*)&spendKeys.secretKey);
 
@@ -1753,7 +1753,7 @@ TEST_F(WalletApi, createTrackingKeyAddressSucceeded) {
   cryptonote::WalletGreen wallet(dispatcher, currency, node);
   wallet.initialize("pass");
 
-  crypto::public_key_t publicKey = generatePublicKey();
+  public_key_t publicKey = generatePublicKey();
 
   ASSERT_NO_THROW(wallet.createAddress(publicKey));
   ASSERT_EQ(1, wallet.getAddressCount());
@@ -1763,7 +1763,7 @@ TEST_F(WalletApi, createTrackingKeyAddressSucceeded) {
 TEST_F(WalletApi, createTrackingKeyThrowsIfNotInitialized) {
   cryptonote::WalletGreen wallet(dispatcher, currency, node);
 
-  crypto::public_key_t publicKey = generatePublicKey();
+  public_key_t publicKey = generatePublicKey();
   ASSERT_ANY_THROW(wallet.createAddress(publicKey));
 }
 
@@ -1772,7 +1772,7 @@ TEST_F(WalletApi, createTrackingKeyThrowsIfStopped) {
   wallet.initialize("pass");
   wallet.stop();
 
-  crypto::public_key_t publicKey = generatePublicKey();
+  public_key_t publicKey = generatePublicKey();
   ASSERT_ANY_THROW(wallet.createAddress(publicKey));
   wallet.shutdown();
 }
@@ -1781,14 +1781,14 @@ TEST_F(WalletApi, createTrackingKeyThrowsIfKeyExists) {
   cryptonote::WalletGreen wallet(dispatcher, currency, node);
   wallet.initialize("pass");
 
-  crypto::public_key_t publicKey = generatePublicKey();
+  public_key_t publicKey = generatePublicKey();
   wallet.createAddress(publicKey);
   ASSERT_ANY_THROW(wallet.createAddress(publicKey));
   wallet.shutdown();
 }
 
 TEST_F(WalletApi, createTrackingKeyThrowsIfWalletHasNotTrackingKeys) {
-  crypto::public_key_t publicKey = generatePublicKey();
+  public_key_t publicKey = generatePublicKey();
   ASSERT_ANY_THROW(alice.createAddress(publicKey));
 }
 
@@ -1796,7 +1796,7 @@ TEST_F(WalletApi, getAddressSpendKeyForTrackingKeyReturnsNullSecretKey) {
   cryptonote::WalletGreen wallet(dispatcher, currency, node);
   wallet.initialize("pass");
 
-  crypto::public_key_t publicKey = generatePublicKey();
+  public_key_t publicKey = generatePublicKey();
   wallet.createAddress(publicKey);
 
   key_pair_t spendKeys = wallet.getAddressSpendKey(0);
@@ -1811,7 +1811,7 @@ TEST_F(WalletApi, getAddressSpendKeyForTrackingKeyReturnsNullSecretKey) {
 //   cryptonote::WalletGreen bob(dispatcher, currency, node);
 //   bob.initialize("pass2");
 
-//   crypto::public_key_t publicKey = generatePublicKey();
+//   public_key_t publicKey = generatePublicKey();
 //   bob.createAddress(publicKey);
 
 //   sendMoney(bob.getAddress(0), SENT, FEE);
@@ -1840,7 +1840,7 @@ TEST_F(WalletApi, getAddressSpendKeyForTrackingKeyReturnsNullSecretKey) {
 //   cryptonote::WalletGreen bob(dispatcher, currency, node);
 //   bob.initialize("pass2");
 
-//   crypto::public_key_t publicKey = generatePublicKey();
+//   public_key_t publicKey = generatePublicKey();
 //   bob.createAddress(publicKey);
 
 //   sendMoney(bob.getAddress(0), SENT, FEE);
@@ -1858,7 +1858,7 @@ TEST_F(WalletApi, getAddressSpendKeyForTrackingKeyReturnsNullSecretKey) {
 //   cryptonote::WalletGreen bob(dispatcher, currency, node);
 //   bob.initialize("pass2");
 
-//   crypto::public_key_t publicKey = generatePublicKey();
+//   public_key_t publicKey = generatePublicKey();
 //   bob.createAddress(publicKey);
 
 //   sendMoney(bob.getAddress(0), SENT, FEE);
@@ -2714,7 +2714,7 @@ protected:
 // }
 
 TEST_F(WalletApi, getTransactionThrowsIfTransactionNotFound) {
-  crypto::hash_t hash;
+  hash_t hash;
   std::generate(std::begin(hash.data), std::end(hash.data), std::rand);
 
   ASSERT_ANY_THROW(alice.getTransaction(hash));
@@ -2723,7 +2723,7 @@ TEST_F(WalletApi, getTransactionThrowsIfTransactionNotFound) {
 TEST_F(WalletApi, getTransactionThrowsIfStopped) {
   alice.stop();
 
-  crypto::hash_t hash;
+  hash_t hash;
   std::generate(std::begin(hash.data), std::end(hash.data), std::rand);
 
   ASSERT_ANY_THROW(alice.getTransaction(hash));
@@ -2732,7 +2732,7 @@ TEST_F(WalletApi, getTransactionThrowsIfStopped) {
 TEST_F(WalletApi, getTransactionThrowsIfNotInitialized) {
   WalletGreen wallet(dispatcher, currency, node);
 
-  crypto::hash_t hash;
+  hash_t hash;
   std::generate(std::begin(hash.data), std::end(hash.data), std::rand);
 
   ASSERT_ANY_THROW(wallet.getTransaction(hash));
@@ -2753,7 +2753,7 @@ TEST_F(WalletApi, getTransactionThrowsIfNotInitialized) {
 //   waitForTransactionUpdated(alice, txId); //first notification comes right after inserting transaction. totalAmount at the moment is 0
 //   waitForTransactionUpdated(alice, txId); //second notification comes after processing the transaction by TransfersContainer
 
-//   crypto::hash_t hash = alice.getTransaction(txId).hash;
+//   hash_t hash = alice.getTransaction(txId).hash;
 
 //   cryptonote::WalletTransactionWithTransfers tx = alice.getTransaction(hash);
 //   cryptonote::WalletTransaction transaction = tx.transaction;
@@ -2868,7 +2868,7 @@ TEST_F(WalletApi, getTransactionsReturnsEmptyArrayIfBlockIndexTooBig) {
 // }
 
 TEST_F(WalletApi, getTransactionsReturnsEmptyArrayIfBlockHashDoesntExist) {
-  crypto::hash_t hash;
+  hash_t hash;
   std::generate(std::begin(hash.data), std::end(hash.data), std::rand);
 
   auto transactions = alice.getTransactions(hash, 1);
@@ -2974,7 +2974,7 @@ TEST_F(WalletApi, getTransactionsReturnsBlockWithCorrectHash) {
   node.updateObservers();
   waitForWalletEvent(alice, cryptonote::WalletEventType::SYNC_COMPLETED, std::chrono::seconds(3));
 
-  crypto::hash_t lastBlockHash = Block::getHash(generator.getBlockchain().back());
+  hash_t lastBlockHash = Block::getHash(generator.getBlockchain().back());
   auto transactions = alice.getTransactions(lastBlockHash, 1);
 
   ASSERT_EQ(1, transactions.size());
@@ -2991,7 +2991,7 @@ TEST_F(WalletApi, getTransactionsReturnsBlockWithCorrectHash) {
 //   node.updateObservers();
 //   waitForWalletEvent(alice, cryptonote::WalletEventType::SYNC_COMPLETED, std::chrono::seconds(3));
 
-//   crypto::hash_t lastBlockHash = Block::getHash(generator.getBlockchain().back());
+//   hash_t lastBlockHash = Block::getHash(generator.getBlockchain().back());
 //   auto transactions = alice.getTransactions(lastBlockHash, 1);
 
 //   ASSERT_TRUE(transactionWithTransfersFound(alice, transactions, transactionId));
@@ -3384,8 +3384,8 @@ TEST_F(WalletApi, getDelayedTransactionIdsThrowsIfInTrackingMode) {
   cryptonote::WalletGreen bob(dispatcher, currency, node, TRANSACTION_SOFTLOCK_TIME);
   bob.initialize("p");
 
-  crypto::public_key_t pub;
-  crypto::secret_key_t sec;
+  public_key_t pub;
+  secret_key_t sec;
   generate_keys((uint8_t*)&pub, (uint8_t*)&sec);
 
   bob.createAddress(pub);

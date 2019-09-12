@@ -79,8 +79,8 @@ void findMyOutputs(
   }
 }
 
-std::vector<crypto::hash_t> getBlockHashes(const cryptonote::CompleteBlock* blocks, size_t count) {
-  std::vector<crypto::hash_t> result;
+std::vector<hash_t> getBlockHashes(const cryptonote::CompleteBlock* blocks, size_t count) {
+  std::vector<hash_t> result;
   result.reserve(count);
 
   for (size_t i = 0; i < count; ++i) {
@@ -133,9 +133,9 @@ void TransfersConsumer::getSubscriptions(std::vector<account_public_address_t>& 
   }
 }
 
-void TransfersConsumer::initTransactionPool(const std::unordered_set<crypto::hash_t>& uncommitedTransactions) {
+void TransfersConsumer::initTransactionPool(const std::unordered_set<hash_t>& uncommitedTransactions) {
   for (auto itSubscriptions = m_subscriptions.begin(); itSubscriptions != m_subscriptions.end(); ++itSubscriptions) {
-    std::vector<crypto::hash_t> unconfirmedTransactions;
+    std::vector<hash_t> unconfirmedTransactions;
     itSubscriptions->second->getContainer().getUnconfirmedTransactions(unconfirmedTransactions);
 
     for (auto itTransactions = unconfirmedTransactions.begin(); itTransactions != unconfirmedTransactions.end(); ++itTransactions) {
@@ -268,7 +268,7 @@ bool TransfersConsumer::onNewBlocks(const CompleteBlock* blocks, uint32_t startH
     }
   }
 
-  std::vector<crypto::hash_t> blockHashes = getBlockHashes(blocks, count);
+  std::vector<hash_t> blockHashes = getBlockHashes(blocks, count);
   if (!processingError) {
     m_observerManager.notify(&IBlockchainConsumerObserver::onBlocksAdded, this, blockHashes);
 
@@ -328,7 +328,7 @@ std::error_code TransfersConsumer::onPoolUpdated(const std::vector<std::unique_p
   return std::error_code();
 }
 
-const std::unordered_set<crypto::hash_t>& TransfersConsumer::getKnownPoolTxIds() const {
+const std::unordered_set<hash_t>& TransfersConsumer::getKnownPoolTxIds() const {
   return m_poolTxs;
 }
 
@@ -341,7 +341,7 @@ std::error_code TransfersConsumer::addUnconfirmedTransaction(const ITransactionR
   return processTransaction(unconfirmedBlockInfo, transaction);
 }
 
-void TransfersConsumer::removeUnconfirmedTransaction(const crypto::hash_t& transactionHash) {
+void TransfersConsumer::removeUnconfirmedTransaction(const hash_t& transactionHash) {
   m_observerManager.notify(&IBlockchainConsumerObserver::onTransactionDeleteBegin, this, transactionHash);
   for (auto& subscription : m_subscriptions) {
     subscription.second->deleteUnconfirmedTransaction(transactionHash);

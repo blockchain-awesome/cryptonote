@@ -253,14 +253,14 @@ WalletGreen::~WalletGreen() {
 }
 
 void WalletGreen::initialize(const std::string& password) {
-  crypto::public_key_t viewPublicKey;
-  crypto::secret_key_t viewSecretKey;
+  public_key_t viewPublicKey;
+  secret_key_t viewSecretKey;
   generate_keys((uint8_t *)&viewPublicKey, (uint8_t *)&viewSecretKey);
   initWithKeys(viewPublicKey, viewSecretKey, password);
 }
 
-void WalletGreen::initializeWithViewKey(const crypto::secret_key_t& viewSecretKey, const std::string& password) {
-  crypto::public_key_t viewPublicKey;
+void WalletGreen::initializeWithViewKey(const secret_key_t& viewSecretKey, const std::string& password) {
+  public_key_t viewPublicKey;
   if (!secret_key_to_public_key((const uint8_t*)&viewSecretKey, (uint8_t*)&viewPublicKey)) {
     throw std::system_error(make_error_code(cryptonote::error::KEY_GENERATION_ERROR));
   }
@@ -307,7 +307,7 @@ void WalletGreen::clearCaches() {
   m_blockchain.clear();
 }
 
-void WalletGreen::initWithKeys(const crypto::public_key_t& viewPublicKey, const crypto::secret_key_t& viewSecretKey, const std::string& password) {
+void WalletGreen::initWithKeys(const public_key_t& viewPublicKey, const secret_key_t& viewSecretKey, const std::string& password) {
   if (m_state != WalletState::NOT_INITIALIZED) {
     throw std::system_error(make_error_code(cryptonote::error::ALREADY_INITIALIZED));
   }
@@ -488,8 +488,8 @@ std::string WalletGreen::createAddress() {
   return doCreateAddress(spendKey.publicKey, spendKey.secretKey, creationTimestamp);
 }
 
-std::string WalletGreen::createAddress(const crypto::secret_key_t& spendSecretKey) {
-  crypto::public_key_t spendPublicKey;
+std::string WalletGreen::createAddress(const secret_key_t& spendSecretKey) {
+  public_key_t spendPublicKey;
   if (!secret_key_to_public_key((const uint8_t*)&spendSecretKey, (uint8_t*)&spendPublicKey) ) {
     throw std::system_error(make_error_code(cryptonote::error::KEY_GENERATION_ERROR));
   }
@@ -497,7 +497,7 @@ std::string WalletGreen::createAddress(const crypto::secret_key_t& spendSecretKe
   return doCreateAddress(spendPublicKey, spendSecretKey, 0);
 }
 
-std::string WalletGreen::createAddress(const crypto::public_key_t& spendPublicKey) {
+std::string WalletGreen::createAddress(const public_key_t& spendPublicKey) {
   if (!check_key((uint8_t*)&spendPublicKey)) {
     throw std::system_error(make_error_code(error::WRONG_PARAMETERS), "Wrong public key format");
   }
@@ -505,7 +505,7 @@ std::string WalletGreen::createAddress(const crypto::public_key_t& spendPublicKe
   return doCreateAddress(spendPublicKey, NULL_SECRET_KEY, 0);
 }
 
-std::string WalletGreen::doCreateAddress(const crypto::public_key_t& spendPublicKey, const crypto::secret_key_t& spendSecretKey, uint64_t creationTimestamp) {
+std::string WalletGreen::doCreateAddress(const public_key_t& spendPublicKey, const secret_key_t& spendSecretKey, uint64_t creationTimestamp) {
   assert(creationTimestamp <= std::numeric_limits<uint64_t>::max() - m_currency.blockFutureTimeLimit());
 
   throwIfNotInitialized();
@@ -535,7 +535,7 @@ std::string WalletGreen::doCreateAddress(const crypto::public_key_t& spendPublic
   return address;
 }
 
-std::string WalletGreen::addWallet(const crypto::public_key_t& spendPublicKey, const crypto::secret_key_t& spendSecretKey, uint64_t creationTimestamp) {
+std::string WalletGreen::addWallet(const public_key_t& spendPublicKey, const secret_key_t& spendSecretKey, uint64_t creationTimestamp) {
   auto& index = m_walletsContainer.get<KeysIndex>();
 
   auto trackingMode = getTrackingMode();
@@ -1556,7 +1556,7 @@ void WalletGreen::prepareInputs(
   }
 }
 
-WalletTransactionWithTransfers WalletGreen::getTransaction(const crypto::hash_t& transactionHash) const {
+WalletTransactionWithTransfers WalletGreen::getTransaction(const hash_t& transactionHash) const {
   throwIfNotInitialized();
   throwIfStopped();
 
@@ -1573,7 +1573,7 @@ WalletTransactionWithTransfers WalletGreen::getTransaction(const crypto::hash_t&
   return walletTransaction;
 }
 
-std::vector<TransactionsInBlockInfo> WalletGreen::getTransactions(const crypto::hash_t& blockHash, size_t count) const {
+std::vector<TransactionsInBlockInfo> WalletGreen::getTransactions(const hash_t& blockHash, size_t count) const {
   throwIfNotInitialized();
   throwIfStopped();
 
@@ -1596,19 +1596,19 @@ std::vector<TransactionsInBlockInfo> WalletGreen::getTransactions(uint32_t block
   return getTransactionsInBlocks(blockIndex, count);
 }
 
-std::vector<crypto::hash_t> WalletGreen::getBlockHashes(uint32_t blockIndex, size_t count) const {
+std::vector<hash_t> WalletGreen::getBlockHashes(uint32_t blockIndex, size_t count) const {
   throwIfNotInitialized();
   throwIfStopped();
 
   auto& index = m_blockchain.get<BlockHeightIndex>();
 
   if (blockIndex >= index.size()) {
-    return std::vector<crypto::hash_t>();
+    return std::vector<hash_t>();
   }
 
   auto start = std::next(index.begin(), blockIndex);
   auto end = std::next(index.begin(), std::min(index.size(), blockIndex + count));
-  return std::vector<crypto::hash_t>(start, end);
+  return std::vector<hash_t>(start, end);
 }
 
 uint32_t WalletGreen::getBlockCount() const {
@@ -1724,11 +1724,11 @@ void WalletGreen::onSynchronizationCompleted() {
   pushEvent(makeSyncCompletedEvent());
 }
 
-void WalletGreen::onBlocksAdded(const crypto::public_key_t& viewPublicKey, const std::vector<crypto::hash_t>& blockHashes) {
+void WalletGreen::onBlocksAdded(const public_key_t& viewPublicKey, const std::vector<hash_t>& blockHashes) {
   m_dispatcher.remoteSpawn([this, blockHashes] () { blocksAdded(blockHashes); } );
 }
 
-void WalletGreen::blocksAdded(const std::vector<crypto::hash_t>& blockHashes) {
+void WalletGreen::blocksAdded(const std::vector<hash_t>& blockHashes) {
   System::EventLock lk(m_readyEvent);
 
   if (m_state == WalletState::NOT_INITIALIZED) {
@@ -1738,7 +1738,7 @@ void WalletGreen::blocksAdded(const std::vector<crypto::hash_t>& blockHashes) {
   m_blockchain.insert(m_blockchain.end(), blockHashes.begin(), blockHashes.end());
 }
 
-void WalletGreen::onBlockchainDetach(const crypto::public_key_t& viewPublicKey, uint32_t blockIndex) {
+void WalletGreen::onBlockchainDetach(const public_key_t& viewPublicKey, uint32_t blockIndex) {
   m_dispatcher.remoteSpawn([this, blockIndex] () { blocksRollback(blockIndex); } );
 }
 
@@ -1753,20 +1753,20 @@ void WalletGreen::blocksRollback(uint32_t blockIndex) {
   blockHeightIndex.erase(std::next(blockHeightIndex.begin(), blockIndex), blockHeightIndex.end());
 }
 
-void WalletGreen::onTransactionDeleteBegin(const crypto::public_key_t& viewPublicKey, crypto::hash_t transactionHash) {
+void WalletGreen::onTransactionDeleteBegin(const public_key_t& viewPublicKey, hash_t transactionHash) {
   m_dispatcher.remoteSpawn([=]() { transactionDeleteBegin(transactionHash); });
 }
 
 // TODO remove
-void WalletGreen::transactionDeleteBegin(crypto::hash_t /*transactionHash*/) {
+void WalletGreen::transactionDeleteBegin(hash_t /*transactionHash*/) {
 }
 
-void WalletGreen::onTransactionDeleteEnd(const crypto::public_key_t& viewPublicKey, crypto::hash_t transactionHash) {
+void WalletGreen::onTransactionDeleteEnd(const public_key_t& viewPublicKey, hash_t transactionHash) {
   m_dispatcher.remoteSpawn([=]() { transactionDeleteEnd(transactionHash); });
 }
 
 // TODO remove
-void WalletGreen::transactionDeleteEnd(crypto::hash_t transactionHash) {
+void WalletGreen::transactionDeleteEnd(hash_t transactionHash) {
 }
 
 void WalletGreen::unlockBalances(uint32_t height) {
@@ -1783,11 +1783,11 @@ void WalletGreen::unlockBalances(uint32_t height) {
   }
 }
 
-void WalletGreen::onTransactionUpdated(ITransfersSubscription* /*object*/, const crypto::hash_t& /*transactionHash*/) {
-  // Deprecated, ignore it. New event handler is onTransactionUpdated(const crypto::public_key_t&, const crypto::hash_t&, const std::vector<ITransfersContainer*>&)
+void WalletGreen::onTransactionUpdated(ITransfersSubscription* /*object*/, const hash_t& /*transactionHash*/) {
+  // Deprecated, ignore it. New event handler is onTransactionUpdated(const public_key_t&, const hash_t&, const std::vector<ITransfersContainer*>&)
 }
 
-void WalletGreen::onTransactionUpdated(const crypto::public_key_t&, const crypto::hash_t& transactionHash, const std::vector<ITransfersContainer*>& containers) {
+void WalletGreen::onTransactionUpdated(const public_key_t&, const hash_t& transactionHash, const std::vector<ITransfersContainer*>& containers) {
   assert(!containers.empty());
 
   TransactionInformation info;
@@ -1955,7 +1955,7 @@ void WalletGreen::addUnconfirmedTransaction(const ITransactionReader& transactio
   }
 }
 
-void WalletGreen::removeUnconfirmedTransaction(const crypto::hash_t& transactionHash) {
+void WalletGreen::removeUnconfirmedTransaction(const hash_t& transactionHash) {
   System::RemoteContext<void> context(m_dispatcher, [this, &transactionHash] {
     m_blockchainSynchronizer.removeUnconfirmedTransaction(transactionHash).get();
   });
@@ -2326,7 +2326,7 @@ std::vector<TransactionsInBlockInfo> WalletGreen::getTransactionsInBlocks(uint32
   return result;
 }
 
-crypto::hash_t WalletGreen::getBlockHashByIndex(uint32_t blockIndex) const {
+hash_t WalletGreen::getBlockHashByIndex(uint32_t blockIndex) const {
   assert(blockIndex < m_blockchain.size());
   return m_blockchain.get<BlockHeightIndex>()[blockIndex];
 }
@@ -2370,8 +2370,8 @@ void WalletGreen::filterOutTransactions(WalletTransactions& transactions, Wallet
   }
 }
 
-void WalletGreen::getViewKeyKnownBlocks(const crypto::public_key_t& viewPublicKey) {
-  std::vector<crypto::hash_t> blockchain = m_synchronizer.getViewKeyKnownBlocks(m_viewPublicKey);
+void WalletGreen::getViewKeyKnownBlocks(const public_key_t& viewPublicKey) {
+  std::vector<hash_t> blockchain = m_synchronizer.getViewKeyKnownBlocks(m_viewPublicKey);
   m_blockchain.insert(m_blockchain.end(), blockchain.begin(), blockchain.end());
 }
 

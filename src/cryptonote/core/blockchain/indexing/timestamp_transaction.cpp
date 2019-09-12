@@ -6,12 +6,12 @@
 namespace cryptonote
 {
 
-bool TimestampTransactionsIndex::add(uint64_t timestamp, const crypto::hash_t& hash) {
+bool TimestampTransactionsIndex::add(uint64_t timestamp, const hash_t& hash) {
   index.emplace(timestamp, hash);
   return true;
 }
 
-bool TimestampTransactionsIndex::remove(uint64_t timestamp, const crypto::hash_t& hash) {
+bool TimestampTransactionsIndex::remove(uint64_t timestamp, const hash_t& hash) {
   auto range = index.equal_range(timestamp);
   for (auto iter = range.first; iter != range.second; ++iter) {
     if (iter->second == hash) {
@@ -23,7 +23,7 @@ bool TimestampTransactionsIndex::remove(uint64_t timestamp, const crypto::hash_t
   return false;
 }
 
-bool TimestampTransactionsIndex::find(uint64_t timestampBegin, uint64_t timestampEnd, uint64_t hashesNumberLimit, std::vector<crypto::hash_t>& hashes, uint64_t& hashesNumberWithinTimestamps) {
+bool TimestampTransactionsIndex::find(uint64_t timestampBegin, uint64_t timestampEnd, uint64_t hashesNumberLimit, std::vector<hash_t>& hashes, uint64_t& hashesNumberWithinTimestamps) {
   uint32_t hashesNumber = 0;
   if (timestampBegin > timestampEnd) {
     //std::swap(timestampBegin, timestampEnd);

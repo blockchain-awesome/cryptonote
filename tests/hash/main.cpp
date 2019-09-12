@@ -11,8 +11,9 @@
 #include "crypto/crypto.h"
 #include "../io.h"
 
+using namespace crypto;
 using namespace std;
-typedef crypto::hash_t chash;
+typedef hash_t chash;
 
 
 

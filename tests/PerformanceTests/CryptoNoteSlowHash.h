@@ -34,12 +34,12 @@ public:
   }
 
   bool test() {
-    crypto::hash_t hash;
+    hash_t hash;
     crypto::cn_slow_hash(&m_data, sizeof(m_data), (char *) &hash, 0, 0);
     return hash == m_expected_hash;
   }
 
 private:
   data_t m_data;
-  crypto::hash_t m_expected_hash;
+  hash_t m_expected_hash;
 };

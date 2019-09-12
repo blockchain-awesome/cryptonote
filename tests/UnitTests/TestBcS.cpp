@@ -112,7 +112,7 @@ public:
     m_blockchain.push_back(genesisBlockHash);
   }
 
-  void addPoolTransaction(const crypto::hash_t& hash) {
+  void addPoolTransaction(const hash_t& hash) {
     m_pool.emplace(hash);
   }
 
@@ -145,7 +145,7 @@ public:
     return m_blockchain;
   }
 
-  virtual const std::unordered_set<crypto::hash_t>& getKnownPoolTxIds() const override {
+  virtual const std::unordered_set<hash_t>& getKnownPoolTxIds() const override {
     return m_pool;
   }
 
@@ -165,12 +165,12 @@ public:
     throw std::runtime_error("Not implemented");
   }
 
-  void removeUnconfirmedTransaction(const crypto::hash_t& /*transactionHash*/) override {
+  void removeUnconfirmedTransaction(const hash_t& /*transactionHash*/) override {
     throw std::runtime_error("Not implemented");
   }
 
 private:
-  std::unordered_set<crypto::hash_t> m_pool;
+  std::unordered_set<hash_t> m_pool;
   std::vector<hash_t> m_blockchain;
 };
 
@@ -605,7 +605,7 @@ TEST_F(BcSTest, firstPoolSynchronizationCheck) {
 
 TEST_F(BcSTest, firstPoolSynchronizationCheckNonActual) {
   addConsumers(2);
-  m_consumers.front()->addPoolTransaction(crypto::rand<crypto::hash_t>());
+  m_consumers.front()->addPoolTransaction(crypto::rand<hash_t>());
 
   int requestsCount = 0;
 
@@ -640,7 +640,7 @@ TEST_F(BcSTest, firstPoolSynchronizationCheckNonActual) {
 
 TEST_F(BcSTest, firstPoolSynchronizationCheckGetPoolErr) {
   addConsumers(2);
-  m_consumers.front()->addPoolTransaction(crypto::rand<crypto::hash_t>());
+  m_consumers.front()->addPoolTransaction(crypto::rand<hash_t>());
 
   int requestsCount = 0;
 

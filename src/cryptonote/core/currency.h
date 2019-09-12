@@ -106,7 +106,7 @@ public:
   // bool isTestnet() const { return m_testnet; }
 
   const block_t& genesisBlock() const { return m_genesisBlock; }
-  const crypto::hash_t& genesisBlockHash() const { return m_genesisBlockHash; }
+  const hash_t& genesisBlockHash() const { return m_genesisBlockHash; }
 
   bool getBlockReward(size_t medianSize, size_t currentBlockSize, uint64_t alreadyGeneratedCoins, uint64_t fee,
     uint64_t& reward, int64_t& emissionChange) const;
@@ -194,7 +194,7 @@ private:
   static const std::vector<uint64_t> PRETTY_AMOUNTS;
 
   block_t m_genesisBlock;
-  crypto::hash_t m_genesisBlockHash;
+  hash_t m_genesisBlockHash;
 
   size_t m_poolSize = 1024;
 

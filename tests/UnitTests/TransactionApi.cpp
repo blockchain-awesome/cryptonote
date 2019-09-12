@@ -31,8 +31,8 @@ namespace {
     return a;
   }
 
-  void derivePublicKey(const account_keys_t& reciever, const crypto::public_key_t& srcTxKey, size_t outputIndex, public_key_t& ephemeralKey) {
-    crypto::key_derivation_t derivation;
+  void derivePublicKey(const account_keys_t& reciever, const public_key_t& srcTxKey, size_t outputIndex, public_key_t& ephemeralKey) {
+    key_derivation_t derivation;
     generate_key_derivation((const uint8_t*)&srcTxKey, (const uint8_t*)&(reciever.viewSecretKey), (uint8_t*)&derivation);
     derive_public_key((const uint8_t*)&derivation, outputIndex, 
       (const uint8_t*)&(reciever.address.spendPublicKey), 

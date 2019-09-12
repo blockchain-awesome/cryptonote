@@ -1,6 +1,6 @@
 #include "crypto.h"
 
-bool parse_hash256(const std::string& str_hash, crypto::hash_t& hash) {
+bool parse_hash256(const std::string& str_hash, hash_t& hash) {
   return hex::podFromString(str_hash, hash);
 }
 

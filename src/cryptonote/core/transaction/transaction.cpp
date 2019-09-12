@@ -64,7 +64,7 @@ void Transaction::getInputDetails(std::vector<transaction_input_details_t> input
       transaction_input_to_key_details_t details;
       key_input_t kinput = boost::get<key_input_t>(in);
 
-      std::vector<std::pair<crypto::hash_t, size_t>> outputReferences;
+      std::vector<std::pair<hash_t, size_t>> outputReferences;
       outputReferences.reserve(kinput.outputIndexes.size());
       details.outputIndexes = kinput.outputIndexes;
 

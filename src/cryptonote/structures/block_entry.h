@@ -10,7 +10,7 @@ namespace cryptonote
 struct block_info_t
 {
     uint32_t height;
-    crypto::hash_t id;
+    hash_t id;
 
     block_info_t()
     {
@@ -55,11 +55,11 @@ class Block
 
     //Static tool functions
     static bool getBlob(const block_t &b, binary_array_t &ba);
-    static bool getHash(const block_t &block, crypto::hash_t &hash);
-    static crypto::hash_t getHash(const block_t &block);
+    static bool getHash(const block_t &block, hash_t &hash);
+    static hash_t getHash(const block_t &block);
 
-    static bool getLongHash(const block_t &b, crypto::hash_t &res);
-    static bool checkProofOfWork(const block_t &block, difficulty_t currentDiffic, crypto::hash_t &proofOfWork);
+    static bool getLongHash(const block_t &b, hash_t &res);
+    static bool checkProofOfWork(const block_t &block, difficulty_t currentDiffic, hash_t &proofOfWork);
 
     static block_t genesis(config::config_t &conf);
 

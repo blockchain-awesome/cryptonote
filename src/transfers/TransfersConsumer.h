@@ -22,7 +22,7 @@ class INode;
 class TransfersConsumer: public IObservableImpl<IBlockchainConsumerObserver, IBlockchainConsumer> {
 public:
 
-  TransfersConsumer(const cryptonote::Currency& currency, INode& node, const crypto::secret_key_t& viewSecret);
+  TransfersConsumer(const cryptonote::Currency& currency, INode& node, const secret_key_t& viewSecret);
 
   ITransfersSubscription& addSubscription(const AccountSubscription& subscription);
   // returns true if no subscribers left
@@ -30,17 +30,17 @@ public:
   ITransfersSubscription* getSubscription(const account_public_address_t& acc);
   void getSubscriptions(std::vector<account_public_address_t>& subscriptions);
 
-  void initTransactionPool(const std::unordered_set<crypto::hash_t>& uncommitedTransactions);
+  void initTransactionPool(const std::unordered_set<hash_t>& uncommitedTransactions);
   
   // IBlockchainConsumer
   virtual SynchronizationStart getSyncStart() override;
   virtual void onBlockchainDetach(uint32_t height) override;
   virtual bool onNewBlocks(const CompleteBlock* blocks, uint32_t startHeight, uint32_t count) override;
-  virtual std::error_code onPoolUpdated(const std::vector<std::unique_ptr<ITransactionReader>>& addedTransactions, const std::vector<crypto::hash_t>& deletedTransactions) override;
-  virtual const std::unordered_set<crypto::hash_t>& getKnownPoolTxIds() const override;
+  virtual std::error_code onPoolUpdated(const std::vector<std::unique_ptr<ITransactionReader>>& addedTransactions, const std::vector<hash_t>& deletedTransactions) override;
+  virtual const std::unordered_set<hash_t>& getKnownPoolTxIds() const override;
 
   virtual std::error_code addUnconfirmedTransaction(const ITransactionReader& transaction) override;
-  virtual void removeUnconfirmedTransaction(const crypto::hash_t& transactionHash) override;
+  virtual void removeUnconfirmedTransaction(const hash_t& transactionHash) override;
 
 private:
 
@@ -52,7 +52,7 @@ private:
   }
 
   struct PreprocessInfo {
-    std::unordered_map<crypto::public_key_t, std::vector<TransactionOutputInformationIn>> outputs;
+    std::unordered_map<public_key_t, std::vector<TransactionOutputInformationIn>> outputs;
     std::vector<uint32_t> globalIdxs;
   };
 
@@ -62,16 +62,16 @@ private:
   void processOutputs(const TransactionBlockInfo& blockInfo, TransfersSubscription& sub, const ITransactionReader& tx,
     const std::vector<TransactionOutputInformationIn>& outputs, const std::vector<uint32_t>& globalIdxs, bool& contains, bool& updated);
 
-  std::error_code getGlobalIndices(const crypto::hash_t& transactionHash, std::vector<uint32_t>& outsGlobalIndices);
+  std::error_code getGlobalIndices(const hash_t& transactionHash, std::vector<uint32_t>& outsGlobalIndices);
 
   void updateSyncStart();
 
   SynchronizationStart m_syncStart;
-  const crypto::secret_key_t m_viewSecret;
+  const secret_key_t m_viewSecret;
   // map { spend public key -> subscription }
-  std::unordered_map<crypto::public_key_t, std::unique_ptr<TransfersSubscription>> m_subscriptions;
-  std::unordered_set<crypto::public_key_t> m_spendKeys;
-  std::unordered_set<crypto::hash_t> m_poolTxs;
+  std::unordered_map<public_key_t, std::unique_ptr<TransfersSubscription>> m_subscriptions;
+  std::unordered_set<public_key_t> m_spendKeys;
+  std::unordered_set<hash_t> m_poolTxs;
 
   INode& m_node;
   const cryptonote::Currency& m_currency;

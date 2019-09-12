@@ -23,35 +23,35 @@ namespace boost
 
   //---------------------------------------------------
   template <class Archive>
-  inline void serialize(Archive &a, crypto::public_key_t &x, const boost::serialization::version_type ver)
+  inline void serialize(Archive &a, public_key_t &x, const boost::serialization::version_type ver)
   {
-    a & reinterpret_cast<char (&)[sizeof(crypto::public_key_t)]>(x);
+    a & reinterpret_cast<char (&)[sizeof(public_key_t)]>(x);
   }
   template <class Archive>
-  inline void serialize(Archive &a, crypto::secret_key_t &x, const boost::serialization::version_type ver)
+  inline void serialize(Archive &a, secret_key_t &x, const boost::serialization::version_type ver)
   {
-    a & reinterpret_cast<char (&)[sizeof(crypto::secret_key_t)]>(x);
+    a & reinterpret_cast<char (&)[sizeof(secret_key_t)]>(x);
   }
   template <class Archive>
-  inline void serialize(Archive &a, crypto::key_derivation_t &x, const boost::serialization::version_type ver)
+  inline void serialize(Archive &a, key_derivation_t &x, const boost::serialization::version_type ver)
   {
-    a & reinterpret_cast<char (&)[sizeof(crypto::key_derivation_t)]>(x);
+    a & reinterpret_cast<char (&)[sizeof(key_derivation_t)]>(x);
   }
   template <class Archive>
-  inline void serialize(Archive &a, crypto::key_image_t &x, const boost::serialization::version_type ver)
+  inline void serialize(Archive &a, key_image_t &x, const boost::serialization::version_type ver)
   {
-    a & reinterpret_cast<char (&)[sizeof(crypto::key_image_t)]>(x);
+    a & reinterpret_cast<char (&)[sizeof(key_image_t)]>(x);
   }
 
   template <class Archive>
-  inline void serialize(Archive &a, crypto::signature_t &x, const boost::serialization::version_type ver)
+  inline void serialize(Archive &a, signature_t &x, const boost::serialization::version_type ver)
   {
-    a & reinterpret_cast<char (&)[sizeof(crypto::signature_t)]>(x);
+    a & reinterpret_cast<char (&)[sizeof(signature_t)]>(x);
   }
   template <class Archive>
-  inline void serialize(Archive &a, crypto::hash_t &x, const boost::serialization::version_type ver)
+  inline void serialize(Archive &a, hash_t &x, const boost::serialization::version_type ver)
   {
-    a & reinterpret_cast<char (&)[sizeof(crypto::hash_t)]>(x);
+    a & reinterpret_cast<char (&)[sizeof(hash_t)]>(x);
   }
   
   template <class Archive> void serialize(Archive& archive, cryptonote::multi_signature_input_t &output, unsigned int version) {

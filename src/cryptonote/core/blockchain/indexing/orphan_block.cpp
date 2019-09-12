@@ -7,14 +7,14 @@ namespace cryptonote
 
 
 bool OrphanBlocksIndex::add(const block_t& block) {
-  crypto::hash_t blockHash = Block::getHash(block);
+  hash_t blockHash = Block::getHash(block);
   uint32_t blockHeight = boost::get<base_input_t>(block.baseTransaction.inputs.front()).blockIndex;
   index.emplace(blockHeight, blockHash);
   return true;
 }
 
 bool OrphanBlocksIndex::remove(const block_t& block) {
-  crypto::hash_t blockHash = Block::getHash(block);
+  hash_t blockHash = Block::getHash(block);
   uint32_t blockHeight = boost::get<base_input_t>(block.baseTransaction.inputs.front()).blockIndex;
   auto range = index.equal_range(blockHeight);
   for (auto iter = range.first; iter != range.second; ++iter) {
@@ -27,7 +27,7 @@ bool OrphanBlocksIndex::remove(const block_t& block) {
   return false;
 }
 
-bool OrphanBlocksIndex::find(uint32_t height, std::vector<crypto::hash_t>& blockHashes) {
+bool OrphanBlocksIndex::find(uint32_t height, std::vector<hash_t>& blockHashes) {
   if (height > std::numeric_limits<uint32_t>::max()) {
     return false;
   }

@@ -64,7 +64,7 @@ IStreamSerializable* BlockchainSynchronizer::getConsumerState(IBlockchainConsume
   return getConsumerSynchronizationState(consumer);
 }
 
-std::vector<crypto::hash_t> BlockchainSynchronizer::getConsumerKnownBlocks(IBlockchainConsumer& consumer) const {
+std::vector<hash_t> BlockchainSynchronizer::getConsumerKnownBlocks(IBlockchainConsumer& consumer) const {
   std::unique_lock<std::mutex> lk(m_consumersMutex);
 
   auto state = getConsumerSynchronizationState(&consumer);
@@ -90,7 +90,7 @@ std::future<std::error_code> BlockchainSynchronizer::addUnconfirmedTransaction(c
   return future;
 }
 
-std::future<void> BlockchainSynchronizer::removeUnconfirmedTransaction(const crypto::hash_t& transactionHash) {
+std::future<void> BlockchainSynchronizer::removeUnconfirmedTransaction(const hash_t& transactionHash) {
   std::unique_lock<std::mutex> lock(m_stateMutex);
 
   if (m_currentState == State::stopped || m_futureState == State::stopped) {
@@ -127,7 +127,7 @@ std::error_code BlockchainSynchronizer::doAddUnconfirmedTransaction(const ITrans
   return ec;
 }
 
-void BlockchainSynchronizer::doRemoveUnconfirmedTransaction(const crypto::hash_t& transactionHash) {
+void BlockchainSynchronizer::doRemoveUnconfirmedTransaction(const hash_t& transactionHash) {
   std::unique_lock<std::mutex> lk(m_consumersMutex);
 
   for (auto& consumer : m_consumers) {
@@ -176,7 +176,7 @@ void BlockchainSynchronizer::actualizeFutureState() {
 
   while (!m_removeTransactionTasks.empty()) {
     auto& task = m_removeTransactionTasks.front();
-    const crypto::hash_t& transactionHash = *task.first;
+    const hash_t& transactionHash = *task.first;
     auto detachedPromise = std::move(task.second);
     m_removeTransactionTasks.pop_front();
 
@@ -282,7 +282,7 @@ void BlockchainSynchronizer::poolChanged() {
 }
 //--------------------------- FSM END ------------------------------------
 
-void BlockchainSynchronizer::getPoolUnionAndIntersection(std::unordered_set<crypto::hash_t>& poolUnion, std::unordered_set<crypto::hash_t>& poolIntersection) const {
+void BlockchainSynchronizer::getPoolUnionAndIntersection(std::unordered_set<hash_t>& poolUnion, std::unordered_set<hash_t>& poolIntersection) const {
   std::unique_lock<std::mutex> lk(m_consumersMutex);
 
   auto itConsumers = m_consumers.begin();
@@ -291,7 +291,7 @@ void BlockchainSynchronizer::getPoolUnionAndIntersection(std::unordered_set<cryp
   ++itConsumers;
 
   for (; itConsumers != m_consumers.end(); ++itConsumers) {
-    const std::unordered_set<crypto::hash_t>& consumerKnownIds = itConsumers->first->getKnownPoolTxIds();
+    const std::unordered_set<hash_t>& consumerKnownIds = itConsumers->first->getKnownPoolTxIds();
 
     poolUnion.insert(consumerKnownIds.begin(), consumerKnownIds.end());
 
@@ -465,8 +465,8 @@ BlockchainSynchronizer::UpdateConsumersResult BlockchainSynchronizer::updateCons
 }
 
 void BlockchainSynchronizer::startPoolSync() {
-  std::unordered_set<crypto::hash_t> unionPoolHistory;
-  std::unordered_set<crypto::hash_t> intersectedPoolHistory;
+  std::unordered_set<hash_t> unionPoolHistory;
+  std::unordered_set<hash_t> intersectedPoolHistory;
   getPoolUnionAndIntersection(unionPoolHistory, intersectedPoolHistory);
 
   GetPoolRequest unionRequest;

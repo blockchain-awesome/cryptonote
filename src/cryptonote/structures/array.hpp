@@ -77,7 +77,7 @@ size_t BinaryArray::size(const T &object)
 }
 
 template <class T>
-bool BinaryArray::objectHash(const T &object, crypto::hash_t &hash)
+bool BinaryArray::objectHash(const T &object, hash_t &hash)
 {
   binary_array_t ba;
   if (!BinaryArray::to(object, ba))
@@ -91,7 +91,7 @@ bool BinaryArray::objectHash(const T &object, crypto::hash_t &hash)
 }
 
 template <class T>
-bool BinaryArray::objectHash(const T &object, crypto::hash_t &hash, size_t &size)
+bool BinaryArray::objectHash(const T &object, hash_t &hash, size_t &size)
 {
   binary_array_t ba;
   if (!BinaryArray::to(object, ba))
@@ -107,9 +107,9 @@ bool BinaryArray::objectHash(const T &object, crypto::hash_t &hash, size_t &size
 }
 
 template <class T>
-crypto::hash_t BinaryArray::objectHash(const T &object)
+hash_t BinaryArray::objectHash(const T &object)
 {
-  crypto::hash_t hash;
+  hash_t hash;
   BinaryArray::objectHash(object, hash);
   return hash;
 }

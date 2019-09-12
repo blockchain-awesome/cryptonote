@@ -5,6 +5,8 @@
 #include "crypto/crypto.h"
 #include "common/StringTools.h"
 
+using namespace crypto;
+
 template <typename T>
 bool serializePod(T &v, Common::StringView name, cryptonote::ISerializer &serializer)
 {
@@ -17,7 +19,8 @@ std::ostream &print256(std::ostream &o, const T &v)
   return o << "<" << hex::podToString(v) << ">";
 }
 
-bool parse_hash256(const std::string &str_hash, crypto::hash_t &hash);
+bool parse_hash256(const std::string &str_hash, hash_t &hash);
+
 
 namespace crypto
 {
@@ -31,10 +34,10 @@ bool serialize(signature_t &sig, Common::StringView name, cryptonote::ISerialize
 bool serialize(elliptic_curve_scalar_t &ecScalar, Common::StringView name, cryptonote::ISerializer &serializer);
 bool serialize(elliptic_curve_point_t &ecPoint, Common::StringView name, cryptonote::ISerializer &serializer);
 
-inline std::ostream &operator<<(std::ostream &o, const crypto::public_key_t &v) { return print256(o, v); }
-inline std::ostream &operator<<(std::ostream &o, const crypto::secret_key_t &v) { return print256(o, v); }
-inline std::ostream &operator<<(std::ostream &o, const crypto::key_derivation_t &v) { return print256(o, v); }
-inline std::ostream &operator<<(std::ostream &o, const crypto::key_image_t &v) { return print256(o, v); }
-inline std::ostream &operator<<(std::ostream &o, const crypto::signature_t &v) { return print256(o, v); }
-inline std::ostream &operator<<(std::ostream &o, const crypto::hash_t &v) { return print256(o, v); }
+inline std::ostream &operator<<(std::ostream &o, const public_key_t &v) { return print256(o, v); }
+inline std::ostream &operator<<(std::ostream &o, const secret_key_t &v) { return print256(o, v); }
+inline std::ostream &operator<<(std::ostream &o, const key_derivation_t &v) { return print256(o, v); }
+inline std::ostream &operator<<(std::ostream &o, const key_image_t &v) { return print256(o, v); }
+inline std::ostream &operator<<(std::ostream &o, const signature_t &v) { return print256(o, v); }
+inline std::ostream &operator<<(std::ostream &o, const hash_t &v) { return print256(o, v); }
 } // namespace crypto

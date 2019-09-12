@@ -33,7 +33,7 @@ namespace
       {
         m_in_contexts.push_back(key_pair_t());
         key_pair_t& in_ephemeral = m_in_contexts.back();
-        crypto::key_image_t img;
+        key_image_t img;
         generate_key_image_helper(sender_account_keys, src_entr.realTransactionPublicKey, src_entr.realOutputIndexInTransaction, in_ephemeral, img);
 
         // put key image into tx input
@@ -55,8 +55,8 @@ namespace
       size_t output_index = 0;
       BOOST_FOREACH(const transaction_destination_entry_t& dst_entr, destinations)
       {
-        crypto::key_derivation_t derivation;
-        crypto::public_key_t out_eph_public_key;
+        key_derivation_t derivation;
+        public_key_t out_eph_public_key;
         generate_key_derivation((const uint8_t*)&dst_entr.addr.viewPublicKey, (const uint8_t*)&m_tx_key.secretKey, (uint8_t*)&derivation);
         derive_public_key((const uint8_t*)&derivation, output_index, (const uint8_t*)&dst_entr.addr.spendPublicKey, (uint8_t*)&out_eph_public_key);
 
@@ -82,14 +82,14 @@ namespace
       size_t i = 0;
       BOOST_FOREACH(const transaction_source_entry_t& src_entr, sources)
       {
-        std::vector<const crypto::public_key_t*> keys_ptrs;
+        std::vector<const public_key_t*> keys_ptrs;
         BOOST_FOREACH(const transaction_source_entry_t::output_entry_t& o, src_entr.outputs)
         {
           keys_ptrs.push_back(&o.second);
         }
 
-        m_tx.signatures.push_back(std::vector<crypto::signature_t>());
-        std::vector<crypto::signature_t>& sigs = m_tx.signatures.back();
+        m_tx.signatures.push_back(std::vector<signature_t>());
+        std::vector<signature_t>& sigs = m_tx.signatures.back();
         sigs.resize(src_entr.outputs.size());
         generate_ring_signature(m_tx_prefix_hash, boost::get<key_input_t>(m_tx.inputs[i]).keyImage,
           keys_ptrs.data(), keys_ptrs.size(), m_in_contexts[i].secretKey, src_entr.realOutput, sigs.data());
@@ -100,7 +100,7 @@ namespace
     transaction_t m_tx;
     key_pair_t m_tx_key;
     std::vector<key_pair_t> m_in_contexts;
-    crypto::hash_t m_tx_prefix_hash;
+    hash_t m_tx_prefix_hash;
   };
 
   transaction_t make_simple_tx_with_unlock_time(const std::vector<test_event_entry>& events,
@@ -120,12 +120,12 @@ namespace
     return builder.m_tx;
   };
 
-  crypto::public_key_t generate_invalid_pub_key()
+  public_key_t generate_invalid_pub_key()
   {
     for (int i = 0; i <= 0xFF; ++i)
     {
-      crypto::public_key_t key;
-      memset(&key, i, sizeof(crypto::public_key_t));
+      public_key_t key;
+      memset(&key, i, sizeof(public_key_t));
       if (!check_key((uint8_t*)&key))
       {
         return key;
@@ -133,7 +133,7 @@ namespace
     }
 
     throw std::runtime_error("invalid public key wasn't found");
-    return crypto::public_key_t();
+    return public_key_t();
   }
 }
 
@@ -444,7 +444,7 @@ bool gen_tx_key_image_not_derive_from_tx_key::generate(std::vector<test_event_en
   key_input_t& in_to_key = boost::get<key_input_t>(builder.m_tx.inputs.front());
   // key_pair_t kp = generateKeyPair();
   key_pair_t kp = Key::generate();
-  crypto::key_image_t another_ki;
+  key_image_t another_ki;
   crypto::generate_key_image(kp.publicKey, kp.secretKey, another_ki);
   in_to_key.keyImage = another_ki;
 
@@ -454,7 +454,7 @@ bool gen_tx_key_image_not_derive_from_tx_key::generate(std::vector<test_event_en
   // Tx with invalid key image can't be subscribed, so create empty signature
   builder.m_tx.signatures.resize(1);
   builder.m_tx.signatures[0].resize(1);
-  builder.m_tx.signatures[0][0] = boost::value_initialized<crypto::signature_t>();
+  builder.m_tx.signatures[0][0] = boost::value_initialized<signature_t>();
 
   DO_CALLBACK(events, "mark_invalid_tx");
   events.push_back(builder.m_tx);
@@ -479,7 +479,7 @@ bool gen_tx_key_image_is_invalid::generate(std::vector<test_event_entry>& events
   builder.step2_fill_inputs(miner_account.getAccountKeys(), sources);
 
   key_input_t& in_to_key = boost::get<key_input_t>(builder.m_tx.inputs.front());
-  crypto::public_key_t pub = generate_invalid_pub_key();
+  public_key_t pub = generate_invalid_pub_key();
   memcpy(&in_to_key.keyImage, &pub, sizeof(elliptic_curve_point_t));
 
   builder.step3_fill_outputs(destinations);
@@ -488,7 +488,7 @@ bool gen_tx_key_image_is_invalid::generate(std::vector<test_event_entry>& events
   // Tx with invalid key image can't be subscribed, so create empty signature
   builder.m_tx.signatures.resize(1);
   builder.m_tx.signatures[0].resize(1);
-  builder.m_tx.signatures[0][0] = boost::value_initialized<crypto::signature_t>();
+  builder.m_tx.signatures[0][0] = boost::value_initialized<signature_t>();
 
   DO_CALLBACK(events, "mark_invalid_tx");
   events.push_back(builder.m_tx);
@@ -643,13 +643,13 @@ bool gen_tx_signatures_are_invalid::generate(std::vector<test_event_entry>& even
   // Tx with nmix = 0 have a few inputs, and not enough signatures
   DO_CALLBACK(events, "mark_invalid_tx");
   sr_tx = BinaryArray::to(tx_0);
-  sr_tx.resize(sr_tx.size() - sizeof(crypto::signature_t));
+  sr_tx.resize(sr_tx.size() - sizeof(signature_t));
   events.push_back(serialized_transaction(sr_tx));
 
   // Tx with nmix = 0 have a few inputs, and too many signatures
   DO_CALLBACK(events, "mark_invalid_tx");
   sr_tx = BinaryArray::to(tx_0);
-  sr_tx.insert(sr_tx.end(), sr_tx.end() - sizeof(crypto::signature_t), sr_tx.end());
+  sr_tx.insert(sr_tx.end(), sr_tx.end() - sizeof(signature_t), sr_tx.end());
   events.push_back(serialized_transaction(sr_tx));
 
   // Tx with nmix = 1 without signatures
@@ -660,13 +660,13 @@ bool gen_tx_signatures_are_invalid::generate(std::vector<test_event_entry>& even
   // Tx with nmix = 1 have not enough signatures
   DO_CALLBACK(events, "mark_invalid_tx");
   sr_tx = BinaryArray::to(tx_1);
-  sr_tx.resize(sr_tx.size() - sizeof(crypto::signature_t));
+  sr_tx.resize(sr_tx.size() - sizeof(signature_t));
   events.push_back(serialized_transaction(sr_tx));
 
   // Tx with nmix = 1 have too many signatures
   DO_CALLBACK(events, "mark_invalid_tx");
   sr_tx = BinaryArray::to(tx_1);
-  sr_tx.insert(sr_tx.end(), sr_tx.end() - sizeof(crypto::signature_t), sr_tx.end());
+  sr_tx.insert(sr_tx.end(), sr_tx.end() - sizeof(signature_t), sr_tx.end());
   events.push_back(serialized_transaction(sr_tx));
 
   return true;
@@ -774,8 +774,8 @@ bool MultiSigTx_InvalidOutputSignature::generate(std::vector<test_event_entry>& 
 
   multi_signature_output_t target;
 
-  crypto::public_key_t pk;
-  crypto::secret_key_t sk;
+  public_key_t pk;
+  secret_key_t sk;
   generate_keys((uint8_t *)&pk, (uint8_t *)&sk);
 
   // fill with 1 valid key
@@ -846,7 +846,7 @@ bool MultiSigTx_Input::generate(std::vector<test_event_entry>& events) const {
     const auto& pk = m_outputAccounts[i].getAccountKeys().address.spendPublicKey;
     const auto& sk = m_outputAccounts[i].getAccountKeys().spendSecretKey;
 
-    crypto::signature_t sig;
+    signature_t sig;
     crypto::generate_signature(builder.m_tx_prefix_hash, pk, sk, sig);
     outsigs.push_back(sig);
   }
@@ -883,11 +883,11 @@ bool MultiSigTx_BadInputSignature::generate(std::vector<test_event_entry>& event
   const auto& sk = m_outputAccounts[0].getAccountKeys().spendSecretKey;
 
   // modify the transaction prefix hash
-  crypto::hash_t badHash = builder.m_tx_prefix_hash;
+  hash_t badHash = builder.m_tx_prefix_hash;
   *reinterpret_cast<uint16_t*>(&badHash) = 0xdead;
 
   // sign the hash
-  crypto::signature_t sig;
+  signature_t sig;
   crypto::generate_signature(badHash, pk, sk, sig);
   outsigs.push_back(sig);
 

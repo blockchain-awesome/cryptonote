@@ -396,11 +396,11 @@ TEST(BinarySerializer, uint16) {
 //  tx.vin.push_back(txin_gen1);
 //  tx.signatures.clear();
 //  ASSERT_TRUE(serialization::dump_binary(tx, blob));
-//  blob.append(std::string(sizeof(crypto::signature_t) / 2, 'x'));
+//  blob.append(std::string(sizeof(signature_t) / 2, 'x'));
 //  ASSERT_FALSE(serialization::parse_binary(blob, tx1));
 //
 //  // blob contains one signature
-//  blob.append(std::string(sizeof(crypto::signature_t) / 2, 'y'));
+//  blob.append(std::string(sizeof(signature_t) / 2, 'y'));
 //  ASSERT_FALSE(serialization::parse_binary(blob, tx1));
 //
 //  // Not enough signature vectors for all inputs
@@ -442,14 +442,14 @@ TEST(BinarySerializer, uint16) {
 //  ASSERT_EQ(linearize_vector2(tx.signatures), linearize_vector2(tx1.signatures));
 //
 //  // Blob doesn't contain enough data
-//  blob.resize(blob.size() - sizeof(crypto::signature_t) / 2);
+//  blob.resize(blob.size() - sizeof(signature_t) / 2);
 //  ASSERT_FALSE(serialization::parse_binary(blob, tx1));
 //
 //  // Blob contains too much data
-//  blob.resize(blob.size() + sizeof(crypto::signature_t));
+//  blob.resize(blob.size() + sizeof(signature_t));
 //  ASSERT_FALSE(serialization::parse_binary(blob, tx1));
 //
 //  // Blob contains one excess signature
-//  blob.resize(blob.size() + sizeof(crypto::signature_t) / 2);
+//  blob.resize(blob.size() + sizeof(signature_t) / 2);
 //  ASSERT_FALSE(serialization::parse_binary(blob, tx1));
 //}

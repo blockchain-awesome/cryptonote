@@ -42,6 +42,8 @@ extern "C" {
   extern void cn_fast_hash(const void *data, size_t length, char *hash);
 }
 
+using namespace crypto;
+
 namespace tools
 {
   namespace base58
@@ -244,7 +246,7 @@ namespace tools
     {
       std::string buf = varint::get(tag);
       buf += data;
-      crypto::hash_t hash;
+      hash_t hash;
       cn_fast_hash(buf.data(), buf.size(), (char *)&hash);
       const char* hash_data = reinterpret_cast<const char*>(&hash);
       buf.append(hash_data, addr_checksum_size);
@@ -262,7 +264,7 @@ namespace tools
       checksum = addr_data.substr(addr_data.size() - addr_checksum_size);
 
       addr_data.resize(addr_data.size() - addr_checksum_size);
-      crypto::hash_t hash;
+      hash_t hash;
       cn_fast_hash(addr_data.data(), addr_data.size(), (char*)&hash);
       std::string expected_checksum(reinterpret_cast<const char*>(&hash), addr_checksum_size);
       if (expected_checksum != checksum) return false;

@@ -33,6 +33,6 @@ public:
   }
 
 private:
-  crypto::key_derivation_t m_key_derivation;
-  crypto::secret_key_t m_spend_secret_key;
+  key_derivation_t m_key_derivation;
+  secret_key_t m_spend_secret_key;
 };

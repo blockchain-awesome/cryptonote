@@ -62,16 +62,16 @@ namespace cryptonote {
     }
 
     bool getLowerBound(uint64_t timestamp, uint64_t startOffset, uint32_t& height);
-    std::vector<crypto::hash_t> getBlockIds(uint32_t startHeight, uint32_t maxCount);
+    std::vector<hash_t> getBlockIds(uint32_t startHeight, uint32_t maxCount);
 
     void setCheckpoints(Checkpoints&& chk_pts) { m_checkpoints = chk_pts; }
     bool getBlocks(uint32_t start_offset, uint32_t count, std::list<block_t>& blocks, std::list<transaction_t>& txs);
     bool getBlocks(uint32_t start_offset, uint32_t count, std::list<block_t>& blocks);
     bool getAlternativeBlocks(std::list<block_t>& blocks);
     uint32_t getAlternativeBlocksCount();
-    crypto::hash_t getBlockIdByHeight(uint32_t height);
-    bool getBlockByHash(const crypto::hash_t &h, block_t &blk);
-    bool getBlockHeight(const crypto::hash_t& blockId, uint32_t& blockHeight);
+    hash_t getBlockIdByHeight(uint32_t height);
+    bool getBlockByHash(const hash_t &h, block_t &blk);
+    bool getBlockHeight(const hash_t& blockId, uint32_t& blockHeight);
     block_entry_t getBlock(uint32_t& height) {
       return m_blocks[height];
     }
@@ -80,17 +80,17 @@ namespace cryptonote {
 
 
     uint32_t getHeight(); //TODO rename to getCurrentBlockchainSize
-    crypto::hash_t getTailId();
-    crypto::hash_t getTailId(uint32_t& height);
+    hash_t getTailId();
+    hash_t getTailId(uint32_t& height);
     difficulty_t getDifficultyForNextBlock();
     uint64_t getCoinsInCirculation();
     bool addNewBlock(const block_t& bl_, block_verification_context_t& bvc);
     bool resetAndSetGenesisBlock(const block_t& b);
-    bool haveBlock(const crypto::hash_t& id);
-    std::vector<crypto::hash_t> buildSparseChain();
-    std::vector<crypto::hash_t> buildSparseChain(const crypto::hash_t& startBlockId);
-    uint32_t findBlockchainSupplement(const std::vector<crypto::hash_t>& qblock_ids); // !!!!
-    std::vector<crypto::hash_t> findBlockchainSupplement(const std::vector<crypto::hash_t>& remoteBlockIds, size_t maxCount,
+    bool haveBlock(const hash_t& id);
+    std::vector<hash_t> buildSparseChain();
+    std::vector<hash_t> buildSparseChain(const hash_t& startBlockId);
+    uint32_t findBlockchainSupplement(const std::vector<hash_t>& qblock_ids); // !!!!
+    std::vector<hash_t> findBlockchainSupplement(const std::vector<hash_t>& remoteBlockIds, size_t maxCount,
       uint32_t& totalBlockCount, uint32_t& startBlockIndex);
     bool handleGetObjects(NOTIFY_REQUEST_GET_OBJECTS_request& arg, NOTIFY_RESPONSE_GET_OBJECTS_request& rsp); //Deprecated. Should be removed with CryptoNoteProtocolHandler.
     bool getRandomOutsByAmount(const COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_request& req, COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_response& res);
@@ -98,21 +98,21 @@ namespace cryptonote {
     bool get_out_by_msig_gindex(uint64_t amount, uint64_t gindex, multi_signature_output_t& out);
     uint64_t getCurrentCumulativeBlocksizeLimit();
     uint64_t blockDifficulty(size_t i);
-    bool getAlreadyGeneratedCoins(const crypto::hash_t& hash, uint64_t& generatedCoins);
-    bool getBlockSize(const crypto::hash_t& hash, size_t& size);
-    bool getMultisigOutputReference(const multi_signature_input_t& txInMultisig, std::pair<crypto::hash_t, size_t>& outputReference);
-    bool getOrphanBlockIdsByHeight(uint32_t height, std::vector<crypto::hash_t>& blockHashes);
-    bool getBlockIdsByTimestamp(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t blocksNumberLimit, std::vector<crypto::hash_t>& hashes, uint32_t& blocksNumberWithinTimestamps);
-    bool isBlockInMainChain(const crypto::hash_t& blockId);
+    bool getAlreadyGeneratedCoins(const hash_t& hash, uint64_t& generatedCoins);
+    bool getBlockSize(const hash_t& hash, size_t& size);
+    bool getMultisigOutputReference(const multi_signature_input_t& txInMultisig, std::pair<hash_t, size_t>& outputReference);
+    bool getOrphanBlockIdsByHeight(uint32_t height, std::vector<hash_t>& blockHashes);
+    bool getBlockIdsByTimestamp(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t blocksNumberLimit, std::vector<hash_t>& hashes, uint32_t& blocksNumberWithinTimestamps);
+    bool isBlockInMainChain(const hash_t& blockId);
 
     // Transaction Operations
-    bool getTransactionIdsByPaymentId(const crypto::hash_t& paymentId, std::vector<crypto::hash_t>& transactionHashes);
+    bool getTransactionIdsByPaymentId(const hash_t& paymentId, std::vector<hash_t>& transactionHashes);
     bool getGeneratedTransactionsNumber(uint32_t height, uint64_t& generatedTransactions);
-    bool getBlockContainingTransaction(const crypto::hash_t& txId, crypto::hash_t& blockId, uint32_t& blockHeight);
-    bool checkTransactionInputs(const transaction_t& tx, uint32_t& pmax_used_block_height, crypto::hash_t& max_used_block_id, block_info_t* tail = 0);
-    bool getTransactionOutputGlobalIndexes(const crypto::hash_t& tx_id, std::vector<uint32_t>& indexs);
+    bool getBlockContainingTransaction(const hash_t& txId, hash_t& blockId, uint32_t& blockHeight);
+    bool checkTransactionInputs(const transaction_t& tx, uint32_t& pmax_used_block_height, hash_t& max_used_block_id, block_info_t* tail = 0);
+    bool getTransactionOutputGlobalIndexes(const hash_t& tx_id, std::vector<uint32_t>& indexs);
     size_t getTotalTransactions();
-    bool haveTransaction(const crypto::hash_t &id);
+    bool haveTransaction(const hash_t &id);
     bool haveTransactionKeyImagesAsSpent(const transaction_t &tx);
     transaction_index_t &getTransactionBlockIndex(const hash_t &hash) {
       return m_transactionMap[hash];
@@ -185,9 +185,9 @@ namespace cryptonote {
     }
 
   private:
-    typedef google::sparse_hash_set<crypto::key_image_t> key_images_container_t;
-    typedef std::unordered_map<crypto::hash_t, block_entry_t> blocks_ext_by_hash_t;
-    typedef google::sparse_hash_map<uint64_t, std::vector<std::pair<transaction_index_t, uint16_t>>> outputs_container_t; //crypto::hash_t - tx hash, size_t - index of out in transaction
+    typedef google::sparse_hash_set<key_image_t> key_images_container_t;
+    typedef std::unordered_map<hash_t, block_entry_t> blocks_ext_by_hash_t;
+    typedef google::sparse_hash_map<uint64_t, std::vector<std::pair<transaction_index_t, uint16_t>>> outputs_container_t; //hash_t - tx hash, size_t - index of out in transaction
     typedef google::sparse_hash_map<uint64_t, std::vector<multisignature_output_usage_t>> multisignature_outputs_container_t;
 
     const Currency& m_currency;
@@ -197,15 +197,15 @@ namespace cryptonote {
 
     key_images_container_t m_spent_keys;
     size_t m_current_block_cumul_sz_limit;
-    blocks_ext_by_hash_t m_alternative_chains; // crypto::hash_t -> block_extended_info
+    blocks_ext_by_hash_t m_alternative_chains; // hash_t -> block_extended_info
     outputs_container_t m_outputs;
 
     Checkpoints m_checkpoints;
     std::atomic<bool> m_is_in_checkpoint_zone;
 
     typedef BlockAccessor<block_entry_t> blocks_t;
-    typedef std::unordered_map<crypto::hash_t, uint32_t> block_map_t;
-    typedef std::unordered_map<crypto::hash_t, transaction_index_t> transaction_map_t;
+    typedef std::unordered_map<hash_t, uint32_t> block_map_t;
+    typedef std::unordered_map<hash_t, transaction_index_t> transaction_map_t;
 
     friend class BlockCacheSerializer;
     friend class BlockchainIndicesSerializer;
@@ -227,7 +227,7 @@ namespace cryptonote {
     void rebuildCache();
     bool storeCache();
     bool switch_to_alternative_blockchain(std::list<blocks_ext_by_hash_t::iterator>& alt_chain, bool discard_disconnected_chain);
-    bool handle_alternative_block(const block_t& b, const crypto::hash_t& id, block_verification_context_t& bvc, bool sendNewAlternativeBlockMessage = true);
+    bool handle_alternative_block(const block_t& b, const hash_t& id, block_verification_context_t& bvc, bool sendNewAlternativeBlockMessage = true);
     difficulty_t get_next_difficulty_for_alternative_chain(const std::list<blocks_ext_by_hash_t::iterator>& alt_chain, block_entry_t& bei);
     bool rollback_blockchain_switching(std::list<block_t>& original_chain, size_t rollback_height);
     bool get_last_n_blocks_sizes(std::vector<size_t>& sz, size_t count);
@@ -236,32 +236,32 @@ namespace cryptonote {
     bool check_block_timestamp(std::vector<uint64_t> timestamps, const block_t& b);
     uint64_t get_adjusted_time();
     bool complete_timestamps_vector(uint64_t start_height, std::vector<uint64_t>& timestamps);
-    bool checkCumulativeBlockSize(const crypto::hash_t& blockId, size_t cumulativeBlockSize, uint64_t height);
-    std::vector<crypto::hash_t> doBuildSparseChain(const crypto::hash_t& startBlockId) const;
+    bool checkCumulativeBlockSize(const hash_t& blockId, size_t cumulativeBlockSize, uint64_t height);
+    std::vector<hash_t> doBuildSparseChain(const hash_t& startBlockId) const;
     bool getBlockCumulativeSize(const block_t& block, size_t& cumulativeSize);
     bool update_next_comulative_size_limit();
-    bool check_tx_input(const key_input_t& txin, const crypto::hash_t& tx_prefix_hash, const std::vector<crypto::signature_t>& sig, uint32_t* pmax_related_block_height = NULL);
-    bool have_tx_keyimg_as_spent(const crypto::key_image_t &key_im);
+    bool check_tx_input(const key_input_t& txin, const hash_t& tx_prefix_hash, const std::vector<signature_t>& sig, uint32_t* pmax_related_block_height = NULL);
+    bool have_tx_keyimg_as_spent(const key_image_t &key_im);
     bool pushBlock(const block_t& blockData, block_verification_context_t& bvc);
     bool pushBlock(const block_t& blockData, const std::vector<transaction_t>& transactions, block_verification_context_t& bvc);
     bool pushBlock(block_entry_t& block);
-    void popBlock(const crypto::hash_t& blockHash);
+    void popBlock(const hash_t& blockHash);
 
     bool storeBlockchainIndices();
     bool loadBlockchainIndices();
 
     // Transactions
     size_t find_end_of_allowed_index(const std::vector<std::pair<transaction_index_t, uint16_t>>& amount_outs);
-    bool validateInput(const multi_signature_input_t& input, const crypto::hash_t& transactionHash, const crypto::hash_t& transactionPrefixHash, const std::vector<crypto::signature_t>& transactionSignatures);
+    bool validateInput(const multi_signature_input_t& input, const hash_t& transactionHash, const hash_t& transactionPrefixHash, const std::vector<signature_t>& transactionSignatures);
     bool add_out_to_get_random_outs(std::vector<std::pair<transaction_index_t, uint16_t>>& amount_outs, COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_outs_for_amount& result_outs, uint64_t amount, size_t i);
     bool prevalidate_miner_transaction(const block_t& b, uint32_t height);
     bool validate_miner_transaction(const block_t& b, uint32_t height, size_t cumulativeBlockSize, uint64_t alreadyGeneratedCoins, uint64_t fee, uint64_t& reward, int64_t& emissionChange);
     const transaction_entry_t& transactionByIndex(transaction_index_t index);
-    bool checkTransactionInputs(const transaction_t& tx, const crypto::hash_t& tx_prefix_hash, uint32_t* pmax_used_block_height = NULL);
+    bool checkTransactionInputs(const transaction_t& tx, const hash_t& tx_prefix_hash, uint32_t* pmax_used_block_height = NULL);
     bool checkTransactionInputs(const transaction_t& tx, uint32_t* pmax_used_block_height = NULL);
-    bool pushTransaction(block_entry_t& block, const crypto::hash_t& transactionHash, transaction_index_t transactionIndex);
-    void popTransaction(const transaction_t& transaction, const crypto::hash_t& transactionHash);
-    void popTransactions(const block_entry_t& block, const crypto::hash_t& minerTransactionHash);
+    bool pushTransaction(block_entry_t& block, const hash_t& transactionHash, transaction_index_t transactionIndex);
+    void popTransaction(const transaction_t& transaction, const hash_t& transactionHash);
+    void popTransactions(const block_entry_t& block, const hash_t& minerTransactionHash);
 
     bool loadTransactions(const block_t& block, std::vector<transaction_t>& transactions);
     void saveTransactions(const std::vector<transaction_t>& transactions);

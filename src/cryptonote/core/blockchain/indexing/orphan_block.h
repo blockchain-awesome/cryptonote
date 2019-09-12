@@ -15,10 +15,10 @@ public:
 
   bool add(const block_t& block);
   bool remove(const block_t& block);
-  bool find(uint32_t height, std::vector<crypto::hash_t>& blockHashes);
+  bool find(uint32_t height, std::vector<hash_t>& blockHashes);
   void clear();
 private:
-  std::unordered_multimap<uint32_t, crypto::hash_t> index;
+  std::unordered_multimap<uint32_t, hash_t> index;
 };
 
 } // namespace cryptonote

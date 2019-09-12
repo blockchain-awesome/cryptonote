@@ -25,7 +25,7 @@ struct transaction_extra_padding_t {
 };
 
 struct transaction_extra_public_key_t {
-  crypto::public_key_t publicKey;
+  public_key_t publicKey;
 };
 
 struct transaction_extra_nonce_t {
@@ -55,15 +55,15 @@ bool findTransactionExtraFieldByType(const std::vector<transaction_extra_field_t
 bool parseTransactionExtra(const std::vector<uint8_t>& tx_extra, std::vector<transaction_extra_field_t>& tx_extra_fields);
 bool writeTransactionExtra(std::vector<uint8_t>& tx_extra, const std::vector<transaction_extra_field_t>& tx_extra_fields);
 
-crypto::public_key_t getTransactionPublicKeyFromExtra(const std::vector<uint8_t>& tx_extra);
-bool addTransactionPublicKeyToExtra(std::vector<uint8_t>& tx_extra, const crypto::public_key_t& tx_pub_key);
+public_key_t getTransactionPublicKeyFromExtra(const std::vector<uint8_t>& tx_extra);
+bool addTransactionPublicKeyToExtra(std::vector<uint8_t>& tx_extra, const public_key_t& tx_pub_key);
 bool addExtraNonceToTransactionExtra(std::vector<uint8_t>& tx_extra, const binary_array_t& extra_nonce);
-void setPaymentIdToTransactionExtraNonce(binary_array_t& extra_nonce, const crypto::hash_t& payment_id);
-bool getPaymentIdFromTransactionExtraNonce(const binary_array_t& extra_nonce, crypto::hash_t& payment_id);
+void setPaymentIdToTransactionExtraNonce(binary_array_t& extra_nonce, const hash_t& payment_id);
+bool getPaymentIdFromTransactionExtraNonce(const binary_array_t& extra_nonce, hash_t& payment_id);
 
 bool createTxExtraWithPaymentId(const std::string& paymentIdString, std::vector<uint8_t>& extra);
 //returns false if payment id is not found or parse error
-bool getPaymentIdFromTxExtra(const std::vector<uint8_t>& extra, crypto::hash_t& paymentId);
-bool parsePaymentId(const std::string& paymentIdString, crypto::hash_t& paymentId);
+bool getPaymentIdFromTxExtra(const std::vector<uint8_t>& extra, hash_t& paymentId);
+bool parsePaymentId(const std::string& paymentIdString, hash_t& paymentId);
 
 }

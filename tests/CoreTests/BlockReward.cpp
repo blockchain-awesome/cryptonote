@@ -130,13 +130,13 @@ bool gen_block_reward::generate(std::vector<test_event_entry>& events) const
     if (!r)
       return false;
 
-    std::vector<crypto::hash_t> txs_1_hashes;
+    std::vector<hash_t> txs_1_hashes;
     txs_1_hashes.push_back(BinaryArray::objectHash(tx_1));
     txs_1_hashes.push_back(BinaryArray::objectHash(tx_2));
 
     block_t blk_8;
     generator.constructBlockManually(blk_8, blk_7, miner_account, test_generator::bf_miner_tx | test_generator::bf_tx_hashes,
-      0, 0, 0, crypto::hash_t(), 0, miner_tx, txs_1_hashes, txs_1_size, txs_fee);
+      0, 0, 0, hash_t(), 0, miner_tx, txs_1_hashes, txs_1_size, txs_fee);
 
     events.push_back(blk_8);
     DO_CALLBACK(events, "mark_checked_block");

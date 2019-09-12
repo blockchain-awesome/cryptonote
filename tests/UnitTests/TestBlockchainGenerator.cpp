@@ -69,7 +69,7 @@ std::vector<cryptonote::block_t> TestBlockchainGenerator::getBlockchainCopy() {
   return blockchain;
 }
 
-bool TestBlockchainGenerator::getTransactionByHash(const crypto::hash_t& hash, cryptonote::transaction_t& tx, bool checkTxPool)
+bool TestBlockchainGenerator::getTransactionByHash(const hash_t& hash, cryptonote::transaction_t& tx, bool checkTxPool)
 {
   std::unique_lock<std::mutex> lock(m_mutex);
 
@@ -109,7 +109,7 @@ void TestBlockchainGenerator::addMiningBlock() {
   uint64_t timestamp = time(NULL);
   cryptonote::block_t& prev_block = m_blockchain.back();
   uint32_t height = boost::get<base_input_t>(prev_block.baseTransaction.inputs.front()).blockIndex + 1;
-  crypto::hash_t prev_id = Block::getHash(prev_block);
+  hash_t prev_id = Block::getHash(prev_block);
 
   std::vector<size_t> block_sizes;
   std::list<cryptonote::transaction_t> tx_list;
@@ -222,8 +222,8 @@ void TestBlockchainGenerator::addToBlockchain(const std::vector<cryptonote::tran
   m_generatedTransactionsIndex.add(block);
 }
 
-void TestBlockchainGenerator::getPoolSymmetricDifference(std::vector<crypto::hash_t>&& known_pool_tx_ids, crypto::hash_t known_block_id, bool& is_bc_actual,
-  std::vector<cryptonote::transaction_t>& new_txs, std::vector<crypto::hash_t>& deleted_tx_ids)
+void TestBlockchainGenerator::getPoolSymmetricDifference(std::vector<hash_t>&& known_pool_tx_ids, hash_t known_block_id, bool& is_bc_actual,
+  std::vector<cryptonote::transaction_t>& new_txs, std::vector<hash_t>& deleted_tx_ids)
 {
   std::unique_lock<std::mutex> lock(m_mutex);
 
@@ -234,12 +234,12 @@ void TestBlockchainGenerator::getPoolSymmetricDifference(std::vector<crypto::has
 
   is_bc_actual = true;
 
-  std::unordered_set<crypto::hash_t> txIds;
+  std::unordered_set<hash_t> txIds;
   for (const auto& kv : m_txPool) {
     txIds.insert(kv.first);
   }
 
-  std::unordered_set<crypto::hash_t> known_set(known_pool_tx_ids.begin(), known_pool_tx_ids.end());
+  std::unordered_set<hash_t> known_set(known_pool_tx_ids.begin(), known_pool_tx_ids.end());
   for (auto it = txIds.begin(), e = txIds.end(); it != e;) {
     auto known_it = known_set.find(*it);
     if (known_it != known_set.end()) {
@@ -258,7 +258,7 @@ void TestBlockchainGenerator::getPoolSymmetricDifference(std::vector<crypto::has
 void TestBlockchainGenerator::putTxToPool(const cryptonote::transaction_t& tx) {
   std::unique_lock<std::mutex> lock(m_mutex);
 
-  crypto::hash_t txHash = cryptonote::BinaryArray::objectHash(tx);
+  hash_t txHash = cryptonote::BinaryArray::objectHash(tx);
   m_txPool[txHash] = tx;
 }
 
@@ -293,7 +293,7 @@ void TestBlockchainGenerator::cutBlockchain(uint32_t height) {
   //TODO: delete transactions from m_txs
 }
 
-bool TestBlockchainGenerator::addOrphan(const crypto::hash_t& hash, uint32_t height) {
+bool TestBlockchainGenerator::addOrphan(const hash_t& hash, uint32_t height) {
   cryptonote::block_t block;
   uint64_t timestamp = time(NULL);
   generator.constructBlock(block, miner_acc, timestamp);
@@ -308,11 +308,11 @@ bool TestBlockchainGenerator::getGeneratedTransactionsNumber(uint32_t height, ui
   return m_generatedTransactionsIndex.find(height, generatedTransactions);
 }
 
-bool TestBlockchainGenerator::getOrphanBlockIdsByHeight(uint32_t height, std::vector<crypto::hash_t>& blockHashes) {
+bool TestBlockchainGenerator::getOrphanBlockIdsByHeight(uint32_t height, std::vector<hash_t>& blockHashes) {
   return m_orthanBlocksIndex.find(height, blockHashes);
 }
 
-bool TestBlockchainGenerator::getBlockIdsByTimestamp(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t blocksNumberLimit, std::vector<crypto::hash_t>& hashes, uint32_t& blocksNumberWithinTimestamps) {
+bool TestBlockchainGenerator::getBlockIdsByTimestamp(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t blocksNumberLimit, std::vector<hash_t>& hashes, uint32_t& blocksNumberWithinTimestamps) {
   uint64_t blockCount;
   if (!m_timestampIndex.find(timestampBegin, timestampEnd, blocksNumberLimit, hashes, blockCount)) {
     return false;
@@ -322,8 +322,8 @@ bool TestBlockchainGenerator::getBlockIdsByTimestamp(uint64_t timestampBegin, ui
   return true;
 }
 
-bool TestBlockchainGenerator::getPoolTransactionIdsByTimestamp(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t transactionsNumberLimit, std::vector<crypto::hash_t>& hashes, uint64_t& transactionsNumberWithinTimestamps) {
-  std::vector<crypto::hash_t> blockHashes;
+bool TestBlockchainGenerator::getPoolTransactionIdsByTimestamp(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t transactionsNumberLimit, std::vector<hash_t>& hashes, uint64_t& transactionsNumberWithinTimestamps) {
+  std::vector<hash_t> blockHashes;
   if (!m_timestampIndex.find(timestampBegin, timestampEnd, transactionsNumberLimit, blockHashes, transactionsNumberWithinTimestamps)) {
     return false;
   }
@@ -339,12 +339,12 @@ bool TestBlockchainGenerator::getPoolTransactionIdsByTimestamp(uint64_t timestam
   return true;
 }
 
-bool TestBlockchainGenerator::getTransactionIdsByPaymentId(const crypto::hash_t& paymentId, std::vector<crypto::hash_t>& transactionHashes) {
+bool TestBlockchainGenerator::getTransactionIdsByPaymentId(const hash_t& paymentId, std::vector<hash_t>& transactionHashes) {
   return m_paymentIdIndex.find(paymentId, transactionHashes);
 }
 
 void TestBlockchainGenerator::addTx(const cryptonote::transaction_t& tx) {
-  crypto::hash_t txHash = BinaryArray::objectHash(tx);
+  hash_t txHash = BinaryArray::objectHash(tx);
   m_txs[txHash] = tx;
   auto& globalIndexes = transactionGlobalOuts[txHash];
   for (uint16_t outIndex = 0; outIndex < tx.outputs.size(); ++outIndex) {
@@ -361,7 +361,7 @@ void TestBlockchainGenerator::addTx(const cryptonote::transaction_t& tx) {
   }
 }
 
-bool TestBlockchainGenerator::getTransactionGlobalIndexesByHash(const crypto::hash_t& transactionHash, std::vector<uint32_t>& globalIndexes) {
+bool TestBlockchainGenerator::getTransactionGlobalIndexesByHash(const hash_t& transactionHash, std::vector<uint32_t>& globalIndexes) {
   auto globalIndexesIt = transactionGlobalOuts.find(transactionHash);
   if (globalIndexesIt == transactionGlobalOuts.end()) {
     return false;

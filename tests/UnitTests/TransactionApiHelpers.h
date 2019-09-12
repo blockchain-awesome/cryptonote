@@ -108,7 +108,7 @@ class TestTransactionBuilder {
 public:
 
   TestTransactionBuilder();
-  TestTransactionBuilder(const binary_array_t& txTemplate, const crypto::secret_key_t& secretKey);
+  TestTransactionBuilder(const binary_array_t& txTemplate, const secret_key_t& secretKey);
 
   public_key_t getTransactionPublicKey() const;
   void appendExtra(const binary_array_t& extraData);
@@ -133,12 +133,12 @@ public:
   std::unique_ptr<ITransactionReader> build();
 
   // get built transaction hash (call only after build)
-  crypto::hash_t getTransactionHash() const;
+  hash_t getTransactionHash() const;
 
 private:
 
-  void derivePublicKey(const account_keys_t& reciever, const crypto::public_key_t& srcTxKey, size_t outputIndex, public_key_t& ephemeralKey) {
-    crypto::key_derivation_t derivation;
+  void derivePublicKey(const account_keys_t& reciever, const public_key_t& srcTxKey, size_t outputIndex, public_key_t& ephemeralKey) {
+    key_derivation_t derivation;
     generate_key_derivation((const uint8_t*)&srcTxKey, (uint8_t*)&(reciever.viewSecretKey), (uint8_t*)&derivation);
     derive_public_key((const uint8_t*)&derivation, outputIndex,
       (const uint8_t*)&(reciever.address.spendPublicKey),
@@ -155,7 +155,7 @@ private:
   std::unordered_map<size_t, MsigInfo> msigInputs;
 
   std::unique_ptr<ITransaction> tx;
-  crypto::hash_t transactionHash;
+  hash_t transactionHash;
 };
 
 class FusionTransactionBuilder {

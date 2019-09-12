@@ -36,15 +36,15 @@ public:
   virtual bool removeObserver(IBlockchainObserver* observer) override;
 
   virtual bool getBlocks(const std::vector<uint32_t>& blockHeights, std::vector<std::vector<block_details_t>>& blocks) override;
-  virtual bool getBlocks(const std::vector<crypto::hash_t>& blockHashes, std::vector<block_details_t>& blocks) override;
+  virtual bool getBlocks(const std::vector<hash_t>& blockHashes, std::vector<block_details_t>& blocks) override;
   virtual bool getBlocks(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t blocksNumberLimit, std::vector<block_details_t>& blocks, uint32_t& blocksNumberWithinTimestamps) override;
 
   virtual bool getBlockchainTop(block_details_t& topBlock) override;
 
-  virtual bool getTransactions(const std::vector<crypto::hash_t>& transactionHashes, std::vector<transaction_details_t>& transactions) override;
-  virtual bool getTransactionsByPaymentId(const crypto::hash_t& paymentId, std::vector<transaction_details_t>& transactions) override;
+  virtual bool getTransactions(const std::vector<hash_t>& transactionHashes, std::vector<transaction_details_t>& transactions) override;
+  virtual bool getTransactionsByPaymentId(const hash_t& paymentId, std::vector<transaction_details_t>& transactions) override;
   virtual bool getPoolTransactions(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t transactionsNumberLimit, std::vector<transaction_details_t>& transactions, uint64_t& transactionsNumberWithinTimestamps) override;
-  virtual bool getPoolState(const std::vector<crypto::hash_t>& knownPoolTransactionHashes, crypto::hash_t knownBlockchainTop, bool& isBlockchainActual, std::vector<transaction_details_t>& newTransactions, std::vector<crypto::hash_t>& removedTransactions) override;
+  virtual bool getPoolState(const std::vector<hash_t>& knownPoolTransactionHashes, hash_t knownBlockchainTop, bool& isBlockchainActual, std::vector<transaction_details_t>& newTransactions, std::vector<hash_t>& removedTransactions) override;
 
   virtual uint64_t getRewardBlocksWindow() override;
   virtual uint64_t getFullRewardMaxBlockSize(uint8_t majorVersion) override;
@@ -87,7 +87,7 @@ private:
 
   block_details_t knownBlockchainTop;
   uint32_t knownBlockchainTopHeight;
-  std::unordered_set<crypto::hash_t> knownPoolState;
+  std::unordered_set<hash_t> knownPoolState;
 
   std::atomic<State> state;
   std::atomic<bool> synchronized;

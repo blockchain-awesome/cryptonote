@@ -9,6 +9,8 @@
 #include "crypto/hash.h"
 #include <vector>
 
+using namespace crypto;
+
 namespace cryptonote
 {
   class ISerializer;
@@ -24,16 +26,16 @@ namespace cryptonote
     }
 
     // returns true if new element was inserted, false if already exists
-    bool push(const crypto::hash_t& h) {
+    bool push(const hash_t& h) {
       auto result = m_container.push_back(h);
       return result.second;
     }
 
-    bool hasBlock(const crypto::hash_t& h) const {
+    bool hasBlock(const hash_t& h) const {
       return m_index.find(h) != m_index.end();
     }
 
-    bool getBlockHeight(const crypto::hash_t& h, uint32_t& height) const {
+    bool getBlockHeight(const hash_t& h, uint32_t& height) const {
       auto hi = m_index.find(h);
       if (hi == m_index.end())
         return false;
@@ -50,21 +52,21 @@ namespace cryptonote
       m_container.clear();
     }
 
-    crypto::hash_t getBlockId(uint32_t height) const;
-    std::vector<crypto::hash_t> getBlockIds(uint32_t startBlockIndex, uint32_t maxCount) const;
-    bool findSupplement(const std::vector<crypto::hash_t>& ids, uint32_t& offset) const;
-    std::vector<crypto::hash_t> buildSparseChain(const crypto::hash_t& startBlockId) const;
-    crypto::hash_t getTailId() const;
+    hash_t getBlockId(uint32_t height) const;
+    std::vector<hash_t> getBlockIds(uint32_t startBlockIndex, uint32_t maxCount) const;
+    bool findSupplement(const std::vector<hash_t>& ids, uint32_t& offset) const;
+    std::vector<hash_t> buildSparseChain(const hash_t& startBlockId) const;
+    hash_t getTailId() const;
 
     void serialize(ISerializer& s);
 
   private:
 
     typedef boost::multi_index_container <
-      crypto::hash_t,
+      hash_t,
       boost::multi_index::indexed_by<
         boost::multi_index::random_access<>,
-        boost::multi_index::hashed_unique<boost::multi_index::identity<crypto::hash_t>>
+        boost::multi_index::hashed_unique<boost::multi_index::identity<hash_t>>
       >
     > ContainerT;
 

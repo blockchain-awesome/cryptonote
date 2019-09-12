@@ -5,13 +5,13 @@
 namespace cryptonote
 {
 
-bool TimestampBlocksIndex::add(uint64_t timestamp, const crypto::hash_t &hash)
+bool TimestampBlocksIndex::add(uint64_t timestamp, const hash_t &hash)
 {
     index.emplace(timestamp, hash);
     return true;
 }
 
-bool TimestampBlocksIndex::remove(uint64_t timestamp, const crypto::hash_t &hash)
+bool TimestampBlocksIndex::remove(uint64_t timestamp, const hash_t &hash)
 {
     auto range = index.equal_range(timestamp);
     for (auto iter = range.first; iter != range.second; ++iter)
@@ -26,7 +26,7 @@ bool TimestampBlocksIndex::remove(uint64_t timestamp, const crypto::hash_t &hash
     return false;
 }
 
-bool TimestampBlocksIndex::find(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t hashesNumberLimit, std::vector<crypto::hash_t> &hashes, uint32_t &hashesNumberWithinTimestamps)
+bool TimestampBlocksIndex::find(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t hashesNumberLimit, std::vector<hash_t> &hashes, uint32_t &hashesNumberWithinTimestamps)
 {
     uint32_t hashesNumber = 0;
     if (timestampBegin > timestampEnd)

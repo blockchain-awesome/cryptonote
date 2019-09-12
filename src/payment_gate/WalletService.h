@@ -75,15 +75,15 @@ private:
   void loadWallet();
   void loadTransactionIdIndex();
 
-  void replaceWithNewWallet(const crypto::secret_key_t& viewSecretKey);
+  void replaceWithNewWallet(const secret_key_t& viewSecretKey);
 
-  std::vector<cryptonote::TransactionsInBlockInfo> getTransactions(const crypto::hash_t& blockHash, size_t blockCount) const;
+  std::vector<cryptonote::TransactionsInBlockInfo> getTransactions(const hash_t& blockHash, size_t blockCount) const;
   std::vector<cryptonote::TransactionsInBlockInfo> getTransactions(uint32_t firstBlockIndex, size_t blockCount) const;
 
-  std::vector<TransactionHashesInBlockRpcInfo> getRpcTransactionHashes(const crypto::hash_t& blockHash, size_t blockCount, const TransactionsInBlockInfoFilter& filter) const;
+  std::vector<TransactionHashesInBlockRpcInfo> getRpcTransactionHashes(const hash_t& blockHash, size_t blockCount, const TransactionsInBlockInfoFilter& filter) const;
   std::vector<TransactionHashesInBlockRpcInfo> getRpcTransactionHashes(uint32_t firstBlockIndex, size_t blockCount, const TransactionsInBlockInfoFilter& filter) const;
 
-  std::vector<TransactionsInBlockRpcInfo> getRpcTransactions(const crypto::hash_t& blockHash, size_t blockCount, const TransactionsInBlockInfoFilter& filter) const;
+  std::vector<TransactionsInBlockRpcInfo> getRpcTransactions(const hash_t& blockHash, size_t blockCount, const TransactionsInBlockInfoFilter& filter) const;
   std::vector<TransactionsInBlockRpcInfo> getRpcTransactions(uint32_t firstBlockIndex, size_t blockCount, const TransactionsInBlockInfoFilter& filter) const;
 
   const cryptonote::Currency& currency;
