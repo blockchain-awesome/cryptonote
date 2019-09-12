@@ -87,13 +87,13 @@ bool derive_public_key_suffix(const uint8_t *derivation, size_t output_index,
 void derive_secret_key(const uint8_t *derivation, size_t output_index, const uint8_t *base, uint8_t *derived_key);
 void derive_secret_key_suffix(const uint8_t *derivation, size_t output_index, const uint8_t *base, const uint8_t *suffix, size_t suffixLength, uint8_t *derived_key);
 
+bool underive_public_key(const uint8_t *derivation, size_t output_index,
+                         const uint8_t *derived_key, uint8_t *base);
+bool underive_public_key_suffix(const uint8_t *derivation, size_t output_index,
+                         const uint8_t *derived_key, const uint8_t *suffix, size_t suffixLength, uint8_t *base);
+
 bool underive_public_key_and_get_scalar(const key_derivation_t &derivation, std::size_t output_index,
                                         const public_key_t &derived_key, public_key_t &base, elliptic_curve_scalar_t &hashed_derivation);
-bool underive_public_key_suffix(const key_derivation_t &derivation, size_t output_index,
-                                const public_key_t &derived_key, const uint8_t *prefix, size_t prefixLength, public_key_t &base);
-
-bool underive_public_key(const key_derivation_t &derivation, size_t output_index,
-                         const public_key_t &derived_key, public_key_t &base);
 
 void generate_signature(const hash_t &prefix_hash, const public_key_t &pub, const secret_key_t &sec, signature_t &sig);
 

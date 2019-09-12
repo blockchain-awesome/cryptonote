@@ -187,7 +187,7 @@ int main(int argc, char *argv[])
       {
         get(input, expected2);
       }
-      actual1 = underive_public_key(derivation, output_index, derived_key, actual2);
+      actual1 = crypto::underive_public_key((const uint8_t *)&derivation, output_index, (const uint8_t *)&derived_key, (uint8_t *)&actual2);
       if (expected1 != actual1 || (expected1 && expected2 != actual2))
       {
         goto error;
