@@ -51,7 +51,7 @@ bool Block::getLongHash(const block_t& b, hash_t& res) {
     return false;
   }
   const HardFork hf = HardFork(config::get().hardforks);
-  cn_slow_hash(bd.data(), bd.size(), res, hf.getCNVariant(b));
+  cn_slow_hash(bd.data(), bd.size(), (char *)&res, hf.getCNVariant(b), 0);
   return true;
 }
 
