@@ -40,7 +40,7 @@ struct s_comm
 
 void generate_signature(const uint8_t *prefix_hash, const uint8_t *pub, const uint8_t *sec, uint8_t *sig)
 {
-  lock_guard<mutex> lock(random_lock);
+  // lock_guard<mutex> lock(random_lock);
   ge_p3 tmp3;
   elliptic_curve_scalar_t k;
   s_comm buf;
@@ -151,7 +151,7 @@ void generate_ring_signature(const uint8_t *prefix_hash, const uint8_t *image,
                              const uint8_t *sec, size_t sec_index,
                              uint8_t *sig)
 {
-  lock_guard<mutex> lock(random_lock);
+  // lock_guard<mutex> lock(random_lock);
   size_t i;
   ge_p3 image_unp;
   ge_dsmp image_pre;
