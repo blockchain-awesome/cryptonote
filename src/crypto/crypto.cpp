@@ -104,10 +104,10 @@ void hash_data_to_ec(const uint8_t *data, std::size_t len, public_key_t &key)
   ge_p2 point;
   ge_p1p1 point2;
   cn_fast_hash(data, len, (char *)&h);
-  ge_fromfe_frombytes_vartime(&point, reinterpret_cast<const unsigned char *>(&h));
+  ge_fromfe_frombytes_vartime(&point, (const uint8_t *)(&h));
   ge_mul8(&point2, &point);
   ge_p1p1_to_p2(&point, &point2);
-  ge_tobytes(reinterpret_cast<unsigned char *>(&key), &point);
+  ge_tobytes((uint8_t *)(&key), &point);
 }
 
 void generate_key_image(const uint8_t *pub, const uint8_t *sec, uint8_t *image)
@@ -156,16 +156,16 @@ void generate_ring_signature(const hash_t &prefix_hash, const key_image_t &image
   ge_p3 image_unp;
   ge_dsmp image_pre;
   elliptic_curve_scalar_t sum, k, h;
-  rs_comm *const buf = reinterpret_cast<rs_comm *>(alloca(rs_comm_size(pubs_count)));
+  rs_comm *const buf = (rs_comm *)(alloca(rs_comm_size(pubs_count)));
   assert(sec_index < pubs_count);
 #if !defined(NDEBUG)
   {
     ge_p3 t;
     public_key_t t2;
     key_image_t t3;
-    assert(sc_check(reinterpret_cast<const unsigned char *>(&sec)) == 0);
-    ge_scalarmult_base(&t, reinterpret_cast<const unsigned char *>(&sec));
-    ge_p3_tobytes(reinterpret_cast<unsigned char *>(&t2), &t);
+    assert(sc_check((const uint8_t *)(&sec)) == 0);
+    ge_scalarmult_base(&t, (const uint8_t *)(&sec));
+    ge_p3_tobytes((uint8_t *)(&t2), &t);
     assert(*pubs[sec_index] == t2);
     generate_key_image((const uint8_t *)&(*pubs[sec_index]), (const uint8_t *)&sec, (uint8_t *)&t3);
     assert(image == t3);
@@ -175,12 +175,12 @@ void generate_ring_signature(const hash_t &prefix_hash, const key_image_t &image
     }
   }
 #endif
-  if (ge_frombytes_vartime(&image_unp, reinterpret_cast<const unsigned char *>(&image)) != 0)
+  if (ge_frombytes_vartime(&image_unp, (const uint8_t *)(&image)) != 0)
   {
     abort();
   }
   ge_dsm_precomp(image_pre, &image_unp);
-  sc_0(reinterpret_cast<unsigned char *>(&sum));
+  sc_0((uint8_t *)(&sum));
   buf->h = prefix_hash;
   for (i = 0; i < pubs_count; i++)
   {
@@ -189,31 +189,31 @@ void generate_ring_signature(const hash_t &prefix_hash, const key_image_t &image
     if (i == sec_index)
     {
       random_scalar((uint8_t *)&k);
-      ge_scalarmult_base(&tmp3, reinterpret_cast<unsigned char *>(&k));
-      ge_p3_tobytes(reinterpret_cast<unsigned char *>(&buf->ab[i].a), &tmp3);
+      ge_scalarmult_base(&tmp3, (uint8_t *)(&k));
+      ge_p3_tobytes((uint8_t *)(&buf->ab[i].a), &tmp3);
       hash_to_ec(*pubs[i], tmp3);
-      ge_scalarmult(&tmp2, reinterpret_cast<unsigned char *>(&k), &tmp3);
-      ge_tobytes(reinterpret_cast<unsigned char *>(&buf->ab[i].b), &tmp2);
+      ge_scalarmult(&tmp2, (uint8_t *)(&k), &tmp3);
+      ge_tobytes((uint8_t *)(&buf->ab[i].b), &tmp2);
     }
     else
     {
       random_scalar((uint8_t *)&(sig[i]));
-      random_scalar((uint8_t *)(reinterpret_cast<unsigned char *>(&sig[i]) + 32));
-      if (ge_frombytes_vartime(&tmp3, reinterpret_cast<const unsigned char *>(&*pubs[i])) != 0)
+      random_scalar((uint8_t *)((uint8_t *)(&sig[i]) + 32));
+      if (ge_frombytes_vartime(&tmp3, (const uint8_t *)(&*pubs[i])) != 0)
       {
         abort();
       }
-      ge_double_scalarmult_base_vartime(&tmp2, reinterpret_cast<unsigned char *>(&sig[i]), &tmp3, reinterpret_cast<unsigned char *>(&sig[i]) + 32);
-      ge_tobytes(reinterpret_cast<unsigned char *>(&buf->ab[i].a), &tmp2);
+      ge_double_scalarmult_base_vartime(&tmp2, (uint8_t *)(&sig[i]), &tmp3, (uint8_t *)(&sig[i]) + 32);
+      ge_tobytes((uint8_t *)(&buf->ab[i].a), &tmp2);
       hash_to_ec(*pubs[i], tmp3);
-      ge_double_scalarmult_precomp_vartime(&tmp2, reinterpret_cast<unsigned char *>(&sig[i]) + 32, &tmp3, reinterpret_cast<unsigned char *>(&sig[i]), image_pre);
-      ge_tobytes(reinterpret_cast<unsigned char *>(&buf->ab[i].b), &tmp2);
-      sc_add(reinterpret_cast<unsigned char *>(&sum), reinterpret_cast<unsigned char *>(&sum), reinterpret_cast<unsigned char *>(&sig[i]));
+      ge_double_scalarmult_precomp_vartime(&tmp2, (uint8_t *)(&sig[i]) + 32, &tmp3, (uint8_t *)(&sig[i]), image_pre);
+      ge_tobytes((uint8_t *)(&buf->ab[i].b), &tmp2);
+      sc_add((uint8_t *)(&sum), (uint8_t *)(&sum), (uint8_t *)(&sig[i]));
     }
   }
   hash_to_scalar((uint8_t *)buf, rs_comm_size(pubs_count), (uint8_t *)&h);
-  sc_sub(reinterpret_cast<unsigned char *>(&sig[sec_index]), reinterpret_cast<unsigned char *>(&h), reinterpret_cast<unsigned char *>(&sum));
-  sc_mulsub(reinterpret_cast<unsigned char *>(&sig[sec_index]) + 32, reinterpret_cast<unsigned char *>(&sig[sec_index]), reinterpret_cast<const unsigned char *>(&sec), reinterpret_cast<unsigned char *>(&k));
+  sc_sub((uint8_t *)(&sig[sec_index]), (uint8_t *)(&h), (uint8_t *)(&sum));
+  sc_mulsub((uint8_t *)(&sig[sec_index]) + 32, (uint8_t *)(&sig[sec_index]), (const uint8_t *)(&sec), (uint8_t *)(&k));
 }
 
 bool check_ring_signature(const uint8_t *prefix_hash, const uint8_t *image,
