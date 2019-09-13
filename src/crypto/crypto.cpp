@@ -87,12 +87,12 @@ bool check_signature(const uint8_t *prefix_hash, const uint8_t *pub, const uint8
   return sc_isnonzero((const uint8_t *)&c) == 0;
 }
 
-static void hash_to_ec(const public_key_t &key, ge_p3 &res)
+static void hash_to_ec(const uint8_t *key, ge_p3 &res)
 {
   hash_t h;
   ge_p2 point;
   ge_p1p1 point2;
-  cn_fast_hash((const uint8_t *)&key, sizeof(public_key_t), (char *)&h);
+  cn_fast_hash(key, 32, (char *)&h);
   ge_fromfe_frombytes_vartime(&point, (const uint8_t *)(&h));
   ge_mul8(&point2, &point);
   ge_p1p1_to_p3(&res, &point2);
@@ -115,7 +115,7 @@ void generate_key_image(const uint8_t *pub, const uint8_t *sec, uint8_t *image)
   ge_p3 point;
   ge_p2 point2;
   assert(sc_check(sec) == 0);
-  hash_to_ec(*(const public_key_t *)pub, point);
+  hash_to_ec(pub, point);
   ge_scalarmult(&point2, sec, &point);
   ge_tobytes(image, &point2);
 }
@@ -123,7 +123,7 @@ void generate_key_image(const uint8_t *pub, const uint8_t *sec, uint8_t *image)
 void generate_incomplete_key_image(const uint8_t *pub, uint8_t *incomplete_key_image)
 {
   ge_p3 point;
-  hash_to_ec(*(const public_key_t *)pub, point);
+  hash_to_ec(pub, point);
   ge_p3_tobytes(incomplete_key_image, &point);
 }
 
@@ -192,7 +192,7 @@ void generate_ring_signature(const uint8_t *prefix_hash, const uint8_t *image,
       random_scalar((uint8_t *)&k);
       ge_scalarmult_base(&tmp3, (uint8_t *)(&k));
       ge_p3_tobytes((uint8_t *)(&buf->ab[i].a), &tmp3);
-      hash_to_ec(*pubs[i], tmp3);
+      hash_to_ec((const uint8_t *)pubs[i], tmp3);
       ge_scalarmult(&tmp2, (uint8_t *)(&k), &tmp3);
       ge_tobytes((uint8_t *)(&buf->ab[i].b), &tmp2);
     }
@@ -206,7 +206,7 @@ void generate_ring_signature(const uint8_t *prefix_hash, const uint8_t *image,
       }
       ge_double_scalarmult_base_vartime(&tmp2, (uint8_t *)(&sig[i * 64]), &tmp3, (uint8_t *)(&sig[i * 64]) + 32);
       ge_tobytes((uint8_t *)(&buf->ab[i].a), &tmp2);
-      hash_to_ec(*pubs[i], tmp3);
+      hash_to_ec((const uint8_t *)pubs[i], tmp3);
       ge_double_scalarmult_precomp_vartime(&tmp2, (uint8_t *)(&sig[i*64]) + 32, &tmp3, (uint8_t *)(&sig[i * 64]), image_pre);
       ge_tobytes((uint8_t *)(&buf->ab[i].b), &tmp2);
       sc_add((uint8_t *)(&sum), (uint8_t *)(&sum), (uint8_t *)(&sig[i*64]));
@@ -253,7 +253,7 @@ bool check_ring_signature(const uint8_t *prefix_hash, const uint8_t *image,
     }
     ge_double_scalarmult_base_vartime(&tmp2, sig + i * 64, &tmp3, sig + i * 64 + 32);
     ge_tobytes((uint8_t *)(&buf->ab[i].a), &tmp2);
-    hash_to_ec(*(const public_key_t *)(pubs + i * 32), tmp3);
+    hash_to_ec(*(pubs + i * 32), tmp3);
     ge_double_scalarmult_precomp_vartime(&tmp2, sig + i * 64 + 32, &tmp3, sig + i * 64, image_pre);
     ge_tobytes((uint8_t *)(&buf->ab[i].b), &tmp2);
     sc_add((uint8_t *)(&sum), (const uint8_t *)(&sum), sig + i * 64);
