@@ -146,9 +146,9 @@ static inline size_t rs_comm_size(size_t pubs_count)
   return sizeof(rs_comm) + pubs_count * sizeof(rs.ab[0]);
 }
 
-void generate_ring_signature(const hash_t &prefix_hash, const key_image_t &image,
+void generate_ring_signature(const uint8_t *prefix_hash, const uint8_t *image,
                              const public_key_t *const *pubs, size_t pubs_count,
-                             const secret_key_t &sec, size_t sec_index,
+                             const uint8_t *sec, size_t sec_index,
                              signature_t *sig)
 {
   lock_guard<mutex> lock(random_lock);
@@ -163,25 +163,26 @@ void generate_ring_signature(const hash_t &prefix_hash, const key_image_t &image
     ge_p3 t;
     public_key_t t2;
     key_image_t t3;
-    assert(sc_check((const uint8_t *)(&sec)) == 0);
-    ge_scalarmult_base(&t, (const uint8_t *)(&sec));
+    assert(sc_check(sec) == 0);
+    ge_scalarmult_base(&t, sec);
     ge_p3_tobytes((uint8_t *)(&t2), &t);
     assert(*pubs[sec_index] == t2);
-    generate_key_image((const uint8_t *)&(*pubs[sec_index]), (const uint8_t *)&sec, (uint8_t *)&t3);
-    assert(image == t3);
+    generate_key_image((const uint8_t *)&(*pubs[sec_index]), sec, (uint8_t *)&t3);
+    assert(*(key_image_t *)image == t3);
     for (i = 0; i < pubs_count; i++)
     {
       assert(check_key((uint8_t *)&(*pubs[i])));
     }
   }
 #endif
-  if (ge_frombytes_vartime(&image_unp, (const uint8_t *)(&image)) != 0)
+  if (ge_frombytes_vartime(&image_unp, image) != 0)
   {
     abort();
   }
   ge_dsm_precomp(image_pre, &image_unp);
   sc_0((uint8_t *)(&sum));
-  buf->h = prefix_hash;
+  buf->h = *(const hash_t *)prefix_hash;
+
   for (i = 0; i < pubs_count; i++)
   {
     ge_p2 tmp2;
@@ -213,7 +214,7 @@ void generate_ring_signature(const hash_t &prefix_hash, const key_image_t &image
   }
   hash_to_scalar((uint8_t *)buf, rs_comm_size(pubs_count), (uint8_t *)&h);
   sc_sub((uint8_t *)(&sig[sec_index]), (uint8_t *)(&h), (uint8_t *)(&sum));
-  sc_mulsub((uint8_t *)(&sig[sec_index]) + 32, (uint8_t *)(&sig[sec_index]), (const uint8_t *)(&sec), (uint8_t *)(&k));
+  sc_mulsub((uint8_t *)(&sig[sec_index]) + 32, (uint8_t *)(&sig[sec_index]), sec, (uint8_t *)(&k));
 }
 
 bool check_ring_signature(const uint8_t *prefix_hash, const uint8_t *image,

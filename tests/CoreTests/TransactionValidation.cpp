@@ -91,8 +91,8 @@ namespace
         m_tx.signatures.push_back(std::vector<signature_t>());
         std::vector<signature_t>& sigs = m_tx.signatures.back();
         sigs.resize(src_entr.outputs.size());
-        generate_ring_signature(m_tx_prefix_hash, boost::get<key_input_t>(m_tx.inputs[i]).keyImage,
-          keys_ptrs.data(), keys_ptrs.size(), m_in_contexts[i].secretKey, src_entr.realOutput, sigs.data());
+        generate_ring_signature((const uint8_t*)&m_tx_prefix_hash, (const uint8_t*)&boost::get<key_input_t>(m_tx.inputs[i]).keyImage,
+          keys_ptrs.data(), keys_ptrs.size(), (const uint8_t*)&m_in_contexts[i].secretKey, src_entr.realOutput, sigs.data());
         i++;
       }
     }

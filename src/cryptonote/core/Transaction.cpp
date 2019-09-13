@@ -328,11 +328,11 @@ namespace cryptonote {
     signatures.resize(keysPtrs.size());
 
     generate_ring_signature(
-      reinterpret_cast<const hash_t&>(prefixHash),
-      reinterpret_cast<const key_image_t&>(input.keyImage),
+      (const uint8_t*)&(prefixHash),
+      (const uint8_t*)&(input.keyImage),
       keysPtrs.data(),
       keysPtrs.size(),
-      reinterpret_cast<const secret_key_t&>(ephKeys.secretKey),
+      (const uint8_t*)&(ephKeys.secretKey),
       info.realOutput.transactionIndex,
       signatures.data());
 
