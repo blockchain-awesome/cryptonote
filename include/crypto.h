@@ -9,34 +9,6 @@
 namespace crypto
 {
 
-struct hash_t
-{
-  uint8_t data[32];
-};
-
-struct public_key_t
-{
-  uint8_t data[32];
-};
-
-struct secret_key_t
-{
-  uint8_t data[32];
-};
-
-struct key_derivation_t
-{
-  uint8_t data[32];
-};
-
-struct key_image_t
-{
-  uint8_t data[32];
-};
-
-struct signature_t
-{
-  uint8_t data[64];
-};
+#include "crypto/types.h"
 
 } // namespace crypto
