@@ -334,7 +334,7 @@ namespace cryptonote {
       keysPtrs.size(),
       (const uint8_t*)&(ephKeys.secretKey),
       info.realOutput.transactionIndex,
-      signatures.data());
+      (uint8_t *)signatures.data());
 
     getSignatures(index) = signatures;
     invalidateHash();

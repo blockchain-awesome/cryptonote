@@ -149,7 +149,7 @@ static inline size_t rs_comm_size(size_t pubs_count)
 void generate_ring_signature(const uint8_t *prefix_hash, const uint8_t *image,
                              const public_key_t *const *pubs, size_t pubs_count,
                              const uint8_t *sec, size_t sec_index,
-                             signature_t *sig)
+                             uint8_t *sig)
 {
   lock_guard<mutex> lock(random_lock);
   size_t i;
@@ -198,23 +198,23 @@ void generate_ring_signature(const uint8_t *prefix_hash, const uint8_t *image,
     }
     else
     {
-      random_scalar((uint8_t *)&(sig[i]));
-      random_scalar((uint8_t *)((uint8_t *)(&sig[i]) + 32));
+      random_scalar((uint8_t *)&(sig[i * 64]));
+      random_scalar((uint8_t *)((uint8_t *)(&sig[i * 64]) + 32));
       if (ge_frombytes_vartime(&tmp3, (const uint8_t *)(&*pubs[i])) != 0)
       {
         abort();
       }
-      ge_double_scalarmult_base_vartime(&tmp2, (uint8_t *)(&sig[i]), &tmp3, (uint8_t *)(&sig[i]) + 32);
+      ge_double_scalarmult_base_vartime(&tmp2, (uint8_t *)(&sig[i * 64]), &tmp3, (uint8_t *)(&sig[i * 64]) + 32);
       ge_tobytes((uint8_t *)(&buf->ab[i].a), &tmp2);
       hash_to_ec(*pubs[i], tmp3);
-      ge_double_scalarmult_precomp_vartime(&tmp2, (uint8_t *)(&sig[i]) + 32, &tmp3, (uint8_t *)(&sig[i]), image_pre);
+      ge_double_scalarmult_precomp_vartime(&tmp2, (uint8_t *)(&sig[i*64]) + 32, &tmp3, (uint8_t *)(&sig[i * 64]), image_pre);
       ge_tobytes((uint8_t *)(&buf->ab[i].b), &tmp2);
-      sc_add((uint8_t *)(&sum), (uint8_t *)(&sum), (uint8_t *)(&sig[i]));
+      sc_add((uint8_t *)(&sum), (uint8_t *)(&sum), (uint8_t *)(&sig[i*64]));
     }
   }
   hash_to_scalar((uint8_t *)buf, rs_comm_size(pubs_count), (uint8_t *)&h);
-  sc_sub((uint8_t *)(&sig[sec_index]), (uint8_t *)(&h), (uint8_t *)(&sum));
-  sc_mulsub((uint8_t *)(&sig[sec_index]) + 32, (uint8_t *)(&sig[sec_index]), sec, (uint8_t *)(&k));
+  sc_sub((uint8_t *)(&sig[sec_index * 64]), (uint8_t *)(&h), (uint8_t *)(&sum));
+  sc_mulsub((uint8_t *)(&sig[sec_index * 64]) + 32, (uint8_t *)(&sig[sec_index * 64]), sec, (uint8_t *)(&k));
 }
 
 bool check_ring_signature(const uint8_t *prefix_hash, const uint8_t *image,
