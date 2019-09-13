@@ -91,7 +91,7 @@ bool check_signature(const uint8_t *prefix_hash, const uint8_t *pub, const uint8
    */
 void generate_key_image(const uint8_t *pub, const uint8_t *sec, uint8_t *image);
 
-void hash_data_to_ec(const uint8_t *data, std::size_t len, public_key_t &key);
+void hash_data_to_ec(const uint8_t *data, std::size_t len, uint8_t *key);
 
 void generate_ring_signature(const uint8_t *prefix_hash, const uint8_t *image,
                              const public_key_t *const *pubs, size_t pubs_count,
