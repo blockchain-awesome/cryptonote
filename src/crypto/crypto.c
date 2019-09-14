@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <memory.h>
 #include "crypto-ops.h"
-#include "crypto-defines.h"
+#include "crypto.h"
 #include "random.h"
 #include "hash-ops.h"
 #include "types.h"
@@ -23,6 +23,15 @@ typedef struct
     elliptic_curve_point_t a, b;
   } ab[];
 } rs_comm;
+
+int check_scalar(uint8_t * scalar) {
+  return sc_check(scalar) == 0;
+}
+
+int check_public_key(const uint8_t *public_key) {
+  ge_p3 point;
+  return ge_frombytes_vartime(&point, public_key) == 0;
+}
 
 void random_scalar(uint8_t *res)
 {

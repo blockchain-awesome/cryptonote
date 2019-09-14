@@ -67,7 +67,7 @@ if (MSVC)
   target_link_libraries(System ws2_32)
 endif ()
 
-target_link_libraries(ConnectivityTool CryptoNoteCore CommandLine Logging Crypto P2P Rpc Http Serialization Common System Config ${Boost_LIBRARIES})
+target_link_libraries(ConnectivityTool CryptoNoteCore CommandLine Logging CryptoNoteCrypto Crypto P2P Rpc Http Serialization Common System Config ${Boost_LIBRARIES})
 target_link_libraries(daemon Rpc CryptoNoteCore P2P Serialization System Http CommandLine Logging Common CryptoNoteCrypto Crypto upnpc-static BlockchainExplorer Config ${Boost_LIBRARIES})
 target_link_libraries(SimpleWallet Wallet NodeRpcProxy Transfers Rpc Http CryptoNoteCore Serialization BlockchainExplorer System CommandLine Logging Common CryptoNoteCrypto Crypto Config ${Boost_LIBRARIES})
 target_link_libraries(PaymentGateService PaymentGate JsonRpcServer Wallet NodeRpcProxy Transfers CryptoNoteCore CryptoNoteCrypto Crypto P2P Rpc Http Serialization System CommandLine Logging Common InProcessNode upnpc-static BlockchainExplorer Config ${Boost_LIBRARIES})

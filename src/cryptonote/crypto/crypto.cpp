@@ -26,7 +26,7 @@ extern "C"
 {
 #include "crypto/crypto-ops.h"
 #include "crypto/random.h"
-#include "crypto/crypto-defines.h"
+#include "crypto/crypto.h"
 }
 
 mutex random_lock;

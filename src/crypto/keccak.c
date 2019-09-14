@@ -9,7 +9,7 @@
 #else
 #include <unistd.h>
 #endif
-#include "common/int-util.h"
+#include "util.h"
 #include "hash-ops.h"
 #include "keccak.h"
 

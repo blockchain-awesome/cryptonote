@@ -146,3 +146,8 @@ void generate_random_bytes_not_thread_safe(size_t n, void *result) {
     }
   }
 }
+
+void setup_random(int value)
+{
+  memset(&state, value, sizeof(union hash_state));
+}

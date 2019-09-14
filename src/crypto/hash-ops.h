@@ -11,8 +11,16 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#endif 
+
+#if !defined(__RUST_RAW_CRYPTO__)
+
 #include "../common/static_assert.h"
-#include "common/int-util.h"
+
+#endif
+
+#if !defined(__cplusplus)
+#include "util.h"
 
 static inline void *padd(void *p, size_t i) {
   return (char *) p + i;

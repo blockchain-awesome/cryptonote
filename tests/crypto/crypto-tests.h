@@ -11,7 +11,7 @@ using namespace crypto;
 extern "C" {
 #endif
 
-void setup_random(void);
+void setup_random(int value);
 void random_scalar(uint8_t *);
 void hash_to_scalar(const uint8_t *data, size_t length, uint8_t *res);
 void generate_keys(uint8_t *public_key, uint8_t *secret_key);
