@@ -1,8 +1,8 @@
 #pragma once
 
-#include "crypto/chacha.h"
+#include "cryptonote/chacha.h"
 #include "serialization/ISerializer.h"
-#include "crypto/crypto.h"
+#include "cryptonote/crypto.h"
 #include "common/StringTools.h"
 
 using namespace crypto;

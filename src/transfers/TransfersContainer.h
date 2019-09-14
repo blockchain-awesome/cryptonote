@@ -14,7 +14,7 @@
 #include <boost/multi_index/mem_fun.hpp>
 #include <boost/multi_index/ordered_index.hpp>
 
-#include "crypto/crypto.h"
+#include "cryptonote/crypto.h"
 #include "cryptonote/core/key.h"
 #include "cryptonote/core/blockchain/serializer/basics.h"
 #include "cryptonote/core/currency.h"

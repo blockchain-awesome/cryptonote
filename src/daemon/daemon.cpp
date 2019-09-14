@@ -10,7 +10,7 @@
 #include "DaemonCommandsHandler.h"
 
 #include "common/SignalHandler.h"
-#include "crypto/hash.h"
+#include "cryptonote/hash.h"
 #include "cryptonote/core/core.h"
 #include "command_line/daemon.h"
 #include "command_line/CoreConfig.h"

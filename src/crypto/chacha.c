@@ -10,7 +10,7 @@ Public domain.
 #include <sys/param.h>
 #endif
 
-#include "chacha.h"
+// #include "chacha.h"
 #include "common/int-util.h"
 #include "warnings.h"
 

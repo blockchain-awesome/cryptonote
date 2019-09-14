@@ -16,7 +16,7 @@
 #include <boost/limits.hpp>
 #include <boost/utility/value_init.hpp>
 
-#include "crypto/crypto.h"
+#include "cryptonote/crypto.h"
 #include "command_line/options.h"
 #include "common/StringTools.h"
 #include "serialization/SerializationTools.h"

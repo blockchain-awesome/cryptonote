@@ -24,9 +24,9 @@ using std::mutex;
 
 extern "C"
 {
-#include "crypto-ops.h"
-#include "random.h"
-#include "crypto-defines.h"
+#include "crypto/crypto-ops.h"
+#include "crypto/random.h"
+#include "crypto/crypto-defines.h"
 }
 
 mutex random_lock;

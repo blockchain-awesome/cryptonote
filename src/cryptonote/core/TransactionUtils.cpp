@@ -6,7 +6,7 @@
 
 #include <unordered_set>
 
-#include "crypto/crypto.h"
+#include "cryptonote/crypto.h"
 #include "cryptonote/core/account.h"
 #include "CryptoNoteFormatUtils.h"
 #include "TransactionExtra.h"

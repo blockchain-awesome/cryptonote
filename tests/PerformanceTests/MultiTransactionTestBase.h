@@ -12,7 +12,7 @@
 #include "cryptonote/core/currency.h"
 #include "cryptonote/core/TransactionExtra.h"
 
-#include "crypto/crypto.h"
+#include "cryptonote/crypto.h"
 
 #include "logging/ConsoleLogger.h"
 

@@ -10,7 +10,7 @@
 #include <tuple>
 
 #include "common/StringTools.h"
-#include "crypto/hash.h"
+#include "cryptonote/hash.h"
 #include "cryptonote/core/currency.h"
 #include "cryptonote/core/TransactionApi.h"
 #include "cryptonote/core/TransactionApiExtra.h"

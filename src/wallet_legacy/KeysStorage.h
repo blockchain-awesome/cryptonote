@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "crypto/crypto.h"
+#include "cryptonote/crypto.h"
 
 #include <stdint.h>
 

@@ -7,7 +7,7 @@
 #include <cstdint>
 #include <vector>
 
-#include "crypto/hash.h"
+#include "cryptonote/hash.h"
 
 using namespace crypto;
 

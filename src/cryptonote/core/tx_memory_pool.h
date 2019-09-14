@@ -18,8 +18,8 @@
 
 #include "common/int-util.h"
 #include "common/ObserverManager.h"
-#include "crypto/hash.h"
-#include "crypto/crypto.h"
+#include "cryptonote/hash.h"
+#include "cryptonote/crypto.h"
 #include "cryptonote/core/blockchain/serializer/crypto.h"
 
 #include "cryptonote/core/key.h"

@@ -13,7 +13,7 @@
 #include <boost/serialization/is_bitwise_serializable.hpp>
 #include "cryptonote/core/key.h"
 #include "UnorderedContainersBoostSerialization.h"
-#include "crypto/crypto.h"
+#include "cryptonote/crypto.h"
 
 //namespace cryptonote {
 namespace boost

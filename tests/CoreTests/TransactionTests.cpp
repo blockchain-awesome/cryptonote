@@ -2,8 +2,8 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "crypto/crypto.h"
-#include "crypto/hash.h"
+#include "cryptonote/crypto.h"
+#include "cryptonote/hash.h"
 #include "cryptonote/core/key.h"
 #include "cryptonote/core/blockchain/serializer/crypto.h"
 #include "cryptonote/core/account.h"

@@ -8,8 +8,9 @@
 #include <ostream>
 #include <istream>
 
-#include "crypto/hash.h"
-#include "crypto/chacha.h"
+#include "cryptonote/hash.h"
+#include "cryptonote/chacha.h"
+
 
 namespace cryptonote {
 class Account;

@@ -10,7 +10,7 @@
 #include <boost/utility.hpp>
 #include <boost/filesystem.hpp>
 #include "CryptoNoteConfig.h"
-#include "crypto/hash.h"
+#include "cryptonote/hash.h"
 #include "logging/LoggerRef.h"
 #include "key.h"
 #include "../structures/block.h"

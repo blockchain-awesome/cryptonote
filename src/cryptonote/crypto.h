@@ -17,8 +17,8 @@
 
 extern "C"
 {
-#include "random.h"
-#include "crypto-defines.h"
+#include "crypto/random.h"
+#include "crypto/crypto-defines.h"
 }
 
 namespace crypto

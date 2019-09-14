@@ -8,7 +8,7 @@
 #include <ios>
 #include <string>
 
-#include "crypto/crypto.h"
+#include "cryptonote/crypto.h"
 #include "../io.h"
 
 using namespace crypto;

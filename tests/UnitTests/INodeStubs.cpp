@@ -17,7 +17,7 @@
 
 #include <system_error>
 
-#include "crypto/crypto.h"
+#include "cryptonote/crypto.h"
 #include "cryptonote/structures/block_entry.h"
 
 #include "blockchain_explorer/BlockchainExplorerDataBuilder.h"

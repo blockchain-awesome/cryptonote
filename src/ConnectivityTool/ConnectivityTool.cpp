@@ -18,7 +18,7 @@
 
 #include "command_line/options.h"
 #include "common/StringTools.h"
-#include "crypto/crypto.h"
+#include "cryptonote/crypto.h"
 #include "p2p/P2pProtocolDefinitions.h"
 #include "p2p/LevinProtocol.h"
 #include "rpc/CoreRpcServerCommandsDefinitions.h"

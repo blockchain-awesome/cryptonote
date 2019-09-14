@@ -11,7 +11,7 @@
 #include "transfers/TransfersSynchronizer.h"
 #include "serialization/BinaryInputStreamSerializer.h"
 
-#include "crypto/chacha.h"
+#include "cryptonote/chacha.h"
 
 namespace cryptonote {
 

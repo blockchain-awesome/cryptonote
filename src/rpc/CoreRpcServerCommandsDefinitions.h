@@ -7,7 +7,7 @@
 #include "cryptonote/protocol/definitions.h"
 #include "cryptonote/core/key.h"
 #include "cryptonote/core/difficulty.h"
-#include "crypto/hash.h"
+#include "cryptonote/hash.h"
 
 #include "BlockchainExplorerData.h"
 #include "serialization/SerializationOverloads.h"

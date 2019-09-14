@@ -7,7 +7,7 @@
 #include <fstream>
 #include <cstring>
 
-#include "crypto/crypto.h"
+#include "cryptonote/crypto.h"
 #include "cryptonote/structures/array.h"
 #include "cryptonote/core/key.h"
 

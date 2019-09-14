@@ -11,7 +11,7 @@
 #include "cryptonote/core/key.h"
 #include "cryptonote/core/currency.h"
 #include "cryptonote/core/blockchain/indexing/exports.h"
-#include "crypto/hash.h"
+#include "cryptonote/hash.h"
 
 #include "../TestGenerator/TestGenerator.h"
 

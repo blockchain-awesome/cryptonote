@@ -6,7 +6,7 @@
 #include <boost/multi_index/hashed_index.hpp>
 #include <boost/multi_index/random_access_index.hpp>
 
-#include "crypto/hash.h"
+#include "cryptonote/hash.h"
 #include <vector>
 
 using namespace crypto;

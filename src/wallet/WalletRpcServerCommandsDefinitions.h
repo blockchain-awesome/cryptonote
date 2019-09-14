@@ -5,7 +5,7 @@
 #pragma once
 #include "cryptonote/protocol/definitions.h"
 #include "cryptonote/core/key.h"
-#include "crypto/hash.h"
+#include "cryptonote/hash.h"
 #include "rpc/CoreRpcServerCommandsDefinitions.h"
 #include "WalletRpcServerErrorCodes.h"
 
