@@ -5,6 +5,7 @@
 #include "crypto-defines.h"
 #include "random.h"
 #include "hash-ops.h"
+#include "types.h"
 
 void random_scalar(uint8_t *res)
 {
@@ -225,5 +226,17 @@ int underive_public_key_suffix(const uint8_t *derivation, size_t output_index,
   ge_p1p1_to_p2(&point5, &point4);
   ge_tobytes(base, &point5);
   return 1;
+}
+
+void hash_data_to_ec(const uint8_t *data, size_t len, uint8_t *key)
+{
+  hash_t h;
+  ge_p2 point;
+  ge_p1p1 point2;
+  cn_fast_hash(data, len, (char *)&h);
+  ge_fromfe_frombytes_vartime(&point, (const uint8_t *)(&h));
+  ge_mul8(&point2, &point);
+  ge_p1p1_to_p2(&point, &point2);
+  ge_tobytes(key, &point);
 }
 
