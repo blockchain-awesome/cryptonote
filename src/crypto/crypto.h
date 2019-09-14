@@ -79,10 +79,6 @@ public:
    * * The receiver can either derive the public key (to check that the transaction is addressed to him) or the private key (to spend the money).
    */
 
-void generate_signature(const uint8_t *prefix_hash, const uint8_t *pub, const uint8_t *sec, uint8_t *sig);
-
-bool check_signature(const uint8_t *prefix_hash, const uint8_t *pub, const uint8_t *sig);
-
 /* To send money to a key:
    * * The sender generates an ephemeral key and includes it in transaction output.
    * * To spend the money, the receiver generates a key image from it.

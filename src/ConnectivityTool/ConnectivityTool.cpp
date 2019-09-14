@@ -255,7 +255,7 @@ bool handle_request_stat(po::variables_map& vm, peer_id_type_t peer_id) {
 
     hex::podFromString(config::get().net.p2p_stat_trusted_pub_key, pubk);
     hash_t h = get_proof_of_trust_t_hash(pot);
-    crypto::generate_signature((const uint8_t *)&h, (const uint8_t *)&pubk, (const uint8_t *)&prvk, (uint8_t *)&pot.sign);
+    generate_signature((const uint8_t *)&h, (const uint8_t *)&pubk, (const uint8_t *)&prvk, (uint8_t *)&pot.sign);
 
     if (command_line::get_arg(vm, arg_request_stat_info)) {
       COMMAND_REQUEST_STAT_INFO::request req;
@@ -281,7 +281,7 @@ bool handle_request_stat(po::variables_map& vm, peer_id_type_t peer_id) {
     if (command_line::get_arg(vm, arg_request_net_state))  {
       ++pot.time;
       h = get_proof_of_trust_t_hash(pot);
-      crypto::generate_signature((const uint8_t *)&h, (const uint8_t *)&pubk, (const uint8_t *)&prvk, (uint8_t *)&pot.sign);
+      generate_signature((const uint8_t *)&h, (const uint8_t *)&pubk, (const uint8_t *)&prvk, (uint8_t *)&pot.sign);
       COMMAND_REQUEST_NETWORK_STATE::request req{ pot };
       COMMAND_REQUEST_NETWORK_STATE::response res;
 

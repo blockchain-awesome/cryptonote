@@ -31,62 +31,6 @@ extern "C"
 
 mutex random_lock;
 
-struct s_comm
-{
-  hash_t h;
-  elliptic_curve_point_t key;
-  elliptic_curve_point_t comm;
-};
-
-void generate_signature(const uint8_t *prefix_hash, const uint8_t *pub, const uint8_t *sec, uint8_t *sig)
-{
-  // lock_guard<mutex> lock(random_lock);
-  ge_p3 tmp3;
-  elliptic_curve_scalar_t k;
-  s_comm buf;
-#if !defined(NDEBUG)
-  {
-    ge_p3 t;
-    public_key_t t2;
-    assert(sc_check(sec) == 0);
-    ge_scalarmult_base(&t, sec);
-    ge_p3_tobytes((uint8_t *)&t2, &t);
-    assert(*(public_key_t *)pub == t2);
-  }
-#endif
-  buf.h = *(const hash_t *)prefix_hash;
-  buf.key = *(const elliptic_curve_point_t *)pub;
-  random_scalar((uint8_t *)&k);
-  ge_scalarmult_base(&tmp3, (uint8_t *)&k);
-  ge_p3_tobytes((uint8_t *)(&buf.comm), &tmp3);
-  hash_to_scalar((uint8_t *)&buf, sizeof(s_comm), sig);
-  sc_mulsub(sig + 32, sig, sec, (uint8_t *)&k);
-}
-
-bool check_signature(const uint8_t *prefix_hash, const uint8_t *pub, const uint8_t *sig)
-{
-  ge_p2 tmp2;
-  ge_p3 tmp3;
-  elliptic_curve_scalar_t c;
-  s_comm buf;
-  assert(check_key((uint8_t *)&pub));
-  buf.h = *(const hash_t *)prefix_hash;
-  buf.key = *(const elliptic_curve_point_t *)pub;
-  if (ge_frombytes_vartime(&tmp3, pub) != 0)
-  {
-    abort();
-  }
-  if (sc_check(sig) != 0 || sc_check(sig + 32) != 0)
-  {
-    return false;
-  }
-  ge_double_scalarmult_base_vartime(&tmp2, sig, &tmp3, sig + 32);
-  ge_tobytes((uint8_t *)(&buf.comm), &tmp2);
-  hash_to_scalar((const uint8_t *)&buf, sizeof(s_comm), (uint8_t *)&c);
-  sc_sub((uint8_t *)&c, (const uint8_t *)&c, sig);
-  return sc_isnonzero((const uint8_t *)&c) == 0;
-}
-
 static void hash_to_ec(const uint8_t *key, ge_p3 &res)
 {
   hash_t h;

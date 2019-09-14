@@ -45,3 +45,6 @@ int underive_public_key_suffix(const uint8_t *derivation, size_t output_index,
 int underive_public_key_and_get_scalar(const uint8_t *derivation, size_t output_index,
                                         const uint8_t *derived_key, uint8_t *base, uint8_t *hashed_derivation);
 void hash_data_to_ec(const uint8_t *data, size_t len, uint8_t *key);
+
+void generate_signature(const uint8_t *prefix_hash, const uint8_t *pub, const uint8_t *sec, uint8_t *sig);
+int check_signature(const uint8_t *prefix_hash, const uint8_t *pub, const uint8_t *sig);

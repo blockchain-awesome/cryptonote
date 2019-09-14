@@ -847,7 +847,7 @@ bool MultiSigTx_Input::generate(std::vector<test_event_entry>& events) const {
     const auto& sk = m_outputAccounts[i].getAccountKeys().spendSecretKey;
 
     signature_t sig;
-    crypto::generate_signature((const uint8_t *)&builder.m_tx_prefix_hash, (const uint8_t *)&pk, (const uint8_t *)&sk, (uint8_t *)&sig);
+    generate_signature((const uint8_t *)&builder.m_tx_prefix_hash, (const uint8_t *)&pk, (const uint8_t *)&sk, (uint8_t *)&sig);
     outsigs.push_back(sig);
   }
   
@@ -888,7 +888,7 @@ bool MultiSigTx_BadInputSignature::generate(std::vector<test_event_entry>& event
 
   // sign the hash
   signature_t sig;
-  crypto::generate_signature((const uint8_t *)&badHash, (const uint8_t *)&pk, (const uint8_t *)&sk, (uint8_t *)&sig);
+  generate_signature((const uint8_t *)&badHash, (const uint8_t *)&pk, (const uint8_t *)&sk, (uint8_t *)&sig);
   outsigs.push_back(sig);
 
   // transaction with bad signature should be rejected
