@@ -6,7 +6,7 @@
 
 #include <functional>
 
-#include "cryptonote/crypto.h"
+#include "cryptonote/crypto/crypto.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/structures/block_entry.h"
 #include <system/InterruptedException.h>

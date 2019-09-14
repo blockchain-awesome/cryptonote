@@ -1,5 +1,5 @@
 #include "timestamp_transaction.h"
-#include "cryptonote/hash.h"
+#include "cryptonote/crypto/hash.h"
 #include "cryptonote/core/key.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 

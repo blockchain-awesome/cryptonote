@@ -4,7 +4,7 @@
 
 #include "gtest/gtest.h"
 
-#include "cryptonote/crypto.h"
+#include "cryptonote/crypto/crypto.h"
 #include "cryptonote/core/currency.h"
 #include "cryptonote/core/TransactionApi.h"
 #include "logging/ConsoleLogger.h"

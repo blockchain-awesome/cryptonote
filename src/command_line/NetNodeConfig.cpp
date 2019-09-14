@@ -9,7 +9,7 @@
 #include "common/os.h"
 #include "command_line/options.h"
 #include "common/StringTools.h"
-#include "cryptonote/crypto.h"
+#include "cryptonote/crypto/crypto.h"
 #include "CryptoNoteConfig.h"
 
 using namespace command_line;

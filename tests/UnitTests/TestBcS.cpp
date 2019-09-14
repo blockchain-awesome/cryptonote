@@ -7,7 +7,7 @@
 #include "transfers/BlockchainSynchronizer.h"
 #include "transfers/TransfersConsumer.h"
 
-#include "cryptonote/hash.h"
+#include "cryptonote/crypto/hash.h"
 #include "cryptonote/core/TransactionApi.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/CryptoNoteTools.h"

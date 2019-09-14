@@ -7,7 +7,7 @@
 #include <cstdint>
 #include <limits>
 #include <vector>
-#include "cryptonote/hash.h"
+#include "cryptonote/crypto/hash.h"
 #include "ITransaction.h"
 #include "IObservable.h"
 #include "IStreamSerializable.h"

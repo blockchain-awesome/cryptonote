@@ -6,7 +6,7 @@
 
 #include "P2pProtocolTypes.h"
 
-#include "cryptonote/crypto.h"
+#include "cryptonote/crypto/crypto.h"
 #include "CryptoNoteConfig.h"
 #include "cryptonote/core/CryptoNoteStatInfo.h"
 

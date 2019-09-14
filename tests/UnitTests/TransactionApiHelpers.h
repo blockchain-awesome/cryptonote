@@ -6,8 +6,8 @@
 
 #include "crypto.h"
 #include "ITransaction.h"
-#include "cryptonote/crypto.h"
-#include "cryptonote/hash.h"
+#include "cryptonote/crypto/crypto.h"
+#include "cryptonote/crypto/hash.h"
 
 #include "cryptonote/core/account.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"

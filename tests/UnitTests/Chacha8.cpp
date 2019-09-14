@@ -6,7 +6,7 @@
 
 #include "gtest/gtest.h"
 
-#include "cryptonote/chacha.h"
+#include "cryptonote/crypto/chacha.h"
 
 namespace
 {

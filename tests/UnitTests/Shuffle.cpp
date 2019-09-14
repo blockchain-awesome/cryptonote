@@ -7,7 +7,7 @@
 #include "gtest/gtest.h"
 
 #include <unordered_set>
-#include "cryptonote/crypto.h"
+#include "cryptonote/crypto/crypto.h"
 #include "common/ShuffleGenerator.h"
 
 class ShuffleTest : public ::testing::Test {

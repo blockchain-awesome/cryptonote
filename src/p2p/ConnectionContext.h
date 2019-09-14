@@ -10,7 +10,7 @@
 
 #include <boost/uuid/uuid.hpp>
 #include "common/StringTools.h"
-#include "cryptonote/hash.h"
+#include "cryptonote/crypto/hash.h"
 
 namespace cryptonote {
 

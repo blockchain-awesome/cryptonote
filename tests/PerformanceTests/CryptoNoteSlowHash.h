@@ -5,7 +5,7 @@
 #pragma once
 
 #include "common/StringTools.h"
-#include "cryptonote/crypto.h"
+#include "cryptonote/crypto/crypto.h"
 #include "cryptonote/core/key.h"
 
 class test_cn_slow_hash {

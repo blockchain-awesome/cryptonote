@@ -28,7 +28,7 @@
 #include "version.h"
 #include "stream/StdInputStream.h"
 #include "stream/StdOutputStream.h"
-#include "cryptonote/crypto.h"
+#include "cryptonote/crypto/crypto.h"
 #include "common/os.h"
 #include "command_line/options.h"
 

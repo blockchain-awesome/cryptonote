@@ -2,7 +2,7 @@
 
 #include <map>
 
-#include "cryptonote/hash.h"
+#include "cryptonote/crypto/hash.h"
 #include "cryptonote/core/key.h"
 
 namespace cryptonote

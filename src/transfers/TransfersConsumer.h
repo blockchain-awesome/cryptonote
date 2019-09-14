@@ -9,7 +9,7 @@
 #include "TransfersSubscription.h"
 #include "TypeHelpers.h"
 
-#include "cryptonote/crypto.h"
+#include "cryptonote/crypto/crypto.h"
 
 #include "IObservableImpl.h"
 

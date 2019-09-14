@@ -5,9 +5,9 @@
 #pragma once
 
 #include "cryptonote/core/key.h"
-#include "cryptonote/chacha.h"
+#include "cryptonote/crypto/chacha.h"
 #include "serialization/ISerializer.h"
-#include "cryptonote/crypto.h"
+#include "cryptonote/crypto/crypto.h"
 #include "crypto.h"
 
 namespace cryptonote {

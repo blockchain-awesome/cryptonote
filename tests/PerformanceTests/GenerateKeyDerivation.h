@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "cryptonote/crypto.h"
+#include "cryptonote/crypto/crypto.h"
 #include "cryptonote/core/key.h"
 
 #include "SingleTransactionTestBase.h"

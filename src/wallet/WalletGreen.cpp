@@ -28,7 +28,7 @@
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/core/TransactionApi.h"
-#include "cryptonote/crypto.h"
+#include "cryptonote/crypto/crypto.h"
 #include "transfers/TransfersContainer.h"
 #include "WalletSerialization.h"
 #include "WalletErrors.h"

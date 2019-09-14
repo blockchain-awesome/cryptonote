@@ -8,7 +8,7 @@
 #include <map>
 #include <mutex>
 
-#include "cryptonote/hash.h"
+#include "cryptonote/crypto/hash.h"
 #include "IWalletLegacy.h"
 
 namespace cryptonote {

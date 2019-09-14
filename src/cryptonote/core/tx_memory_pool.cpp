@@ -13,7 +13,7 @@
 
 #include "common/int-util.h"
 #include "common/file.h"
-#include "cryptonote/hash.h"
+#include "cryptonote/crypto/hash.h"
 
 #include "serialization/SerializationTools.h"
 #include "serialization/BinarySerializationTools.h"

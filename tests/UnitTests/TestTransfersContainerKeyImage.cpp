@@ -6,7 +6,7 @@
 
 #include "IWalletLegacy.h"
 
-#include "cryptonote/crypto.h"
+#include "cryptonote/crypto/crypto.h"
 #include "cryptonote/core/account.h"
 #include "cryptonote/core/currency.h"
 #include "cryptonote/core/TransactionApi.h"

@@ -8,8 +8,8 @@
 #include <ostream>
 #include <istream>
 
-#include "cryptonote/hash.h"
-#include "cryptonote/chacha.h"
+#include "cryptonote/crypto/hash.h"
+#include "cryptonote/crypto/chacha.h"
 
 
 namespace cryptonote {

@@ -8,8 +8,8 @@
 #include <string>
 #include <vector>
 
-#include "cryptonote/crypto.h"
-#include "cryptonote/hash.h"
+#include "cryptonote/crypto/crypto.h"
+#include "cryptonote/crypto/hash.h"
 #include "crypto-tests.h"
 #include "../io.h"
 

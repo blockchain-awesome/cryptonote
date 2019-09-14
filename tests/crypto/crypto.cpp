@@ -2,7 +2,7 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "cryptonote/crypto.cpp"
+#include "cryptonote/crypto/crypto.cpp"
 #include "crypto-tests.h"
 
 using namespace crypto;

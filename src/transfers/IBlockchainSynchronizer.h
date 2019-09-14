@@ -9,7 +9,7 @@
 #include <system_error>
 #include <unordered_set>
 
-#include "cryptonote/crypto.h"
+#include "cryptonote/crypto/crypto.h"
 #include "cryptonote/core/key.h"
 
 #include "IObservable.h"

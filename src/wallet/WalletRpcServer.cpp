@@ -9,7 +9,7 @@
 #include "common/StringTools.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/account.h"
-#include "cryptonote/hash.h"
+#include "cryptonote/crypto/hash.h"
 #include "wallet_legacy/WalletHelper.h"
 // #include "wallet_errors.h"
 

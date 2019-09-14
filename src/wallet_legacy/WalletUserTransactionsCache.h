@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "cryptonote/hash.h"
+#include "cryptonote/crypto/hash.h"
 #include "IWalletLegacy.h"
 #include "ITransfersContainer.h"
 

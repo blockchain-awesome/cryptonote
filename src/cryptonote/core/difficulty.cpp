@@ -9,7 +9,7 @@
 #include <vector>
 
 #include "common/int-util.h"
-#include "cryptonote/hash.h"
+#include "cryptonote/crypto/hash.h"
 #include "CryptoNoteConfig.h"
 #include "difficulty.h"
 

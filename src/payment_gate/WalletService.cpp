@@ -16,7 +16,7 @@
 #include <system/Timer.h>
 #include <system/InterruptedException.h>
 
-#include "cryptonote/crypto.h"
+#include "cryptonote/crypto/crypto.h"
 #include "cryptonote.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/TransactionExtra.h"

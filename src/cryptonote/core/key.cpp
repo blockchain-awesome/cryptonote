@@ -1,5 +1,5 @@
 #include "key.h"
-#include "cryptonote/crypto.h"
+#include "cryptonote/crypto/crypto.h"
 
 namespace cryptonote
 {

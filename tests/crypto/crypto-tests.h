@@ -5,7 +5,7 @@
 #pragma once
 
 #if defined(__cplusplus)
-#include "cryptonote/crypto.h"
+#include "cryptonote/crypto/crypto.h"
 using namespace crypto;
 
 extern "C" {

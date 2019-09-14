@@ -18,7 +18,7 @@
 #include "serialization/BlockchainExplorerDataSerialization.h"
 
 #include "stream/StringOutputStream.h"
-#include "cryptonote/crypto.h"
+#include "cryptonote/crypto/crypto.h"
 
 #include "cryptonote/core/account.h"
 
