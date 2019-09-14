@@ -31,17 +31,6 @@ extern "C"
 
 mutex random_lock;
 
-void hash_to_ec(const uint8_t *key, uint8_t *res)
-{
-  hash_t h;
-  ge_p2 point;
-  ge_p1p1 point2;
-  cn_fast_hash(key, 32, (char *)&h);
-  ge_fromfe_frombytes_vartime(&point, (const uint8_t *)(&h));
-  ge_mul8(&point2, &point);
-  ge_p1p1_to_p3((ge_p3 *)res, &point2);
-}
-
 void generate_key_image(const uint8_t *pub, const uint8_t *sec, uint8_t *image)
 {
   ge_p3 point;

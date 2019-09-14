@@ -298,3 +298,13 @@ int check_signature(const uint8_t *prefix_hash, const uint8_t *pub, const uint8_
   return sc_isnonzero((const uint8_t *)&c) == 0;
 }
 
+void hash_to_ec(const uint8_t *key, uint8_t *res)
+{
+  hash_t h;
+  ge_p2 point;
+  ge_p1p1 point2;
+  cn_fast_hash(key, 32, (char *)&h);
+  ge_fromfe_frombytes_vartime(&point, (const uint8_t *)(&h));
+  ge_mul8(&point2, &point);
+  ge_p1p1_to_p3((ge_p3 *)res, &point2);
+}

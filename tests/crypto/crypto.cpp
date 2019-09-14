@@ -19,6 +19,6 @@ void hash_to_point(const hash_t &h, elliptic_curve_point_t &res) {
 
 void hash_to_ec(const public_key_t &key, elliptic_curve_point_t &res) {
   crypto::ge_p3 tmp;
-  crypto::hash_to_ec((const uint8_t *)&key, (uint8_t *)&tmp);
+  hash_to_ec((const uint8_t *)&key, (uint8_t *)&tmp);
   crypto::ge_p3_tobytes(reinterpret_cast<unsigned char*>(&res), &tmp);
 }
