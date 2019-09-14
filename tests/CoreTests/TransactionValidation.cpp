@@ -445,7 +445,7 @@ bool gen_tx_key_image_not_derive_from_tx_key::generate(std::vector<test_event_en
   // key_pair_t kp = generateKeyPair();
   key_pair_t kp = Key::generate();
   key_image_t another_ki;
-  crypto::generate_key_image((const uint8_t *)&kp.publicKey, (const uint8_t *)&kp.secretKey, (uint8_t *)&another_ki);
+  generate_key_image((const uint8_t *)&kp.publicKey, (const uint8_t *)&kp.secretKey, (uint8_t *)&another_ki);
   in_to_key.keyImage = another_ki;
 
   builder.step3_fill_outputs(destinations);

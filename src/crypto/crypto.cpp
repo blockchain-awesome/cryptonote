@@ -31,23 +31,6 @@ extern "C"
 
 mutex random_lock;
 
-void generate_key_image(const uint8_t *pub, const uint8_t *sec, uint8_t *image)
-{
-  ge_p3 point;
-  ge_p2 point2;
-  assert(sc_check(sec) == 0);
-  hash_to_ec(pub, (uint8_t *)&point);
-  ge_scalarmult(&point2, sec, &point);
-  ge_tobytes(image, &point2);
-}
-
-void generate_incomplete_key_image(const uint8_t *pub, uint8_t *incomplete_key_image)
-{
-  ge_p3 point;
-  hash_to_ec(pub, (uint8_t *)&point);
-  ge_p3_tobytes(incomplete_key_image, &point);
-}
-
 #ifdef _MSC_VER
 #pragma warning(disable : 4200)
 #endif

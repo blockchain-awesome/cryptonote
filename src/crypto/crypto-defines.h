@@ -50,3 +50,4 @@ void generate_signature(const uint8_t *prefix_hash, const uint8_t *pub, const ui
 int check_signature(const uint8_t *prefix_hash, const uint8_t *pub, const uint8_t *sig);
 
 void hash_to_ec(const uint8_t *key, uint8_t *res);
+void generate_key_image(const uint8_t *pub, const uint8_t *sec, uint8_t *image);
