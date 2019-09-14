@@ -51,3 +51,8 @@ int check_signature(const uint8_t *prefix_hash, const uint8_t *pub, const uint8_
 
 void hash_to_ec(const uint8_t *key, uint8_t *res);
 void generate_key_image(const uint8_t *pub, const uint8_t *sec, uint8_t *image);
+
+void generate_ring_signature(const uint8_t *prefix_hash, const uint8_t *image,
+                             const uint8_t *const *pubs, size_t pubs_count,
+                             const uint8_t *sec, size_t sec_index,
+                             uint8_t *sig);

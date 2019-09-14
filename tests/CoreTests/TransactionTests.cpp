@@ -11,6 +11,7 @@
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/core/currency.h"
 #include "cryptonote/structures/array.hpp"
+#include "cryptonote/core/crypto.h"
 
 #include <common/math.hpp>
 
@@ -110,7 +111,7 @@ bool test_transaction_generation_and_ring_signature()
   output_keys.push_back(&boost::get<key_output_t>(tx_mine_4.outputs[0].target).key);
   output_keys.push_back(&boost::get<key_output_t>(tx_mine_5.outputs[0].target).key);
   output_keys.push_back(&boost::get<key_output_t>(tx_mine_6.outputs[0].target).key);
-  r = crypto::check_ring_signature((const uint8_t *)&pref_hash, (const uint8_t *)&boost::get<key_input_t>(tx_rc1.inputs[0]).keyImage,
+  r = check_ring_signature((const uint8_t *)&pref_hash, (const uint8_t *)&boost::get<key_input_t>(tx_rc1.inputs[0]).keyImage,
     (const uint8_t *const *)output_keys.data(), output_keys.size(), (const uint8_t *)&tx_rc1.signatures[0][0]);
   CHECK_AND_ASSERT_MES(r, false, "failed to check ring signature");
 

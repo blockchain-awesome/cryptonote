@@ -11,6 +11,7 @@
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "crypto/crypto.h"
+#include "cryptonote/core/crypto.h"
 
 #include "MultiTransactionTestBase.h"
 
@@ -48,7 +49,7 @@ public:
   bool test()
   {
     const cryptonote::key_input_t& txin = boost::get<cryptonote::key_input_t>(m_tx.inputs[0]);
-    return crypto::check_ring_signature((const uint8_t *)&m_tx_prefix_hash, (const uint8_t *)&txin.keyImage, (const uint8_t * const *)this->m_public_key_ptrs, ring_size, (const uint8_t *)m_tx.signatures[0].data());
+    return check_ring_signature((const uint8_t *)&m_tx_prefix_hash, (const uint8_t *)&txin.keyImage, (const uint8_t * const *)this->m_public_key_ptrs, ring_size, (const uint8_t *)m_tx.signatures[0].data());
   }
 
 private:

@@ -16,6 +16,7 @@
 #include "serialization/BinarySerializationTools.h"
 #include "CryptoNoteTools.h"
 #include "cryptonote/structures/array.hpp"
+#include "cryptonote/core/crypto.h"
 
 #include "cryptonote/core/blockchain/serializer/block_cache.hpp"
 #include "cryptonote/core/blockchain/serializer/blockchain_indices.hpp"
@@ -1259,7 +1260,7 @@ bool Blockchain::check_tx_input(const key_input_t& txin, const hash_t& tx_prefix
     return true;
   }
 
-  return crypto::check_ring_signature((const uint8_t *)&tx_prefix_hash, (const uint8_t *)&txin.keyImage, 
+  return check_ring_signature((const uint8_t *)&tx_prefix_hash, (const uint8_t *)&txin.keyImage, 
   (const uint8_t *const *)output_keys.data(), output_keys.size(), (uint8_t *)sig.data());
 }
 

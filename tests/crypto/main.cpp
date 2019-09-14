@@ -13,9 +13,8 @@
 #include "crypto-tests.h"
 #include "../io.h"
 
-extern "C" {
-  #include "crypto/crypto-defines.h"
-}
+#include "cryptonote/core/crypto.h"
+
 
 using namespace std;
 typedef hash_t chash;
@@ -276,7 +275,7 @@ int main(int argc, char *argv[])
       expected.resize(pubs_count);
       getvar(input, pubs_count * sizeof(signature_t), expected.data());
       actual.resize(pubs_count);
-      generate_ring_signature((const uint8_t*)&prefix_hash, (const uint8_t*)&image, pubs.data(), pubs_count, (const uint8_t*)&sec, sec_index, (uint8_t *)actual.data());
+      generate_ring_signature((const uint8_t*)&prefix_hash, (const uint8_t*)&image, (const uint8_t* const*)pubs.data(), pubs_count, (const uint8_t*)&sec, sec_index, (uint8_t *)actual.data());
       if (expected != actual)
       {
         goto error;

@@ -49,9 +49,9 @@ extern void generate_key_image(const uint8_t *pub, const uint8_t *sec, uint8_t *
 extern void hash_data_to_ec(const uint8_t *data, size_t len, uint8_t *key);
 
 extern void generate_ring_signature(const uint8_t *prefix_hash, const uint8_t *image,
-                               const public_key_t *const *pubs, size_t pubs_count,
-                               const uint8_t *sec, size_t sec_index,
-                               uint8_t *sig);
+                             const uint8_t *const *pubs, size_t pubs_count,
+                             const uint8_t *sec, size_t sec_index,
+                             uint8_t *sig);
 extern int check_ring_signature(const uint8_t *prefix_hash, const uint8_t *image,
                            const uint8_t *const *pubs, size_t pubs_count,
                            const uint8_t *sig);

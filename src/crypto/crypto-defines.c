@@ -8,12 +8,21 @@
 #include "hash-ops.h"
 #include "types.h"
 
-typedef struct 
+typedef struct
 {
   hash_t h;
   elliptic_curve_point_t key;
   elliptic_curve_point_t comm;
 } s_comm;
+
+typedef struct
+{
+  hash_t h;
+  struct
+  {
+    elliptic_curve_point_t a, b;
+  } ab[];
+} rs_comm;
 
 void random_scalar(uint8_t *res)
 {
@@ -111,7 +120,7 @@ static void derivation_to_scalar_suffix(const uint8_t *derivation, size_t output
 }
 
 int derive_public_key(const uint8_t *derivation, size_t output_index,
-                       const uint8_t *base, uint8_t *derived_key)
+                      const uint8_t *base, uint8_t *derived_key)
 {
   elliptic_curve_scalar_t scalar;
   ge_p3 point1;
@@ -133,7 +142,7 @@ int derive_public_key(const uint8_t *derivation, size_t output_index,
 }
 
 int derive_public_key_suffix(const uint8_t *derivation, size_t output_index,
-                              const uint8_t *base, const uint8_t *suffix, size_t suffixLength, uint8_t *derived_key)
+                             const uint8_t *base, const uint8_t *suffix, size_t suffixLength, uint8_t *derived_key)
 {
   elliptic_curve_scalar_t scalar;
   ge_p3 point1;
@@ -155,7 +164,7 @@ int derive_public_key_suffix(const uint8_t *derivation, size_t output_index,
 }
 
 int underive_public_key_and_get_scalar(const uint8_t *derivation, size_t output_index,
-                                        const uint8_t *derived_key, uint8_t *base, uint8_t *hashed_derivation)
+                                       const uint8_t *derived_key, uint8_t *base, uint8_t *hashed_derivation)
 {
   ge_p3 point1;
   ge_p3 point2;
@@ -192,7 +201,7 @@ void derive_secret_key_suffix(const uint8_t *derivation, size_t output_index, co
 }
 
 int underive_public_key(const uint8_t *derivation, size_t output_index,
-                         const uint8_t *derived_key, uint8_t *base)
+                        const uint8_t *derived_key, uint8_t *base)
 {
   elliptic_curve_scalar_t scalar;
   ge_p3 point1;
@@ -214,7 +223,7 @@ int underive_public_key(const uint8_t *derivation, size_t output_index,
 }
 
 int underive_public_key_suffix(const uint8_t *derivation, size_t output_index,
-                                const uint8_t *derived_key, const uint8_t *suffix, size_t suffixLength, uint8_t *base)
+                               const uint8_t *derived_key, const uint8_t *suffix, size_t suffixLength, uint8_t *base)
 {
   elliptic_curve_scalar_t scalar;
   ge_p3 point1;
@@ -324,4 +333,138 @@ void generate_incomplete_key_image(const uint8_t *pub, uint8_t *incomplete_key_i
   ge_p3 point;
   hash_to_ec(pub, (uint8_t *)&point);
   ge_p3_tobytes(incomplete_key_image, &point);
+}
+
+static inline size_t rs_comm_size(size_t pubs_count)
+{
+  rs_comm rs;
+  return sizeof(rs_comm) + pubs_count * sizeof(rs.ab[0]);
+}
+
+void generate_ring_signature_ex(const uint8_t *prefix_hash, const uint8_t *image,
+                                const public_key_t *const *pubs, size_t pubs_count,
+                                const uint8_t *sec, size_t sec_index,
+                                uint8_t *sig)
+{
+  // lock_guard<mutex> lock(random_lock);
+  size_t i;
+  ge_p3 image_unp;
+  ge_dsmp image_pre;
+  elliptic_curve_scalar_t sum, k, h;
+  rs_comm *const buf = (rs_comm *)(alloca(rs_comm_size(pubs_count)));
+  assert(sec_index < pubs_count);
+#if !defined(NDEBUG)
+  {
+    ge_p3 t;
+    public_key_t t2;
+    key_image_t t3;
+    assert(sc_check(sec) == 0);
+    ge_scalarmult_base(&t, sec);
+    ge_p3_tobytes((uint8_t *)(&t2), &t);
+    assert(memcmp(pubs[sec_index], &t2, sizeof(public_key_t)) == 0);
+    generate_key_image((const uint8_t *)&(*pubs[sec_index]), sec, (uint8_t *)&t3);
+    assert(memcmp(image, &t3, sizeof(key_image_t)) == 0);
+
+    for (i = 0; i < pubs_count; i++)
+    {
+      assert(check_key((uint8_t *)&(*pubs[i])));
+    }
+  }
+#endif
+  if (ge_frombytes_vartime(&image_unp, image) != 0)
+  {
+    abort();
+  }
+  ge_dsm_precomp(image_pre, &image_unp);
+  sc_0((uint8_t *)(&sum));
+  buf->h = *(const hash_t *)prefix_hash;
+
+  for (i = 0; i < pubs_count; i++)
+  {
+    ge_p2 tmp2;
+    ge_p3 tmp3;
+    if (i == sec_index)
+    {
+      random_scalar((uint8_t *)&k);
+      ge_scalarmult_base(&tmp3, (uint8_t *)(&k));
+      ge_p3_tobytes((uint8_t *)(&buf->ab[i].a), &tmp3);
+      hash_to_ec((const uint8_t *)pubs[i], (uint8_t *)&tmp3);
+      ge_scalarmult(&tmp2, (uint8_t *)(&k), &tmp3);
+      ge_tobytes((uint8_t *)(&buf->ab[i].b), &tmp2);
+    }
+    else
+    {
+      random_scalar((uint8_t *)&(sig[i * 64]));
+      random_scalar((uint8_t *)((uint8_t *)(&sig[i * 64]) + 32));
+      if (ge_frombytes_vartime(&tmp3, (const uint8_t *)(&*pubs[i])) != 0)
+      {
+        abort();
+      }
+      ge_double_scalarmult_base_vartime(&tmp2, (uint8_t *)(&sig[i * 64]), &tmp3, (uint8_t *)(&sig[i * 64]) + 32);
+      ge_tobytes((uint8_t *)(&buf->ab[i].a), &tmp2);
+      hash_to_ec((const uint8_t *)pubs[i], (uint8_t *)&tmp3);
+      ge_double_scalarmult_precomp_vartime(&tmp2, (uint8_t *)(&sig[i * 64]) + 32, &tmp3, (uint8_t *)(&sig[i * 64]), image_pre);
+      ge_tobytes((uint8_t *)(&buf->ab[i].b), &tmp2);
+      sc_add((uint8_t *)(&sum), (uint8_t *)(&sum), (uint8_t *)(&sig[i * 64]));
+    }
+  }
+  hash_to_scalar((uint8_t *)buf, rs_comm_size(pubs_count), (uint8_t *)&h);
+  sc_sub((uint8_t *)(&sig[sec_index * 64]), (uint8_t *)(&h), (uint8_t *)(&sum));
+  sc_mulsub((uint8_t *)(&sig[sec_index * 64]) + 32, (uint8_t *)(&sig[sec_index * 64]), sec, (uint8_t *)(&k));
+}
+
+bool check_ring_signature(const uint8_t *prefix_hash, const uint8_t *image,
+                          const uint8_t *const *pubs, size_t pubs_count,
+                          const uint8_t *sig)
+{
+  size_t i;
+  ge_p3 image_unp;
+  ge_dsmp image_pre;
+  elliptic_curve_scalar_t sum, h;
+  rs_comm *const buf = (rs_comm *)(alloca(rs_comm_size(pubs_count)));
+#if !defined(NDEBUG)
+  for (i = 0; i < pubs_count; i++)
+  {
+    assert(check_key((uint8_t *)(pubs + i * 32)));
+  }
+#endif
+  if (ge_frombytes_vartime(&image_unp, image) != 0)
+  {
+    return false;
+  }
+  ge_dsm_precomp(image_pre, &image_unp);
+  sc_0((uint8_t *)(&sum));
+  buf->h = *(const hash_t *)prefix_hash;
+  for (i = 0; i < pubs_count; i++)
+  {
+    ge_p2 tmp2;
+    ge_p3 tmp3;
+    if (sc_check(sig + i * 64) != 0 || sc_check(sig + i * 64 + 32) != 0)
+    {
+      return false;
+    }
+    if (ge_frombytes_vartime(&tmp3, sig + i * 64) != 0)
+    {
+      abort();
+    }
+    ge_double_scalarmult_base_vartime(&tmp2, sig + i * 64, &tmp3, sig + i * 64 + 32);
+    ge_tobytes((uint8_t *)(&buf->ab[i].a), &tmp2);
+    hash_to_ec(*(pubs + i * 32), (uint8_t *)&tmp3);
+    ge_double_scalarmult_precomp_vartime(&tmp2, sig + i * 64 + 32, &tmp3, sig + i * 64, image_pre);
+    ge_tobytes((uint8_t *)(&buf->ab[i].b), &tmp2);
+    sc_add((uint8_t *)(&sum), (const uint8_t *)(&sum), sig + i * 64);
+  }
+  hash_to_scalar((uint8_t *)buf, rs_comm_size(pubs_count), (uint8_t *)&h);
+  sc_sub((uint8_t *)(&h), (uint8_t *)(&h), (uint8_t *)(&sum));
+  return sc_isnonzero((uint8_t *)(&h)) == 0;
+}
+
+void generate_ring_signature(const uint8_t *prefix_hash, const uint8_t *image,
+                             const uint8_t *const *pubs, size_t pubs_count,
+                             const uint8_t *sec, size_t sec_index,
+                             uint8_t *sig)
+{
+  generate_ring_signature_ex(prefix_hash,
+                             image,
+                             (const public_key_t *const *)pubs, pubs_count, sec, sec_index, sig);
 }

@@ -85,14 +85,6 @@ public:
    * * Then he selects a bunch of outputs, including the one he spends, and uses them to generate a ring signature.
    * To check the signature, it is necessary to collect all the keys that were used to generate it. To detect double spends, it is necessary to check that each key image is used at most once.
    */
-
-void generate_ring_signature(const uint8_t *prefix_hash, const uint8_t *image,
-                             const public_key_t *const *pubs, size_t pubs_count,
-                             const uint8_t *sec, size_t sec_index,
-                             uint8_t *sig);
-bool check_ring_signature(const uint8_t *prefix_hash, const uint8_t *image,
-                          const uint8_t *const *pubs, size_t pubs_count,
-                          const uint8_t *sig);
 } // namespace crypto
 
 CRYPTO_MAKE_HASHABLE(public_key_t)

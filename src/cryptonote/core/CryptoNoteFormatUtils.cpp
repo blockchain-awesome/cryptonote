@@ -22,9 +22,7 @@ using namespace Logging;
 using namespace crypto;
 using namespace Common;
 
-extern "C" {
-  extern void cn_fast_hash(const void *data, size_t length, char *hash);
-}
+#include "cryptonote/core/crypto.h"
 
 namespace cryptonote {
 
@@ -233,7 +231,8 @@ bool constructTransaction(
     tx.signatures.push_back(std::vector<signature_t>());
     std::vector<signature_t>& sigs = tx.signatures.back();
     sigs.resize(src_entr.outputs.size());
-    generate_ring_signature((const uint8_t*)&tx_prefix_hash, (const uint8_t*)&boost::get<key_input_t>(tx.inputs[i]).keyImage, keys_ptrs.data(), keys_ptrs.size(),
+    generate_ring_signature((const uint8_t*)&tx_prefix_hash, (const uint8_t*)&boost::get<key_input_t>(tx.inputs[i]).keyImage, 
+    (const uint8_t *const *)keys_ptrs.data(), keys_ptrs.size(),
       (const uint8_t*)&in_contexts[i].in_ephemeral.secretKey, src_entr.realOutput, (uint8_t *)sigs.data());
     i++;
   }
