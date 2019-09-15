@@ -298,7 +298,7 @@ int check_signature(const uint8_t *prefix_hash, const uint8_t *pub, const uint8_
   ge_p3 tmp3;
   elliptic_curve_scalar_t c;
   s_comm buf;
-  assert(check_key((uint8_t *)&pub));
+  assert(check_key((uint8_t *)pub));
   buf.h = *(const hash_t *)prefix_hash;
   buf.key = *(const elliptic_curve_point_t *)pub;
   if (ge_frombytes_vartime(&tmp3, pub) != 0)
