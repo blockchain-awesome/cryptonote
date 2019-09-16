@@ -38,10 +38,6 @@
 #include "int-util.h"
 #include "varint.h"
 
-extern "C" {
-  extern void cn_fast_hash(const void *data, size_t length, char *hash);
-}
-
 using namespace crypto;
 
 namespace tools
