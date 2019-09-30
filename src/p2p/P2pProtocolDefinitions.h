@@ -15,10 +15,6 @@
 #include "serialization/SerializationOverloads.h"
 #include "cryptonote/core/blockchain/serializer/basics.h"
 
-extern "C" {
-  extern void cn_fast_hash(const void *data, size_t length, char *hash);
-}
-
 namespace cryptonote
 {
   inline bool serialize(uuid& v, Common::StringView name, ISerializer& s) {

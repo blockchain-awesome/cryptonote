@@ -66,9 +66,10 @@ namespace crypto { \
   } \
 } \
 namespace std { \
+  using namespace crypto;\
   template<> \
-  struct hash<crypto::type> { \
-    std::size_t operator()(const crypto::type &_v) const { \
+  struct hash<type> { \
+    std::size_t operator()(const type &_v) const { \
       return reinterpret_cast<const std::size_t &>(_v); \
     } \
   }; \

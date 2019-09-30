@@ -8,6 +8,10 @@
 #include "hash-ops.h"
 #include "types.h"
 
+#ifdef _MSC_VER
+#define alloca _alloca
+#endif
+
 typedef struct
 {
   hash_t h;
