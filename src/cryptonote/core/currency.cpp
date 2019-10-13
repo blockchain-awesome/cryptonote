@@ -19,6 +19,7 @@
 #include "TransactionExtra.h"
 #include "../structures/block_entry.h"
 #include "cryptonote/structures/array.hpp"
+#include "difficulty.h"
 
 #undef ERROR
 
@@ -120,8 +121,7 @@ bool Currency::getPathAndFilesReady()
       // blocksCacheFileName(),
       // blockIndexesFileName(),
       // txPoolFileName(),
-      blockchainIndexesFileName()
-      };
+      blockchainIndexesFileName()};
   for (std::string file : files)
   {
     if (!boost::filesystem::exists(file))
@@ -239,7 +239,7 @@ bool Currency::constructMinerTx(uint32_t height, size_t medianSize, uint64_t alr
     key_derivation_t derivation = boost::value_initialized<key_derivation_t>();
     public_key_t outEphemeralPubKey = boost::value_initialized<public_key_t>();
 
-    bool r = generate_key_derivation((const uint8_t*)&minerAddress.viewPublicKey, (const uint8_t*)&txkey.secretKey, (uint8_t*)&derivation);
+    bool r = generate_key_derivation((const uint8_t *)&minerAddress.viewPublicKey, (const uint8_t *)&txkey.secretKey, (uint8_t *)&derivation);
 
     if (!(r))
     {
@@ -433,56 +433,16 @@ bool Currency::parseAmount(const std::string &str, uint64_t &amount) const
 }
 
 difficulty_t Currency::nextDifficulty(std::vector<uint64_t> timestamps,
-                                         std::vector<difficulty_t> cumulativeDifficulties) const
+                                      std::vector<difficulty_t> cumulativeDifficulties) const
 {
-  assert(m_difficultyWindow >= 2);
-
-  if (timestamps.size() > m_difficultyWindow)
-  {
-    timestamps.resize(m_difficultyWindow);
-    cumulativeDifficulties.resize(m_difficultyWindow);
-  }
-
-  size_t length = timestamps.size();
-  assert(length == cumulativeDifficulties.size());
-  assert(length <= m_difficultyWindow);
-  if (length <= 1)
-  {
-    return 1;
-  }
-
-  sort(timestamps.begin(), timestamps.end());
-
-  size_t cutBegin, cutEnd;
-  assert(2 * m_difficultyCut <= m_difficultyWindow - 2);
-  if (length <= m_difficultyWindow - 2 * m_difficultyCut)
-  {
-    cutBegin = 0;
-    cutEnd = length;
-  }
-  else
-  {
-    cutBegin = (length - (m_difficultyWindow - 2 * m_difficultyCut) + 1) / 2;
-    cutEnd = cutBegin + (m_difficultyWindow - 2 * m_difficultyCut);
-  }
-  assert(/*cut_begin >= 0 &&*/ cutBegin + 2 <= cutEnd && cutEnd <= length);
-  uint64_t timeSpan = timestamps[cutEnd - 1] - timestamps[cutBegin];
-  if (timeSpan == 0)
-  {
-    timeSpan = 1;
-  }
-
-  difficulty_t totalWork = cumulativeDifficulties[cutEnd - 1] - cumulativeDifficulties[cutBegin];
-  assert(totalWork > 0);
-
-  uint64_t low, high;
-  low = mul128(totalWork, m_difficultyTarget, &high);
-  if (high != 0 || low + timeSpan - 1 < low)
-  {
-    return 0;
-  }
-
-  return (low + timeSpan - 1) / timeSpan;
+  difficulty_config_t config;
+  config.window = m_difficultyWindow;
+  config.target = m_difficultyTarget;
+  config.cut = m_difficultyCut;
+  config.lag = m_difficultyLag;
+  return next_difficulty(timestamps.data(), timestamps.size(),
+                         cumulativeDifficulties.data(), cumulativeDifficulties.size(),
+                         (uint64_t *)&config);
 }
 
 size_t Currency::getApproximateMaximumInputCount(size_t transactionSize, size_t outputCount, size_t mixinCount) const
@@ -509,7 +469,7 @@ size_t Currency::getApproximateMaximumInputCount(size_t transactionSize, size_t 
   return (transactionSize - headerSize - outputsSize) / inputSize;
 }
 
-CurrencyBuilder::CurrencyBuilder(const std::string &path, config::config_t& config, Logging::ILogger &log) : m_currency(path, config, log)
+CurrencyBuilder::CurrencyBuilder(const std::string &path, config::config_t &config, Logging::ILogger &log) : m_currency(path, config, log)
 {
   maxBlockNumber(parameters::CRYPTONOTE_MAX_BLOCK_NUMBER);
   maxBlockBlobSize(parameters::CRYPTONOTE_MAX_BLOCK_BLOB_SIZE);
@@ -553,7 +513,7 @@ CurrencyBuilder::CurrencyBuilder(const std::string &path, config::config_t& conf
   fusionTxMinInOutCountRatio(parameters::FUSION_TX_MIN_IN_OUT_COUNT_RATIO);
 
   coin::storage_files_t files;
-  
+
   files.blocks = config.filenames.block;
   files.blocksCache = config.filenames.blockCache;
   files.blocksIndexes = config.filenames.blockIndex;

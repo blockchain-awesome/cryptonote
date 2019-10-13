@@ -10,6 +10,7 @@
 
 #include "crypto/util.h"
 #include "crypto/types.h"
+#include "difficulty.h"
 
 extern "C"
 {
@@ -60,5 +61,69 @@ extern "C"
     carry = cadc(cur, low, carry);
     carry = cadc(high, top, carry);
     return !carry;
+  }
+
+  int compare(const void *a, const void *b)
+  {
+    return (*(int *)a - *(int *)b);
+  }
+
+  uint64_t next_difficulty(uint64_t *timestamps,
+                           uint16_t timestamps_length,
+                           uint64_t *cumulativeDifficulties,
+                           uint16_t difficulties_length,
+                           uint64_t *conf)
+  {
+    difficulty_config_t *config = (difficulty_config_t *)conf;
+
+    assert(config->window >= 2);
+
+    if (timestamps_length > config->window)
+    {
+      timestamps_length = config->window;
+      difficulties_length = config->window;
+    }
+
+    size_t length = timestamps_length;
+    assert(length == difficulties_length);
+    assert(length <= config->window);
+    if (length <= 1)
+    {
+      return 1;
+    }
+
+    qsort(timestamps, timestamps_length, sizeof(uint64_t), compare);
+
+    size_t cutBegin, cutEnd;
+    assert(2 * config->cut <= config->window - 2);
+
+    if (length <= config->window - 2 * config->cut)
+    {
+      cutBegin = 0;
+      cutEnd = length;
+    }
+    else
+    {
+      cutBegin = (length - (config->window - 2 * config->cut) + 1) / 2;
+      cutEnd = cutBegin + (config->window - 2 * config->cut);
+    }
+    assert(/*cut_begin >= 0 &&*/ cutBegin + 2 <= cutEnd && cutEnd <= length);
+    uint64_t timeSpan = timestamps[cutEnd - 1] - timestamps[cutBegin];
+    if (timeSpan == 0)
+    {
+      timeSpan = 1;
+    }
+
+    uint64_t totalWork = cumulativeDifficulties[cutEnd - 1] - cumulativeDifficulties[cutBegin];
+    assert(totalWork > 0);
+
+    uint64_t low, high;
+    low = mul128(totalWork, config->target, &high);
+    if (high != 0 || low + timeSpan - 1 < low)
+    {
+      return 0;
+    }
+
+    return (low + timeSpan - 1) / timeSpan;
   }
 }
