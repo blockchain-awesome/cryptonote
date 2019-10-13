@@ -6,9 +6,7 @@
 
 #include <cstdint>
 
-#include "cryptonote/crypto/hash.h"
-
-using namespace crypto;
+#include "crypto/types.h"
 
 extern "C"
 {

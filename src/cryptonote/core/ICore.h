@@ -9,7 +9,7 @@
 #include <utility>
 #include <vector>
 #include <system_error>
-
+#include <functional>
 #include <cryptonote.h>
 #include "cryptonote/core/difficulty.h"
 

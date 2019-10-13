@@ -10,6 +10,7 @@
 #include "serialization/BinaryInputStreamSerializer.h"
 #include "serialization/BinaryOutputStreamSerializer.h"
 #include <logging/LoggerManager.h>
+#include "cryptonote/crypto/hash.h"
 #include "cryptonote/structures/block_entry.h"
 #include "cryptonote/core/transaction/transaction.h"
 #include "cryptonote/core/currency.h"
