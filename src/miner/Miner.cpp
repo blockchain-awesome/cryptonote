@@ -96,7 +96,7 @@ void Miner::workerFunc(const block_t& blockTemplate, difficulty_t difficulty, ui
         return;
       }
 
-      if (check_hash(hash, difficulty)) {
+      if (check_hash(&hash, difficulty)) {
         m_logger(Logging::INFO) << "Found block for difficulty " << difficulty;
 
         if (!setStateBlockFound()) {

@@ -275,7 +275,7 @@ namespace cryptonote
               return;
             }
 
-            if (check_hash(h, diffic)) {
+            if (check_hash(&h, diffic)) {
               foundNonce = nonce;
               found = true;
               return;
@@ -300,7 +300,7 @@ namespace cryptonote
           return false;
         }
 
-        if (check_hash(h, diffic)) {
+        if (check_hash(&h, diffic)) {
           return true;
         }
       }
@@ -377,7 +377,7 @@ namespace cryptonote
         m_stop = true;
       }
 
-      if (!m_stop && check_hash(h, local_diff))
+      if (!m_stop && check_hash(&h, local_diff))
       {
         //we lucky!
         ++m_config.current_extra_message_index;

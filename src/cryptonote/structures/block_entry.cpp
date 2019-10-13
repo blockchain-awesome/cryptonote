@@ -96,6 +96,6 @@ bool Block::checkProofOfWork(const block_t &block, difficulty_t currentDiffic,
                              hash_t &proofOfWork)
 {
   Block::getLongHash(block, proofOfWork);
-  return check_hash(proofOfWork, currentDiffic);
+  return check_hash(&proofOfWork, currentDiffic);
 }
 } // namespace cryptonote

@@ -43,13 +43,13 @@ int main(int argc, char *argv[]) {
   for (uint64_t diff = 1;; diff += 1 + (diff >> 8)) {
     for (int b = 0; b < 256; b++) {
       memset(&h, b, sizeof(hash_t));
-      if (check_hash(h, diff) != (b == 0 || diff <= 255 / b)) {
+      if (check_hash(&h, diff) != (b == 0 || diff <= 255 / b)) {
         return 1;
       }
       if (b > 0) {
         memset(&h, 0, sizeof(hash_t));
         ((char *) &h)[31] = b;
-        if (check_hash(h, diff) != (diff <= 255 / b)) {
+        if (check_hash(&h, diff) != (diff <= 255 / b)) {
           return 1;
         }
       }
@@ -61,7 +61,7 @@ int main(int argc, char *argv[]) {
         ((char *) &h)[i] = static_cast<char>(val / diff);
         val %= diff;
       }
-      if (check_hash(h, diff) != true) {
+      if (check_hash(&h, diff) != true) {
         return 1;
       }
       if (diff > 1) {
@@ -73,7 +73,7 @@ int main(int argc, char *argv[]) {
             break;
           }
         }
-        if (check_hash(h, diff) != false) {
+        if (check_hash(&h, diff) != false) {
           return 1;
         }
       }

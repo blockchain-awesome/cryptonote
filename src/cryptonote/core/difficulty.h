@@ -5,7 +5,6 @@
 #pragma once
 
 #include <cstdint>
-#include <vector>
 
 #include "cryptonote/crypto/hash.h"
 
@@ -13,7 +12,11 @@ using namespace crypto;
 
 namespace cryptonote
 {
-    typedef std::uint64_t difficulty_t;
+typedef std::uint64_t difficulty_t;
 
-    bool check_hash(const hash_t &hash, difficulty_t difficulty);
+extern "C"
+{
+    bool check_hash(const hash_t *hash, difficulty_t difficulty);
 }
+
+} // namespace cryptonote
