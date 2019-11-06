@@ -11,6 +11,7 @@
 #include <boost/filesystem.hpp>
 #include "CryptoNoteConfig.h"
 #include "cryptonote/crypto/hash.h"
+#include "cryptonote/core/util/amount.h"
 #include "logging/LoggerRef.h"
 #include "key.h"
 #include "../structures/block.h"
@@ -21,8 +22,6 @@
 namespace cryptonote {
 
 class Account;
-
-uint64_t getPenalizedAmount(uint64_t amount, size_t medianSize, size_t currentBlockSize);
 
 class Currency {
 public:
