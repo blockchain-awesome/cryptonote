@@ -11,7 +11,6 @@
 #include <boost/filesystem.hpp>
 #include "CryptoNoteConfig.h"
 #include "cryptonote/crypto/hash.h"
-#include "cryptonote/core/util/amount.h"
 #include "logging/LoggerRef.h"
 #include "key.h"
 #include "../structures/block.h"

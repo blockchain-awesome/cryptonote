@@ -19,6 +19,7 @@
 #include "TransactionExtra.h"
 #include "../structures/block_entry.h"
 #include "cryptonote/structures/array.hpp"
+#include "cryptonote/core/util/amount.h"
 #include "difficulty.h"
 
 #undef ERROR
@@ -140,8 +141,8 @@ bool Currency::getBlockReward(size_t medianSize, size_t currentBlockSize, uint64
     return false;
   }
 
-  uint64_t penalizedBaseReward = getPenalizedAmount(baseReward, medianSize, currentBlockSize);
-  uint64_t penalizedFee = getPenalizedAmount(fee, medianSize, currentBlockSize);
+  uint64_t penalizedBaseReward = get_penalized_amount(baseReward, medianSize, currentBlockSize);
+  uint64_t penalizedFee = get_penalized_amount(fee, medianSize, currentBlockSize);
 
   emissionChange = penalizedBaseReward - (fee - penalizedFee);
   reward = penalizedBaseReward + penalizedFee;
