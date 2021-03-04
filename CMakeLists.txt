@@ -13,7 +13,9 @@ set(CMAKE_HAVE_THREADS_LIBRARY 1)
 set(CMAKE_USE_WIN32_THREADS_INIT 0)
 set(CMAKE_USE_PTHREADS_INIT 1)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
 enable_testing()
+endif()
 # copy CTestCustom.cmake to build dir to disable long running tests in 'make test'
 configure_file(${CMAKE_SOURCE_DIR}/CTestCustom.cmake ${CMAKE_BINARY_DIR})
 
@@ -170,4 +172,7 @@ endif()
 
 add_subdirectory(external)
 add_subdirectory(src)
+
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
 add_subdirectory(tests)
+endif()

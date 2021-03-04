@@ -33,7 +33,6 @@ extern "C"
     uint64_t next_difficulty(uint64_t *timestamps,
                              uint16_t timestamps_length,
                              uint64_t *cumulativeDifficulties,
-                             uint16_t difficulties_length,
                              uint64_t *config);
 }
 

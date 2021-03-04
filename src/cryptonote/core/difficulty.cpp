@@ -71,7 +71,6 @@ extern "C"
   uint64_t next_difficulty(uint64_t *timestamps,
                            uint16_t timestamps_length,
                            uint64_t *cumulativeDifficulties,
-                           uint16_t difficulties_length,
                            uint64_t *conf)
   {
     difficulty_config_t *config = (difficulty_config_t *)conf;
@@ -81,11 +80,9 @@ extern "C"
     if (timestamps_length > config->window)
     {
       timestamps_length = config->window;
-      difficulties_length = config->window;
     }
 
     size_t length = timestamps_length;
-    assert(length == difficulties_length);
     assert(length <= config->window);
     if (length <= 1)
     {
