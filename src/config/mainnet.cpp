@@ -36,6 +36,7 @@ const char CRYPTONOTE_BLOCKCHAIN_INDICES_FILENAME[] = "blockchainindices.dat";
 const char MINER_CONFIG_FILE_NAME[] = "miner_conf.json";
 
 seeds_t seeds = {
+    "172.26.8.85:19800",
     "69.171.73.252:19800",
     "39.108.160.252:19800",
     "144.202.10.183:19800",
