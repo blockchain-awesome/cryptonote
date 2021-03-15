@@ -37,7 +37,7 @@ bool BlockchainExplorerDataBuilder::getMixin(const transaction_t& transaction, u
 }
 
 bool BlockchainExplorerDataBuilder::getPaymentId(const transaction_t& transaction, hash_t& paymentId) {
-  std::vector<transaction_extra_field_t> txExtraFields;
+  std::vector<transaction_extra_t> txExtraFields;
   parseTransactionExtra(transaction.extra, txExtraFields);
   transaction_extra_nonce_t extraNonce;
   if (!findTransactionExtraFieldByType(txExtraFields, extraNonce)) {
@@ -48,9 +48,9 @@ bool BlockchainExplorerDataBuilder::getPaymentId(const transaction_t& transactio
 
 bool BlockchainExplorerDataBuilder::fillTxExtra(const std::vector<uint8_t>& rawExtra, transaction_extra_details_t& extraDetails) {
   extraDetails.raw = rawExtra;
-  std::vector<transaction_extra_field_t> txExtraFields;
+  std::vector<transaction_extra_t> txExtraFields;
   parseTransactionExtra(rawExtra, txExtraFields);
-  for (const transaction_extra_field_t& field : txExtraFields) {
+  for (const transaction_extra_t& field : txExtraFields) {
     if (typeid(transaction_extra_padding_t) == field.type()) {
       extraDetails.padding.push_back(std::move(boost::get<transaction_extra_padding_t>(field).size));
     } else if (typeid(transaction_extra_public_key_t) == field.type()) {

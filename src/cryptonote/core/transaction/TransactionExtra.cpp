@@ -16,7 +16,7 @@ using namespace Common;
 
 namespace cryptonote {
 
-bool parseTransactionExtra(const std::vector<uint8_t> &transactionExtra, std::vector<transaction_extra_field_t> &transactionExtraFields) {
+bool parseTransactionExtra(const std::vector<uint8_t> &transactionExtra, std::vector<transaction_extra_t> &transactionExtraFields) {
   transactionExtraFields.clear();
 
   if (transactionExtra.empty())
@@ -97,7 +97,7 @@ struct ExtraSerializerVisitor : public boost::static_visitor<bool> {
   }
 };
 
-bool writeTransactionExtra(std::vector<uint8_t>& tx_extra, const std::vector<transaction_extra_field_t>& tx_extra_fields) {
+bool writeTransactionExtra(std::vector<uint8_t>& tx_extra, const std::vector<transaction_extra_t>& tx_extra_fields) {
   ExtraSerializerVisitor visitor(tx_extra);
 
   for (const auto& tag : tx_extra_fields) {
@@ -110,7 +110,7 @@ bool writeTransactionExtra(std::vector<uint8_t>& tx_extra, const std::vector<tra
 }
 
 public_key_t getTransactionPublicKeyFromExtra(const std::vector<uint8_t>& tx_extra) {
-  std::vector<transaction_extra_field_t> tx_extra_fields;
+  std::vector<transaction_extra_t> tx_extra_fields;
   parseTransactionExtra(tx_extra, tx_extra_fields);
 
   transaction_extra_public_key_t pub_key_field;
@@ -184,7 +184,7 @@ bool createTxExtraWithPaymentId(const std::string& paymentIdString, std::vector<
 }
 
 bool getPaymentIdFromTxExtra(const std::vector<uint8_t>& extra, hash_t& paymentId) {
-  std::vector<transaction_extra_field_t> tx_extra_fields;
+  std::vector<transaction_extra_t> tx_extra_fields;
   if (!parseTransactionExtra(extra, tx_extra_fields)) {
     return false;
   }
