@@ -13,7 +13,7 @@
 // new serialization
 #include "serialization/ISerializer.h"
 #include "serialization/SerializationOverloads.h"
-#include "cryptonote/core/blockchain/serializer/basics.h"
+#include "cryptonote/core/transaction/serializer/basics.h"
 
 namespace cryptonote
 {

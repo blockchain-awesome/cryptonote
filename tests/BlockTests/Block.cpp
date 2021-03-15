@@ -14,7 +14,7 @@
 #include "cryptonote/structures/block_entry.h"
 #include "cryptonote/core/transaction/transaction.h"
 #include "cryptonote/core/currency.h"
-#include "cryptonote/core/blockchain/serializer/basics.h"
+#include "cryptonote/core/transaction/serializer/basics.h"
 #include "config/common.h"
 
 #include "cryptonote/core/CryptoNoteFormatUtils.h"

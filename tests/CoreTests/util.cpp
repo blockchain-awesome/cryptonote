@@ -1,7 +1,7 @@
 #include "util.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/CryptoNoteTools.h"
-#include "cryptonote/core/blockchain/serializer/basics.h"
+#include "cryptonote/core/transaction/serializer/basics.h"
 #include "cryptonote/structures/block_entry.h"
 #include "cryptonote/structures/array.hpp"
 

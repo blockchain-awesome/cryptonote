@@ -23,9 +23,9 @@
 #include "cryptonote/core/account.h"
 
 #include "CryptoNoteConfig.h"
+#include "cryptonote/core/TransactionExtra.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/CryptoNoteTools.h"
-#include "cryptonote/core/TransactionExtra.h"
 
 using namespace Common;
 

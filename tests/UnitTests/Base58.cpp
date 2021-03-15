@@ -13,7 +13,7 @@
 #include "cryptonote/core/blockchain/serializer/crypto.h"
 #include "cryptonote/core/account.h"
 #include "cryptonote/core/currency.h"
-#include "cryptonote/core/blockchain/serializer/basics.h"
+#include "cryptonote/core/transaction/serializer/basics.h"
 #include "common/os.h"
 
 #include "serialization/BinarySerializationTools.h"
