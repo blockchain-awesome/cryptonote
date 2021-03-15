@@ -6,7 +6,7 @@
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/structures/array.hpp"
-#include "cryptonote/core/TransactionApi.h"
+#include "cryptonote/core/transaction/TransactionApi.h"
 #include "wallet/WalletErrors.h"
 
 #include <functional>

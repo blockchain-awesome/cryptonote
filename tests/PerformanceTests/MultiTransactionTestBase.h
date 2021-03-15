@@ -10,7 +10,7 @@
 #include "cryptonote/core/key.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/currency.h"
-#include "cryptonote/core/TransactionExtra.h"
+#include "cryptonote/core/transaction/TransactionExtra.h"
 
 #include "cryptonote/crypto/crypto.h"
 

@@ -23,7 +23,7 @@
 
 #include "CryptoNoteFormatUtils.h"
 #include "cryptonote/structures/block_entry.h"
-#include "TransactionExtra.h"
+#include "transaction/TransactionExtra.h"
 #include "cryptonote/core/account.h"
 #include "common/os.h"
 

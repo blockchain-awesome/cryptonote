@@ -14,8 +14,8 @@
 #include "cryptonote/core/account.h"
 #include "cryptonote/core/IBlock.h"
 #include "cryptonote/core/Miner.h"
-#include "cryptonote/core/TransactionExtra.h"
-#include "cryptonote/core/TransactionApiExtra.h"
+#include "cryptonote/core/transaction/TransactionExtra.h"
+#include "cryptonote/core/transaction/TransactionApiExtra.h"
 #include "cryptonote/core/transaction/transaction.h"
 #include "cryptonote/structures/array.hpp"
 

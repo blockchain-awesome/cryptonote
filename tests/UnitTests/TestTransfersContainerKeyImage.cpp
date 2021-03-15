@@ -9,7 +9,7 @@
 #include "cryptonote/crypto/crypto.h"
 #include "cryptonote/core/account.h"
 #include "cryptonote/core/currency.h"
-#include "cryptonote/core/TransactionApi.h"
+#include "cryptonote/core/transaction/TransactionApi.h"
 #include "logging/ConsoleLogger.h"
 #include "transfers/TransfersContainer.h"
 

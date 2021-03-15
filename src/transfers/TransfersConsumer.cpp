@@ -9,7 +9,7 @@
 #include "CommonTypes.h"
 #include "common/BlockingQueue.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
-#include "cryptonote/core/TransactionApi.h"
+#include "cryptonote/core/transaction/TransactionApi.h"
 
 #include "IWallet.h"
 #include "INode.h"

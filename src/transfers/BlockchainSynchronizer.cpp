@@ -9,7 +9,7 @@
 #include <sstream>
 #include <unordered_set>
 
-#include "cryptonote/core/TransactionApi.h"
+#include "cryptonote/core/transaction/TransactionApi.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 
 using namespace crypto;

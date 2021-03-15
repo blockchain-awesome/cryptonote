@@ -16,7 +16,7 @@
 #include "account.h"
 #include "CryptoNoteFormatUtils.h"
 #include "CryptoNoteTools.h"
-#include "TransactionExtra.h"
+#include "transaction/TransactionExtra.h"
 #include "../structures/block_entry.h"
 #include "cryptonote/structures/array.hpp"
 #include "cryptonote/core/util/amount.h"

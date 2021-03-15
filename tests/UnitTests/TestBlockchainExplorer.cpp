@@ -12,7 +12,7 @@
 #include "ICoreStub.h"
 #include "ICryptoNoteProtocolQueryStub.h"
 #include "INodeStubs.h"
-#include "cryptonote/core/TransactionApi.h"
+#include "cryptonote/core/transaction/TransactionApi.h"
 #include "cryptonote/structures/array.hpp"
 #include "TestBlockchainGenerator.h"
 
