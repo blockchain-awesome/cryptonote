@@ -176,13 +176,13 @@ std::string encrypt(const std::string& plain, cryptonote::CryptoContext& cryptoC
   return cipher;
 }
 
-void addToStream(const std::string& cipher, const std::string& name, Common::IOutputStream& destination) {
+void addToStream(const std::string& cipher, const std::string& name, Writer& destination) {
   cryptonote::BinaryOutputStreamSerializer s(destination);
   s(const_cast<std::string& >(cipher), name);
 }
 
 template<typename Object>
-void serializeEncrypted(Object& obj, const std::string& name, cryptonote::CryptoContext& cryptoContext, Common::IOutputStream& destination) {
+void serializeEncrypted(Object& obj, const std::string& name, cryptonote::CryptoContext& cryptoContext, Writer& destination) {
   std::string plain = serialize(obj, name);
   std::string cipher = encrypt(plain, cryptoContext);
 
@@ -297,7 +297,7 @@ WalletSerializer::WalletSerializer(
   uncommitedTransactions(uncommitedTransactions)
 { }
 
-void WalletSerializer::save(const std::string& password, Common::IOutputStream& destination, bool saveDetails, bool saveCache) {
+void WalletSerializer::save(const std::string& password, Writer& destination, bool saveDetails, bool saveCache) {
   CryptoContext cryptoContext = generateCryptoContext(password);
 
   cryptonote::BinaryOutputStreamSerializer s(destination);
@@ -335,34 +335,34 @@ CryptoContext WalletSerializer::generateCryptoContext(const std::string& passwor
   return context;
 }
 
-void WalletSerializer::saveVersion(Common::IOutputStream& destination) {
+void WalletSerializer::saveVersion(Writer& destination) {
   uint32_t version = SERIALIZATION_VERSION;
 
   BinaryOutputStreamSerializer s(destination);
   s(version, "version");
 }
 
-void WalletSerializer::saveIv(Common::IOutputStream& destination, crypto::chacha_iv_t& iv) {
+void WalletSerializer::saveIv(Writer& destination, crypto::chacha_iv_t& iv) {
   BinaryOutputStreamSerializer s(destination);
   s.binary(reinterpret_cast<void *>(&iv.data), sizeof(iv.data), "chacha_iv_t");
 }
 
-void WalletSerializer::saveKeys(Common::IOutputStream& destination, CryptoContext& cryptoContext) {
+void WalletSerializer::saveKeys(Writer& destination, CryptoContext& cryptoContext) {
   savePublicKey(destination, cryptoContext);
   saveSecretKey(destination, cryptoContext);
 }
 
-void WalletSerializer::savePublicKey(Common::IOutputStream& destination, CryptoContext& cryptoContext) {
+void WalletSerializer::savePublicKey(Writer& destination, CryptoContext& cryptoContext) {
   serializeEncrypted(m_viewPublicKey, "public_key", cryptoContext, destination);
   cryptoContext.incIv();
 }
 
-void WalletSerializer::saveSecretKey(Common::IOutputStream& destination, CryptoContext& cryptoContext) {
+void WalletSerializer::saveSecretKey(Writer& destination, CryptoContext& cryptoContext) {
   serializeEncrypted(m_viewSecretKey, "secret_key", cryptoContext, destination);
   cryptoContext.incIv();
 }
 
-void WalletSerializer::saveFlags(bool saveDetails, bool saveCache, Common::IOutputStream& destination, CryptoContext& cryptoContext) {
+void WalletSerializer::saveFlags(bool saveDetails, bool saveCache, Writer& destination, CryptoContext& cryptoContext) {
   serializeEncrypted(saveDetails, "details", cryptoContext, destination);
   cryptoContext.incIv();
 
@@ -370,7 +370,7 @@ void WalletSerializer::saveFlags(bool saveDetails, bool saveCache, Common::IOutp
   cryptoContext.incIv();
 }
 
-void WalletSerializer::saveWallets(Common::IOutputStream& destination, bool saveCache, CryptoContext& cryptoContext) {
+void WalletSerializer::saveWallets(Writer& destination, bool saveCache, CryptoContext& cryptoContext) {
   auto& index = m_walletsContainer.get<RandomAccessIndex>();
 
   uint64_t count = index.size();
@@ -390,7 +390,7 @@ void WalletSerializer::saveWallets(Common::IOutputStream& destination, bool save
   }
 }
 
-void WalletSerializer::saveBalances(Common::IOutputStream& destination, bool saveCache, CryptoContext& cryptoContext) {
+void WalletSerializer::saveBalances(Writer& destination, bool saveCache, CryptoContext& cryptoContext) {
   uint64_t actual = saveCache ? m_actualBalance : 0;
   uint64_t pending = saveCache ? m_pendingBalance : 0;
 
@@ -401,7 +401,7 @@ void WalletSerializer::saveBalances(Common::IOutputStream& destination, bool sav
   cryptoContext.incIv();
 }
 
-void WalletSerializer::saveTransfersSynchronizer(Common::IOutputStream& destination, CryptoContext& cryptoContext) {
+void WalletSerializer::saveTransfersSynchronizer(Writer& destination, CryptoContext& cryptoContext) {
   std::stringstream stream;
   m_synchronizer.save(stream);
   stream.flush();
@@ -411,7 +411,7 @@ void WalletSerializer::saveTransfersSynchronizer(Common::IOutputStream& destinat
   cryptoContext.incIv();
 }
 
-void WalletSerializer::saveUnlockTransactionsJobs(Common::IOutputStream& destination, CryptoContext& cryptoContext) {
+void WalletSerializer::saveUnlockTransactionsJobs(Writer& destination, CryptoContext& cryptoContext) {
   auto& index = m_unlockTransactions.get<TransactionHashIndex>();
   auto& wallets = m_walletsContainer.get<TransfersContainerIndex>();
 
@@ -438,11 +438,11 @@ void WalletSerializer::saveUnlockTransactionsJobs(Common::IOutputStream& destina
   }
 }
 
-void WalletSerializer::saveUncommitedTransactions(Common::IOutputStream& destination, CryptoContext& cryptoContext) {
+void WalletSerializer::saveUncommitedTransactions(Writer& destination, CryptoContext& cryptoContext) {
   serializeEncrypted(uncommitedTransactions, "uncommited_transactions", cryptoContext, destination);
 }
 
-void WalletSerializer::saveTransactions(Common::IOutputStream& destination, CryptoContext& cryptoContext) {
+void WalletSerializer::saveTransactions(Writer& destination, CryptoContext& cryptoContext) {
   uint64_t count = m_transactions.size();
   serializeEncrypted(count, "transactions_count", cryptoContext, destination);
   cryptoContext.incIv();
@@ -454,7 +454,7 @@ void WalletSerializer::saveTransactions(Common::IOutputStream& destination, Cryp
   }
 }
 
-void WalletSerializer::saveTransfers(Common::IOutputStream& destination, CryptoContext& cryptoContext) {
+void WalletSerializer::saveTransfers(Writer& destination, CryptoContext& cryptoContext) {
   uint64_t count = m_transfers.size();
   serializeEncrypted(count, "transfers_count", cryptoContext, destination);
   cryptoContext.incIv();

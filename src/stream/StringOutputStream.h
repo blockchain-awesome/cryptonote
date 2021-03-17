@@ -5,11 +5,11 @@
 #pragma once
 
 #include <string>
-#include "IOutputStream.h"
+#include "writer.h"
 
 namespace Common {
 
-class StringOutputStream : public IOutputStream {
+class StringOutputStream : public Writer {
 public:
   StringOutputStream(std::string& out);
   size_t writeSome(const void* data, size_t size) override;

@@ -6,11 +6,11 @@
 
 #include <cstdint>
 #include <vector>
-#include "IOutputStream.h"
+#include "writer.h"
 
 namespace Common {
 
-class VectorOutputStream : public IOutputStream {
+class VectorOutputStream : public Writer {
 public:
   VectorOutputStream(std::vector<uint8_t>& out);
   VectorOutputStream& operator=(const VectorOutputStream&) = delete;

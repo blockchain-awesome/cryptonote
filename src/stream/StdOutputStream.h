@@ -5,11 +5,11 @@
 #pragma once
 
 #include <ostream>
-#include "IOutputStream.h"
+#include "writer.h"
 
 namespace Common {
 
-class StdOutputStream : public IOutputStream {
+class StdOutputStream : public Writer {
 public:
   StdOutputStream(std::ostream& out);
   StdOutputStream& operator=(const StdOutputStream&) = delete;

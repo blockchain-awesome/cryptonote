@@ -7,7 +7,7 @@
 #include "IWallet.h"
 #include "WalletIndices.h"
 #include "stream/reader.h"
-#include "stream/IOutputStream.h"
+#include "stream/writer.h"
 #include "transfers/TransfersSynchronizer.h"
 #include "serialization/BinaryInputStreamSerializer.h"
 
@@ -39,7 +39,7 @@ public:
     UncommitedTransactions& uncommitedTransactions
   );
   
-  void save(const std::string& password, Common::IOutputStream& destination, bool saveDetails, bool saveCache);
+  void save(const std::string& password, Writer& destination, bool saveDetails, bool saveCache);
   void load(const std::string& password, Reader& source);
 
 private:
@@ -50,19 +50,19 @@ private:
 
   CryptoContext generateCryptoContext(const std::string& password);
 
-  void saveVersion(Common::IOutputStream& destination);
-  void saveIv(Common::IOutputStream& destination, crypto::chacha_iv_t& iv);
-  void saveKeys(Common::IOutputStream& destination, CryptoContext& cryptoContext);
-  void savePublicKey(Common::IOutputStream& destination, CryptoContext& cryptoContext);
-  void saveSecretKey(Common::IOutputStream& destination, CryptoContext& cryptoContext);
-  void saveFlags(bool saveDetails, bool saveCache, Common::IOutputStream& destination, CryptoContext& cryptoContext);
-  void saveWallets(Common::IOutputStream& destination, bool saveCache, CryptoContext& cryptoContext);
-  void saveBalances(Common::IOutputStream& destination, bool saveCache, CryptoContext& cryptoContext);
-  void saveTransfersSynchronizer(Common::IOutputStream& destination, CryptoContext& cryptoContext);
-  void saveUnlockTransactionsJobs(Common::IOutputStream& destination, CryptoContext& cryptoContext);
-  void saveUncommitedTransactions(Common::IOutputStream& destination, CryptoContext& cryptoContext);
-  void saveTransactions(Common::IOutputStream& destination, CryptoContext& cryptoContext);
-  void saveTransfers(Common::IOutputStream& destination, CryptoContext& cryptoContext);
+  void saveVersion(Writer& destination);
+  void saveIv(Writer& destination, crypto::chacha_iv_t& iv);
+  void saveKeys(Writer& destination, CryptoContext& cryptoContext);
+  void savePublicKey(Writer& destination, CryptoContext& cryptoContext);
+  void saveSecretKey(Writer& destination, CryptoContext& cryptoContext);
+  void saveFlags(bool saveDetails, bool saveCache, Writer& destination, CryptoContext& cryptoContext);
+  void saveWallets(Writer& destination, bool saveCache, CryptoContext& cryptoContext);
+  void saveBalances(Writer& destination, bool saveCache, CryptoContext& cryptoContext);
+  void saveTransfersSynchronizer(Writer& destination, CryptoContext& cryptoContext);
+  void saveUnlockTransactionsJobs(Writer& destination, CryptoContext& cryptoContext);
+  void saveUncommitedTransactions(Writer& destination, CryptoContext& cryptoContext);
+  void saveTransactions(Writer& destination, CryptoContext& cryptoContext);
+  void saveTransfers(Writer& destination, CryptoContext& cryptoContext);
 
   uint32_t loadVersion(Reader& source);
   void loadIv(Reader& source, crypto::chacha_iv_t& iv);
