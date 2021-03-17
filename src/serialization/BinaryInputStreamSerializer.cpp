@@ -14,15 +14,6 @@ using namespace Common;
 
 namespace cryptonote {
 
-namespace {
-
-template<typename StorageType, typename T>
-void readVarintAs(IInputStream& s, T &i) {
-  i = static_cast<T>(readVarint<StorageType>(s));
-}
-
-}
-
 ISerializer::SerializerType BinaryInputStreamSerializer::type() const {
   return ISerializer::INPUT;
 }
@@ -35,7 +26,9 @@ void BinaryInputStreamSerializer::endObject() {
 }
 
 bool BinaryInputStreamSerializer::beginArray(size_t& size, Common::StringView name) {
-  readVarintAs<uint64_t>(stream, size);
+  uint64_t temp;
+  stream.readVarint(temp);
+  size = temp;
   return true;
 }
 
@@ -43,48 +36,48 @@ void BinaryInputStreamSerializer::endArray() {
 }
 
 bool BinaryInputStreamSerializer::operator()(uint8_t& value, Common::StringView name) {
-  readVarint(stream, value);
+  stream.readVarint(value);
   return true;
 }
 
 bool BinaryInputStreamSerializer::operator()(uint16_t& value, Common::StringView name) {
-  readVarint(stream, value);
+  stream.readVarint(value);
   return true;
 }
 
 bool BinaryInputStreamSerializer::operator()(int16_t& value, Common::StringView name) {
-  readVarintAs<uint16_t>(stream, value);
+  stream.readVarint(value);
   return true;
 }
 
 bool BinaryInputStreamSerializer::operator()(uint32_t& value, Common::StringView name) {
-  readVarint(stream, value);
+  stream.readVarint(value);
   return true;
 }
 
 bool BinaryInputStreamSerializer::operator()(int32_t& value, Common::StringView name) {
-  readVarintAs<uint32_t>(stream, value);
+  stream.readVarint(value);
   return true;
 }
 
 bool BinaryInputStreamSerializer::operator()(int64_t& value, Common::StringView name) {
-  readVarintAs<uint64_t>(stream, value);
+  stream.readVarint(value);
   return true;
 }
 
 bool BinaryInputStreamSerializer::operator()(uint64_t& value, Common::StringView name) {
-  readVarint(stream, value);
+  stream.readVarint(value);
   return true;
 }
 
 bool BinaryInputStreamSerializer::operator()(bool& value, Common::StringView name) {
-  value = read<uint8_t>(stream) != 0;
+  stream.readVarint(value);
   return true;
 }
 
 bool BinaryInputStreamSerializer::operator()(std::string& value, Common::StringView name) {
   uint64_t size;
-  readVarint(stream, size);
+  stream.readVarint(size);
 
   if (size > 0) {
     std::vector<char> temp;
@@ -115,7 +108,7 @@ bool BinaryInputStreamSerializer::operator()(double& value, Common::StringView n
 }
 
 void BinaryInputStreamSerializer::checkedRead(char* buf, size_t size) {
-  read(stream, buf, size);
+  stream.read(buf,size);
 }
 
 }

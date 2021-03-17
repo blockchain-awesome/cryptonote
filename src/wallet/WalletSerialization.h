@@ -6,7 +6,7 @@
 
 #include "IWallet.h"
 #include "WalletIndices.h"
-#include "stream/IInputStream.h"
+#include "stream/reader.h"
 #include "stream/IOutputStream.h"
 #include "transfers/TransfersSynchronizer.h"
 #include "serialization/BinaryInputStreamSerializer.h"
@@ -40,13 +40,13 @@ public:
   );
   
   void save(const std::string& password, Common::IOutputStream& destination, bool saveDetails, bool saveCache);
-  void load(const std::string& password, Common::IInputStream& source);
+  void load(const std::string& password, Reader& source);
 
 private:
   static const uint32_t SERIALIZATION_VERSION;
 
-  void loadWallet(Common::IInputStream& source, const std::string& password, uint32_t version);
-  void loadWalletV1(Common::IInputStream& source, const std::string& password);
+  void loadWallet(Reader& source, const std::string& password, uint32_t version);
+  void loadWalletV1(Reader& source, const std::string& password);
 
   CryptoContext generateCryptoContext(const std::string& password);
 
@@ -64,24 +64,24 @@ private:
   void saveTransactions(Common::IOutputStream& destination, CryptoContext& cryptoContext);
   void saveTransfers(Common::IOutputStream& destination, CryptoContext& cryptoContext);
 
-  uint32_t loadVersion(Common::IInputStream& source);
-  void loadIv(Common::IInputStream& source, crypto::chacha_iv_t& iv);
+  uint32_t loadVersion(Reader& source);
+  void loadIv(Reader& source, crypto::chacha_iv_t& iv);
   void generateKey(const std::string& password, crypto::chacha_key_t& key);
-  void loadKeys(Common::IInputStream& source, CryptoContext& cryptoContext);
-  void loadPublicKey(Common::IInputStream& source, CryptoContext& cryptoContext);
-  void loadSecretKey(Common::IInputStream& source, CryptoContext& cryptoContext);
+  void loadKeys(Reader& source, CryptoContext& cryptoContext);
+  void loadPublicKey(Reader& source, CryptoContext& cryptoContext);
+  void loadSecretKey(Reader& source, CryptoContext& cryptoContext);
   void checkKeys();
-  void loadFlags(bool& details, bool& cache, Common::IInputStream& source, CryptoContext& cryptoContext);
-  void loadWallets(Common::IInputStream& source, CryptoContext& cryptoContext);
+  void loadFlags(bool& details, bool& cache, Reader& source, CryptoContext& cryptoContext);
+  void loadWallets(Reader& source, CryptoContext& cryptoContext);
   void subscribeWallets();
-  void loadBalances(Common::IInputStream& source, CryptoContext& cryptoContext);
-  void loadTransfersSynchronizer(Common::IInputStream& source, CryptoContext& cryptoContext);
-  void loadObsoleteSpentOutputs(Common::IInputStream& source, CryptoContext& cryptoContext);
-  void loadUnlockTransactionsJobs(Common::IInputStream& source, CryptoContext& cryptoContext);
-  void loadObsoleteChange(Common::IInputStream& source, CryptoContext& cryptoContext);
-  void loadUncommitedTransactions(Common::IInputStream& source, CryptoContext& cryptoContext);
-  void loadTransactions(Common::IInputStream& source, CryptoContext& cryptoContext);
-  void loadTransfers(Common::IInputStream& source, CryptoContext& cryptoContext, uint32_t version);
+  void loadBalances(Reader& source, CryptoContext& cryptoContext);
+  void loadTransfersSynchronizer(Reader& source, CryptoContext& cryptoContext);
+  void loadObsoleteSpentOutputs(Reader& source, CryptoContext& cryptoContext);
+  void loadUnlockTransactionsJobs(Reader& source, CryptoContext& cryptoContext);
+  void loadObsoleteChange(Reader& source, CryptoContext& cryptoContext);
+  void loadUncommitedTransactions(Reader& source, CryptoContext& cryptoContext);
+  void loadTransactions(Reader& source, CryptoContext& cryptoContext);
+  void loadTransfers(Reader& source, CryptoContext& cryptoContext, uint32_t version);
 
   void loadWalletV1Keys(cryptonote::BinaryInputStreamSerializer& serializer);
   void loadWalletV1Details(cryptonote::BinaryInputStreamSerializer& serializer);

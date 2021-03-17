@@ -5,11 +5,8 @@
 #include <vector>
 #include <string>
 #include <istream>
-#include "IOutputStream.h"
 
-using Common::IOutputStream;
-
-class Writer : IOutputStream
+class Writer 
 {
 
 public:
@@ -21,7 +18,7 @@ public:
   void write(const void *data, size_t size);
   void write(std::vector<uint8_t> &data, size_t size);
   void write(std::string &data, size_t size);
-  size_t writeSome(const void *data, size_t size) override;
+  virtual size_t writeSome(const void *data, size_t size);
 
 private:
   std::ostream &out;

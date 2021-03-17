@@ -1,14 +1,29 @@
 
 #include "reader.h"
 
-Reader::Reader(std::istream &in) : in(in)
+struct membuf : std::streambuf
+{
+  membuf(char *begin, char *end)
+  {
+    this->setg(begin, begin, end);
+  }
+};
+
+Reader::Reader(const char *buffer, size_t size)
+{
+    membuf sbuf((char *)buffer, (char *)buffer + size);
+    std::istream in(&sbuf);
+    this->in = &in;
+}
+
+Reader::Reader(std::istream *in) : in(in)
 {
 }
 
 size_t Reader::readSome(void *data, size_t size)
 {
-  in.read(static_cast<char *>(data), size);
-  return in.gcount();
+  in->read(static_cast<char *>(data), size);
+  return in->gcount();
 }
 
 void Reader::read(void *data, size_t size)

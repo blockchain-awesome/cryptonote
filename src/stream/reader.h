@@ -6,26 +6,24 @@
 #include <vector>
 #include <string>
 #include <istream>
-#include "IInputStream.h"
 
-using Common::IInputStream;
-
-class Reader : IInputStream
+class Reader
 {
 
 public:
-  Reader(std::istream &in);
+  Reader(const char *buffer, size_t size);
+  Reader(std::istream *in);
   template <typename T>
   void read(T &value);
   template <typename T>
   void readVarint(T &value);
   void read(void *data, size_t size);
-  size_t readSome(void *data, size_t size) override;
+  virtual size_t readSome(void *data, size_t size);
   void read(std::vector<uint8_t> &data, size_t size);
   void read(std::string &data, size_t size);
 
-private:
-  std::istream &in;
+protected:
+  std::istream *in = NULL;
 };
 
 template <typename T>
