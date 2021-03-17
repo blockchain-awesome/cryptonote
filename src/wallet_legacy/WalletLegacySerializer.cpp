@@ -6,7 +6,7 @@
 
 #include <stdexcept>
 
-#include "stream/MemoryInputStream.h"
+#include "stream/memory.h"
 #include "stream/StdInputStream.h"
 #include "stream/StdOutputStream.h"
 #include "serialization/BinaryOutputStreamSerializer.h"

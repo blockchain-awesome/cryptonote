@@ -82,7 +82,7 @@ bool KVBinaryOutputStreamSerializer::beginObject(Common::StringView name) {
   checkArrayPreamble(BIN_KV_SERIALIZE_TYPE_OBJECT);
  
   m_stack.push_back(Level(name));
-  m_objectsStack.push_back(MemoryStream());
+  m_objectsStack.push_back(MemoryOutputStream());
 
   return true;
 }
@@ -229,7 +229,7 @@ void KVBinaryOutputStreamSerializer::checkArrayPreamble(uint8_t type) {
 }
 
 
-MemoryStream& KVBinaryOutputStreamSerializer::stream() {
+MemoryOutputStream& KVBinaryOutputStreamSerializer::stream() {
   assert(m_objectsStack.size());
   return m_objectsStack.back();
 }

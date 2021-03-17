@@ -8,7 +8,7 @@
 #include <sstream>
 #include <type_traits>
 
-#include "stream/MemoryInputStream.h"
+#include "stream/memory.h"
 #include "stream/StdInputStream.h"
 #include "stream/StdOutputStream.h"
 #include "cryptonote/core/transaction/serializer/basics.h"

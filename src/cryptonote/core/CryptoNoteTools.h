@@ -5,7 +5,7 @@
 #pragma once
 
 #include <limits>
-#include "stream/MemoryInputStream.h"
+#include "stream/memory.h"
 #include "common/StringTools.h"
 #include "stream/VectorOutputStream.h"
 #include "serialization/BinaryOutputStreamSerializer.h"

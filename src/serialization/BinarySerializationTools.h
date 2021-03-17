@@ -5,7 +5,7 @@
 #include <cryptonote.h>
 #include "BinaryInputStreamSerializer.h"
 #include "BinaryOutputStreamSerializer.h"
-#include "stream/MemoryInputStream.h"
+#include "stream/memory.h"
 #include "stream/StdInputStream.h"
 #include "stream/StdOutputStream.h"
 #include "stream/VectorOutputStream.h"
