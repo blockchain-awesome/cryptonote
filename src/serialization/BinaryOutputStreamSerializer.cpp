@@ -6,7 +6,7 @@
 
 #include <cassert>
 #include <stdexcept>
-#include "stream/StreamTools.h"
+#include "stream/writer.h"
 
 using namespace Common;
 
@@ -24,7 +24,7 @@ void BinaryOutputStreamSerializer::endObject() {
 }
 
 bool BinaryOutputStreamSerializer::beginArray(size_t& size, Common::StringView name) {
-  writeVarint(stream, size);
+  stream.writeVarint(size);
   return true;
 }
 
@@ -32,37 +32,37 @@ void BinaryOutputStreamSerializer::endArray() {
 }
 
 bool BinaryOutputStreamSerializer::operator()(uint8_t& value, Common::StringView name) {
-  writeVarint(stream, value);
+  stream.writeVarint(value);
   return true;
 }
 
 bool BinaryOutputStreamSerializer::operator()(uint16_t& value, Common::StringView name) {
-  writeVarint(stream, value);
+  stream.writeVarint(value);
   return true;
 }
 
 bool BinaryOutputStreamSerializer::operator()(int16_t& value, Common::StringView name) {
-  writeVarint(stream, static_cast<uint16_t>(value));
+  stream.writeVarint(value);
   return true;
 }
 
 bool BinaryOutputStreamSerializer::operator()(uint32_t& value, Common::StringView name) {
-  writeVarint(stream, value);
+  stream.writeVarint(value);
   return true;
 }
 
 bool BinaryOutputStreamSerializer::operator()(int32_t& value, Common::StringView name) {
-  writeVarint(stream, static_cast<uint32_t>(value));
+  stream.writeVarint(value);
   return true;
 }
 
 bool BinaryOutputStreamSerializer::operator()(int64_t& value, Common::StringView name) {
-  writeVarint(stream, static_cast<uint64_t>(value));
+  stream.writeVarint(value);
   return true;
 }
 
 bool BinaryOutputStreamSerializer::operator()(uint64_t& value, Common::StringView name) {
-  writeVarint(stream, value);
+  stream.writeVarint(value);
   return true;
 }
 
@@ -73,7 +73,7 @@ bool BinaryOutputStreamSerializer::operator()(bool& value, Common::StringView na
 }
 
 bool BinaryOutputStreamSerializer::operator()(std::string& value, Common::StringView name) {
-  writeVarint(stream, value.size());
+  stream.writeVarint(value.size());
   checkedWrite(value.data(), value.size());
   return true;
 }
@@ -95,7 +95,7 @@ bool BinaryOutputStreamSerializer::operator()(double& value, Common::StringView 
 }
 
 void BinaryOutputStreamSerializer::checkedWrite(const char* buf, size_t size) {
-  write(stream, buf, size);
+  stream.write(buf, size);
 }
 
 }

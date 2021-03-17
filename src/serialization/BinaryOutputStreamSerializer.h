@@ -12,7 +12,7 @@ namespace cryptonote {
 
 class BinaryOutputStreamSerializer : public ISerializer {
 public:
-  BinaryOutputStreamSerializer(Writer& strm) : stream(strm) {}
+  BinaryOutputStreamSerializer(Writer& stream) : stream(stream) {}
   virtual ~BinaryOutputStreamSerializer() {}
 
   virtual ISerializer::SerializerType type() const override;

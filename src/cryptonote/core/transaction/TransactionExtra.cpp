@@ -5,7 +5,7 @@
 #include "TransactionExtra.h"
 
 #include "stream/memory.h"
-#include "stream/StreamTools.h"
+#include "stream/writer.h"
 #include "common/StringTools.h"
 #include "CryptoNoteTools.h"
 #include "serialization/BinaryOutputStreamSerializer.h"
