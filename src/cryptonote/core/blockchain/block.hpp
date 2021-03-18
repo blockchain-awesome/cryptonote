@@ -16,7 +16,7 @@
 #include "common/file.h"
 
 #include "stream/reader.h"
-#include "stream/StdOutputStream.h"
+#include "stream/writer.h"
 #include "serialization/BinaryInputStreamSerializer.h"
 #include "serialization/BinaryOutputStreamSerializer.h"
 #include "cryptonote/core/currency.h"
@@ -337,7 +337,7 @@ template<class T> const T& BlockAccessor<T>::operator[](uint64_t index) {
   m_itemsFile.seekg(m_offsets[index]);
   T tempItem;
   
-  Reader stream = Reader(&m_itemsFile);
+  Reader stream = Reader(m_itemsFile);
   cryptonote::BinaryInputStreamSerializer archive(stream);
   serialize(tempItem, archive);
 
@@ -387,7 +387,7 @@ template<class T> void BlockAccessor<T>::push_back(const T& item) {
 
     m_itemsFile.seekp(m_itemsFileSize);
 
-    Common::StdOutputStream stream(m_itemsFile);
+    Writer stream(m_itemsFile);
     cryptonote::BinaryOutputStreamSerializer archive(stream);
     serialize(const_cast<T&>(item), archive);
 

@@ -12,6 +12,15 @@
 namespace Common
 {
 
+
+  struct membuf : std::streambuf
+  {
+    membuf(char *begin, char *end)
+    {
+      this->setg(begin, begin, end);
+    }
+  };
+
   class MemoryInputStream : public Reader
   {
   public:
@@ -26,6 +35,8 @@ namespace Common
     const char *buffer;
     size_t bufferSize;
     size_t position;
+    std::istream temp;
+    membuf mem;
   };
 
   class MemoryOutputStream : public Writer

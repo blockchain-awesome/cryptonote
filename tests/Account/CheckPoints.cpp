@@ -5,7 +5,7 @@
 #include "gtest/gtest.h"
 
 #include <fstream>
-#include "stream/StdOutputStream.h"
+#include "stream/writer.h"
 #include "serialization/BinaryInputStreamSerializer.h"
 #include "serialization/BinaryOutputStreamSerializer.h"
 #include "cryptonote/core/checkpoints.h"

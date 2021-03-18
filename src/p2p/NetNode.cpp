@@ -27,7 +27,7 @@
  
 #include "version.h"
 #include "stream/reader.h"
-#include "stream/StdOutputStream.h"
+#include "stream/writer.h"
 #include "cryptonote/crypto/crypto.h"
 #include "common/os.h"
 #include "command_line/options.h"
@@ -270,7 +270,7 @@ namespace cryptonote
         p2p_data.open(state_file_path, std::ios_base::binary | std::ios_base::in);
 
         if (!p2p_data.fail()) {
-          Reader inputStream(&p2p_data);
+          Reader inputStream(p2p_data);
           BinaryInputStreamSerializer a(inputStream);
           cryptonote::serialize(*this, a);
           loaded = true;
@@ -534,7 +534,7 @@ namespace cryptonote
         return false;
       };
 
-      StdOutputStream stream(p2p_data);
+      Writer stream(p2p_data);
       BinaryOutputStreamSerializer a(stream);
       cryptonote::serialize(*this, a);
       return true;

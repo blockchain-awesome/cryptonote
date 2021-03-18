@@ -7,7 +7,7 @@
 #include "BinaryOutputStreamSerializer.h"
 #include "stream/memory.h"
 #include "stream/reader.h"
-#include "stream/StdOutputStream.h"
+#include "stream/writer.h"
 #include "stream/VectorOutputStream.h"
 
 #include <fstream>
@@ -39,7 +39,7 @@ bool storeToBinaryFile(const T& obj, const std::string& filename) {
       return false;
     }
 
-    Common::StdOutputStream stream(dataFile);
+    Writer stream(dataFile);
     BinaryOutputStreamSerializer out(stream);
     cryptonote::serialize(const_cast<T&>(obj), out);
       
@@ -66,7 +66,7 @@ bool loadFromBinaryFile(T& obj, const std::string& filename) {
       return false;
     }
 
-    Reader stream(&dataFile);
+    Reader stream(dataFile);
     BinaryInputStreamSerializer in(stream);
     serialize(obj, in);
     return !dataFile.fail();

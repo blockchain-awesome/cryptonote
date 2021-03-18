@@ -11,7 +11,7 @@
 #include "common/math.hpp"
 #include "common/ShuffleGenerator.h"
 #include "stream/reader.h"
-#include "stream/StdOutputStream.h"
+#include "stream/writer.h"
 #include "rpc/CoreRpcServerCommandsDefinitions.h"
 #include "serialization/BinarySerializationTools.h"
 #include "CryptoNoteTools.h"

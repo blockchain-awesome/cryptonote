@@ -11,8 +11,7 @@ class Reader
 {
 
 public:
-  Reader(const char *buffer, size_t size);
-  Reader(std::istream *in);
+  Reader(std::istream &in);
   template <typename T>
   void read(T &value);
   template <typename T>
@@ -23,7 +22,7 @@ public:
   void read(std::string &data, size_t size);
 
 protected:
-  std::istream *in = NULL;
+  std::istream &in;
 };
 
 template <typename T>

@@ -5,7 +5,7 @@
 #include "SynchronizationState.h"
 
 #include "stream/reader.h"
-#include "stream/StdOutputStream.h"
+#include "stream/writer.h"
 #include "serialization/BinaryInputStreamSerializer.h"
 #include "serialization/BinaryOutputStreamSerializer.h"
 #include "cryptonote/core/transaction/serializer/basics.h"
@@ -95,13 +95,13 @@ const std::vector<hash_t>& SynchronizationState::getKnownBlockHashes() const {
 }
 
 void SynchronizationState::save(std::ostream& os) {
-  StdOutputStream stream(os);
+  Writer stream(os);
   cryptonote::BinaryOutputStreamSerializer s(stream);
   serialize(s, "state");
 }
 
 void SynchronizationState::load(std::istream& in) {
-  Reader stream(&in);
+  Reader stream(in);
   cryptonote::BinaryInputStreamSerializer s(stream);
   serialize(s, "state");
 }

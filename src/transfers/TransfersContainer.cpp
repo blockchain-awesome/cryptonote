@@ -5,7 +5,7 @@
 #include "TransfersContainer.h"
 #include "IWalletLegacy.h"
 #include "stream/reader.h"
-#include "stream/StdOutputStream.h"
+#include "stream/writer.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "serialization/BinaryInputStreamSerializer.h"
 #include "serialization/BinaryOutputStreamSerializer.h"
@@ -759,7 +759,7 @@ std::vector<TransactionSpentOutputInformation> TransfersContainer::getSpentOutpu
 
 void TransfersContainer::save(std::ostream& os) {
   std::lock_guard<std::mutex> lk(m_mutex);
-  StdOutputStream stream(os);
+  Writer stream(os);
   cryptonote::BinaryOutputStreamSerializer s(stream);
 
   s(const_cast<uint32_t&>(TRANSFERS_CONTAINER_STORAGE_VERSION), "version");
@@ -773,7 +773,7 @@ void TransfersContainer::save(std::ostream& os) {
 
 void TransfersContainer::load(std::istream& in) {
   std::lock_guard<std::mutex> lk(m_mutex);
-  Reader stream(&in);
+  Reader stream(in);
   cryptonote::BinaryInputStreamSerializer s(stream);
 
   uint32_t version = 0;

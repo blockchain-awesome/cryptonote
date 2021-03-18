@@ -5,7 +5,7 @@
 #include <logging/ILogger.h>
 #include <stream/reader.h>
 #include <serialization/BinaryInputStreamSerializer.h>
-#include <stream/StdOutputStream.h>
+#include <stream/writer.h>
 #include <serialization/BinaryOutputStreamSerializer.h>
 #include <fstream>
 #include <chrono>
@@ -39,7 +39,7 @@ public:
         return;
       }
 
-      Reader stream(&stdStream);
+      Reader stream(stdStream);
       BinaryInputStreamSerializer s(stream);
       serialize(s);
     }
@@ -59,7 +59,7 @@ public:
         return false;
       }
 
-      StdOutputStream stream(file);
+      Writer stream(file);
       BinaryOutputStreamSerializer s(stream);
       serialize(s);
     }
