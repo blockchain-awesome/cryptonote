@@ -4,7 +4,7 @@
 
 #include "SynchronizationState.h"
 
-#include "stream/StdInputStream.h"
+#include "stream/reader.h"
 #include "stream/StdOutputStream.h"
 #include "serialization/BinaryInputStreamSerializer.h"
 #include "serialization/BinaryOutputStreamSerializer.h"
@@ -101,7 +101,7 @@ void SynchronizationState::save(std::ostream& os) {
 }
 
 void SynchronizationState::load(std::istream& in) {
-  StdInputStream stream(in);
+  Reader stream(&in);
   cryptonote::BinaryInputStreamSerializer s(stream);
   serialize(s, "state");
 }

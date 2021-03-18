@@ -20,7 +20,7 @@
 
 #include "common/ScopeExit.h"
 #include "common/ShuffleGenerator.h"
-#include "stream/StdInputStream.h"
+#include "stream/reader.h"
 #include "stream/StdOutputStream.h"
 #include "common/StringTools.h"
 #include "cryptonote/core/account.h"
@@ -410,7 +410,7 @@ void WalletGreen::unsafeLoad(std::istream& source, const std::string& password) 
     m_uncommitedTransactions
   );
 
-  StdInputStream inputStream(source);
+  Reader inputStream(&source);
   s.load(password, inputStream);
 
   m_password = password;

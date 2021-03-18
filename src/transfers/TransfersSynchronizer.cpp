@@ -5,7 +5,7 @@
 #include "TransfersSynchronizer.h"
 #include "TransfersConsumer.h"
 
-#include "stream/StdInputStream.h"
+#include "stream/reader.h"
 #include "stream/StdOutputStream.h"
 #include "serialization/BinaryInputStreamSerializer.h"
 #include "serialization/BinaryOutputStreamSerializer.h"
@@ -203,7 +203,7 @@ void setObjectState(IStreamSerializable& obj, const std::string& state) {
 void TransfersSyncronizer::load(std::istream& is) {
   m_sync.load(is);
 
-  StdInputStream inputStream(is);
+  Reader inputStream(&is);
   cryptonote::BinaryInputStreamSerializer s(inputStream);
   uint32_t version = 0;
 

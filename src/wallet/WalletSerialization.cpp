@@ -9,7 +9,6 @@
 #include <type_traits>
 
 #include "stream/memory.h"
-#include "stream/StdInputStream.h"
 #include "stream/StdOutputStream.h"
 #include "cryptonote/core/transaction/serializer/basics.h"
 #include "cryptonote/core/CryptoNoteTools.h"

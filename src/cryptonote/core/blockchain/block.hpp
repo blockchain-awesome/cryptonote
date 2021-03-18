@@ -15,7 +15,7 @@
 #include <vector>
 #include "common/file.h"
 
-#include "stream/StdInputStream.h"
+#include "stream/reader.h"
 #include "stream/StdOutputStream.h"
 #include "serialization/BinaryInputStreamSerializer.h"
 #include "serialization/BinaryOutputStreamSerializer.h"
@@ -337,7 +337,7 @@ template<class T> const T& BlockAccessor<T>::operator[](uint64_t index) {
   m_itemsFile.seekg(m_offsets[index]);
   T tempItem;
   
-  Common::StdInputStream stream(m_itemsFile);
+  Reader stream = Reader(&m_itemsFile);
   cryptonote::BinaryInputStreamSerializer archive(stream);
   serialize(tempItem, archive);
 

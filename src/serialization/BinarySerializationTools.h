@@ -6,7 +6,7 @@
 #include "BinaryInputStreamSerializer.h"
 #include "BinaryOutputStreamSerializer.h"
 #include "stream/memory.h"
-#include "stream/StdInputStream.h"
+#include "stream/reader.h"
 #include "stream/StdOutputStream.h"
 #include "stream/VectorOutputStream.h"
 
@@ -66,7 +66,7 @@ bool loadFromBinaryFile(T& obj, const std::string& filename) {
       return false;
     }
 
-    Common::StdInputStream stream(dataFile);
+    Reader stream(&dataFile);
     BinaryInputStreamSerializer in(stream);
     serialize(obj, in);
     return !dataFile.fail();

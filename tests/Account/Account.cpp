@@ -5,7 +5,7 @@
 #include "gtest/gtest.h"
 
 #include <fstream>
-#include "stream/StdInputStream.h"
+#include "stream/reader.h"
 #include "stream/StdOutputStream.h"
 #include "serialization/BinaryInputStreamSerializer.h"
 #include "serialization/BinaryOutputStreamSerializer.h"
@@ -68,7 +68,7 @@ TEST_F(AccountTest, serialize)
   std::fstream of;
   of.open(filename, std::fstream::in);
 
-  StdInputStream inStream(of);
+  Reader inStream(&of);
   BinaryInputStreamSerializer inS(inStream);
 
   acc1->serialize(inS);

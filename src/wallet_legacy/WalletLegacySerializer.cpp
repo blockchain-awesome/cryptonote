@@ -7,7 +7,7 @@
 #include <stdexcept>
 
 #include "stream/memory.h"
-#include "stream/StdInputStream.h"
+#include "stream/reader.h"
 #include "stream/StdOutputStream.h"
 #include "serialization/BinaryOutputStreamSerializer.h"
 #include "serialization/BinaryInputStreamSerializer.h"
@@ -101,7 +101,7 @@ crypto::chacha_iv_t WalletLegacySerializer::encrypt(const std::string& plain, co
 
 
 void WalletLegacySerializer::deserialize(std::istream& stream, const std::string& password, std::string& cache) {
-  StdInputStream stdStream(stream);
+  Reader stdStream(&stream);
   cryptonote::BinaryInputStreamSerializer serializerEncrypted(stdStream);
 
   serializerEncrypted.beginObject("wallet");

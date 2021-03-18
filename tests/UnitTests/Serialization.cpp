@@ -4,7 +4,7 @@
 
 #include "gtest/gtest.h"
 
-#include "stream/StdInputStream.h"
+#include "stream/reader.h"
 #include "stream/StdOutputStream.h"
 #include "serialization/BinaryInputStreamSerializer.h"
 #include "serialization/BinaryOutputStreamSerializer.h"
@@ -28,7 +28,7 @@ TEST(BinarySerializer, uint16) {
   }
 
   {
-    StdInputStream is(ss);
+    Reader is(&ss);
     BinaryInputStreamSerializer s(is);
     
     uint32_t t32 = 0;
