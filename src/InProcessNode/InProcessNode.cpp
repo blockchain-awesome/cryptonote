@@ -6,7 +6,7 @@
 
 #include <functional>
 #include <boost/utility/value_init.hpp>
-#include <cryptonote/core/TransactionApi.h>
+#include <cryptonote/core/transaction/TransactionApi.h>
 
 #include "CryptoNoteConfig.h"
 #include "common/StringTools.h"

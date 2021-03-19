@@ -12,7 +12,7 @@
 #include "serialization/BinaryInputStreamSerializer.h"
 
 #include "account.h"
-#include "TransactionExtra.h"
+#include "transaction/TransactionExtra.h"
 #include "CryptoNoteTools.h"
 
 #include "CryptoNoteConfig.h"

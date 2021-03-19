@@ -13,7 +13,7 @@
 
 #include "cryptonote/core/account.h"
 #include "cryptonote/core/core.h"
-#include "cryptonote/core/TransactionExtra.h"
+#include "cryptonote/core/transaction/TransactionExtra.h"
 
 #include "../TestGenerator/TestGenerator.h"
 #include "cryptonote/core/CryptoNoteTools.h"

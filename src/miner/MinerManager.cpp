@@ -13,7 +13,7 @@
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/structures/block_entry.h"
-#include "cryptonote/core/TransactionExtra.h"
+#include "cryptonote/core/transaction/TransactionExtra.h"
 #include "rpc/HttpClient.h"
 #include "rpc/CoreRpcServerCommandsDefinitions.h"
 #include "rpc/JsonRpc.h"

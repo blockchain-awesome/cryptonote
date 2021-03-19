@@ -17,7 +17,7 @@
 #include "CryptoNoteTools.h"
 #include "CryptoNoteStatInfo.h"
 #include "Miner.h"
-#include "TransactionExtra.h"
+#include "transaction/TransactionExtra.h"
 #include "IBlock.h"
 #include "cryptonote/structures/array.hpp"
 #include "cryptonote/core/hardfork.h"

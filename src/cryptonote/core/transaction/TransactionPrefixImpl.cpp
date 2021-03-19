@@ -8,7 +8,7 @@
 #include <system_error>
 
 #include "cryptonote/core/key.h"
-#include "cryptonote/core/TransactionApiExtra.h"
+#include "TransactionApiExtra.h"
 #include "TransactionUtils.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/structures/array.hpp"
