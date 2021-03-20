@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <stream/IInputStream.h>
+#include "stream/reader.h"
 #include "ISerializer.h"
 #include "JsonInputValueSerializer.h"
 
@@ -12,7 +12,7 @@ namespace cryptonote {
 
 class KVBinaryInputStreamSerializer : public JsonInputValueSerializer {
 public:
-  KVBinaryInputStreamSerializer(Common::IInputStream& strm);
+  KVBinaryInputStreamSerializer(Reader& strm);
 
   virtual bool binary(void* value, size_t size, Common::StringView name) override;
   virtual bool binary(std::string& value, Common::StringView name) override;

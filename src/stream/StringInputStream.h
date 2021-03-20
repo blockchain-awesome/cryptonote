@@ -5,18 +5,18 @@
 #pragma once
 
 #include <string>
-#include "IInputStream.h"
+#include "reader.h"
 
-namespace Common {
+namespace Common
+{
 
-class StringInputStream : public IInputStream {
-public:
-  StringInputStream(const std::string& in);
-  size_t readSome(void* data, size_t size) override;
+  class StringInputStream : public Reader
+  {
+  public:
+    StringInputStream(const std::string &in);
 
-private:
-  const std::string& in;
-  size_t offset;
-};
+  private:
+    size_t offset;
+  };
 
 }

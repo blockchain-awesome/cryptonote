@@ -4,21 +4,23 @@
 
 #pragma once
 
-#include "IInputStream.h"
+#include "reader.h"
 
-namespace Common {
+namespace Common
+{
 
-  class MemoryInputStream : public IInputStream {
+  class MemoryInputStream : public Reader
+  {
   public:
-    MemoryInputStream(const void* buffer, size_t bufferSize);
+    MemoryInputStream(const void *buffer, size_t bufferSize);
     size_t getPosition() const;
     bool endOfStream() const;
-    
+
     // IInputStream
-    virtual size_t readSome(void* data, size_t size) override;
+    virtual size_t readSome(void *data, size_t size) override;
 
   private:
-    const char* buffer;
+    const char *buffer;
     size_t bufferSize;
     size_t position;
   };

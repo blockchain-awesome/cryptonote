@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <stream/IInputStream.h>
+#include "stream/reader.h"
 #include "ISerializer.h"
 #include "SerializationOverloads.h"
 
@@ -12,7 +12,7 @@ namespace cryptonote {
 
 class BinaryInputStreamSerializer : public ISerializer {
 public:
-  BinaryInputStreamSerializer(Common::IInputStream& strm) : stream(strm) {}
+  BinaryInputStreamSerializer(Reader& strm) : stream(strm) {}
   virtual ~BinaryInputStreamSerializer() {}
 
   virtual ISerializer::SerializerType type() const override;
@@ -44,7 +44,7 @@ public:
 private:
 
   void checkedRead(char* buf, size_t size);
-  Common::IInputStream& stream;
+  Reader& stream;
 };
 
 }
