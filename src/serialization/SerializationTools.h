@@ -6,7 +6,7 @@
 
 #include <list>
 #include <vector>
-#include <stream/MemoryInputStream.h>
+#include <stream/memory.h>
 #include <stream/StringOutputStream.h>
 #include "JsonInputStreamSerializer.h"
 #include "JsonOutputStreamSerializer.h"

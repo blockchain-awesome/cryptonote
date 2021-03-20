@@ -4,7 +4,7 @@
 
 #include "TransactionExtra.h"
 
-#include "stream/MemoryInputStream.h"
+#include "stream/memory.h"
 #include "stream/StreamTools.h"
 #include "common/StringTools.h"
 #include "CryptoNoteTools.h"

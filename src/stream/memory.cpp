@@ -2,7 +2,7 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "MemoryInputStream.h"
+#include "memory.h"
 #include <algorithm>
 #include <cassert>
 #include <cstring> // memcpy

@@ -2,7 +2,7 @@
 #include "stream/VectorOutputStream.h"
 #include "BinaryInputStreamSerializer.h"
 #include "BinaryOutputStreamSerializer.h"
-#include "stream/MemoryInputStream.h"
+#include "stream/memory.h"
 #include "stream/StdInputStream.h"
 #include "stream/StdOutputStream.h"
 #include <fstream>

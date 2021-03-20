@@ -7,7 +7,9 @@
 #include <vector>
 #include <stream/writer.h>
 #include "ISerializer.h"
-#include "MemoryStream.h"
+#include "stream/memory.h"
+
+using namespace Common;
 
 namespace cryptonote {
 
@@ -50,7 +52,7 @@ private:
   void writeElementPrefix(uint8_t type, Common::StringView name);
   void checkArrayPreamble(uint8_t type);
   void updateState(uint8_t type);
-  MemoryStream& stream();
+  Common::MemoryOutputStream& stream();
 
   enum class State {
     Root,
@@ -78,7 +80,7 @@ private:
 
   };
 
-  std::vector<MemoryStream> m_objectsStack;
+  std::vector<Common::MemoryOutputStream> m_objectsStack;
   std::vector<Level> m_stack;
 };
 
