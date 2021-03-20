@@ -10,6 +10,7 @@ class Writer
 {
 
 public:
+  Writer();
   Writer(std::ostream &out);
   template <typename T>
   void write(T &value);
@@ -21,7 +22,7 @@ public:
   virtual size_t writeSome(const void *data, size_t size);
 
 private:
-  std::ostream &out;
+  std::ostream *out;
 };
 
 template <typename T>

@@ -8,14 +8,14 @@
 #include <cstdint>
 #include <cstring> // memcpy
 #include <vector>
-#include <stream/IOutputStream.h>
+#include <stream/writer.h>
 
 namespace cryptonote {
 
-class MemoryStream: public Common::IOutputStream {
+class MemoryStream: public Writer {
 public:
 
-  MemoryStream() : m_writePos(0) {
+  MemoryStream() : Writer(), m_writePos(0) {
   }
 
   virtual size_t writeSome(const void* data, size_t size) override {

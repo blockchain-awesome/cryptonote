@@ -1,14 +1,19 @@
 
 #include "writer.h"
 
-Writer::Writer(std::ostream &out) : out(out)
+
+Writer::Writer() {
+
+}
+
+Writer::Writer(std::ostream &out) : out(&out)
 {
 }
 
 size_t Writer::writeSome(const void *data, size_t size)
 {
-  out.write(static_cast<const char *>(data), size);
-  if (out.bad())
+  out->write(static_cast<const char *>(data), size);
+  if (out->bad())
   {
     return 0;
   }
@@ -24,7 +29,7 @@ void Writer::write(const void *data, size_t size)
       size_t writtenSize = writeSome(data, size);
       if (writtenSize == 0)
       {
-        throw std::runtime_error("Failed to write to IOutputStream");
+        throw std::runtime_error("Failed to write to Writer");
       }
 
       data = static_cast<const uint8_t *>(data) + writtenSize;

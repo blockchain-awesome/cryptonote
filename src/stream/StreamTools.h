@@ -7,22 +7,21 @@
 #include <cstdint>
 #include <vector>
 #include <string>
+#include "writer.h"
 
 namespace Common {
 
-class IOutputStream;
-
-void write(IOutputStream& out, const void* data, size_t size);
-void write(IOutputStream& out, int8_t value);
-void write(IOutputStream& out, int16_t value);
-void write(IOutputStream& out, int32_t value);
-void write(IOutputStream& out, int64_t value);
-void write(IOutputStream& out, uint8_t value);
-void write(IOutputStream& out, uint16_t value);
-void write(IOutputStream& out, uint32_t value);
-void write(IOutputStream& out, uint64_t value);
-void write(IOutputStream& out, const std::vector<uint8_t>& data);
-void write(IOutputStream& out, const std::string& data);
-void writeVarint(IOutputStream& out, uint64_t value);
+void write(Writer& out, const void* data, size_t size);
+void write(Writer& out, int8_t value);
+void write(Writer& out, int16_t value);
+void write(Writer& out, int32_t value);
+void write(Writer& out, int64_t value);
+void write(Writer& out, uint8_t value);
+void write(Writer& out, uint16_t value);
+void write(Writer& out, uint32_t value);
+void write(Writer& out, uint64_t value);
+void write(Writer& out, const std::vector<uint8_t>& data);
+void write(Writer& out, const std::string& data);
+void writeVarint(Writer& out, uint64_t value);
 
 };

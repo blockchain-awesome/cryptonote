@@ -5,7 +5,7 @@
 #pragma once
 
 #include <vector>
-#include <stream/IOutputStream.h>
+#include <stream/writer.h>
 #include "ISerializer.h"
 #include "MemoryStream.h"
 
@@ -17,7 +17,7 @@ public:
   KVBinaryOutputStreamSerializer();
   virtual ~KVBinaryOutputStreamSerializer() {}
 
-  void dump(Common::IOutputStream& target);
+  void dump(Writer& target);
 
   virtual ISerializer::SerializerType type() const override;
 

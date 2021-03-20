@@ -15,19 +15,19 @@ using namespace cryptonote;
 namespace {
 
 template <typename T>
-void writePod(IOutputStream& s, const T& value) {
+void writePod(Writer& s, const T& value) {
   write(s, &value, sizeof(T));
 }
 
 template<class T>
-size_t packVarint(IOutputStream& s, uint8_t type_or, size_t pv) {
+size_t packVarint(Writer& s, uint8_t type_or, size_t pv) {
   T v = static_cast<T>(pv << 2);
   v |= type_or;
   write(s, &v, sizeof(T));
   return sizeof(T);
 }
 
-void writeElementName(IOutputStream& s, Common::StringView name) {
+void writeElementName(Writer& s, Common::StringView name) {
   if (name.getSize() > std::numeric_limits<uint8_t>::max()) {
     throw std::runtime_error("Element name is too long");
   }
@@ -37,7 +37,7 @@ void writeElementName(IOutputStream& s, Common::StringView name) {
   write(s, name.getData(), len);
 }
 
-size_t writeArraySize(IOutputStream& s, size_t val) {
+size_t writeArraySize(Writer& s, size_t val) {
   if (val <= 63) {
     return packVarint<uint8_t>(s, PORTABLE_RAW_SIZE_MARK_BYTE, val);
   } else if (val <= 16383) {
@@ -60,7 +60,7 @@ KVBinaryOutputStreamSerializer::KVBinaryOutputStreamSerializer() {
   beginObject(std::string());
 }
 
-void KVBinaryOutputStreamSerializer::dump(IOutputStream& target) {
+void KVBinaryOutputStreamSerializer::dump(Writer& target) {
   assert(m_objectsStack.size() == 1);
   assert(m_stack.size() == 1);
 
