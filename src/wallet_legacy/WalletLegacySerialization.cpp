@@ -6,7 +6,7 @@
 #include "wallet_legacy/WalletUnconfirmedTransactions.h"
 #include "IWalletLegacy.h"
 
-#include "cryptonote/core/blockchain/serializer/basics.h"
+#include "cryptonote/core/transaction/serializer/basics.h"
 #include "serialization/ISerializer.h"
 #include "serialization/SerializationOverloads.h"
 

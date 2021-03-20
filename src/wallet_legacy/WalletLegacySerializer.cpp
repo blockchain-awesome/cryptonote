@@ -12,7 +12,7 @@
 #include "serialization/BinaryOutputStreamSerializer.h"
 #include "serialization/BinaryInputStreamSerializer.h"
 #include "cryptonote/core/account.h"
-#include "cryptonote/core/blockchain/serializer/basics.h"
+#include "cryptonote/core/transaction/serializer/basics.h"
 #include "wallet_legacy/WalletUserTransactionsCache.h"
 #include "wallet/WalletErrors.h"
 #include "wallet_legacy/KeysStorage.h"

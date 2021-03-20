@@ -6,7 +6,7 @@
 
 #include <boost/utility/value_init.hpp>
 
-#include "cryptonote/core/blockchain/serializer/basics.h"
+#include "cryptonote/core/transaction/serializer/basics.h"
 #include "serialization/SerializationOverloads.h"
 
 namespace cryptonote {

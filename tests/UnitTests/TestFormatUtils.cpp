@@ -20,7 +20,7 @@
 TEST(parseTransactionExtra, handles_empty_extra)
 {
   std::vector<uint8_t> extra;;
-  std::vector<cryptonote::transaction_extra_field_t> tx_extra_fields;
+  std::vector<cryptonote::transaction_extra_t> tx_extra_fields;
   ASSERT_TRUE(cryptonote::parseTransactionExtra(extra, tx_extra_fields));
   ASSERT_TRUE(tx_extra_fields.empty());
 }
@@ -29,7 +29,7 @@ TEST(parseTransactionExtra, handles_padding_only_size_1)
 {
   const uint8_t extra_arr[] = {0};
   std::vector<uint8_t> extra(&extra_arr[0], &extra_arr[0] + sizeof(extra_arr));
-  std::vector<cryptonote::transaction_extra_field_t> tx_extra_fields;
+  std::vector<cryptonote::transaction_extra_t> tx_extra_fields;
   ASSERT_TRUE(cryptonote::parseTransactionExtra(extra, tx_extra_fields));
   ASSERT_EQ(1, tx_extra_fields.size());
   ASSERT_EQ(typeid(cryptonote::transaction_extra_padding_t), tx_extra_fields[0].type());
@@ -40,7 +40,7 @@ TEST(parseTransactionExtra, handles_padding_only_size_2)
 {
   const uint8_t extra_arr[] = {0, 0};
   std::vector<uint8_t> extra(&extra_arr[0], &extra_arr[0] + sizeof(extra_arr));
-  std::vector<cryptonote::transaction_extra_field_t> tx_extra_fields;
+  std::vector<cryptonote::transaction_extra_t> tx_extra_fields;
   ASSERT_TRUE(cryptonote::parseTransactionExtra(extra, tx_extra_fields));
   ASSERT_EQ(1, tx_extra_fields.size());
   ASSERT_EQ(typeid(cryptonote::transaction_extra_padding_t), tx_extra_fields[0].type());
@@ -50,7 +50,7 @@ TEST(parseTransactionExtra, handles_padding_only_size_2)
 TEST(parseTransactionExtra, handles_padding_only_max_size)
 {
   std::vector<uint8_t> extra(TX_EXTRA_NONCE_MAX_COUNT, 0);
-  std::vector<cryptonote::transaction_extra_field_t> tx_extra_fields;
+  std::vector<cryptonote::transaction_extra_t> tx_extra_fields;
   ASSERT_TRUE(cryptonote::parseTransactionExtra(extra, tx_extra_fields));
   ASSERT_EQ(1, tx_extra_fields.size());
   ASSERT_EQ(typeid(cryptonote::transaction_extra_padding_t), tx_extra_fields[0].type());
@@ -60,7 +60,7 @@ TEST(parseTransactionExtra, handles_padding_only_max_size)
 TEST(parseTransactionExtra, handles_padding_only_exceed_max_size)
 {
   std::vector<uint8_t> extra(TX_EXTRA_NONCE_MAX_COUNT + 1, 0);
-  std::vector<cryptonote::transaction_extra_field_t> tx_extra_fields;
+  std::vector<cryptonote::transaction_extra_t> tx_extra_fields;
   ASSERT_FALSE(cryptonote::parseTransactionExtra(extra, tx_extra_fields));
 }
 
@@ -68,7 +68,7 @@ TEST(parseTransactionExtra, handles_invalid_padding_only)
 {
   std::vector<uint8_t> extra(2, 0);
   extra[1] = 42;
-  std::vector<cryptonote::transaction_extra_field_t> tx_extra_fields;
+  std::vector<cryptonote::transaction_extra_t> tx_extra_fields;
   ASSERT_FALSE(cryptonote::parseTransactionExtra(extra, tx_extra_fields));
 }
 
@@ -77,7 +77,7 @@ TEST(parseTransactionExtra, handles_pub_key_only)
   const uint8_t extra_arr[] = {1, 30, 208, 98, 162, 133, 64, 85, 83, 112, 91, 188, 89, 211, 24, 131, 39, 154, 22, 228,
     80, 63, 198, 141, 173, 111, 244, 183, 4, 149, 186, 140, 230};
   std::vector<uint8_t> extra(&extra_arr[0], &extra_arr[0] + sizeof(extra_arr));
-  std::vector<cryptonote::transaction_extra_field_t> tx_extra_fields;
+  std::vector<cryptonote::transaction_extra_t> tx_extra_fields;
   ASSERT_TRUE(cryptonote::parseTransactionExtra(extra, tx_extra_fields));
   ASSERT_EQ(1, tx_extra_fields.size());
   ASSERT_EQ(typeid(cryptonote::transaction_extra_public_key_t), tx_extra_fields[0].type());
@@ -87,7 +87,7 @@ TEST(parseTransactionExtra, handles_extra_nonce_only)
 {
   const uint8_t extra_arr[] = {2, 1, 42};
   std::vector<uint8_t> extra(&extra_arr[0], &extra_arr[0] + sizeof(extra_arr));
-  std::vector<cryptonote::transaction_extra_field_t> tx_extra_fields;
+  std::vector<cryptonote::transaction_extra_t> tx_extra_fields;
   ASSERT_TRUE(cryptonote::parseTransactionExtra(extra, tx_extra_fields));
   ASSERT_EQ(1, tx_extra_fields.size());
   ASSERT_EQ(typeid(cryptonote::transaction_extra_nonce_t), tx_extra_fields[0].type());
@@ -103,7 +103,7 @@ TEST(parseTransactionExtra, handles_pub_key_and_padding)
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
   std::vector<uint8_t> extra(&extra_arr[0], &extra_arr[0] + sizeof(extra_arr));
-  std::vector<cryptonote::transaction_extra_field_t> tx_extra_fields;
+  std::vector<cryptonote::transaction_extra_t> tx_extra_fields;
   ASSERT_TRUE(cryptonote::parseTransactionExtra(extra, tx_extra_fields));
   ASSERT_EQ(2, tx_extra_fields.size());
   ASSERT_EQ(typeid(cryptonote::transaction_extra_public_key_t), tx_extra_fields[0].type());
@@ -138,7 +138,7 @@ TEST(parse_and_validate_tx_extra, fails_on_wrong_size_in_extra_nonce)
   tx.extra.resize(20, 0);
   tx.extra[0] = TX_EXTRA_NONCE;
   tx.extra[1] = 255;
-  std::vector<cryptonote::transaction_extra_field_t> tx_extra_fields;
+  std::vector<cryptonote::transaction_extra_t> tx_extra_fields;
   ASSERT_FALSE(cryptonote::parseTransactionExtra(tx.extra, tx_extra_fields));
 }
 TEST(validate_parse_amount_case, validate_parse_amount)

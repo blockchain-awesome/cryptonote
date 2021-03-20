@@ -6,12 +6,14 @@
 
 #include <cstddef>
 
-namespace Common {
+namespace Common
+{
 
-class IInputStream {
-public:
-  virtual ~IInputStream() { }
-  virtual size_t readSome(void* data, size_t size) = 0;
-};
+  class IInputStream
+  {
+  public:
+    virtual ~IInputStream() {}
+    virtual size_t readSome(void *data, size_t size) = 0;
+  };
 
 }

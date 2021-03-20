@@ -4,7 +4,6 @@
 
 #include "gtest/gtest.h"
 
-#include "cryptonote/core/transaction/TransactionApi.h"
 #include "logging/ConsoleLogger.h"
 #include "transfers/TransfersConsumer.h"
 

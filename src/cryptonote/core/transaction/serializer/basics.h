@@ -8,7 +8,7 @@
 #include "cryptonote/crypto/chacha.h"
 #include "serialization/ISerializer.h"
 #include "cryptonote/crypto/crypto.h"
-#include "crypto.h"
+#include "cryptonote/core/blockchain/serializer/crypto.h"
 
 namespace cryptonote {
 
