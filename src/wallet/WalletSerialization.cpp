@@ -9,8 +9,7 @@
 #include <type_traits>
 
 #include "stream/memory.h"
-#include "stream/StdInputStream.h"
-#include "stream/StdOutputStream.h"
+#include "stream/writer.h"
 #include "cryptonote/core/transaction/serializer/basics.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/structures/array.hpp"
@@ -158,7 +157,7 @@ void serialize(WalletTransferDto& value, cryptonote::ISerializer& serializer) {
 template <typename Object>
 std::string serialize(Object& obj, const std::string& name) {
   std::stringstream stream;
-  StdOutputStream output(stream);
+  Writer output(stream);
   cryptonote::BinaryOutputStreamSerializer s(output);
 
   s(obj, Common::StringView(name));

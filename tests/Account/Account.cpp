@@ -5,8 +5,8 @@
 #include "gtest/gtest.h"
 
 #include <fstream>
-#include "stream/StdInputStream.h"
-#include "stream/StdOutputStream.h"
+#include "stream/reader.h"
+#include "stream/writer.h"
 #include "serialization/BinaryInputStreamSerializer.h"
 #include "serialization/BinaryOutputStreamSerializer.h"
 #include "cryptonote/core/account.h"
@@ -45,14 +45,14 @@ TEST_F(AccountTest, serialize)
   Account *acc = new Account();
   acc->generate();
 
-  std::string filename = "temp.txt";
+  std::string filename = "temp1.txt";
   std::fstream fstream;
   fstream.open(filename, std::fstream::out);
   std::cerr << "Failed to open file : " << errno << std::endl;
 
   ASSERT_TRUE(!!fstream);
 
-  StdOutputStream stream(fstream);
+  Writer stream(fstream);
   BinaryOutputStreamSerializer s(stream);
   account_keys_t keys = acc->getAccountKeys();
   acc->serialize(s);
@@ -68,7 +68,7 @@ TEST_F(AccountTest, serialize)
   std::fstream of;
   of.open(filename, std::fstream::in);
 
-  StdInputStream inStream(of);
+  Reader inStream(of);
   BinaryInputStreamSerializer inS(inStream);
 
   acc1->serialize(inS);

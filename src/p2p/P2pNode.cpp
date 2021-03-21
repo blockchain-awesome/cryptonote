@@ -13,8 +13,8 @@
 #include <system/TcpConnection.h>
 #include <system/TcpConnector.h>
 
-#include "stream/StdInputStream.h"
-#include "stream/StdOutputStream.h"
+#include "stream/reader.h"
+#include "stream/writer.h"
 #include "serialization/BinaryInputStreamSerializer.h"
 #include "serialization/BinaryOutputStreamSerializer.h"
 
@@ -172,13 +172,13 @@ void P2pNode::serialize(ISerializer& s) {
 }
 
 void P2pNode::save(std::ostream& os) {
-  StdOutputStream stream(os);
+  Writer stream(os);
   BinaryOutputStreamSerializer a(stream);
   cryptonote::serialize(*this, a);
 }
 
 void P2pNode::load(std::istream& in) {
-  StdInputStream stream(in);
+  Reader stream(in);
   BinaryInputStreamSerializer a(stream);
   cryptonote::serialize(*this, a);
 }

@@ -5,8 +5,8 @@
 #include "TransfersSynchronizer.h"
 #include "TransfersConsumer.h"
 
-#include "stream/StdInputStream.h"
-#include "stream/StdOutputStream.h"
+#include "stream/reader.h"
+#include "stream/writer.h"
 #include "serialization/BinaryInputStreamSerializer.h"
 #include "serialization/BinaryOutputStreamSerializer.h"
 
@@ -139,7 +139,7 @@ void TransfersSyncronizer::unsubscribeConsumerNotifications(const public_key_t& 
 void TransfersSyncronizer::save(std::ostream& os) {
   m_sync.save(os);
 
-  StdOutputStream stream(os);
+  Writer stream(os);
   cryptonote::BinaryOutputStreamSerializer s(stream);
   s(const_cast<uint32_t&>(TRANSFERS_STORAGE_ARCHIVE_VERSION), "version");
 
@@ -203,7 +203,7 @@ void setObjectState(IStreamSerializable& obj, const std::string& state) {
 void TransfersSyncronizer::load(std::istream& is) {
   m_sync.load(is);
 
-  StdInputStream inputStream(is);
+  Reader inputStream(is);
   cryptonote::BinaryInputStreamSerializer s(inputStream);
   uint32_t version = 0;
 

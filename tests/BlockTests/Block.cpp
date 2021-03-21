@@ -5,8 +5,6 @@
 #include "gtest/gtest.h"
 
 #include <fstream>
-#include "stream/StdInputStream.h"
-#include "stream/StdOutputStream.h"
 #include "serialization/BinaryInputStreamSerializer.h"
 #include "serialization/BinaryOutputStreamSerializer.h"
 #include <logging/LoggerManager.h>

@@ -10,8 +10,9 @@
 namespace Common
 {
 
-  MemoryInputStream::MemoryInputStream(const void *buffer, size_t bufferSize) : buffer(static_cast<const char *>(buffer)), bufferSize(bufferSize), position(0),
-                                                                                Reader((char *)buffer, bufferSize)
+  MemoryInputStream::MemoryInputStream(const void *buffer, size_t bufferSize) : buffer(static_cast<const char *>(buffer)), bufferSize(bufferSize),
+                                                                                position(0), mem((char *)buffer, (char *)buffer + bufferSize),
+                                                                                temp(&mem), Reader(temp)
   {
   }
 

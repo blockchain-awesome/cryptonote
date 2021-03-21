@@ -4,8 +4,8 @@
 
 #include "gtest/gtest.h"
 
-#include "stream/StdInputStream.h"
-#include "stream/StdOutputStream.h"
+#include "stream/reader.h"
+#include "stream/writer.h"
 #include "serialization/BinaryInputStreamSerializer.h"
 #include "serialization/BinaryOutputStreamSerializer.h"
 #include "serialization/BinarySerializationTools.h"
@@ -21,14 +21,14 @@ TEST(BinarySerializer, uint16) {
   uint32_t u32 = 0x3fddfd48;
 
   {
-    StdOutputStream os(ss);
+    Writer os(ss);
     BinaryOutputStreamSerializer s(os);
     s(u32, "u32");
     s(u16, "u16");
   }
 
   {
-    StdInputStream is(ss);
+    Reader is(ss);
     BinaryInputStreamSerializer s(is);
     
     uint32_t t32 = 0;

@@ -3,8 +3,8 @@
 #include "BinaryInputStreamSerializer.h"
 #include "BinaryOutputStreamSerializer.h"
 #include "stream/memory.h"
-#include "stream/StdInputStream.h"
-#include "stream/StdOutputStream.h"
+#include "stream/reader.h"
+#include "stream/writer.h"
 #include <fstream>
 #include <iostream>
 #include "common/file.h"
@@ -32,7 +32,7 @@ bool BinarySerializer::store(bool create)
       return false;
     }
 
-    Common::StdOutputStream stream(dataFile);
+    Writer stream(dataFile);
     BinaryOutputStreamSerializer out(stream);
     serialize(out);
 
@@ -63,7 +63,7 @@ bool BinarySerializer::load()
       return false;
     }
 
-    Common::StdInputStream stream(dataFile);
+    Reader stream(dataFile);
     BinaryInputStreamSerializer in(stream);
     serialize(in);
     return !dataFile.fail();

@@ -20,8 +20,8 @@
 
 #include "common/ScopeExit.h"
 #include "common/ShuffleGenerator.h"
-#include "stream/StdInputStream.h"
-#include "stream/StdOutputStream.h"
+#include "stream/reader.h"
+#include "stream/writer.h"
 #include "common/StringTools.h"
 #include "cryptonote/core/account.h"
 #include "cryptonote/core/currency.h"
@@ -366,7 +366,7 @@ void WalletGreen::unsafeSave(std::ostream& destination, bool saveDetails, bool s
     m_uncommitedTransactions
   );
 
-  StdOutputStream output(destination);
+  Writer output(destination);
   s.save(m_password, output, saveDetails, saveCache);
 }
 
@@ -410,7 +410,7 @@ void WalletGreen::unsafeLoad(std::istream& source, const std::string& password) 
     m_uncommitedTransactions
   );
 
-  StdInputStream inputStream(source);
+  Reader inputStream(source);
   s.load(password, inputStream);
 
   m_password = password;

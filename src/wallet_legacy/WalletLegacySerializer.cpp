@@ -7,8 +7,8 @@
 #include <stdexcept>
 
 #include "stream/memory.h"
-#include "stream/StdInputStream.h"
-#include "stream/StdOutputStream.h"
+#include "stream/reader.h"
+#include "stream/writer.h"
 #include "serialization/BinaryOutputStreamSerializer.h"
 #include "serialization/BinaryInputStreamSerializer.h"
 #include "cryptonote/core/account.h"
@@ -45,7 +45,7 @@ WalletLegacySerializer::WalletLegacySerializer(cryptonote::Account& account, Wal
 
 void WalletLegacySerializer::serialize(std::ostream& stream, const std::string& password, bool saveDetailed, const std::string& cache) {
   std::stringstream plainArchive;
-  StdOutputStream plainStream(plainArchive);
+  Writer plainStream(plainArchive);
   cryptonote::BinaryOutputStreamSerializer serializer(plainStream);
   saveKeys(serializer);
 
@@ -63,7 +63,7 @@ void WalletLegacySerializer::serialize(std::ostream& stream, const std::string& 
   crypto::chacha_iv_t iv = encrypt(plain, password, cipher);
 
   uint32_t version = walletSerializationVersion;
-  StdOutputStream output(stream);
+  Writer output(stream);
   cryptonote::BinaryOutputStreamSerializer s(output);
   s.beginObject("wallet");
   s(version, "version");
@@ -101,7 +101,7 @@ crypto::chacha_iv_t WalletLegacySerializer::encrypt(const std::string& plain, co
 
 
 void WalletLegacySerializer::deserialize(std::istream& stream, const std::string& password, std::string& cache) {
-  StdInputStream stdStream(stream);
+  Reader stdStream(stream);
   cryptonote::BinaryInputStreamSerializer serializerEncrypted(stdStream);
 
   serializerEncrypted.beginObject("wallet");
