@@ -11,6 +11,16 @@ size_t Reader::readSome(void *data, size_t size)
   return in.gcount();
 }
 
+size_t Reader::getPosition() const
+{
+  return in.tellg();
+}
+
+bool Reader::endOfStream() const
+{
+  return in.peek() == EOF;
+}
+
 void Reader::read(void *data, size_t size)
 {
   while (size > 0)

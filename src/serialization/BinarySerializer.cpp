@@ -2,7 +2,7 @@
 #include "stream/VectorOutputStream.h"
 #include "BinaryInputStreamSerializer.h"
 #include "BinaryOutputStreamSerializer.h"
-#include "stream/memory.h"
+#include "stream/reader.h"
 #include "stream/reader.h"
 #include "stream/writer.h"
 #include <fstream>
@@ -84,7 +84,11 @@ binary_array_t BinarySerializer::to()
 }
 bool BinarySerializer::from(const binary_array_t &blob)
 {
-  Common::MemoryInputStream stream(blob.data(), blob.size());
+  // Reader stream(blob.data(), blob.size());
+  const unsigned char * b = static_cast<const unsigned char *>(blob.data());
+  membuf mem((char *)(b), (char *)(b + blob.size()));
+  std::istream istream(&mem);
+  Reader stream(istream);
   BinaryInputStreamSerializer ba(stream);
   return serialize(ba);
 }

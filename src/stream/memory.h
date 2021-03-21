@@ -13,31 +13,31 @@ namespace Common
 {
 
 
-  struct membuf : std::streambuf
-  {
-    membuf(char *begin, char *end)
-    {
-      this->setg(begin, begin, end);
-    }
-  };
+  // struct membuf : std::streambuf
+  // {
+  //   membuf(char *begin, char *end)
+  //   {
+  //     this->setg(begin, begin, end);
+  //   }
+  // };
 
-  class MemoryInputStream : public Reader
-  {
-  public:
-    MemoryInputStream(const void *buffer, size_t bufferSize);
-    size_t getPosition() const;
-    bool endOfStream() const;
+  // class Reader : public Reader
+  // {
+  // public:
+  //   Reader(const void *buffer, size_t bufferSize);
+  //   size_t getPosition() const;
+  //   bool endOfStream() const;
 
-    // IInputStream
-    virtual size_t readSome(void *data, size_t size) override;
+  //   // IInputStream
+  //   // virtual size_t readSome(void *data, size_t size) override;
 
-  private:
-    const char *buffer;
-    size_t bufferSize;
-    size_t position;
-    std::istream temp;
-    membuf mem;
-  };
+  // private:
+  //   const char *buffer;
+  //   size_t bufferSize;
+  //   size_t position;
+  //   std::istream temp;
+  //   membuf mem;
+  // };
 
   class MemoryOutputStream : public Writer
   {

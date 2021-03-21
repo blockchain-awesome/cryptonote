@@ -2,7 +2,7 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "memory.h"
+#include "reader.h"
 #include <algorithm>
 #include <cassert>
 #include <cstring> // memcpy
@@ -10,34 +10,34 @@
 namespace Common
 {
 
-  MemoryInputStream::MemoryInputStream(const void *buffer, size_t bufferSize) : buffer(static_cast<const char *>(buffer)), bufferSize(bufferSize),
-                                                                                position(0), mem((char *)buffer, (char *)buffer + bufferSize),
-                                                                                temp(&mem), Reader(temp)
-  {
-  }
+  // Reader::MemoryInputStream(const void *buffer, size_t bufferSize) : buffer(static_cast<const char *>(buffer)), bufferSize(bufferSize),
+  //                                                                               position(0), mem((char *)buffer, (char *)buffer + bufferSize),
+  //                                                                               temp(&mem), Reader(temp)
+  // {
+  // }
 
-  size_t MemoryInputStream::getPosition() const
-  {
-    return position;
-  }
+  // size_t Reader::getPosition() const
+  // {
+  //   return in.tellg();
+  // }
 
-  bool MemoryInputStream::endOfStream() const
-  {
-    return position == bufferSize;
-  }
+  // bool Reader::endOfStream() const
+  // {
+  //   return in.peek() == EOF;
+  // }
 
-  size_t MemoryInputStream::readSome(void *data, size_t size)
-  {
-    assert(position <= bufferSize);
-    size_t readSize = std::min(size, bufferSize - position);
+  // size_t Reader::readSome(void *data, size_t size)
+  // {
+  //   assert(position <= bufferSize);
+  //   size_t readSize = std::min(size, bufferSize - position);
 
-    if (readSize > 0)
-    {
-      memcpy(data, buffer + position, readSize);
-      position += readSize;
-    }
+  //   if (readSize > 0)
+  //   {
+  //     memcpy(data, buffer + position, readSize);
+  //     position += readSize;
+  //   }
 
-    return readSize;
-  }
+  //   return readSize;
+  // }
 
 }

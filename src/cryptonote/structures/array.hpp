@@ -3,7 +3,7 @@
 #include "stream/VectorOutputStream.h"
 #include "serialization/BinaryOutputStreamSerializer.h"
 #include "serialization/BinaryInputStreamSerializer.h"
-#include "stream/memory.h"
+#include "stream/reader.h"
 #include "cryptonote/core/transaction/serializer/basics.h"
 
 namespace cryptonote
@@ -14,7 +14,10 @@ bool BinaryArray::from(T &object, const binary_array_t &binaryArray)
   bool result = false;
   try
   {
-    Common::MemoryInputStream stream(binaryArray.data(), binaryArray.size());
+    const unsigned char * b = static_cast<const unsigned char *>(binaryArray.data());
+    membuf mem((char *)(b), (char *)(b + binaryArray.size()));
+    std::istream istream(&mem);
+    Reader stream(istream);
     BinaryInputStreamSerializer serializer(stream);
     serialize(object, serializer);
     result = stream.endOfStream(); // check that all data was consumed

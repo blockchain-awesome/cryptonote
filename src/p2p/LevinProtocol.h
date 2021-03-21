@@ -5,7 +5,7 @@
 #pragma once
 
 #include "cryptonote.h"
-#include <stream/memory.h>
+#include <stream/reader.h>
 #include <stream/VectorOutputStream.h>
 #include "serialization/KVBinaryInputStreamSerializer.h"
 #include "serialization/KVBinaryOutputStreamSerializer.h"
@@ -70,7 +70,11 @@ public:
   template <typename T>
   static bool decode(const binary_array_t& buf, T& value) {
     try {
-      Common::MemoryInputStream stream(buf.data(), buf.size());
+      // Reader stream(buf.data(), buf.size());
+      const unsigned char * b = static_cast<const unsigned char *>(buf.data());
+      membuf mem((char *)(b), (char *)(b + buf.size()));
+      std::istream istream(&mem);
+      Reader stream(istream);
       KVBinaryInputStreamSerializer serializer(stream);
       serialize(value, serializer);
     } catch (std::exception&) {

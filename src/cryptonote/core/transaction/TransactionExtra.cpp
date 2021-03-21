@@ -4,7 +4,7 @@
 
 #include "TransactionExtra.h"
 
-#include "stream/memory.h"
+#include "stream/reader.h"
 #include "stream/writer.h"
 #include "common/StringTools.h"
 #include "CryptoNoteTools.h"
@@ -26,7 +26,11 @@ namespace cryptonote
 
     try
     {
-      MemoryInputStream iss(transactionExtra.data(), transactionExtra.size());
+      // Reader iss(transactionExtra.data(), transactionExtra.size());
+      const unsigned char * b = static_cast<const unsigned char *>(transactionExtra.data());
+      membuf mem((char *)(b), (char *)(b + transactionExtra.size()));
+      std::istream istream(&mem);
+      Reader iss(istream);
       BinaryInputStreamSerializer ar(iss);
 
       uint8_t tag = 0;

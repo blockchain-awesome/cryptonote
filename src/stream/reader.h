@@ -7,6 +7,14 @@
 #include <string>
 #include <istream>
 
+struct membuf : std::streambuf
+{
+  membuf(char *begin, char *end)
+  {
+    this->setg(begin, begin, end);
+  }
+};
+
 class Reader
 {
 
@@ -20,6 +28,8 @@ public:
   virtual size_t readSome(void *data, size_t size);
   void read(std::vector<uint8_t> &data, size_t size);
   void read(std::string &data, size_t size);
+  size_t getPosition() const;
+  bool endOfStream() const;
 
 protected:
   std::istream &in;

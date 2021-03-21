@@ -6,7 +6,7 @@
 
 #include <stdexcept>
 
-#include "stream/memory.h"
+#include "stream/reader.h"
 #include "stream/reader.h"
 #include "stream/writer.h"
 #include "serialization/BinaryOutputStreamSerializer.h"
@@ -120,8 +120,11 @@ void WalletLegacySerializer::deserialize(std::istream& stream, const std::string
   std::string plain;
   decrypt(cipher, plain, iv, password);
 
-  MemoryInputStream decryptedStream(plain.data(), plain.size()); 
-  cryptonote::BinaryInputStreamSerializer serializer(decryptedStream);
+  const char * b = static_cast<const char *>(plain.data());
+  membuf mem((char *)(b), (char *)(b + plain.size()));
+  std::istream istream(&mem);
+  Reader decrypted(istream);
+  cryptonote::BinaryInputStreamSerializer serializer(decrypted);
 
   loadKeys(serializer);
   throwIfKeysMissmatch(account.getAccountKeys().viewSecretKey, account.getAccountKeys().address.viewPublicKey);

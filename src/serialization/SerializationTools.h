@@ -6,7 +6,7 @@
 
 #include <list>
 #include <vector>
-#include <stream/memory.h>
+#include <stream/reader.h>
 #include <stream/StringOutputStream.h>
 #include "JsonInputStreamSerializer.h"
 #include "JsonOutputStreamSerializer.h"
@@ -109,7 +109,10 @@ std::string storeToBinaryKeyValue(const T& v) {
 template <typename T>
 bool loadFromBinaryKeyValue(T& v, const std::string& buf) {
   try {
-    Common::MemoryInputStream stream(buf.data(), buf.size());
+    const char * b = static_cast<const char *>(buf.data());
+    membuf mem((char *)(b), (char *)(b + buf.size()));
+    std::istream istream(&mem);
+    Reader stream(istream);
     KVBinaryInputStreamSerializer s(stream);
     serialize(v, s);
     return true;

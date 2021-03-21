@@ -7,6 +7,7 @@
 #include <vector>
 #include <stream/writer.h>
 #include "ISerializer.h"
+#include "stream/reader.h"
 #include "stream/memory.h"
 
 using namespace Common;

@@ -8,7 +8,7 @@
 #include <sstream>
 #include <type_traits>
 
-#include "stream/memory.h"
+#include "stream/reader.h"
 #include "stream/writer.h"
 #include "cryptonote/core/transaction/serializer/basics.h"
 #include "cryptonote/core/CryptoNoteTools.h"
@@ -206,7 +206,11 @@ std::string decrypt(const std::string& cipher, cryptonote::CryptoContext& crypto
 
 template<typename Object>
 void deserialize(Object& obj, const std::string& name, const std::string& plain) {
-  MemoryInputStream stream(plain.data(), plain.size());
+
+  const char * b = static_cast<const char *>(plain.data());
+  membuf mem((char *)(b), (char *)(b + plain.size()));
+  std::istream istream(&mem);
+  Reader stream(istream);
   cryptonote::BinaryInputStreamSerializer s(stream);
   s(obj, Common::StringView(name));
 }
@@ -557,8 +561,11 @@ void WalletSerializer::loadWalletV1(Reader& source, const std::string& password)
 
   std::string plain = decrypt(cipher, cryptoContext);
 
-  MemoryInputStream decryptedStream(plain.data(), plain.size());
-  cryptonote::BinaryInputStreamSerializer serializer(decryptedStream);
+  const char * b = static_cast<const char *>(plain.data());
+  membuf mem((char *)(b), (char *)(b + plain.size()));
+  std::istream istream(&mem);
+  Reader decrypted(istream);
+  cryptonote::BinaryInputStreamSerializer serializer(decrypted);
 
   loadWalletV1Keys(serializer);
   checkKeys();
