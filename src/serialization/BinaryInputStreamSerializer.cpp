@@ -7,7 +7,7 @@
 #include <algorithm>
 #include <cassert>
 #include <stdexcept>
-#include <stream/StreamTools.h>
+#include <stream/writer.h>
 #include "SerializationOverloads.h"
 
 using namespace Common;

@@ -7,7 +7,7 @@
 
 #include <cassert>
 #include <stdexcept>
-#include <stream/StreamTools.h>
+#include <stream/writer.h>
 
 using namespace Common;
 using namespace cryptonote;
@@ -16,14 +16,14 @@ namespace {
 
 template <typename T>
 void writePod(Writer& s, const T& value) {
-  write(s, &value, sizeof(T));
+  s.write(&value, sizeof(T));
 }
 
 template<class T>
 size_t packVarint(Writer& s, uint8_t type_or, size_t pv) {
   T v = static_cast<T>(pv << 2);
   v |= type_or;
-  write(s, &v, sizeof(T));
+  s.write(&v, sizeof(T));
   return sizeof(T);
 }
 
@@ -33,8 +33,8 @@ void writeElementName(Writer& s, Common::StringView name) {
   }
 
   uint8_t len = static_cast<uint8_t>(name.getSize());
-  write(s, &len, sizeof(len));
-  write(s, name.getData(), len);
+  s.write(&len, sizeof(len));
+  s.write(name.getData(), len);
 }
 
 size_t writeArraySize(Writer& s, size_t val) {
@@ -60,7 +60,7 @@ KVBinaryOutputStreamSerializer::KVBinaryOutputStreamSerializer() {
   beginObject(std::string());
 }
 
-void KVBinaryOutputStreamSerializer::dump(Writer& target) {
+void KVBinaryOutputStreamSerializer::dump(Writer& s) {
   assert(m_objectsStack.size() == 1);
   assert(m_stack.size() == 1);
 
@@ -69,9 +69,9 @@ void KVBinaryOutputStreamSerializer::dump(Writer& target) {
   hdr.m_signature_b = PORTABLE_STORAGE_SIGNATUREB;
   hdr.m_ver = PORTABLE_STORAGE_FORMAT_VER;
 
-  Common::write(target, &hdr, sizeof(hdr));
-  writeArraySize(target, m_stack.front().count);
-  write(target, stream().data(), stream().size());
+  s.write(&hdr, sizeof(hdr));
+  writeArraySize(s, m_stack.front().count);
+  s.write(stream().data(), stream().size());
 }
 
 ISerializer::SerializerType KVBinaryOutputStreamSerializer::type() const {
@@ -96,12 +96,12 @@ void KVBinaryOutputStreamSerializer::endObject() {
   auto objStream = std::move(m_objectsStack.back());
   m_objectsStack.pop_back();
 
-  auto& out = stream();
+  auto& s = stream();
 
   writeElementPrefix(BIN_KV_SERIALIZE_TYPE_OBJECT, level.name);
 
-  writeArraySize(out, level.count);
-  write(out, objStream.data(), objStream.size());
+  writeArraySize(s, level.count);
+  s.write(objStream.data(), objStream.size());
 }
 
 bool KVBinaryOutputStreamSerializer::beginArray(size_t& size, Common::StringView name) {
@@ -175,18 +175,18 @@ bool KVBinaryOutputStreamSerializer::operator()(double& value, Common::StringVie
 bool KVBinaryOutputStreamSerializer::operator()(std::string& value, Common::StringView name) {
   writeElementPrefix(BIN_KV_SERIALIZE_TYPE_STRING, name);
 
-  auto& out = stream();
-  writeArraySize(out, value.size());
-  write(out, value.data(), value.size());
+  auto& s = stream();
+  writeArraySize(s, value.size());
+  s.write(value.data(), value.size());
   return true;
 }
 
 bool KVBinaryOutputStreamSerializer::binary(void* value, size_t size, Common::StringView name) {
   if (size > 0) {
     writeElementPrefix(BIN_KV_SERIALIZE_TYPE_STRING, name);
-    auto& out = stream();
-    writeArraySize(out, size);
-    write(out, value, size);
+    auto& s = stream();
+    writeArraySize(s, size);
+    s.write(value, size);
   }
   return true;
 }
@@ -205,7 +205,7 @@ void KVBinaryOutputStreamSerializer::writeElementPrefix(uint8_t type, Common::St
     if (!name.isEmpty()) {
       auto& s = stream();
       writeElementName(s, name);
-      write(s, &type, 1);
+      s.write(&type, 1);
     }
     ++level.count;
   }
@@ -222,7 +222,7 @@ void KVBinaryOutputStreamSerializer::checkArrayPreamble(uint8_t type) {
     auto& s = stream();
     writeElementName(s, level.name);
     char c = BIN_KV_SERIALIZE_FLAG_ARRAY | type;
-    write(s, &c, 1);
+    s.write(&c, 1);
     writeArraySize(s, level.count);
     level.state = State::Array;
   }
