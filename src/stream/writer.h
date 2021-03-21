@@ -28,20 +28,22 @@ private:
 template <typename T>
 void Writer::write(const T &value)
 {
-  write(&value, sizeof(value));
+  write((const void *)&value, sizeof(value));
 }
 
 template <typename T>
 void Writer::writeVarint(const T &value)
 {
   uint64_t v = static_cast<uint64_t>(value);
-  uint8_t temp = static_cast<uint8_t>(v);
-
   while (v >= 0x80)
   {
-    temp = static_cast<uint8_t>(v | 0x80);
-    write(temp);
+    uint8_t tag = static_cast<uint8_t>(v | 0x80);
+
+    write(tag);
     v >>= 7;
   }
-  write(temp);
+
+  uint8_t tag = static_cast<uint8_t>(v);
+
+  write(tag);
 }
