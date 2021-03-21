@@ -4,11 +4,11 @@
 
 #pragma once
 
+#include <sstream>
 #include <vector>
 #include <stream/writer.h>
 #include "ISerializer.h"
 #include "stream/reader.h"
-#include "stream/memory.h"
 
 using namespace Common;
 
@@ -53,7 +53,7 @@ private:
   void writeElementPrefix(uint8_t type, Common::StringView name);
   void checkArrayPreamble(uint8_t type);
   void updateState(uint8_t type);
-  Common::MemoryOutputStream& stream();
+  std::ostringstream& stream();
 
   enum class State {
     Root,
@@ -81,7 +81,7 @@ private:
 
   };
 
-  std::vector<Common::MemoryOutputStream> m_objectsStack;
+  std::vector<std::ostringstream> m_objectsStack;
   std::vector<Level> m_stack;
 };
 
