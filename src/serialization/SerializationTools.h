@@ -7,7 +7,6 @@
 #include <list>
 #include <vector>
 #include <stream/reader.h>
-#include <stream/StringOutputStream.h>
 #include "JsonInputStreamSerializer.h"
 #include "JsonOutputStreamSerializer.h"
 #include "KVBinaryInputStreamSerializer.h"
@@ -100,10 +99,10 @@ std::string storeToBinaryKeyValue(const T& v) {
   KVBinaryOutputStreamSerializer s;
   serialize(const_cast<T&>(v), s);
   
-  std::string result;
-  Common::StringOutputStream stream(result);
+  std::ostringstream oss;
+  Writer stream(oss);
   s.dump(stream);
-  return result;
+  return oss.str();
 }
 
 template <typename T>
