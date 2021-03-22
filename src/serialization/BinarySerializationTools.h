@@ -8,7 +8,6 @@
 #include "stream/reader.h"
 #include "stream/reader.h"
 #include "stream/writer.h"
-#include "stream/VectorOutputStream.h"
 
 #include <fstream>
 
@@ -16,17 +15,18 @@ namespace cryptonote {
 
 template <typename T>
 binary_array_t storeToBinary(const T& obj) {
-  binary_array_t result;
-  Common::VectorOutputStream stream(result);
+  binary_array_t binaryArray;
+  std::ostringstream oss;
+  Writer stream(oss);
   BinaryOutputStreamSerializer ba(stream);
-  serialize(const_cast<T&>(obj), ba);
-  return result;
+  serialize(const_cast<T &>(obj), ba);
+  binaryArray.resize(oss.str().length());
+  memcpy(&binaryArray[0], oss.str().c_str(), oss.str().length());
+  return binaryArray;
 }
 
 template <typename T>
 void loadFromBinary(T& obj, const binary_array_t& blob) {
-  // Reader stream(blob.data(), blob.size());
-
   const unsigned char * b = static_cast<const unsigned char *>(blob.data());
   membuf mem((char *)(b), (char *)(b + blob.size()));
   std::istream istream(&mem);

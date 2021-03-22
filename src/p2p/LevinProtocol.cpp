@@ -48,14 +48,16 @@ void LevinProtocol::sendMessage(uint32_t command, const binary_array_t& out, boo
   head.m_flags = LEVIN_PACKET_REQUEST;
 
   // write header and body in one operation
-  binary_array_t writeBuffer;
-  writeBuffer.reserve(sizeof(head) + out.size());
+  // binary_array_t writeBuffer;
+  // writeBuffer.reserve(sizeof(head) + out.size());
 
-  Common::VectorOutputStream stream(writeBuffer);
+  // Common::VectorOutputStream stream(writeBuffer);
+  std::ostringstream oss;
+  Writer stream(oss);
   stream.writeSome(&head, sizeof(head));
   stream.writeSome(out.data(), out.size());
 
-  writeStrict(writeBuffer.data(), writeBuffer.size());
+  writeStrict((const uint8_t *)oss.str().c_str(), oss.str().length());
 }
 
 bool LevinProtocol::readCommand(Command& cmd) {
@@ -100,14 +102,12 @@ void LevinProtocol::sendReply(uint32_t command, const binary_array_t& out, int32
   head.m_flags = LEVIN_PACKET_RESPONSE;
   head.m_return_code = returnCode;
 
-  binary_array_t writeBuffer;
-  writeBuffer.reserve(sizeof(head) + out.size());
-
-  Common::VectorOutputStream stream(writeBuffer);
+  std::ostringstream oss;
+  Writer stream(oss);
   stream.writeSome(&head, sizeof(head));
   stream.writeSome(out.data(), out.size());
 
-  writeStrict(writeBuffer.data(), writeBuffer.size());
+  writeStrict((const uint8_t *)oss.str().c_str(), oss.str().length());
 }
 
 void LevinProtocol::writeStrict(const uint8_t* ptr, size_t size) {

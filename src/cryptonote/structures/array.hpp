@@ -1,6 +1,5 @@
 
 #include "array.h"
-#include "stream/VectorOutputStream.h"
 #include "serialization/BinaryOutputStreamSerializer.h"
 #include "serialization/BinaryInputStreamSerializer.h"
 #include "stream/reader.h"
@@ -34,9 +33,13 @@ bool BinaryArray::to(const T &object, binary_array_t &binaryArray)
 {
   try
   {
-    ::Common::VectorOutputStream stream(binaryArray);
+    std::ostringstream oss;
+    Writer stream(oss);
     BinaryOutputStreamSerializer serializer(stream);
     serialize(const_cast<T &>(object), serializer);
+
+    binaryArray.resize(oss.str().length());
+    memcpy(&binaryArray[0], oss.str().c_str(), oss.str().length());
   }
   catch (std::exception &)
   {

@@ -21,10 +21,13 @@ bool BinaryArray::to(const binary_array_t &object, binary_array_t &binaryArray)
 {
   try
   {
-    Common::VectorOutputStream stream(binaryArray);
+    std::ostringstream oss;
+    Writer stream(oss);
     BinaryOutputStreamSerializer serializer(stream);
     std::string oldBlob = BinaryArray::toString(object);
     serializer(oldBlob, "");
+    binaryArray.resize(oss.str().length());
+    memcpy(&binaryArray[0], oss.str().c_str(), oss.str().length());
   }
   catch (std::exception &)
   {

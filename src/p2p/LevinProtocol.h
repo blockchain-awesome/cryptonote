@@ -6,7 +6,6 @@
 
 #include "cryptonote.h"
 #include <stream/reader.h>
-#include <stream/VectorOutputStream.h>
 #include "serialization/KVBinaryInputStreamSerializer.h"
 #include "serialization/KVBinaryOutputStreamSerializer.h"
 
@@ -89,8 +88,11 @@ public:
     binary_array_t result;
     KVBinaryOutputStreamSerializer serializer;
     serialize(const_cast<T&>(value), serializer);
-    Common::VectorOutputStream stream(result);
+    std::ostringstream oss;
+    Writer stream(oss);
     serializer.dump(stream);
+    result.resize(oss.str().length());
+    memcpy(&result[0], oss.str().c_str(), oss.str().length());
     return result;
   }
 
