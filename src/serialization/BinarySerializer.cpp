@@ -82,7 +82,8 @@ binary_array_t BinarySerializer::to()
   BinaryOutputStreamSerializer ba(stream);
   serialize(ba);
   result.resize(oss.str().length());
-  result.assign(oss.str().begin(), oss.str().end());
+
+  memcpy(&result[0], oss.str().c_str(), oss.str().length());
   return result;
 }
 bool BinarySerializer::from(const binary_array_t &blob)
