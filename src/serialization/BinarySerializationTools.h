@@ -25,8 +25,6 @@ binary_array_t storeToBinary(const T& obj) {
 
 template <typename T>
 void loadFromBinary(T& obj, const binary_array_t& blob) {
-  // Reader stream(blob.data(), blob.size());
-
   const unsigned char * b = static_cast<const unsigned char *>(blob.data());
   membuf mem((char *)(b), (char *)(b + blob.size()));
   std::istream istream(&mem);

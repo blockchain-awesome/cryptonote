@@ -1,5 +1,4 @@
 #include "BinarySerializer.h"
-#include "stream/VectorOutputStream.h"
 #include "BinaryInputStreamSerializer.h"
 #include "BinaryOutputStreamSerializer.h"
 #include "stream/reader.h"
@@ -7,6 +6,7 @@
 #include "stream/writer.h"
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include "common/file.h"
 
 namespace cryptonote
@@ -77,9 +77,12 @@ bool BinarySerializer::load()
 binary_array_t BinarySerializer::to()
 {
   binary_array_t result;
-  Common::VectorOutputStream stream(result);
+  std::ostringstream oss;
+  Writer stream(oss);
   BinaryOutputStreamSerializer ba(stream);
   serialize(ba);
+  result.resize(oss.str().length());
+  result.assign(oss.str().begin(), oss.str().end());
   return result;
 }
 bool BinarySerializer::from(const binary_array_t &blob)
