@@ -683,7 +683,7 @@ TEST_F(WalletServiceTest_getTransaction, returnsCorrectFields) {
   ASSERT_FALSE(ec);
   ASSERT_EQ(static_cast<uint8_t>(wallet.transaction.transaction.state), transaction.state);
   ASSERT_EQ(wallet.transaction.transaction.blockHeight, transaction.blockIndex);
-  ASSERT_EQ(hex::toString(array::fromString(wallet.transaction.transaction.extra)), transaction.extra);
+  ASSERT_EQ(hex::toString(IBinary::from(wallet.transaction.transaction.extra)), transaction.extra);
   ASSERT_EQ(PAYMENT_ID, transaction.paymentId);
   ASSERT_EQ(wallet.transaction.transaction.fee, transaction.fee);
   ASSERT_EQ(wallet.transaction.transaction.isBase, transaction.isBase);
@@ -766,7 +766,7 @@ bool isEquivalent(const SendTransaction::Request& request, const TransactionPara
 
   return std::make_tuple(request.sourceAddresses, orders, request.fee, request.anonymity, extra, request.unlockTime)
       ==
-      std::make_tuple(params.sourceAddresses, params.destinations, params.fee, params.mixIn, hex::toString(array::fromString(params.extra)), params.unlockTimestamp);
+      std::make_tuple(params.sourceAddresses, params.destinations, params.fee, params.mixIn, hex::toString(IBinary::from(params.extra)), params.unlockTimestamp);
 }
 
 // TEST_F(WalletServiceTest_sendTransaction, passesCorrectParameters) {
@@ -845,7 +845,7 @@ bool isEquivalent(const CreateDelayedTransaction::Request& request, const Transa
 
   return std::make_tuple(request.addresses, orders, request.fee, request.anonymity, extra, request.unlockTime)
       ==
-      std::make_tuple(params.sourceAddresses, params.destinations, params.fee, params.mixIn, hex::toString(array::fromString(params.extra)), params.unlockTimestamp);
+      std::make_tuple(params.sourceAddresses, params.destinations, params.fee, params.mixIn, hex::toString(IBinary::from(params.extra)), params.unlockTimestamp);
 }
 
 // TEST_F(WalletServiceTest_createDelayedTransaction, passesCorrectParameters) {

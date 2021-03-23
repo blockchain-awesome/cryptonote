@@ -1257,7 +1257,7 @@ std::unique_ptr<cryptonote::ITransaction> WalletGreen::makeTransaction(const std
   }
 
   tx->setUnlockTime(unlockTimestamp);
-  tx->appendExtra(array::fromString(extra));
+  tx->appendExtra(IBinary::from(extra));
 
   for (auto& input: keysInfo) {
     tx->addInput(makeAccountKeys(*input.walletRecord), input.keyInfo, input.ephKeys);

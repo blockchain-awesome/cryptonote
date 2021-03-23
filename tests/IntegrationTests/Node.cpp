@@ -35,7 +35,7 @@ namespace cryptonote {
     if (s.type() == ISerializer::INPUT) {
       std::string blockBinary;
       if (s.binary(blockBinary, "block")) {
-        BinaryArray::from(v.block, array::fromString(blockBinary));
+        BinaryArray::from(v.block, IBinary::from(blockBinary));
         v.hasBlock = true;
       }
     } else {

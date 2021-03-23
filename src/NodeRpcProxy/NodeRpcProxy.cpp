@@ -537,7 +537,7 @@ std::error_code NodeRpcProxy::doQueryBlocksLite(const std::vector<hash_t>& known
 
     bse.blockHash = std::move(item.blockId);
     if (!item.block.empty()) {
-      if (!BinaryArray::from(bse.block, array::fromString(item.block))) {
+      if (!BinaryArray::from(bse.block, IBinary::from(item.block))) {
         return std::make_error_code(std::errc::invalid_argument);
       }
 

@@ -2,7 +2,7 @@
 
 #include <vector>
 #include <boost/variant.hpp>
-#include "common/binary_array.h"
+#include "common/binary.h"
 #include "crypto.h"
 
 using namespace crypto;

@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "binary_array.h"
+#include "binary.h"
 
 namespace hex
 {

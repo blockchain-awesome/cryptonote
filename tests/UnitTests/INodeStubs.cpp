@@ -239,7 +239,7 @@ void INodeTrivialRefreshStub::queryBlocks(std::vector<hash_t>&& knownBlockIds, u
     for (const auto& item : *resultHolder) {
       BlockShortEntry entry;
 
-      if (!BinaryArray::from(entry.block, array::fromString(item.block))) {
+      if (!BinaryArray::from(entry.block, IBinary::from(item.block))) {
         callback(std::make_error_code(std::errc::invalid_argument));
         return;
       }
@@ -249,7 +249,7 @@ void INodeTrivialRefreshStub::queryBlocks(std::vector<hash_t>&& knownBlockIds, u
 
       for (const auto& txBlob: item.txs) {
         transaction_t tx;
-        if (!BinaryArray::from(tx, array::fromString(txBlob))) {
+        if (!BinaryArray::from(tx, IBinary::from(txBlob))) {
           callback(std::make_error_code(std::errc::invalid_argument));
           return;
         }

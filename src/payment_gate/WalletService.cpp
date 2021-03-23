@@ -72,7 +72,7 @@ hash_t parsePaymentId(const std::string& paymentIdStr) {
 }
 
 bool getPaymentIdFromExtra(const std::string& binaryString, hash_t& paymentId) {
-  return cryptonote::getPaymentIdFromTxExtra(array::fromString(binaryString), paymentId);
+  return cryptonote::getPaymentIdFromTxExtra(IBinary::from(binaryString), paymentId);
 }
 
 std::string getPaymentIdStringFromExtra(const std::string& binaryString) {

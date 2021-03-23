@@ -275,7 +275,7 @@ TEST_F(TransactionApi, setGetPaymentId) {
 }
 
 TEST_F(TransactionApi, setExtraNonce) {
-  binary_array_t extraNonce = array::fromString("Hello, world"); // just a sequence of bytes
+  binary_array_t extraNonce = IBinary::from("Hello, world"); // just a sequence of bytes
   binary_array_t s;
 
   ASSERT_FALSE(tx->getExtraNonce(s));
@@ -354,7 +354,7 @@ TEST_F(TransactionApi, unableToModifySignedTransaction) {
 
   hash_t paymentId;
   ASSERT_ANY_THROW(tx->setPaymentId(paymentId));
-  ASSERT_ANY_THROW(tx->setExtraNonce(array::fromString("smth")));
+  ASSERT_ANY_THROW(tx->setExtraNonce(IBinary::from("smth")));
 
   // but can add more signatures
   tx->signInputMultisignature(index, srcTxKey, 0, generateAccountKeys());
