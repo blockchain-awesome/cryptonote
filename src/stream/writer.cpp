@@ -1,9 +1,8 @@
 
 #include "writer.h"
 
-
-Writer::Writer() {
-
+Writer::Writer()
+{
 }
 
 Writer::Writer(std::ostream &out) : out(&out)

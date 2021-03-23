@@ -6,7 +6,7 @@
 #include <string>
 #include <istream>
 
-class Writer 
+class Writer
 {
 
 public:
