@@ -4,7 +4,6 @@
 
 #pragma once
 #include "hex.h"
-#include "stream.h"
 
 namespace Common {
 std::string base64Decode(std::string const& encoded_string);

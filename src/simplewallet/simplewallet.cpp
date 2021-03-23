@@ -107,7 +107,7 @@ struct TransferCommand {
 
       auto mixin_str = ar.next();
 
-      if (!stream::fromString(mixin_str, fake_outs_count)) {
+      if (!  binary::is::from(mixin_str, fake_outs_count)) {
         logger(ERROR, BRIGHT_RED) << "mixin_count should be non-negative integer, got " << mixin_str;
         return false;
       }
@@ -318,7 +318,7 @@ bool simple_wallet::set_log(const std::vector<std::string> &args) {
   }
 
   uint16_t l = 0;
-  if (!stream::fromString(args[0], l)) {
+  if (!  binary::is::from(args[0], l)) {
     fail_msg_writer() << "wrong number format, use: set_log <log_level_number_0-4>";
     return true;
   }
@@ -588,7 +588,7 @@ bool simple_wallet::start_mining(const std::vector<std::string>& args) {
     req.threads_count = 1;
   } else if (1 == args.size()) {
     uint16_t num = 1;
-    ok = stream::fromString(args[0], num);
+    ok =   binary::is::from(args[0], num);
     ok = ok && (1 <= num && num <= max_mining_threads_count);
     req.threads_count = num;
   } else {
