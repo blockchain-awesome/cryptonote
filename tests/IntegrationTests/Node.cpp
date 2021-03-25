@@ -40,7 +40,7 @@ namespace cryptonote {
       }
     } else {
       if (v.hasBlock) {
-        std::string blockBinary(BinaryArray::toString(BinaryArray::to(v.block)));
+        std::string blockBinary(IBinary::to(BinaryArray::to(v.block)));
         s.binary(blockBinary, "block");
       }
     }

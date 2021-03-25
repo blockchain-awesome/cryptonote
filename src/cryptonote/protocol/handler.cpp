@@ -408,7 +408,7 @@ int CryptoNoteProtocolHandler::processObjects(CryptoNoteConnectionContext& conte
       m_core.handle_incoming_tx(IBinary::from(tx_blob), tvc, true);
       if (tvc.m_verifivation_failed) {
         logger(Logging::ERROR) << context << "transaction verification failed on NOTIFY_RESPONSE_GET_OBJECTS, \r\ntx_id = "
-          << hex::podTo(BinaryArray::getHash(IBinary::from(tx_blob))) << ", dropping connection";
+          << hex::podTo(BinaryArray::hash(IBinary::from(tx_blob))) << ", dropping connection";
         context.m_state = CryptoNoteConnectionContext::state_shutdown;
         return 1;
       }
@@ -588,7 +588,7 @@ int CryptoNoteProtocolHandler::handleRequestTxPool(int command, NOTIFY_REQUEST_T
   if (!addedTransactions.empty()) {
     NOTIFY_NEW_TRANSACTIONS::request notification;
     for (auto& tx : addedTransactions) {
-      notification.txs.push_back(BinaryArray::toString(BinaryArray::to(tx)));
+      notification.txs.push_back(IBinary::to(BinaryArray::to(tx)));
     }
 
     bool ok = post_notify<NOTIFY_NEW_TRANSACTIONS>(*m_p2p, notification, context);

@@ -821,7 +821,7 @@ std::error_code WalletService::sendTransaction(const SendTransaction::Request& r
     if (!request.paymentId.empty()) {
       addPaymentIdToExtra(request.paymentId, sendParams.extra);
     } else {
-      sendParams.extra = BinaryArray::toString(hex::from(request.extra));
+      sendParams.extra = IBinary::to(hex::from(request.extra));
     }
 
     sendParams.sourceAddresses = request.sourceAddresses;
@@ -860,7 +860,7 @@ std::error_code WalletService::createDelayedTransaction(const CreateDelayedTrans
     if (!request.paymentId.empty()) {
       addPaymentIdToExtra(request.paymentId, sendParams.extra);
     } else {
-      sendParams.extra = BinaryArray::toString(hex::from(request.extra));
+      sendParams.extra = IBinary::to(hex::from(request.extra));
     }
 
     sendParams.sourceAddresses = request.addresses;

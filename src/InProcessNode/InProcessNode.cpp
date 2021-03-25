@@ -150,11 +150,11 @@ std::error_code InProcessNode::doGetNewBlocks(std::vector<hash_t>&& knownBlockId
       assert(completeBlock != nullptr);
 
       cryptonote::block_complete_entry_t be;
-      be.block = BinaryArray::toString(BinaryArray::to(completeBlock->getBlock()));
+      be.block = IBinary::to(BinaryArray::to(completeBlock->getBlock()));
 
       be.txs.reserve(completeBlock->getTransactionCount());
       for (size_t i = 0; i < completeBlock->getTransactionCount(); ++i) {
-        be.txs.push_back(BinaryArray::toString(BinaryArray::to(completeBlock->getTransaction(i))));
+        be.txs.push_back(IBinary::to(BinaryArray::to(completeBlock->getTransaction(i))));
       }
 
       newBlocks.push_back(std::move(be));
@@ -325,7 +325,7 @@ std::error_code InProcessNode::doRelayTransaction(const cryptonote::transaction_
     }
 
     cryptonote::NOTIFY_NEW_TRANSACTIONS::request r;
-    r.txs.push_back(BinaryArray::toString(transactionBinaryArray));
+    r.txs.push_back(IBinary::to(transactionBinaryArray));
     core.get_protocol()->relay_transactions(r);
   } catch (std::system_error& e) {
     return e.code();

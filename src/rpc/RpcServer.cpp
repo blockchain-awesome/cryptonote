@@ -223,11 +223,11 @@ bool RpcServer::on_get_blocks(const COMMAND_RPC_GET_BLOCKS_FAST::request& req, C
     assert(completeBlock != nullptr);
 
     res.blocks.resize(res.blocks.size() + 1);
-    res.blocks.back().block = BinaryArray::toString(BinaryArray::to(completeBlock->getBlock()));
+    res.blocks.back().block = IBinary::to(BinaryArray::to(completeBlock->getBlock()));
 
     res.blocks.back().txs.reserve(completeBlock->getTransactionCount());
     for (size_t i = 0; i < completeBlock->getTransactionCount(); ++i) {
-      res.blocks.back().txs.push_back(BinaryArray::toString(BinaryArray::to(completeBlock->getTransaction(i))));
+      res.blocks.back().txs.push_back(IBinary::to(BinaryArray::to(completeBlock->getTransaction(i))));
     }
   }
 
@@ -435,7 +435,7 @@ bool RpcServer::on_send_raw_tx(const COMMAND_RPC_SEND_RAW_TX::request& req, COMM
 
 
   NOTIFY_NEW_TRANSACTIONS::request r;
-  r.txs.push_back(BinaryArray::toString(tx_blob));
+  r.txs.push_back(IBinary::to(tx_blob));
   m_core.get_protocol()->relay_transactions(r);
   //TODO: make sure that tx has reached other nodes here, probably wait to receive reflections from other nodes
   res.status = CORE_RPC_STATUS_OK;

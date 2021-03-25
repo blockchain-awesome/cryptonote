@@ -31,7 +31,7 @@ TEST_F(BinaryArrayTest, create)
   bat.push_back('o');
   cryptonote::BinaryArray ba(bat);
 
-  hash_t hash = ba.getHash();
+  hash_t hash = ba.hash();
   std::string hex = ba.toString();
 
   binary_array_t bat1;

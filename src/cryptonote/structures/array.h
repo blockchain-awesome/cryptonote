@@ -15,15 +15,9 @@ class BinaryArray
 public:
   BinaryArray(binary_array_t &ba) : m_ba(ba){};
 
-  // toString Change
   std::string toString();
 
-  static std::string toString(const void *data, size_t size); // Does not throw
-  static std::string toString(const binary_array_t &data);    // Does not throw
-
-  // static functions retrieved from old code
-  static void getHash(const binary_array_t &binaryArray, hash_t &hash);
-  static hash_t getHash(const binary_array_t &binaryArray);
+  static hash_t hash(const binary_array_t &binaryArray);
 
   template <class T>
   static bool from(T &object, const binary_array_t &binaryArray);
@@ -45,7 +39,7 @@ public:
   static bool size(const T &object, size_t &size);
   template <class T>
   static size_t size(const T &object);
-  hash_t getHash();
+  hash_t hash();
 
 private:
   binary_array_t m_ba;

@@ -95,7 +95,7 @@ void INodeTrivialRefreshStub::doGetNewBlocks(std::vector<hash_t> knownBlockIds, 
   for (; m_lastHeight < blockchain.size(); ++m_lastHeight)
   {
     block_complete_entry_t e;
-    e.block = BinaryArray::toString(BinaryArray::to(blockchain[m_lastHeight]));
+    e.block = IBinary::to(BinaryArray::to(blockchain[m_lastHeight]));
 
     for (auto hash : blockchain[m_lastHeight].transactionHashes)
     {
@@ -103,7 +103,7 @@ void INodeTrivialRefreshStub::doGetNewBlocks(std::vector<hash_t> knownBlockIds, 
       if (!m_blockchainGenerator.getTransactionByHash(hash, tx))
         continue;
 
-      e.txs.push_back(BinaryArray::toString(BinaryArray::to(tx)));
+      e.txs.push_back(IBinary::to(BinaryArray::to(tx)));
     }
 
     newBlocks.push_back(e);

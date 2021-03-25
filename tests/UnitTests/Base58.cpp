@@ -471,7 +471,7 @@ TEST(parseAccountAddressString, handles_valid_address)
 
   binary_array_t blob;
   ASSERT_NO_THROW(blob = cryptonote::storeToBinary(addr));
-  ASSERT_EQ(BinaryArray::toString(blob), test_serialized_keys);
+  ASSERT_EQ(IBinary::to(blob), test_serialized_keys);
 }
 
 TEST(parseAccountAddressString, fails_on_invalid_address_format)

@@ -5,15 +5,7 @@ namespace cryptonote
 
 std::string BinaryArray::toString()
 {
-  return BinaryArray::toString(m_ba);
-}
-
-std::string BinaryArray::toString(const void* data, size_t size) {
-  return std::string(static_cast<const char*>(data), size);
-}
-
-std::string BinaryArray::toString(const binary_array_t& data) {
-  return std::string(reinterpret_cast<const char*>(data.data()), data.size());
+  return IBinary::to(m_ba);
 }
 
 template <>
@@ -24,7 +16,7 @@ bool BinaryArray::to(const binary_array_t &object, binary_array_t &binaryArray)
     std::ostringstream oss;
     Writer stream(oss);
     BinaryOutputStreamSerializer serializer(stream);
-    std::string oldBlob = BinaryArray::toString(object);
+    std::string oldBlob = IBinary::to(object);
     serializer(oldBlob, "");
     binaryArray.resize(oss.str().length());
     memcpy(&binaryArray[0], oss.str().c_str(), oss.str().length());
@@ -36,22 +28,18 @@ bool BinaryArray::to(const binary_array_t &object, binary_array_t &binaryArray)
   return true;
 }
 
-hash_t BinaryArray::getHash()
+hash_t BinaryArray::hash()
 {
   hash_t hash;
   cn_fast_hash(m_ba.data(), m_ba.size(), (char*)&hash);
   return hash;
 }
 
-void BinaryArray::getHash(const binary_array_t &binaryArray, hash_t &hash)
-{
-  cn_fast_hash(binaryArray.data(), binaryArray.size(), (char*)&hash);
-}
 
-hash_t BinaryArray::getHash(const binary_array_t &binaryArray)
+hash_t BinaryArray::hash(const binary_array_t &ba)
 {
   hash_t hash;
-  getHash(binaryArray, hash);
+  cn_fast_hash(ba.data(), ba.size(), (char*)&hash);
   return hash;
 }
 

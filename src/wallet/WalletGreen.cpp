@@ -996,7 +996,7 @@ bool WalletGreen::updateWalletTransactionInfo(size_t transactionId, const crypto
 
     // Fix LegacyWallet error. Some old versions didn't fill extra field
     if (transaction.extra.empty() && !info.extra.empty()) {
-      transaction.extra = BinaryArray::toString(info.extra);
+      transaction.extra = IBinary::to(info.extra);
       updated = true;
     }
 
