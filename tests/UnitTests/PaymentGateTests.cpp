@@ -123,7 +123,7 @@ TEST_F(PaymentGateTest, DISABLED_sendTransaction) {
 
   hash_t paymentId;
   std::iota(reinterpret_cast<char*>(&paymentId), reinterpret_cast<char*>(&paymentId) + sizeof(paymentId), 0);
-  std::string paymentIdStr = hex::podToString(paymentId);
+  std::string paymentIdStr = hex::podTo(paymentId);
 
   uint64_t txId = 0;
 

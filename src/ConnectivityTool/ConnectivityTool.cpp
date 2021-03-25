@@ -212,7 +212,7 @@ bool handle_request_stat(po::variables_map& vm, peer_id_type_t peer_id) {
   }
 
   secret_key_t prvk;
-  if (!hex::podFromString(command_line::get_arg(vm, arg_priv_key), prvk)) {
+  if (!hex::podFrom(command_line::get_arg(vm, arg_priv_key), prvk)) {
     std::cout << "{" << ENDL << "  \"status\": \"ERROR: " << "wrong secret key set \"" << ENDL << "}";
     return false;
   }
@@ -253,7 +253,7 @@ bool handle_request_stat(po::variables_map& vm, peer_id_type_t peer_id) {
     pot.time = time(NULL);
     public_key_t pubk;
 
-    hex::podFromString(config::get().net.p2p_stat_trusted_pub_key, pubk);
+    hex::podFrom(config::get().net.p2p_stat_trusted_pub_key, pubk);
     hash_t h = get_proof_of_trust_t_hash(pot);
     generate_signature((const uint8_t *)&h, (const uint8_t *)&pubk, (const uint8_t *)&prvk, (uint8_t *)&pot.sign);
 
@@ -313,8 +313,8 @@ bool generate_and_print_keys() {
   public_key_t pk;
   secret_key_t sk;
   generate_keys((uint8_t *) &pk, (uint8_t *) &sk);
-  std::cout << "PUBLIC KEY: " << hex::podToString(pk) << ENDL
-            << "PRIVATE KEY: " << hex::podToString(sk);
+  std::cout << "PUBLIC KEY: " << hex::podTo(pk) << ENDL
+            << "PRIVATE KEY: " << hex::podTo(sk);
   return true;
 }
 

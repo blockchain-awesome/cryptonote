@@ -14,7 +14,7 @@ Checkpoints::Checkpoints(Logging::ILogger &log) : logger(log, "checkpoints") {}
 bool Checkpoints::add(uint32_t height, const std::string &hash_str) {
   hash_t h = NULL_HASH;
 
-  if (!hex::podFromString(hash_str, h)) {
+  if (!hex::podFrom(hash_str, h)) {
     logger(ERROR) << "WRONG HASH IN CHECKPOINTS!!!";
     return false;
   }

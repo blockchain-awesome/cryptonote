@@ -676,7 +676,7 @@ bool Blockchain::handle_alternative_block(const block_t& b, const hash_t& id, bl
   auto block_height = get_block_height(b);
   if (block_height == 0) {
     logger(ERROR, BRIGHT_RED) <<
-      "Block with id: " << hex::podToString(id) << " (as alternative) have wrong miner transaction";
+      "Block with id: " << hex::podTo(id) << " (as alternative) have wrong miner transaction";
     bvc.m_verifivation_failed = true;
     return false;
   }
@@ -768,7 +768,7 @@ bool Blockchain::handle_alternative_block(const block_t& b, const hash_t& id, bl
 
     if (!prevalidate_miner_transaction(b, bei.height)) {
       logger(INFO, BRIGHT_RED) <<
-        "Block with id: " << hex::podToString(id) << " (as alternative) have wrong miner transaction.";
+        "Block with id: " << hex::podTo(id) << " (as alternative) have wrong miner transaction.";
       bvc.m_verifivation_failed = true;
       return false;
     }
@@ -1164,7 +1164,7 @@ bool Blockchain::checkTransactionInputs(const transaction_t& tx, const hash_t& t
 
       if (have_tx_keyimg_as_spent(in_to_key.keyImage)) {
         logger(DEBUGGING) <<
-          "Key image already spent in blockchain: " << hex::podToString(in_to_key.keyImage);
+          "Key image already spent in blockchain: " << hex::podTo(in_to_key.keyImage);
         return false;
       }
 

@@ -375,7 +375,7 @@ bool RpcServer::on_get_transactions(const COMMAND_RPC_GET_TRANSACTIONS::request&
   std::vector<hash_t> vh;
   for (const auto& tx_hex_str : req.txs_hashes) {
     binary_array_t b;
-    if (!hex::fromString(tx_hex_str, b))
+    if (!hex::from(tx_hex_str, b))
     {
       res.status = "Failed to parse hex representation of transaction hash";
       return true;
@@ -391,11 +391,11 @@ bool RpcServer::on_get_transactions(const COMMAND_RPC_GET_TRANSACTIONS::request&
   m_core.getTransactions(vh, txs, missed_txs);
 
   for (auto& tx : txs) {
-    res.txs_as_hex.push_back(hex::toString(BinaryArray::to(tx)));
+    res.txs_as_hex.push_back(hex::to(BinaryArray::to(tx)));
   }
 
   for (const auto& miss_tx : missed_txs) {
-    res.missed_tx.push_back(hex::podToString(miss_tx));
+    res.missed_tx.push_back(hex::podTo(miss_tx));
   }
 
   res.status = CORE_RPC_STATUS_OK;
@@ -404,7 +404,7 @@ bool RpcServer::on_get_transactions(const COMMAND_RPC_GET_TRANSACTIONS::request&
 
 bool RpcServer::on_send_raw_tx(const COMMAND_RPC_SEND_RAW_TX::request& req, COMMAND_RPC_SEND_RAW_TX::response& res) {
   binary_array_t tx_blob;
-  if (!hex::fromString(req.tx_as_hex, tx_blob))
+  if (!hex::from(req.tx_as_hex, tx_blob))
   {
     logger(INFO) << "[on_send_raw_tx]: Failed to parse tx from hexbuff: " << req.tx_as_hex;
     res.status = "Failed";
@@ -501,7 +501,7 @@ bool RpcServer::on_getblockhash(const COMMAND_RPC_GETBLOCKHASH::request& req, CO
     };
   }
 
-  res = hex::podToString(blockId);
+  res = hex::podTo(blockId);
   return true;
 }
 
@@ -563,7 +563,7 @@ bool RpcServer::on_getblocktemplate(const COMMAND_RPC_GETBLOCKTEMPLATE::request&
     res.reserved_offset = 0;
   }
 
-  res.blocktemplate_blob = hex::toString(block_blob);
+  res.blocktemplate_blob = hex::to(block_blob);
   res.status = CORE_RPC_STATUS_OK;
 
   return true;
@@ -571,7 +571,7 @@ bool RpcServer::on_getblocktemplate(const COMMAND_RPC_GETBLOCKTEMPLATE::request&
 
 bool RpcServer::on_get_currency_id(const COMMAND_RPC_GET_CURRENCY_ID::request& /*req*/, COMMAND_RPC_GET_CURRENCY_ID::response& res) {
   hash_t currencyId = m_core.currency().genesisBlockHash();
-  res.currency_id_blob = hex::podToString(currencyId);
+  res.currency_id_blob = hex::podTo(currencyId);
   return true;
 }
 
@@ -581,7 +581,7 @@ bool RpcServer::on_submitblock(const COMMAND_RPC_SUBMITBLOCK::request& req, COMM
   }
 
   binary_array_t blockblob;
-  if (!hex::fromString(req[0], blockblob)) {
+  if (!hex::from(req[0], blockblob)) {
     throw JsonRpc::JsonRpcError{ CORE_RPC_ERROR_CODE_WRONG_BLOCKBLOB, "Wrong block blob" };
   }
 
@@ -612,12 +612,12 @@ void RpcServer::fill_block_header_response(const block_t& blk, bool orphan_statu
   responce.major_version = blk.majorVersion;
   responce.minor_version = blk.minorVersion;
   responce.timestamp = blk.timestamp;
-  responce.prev_hash = hex::podToString(blk.previousBlockHash);
+  responce.prev_hash = hex::podTo(blk.previousBlockHash);
   responce.nonce = blk.nonce;
   responce.orphan_status = orphan_status;
   responce.height = height;
   responce.depth = m_core.get_current_blockchain_height() - height - 1;
-  responce.hash = hex::podToString(hash);
+  responce.hash = hex::podTo(hash);
   m_core.getBlockDifficulty(static_cast<uint32_t>(height), responce.difficulty);
   responce.reward = get_block_reward(blk);
 }
@@ -723,7 +723,7 @@ bool RpcServer::f_on_blocks_list_json(const F_COMMAND_RPC_GET_BLOCKS_LIST::reque
     block_short.cumul_size = be.block_cumulative_size;
     block_short.timestamp = blk.timestamp;
     block_short.height = i;
-    block_short.hash = hex::podToString(block_hash);
+    block_short.hash = hex::podTo(block_hash);
     block_short.difficulty = be.cumulative_difficulty - be1.cumulative_difficulty;
     block_short.tx_count = blk.transactionHashes.size() + 1;
 
@@ -743,7 +743,7 @@ bool RpcServer::f_on_block_json(const F_COMMAND_RPC_GET_BLOCK_DETAILS::request &
 {
   hash_t hash;
   Blockchain &bc = m_core.getBlockChain();
-  hex::podFromString(req.hash, hash);
+  hex::podFrom(req.hash, hash);
 
   if (!bc.haveBlock(hash))
   {
@@ -803,7 +803,7 @@ bool RpcServer::f_on_transactions_pool_json(const F_COMMAND_RPC_GET_POOL::reques
     uint64_t amount_in = getInputAmount(tx);
     uint64_t amount_out = getOutputAmount(tx);
 
-    transaction_short.hash = hex::podToString(BinaryArray::objectHash(tx));
+    transaction_short.hash = hex::podTo(BinaryArray::objectHash(tx));
     transaction_short.fee = amount_in - amount_out;
     transaction_short.amount_out = amount_out;
     transaction_short.size = BinaryArray::size(tx);

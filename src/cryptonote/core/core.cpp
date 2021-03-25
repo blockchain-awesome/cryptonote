@@ -205,7 +205,7 @@ bool core::get_stat_info(CoreStateInfo& st_inf) {
   st_inf.alternative_blocks = m_blockchain.getAlternativeBlocksCount();
   st_inf.blockchain_height = m_blockchain.getHeight();
   st_inf.tx_pool_size = m_mempool.get_transactions_count();
-  st_inf.top_block_id_str = hex::podToString(m_blockchain.getTailId());
+  st_inf.top_block_id_str = hex::podTo(m_blockchain.getTailId());
   return true;
 }
 

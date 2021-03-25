@@ -133,7 +133,7 @@ public:
       m_transfers.push_back(transactionHash);
 
       auto key = object->getAddress().spendPublicKey;
-      std::string address = hex::toString(&key, sizeof(key));
+      std::string address = hex::to(&key, sizeof(key));
       LOG_DEBUG("Transfer to " + address);
     }
     m_cv.notify_all();
@@ -412,7 +412,7 @@ std::error_code submitTransaction(INode& node, ITransactionReader& tx) {
   BinaryArray::from(outTx, data);
 
 
-  LOG_DEBUG("Submitting transaction " + hex::toString(tx.getTransactionHash().data, 32));
+  LOG_DEBUG("Submitting transaction " + hex::to(tx.getTransactionHash().data, 32));
 
   std::promise<std::error_code> result;
   node.relayTransaction(outTx, [&result](std::error_code ec) { result.set_value(ec); });

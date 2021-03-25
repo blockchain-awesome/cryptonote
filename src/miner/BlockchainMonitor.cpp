@@ -78,11 +78,11 @@ hash_t BlockchainMonitor::requestLastBlockHash() {
     }
 
     hash_t blockHash;
-    if (!hex::podFromString(response.block_header.hash, blockHash)) {
+    if (!hex::podFrom(response.block_header.hash, blockHash)) {
       throw std::runtime_error("Couldn't parse block hash: " + response.block_header.hash);
     }
 
-    m_logger(Logging::DEBUGGING) << "Last block hash: " << hex::podToString(blockHash);
+    m_logger(Logging::DEBUGGING) << "Last block hash: " << hex::podTo(blockHash);
 
     return blockHash;
   } catch (std::exception& e) {

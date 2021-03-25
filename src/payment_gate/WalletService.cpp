@@ -65,7 +65,7 @@ hash_t parsePaymentId(const std::string& paymentIdStr) {
   }
 
   hash_t paymentId;
-  bool r = hex::podFromString(paymentIdStr, paymentId);
+  bool r = hex::podFrom(paymentIdStr, paymentId);
   assert(r);
 
   return paymentId;
@@ -82,7 +82,7 @@ std::string getPaymentIdStringFromExtra(const std::string& binaryString) {
     return std::string();
   }
 
-  return hex::podToString(paymentId);
+  return hex::podTo(paymentId);
 }
 
 }
@@ -193,7 +193,7 @@ void replaceWalletFiles(const std::string &path, const std::string &tempFilePath
 hash_t parseHash(const std::string& hashString, Logging::LoggerRef logger) {
   hash_t hash;
 
-  if (!hex::podFromString(hashString, hash)) {
+  if (!hex::podFrom(hashString, hash)) {
     logger(Logging::WARNING) << "Can't parse hash string " << hashString;
     throw std::system_error(make_error_code(cryptonote::error::WalletServiceErrorCode::WRONG_HASH_FORMAT));
   }
@@ -229,14 +229,14 @@ PaymentService::TransactionRpcInfo convertTransactionWithTransfersToTransactionR
   PaymentService::TransactionRpcInfo transactionInfo;
 
   transactionInfo.state = static_cast<uint8_t>(transactionWithTransfers.transaction.state);
-  transactionInfo.transactionHash = hex::podToString(transactionWithTransfers.transaction.hash);
+  transactionInfo.transactionHash = hex::podTo(transactionWithTransfers.transaction.hash);
   transactionInfo.blockIndex = transactionWithTransfers.transaction.blockHeight;
   transactionInfo.timestamp = transactionWithTransfers.transaction.timestamp;
   transactionInfo.isBase = transactionWithTransfers.transaction.isBase;
   transactionInfo.unlockTime = transactionWithTransfers.transaction.unlockTime;
   transactionInfo.amount = transactionWithTransfers.transaction.totalAmount;
   transactionInfo.fee = transactionWithTransfers.transaction.fee;
-  transactionInfo.extra = hex::toString(transactionWithTransfers.transaction.extra.data(), transactionWithTransfers.transaction.extra.size());
+  transactionInfo.extra = hex::to(transactionWithTransfers.transaction.extra.data(), transactionWithTransfers.transaction.extra.size());
   transactionInfo.paymentId = getPaymentIdStringFromExtra(transactionWithTransfers.transaction.extra);
 
   for (const cryptonote::WalletTransfer& transfer: transactionWithTransfers.transfers) {
@@ -258,7 +258,7 @@ std::vector<PaymentService::TransactionsInBlockRpcInfo> convertTransactionsInBlo
   rpcBlocks.reserve(blocks.size());
   for (const auto& block: blocks) {
     PaymentService::TransactionsInBlockRpcInfo rpcBlock;
-    rpcBlock.blockHash = hex::podToString(block.blockHash);
+    rpcBlock.blockHash = hex::podTo(block.blockHash);
 
     for (const cryptonote::WalletTransactionWithTransfers& transactionWithTransfers: block.transactions) {
       PaymentService::TransactionRpcInfo transactionInfo = convertTransactionWithTransfersToTransactionRpcInfo(transactionWithTransfers);
@@ -278,10 +278,10 @@ std::vector<PaymentService::TransactionHashesInBlockRpcInfo> convertTransactions
   transactionHashes.reserve(blocks.size());
   for (const cryptonote::TransactionsInBlockInfo& block: blocks) {
     PaymentService::TransactionHashesInBlockRpcInfo item;
-    item.blockHash = hex::podToString(block.blockHash);
+    item.blockHash = hex::podTo(block.blockHash);
 
     for (const cryptonote::WalletTransactionWithTransfers& transaction: block.transactions) {
-      item.transactionHashes.emplace_back(hex::podToString(transaction.transaction.hash));
+      item.transactionHashes.emplace_back(hex::podTo(transaction.transaction.hash));
     }
 
     transactionHashes.push_back(std::move(item));
@@ -453,7 +453,7 @@ void WalletService::loadTransactionIdIndex() {
   transactionIdIndex.clear();
 
   for (size_t i = 0; i < wallet.getTransactionCount(); ++i) {
-    transactionIdIndex.emplace(hex::podToString(wallet.getTransaction(i).hash), i);
+    transactionIdIndex.emplace(hex::podTo(wallet.getTransaction(i).hash), i);
   }
 }
 
@@ -486,7 +486,7 @@ std::error_code WalletService::replaceWithNewWallet(const std::string& viewSecre
     System::EventLock lk(readyEvent);
 
     secret_key_t viewSecretKey;
-    if (!hex::podFromString(viewSecretKeyText, viewSecretKey)) {
+    if (!hex::podFrom(viewSecretKeyText, viewSecretKey)) {
       logger(Logging::WARNING) << "Cannot restore view secret key: " << viewSecretKeyText;
       return make_error_code(cryptonote::error::WalletServiceErrorCode::WRONG_KEY_FORMAT);
     }
@@ -517,7 +517,7 @@ std::error_code WalletService::createAddress(const std::string& spendSecretKeyTe
     logger(Logging::DEBUGGING) << "Creating address";
 
     secret_key_t secretKey;
-    if (!hex::podFromString(spendSecretKeyText, secretKey)) {
+    if (!hex::podFrom(spendSecretKeyText, secretKey)) {
       logger(Logging::WARNING) << "Wrong key format: " << spendSecretKeyText;
       return make_error_code(cryptonote::error::WalletServiceErrorCode::WRONG_KEY_FORMAT);
     }
@@ -557,7 +557,7 @@ std::error_code WalletService::createTrackingAddress(const std::string& spendPub
     logger(Logging::DEBUGGING) << "Creating tracking address";
 
     public_key_t publicKey;
-    if (!hex::podFromString(spendPublicKeyText, publicKey)) {
+    if (!hex::podFrom(spendPublicKeyText, publicKey)) {
       logger(Logging::WARNING) << "Wrong key format: " << spendPublicKeyText;
       return make_error_code(cryptonote::error::WalletServiceErrorCode::WRONG_KEY_FORMAT);
     }
@@ -593,8 +593,8 @@ std::error_code WalletService::getSpendkeys(const std::string& address, std::str
 
     cryptonote::key_pair_t key = wallet.getAddressSpendKey(address);
 
-    publicSpendKeyText = hex::podToString(key.publicKey);
-    secretSpendKeyText = hex::podToString(key.secretKey);
+    publicSpendKeyText = hex::podTo(key.publicKey);
+    secretSpendKeyText = hex::podTo(key.secretKey);
 
   } catch (std::system_error& x) {
     logger(Logging::WARNING) << "Error while getting spend key: " << x.what();
@@ -643,7 +643,7 @@ std::error_code WalletService::getBlockHashes(uint32_t firstBlockIndex, uint32_t
 
     blockHashes.reserve(hashes.size());
     for (const auto& hash: hashes) {
-      blockHashes.push_back(hex::podToString(hash));
+      blockHashes.push_back(hex::podTo(hash));
     }
   } catch (std::system_error& x) {
     logger(Logging::WARNING) << "Error while getting block hashes: " << x.what();
@@ -657,7 +657,7 @@ std::error_code WalletService::getViewKey(std::string& viewSecretKey) {
   try {
     System::EventLock lk(readyEvent);
     cryptonote::key_pair_t viewKey = wallet.getViewKey();
-    viewSecretKey = hex::podToString(viewKey.secretKey);
+    viewSecretKey = hex::podTo(viewKey.secretKey);
   } catch (std::system_error& x) {
     logger(Logging::WARNING) << "Error while getting view key: " << x.what();
     return x.code();
@@ -821,7 +821,7 @@ std::error_code WalletService::sendTransaction(const SendTransaction::Request& r
     if (!request.paymentId.empty()) {
       addPaymentIdToExtra(request.paymentId, sendParams.extra);
     } else {
-      sendParams.extra = BinaryArray::toString(hex::fromString(request.extra));
+      sendParams.extra = BinaryArray::toString(hex::from(request.extra));
     }
 
     sendParams.sourceAddresses = request.sourceAddresses;
@@ -832,7 +832,7 @@ std::error_code WalletService::sendTransaction(const SendTransaction::Request& r
     sendParams.changeDestination = request.changeAddress;
 
     size_t transactionId = wallet.transfer(sendParams);
-    transactionHash = hex::podToString(wallet.getTransaction(transactionId).hash);
+    transactionHash = hex::podTo(wallet.getTransaction(transactionId).hash);
 
     logger(Logging::DEBUGGING) << "transaction_t " << transactionHash << " has been sent";
   } catch (std::system_error& x) {
@@ -860,7 +860,7 @@ std::error_code WalletService::createDelayedTransaction(const CreateDelayedTrans
     if (!request.paymentId.empty()) {
       addPaymentIdToExtra(request.paymentId, sendParams.extra);
     } else {
-      sendParams.extra = BinaryArray::toString(hex::fromString(request.extra));
+      sendParams.extra = BinaryArray::toString(hex::from(request.extra));
     }
 
     sendParams.sourceAddresses = request.addresses;
@@ -871,7 +871,7 @@ std::error_code WalletService::createDelayedTransaction(const CreateDelayedTrans
     sendParams.changeDestination = request.changeAddress;
 
     size_t transactionId = wallet.makeTransaction(sendParams);
-    transactionHash = hex::podToString(wallet.getTransaction(transactionId).hash);
+    transactionHash = hex::podTo(wallet.getTransaction(transactionId).hash);
 
     logger(Logging::DEBUGGING) << "Delayed transaction " << transactionHash << " has been created";
   } catch (std::system_error& x) {
@@ -893,7 +893,7 @@ std::error_code WalletService::getDelayedTransactionHashes(std::vector<std::stri
     transactionHashes.reserve(transactionIds.size());
 
     for (auto id: transactionIds) {
-      transactionHashes.emplace_back(hex::podToString(wallet.getTransaction(id).hash));
+      transactionHashes.emplace_back(hex::podTo(wallet.getTransaction(id).hash));
     }
 
   } catch (std::system_error& x) {
@@ -971,7 +971,7 @@ std::error_code WalletService::getUnconfirmedTransactionHashes(const std::vector
 
     for (const auto& transaction: transactions) {
       if (transactionFilter.checkTransaction(transaction)) {
-        transactionHashes.emplace_back(hex::podToString(transaction.transaction.hash));
+        transactionHashes.emplace_back(hex::podTo(transaction.transaction.hash));
       }
     }
   } catch (std::system_error& x) {
@@ -994,7 +994,7 @@ std::error_code WalletService::getStatus(uint32_t& blockCount, uint32_t& knownBl
     blockCount = wallet.getBlockCount();
 
     auto lastHashes = wallet.getBlockHashes(blockCount - 1, 1);
-    lastBlockHash = hex::podToString(lastHashes.back());
+    lastBlockHash = hex::podTo(lastHashes.back());
   } catch (std::system_error& x) {
     logger(Logging::WARNING) << "Error while getting status: " << x.what();
     return x.code();
@@ -1013,7 +1013,7 @@ void WalletService::refresh() {
       auto event = wallet.getEvent();
       if (event.type == cryptonote::TRANSACTION_CREATED) {
         size_t transactionId = event.transactionCreated.transactionIndex;
-        transactionIdIndex.emplace(hex::podToString(wallet.getTransaction(transactionId).hash), transactionId);
+        transactionIdIndex.emplace(hex::podTo(wallet.getTransaction(transactionId).hash), transactionId);
       }
     }
   } catch (std::system_error& e) {

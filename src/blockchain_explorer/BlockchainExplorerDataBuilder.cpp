@@ -56,7 +56,7 @@ bool BlockchainExplorerDataBuilder::fillTxExtra(const std::vector<uint8_t>& rawE
     } else if (typeid(transaction_extra_public_key_t) == field.type()) {
       extraDetails.publicKey.push_back(std::move(boost::get<transaction_extra_public_key_t>(field).publicKey));
     } else if (typeid(transaction_extra_nonce_t) == field.type()) {
-      extraDetails.nonce.push_back(hex::toString(boost::get<transaction_extra_nonce_t>(field).nonce.data(), boost::get<transaction_extra_nonce_t>(field).nonce.size()));
+      extraDetails.nonce.push_back(hex::to(boost::get<transaction_extra_nonce_t>(field).nonce.data(), boost::get<transaction_extra_nonce_t>(field).nonce.size()));
     }
   }
   return true;

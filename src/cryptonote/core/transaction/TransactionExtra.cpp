@@ -198,7 +198,7 @@ namespace cryptonote
 
   bool parsePaymentId(const std::string &paymentIdString, hash_t &paymentId)
   {
-    return hex::podFromString(paymentIdString, paymentId);
+    return hex::podFrom(paymentIdString, paymentId);
   }
 
   bool createTxExtraWithPaymentId(const std::string &paymentIdString, std::vector<uint8_t> &extra)

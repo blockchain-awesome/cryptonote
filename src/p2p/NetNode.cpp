@@ -983,8 +983,8 @@ namespace cryptonote
     public_key_t pk;
     const config::config_t &conf = config::get();
 
-    hex::podFromString(conf.net.p2p_stat_trusted_pub_key, pk);
-    // hex::podFromString(cryptonote::P2P_STAT_TRUSTED_PUB_KEY, pk);
+    hex::podFrom(conf.net.p2p_stat_trusted_pub_key, pk);
+    // hex::podFrom(cryptonote::P2P_STAT_TRUSTED_PUB_KEY, pk);
     hash_t h = get_proof_of_trust_t_hash(tr);
     if (!check_signature((const uint8_t *)&h, (const uint8_t *)&pk, (const uint8_t *)&tr.sign)) {
       logger(ERROR) << "check_trust failed: sign check failed";
