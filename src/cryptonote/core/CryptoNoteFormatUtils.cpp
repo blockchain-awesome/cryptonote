@@ -6,7 +6,6 @@
 
 #include <set>
 #include <logging/LoggerRef.h>
-#include <common/varint.h>
 
 #include "serialization/BinaryOutputStreamSerializer.h"
 #include "serialization/BinaryInputStreamSerializer.h"

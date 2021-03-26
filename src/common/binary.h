@@ -3,6 +3,7 @@
 #include <vector>
 #include <iostream>
 #include <sstream>
+#include <limits>
 
 typedef std::vector<uint8_t> binary_array_t;
 
@@ -46,6 +47,40 @@ std::string fromVarint(T &t)
   oss << tag;
 
   return oss.str();
+}
+
+template <typename InputIt, typename T>
+typename std::enable_if<std::is_integral<T>::value && std::is_unsigned<T>::value, int>::type
+toVarint(InputIt &&first, InputIt &&last, T &i)
+{
+  first = std::move(first);
+  last = std::move(last);
+  int bits = std::numeric_limits<T>::digits;
+  int read = 0;
+  i = 0;
+  for (int shift = 0;; shift += 7)
+  {
+    if (first == last)
+    {
+      return read; // End of input.
+    }
+    unsigned char byte = *first++;
+    ++read;
+    if (shift + 7 >= bits && byte >= 1 << (bits - shift))
+    {
+      return -1; // Overflow.
+    }
+    if (byte == 0 && shift != 0)
+    {
+      return -2; // Non-canonical representation.
+    }
+    i |= static_cast<T>(byte & 0x7f) << shift;
+    if ((byte & 0x80) == 0)
+    {
+      break;
+    }
+  }
+  return read;
 }
 
 namespace binary
