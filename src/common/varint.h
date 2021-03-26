@@ -30,10 +30,13 @@ namespace varint
     //     return ss.str();
     // }
 
-    template <int bits, typename InputIt, typename T>
-    typename std::enable_if<std::is_integral<T>::value && std::is_unsigned<T>::value && 0 <= bits && bits <= std::numeric_limits<T>::digits, int>::type
+    template <typename InputIt, typename T>
+    typename std::enable_if<std::is_integral<T>::value && std::is_unsigned<T>::value, int>::type
     read(InputIt &&first, InputIt &&last, T &i)
     {
+        first = std::move(first);
+        last = std::move(last);
+        int bits = std::numeric_limits<T>::digits;
         int read = 0;
         i = 0;
         for (int shift = 0;; shift += 7)
@@ -59,11 +62,5 @@ namespace varint
             }
         }
         return read;
-    }
-
-    template <typename InputIt, typename T>
-    int read(InputIt &&first, InputIt &&last, T &i)
-    {
-        return read<std::numeric_limits<T>::digits, InputIt, T>(std::move(first), std::move(last), i);
     }
 }
