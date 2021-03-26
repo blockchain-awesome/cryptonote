@@ -37,6 +37,8 @@
 #include "cryptonote/crypto/hash.h"
 #include "int-util.h"
 #include "varint.h"
+#include "binary.h"
+
 
 using namespace crypto;
 
@@ -240,7 +242,7 @@ namespace tools
 
     std::string encode_addr(uint64_t tag, const std::string& data)
     {
-      std::string buf = varint::get(tag);
+      std::string buf = fromVarint(tag);
       buf += data;
       hash_t hash;
       cn_fast_hash(buf.data(), buf.size(), (char *)&hash);

@@ -26,7 +26,27 @@ public:
 
   friend std::istream &operator>>(std::istream &is, IBinary &base);
   friend std::ostream &operator<<(std::ostream &os, const IBinary &base);
+
+  template <typename T>
+  friend binary_array_t fromVarint(T &t);
 };
+
+template <typename T>
+std::string fromVarint(T &t)
+{
+  std::ostringstream oss;
+  uint64_t v = t;
+  while (v >= 0x80)
+  {
+    uint8_t tag = (static_cast<char>(v) & 0x7f) | 0x80;
+    oss << tag;
+    v >>= 7;
+  }
+  uint8_t tag = static_cast<char>(v);
+  oss << tag;
+
+  return oss.str();
+}
 
 namespace binary
 {
