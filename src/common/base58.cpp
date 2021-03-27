@@ -266,7 +266,7 @@ namespace tools
       std::string expected_checksum(reinterpret_cast<const char*>(&hash), addr_checksum_size);
       if (expected_checksum != checksum) return false;
 
-      int read = toVarint(addr_data.begin(), addr_data.end(), tag);
+      int read = toVarint(addr_data, tag);
       if (read <= 0) return false;
 
       data = addr_data.substr(read);

@@ -49,12 +49,12 @@ std::string fromVarint(T &t)
   return oss.str();
 }
 
-template <typename InputIt, typename T>
+template <typename T>
 typename std::enable_if<std::is_integral<T>::value && std::is_unsigned<T>::value, int>::type
-toVarint(InputIt &&first, InputIt &&last, T &i)
+toVarint(std::string &str, T &i)
 {
-  first = std::move(first);
-  last = std::move(last);
+  std::string::iterator first = std::move(str.begin());
+  std::string::iterator last = std::move(str.end());
   int bits = std::numeric_limits<T>::digits;
   int read = 0;
   i = 0;
