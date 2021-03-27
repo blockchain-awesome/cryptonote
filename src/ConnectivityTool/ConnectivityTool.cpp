@@ -97,7 +97,7 @@ std::ostream& get_response_schema_as_json(std::ostream& ss, response_schema &rs)
 
     size_t i = 0;
     for (const connection_entry_t &ce : networkState.connections_list) {
-      ss << "      {\"peer_id\": \"" << ce.id << "\", \"ip\": \"" << Common::ipAddressToString(ce.adr.ip) << "\", \"port\": " << ce.adr.port << ", \"is_income\": " << ce.is_income << "}";
+      ss << "      {\"peer_id\": \"" << ce.id << "\", \"ip\": \"" << ::string::IPv4::to(ce.adr.ip) << "\", \"port\": " << ce.adr.port << ", \"is_income\": " << ce.is_income << "}";
       if (networkState.connections_list.size() - 1 != i)
         ss << ",";
       ss << ENDL;
@@ -107,7 +107,7 @@ std::ostream& get_response_schema_as_json(std::ostream& ss, response_schema &rs)
     ss << "    \"local_peerlist_white\": [" << ENDL;
     i = 0;
     for (const peerlist_entry_t &pe : networkState.local_peerlist_white) {
-      ss << "      {\"peer_id\": \"" << pe.id << "\", \"ip\": \"" << Common::ipAddressToString(pe.adr.ip) << "\", \"port\": " << pe.adr.port << ", \"last_seen\": " << networkState.local_time - pe.last_seen << "}";
+      ss << "      {\"peer_id\": \"" << pe.id << "\", \"ip\": \"" << ::string::IPv4::to(pe.adr.ip) << "\", \"port\": " << pe.adr.port << ", \"last_seen\": " << networkState.local_time - pe.last_seen << "}";
       if (networkState.local_peerlist_white.size() - 1 != i)
         ss << ",";
       ss << ENDL;
@@ -118,7 +118,7 @@ std::ostream& get_response_schema_as_json(std::ostream& ss, response_schema &rs)
     ss << "    \"local_peerlist_gray\": [" << ENDL;
     i = 0;
     for (const peerlist_entry_t &pe : networkState.local_peerlist_gray) {
-      ss << "      {\"peer_id\": \"" << pe.id << "\", \"ip\": \"" << Common::ipAddressToString(pe.adr.ip) << "\", \"port\": " << pe.adr.port << ", \"last_seen\": " << networkState.local_time - pe.last_seen << "}";
+      ss << "      {\"peer_id\": \"" << pe.id << "\", \"ip\": \"" << ::string::IPv4::to(pe.adr.ip) << "\", \"port\": " << pe.adr.port << ", \"last_seen\": " << networkState.local_time - pe.last_seen << "}";
       if (networkState.local_peerlist_gray.size() - 1 != i)
         ss << ",";
       ss << ENDL;

@@ -8,8 +8,8 @@
 namespace Common {
 std::string base64Decode(std::string const& encoded_string);
 
-std::string ipAddressToString(uint32_t ip);
-bool parseIpAddressAndPort(uint32_t& ip, uint32_t& port, const std::string& addr);
+// std::string ipAddressToString(uint32_t ip);
+// bool parseIpAddressAndPort(uint32_t& ip, uint32_t& port, const std::string& addr);
 
 std::string timeIntervalToString(uint64_t intervalInSeconds);
 

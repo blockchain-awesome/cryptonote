@@ -123,7 +123,7 @@ void CryptoNoteProtocolHandler::log_connections() {
 
   m_p2p->for_each_connection([&](const CryptoNoteConnectionContext& cntxt, peer_id_type_t peer_id) {
     ss << std::setw(25) << std::left << std::string(cntxt.m_is_income ? "[INC]" : "[OUT]") +
-      Common::ipAddressToString(cntxt.m_remote_ip) + ":" + std::to_string(cntxt.m_remote_port)
+      ::string::IPv4::to(cntxt.m_remote_ip) + ":" + std::to_string(cntxt.m_remote_port)
       << std::setw(20) << std::hex << peer_id
       // << std::setw(25) << std::to_string(cntxt.m_recv_cnt) + "(" + std::to_string(time(NULL) - cntxt.m_last_recv) + ")" + "/" + std::to_string(cntxt.m_send_cnt) + "(" + std::to_string(time(NULL) - cntxt.m_last_send) + ")"
       << std::setw(25) << get_protocol_state_string(cntxt.m_state)

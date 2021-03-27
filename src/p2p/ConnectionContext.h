@@ -9,7 +9,7 @@
 #include <unordered_set>
 
 #include <boost/uuid/uuid.hpp>
-#include "common/StringTools.h"
+#include "common/str.h"
 #include "cryptonote/crypto/hash.h"
 
 namespace cryptonote {
@@ -64,7 +64,7 @@ inline std::string get_protocol_state_string(CryptoNoteConnectionContext::state 
 
 namespace std {
 inline std::ostream& operator << (std::ostream& s, const cryptonote::CryptoNoteConnectionContext& context) {
-  return s << "[" << Common::ipAddressToString(context.m_remote_ip) << ":" << 
+  return s << "[" << ::string::IPv4::to(context.m_remote_ip) << ":" << 
     context.m_remote_port << (context.m_is_income ? " INC" : " OUT") << "] ";
 }
 }

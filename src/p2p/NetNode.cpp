@@ -91,7 +91,7 @@ void addPortMapping(Logging::LoggerRef& logger, uint32_t port) {
 }
 
 bool parse_peer_from_string(network_address_t& pe, const std::string& node_addr) {
-  return Common::parseIpAddressAndPort(pe.ip, pe.port, node_addr);
+  return parseSocket(node_addr, pe);
 }
 
 }
@@ -695,7 +695,7 @@ namespace cryptonote
       try {
         System::Context<System::TcpConnection> connectionContext(m_dispatcher, [&] {
           System::TcpConnector connector(m_dispatcher);
-          return connector.connect(System::Ipv4Address(Common::ipAddressToString(na.ip)), static_cast<uint16_t>(na.port));
+          return connector.connect(System::Ipv4Address(::string::IPv4::to(na.ip)), static_cast<uint16_t>(na.port));
         });
 
         System::Context<> timeoutContext(m_dispatcher, [&] {
@@ -1079,7 +1079,7 @@ namespace cryptonote
       return false;
     }
 
-    auto ip = Common::ipAddressToString(actual_ip);
+    auto ip = ::string::IPv4::to(actual_ip);
     auto port = node_data.my_port;
     auto peerId = node_data.peer_id;
 
@@ -1174,7 +1174,7 @@ namespace cryptonote
           pe.id = peer_id_l;
           m_peerlist.append_with_peer_white(pe);
 
-          logger(Logging::TRACE) << context << "BACK PING SUCCESS, " << Common::ipAddressToString(context.m_remote_ip) << ":" << port_l << " added to whitelist";
+          logger(Logging::TRACE) << context << "BACK PING SUCCESS, " << ::string::IPv4::to(context.m_remote_ip) << ":" << port_l << " added to whitelist";
       }
     }
 
@@ -1218,7 +1218,7 @@ namespace cryptonote
     std::stringstream ss;
 
     for (const auto& cntxt : m_connections) {
-      ss << Common::ipAddressToString(cntxt.second.m_remote_ip) << ":" << cntxt.second.m_remote_port
+      ss << ::string::IPv4::to(cntxt.second.m_remote_ip) << ":" << cntxt.second.m_remote_port
         << " \t\tpeer_id " << cntxt.second.peerId
         << " \t\tconn_id " << cntxt.second.m_connection_id << (cntxt.second.m_is_income ? " INC" : " OUT")
         << std::endl;

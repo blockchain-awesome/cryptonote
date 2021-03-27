@@ -26,7 +26,7 @@ namespace Tests {
 
 namespace {
 bool parse_peer_from_string(network_address_t &pe, const std::string &node_addr) {
-  return ::Common::parseIpAddressAndPort(pe.ip, pe.port, node_addr);
+  return ::cryptonote::parseSocket(node_addr, pe);
 }
 }
 
