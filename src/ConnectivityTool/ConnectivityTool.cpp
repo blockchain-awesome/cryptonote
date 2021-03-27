@@ -160,12 +160,12 @@ bool print_COMMAND_REQUEST_NETWORK_STATE(const COMMAND_REQUEST_NETWORK_STATE::re
 
   std::cout << "Peer list white:" << ns.my_id << ENDL;
   for (const peerlist_entry_t &pe : ns.local_peerlist_white) {
-    std::cout << pe.id << "\t" << pe.adr << "\t" << Common::timeIntervalToString(ns.local_time - pe.last_seen) << ENDL;
+    std::cout << pe.id << "\t" << pe.adr << "\t" << ::string::Time::ago(ns.local_time - pe.last_seen) << ENDL;
   }
 
   std::cout << "Peer list gray:" << ns.my_id << ENDL;
   for (const peerlist_entry_t &pe : ns.local_peerlist_gray) {
-    std::cout << pe.id << "\t" << pe.adr << "\t" << Common::timeIntervalToString(ns.local_time - pe.last_seen) << ENDL;
+    std::cout << pe.id << "\t" << pe.adr << "\t" << ::string::Time::ago(ns.local_time - pe.last_seen) << ENDL;
   }
 
   return true;

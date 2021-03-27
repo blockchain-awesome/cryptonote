@@ -283,7 +283,7 @@ bool P2pNode::makeNewConnectionFromPeerlist(const PeerlistManager::Peerlist& pee
     }
 
     logger(DEBUGGING) << "Selected peer: [" << peer.id << " " << peer.adr << "] last_seen: " <<
-      (peer.last_seen ? Common::timeIntervalToString(time(NULL) - peer.last_seen) : "never");
+      (peer.last_seen ? ::string::Time::ago(time(NULL) - peer.last_seen) : "never");
 
     auto conn = tryToConnectPeer(peer.adr);
     if (conn.get()) {

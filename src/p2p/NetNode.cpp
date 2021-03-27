@@ -107,7 +107,7 @@ namespace cryptonote
       std::stringstream ss;
       ss << std::setfill('0') << std::setw(8) << std::hex << std::noshowbase;
       for (const auto& pe : pl) {
-        ss << pe.id << "\t" << pe.adr << " \tlast_seen: " << Common::timeIntervalToString(now_time - pe.last_seen) << std::endl;
+        ss << pe.id << "\t" << pe.adr << " \tlast_seen: " << ::string::Time::ago(now_time - pe.last_seen) << std::endl;
       }
       return ss.str();
     }
@@ -687,7 +687,7 @@ namespace cryptonote
   bool NodeServer::try_to_connect_and_handshake_with_new_peer(const network_address_t& na, bool just_take_peerlist, uint64_t last_seen_stamp, bool white)  {
 
     logger(DEBUGGING) << "Connecting to " << na << " (white=" << white << ", last_seen: "
-        << (last_seen_stamp ? Common::timeIntervalToString(time(NULL) - last_seen_stamp) : "never") << ")...";
+        << (last_seen_stamp ? ::string::Time::ago(time(NULL) - last_seen_stamp) : "never") << ")...";
 
     try {
       System::TcpConnection connection;
@@ -805,7 +805,7 @@ namespace cryptonote
         continue;
 
       logger(DEBUGGING) << "Selected peer: " << pe.id << " " << pe.adr << " [white=" << use_white_list
-                    << "] last_seen: " << (pe.last_seen ? Common::timeIntervalToString(time(NULL) - pe.last_seen) : "never");
+                    << "] last_seen: " << (pe.last_seen ? ::string::Time::ago(time(NULL) - pe.last_seen) : "never");
       
       if(!try_to_connect_and_handshake_with_new_peer(pe.adr, false, pe.last_seen, use_white_list))
         continue;

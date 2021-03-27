@@ -20,6 +20,7 @@ namespace string
   class Time
   {
   public:
-    std::string ago(uint64_t seconds);
+    static std::string ago(uint64_t seconds);
   };
+
 }

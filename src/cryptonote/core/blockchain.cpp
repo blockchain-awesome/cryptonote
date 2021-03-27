@@ -9,6 +9,7 @@
 #include <cstdio>
 #include <boost/foreach.hpp>
 #include "common/math.hpp"
+#include "common/str.h"
 #include "common/ShuffleGenerator.h"
 #include "stream/reader.h"
 #include "stream/writer.h"
@@ -209,7 +210,7 @@ bool Blockchain::init(bool load_existing) {
 
   logger(INFO, BRIGHT_GREEN)
     << "Blockchain initialized. last block: " << m_blocks.size() - 1 << ", "
-    << Common::timeIntervalToString(timestamp_diff)
+    << ::string::Time::ago(timestamp_diff)
     << " time ago, current difficulty: " << getDifficultyForNextBlock();
   return true;
 }
