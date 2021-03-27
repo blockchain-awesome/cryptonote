@@ -1,10 +1,8 @@
 #include "common/binary.h"
-#include "common/StringTools.h"
 #include "block.h"
 #include "array.hpp"
 #include <boost/utility/value_init.hpp>
 #include "config/common.h"
-#include "common/StringTools.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include <boost/system/system_error.hpp>
 #include "cryptonote/core/CryptoNoteFormatUtils.h"

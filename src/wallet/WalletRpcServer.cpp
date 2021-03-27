@@ -6,7 +6,6 @@
 
 #include <fstream>
 
-#include "common/StringTools.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/account.h"
 #include "cryptonote/crypto/hash.h"

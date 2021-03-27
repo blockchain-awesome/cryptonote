@@ -18,7 +18,6 @@
 
 #include "cryptonote/crypto/crypto.h"
 #include "command_line/options.h"
-#include "common/StringTools.h"
 #include "serialization/SerializationTools.h"
 
 #include "CryptoNoteFormatUtils.h"
@@ -155,7 +154,7 @@ namespace cryptonote
         boost::algorithm::trim(extra_vec[i]);
         if(!extra_vec[i].size())
           continue;
-        binary_array_t ba = IBinary::from(Common::base64Decode(extra_vec[i]));
+        binary_array_t ba = IBinary::from(::string::Base64::decode(extra_vec[i]));
         if(buff != "0")
           m_extra_messages[i] = ba;
       }

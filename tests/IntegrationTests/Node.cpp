@@ -6,7 +6,6 @@
 
 #include <fstream>
 
-#include <common/StringTools.h>
 #include <system/Dispatcher.h>
 #include <system/Timer.h>
 

@@ -23,4 +23,13 @@ namespace string
     static std::string ago(uint64_t seconds);
   };
 
+  class Base64
+  {
+    static const std::string chars;
+
+  public:
+    static bool valid(unsigned char c);
+    static std::string decode(std::string const &encoded_string);
+  };
+
 }

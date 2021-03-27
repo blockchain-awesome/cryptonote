@@ -9,7 +9,6 @@
 #include <cryptonote/core/transaction/TransactionApi.h>
 
 #include "CryptoNoteConfig.h"
-#include "common/StringTools.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/core/IBlock.h"
 #include "cryptonote/core/VerificationContext.h"

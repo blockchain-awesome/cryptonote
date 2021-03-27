@@ -8,7 +8,6 @@
 #include <vector>
 #include <thread>
 
-#include "common/StringTools.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/structures/array.hpp"
 #include "NodeRpcProxy/NodeRpcProxy.h"

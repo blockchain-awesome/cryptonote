@@ -11,7 +11,6 @@
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/core/currency.h"
 #include "cryptonote/core/transaction/TransactionExtra.h"
-#include "common/StringTools.h"
 
 #include <logging/LoggerGroup.h>
 

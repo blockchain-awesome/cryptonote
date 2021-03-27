@@ -10,7 +10,6 @@
 #include <boost/lexical_cast.hpp>
 #include "common/base58.h"
 #include "common/int-util.h"
-#include "common/StringTools.h"
 #include "cryptonote/structures/block.h"
 
 #include "account.h"

@@ -22,7 +22,6 @@
 #include "common/ShuffleGenerator.h"
 #include "stream/reader.h"
 #include "stream/writer.h"
-#include "common/StringTools.h"
 #include "cryptonote/core/account.h"
 #include "cryptonote/core/currency.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"

@@ -5,7 +5,6 @@
 #include "common/os.h"
 #include "daemon.h"
 #include "logging/ConsoleLogger.h"
-#include "common/StringTools.h"
 #include "version.h"
 #include "cryptonote/core/core.h"
 #include "cryptonote/core/CryptoNoteTools.h"

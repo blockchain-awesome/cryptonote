@@ -5,7 +5,7 @@
 #include "JsonOutputStreamSerializer.h"
 #include <cassert>
 #include <stdexcept>
-#include "common/StringTools.h"
+#include "common/hex.h"
 
 using Common::JsonValue;
 using namespace cryptonote;

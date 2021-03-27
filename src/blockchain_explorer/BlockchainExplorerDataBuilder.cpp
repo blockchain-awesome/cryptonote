@@ -6,8 +6,6 @@
 
 #include <boost/utility/value_init.hpp>
 #include <boost/range/combine.hpp>
-
-#include "common/StringTools.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/structures/block_entry.h"
 #include "cryptonote/core/CryptoNoteTools.h"

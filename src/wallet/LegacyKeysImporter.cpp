@@ -7,8 +7,6 @@
 #include <vector>
 #include <system_error>
 
-#include "common/StringTools.h"
-
 #include "cryptonote/core/currency.h"
 #include "cryptonote/core/account.h"
 #include "cryptonote/structures/array.hpp"

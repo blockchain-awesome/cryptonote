@@ -3,9 +3,6 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "BlockchainMonitor.h"
-
-#include "common/StringTools.h"
-
 #include <system/EventLock.h>
 #include <system/Timer.h>
 #include <system/InterruptedException.h>

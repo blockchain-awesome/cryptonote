@@ -17,7 +17,6 @@
 #include <system/Timer.h>
 
 #include "command_line/options.h"
-#include "common/StringTools.h"
 #include "cryptonote/crypto/crypto.h"
 #include "p2p/P2pProtocolDefinitions.h"
 #include "p2p/LevinProtocol.h"

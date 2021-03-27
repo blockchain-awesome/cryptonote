@@ -6,7 +6,6 @@
 
 #include "stream/reader.h"
 #include "stream/writer.h"
-#include "common/StringTools.h"
 #include "CryptoNoteTools.h"
 #include "serialization/BinaryOutputStreamSerializer.h"
 #include "serialization/BinaryInputStreamSerializer.h"
