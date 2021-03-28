@@ -7,6 +7,7 @@
 #include <cstdint>
 
 #include "crypto/types.h"
+#include "cryptonote/types.h"
 
 extern "C"
 {
@@ -24,7 +25,6 @@ extern "C"
 namespace cryptonote
 {
 
-typedef std::uint64_t difficulty_t;
 
 extern "C"
 {

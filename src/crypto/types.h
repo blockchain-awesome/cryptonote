@@ -36,7 +36,6 @@ typedef struct
   uint8_t data[64];
 } signature_t;
 
-
 #pragma pack(push, 1)
 struct chacha_key_t
 {

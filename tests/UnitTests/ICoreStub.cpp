@@ -246,7 +246,7 @@ bool ICoreStub::scanOutputkeysForIndices(const cryptonote::key_input_t& txInToKe
   return true;
 }
 
-bool ICoreStub::getBlockDifficulty(uint32_t height, cryptonote::difficulty_t& difficulty) {
+bool ICoreStub::getBlockDifficulty(uint32_t height, difficulty_t& difficulty) {
   return true;
 }
 
