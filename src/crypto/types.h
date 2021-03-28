@@ -3,6 +3,9 @@
 
 #include <stdint.h>
 
+#define CHACHA_KEY_SIZE 32
+#define CHACHA_IV_SIZE 8
+
 typedef struct
 {
   uint8_t data[32];
@@ -33,15 +36,28 @@ typedef struct
   uint8_t data[64];
 } signature_t;
 
-// typedef struct
-// {
-//   uint8_t data[32];
-// } elliptic_curve_point_t;
 
-// typedef struct
-// {
-//   uint8_t data[32];
-// } elliptic_curve_scalar_t;
+#pragma pack(push, 1)
+struct chacha_key_t
+{
+  uint8_t data[CHACHA_KEY_SIZE];
+};
+
+struct chacha_iv_t
+{
+  uint8_t data[CHACHA_IV_SIZE];
+};
+#pragma pack(pop)
+
+typedef struct
+{
+  uint8_t data[32];
+} elliptic_curve_point_t;
+
+typedef struct
+{
+  uint8_t data[32];
+} elliptic_curve_scalar_t;
 
 // typedef struct
 // {

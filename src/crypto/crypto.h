@@ -2,16 +2,7 @@
 #pragma once
 
 #include <stdint.h>
-
-typedef struct
-{
-  uint8_t data[32];
-} elliptic_curve_point_t;
-
-typedef struct
-{
-  uint8_t data[32];
-} elliptic_curve_scalar_t;
+#include "types.h"
 
 #define VARINT_WRITE(DEST, INT)            \
   while ((INT) >= 0x80)                      \

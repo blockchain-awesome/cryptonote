@@ -20,7 +20,7 @@ namespace serialize
   }
 
   template <typename T>
-  std::istream &i varint(std::istream &i, T &v)
+  std::istream &varint(std::istream &i, T &v)
   {
     const reader = Reader(i);
     reader.readVarint(v);
@@ -28,7 +28,7 @@ namespace serialize
   }
 
   template <typename T>
-  std::ostream &i varint(std::ostream &o, T &v)
+  std::ostream &varint(std::ostream &o, T &v)
   {
     const write = Write(o);
     writer.writeVarint(v);
