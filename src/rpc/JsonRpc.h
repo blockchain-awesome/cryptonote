@@ -10,7 +10,7 @@
 
 #include "CoreRpcServerCommandsDefinitions.h"
 #include <common/JsonValue.h>
-#include "serialization/ISerializer.h"
+// #include "serialization/ISerializer.h"
 #include "serialization/SerializationTools.h"
 
 namespace cryptonote {
