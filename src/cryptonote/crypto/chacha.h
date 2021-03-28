@@ -25,11 +25,6 @@ namespace crypto
   struct chacha_key_t
   {
     uint8_t data[CHACHA_KEY_SIZE];
-
-    ~chacha_key_t()
-    {
-      memset(data, 0, sizeof(data));
-    }
   };
 
   // MS VC 2012 doesn't interpret `class chacha_iv_t` as POD in spite of [9.0.10], so it is a struct
@@ -52,7 +47,7 @@ namespace crypto
     hash_t pwd_hash;
     cn_slow_hash(password.data(), password.size(), (char *)&pwd_hash, 0, 0);
     memcpy(key.data, &pwd_hash, sizeof(key.data));
-    memset(&pwd_hash, 0, sizeof(pwd_hash));
+    // memset(&pwd_hash, 0, sizeof(pwd_hash));
   }
 }
 
