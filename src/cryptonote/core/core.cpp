@@ -14,7 +14,7 @@
 #include "../rpc/CoreRpcServerCommandsDefinitions.h"
 #include "CryptoNoteFormatUtils.h"
 #include "CryptoNoteTools.h"
-#include "CryptoNoteStatInfo.h"
+#include "../serializer/CryptoNoteStatInfo.h"
 #include "Miner.h"
 #include "transaction/TransactionExtra.h"
 #include "IBlock.h"

@@ -8,7 +8,7 @@
 
 #include "cryptonote/crypto/crypto.h"
 #include "CryptoNoteConfig.h"
-#include "cryptonote/core/CryptoNoteStatInfo.h"
+#include "cryptonote/serializer/CryptoNoteStatInfo.h"
 
 // new serialization
 #include "serialization/ISerializer.h"
