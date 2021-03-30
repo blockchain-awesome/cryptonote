@@ -31,7 +31,7 @@ TEST_F(CurrencyTest, create)
 
   Currency c = currencyBuilder.currency();
 
-  cryptonote::transaction_t tx = currencyBuilder.generateGenesisTransaction();
+  transaction_t tx = currencyBuilder.generateGenesisTransaction();
 
   block_t b = c.genesisBlock();
 

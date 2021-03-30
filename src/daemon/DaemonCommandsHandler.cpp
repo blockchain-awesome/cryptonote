@@ -254,7 +254,7 @@ bool DaemonCommandsHandler::print_tx(const std::vector<std::string>& args)
 
   std::vector<hash_t> tx_ids;
   tx_ids.push_back(tx_hash);
-  std::list<cryptonote::transaction_t> txs;
+  std::list<transaction_t> txs;
   std::list<hash_t> missed_ids;
   m_core.getTransactions(tx_ids, txs, missed_ids, true);
 

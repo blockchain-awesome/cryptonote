@@ -92,12 +92,12 @@ void ICoreStub::set_random_outs(const cryptonote::COMMAND_RPC_GET_RANDOM_OUTPUTS
   randomOutsResult = result;
 }
 
-std::vector<cryptonote::transaction_t> ICoreStub::getPoolTransactions() {
-  return std::vector<cryptonote::transaction_t>();
+std::vector<transaction_t> ICoreStub::getPoolTransactions() {
+  return std::vector<transaction_t>();
 }
 
 bool ICoreStub::getPoolChanges(const hash_t& tailBlockId, const std::vector<hash_t>& knownTxsIds,
-                               std::vector<cryptonote::transaction_t>& addedTxs, std::vector<hash_t>& deletedTxsIds) {
+                               std::vector<transaction_t>& addedTxs, std::vector<hash_t>& deletedTxsIds) {
   std::unordered_set<hash_t> knownSet;
   for (const hash_t& txId : knownTxsIds) {
     if (transactionPool.find(txId) == transactionPool.end()) {
@@ -107,7 +107,7 @@ bool ICoreStub::getPoolChanges(const hash_t& tailBlockId, const std::vector<hash
     knownSet.insert(txId);
   }
 
-  for (const std::pair<hash_t, cryptonote::transaction_t>& poolEntry : transactionPool) {
+  for (const std::pair<hash_t, transaction_t>& poolEntry : transactionPool) {
     if (knownSet.find(poolEntry.first) == knownSet.end()) {
       addedTxs.push_back(poolEntry.second);
     }
@@ -118,7 +118,7 @@ bool ICoreStub::getPoolChanges(const hash_t& tailBlockId, const std::vector<hash
 
 bool ICoreStub::getPoolChangesLite(const hash_t& tailBlockId, const std::vector<hash_t>& knownTxsIds,
         std::vector<cryptonote::transaction_prefix_info_t>& addedTxs, std::vector<hash_t>& deletedTxsIds) {
-  std::vector<cryptonote::transaction_t> added;
+  std::vector<transaction_t> added;
   bool returnStatus = getPoolChanges(tailBlockId, knownTxsIds, added, deletedTxsIds);
 
   for (const auto& tx : added) {
@@ -132,7 +132,7 @@ bool ICoreStub::getPoolChangesLite(const hash_t& tailBlockId, const std::vector<
   return returnStatus;
 }
 
-void ICoreStub::getPoolChanges(const std::vector<hash_t>& knownTxsIds, std::vector<cryptonote::transaction_t>& addedTxs,
+void ICoreStub::getPoolChanges(const std::vector<hash_t>& knownTxsIds, std::vector<transaction_t>& addedTxs,
                                std::vector<hash_t>& deletedTxsIds) {
 }
 
@@ -171,7 +171,7 @@ size_t ICoreStub::addChain(const std::vector<const cryptonote::IBlock*>& chain) 
   size_t blocksCounter = 0;
   for (const cryptonote::IBlock* block : chain) {
     for (size_t txNumber = 0; txNumber < block->getTransactionCount(); ++txNumber) {
-      const cryptonote::transaction_t& tx = block->getTransaction(txNumber);
+      const transaction_t& tx = block->getTransaction(txNumber);
       hash_t txHash = cryptonote::NULL_HASH;
       size_t blobSize = 0;
       cryptonote::BinaryArray::objectHash(tx, txHash, blobSize);
@@ -201,7 +201,7 @@ bool ICoreStub::getBlockByHash(const hash_t &h, cryptonote::block_t &blk) {
   return true;
 }
 
-void ICoreStub::getTransactions(const std::vector<hash_t>& txs_ids, std::list<cryptonote::transaction_t>& txs, std::list<hash_t>& missed_txs, bool checkTxPool) {
+void ICoreStub::getTransactions(const std::vector<hash_t>& txs_ids, std::list<transaction_t>& txs, std::list<hash_t>& missed_txs, bool checkTxPool) {
   for (const hash_t& hash : txs_ids) {
     auto iter = transactions.find(hash);
     if (iter != transactions.end()) {
@@ -284,7 +284,7 @@ void ICoreStub::addBlock(const cryptonote::block_t& block) {
   }
 }
 
-void ICoreStub::addTransaction(const cryptonote::transaction_t& tx) {
+void ICoreStub::addTransaction(const transaction_t& tx) {
   hash_t hash = cryptonote::BinaryArray::objectHash(tx);
   transactions.emplace(std::make_pair(hash, tx));
 }
@@ -301,11 +301,11 @@ bool ICoreStub::getBlocksByTimestamp(uint64_t timestampBegin, uint64_t timestamp
   return true;
 }
 
-bool ICoreStub::getPoolTransactionsByTimestamp(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t transactionsNumberLimit, std::vector<cryptonote::transaction_t>& transactions, uint64_t& transactionsNumberWithinTimestamps) {
+bool ICoreStub::getPoolTransactionsByTimestamp(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t transactionsNumberLimit, std::vector<transaction_t>& transactions, uint64_t& transactionsNumberWithinTimestamps) {
   return true;
 }
 
-bool ICoreStub::getTransactionsByPaymentId(const hash_t& paymentId, std::vector<cryptonote::transaction_t>& transactions) {
+bool ICoreStub::getTransactionsByPaymentId(const hash_t& paymentId, std::vector<transaction_t>& transactions) {
   return true;
 }
 
@@ -317,7 +317,7 @@ std::unique_ptr<cryptonote::IBlock> ICoreStub::getBlock(const hash_t& blockId) {
   return std::unique_ptr<cryptonote::IBlock>(nullptr);
 }
 
-bool ICoreStub::handleIncomingTransaction(const cryptonote::transaction_t& tx, const hash_t& txHash, size_t blobSize, cryptonote::tx_verification_context_t& tvc, bool keptByBlock) {
+bool ICoreStub::handleIncomingTransaction(const transaction_t& tx, const hash_t& txHash, size_t blobSize, cryptonote::tx_verification_context_t& tvc, bool keptByBlock) {
   auto result = transactionPool.emplace(std::make_pair(txHash, tx));
   tvc.m_verifivation_failed = !poolTxVerificationResult;
   tvc.m_added_to_pool = true;

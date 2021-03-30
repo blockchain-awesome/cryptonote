@@ -41,7 +41,7 @@ namespace cryptonote {
   public:
     TransactionImpl();
     TransactionImpl(const binary_array_t& txblob);
-    TransactionImpl(const cryptonote::transaction_t& tx);
+    TransactionImpl(const transaction_t& tx);
   
     // ITransactionReader
     virtual hash_t getTransactionHash() const override;
@@ -122,7 +122,7 @@ namespace cryptonote {
       }
     }
 
-    cryptonote::transaction_t transaction;
+    transaction_t transaction;
     boost::optional<secret_key_t> secretKey;
     mutable boost::optional<hash_t> transactionHash;
     TransactionExtra extra;
@@ -141,7 +141,7 @@ namespace cryptonote {
     return std::unique_ptr<ITransaction>(new TransactionImpl(transactionBlob));
   }
 
-  std::unique_ptr<ITransaction> createTransaction(const cryptonote::transaction_t& tx) {
+  std::unique_ptr<ITransaction> createTransaction(const transaction_t& tx) {
     return std::unique_ptr<ITransaction>(new TransactionImpl(tx));
   }
 
@@ -168,7 +168,7 @@ namespace cryptonote {
     transactionHash = BinaryArray::hash(ba); // avoid serialization if we already have blob
   }
 
-  TransactionImpl::TransactionImpl(const cryptonote::transaction_t& tx) : transaction(tx) {
+  TransactionImpl::TransactionImpl(const transaction_t& tx) : transaction(tx) {
     extra.parse(transaction.extra);
   }
 

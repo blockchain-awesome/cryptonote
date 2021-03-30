@@ -299,7 +299,7 @@ uint64_t NodeRpcProxy::getLastLocalBlockTimestamp() const {
   return m_lastLocalBlockTimestamp;
 }
 
-void NodeRpcProxy::relayTransaction(const cryptonote::transaction_t& transaction, const Callback& callback) {
+void NodeRpcProxy::relayTransaction(const transaction_t& transaction, const Callback& callback) {
   std::lock_guard<std::mutex> lock(m_mutex);
   if (m_state != STATE_INITIALIZED) {
     callback(make_error_code(error::NOT_INITIALIZED));
@@ -460,7 +460,7 @@ void NodeRpcProxy::isSynchronized(bool& syncStatus, const Callback& callback) {
   callback(std::error_code());
 }
 
-std::error_code NodeRpcProxy::doRelayTransaction(const cryptonote::transaction_t& transaction) {
+std::error_code NodeRpcProxy::doRelayTransaction(const transaction_t& transaction) {
   COMMAND_RPC_SEND_RAW_TX::request req;
   COMMAND_RPC_SEND_RAW_TX::response rsp;
   req.tx_as_hex = hex::to(BinaryArray::to(transaction));

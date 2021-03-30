@@ -47,7 +47,7 @@ namespace {
     return true;
   }
 
-  void clearTransaction(cryptonote::transaction_t& tx) {
+  void clearTransaction(transaction_t& tx) {
     tx.version = 0;
     tx.unlockTime = 0;
     tx.inputs.clear();

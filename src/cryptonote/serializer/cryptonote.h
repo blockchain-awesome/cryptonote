@@ -10,7 +10,11 @@ namespace serialize
 {
   namespace cryptonote
   {
-    inline std::istream &operator>>(std::istream &i, const transaction_index_t &v) { return serialize(i, v); }
-    inline std::ostream &operator<<(std::ostream &o, const transaction_index_t &v) { return serialize(o, v); }
+
+    std::istream &operator>>(std::istream &i, transaction_index_t &v);
+    std::istream &operator>>(std::istream &i, transaction_map_t &v);
+    
+    std::ostream &operator<<(std::ostream &o, const transaction_index_t &v);
+    std::ostream &operator<<(std::ostream &o, const transaction_map_t &v);
   }
 }

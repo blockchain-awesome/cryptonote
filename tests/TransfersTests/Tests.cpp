@@ -408,7 +408,7 @@ std::unique_ptr<ITransaction> createTransferToMultisignature(
 std::error_code submitTransaction(INode& node, ITransactionReader& tx) {
   auto data = tx.getTransactionData();
 
-  cryptonote::transaction_t outTx;
+  transaction_t outTx;
   BinaryArray::from(outTx, data);
 
 

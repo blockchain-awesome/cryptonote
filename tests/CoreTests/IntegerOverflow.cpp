@@ -48,7 +48,7 @@ gen_uint_overflow_base::gen_uint_overflow_base()
   REGISTER_CALLBACK_METHOD(gen_uint_overflow_1, mark_last_valid_block);
 }
 
-bool gen_uint_overflow_base::check_tx_verification_context_t(const cryptonote::tx_verification_context_t& tvc, bool tx_added, size_t event_idx, const cryptonote::transaction_t& /*tx*/)
+bool gen_uint_overflow_base::check_tx_verification_context_t(const cryptonote::tx_verification_context_t& tvc, bool tx_added, size_t event_idx, const transaction_t& /*tx*/)
 {
   return m_last_valid_block_event_idx < event_idx ? !tx_added && tvc.m_verifivation_failed : tx_added && !tvc.m_verifivation_failed;
 }
@@ -99,7 +99,7 @@ bool gen_uint_overflow_1::generate(std::vector<test_event_entry>& events) const
   REWIND_BLOCKS(events, blk_3r, blk_3, miner_account);
 
   // Problem 2. total_fee overflow, block_reward overflow
-  std::list<cryptonote::transaction_t> txs_1;
+  std::list<transaction_t> txs_1;
   // Create txs with huge fee
   txs_1.push_back(construct_tx_with_fee(m_logger, events, blk_3, bob_account, alice_account, MK_COINS(1), m_currency.moneySupply() - MK_COINS(1)));
   txs_1.push_back(construct_tx_with_fee(m_logger, events, blk_3, bob_account, alice_account, MK_COINS(1), m_currency.moneySupply() - MK_COINS(1)));
@@ -143,7 +143,7 @@ bool gen_uint_overflow_2::generate(std::vector<test_event_entry>& events) const
   // sources.front().amount = destinations[0].amount + destinations[2].amount + destinations[3].amount + m_currency.minimumFee()
   destinations.push_back(transaction_destination_entry_t(sources.front().amount - m_currency.moneySupply() - m_currency.moneySupply() + 1 - m_currency.minimumFee(), bob_addr));
 
-  cryptonote::transaction_t tx_1;
+  transaction_t tx_1;
   if (!constructTransaction(miner_account.getAccountKeys(), sources, destinations, std::vector<uint8_t>(), tx_1, 0, m_logger))
     return false;
   events.push_back(tx_1);
@@ -169,7 +169,7 @@ bool gen_uint_overflow_2::generate(std::vector<test_event_entry>& events) const
   destinations.push_back(de);
   destinations.push_back(de);
 
-  cryptonote::transaction_t tx_2;
+  transaction_t tx_2;
   if (!constructTransaction(bob_account.getAccountKeys(), sources, destinations, std::vector<uint8_t>(), tx_2, 0, m_logger))
     return false;
   events.push_back(tx_2);

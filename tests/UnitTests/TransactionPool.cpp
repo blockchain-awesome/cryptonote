@@ -25,15 +25,15 @@ using namespace cryptonote;
 using namespace cryptonote;
 
 class TransactionValidator : public cryptonote::ITransactionValidator {
-  virtual bool checkTransactionInputs(const cryptonote::transaction_t& tx, block_info_t& maxUsedBlock) override {
+  virtual bool checkTransactionInputs(const transaction_t& tx, block_info_t& maxUsedBlock) override {
     return true;
   }
 
-  virtual bool checkTransactionInputs(const cryptonote::transaction_t& tx, block_info_t& maxUsedBlock, block_info_t& lastFailed) override {
+  virtual bool checkTransactionInputs(const transaction_t& tx, block_info_t& maxUsedBlock, block_info_t& lastFailed) override {
     return true;
   }
 
-  virtual bool haveSpentKeyImages(const cryptonote::transaction_t& tx) override {
+  virtual bool haveSpentKeyImages(const transaction_t& tx) override {
     return false;
   }
 

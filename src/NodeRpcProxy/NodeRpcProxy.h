@@ -51,7 +51,7 @@ public:
   virtual uint32_t getKnownBlockCount() const override;
   virtual uint64_t getLastLocalBlockTimestamp() const override;
 
-  virtual void relayTransaction(const cryptonote::transaction_t& transaction, const Callback& callback) override;
+  virtual void relayTransaction(const transaction_t& transaction, const Callback& callback) override;
   virtual void getRandomOutsByAmounts(std::vector<uint64_t>&& amounts, uint64_t outsCount, std::vector<COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS::outs_for_amount>& result, const Callback& callback) override;
   virtual void getNewBlocks(std::vector<hash_t>&& knownBlockIds, std::vector<cryptonote::block_complete_entry_t>& newBlocks, uint32_t& startHeight, const Callback& callback) override;
   virtual void getTransactionOutsGlobalIndices(const hash_t& transactionHash, std::vector<uint32_t>& outsGlobalIndices, const Callback& callback) override;
@@ -82,7 +82,7 @@ private:
   void updatePeerCount(size_t peerCount);
   void updatePoolState(const std::vector<std::unique_ptr<ITransactionReader>>& addedTxs, const std::vector<hash_t>& deletedTxsIds);
 
-  std::error_code doRelayTransaction(const cryptonote::transaction_t& transaction);
+  std::error_code doRelayTransaction(const transaction_t& transaction);
   std::error_code doGetRandomOutsByAmounts(std::vector<uint64_t>& amounts, uint64_t outsCount,
                                            std::vector<COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS::outs_for_amount>& result);
   std::error_code doGetNewBlocks(std::vector<hash_t>& knownBlockIds,

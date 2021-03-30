@@ -69,7 +69,7 @@ std::vector<cryptonote::block_t> TestBlockchainGenerator::getBlockchainCopy() {
   return blockchain;
 }
 
-bool TestBlockchainGenerator::getTransactionByHash(const hash_t& hash, cryptonote::transaction_t& tx, bool checkTxPool)
+bool TestBlockchainGenerator::getTransactionByHash(const hash_t& hash, transaction_t& tx, bool checkTxPool)
 {
   std::unique_lock<std::mutex> lock(m_mutex);
 
@@ -112,7 +112,7 @@ void TestBlockchainGenerator::addMiningBlock() {
   hash_t prev_id = Block::getHash(prev_block);
 
   std::vector<size_t> block_sizes;
-  std::list<cryptonote::transaction_t> tx_list;
+  std::list<transaction_t> tx_list;
 
   generator.constructBlock(block, height, prev_id, miner_acc, timestamp, 0, block_sizes, tx_list);
   m_blockchain.push_back(block);
@@ -139,7 +139,7 @@ void TestBlockchainGenerator::generateEmptyBlocks(size_t count)
   }
 }
 
-void TestBlockchainGenerator::addTxToBlockchain(const cryptonote::transaction_t& transaction)
+void TestBlockchainGenerator::addTxToBlockchain(const transaction_t& transaction)
 {
   std::unique_lock<std::mutex> lock(m_mutex);
   addToBlockchain(transaction);
@@ -185,7 +185,7 @@ bool TestBlockchainGenerator::getSingleOutputTransaction(const cryptonote::accou
   if (!creator.init())
     return false;
 
-  cryptonote::transaction_t tx;
+  transaction_t tx;
   creator.generateSingleOutputTx(address, amount, tx);
 
   addToBlockchain(tx);
@@ -193,16 +193,16 @@ bool TestBlockchainGenerator::getSingleOutputTransaction(const cryptonote::accou
   return true;
 }
 
-void TestBlockchainGenerator::addToBlockchain(const cryptonote::transaction_t& tx) {
-  addToBlockchain(std::vector<cryptonote::transaction_t> {tx});
+void TestBlockchainGenerator::addToBlockchain(const transaction_t& tx) {
+  addToBlockchain(std::vector<transaction_t> {tx});
 }
 
-void TestBlockchainGenerator::addToBlockchain(const std::vector<cryptonote::transaction_t>& txs) {
+void TestBlockchainGenerator::addToBlockchain(const std::vector<transaction_t>& txs) {
   addToBlockchain(txs, miner_acc);
 }
 
-void TestBlockchainGenerator::addToBlockchain(const std::vector<cryptonote::transaction_t>& txs, const cryptonote::Account& minerAddress) {
-  std::list<cryptonote::transaction_t> txsToBlock;
+void TestBlockchainGenerator::addToBlockchain(const std::vector<transaction_t>& txs, const cryptonote::Account& minerAddress) {
+  std::list<transaction_t> txsToBlock;
 
   for (const auto& tx: txs) {
     addTx(tx);
@@ -223,7 +223,7 @@ void TestBlockchainGenerator::addToBlockchain(const std::vector<cryptonote::tran
 }
 
 void TestBlockchainGenerator::getPoolSymmetricDifference(std::vector<hash_t>&& known_pool_tx_ids, hash_t known_block_id, bool& is_bc_actual,
-  std::vector<cryptonote::transaction_t>& new_txs, std::vector<hash_t>& deleted_tx_ids)
+  std::vector<transaction_t>& new_txs, std::vector<hash_t>& deleted_tx_ids)
 {
   std::unique_lock<std::mutex> lock(m_mutex);
 
@@ -255,7 +255,7 @@ void TestBlockchainGenerator::getPoolSymmetricDifference(std::vector<hash_t>&& k
   deleted_tx_ids.assign(known_set.begin(), known_set.end());
 }
 
-void TestBlockchainGenerator::putTxToPool(const cryptonote::transaction_t& tx) {
+void TestBlockchainGenerator::putTxToPool(const transaction_t& tx) {
   std::unique_lock<std::mutex> lock(m_mutex);
 
   hash_t txHash = cryptonote::BinaryArray::objectHash(tx);
@@ -264,7 +264,7 @@ void TestBlockchainGenerator::putTxToPool(const cryptonote::transaction_t& tx) {
 
 void TestBlockchainGenerator::putTxPoolToBlockchain() {
   std::unique_lock<std::mutex> lock(m_mutex);
-  std::vector<cryptonote::transaction_t> txs;
+  std::vector<transaction_t> txs;
   for (auto& kv : m_txPool) {
     txs.push_back(kv.second);
   }
@@ -343,7 +343,7 @@ bool TestBlockchainGenerator::getTransactionIdsByPaymentId(const hash_t& payment
   return m_paymentIdIndex.find(paymentId, transactionHashes);
 }
 
-void TestBlockchainGenerator::addTx(const cryptonote::transaction_t& tx) {
+void TestBlockchainGenerator::addTx(const transaction_t& tx) {
   hash_t txHash = BinaryArray::objectHash(tx);
   m_txs[txHash] = tx;
   auto& globalIndexes = transactionGlobalOuts[txHash];

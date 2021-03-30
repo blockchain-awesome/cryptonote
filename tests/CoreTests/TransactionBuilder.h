@@ -37,16 +37,16 @@ public:
   TransactionBuilder& addOutput(const cryptonote::transaction_destination_entry_t& dest);
   TransactionBuilder& addMultisignatureOut(uint64_t amount, const KeysVector& keys, uint32_t required);
 
-  cryptonote::transaction_t build() const;
+  transaction_t build() const;
 
   std::vector<cryptonote::transaction_source_entry_t> m_sources;
   std::vector<cryptonote::transaction_destination_entry_t> m_destinations;
 
 private:
 
-  void fillInputs(cryptonote::transaction_t& tx, std::vector<cryptonote::key_pair_t>& contexts) const;
-  void fillOutputs(cryptonote::transaction_t& tx) const;
-  void signSources(const hash_t& prefixHash, const std::vector<cryptonote::key_pair_t>& contexts, cryptonote::transaction_t& tx) const;
+  void fillInputs(transaction_t& tx, std::vector<cryptonote::key_pair_t>& contexts) const;
+  void fillOutputs(transaction_t& tx) const;
+  void signSources(const hash_t& prefixHash, const std::vector<cryptonote::key_pair_t>& contexts, transaction_t& tx) const;
 
   struct MultisignatureDestination {
     uint64_t amount;

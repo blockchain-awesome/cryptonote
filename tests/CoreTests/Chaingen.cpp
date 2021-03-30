@@ -39,9 +39,9 @@ struct output_index {
     uint32_t idx;
     bool spent;
     const cryptonote::block_t *p_blk;
-    const cryptonote::transaction_t *p_tx;
+    const transaction_t *p_tx;
 
-    output_index(const cryptonote::transaction_output_target_t &_out, uint64_t _a, size_t _h, size_t tno, size_t ono, const cryptonote::block_t *_pb, const cryptonote::transaction_t *_pt)
+    output_index(const cryptonote::transaction_output_target_t &_out, uint64_t _a, size_t _h, size_t tno, size_t ono, const cryptonote::block_t *_pb, const transaction_t *_pt)
         : out(_out), amount(_a), blk_height(_h), tx_no(tno), out_no(ono), idx(0), spent(false), p_blk(_pb), p_tx(_pt) { }
 
     output_index(const output_index &other)
@@ -278,7 +278,7 @@ void fill_tx_sources_and_destinations(const std::vector<test_event_entry>& event
   }
 }
 
-bool construct_tx_to_key(Logging::ILogger& logger, const std::vector<test_event_entry>& events, cryptonote::transaction_t& tx, const block_t& blk_head,
+bool construct_tx_to_key(Logging::ILogger& logger, const std::vector<test_event_entry>& events, transaction_t& tx, const block_t& blk_head,
                          const cryptonote::Account& from, const cryptonote::Account& to, uint64_t amount,
                          uint64_t fee, size_t nmix)
 {

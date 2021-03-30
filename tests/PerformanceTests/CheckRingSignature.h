@@ -54,6 +54,6 @@ public:
 
 private:
   cryptonote::Account m_alice;
-  cryptonote::transaction_t m_tx;
+  transaction_t m_tx;
   hash_t m_tx_prefix_hash;
 };

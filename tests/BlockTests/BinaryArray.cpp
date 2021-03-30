@@ -23,7 +23,7 @@ public:
 TEST_F(BinaryArrayTest, create)
 {
   binary_array_t bat;
-  // cryptonote::transaction_t add;
+  // transaction_t add;
   bat.push_back('h');
   bat.push_back('e');
   bat.push_back('l');

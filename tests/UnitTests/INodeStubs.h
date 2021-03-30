@@ -33,7 +33,7 @@ public:
 
   virtual void getNewBlocks(std::vector<hash_t>&& knownBlockIds, std::vector<cryptonote::block_complete_entry_t>& newBlocks, uint32_t& height, const Callback& callback) override { callback(std::error_code()); };
 
-  virtual void relayTransaction(const cryptonote::transaction_t& transaction, const Callback& callback) override { callback(std::error_code()); };
+  virtual void relayTransaction(const transaction_t& transaction, const Callback& callback) override { callback(std::error_code()); };
   virtual void getRandomOutsByAmounts(std::vector<uint64_t>&& amounts, uint64_t outsCount, std::vector<cryptonote::COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS::outs_for_amount>& result, const Callback& callback) override { callback(std::error_code()); };
   virtual void getTransactionOutsGlobalIndices(const hash_t& transactionHash, std::vector<uint32_t>& outsGlobalIndices, const Callback& callback) override { callback(std::error_code()); };
   virtual void getPoolSymmetricDifference(std::vector<hash_t>&& known_pool_tx_ids, hash_t known_block_id, bool& is_bc_actual,
@@ -74,7 +74,7 @@ public:
 
   virtual void getNewBlocks(std::vector<hash_t>&& knownBlockIds, std::vector<cryptonote::block_complete_entry_t>& newBlocks, uint32_t& startHeight, const Callback& callback) override;
 
-  virtual void relayTransaction(const cryptonote::transaction_t& transaction, const Callback& callback) override;
+  virtual void relayTransaction(const transaction_t& transaction, const Callback& callback) override;
   virtual void getRandomOutsByAmounts(std::vector<uint64_t>&& amounts, uint64_t outsCount, std::vector<cryptonote::COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS::outs_for_amount>& result, const Callback& callback) override;
   virtual void getTransactionOutsGlobalIndices(const hash_t& transactionHash, std::vector<uint32_t>& outsGlobalIndices, const Callback& callback) override;
   virtual void queryBlocks(std::vector<hash_t>&& knownBlockIds, uint64_t timestamp, std::vector<cryptonote::BlockShortEntry>& newBlocks, uint32_t& startHeight, const Callback& callback) override;
@@ -115,7 +115,7 @@ protected:
   void doGetNewBlocks(std::vector<hash_t> knownBlockIds, std::vector<cryptonote::block_complete_entry_t>& newBlocks,
           uint32_t& startHeight, std::vector<cryptonote::block_t> blockchain, const Callback& callback);
   void doGetTransactionOutsGlobalIndices(const hash_t& transactionHash, std::vector<uint32_t>& outsGlobalIndices, const Callback& callback);
-  void doRelayTransaction(const cryptonote::transaction_t& transaction, const Callback& callback);
+  void doRelayTransaction(const transaction_t& transaction, const Callback& callback);
   void doGetRandomOutsByAmounts(std::vector<uint64_t> amounts, uint64_t outsCount, std::vector<cryptonote::COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS::outs_for_amount>& result, const Callback& callback);
   void doGetPoolSymmetricDifference(std::vector<hash_t>&& known_pool_tx_ids, hash_t known_block_id, bool& is_bc_actual,
           std::vector<std::unique_ptr<cryptonote::ITransactionReader>>& new_txs, std::vector<hash_t>& deleted_tx_ids, const Callback& callback);

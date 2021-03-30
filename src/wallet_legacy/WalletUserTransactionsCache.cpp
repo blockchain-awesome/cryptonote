@@ -77,7 +77,7 @@ TransactionId WalletUserTransactionsCache::addNewTransaction(
 }
 
 void WalletUserTransactionsCache::updateTransaction(
-  TransactionId transactionId, const cryptonote::transaction_t& tx, uint64_t amount, const std::list<TransactionOutputInformation>& usedOutputs) {
+  TransactionId transactionId, const transaction_t& tx, uint64_t amount, const std::list<TransactionOutputInformation>& usedOutputs) {
   // update extra field from created transaction
   auto& txInfo = m_transactions.at(transactionId);
   txInfo.extra.assign(tx.extra.begin(), tx.extra.end());

@@ -20,7 +20,7 @@ gen_double_spend_base<concrete_test>::gen_double_spend_base()
 }
 
 template<class concrete_test>
-bool gen_double_spend_base<concrete_test>::check_tx_verification_context_t(const cryptonote::tx_verification_context_t& tvc, bool tx_added, size_t event_idx, const cryptonote::transaction_t& /*tx*/)
+bool gen_double_spend_base<concrete_test>::check_tx_verification_context_t(const cryptonote::tx_verification_context_t& tvc, bool tx_added, size_t event_idx, const transaction_t& /*tx*/)
 {
   if (m_invalid_tx_index == event_idx)
     return tvc.m_verifivation_failed;
@@ -118,7 +118,7 @@ bool gen_double_spend_in_tx<txs_keeped_by_block>::generate(std::vector<test_even
   std::vector<cryptonote::transaction_destination_entry_t> destinations;
   destinations.push_back(de);
 
-  cryptonote::transaction_t tx_1;
+  transaction_t tx_1;
   if (!constructTransaction(bob_account.getAccountKeys(), sources, destinations, std::vector<uint8_t>(), tx_1, 0, this->m_logger))
     return false;
 
@@ -141,7 +141,7 @@ bool gen_double_spend_in_the_same_block<txs_keeped_by_block>::generate(std::vect
   SET_EVENT_VISITOR_SETT(events, event_visitor_settings::set_txs_keeped_by_block, txs_keeped_by_block);
 
   MAKE_TX_LIST_START(events, txs_1, bob_account, alice_account, send_amount - this->m_currency.minimumFee(), blk_1);
-  cryptonote::transaction_t tx_1 = txs_1.front();
+  transaction_t tx_1 = txs_1.front();
   auto tx_1_idx = events.size() - 1;
   // Remove tx_1, it is being inserted back a little later
   events.pop_back();
@@ -203,7 +203,7 @@ bool gen_double_spend_in_alt_chain_in_the_same_block<txs_keeped_by_block>::gener
 
   // Alt chain
   MAKE_TX_LIST_START(events, txs_1, bob_account, alice_account, send_amount - this->m_currency.minimumFee(), blk_1);
-  cryptonote::transaction_t tx_1 = txs_1.front();
+  transaction_t tx_1 = txs_1.front();
   auto tx_1_idx = events.size() - 1;
   // Remove tx_1, it is being inserted back a little later
   events.pop_back();

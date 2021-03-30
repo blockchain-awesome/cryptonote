@@ -50,7 +50,7 @@ private:
 class WalletRelayTransactionRequest: public WalletRequest
 {
 public:
-  WalletRelayTransactionRequest(const cryptonote::transaction_t& tx, Callback cb) : m_tx(tx), m_cb(cb) {};
+  WalletRelayTransactionRequest(const transaction_t& tx, Callback cb) : m_tx(tx), m_cb(cb) {};
   virtual ~WalletRelayTransactionRequest() {};
 
   virtual void perform(INode& node, std::function<void (WalletRequest::Callback, std::error_code)> cb) override
@@ -59,7 +59,7 @@ public:
   }
 
 private:
-  cryptonote::transaction_t m_tx;
+  transaction_t m_tx;
   Callback m_cb;
 };
 

@@ -70,21 +70,21 @@ public:
     uint64_t alreadyGeneratedCoins);
   bool constructBlock(cryptonote::block_t& blk, uint32_t height, const hash_t& previousBlockHash,
     const cryptonote::Account& minerAcc, uint64_t timestamp, uint64_t alreadyGeneratedCoins,
-    std::vector<size_t>& blockSizes, const std::list<cryptonote::transaction_t>& txList);
+    std::vector<size_t>& blockSizes, const std::list<transaction_t>& txList);
   bool constructBlock(cryptonote::block_t& blk, const cryptonote::Account& minerAcc, uint64_t timestamp);
   bool constructBlock(cryptonote::block_t& blk, const cryptonote::block_t& blkPrev, const cryptonote::Account& minerAcc,
-    const std::list<cryptonote::transaction_t>& txList = std::list<cryptonote::transaction_t>());
+    const std::list<transaction_t>& txList = std::list<transaction_t>());
 
   bool constructBlockManually(cryptonote::block_t& blk, const cryptonote::block_t& prevBlock,
     const cryptonote::Account& minerAcc, int actualParams = bf_none, uint8_t majorVer = 0,
     uint8_t minorVer = 0, uint64_t timestamp = 0, const hash_t& previousBlockHash = hash_t(),
-    const difficulty_t& diffic = 1, const cryptonote::transaction_t& baseTransaction = cryptonote::transaction_t(),
+    const difficulty_t& diffic = 1, const transaction_t& baseTransaction = transaction_t(),
     const std::vector<hash_t>& transactionHashes = std::vector<hash_t>(), size_t txsSizes = 0, uint64_t fee = 0);
   bool constructBlockManuallyTx(cryptonote::block_t& blk, const cryptonote::block_t& prevBlock,
     const cryptonote::Account& minerAcc, const std::vector<hash_t>& transactionHashes, size_t txsSize);
   bool constructMaxSizeBlock(cryptonote::block_t& blk, const cryptonote::block_t& blkPrev,
     const cryptonote::Account& minerAccount, size_t medianBlockCount = 0,
-    const std::list<cryptonote::transaction_t>& txList = std::list<cryptonote::transaction_t>());
+    const std::list<transaction_t>& txList = std::list<transaction_t>());
 
 private:
   const cryptonote::Currency& m_currency;
@@ -95,8 +95,8 @@ inline difficulty_t getTestDifficulty() { return 1; }
 void fillNonce(cryptonote::block_t& blk, const difficulty_t& diffic);
 
 bool constructMinerTxManually(const cryptonote::Currency& currency, uint32_t height, uint64_t alreadyGeneratedCoins,
-  const cryptonote::account_public_address_t& minerAddress, cryptonote::transaction_t& tx, uint64_t fee,
+  const cryptonote::account_public_address_t& minerAddress, transaction_t& tx, uint64_t fee,
   cryptonote::key_pair_t* pTxKey = 0);
-bool constructMinerTxBySize(const cryptonote::Currency& currency, cryptonote::transaction_t& baseTransaction, uint32_t height,
+bool constructMinerTxBySize(const cryptonote::Currency& currency, transaction_t& baseTransaction, uint32_t height,
   uint64_t alreadyGeneratedCoins, const cryptonote::account_public_address_t& minerAddress,
   std::vector<size_t>& blockSizes, size_t targetTxSize, size_t targetBlockSize, uint64_t fee = 0);

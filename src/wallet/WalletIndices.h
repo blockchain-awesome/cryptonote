@@ -87,7 +87,7 @@ typedef boost::multi_index_container <
 
 typedef std::pair<size_t, cryptonote::WalletTransfer> TransactionTransferPair;
 typedef std::vector<TransactionTransferPair> WalletTransfers;
-typedef std::map<size_t, cryptonote::transaction_t> UncommitedTransactions;
+typedef std::map<size_t, transaction_t> UncommitedTransactions;
 
 typedef boost::multi_index_container<
   hash_t,

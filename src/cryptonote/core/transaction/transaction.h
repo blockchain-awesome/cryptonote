@@ -2,7 +2,7 @@
 
 #include "crypto.h"
 #include "BlockchainExplorerData.h"
-#include "types.h"
+#include "cryptonote/types.h"
 
 namespace cryptonote
 {

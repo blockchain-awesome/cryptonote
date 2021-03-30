@@ -210,7 +210,7 @@ protected:
   std::unique_ptr<cryptonote::ITransaction> makeTransaction(const std::vector<ReceiverAmounts>& decomposedOutputs,
     std::vector<InputInfo>& keysInfo, const std::string& extra, uint64_t unlockTimestamp);
 
-  void sendTransaction(const cryptonote::transaction_t& cryptoNoteTransaction);
+  void sendTransaction(const transaction_t& cryptoNoteTransaction);
   size_t validateSaveAndSendTransaction(const ITransactionReader& transaction, const std::vector<WalletTransfer>& destinations, bool isFusion, bool send);
 
   size_t insertBlockchainTransaction(const TransactionInformation& info, int64_t txBalance);

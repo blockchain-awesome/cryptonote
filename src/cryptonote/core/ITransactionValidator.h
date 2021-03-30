@@ -12,9 +12,9 @@ namespace cryptonote {
   public:
     virtual ~ITransactionValidator() {}
     
-    virtual bool checkTransactionInputs(const cryptonote::transaction_t& tx, block_info_t& maxUsedBlock) = 0;
-    virtual bool checkTransactionInputs(const cryptonote::transaction_t& tx, block_info_t& maxUsedBlock, block_info_t& lastFailed) = 0;
-    virtual bool haveSpentKeyImages(const cryptonote::transaction_t& tx) = 0;
+    virtual bool checkTransactionInputs(const transaction_t& tx, block_info_t& maxUsedBlock) = 0;
+    virtual bool checkTransactionInputs(const transaction_t& tx, block_info_t& maxUsedBlock, block_info_t& lastFailed) = 0;
+    virtual bool haveSpentKeyImages(const transaction_t& tx) = 0;
     virtual bool checkTransactionSize(size_t blobSize) = 0;
   };
 

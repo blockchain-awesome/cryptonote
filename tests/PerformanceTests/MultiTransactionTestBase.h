@@ -61,7 +61,7 @@ public:
 
 protected:
   cryptonote::Account m_miners[ring_size];
-  cryptonote::transaction_t m_miner_txs[ring_size];
+  transaction_t m_miner_txs[ring_size];
   uint64_t m_source_amount;
   Logging::ConsoleLogger m_logger;
 

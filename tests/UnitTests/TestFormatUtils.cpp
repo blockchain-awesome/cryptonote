@@ -113,7 +113,7 @@ TEST(parse_and_validate_tx_extra, is_valid_tx_extra_parsed)
 {
   Logging::LoggerGroup logger;
   cryptonote::Currency currency = cryptonote::CurrencyBuilder(os::appdata::path(), config::testnet::data, logger).currency();
-  cryptonote::transaction_t tx = AUTO_VAL_INIT(tx);
+  transaction_t tx = AUTO_VAL_INIT(tx);
   cryptonote::Account acc;
   acc.generate();
   binary_array_t b = IBinary::from("dsdsdfsdfsf");
@@ -125,7 +125,7 @@ TEST(parse_and_validate_tx_extra, fails_on_big_extra_nonce)
 {
   Logging::LoggerGroup logger;
   cryptonote::Currency currency = cryptonote::CurrencyBuilder(os::appdata::path(), config::testnet::data, logger).currency();
-  cryptonote::transaction_t tx = AUTO_VAL_INIT(tx);
+  transaction_t tx = AUTO_VAL_INIT(tx);
   cryptonote::Account acc;
   acc.generate();
   binary_array_t b(TX_EXTRA_NONCE_MAX_COUNT + 1, 0);
@@ -133,7 +133,7 @@ TEST(parse_and_validate_tx_extra, fails_on_big_extra_nonce)
 }
 TEST(parse_and_validate_tx_extra, fails_on_wrong_size_in_extra_nonce)
 {
-  cryptonote::transaction_t tx = AUTO_VAL_INIT(tx);
+  transaction_t tx = AUTO_VAL_INIT(tx);
   tx.extra.resize(20, 0);
   tx.extra[0] = TX_EXTRA_NONCE;
   tx.extra[1] = 255;

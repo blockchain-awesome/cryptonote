@@ -1270,7 +1270,7 @@ std::unique_ptr<cryptonote::ITransaction> WalletGreen::makeTransaction(const std
   return tx;
 }
 
-void WalletGreen::sendTransaction(const cryptonote::transaction_t& cryptoNoteTransaction) {
+void WalletGreen::sendTransaction(const transaction_t& cryptoNoteTransaction) {
   System::Event completion(m_dispatcher);
   std::error_code ec;
 
@@ -1293,7 +1293,7 @@ size_t WalletGreen::validateSaveAndSendTransaction(const ITransactionReader& tra
     throw std::system_error(make_error_code(error::TRANSACTION_SIZE_TOO_BIG));
   }
 
-  cryptonote::transaction_t cryptoNoteTransaction;
+  transaction_t cryptoNoteTransaction;
   if (!BinaryArray::from(cryptoNoteTransaction, transactionData)) {
     throw std::system_error(make_error_code(error::INTERNAL_WALLET_ERROR), "Failed to deserialize created transaction");
   }

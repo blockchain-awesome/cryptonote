@@ -1,52 +1,53 @@
 #pragma once
 
-#include "block.h"
+#include "cryptonote/types.h"
 #include "array.h"
 #include "cryptonote/core/blockchain/serializer/transaction_entry.hpp"
 #include "cryptonote/core/key.h"
 
+
 namespace cryptonote
 {
-struct block_info_t
-{
-    uint32_t height;
-    hash_t id;
+// struct block_info_t
+// {
+//     uint32_t height;
+//     hash_t id;
 
-    block_info_t()
-    {
-        clear();
-    }
+//     block_info_t()
+//     {
+//         clear();
+//     }
 
-    void clear()
-    {
-        height = 0;
-        id = cryptonote::NULL_HASH;
-    }
+//     void clear()
+//     {
+//         height = 0;
+//         id = cryptonote::NULL_HASH;
+//     }
 
-    bool empty() const
-    {
-        return id == cryptonote::NULL_HASH;
-    }
-};
-struct block_entry_t
-{
-    block_t bl;
-    uint32_t height;
-    uint64_t block_cumulative_size;
-    difficulty_t cumulative_difficulty;
-    uint64_t already_generated_coins;
-    std::vector<transaction_entry_t> transactions;
+//     bool empty() const
+//     {
+//         return id == cryptonote::NULL_HASH;
+//     }
+// };
+// struct block_entry_t
+// {
+//     block_t bl;
+//     uint32_t height;
+//     uint64_t block_cumulative_size;
+//     difficulty_t cumulative_difficulty;
+//     uint64_t already_generated_coins;
+//     std::vector<transaction_entry_t> transactions;
 
-    void serialize(ISerializer &s)
-    {
-        s(bl, "block");
-        s(height, "height");
-        s(block_cumulative_size, "block_cumulative_size");
-        s(cumulative_difficulty, "cumulative_difficulty");
-        s(already_generated_coins, "already_generated_coins");
-        s(transactions, "transactions");
-    }
-};
+//     void serialize(ISerializer &s)
+//     {
+//         s(bl, "block");
+//         s(height, "height");
+//         s(block_cumulative_size, "block_cumulative_size");
+//         s(cumulative_difficulty, "cumulative_difficulty");
+//         s(already_generated_coins, "already_generated_coins");
+//         s(transactions, "transactions");
+//     }
+// };
 
 class Block
 {

@@ -30,7 +30,7 @@ public:
   size_t getTransferCount() const;
 
   TransactionId addNewTransaction(uint64_t amount, uint64_t fee, const std::string& extra, const std::vector<WalletLegacyTransfer>& transfers, uint64_t unlockTime);
-  void updateTransaction(TransactionId transactionId, const cryptonote::transaction_t& tx, uint64_t amount, const std::list<TransactionOutputInformation>& usedOutputs);
+  void updateTransaction(TransactionId transactionId, const transaction_t& tx, uint64_t amount, const std::list<TransactionOutputInformation>& usedOutputs);
   void updateTransactionSendingState(TransactionId transactionId, std::error_code ec);
 
   std::shared_ptr<WalletLegacyEvent> onTransactionUpdated(const TransactionInformation& txInfo, int64_t txBalance);

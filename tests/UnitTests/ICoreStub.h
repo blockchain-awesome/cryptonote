@@ -28,12 +28,12 @@ public:
   virtual bool get_tx_outputs_gindexs(const hash_t& tx_id, std::vector<uint32_t>& indexs) override;
   virtual cryptonote::ICryptonoteProtocol* get_protocol() override;
   virtual bool handle_incoming_tx(binary_array_t const& tx_blob, cryptonote::tx_verification_context_t& tvc, bool keeped_by_block) override;
-  virtual std::vector<cryptonote::transaction_t> getPoolTransactions() override;
+  virtual std::vector<transaction_t> getPoolTransactions() override;
   virtual bool getPoolChanges(const hash_t& tailBlockId, const std::vector<hash_t>& knownTxsIds,
-                              std::vector<cryptonote::transaction_t>& addedTxs, std::vector<hash_t>& deletedTxsIds) override;
+                              std::vector<transaction_t>& addedTxs, std::vector<hash_t>& deletedTxsIds) override;
   virtual bool getPoolChangesLite(const hash_t& tailBlockId, const std::vector<hash_t>& knownTxsIds,
           std::vector<cryptonote::transaction_prefix_info_t>& addedTxs, std::vector<hash_t>& deletedTxsIds) override;
-  virtual void getPoolChanges(const std::vector<hash_t>& knownTxsIds, std::vector<cryptonote::transaction_t>& addedTxs,
+  virtual void getPoolChanges(const std::vector<hash_t>& knownTxsIds, std::vector<transaction_t>& addedTxs,
                               std::vector<hash_t>& deletedTxsIds) override;
   virtual bool queryBlocks(const std::vector<hash_t>& block_ids, uint64_t timestamp,
     uint32_t& start_height, uint32_t& current_height, uint32_t& full_offset, std::vector<cryptonote::block_full_info_t>& entries) override;
@@ -55,7 +55,7 @@ public:
 
   virtual hash_t getBlockIdByHeight(uint32_t height) override;
   virtual bool getBlockByHash(const hash_t &h, cryptonote::block_t &blk) override;
-  virtual void getTransactions(const std::vector<hash_t>& txs_ids, std::list<cryptonote::transaction_t>& txs, std::list<hash_t>& missed_txs, bool checkTxPool = false) override;
+  virtual void getTransactions(const std::vector<hash_t>& txs_ids, std::list<transaction_t>& txs, std::list<hash_t>& missed_txs, bool checkTxPool = false) override;
   virtual bool getBackwardBlocksSizes(uint32_t fromHeight, std::vector<size_t>& sizes, size_t count) override;
   virtual bool getBlockSize(const hash_t& hash, size_t& size) override;
   virtual bool getAlreadyGeneratedCoins(const hash_t& hash, uint64_t& generatedCoins) override;
@@ -69,10 +69,10 @@ public:
   virtual bool getGeneratedTransactionsNumber(uint32_t height, uint64_t& generatedTransactions) override;
   virtual bool getOrphanBlocksByHeight(uint32_t height, std::vector<cryptonote::block_t>& blocks) override;
   virtual bool getBlocksByTimestamp(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t blocksNumberLimit, std::vector<cryptonote::block_t>& blocks, uint32_t& blocksNumberWithinTimestamps) override;
-  virtual bool getPoolTransactionsByTimestamp(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t transactionsNumberLimit, std::vector<cryptonote::transaction_t>& transactions, uint64_t& transactionsNumberWithinTimestamps) override;
-  virtual bool getTransactionsByPaymentId(const hash_t& paymentId, std::vector<cryptonote::transaction_t>& transactions) override;
+  virtual bool getPoolTransactionsByTimestamp(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t transactionsNumberLimit, std::vector<transaction_t>& transactions, uint64_t& transactionsNumberWithinTimestamps) override;
+  virtual bool getTransactionsByPaymentId(const hash_t& paymentId, std::vector<transaction_t>& transactions) override;
   virtual std::unique_ptr<cryptonote::IBlock> getBlock(const hash_t& blockId) override;
-  virtual bool handleIncomingTransaction(const cryptonote::transaction_t& tx, const hash_t& txHash, size_t blobSize, cryptonote::tx_verification_context_t& tvc, bool keptByBlock) override;
+  virtual bool handleIncomingTransaction(const transaction_t& tx, const hash_t& txHash, size_t blobSize, cryptonote::tx_verification_context_t& tvc, bool keptByBlock) override;
   virtual std::error_code executeLocked(const std::function<std::error_code()>& func) override;
 
   virtual bool addMessageQueue(cryptonote::MessageQueue<cryptonote::BlockchainMessage>& messageQueuePtr) override;
@@ -84,7 +84,7 @@ public:
   void set_random_outs(const cryptonote::COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_response& resp, bool result);
 
   void addBlock(const cryptonote::block_t& block);
-  void addTransaction(const cryptonote::transaction_t& tx);
+  void addTransaction(const transaction_t& tx);
 
   void setPoolTxVerificationResult(bool result);
   void setPoolChangesResult(bool result);
@@ -103,8 +103,8 @@ private:
   std::unordered_map<uint32_t, hash_t> blockHashByHeightIndex;
   std::unordered_map<hash_t, crypto::hash_t> blockHashByTxHashIndex;
 
-  std::unordered_map<hash_t, cryptonote::transaction_t> transactions;
-  std::unordered_map<hash_t, cryptonote::transaction_t> transactionPool;
+  std::unordered_map<hash_t, transaction_t> transactions;
+  std::unordered_map<hash_t, transaction_t> transactionPool;
   bool poolTxVerificationResult;
   bool poolChangesResult;
 };

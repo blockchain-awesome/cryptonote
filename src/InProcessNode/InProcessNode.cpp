@@ -275,7 +275,7 @@ std::error_code InProcessNode::doGetRandomOutsByAmounts(std::vector<uint64_t>&& 
 }
 
 
-void InProcessNode::relayTransaction(const cryptonote::transaction_t& transaction, const Callback& callback)
+void InProcessNode::relayTransaction(const transaction_t& transaction, const Callback& callback)
 {
   std::unique_lock<std::mutex> lock(mutex);
   if (state != INITIALIZED) {
@@ -293,13 +293,13 @@ void InProcessNode::relayTransaction(const cryptonote::transaction_t& transactio
   );
 }
 
-void InProcessNode::relayTransactionAsync(const cryptonote::transaction_t& transaction, const Callback& callback) {
+void InProcessNode::relayTransactionAsync(const transaction_t& transaction, const Callback& callback) {
   std::error_code ec = doRelayTransaction(transaction);
   callback(ec);
 }
 
 //it's always protected with mutex
-std::error_code InProcessNode::doRelayTransaction(const cryptonote::transaction_t& transaction) {
+std::error_code InProcessNode::doRelayTransaction(const transaction_t& transaction) {
   {
     std::unique_lock<std::mutex> lock(mutex);
     if (state != INITIALIZED) {

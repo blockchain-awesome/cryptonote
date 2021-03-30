@@ -49,7 +49,7 @@ public:
   virtual void getTransactionOutsGlobalIndices(const hash_t& transactionHash, std::vector<uint32_t>& outsGlobalIndices, const Callback& callback) override;
   virtual void getRandomOutsByAmounts(std::vector<uint64_t>&& amounts, uint64_t outsCount,
       std::vector<cryptonote::COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS::outs_for_amount>& result, const Callback& callback) override;
-  virtual void relayTransaction(const cryptonote::transaction_t& transaction, const Callback& callback) override;
+  virtual void relayTransaction(const transaction_t& transaction, const Callback& callback) override;
   virtual void queryBlocks(std::vector<hash_t>&& knownBlockIds, uint64_t timestamp, std::vector<BlockShortEntry>& newBlocks,
     uint32_t& startHeight, const Callback& callback) override;
   virtual void getPoolSymmetricDifference(std::vector<hash_t>&& knownPoolTxIds, hash_t knownBlockId, bool& isBcActual,
@@ -83,8 +83,8 @@ private:
   std::error_code doGetRandomOutsByAmounts(std::vector<uint64_t>&& amounts, uint64_t outsCount,
       std::vector<cryptonote::COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS::outs_for_amount>& result);
 
-  void relayTransactionAsync(const cryptonote::transaction_t& transaction, const Callback& callback);
-  std::error_code doRelayTransaction(const cryptonote::transaction_t& transaction);
+  void relayTransactionAsync(const transaction_t& transaction, const Callback& callback);
+  std::error_code doRelayTransaction(const transaction_t& transaction);
 
   void queryBlocksLiteAsync(std::vector<hash_t>& knownBlockIds, uint64_t timestamp, std::vector<BlockShortEntry>& newBlocks, uint32_t& startHeight,
           const Callback& callback);

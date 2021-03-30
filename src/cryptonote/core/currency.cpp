@@ -494,7 +494,7 @@ CurrencyBuilder::CurrencyBuilder(const std::string &path, config::config_t &conf
 
 transaction_t CurrencyBuilder::generateGenesisTransaction()
 {
-  cryptonote::transaction_t tx;
+  transaction_t tx;
   cryptonote::account_public_address_t ac = boost::value_initialized<cryptonote::account_public_address_t>();
   m_currency.constructMinerTx(0, 0, 0, 0, 0, ac, tx); // zero fee in genesis
   return tx;

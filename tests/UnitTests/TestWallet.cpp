@@ -1587,13 +1587,13 @@ class INodeNoRelay : public INodeTrivialRefreshStub {
 public:
   INodeNoRelay(TestBlockchainGenerator& generator) : INodeTrivialRefreshStub(generator) {}
 
-  virtual void relayTransaction(const cryptonote::transaction_t& transaction, const Callback& callback) override {
+  virtual void relayTransaction(const transaction_t& transaction, const Callback& callback) override {
     m_asyncCounter.addAsyncContext();
     std::thread task(&INodeNoRelay::doNoRelayTransaction, this, transaction, callback);
     task.detach();
   }
 
-  void doNoRelayTransaction(const cryptonote::transaction_t& transaction, const Callback& callback)
+  void doNoRelayTransaction(const transaction_t& transaction, const Callback& callback)
   {
     callback(std::error_code());
     m_asyncCounter.delAsyncContext();
@@ -1886,14 +1886,14 @@ TEST_F(WalletApi, walletGetsSyncProgressUpdatedEvent) {
 struct CatchTransactionNodeStub : public INodeTrivialRefreshStub {
   CatchTransactionNodeStub(TestBlockchainGenerator& generator): INodeTrivialRefreshStub(generator), caught(false) {}
 
-  virtual void relayTransaction(const cryptonote::transaction_t& incomingTransaction, const Callback& callback) override {
+  virtual void relayTransaction(const transaction_t& incomingTransaction, const Callback& callback) override {
     transaction = incomingTransaction;
     caught = true;
     INodeTrivialRefreshStub::relayTransaction(incomingTransaction, callback);
   }
 
   bool caught;
-  cryptonote::transaction_t transaction;
+  transaction_t transaction;
 };
 
 // TEST_F(WalletApi, createFusionTransactionCreatesValidFusionTransactionWithoutMixin) {
@@ -2012,7 +2012,7 @@ TEST_F(WalletApi, fusionManagerEstimateNullThreshold) {
   generateAndUnlockMoney();
 
   ASSERT_EQ(1, alice.getTransactionCount());
-  cryptonote::transaction_t tx = boost::value_initialized<cryptonote::transaction_t>();
+  transaction_t tx = boost::value_initialized<transaction_t>();
   ASSERT_TRUE(generator.getTransactionByHash(alice.getTransaction(0).hash, tx, false));
   ASSERT_FALSE(tx.outputs.empty());
 
@@ -2024,7 +2024,7 @@ TEST_F(WalletApi, DISABLED_fusionManagerEstimate) {
   generateAndUnlockMoney();
 
   ASSERT_EQ(1, alice.getTransactionCount());
-  cryptonote::transaction_t tx = boost::value_initialized<cryptonote::transaction_t>();
+  transaction_t tx = boost::value_initialized<transaction_t>();
   ASSERT_TRUE(generator.getTransactionByHash(alice.getTransaction(0).hash, tx, false));
   ASSERT_FALSE(tx.outputs.empty());
 

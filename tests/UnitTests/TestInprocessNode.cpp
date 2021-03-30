@@ -37,8 +37,8 @@ struct CallbackStatus {
 };
 
 namespace {
-cryptonote::transaction_t createTx(cryptonote::ITransactionReader& tx) {
-  cryptonote::transaction_t outTx;
+transaction_t createTx(cryptonote::ITransactionReader& tx) {
+  transaction_t outTx;
   BinaryArray::from(outTx, tx.getTransactionData());
   return outTx;
 }
@@ -235,7 +235,7 @@ TEST_F(InProcessNodeTests, relayTransactionUninitialized) {
   cryptonote::InProcessNode newNode(coreStub, protocolQueryStub);
 
   CallbackStatus status;
-  newNode.relayTransaction(cryptonote::transaction_t(), [&] (std::error_code ec) { status.setStatus(ec); });
+  newNode.relayTransaction(transaction_t(), [&] (std::error_code ec) { status.setStatus(ec); });
   ASSERT_TRUE(status.wait());
   ASSERT_NE(std::error_code(), status.getStatus());
 }
@@ -456,7 +456,7 @@ TEST_F(InProcessNodeTests, getTxMany) {
   std::vector<hash_t> transactionHashes;
   std::vector<cryptonote::transaction_details_t> actualTransactions;
 
-  std::vector<std::tuple<cryptonote::transaction_t, hash_t, uint64_t>> expectedTransactions;
+  std::vector<std::tuple<transaction_t, hash_t, uint64_t>> expectedTransactions;
 
   coreStub.set_blockchain_top(0, boost::value_initialized<hash_t>());
 
@@ -499,7 +499,7 @@ TEST_F(InProcessNodeTests, getTxMany) {
   ASSERT_EQ(transactionHashes.size(), actualTransactions.size());
   auto range1 = boost::combine(transactionHashes, actualTransactions);
   auto range = boost::combine(range1, expectedTransactions);
-  for (const boost::tuple<boost::tuple<hash_t, cryptonote::transaction_details_t>, std::tuple<cryptonote::transaction_t, hash_t, uint64_t>>& sameHeight : range) {
+  for (const boost::tuple<boost::tuple<hash_t, cryptonote::transaction_details_t>, std::tuple<transaction_t, hash_t, uint64_t>>& sameHeight : range) {
     hash_t expectedCryptoHash = cryptonote::BinaryArray::objectHash(std::get<0>(sameHeight.get<1>()));
     EXPECT_EQ(expectedCryptoHash, sameHeight.get<0>().get<0>());
     hash_t expectedHash = reinterpret_cast<const hash_t&>(expectedCryptoHash);
@@ -522,7 +522,7 @@ TEST_F(InProcessNodeTests, getTxFail) {
   std::vector<hash_t> transactionHashes;
   std::vector<cryptonote::transaction_details_t> actualTransactions;
 
-  std::vector<std::tuple<cryptonote::transaction_t, hash_t, uint64_t>> expectedTransactions;
+  std::vector<std::tuple<transaction_t, hash_t, uint64_t>> expectedTransactions;
 
   coreStub.set_blockchain_top(0, boost::value_initialized<hash_t>());
 

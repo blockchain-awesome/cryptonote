@@ -53,7 +53,7 @@ struct BinaryVariantTagGetter : boost::static_visitor<uint8_t>
   uint8_t operator()(const cryptonote::multi_signature_input_t) { return 0x3; }
   uint8_t operator()(const cryptonote::key_output_t) { return 0x2; }
   uint8_t operator()(const cryptonote::multi_signature_output_t) { return 0x3; }
-  uint8_t operator()(const cryptonote::transaction_t) { return 0xcc; }
+  uint8_t operator()(const transaction_t) { return 0xcc; }
   uint8_t operator()(const cryptonote::block_t) { return 0xbb; }
 };
 

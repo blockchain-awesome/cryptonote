@@ -33,35 +33,6 @@ namespace std {
 
 namespace cryptonote {
 
-template<typename K, typename V, typename hash_t>
-bool serialize(google::sparse_hash_map<K, V, hash_t>& value, Common::StringView name, cryptonote::ISerializer& serializer) {
-  return serializeMap(value, name, serializer, [&value](size_t size) { value.resize(size); });
-}
-
-template<typename K, typename hash_t>
-bool serialize(google::sparse_hash_set<K, hash_t>& value, Common::StringView name, cryptonote::ISerializer& serializer) {
-  size_t size = value.size();
-  if (!serializer.beginArray(size, name)) {
-    return false;
-  }
-
-  if (serializer.type() == ISerializer::OUTPUT) {
-    for (auto& key : value) {
-      serializer(const_cast<K&>(key), "");
-    }
-  } else {
-    value.resize(size);
-    while (size--) {
-      K key;
-      serializer(key, "");
-      value.insert(key);
-    }
-  }
-
-  serializer.endArray();
-  return true;
-}
-
 Blockchain::Blockchain(const Currency& currency, TxMemoryPool& tx_pool, ILogger& logger) :
 logger(logger, "Blockchain"),
 m_currency(currency),
@@ -84,11 +55,11 @@ bool Blockchain::removeObserver(IBlockchainStorageObserver* observer) {
   return m_observerManager.remove(observer);
 }
 
-bool Blockchain::checkTransactionInputs(const cryptonote::transaction_t& tx, block_info_t& maxUsedBlock) {
+bool Blockchain::checkTransactionInputs(const transaction_t& tx, block_info_t& maxUsedBlock) {
   return checkTransactionInputs(tx, maxUsedBlock.height, maxUsedBlock.id);
 }
 
-bool Blockchain::checkTransactionInputs(const cryptonote::transaction_t& tx, block_info_t& maxUsedBlock, block_info_t& lastFailed) {
+bool Blockchain::checkTransactionInputs(const transaction_t& tx, block_info_t& maxUsedBlock, block_info_t& lastFailed) {
 
   block_info_t tail;
 
@@ -126,7 +97,7 @@ bool Blockchain::checkTransactionInputs(const cryptonote::transaction_t& tx, blo
   return true;
 }
 
-bool Blockchain::haveSpentKeyImages(const cryptonote::transaction_t& tx) {
+bool Blockchain::haveSpentKeyImages(const transaction_t& tx) {
   return this->haveTransactionKeyImagesAsSpent(tx);
 }
 

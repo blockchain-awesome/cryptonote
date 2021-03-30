@@ -683,7 +683,7 @@ bool GenerateTransactionWithZeroFee::generate(std::vector<test_event_entry>& eve
   MAKE_GENESIS_BLOCK(events, blk_0, alice_account, ts_start);
   REWIND_BLOCKS(events, blk_0r, blk_0, alice_account);
 
-  cryptonote::transaction_t tx;
+  transaction_t tx;
   construct_tx_to_key(m_logger, events, tx, blk_0, alice_account, bob_account, MK_COINS(1), 0, 0);
 
   if (!m_keptByBlock) {
