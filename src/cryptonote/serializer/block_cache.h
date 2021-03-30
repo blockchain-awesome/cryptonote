@@ -5,8 +5,9 @@ using namespace serialize;
 
 class BlockCacheStream : public IStream
 {
-    bool serialize(std::ostream &o) const;
-    bool serialize(std::istream &i) const;
+
+    bool serialize(std::ostream &o);
+    bool serialize(std::istream &i);
     uint8_t version;
     hash_t m_lastBlockHash;
 };
