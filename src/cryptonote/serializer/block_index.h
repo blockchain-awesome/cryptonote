@@ -6,7 +6,7 @@
 
 using namespace serialize;
 
-class BlockIndexStream : public IStream
+class BlockIndexStream : public serialize::IStream
 {
     BlockIndexStream() : m_index(m_container.get<1>()) {}
 
@@ -21,4 +21,5 @@ class BlockIndexStream : public IStream
 
     ContainerT m_container;
     ContainerT::nth_index<1>::type &m_index;
+
 };

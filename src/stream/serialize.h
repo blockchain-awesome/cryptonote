@@ -53,17 +53,17 @@ namespace serialize
   {
     virtual bool serialize(std::ostream &o) = 0;
     virtual bool serialize(std::istream &i) = 0;
-    friend std::ostream &operator>>(std::ostream &o, IStream &value);
-    friend std::istream &operator<<(std::istream &o, IStream &value);
+    friend std::ostream &operator<<(std::ostream &o, IStream &value);
+    friend std::istream &operator>>(std::istream &o, IStream &value);
   };
 
-  std::ostream &operator>>(std::ostream &o, IStream &value)
+  std::ostream &operator<<(std::ostream &o, IStream &value)
   {
     value.serialize(o);
     return o;
   };
 
-  std::istream &operator<<(std::istream &i, IStream &value)
+  std::istream &operator>>(std::istream &i, IStream &value)
   {
     value.serialize(i);
     return i;
