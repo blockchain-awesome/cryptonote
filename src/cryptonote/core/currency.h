@@ -13,7 +13,6 @@
 #include "cryptonote/crypto/hash.h"
 #include "logging/LoggerRef.h"
 #include "key.h"
-#include "../structures/block.h"
 #include "difficulty.h"
 #include "coin/exports.h"
 #include "common/os.h"

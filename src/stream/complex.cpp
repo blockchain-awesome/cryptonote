@@ -1,4 +1,5 @@
 
+#include <vector>
 #include "complex.h"
 
 namespace serialize
@@ -10,7 +11,7 @@ namespace serialize
     {
       size_t size = v.length();
       varint(i, size);
-      bytes(i, (void *)&(*v.data()), size);
+      bytes(i, (char *)&(*v.data()), size);
       return i;
     }
 
@@ -22,7 +23,7 @@ namespace serialize
       {
         std::vector<uint8_t> temp;
         temp.resize(size);
-        bytes(o, &temp[0], size);
+        bytes(o, (char *)&temp[0], size);
         v.reserve(size);
         v.assign((char *)temp.data(), size);
       }

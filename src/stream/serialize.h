@@ -1,51 +1,75 @@
-#include "reader.h"
-#include "writer.h"
+#include <istream>
+#include <ostream>
 
 namespace serialize
 {
   template <typename T>
   std::istream &bytes(std::istream &i, T &v)
   {
-    Reader reader = Reader(i);
-    reader.read(static_cast<uint8_t *>(&v), sizeof(v));
+    i.read(static_cast<char *>(&v), sizeof(v));
     return i;
   }
 
-  std::istream &bytes(std::istream &i, void *v, const size_t len)
+  std::istream &bytes(std::istream &i, char *v, const size_t len)
   {
-    Reader reader = Reader(i);
-    reader.read(v, len);
+    i.read(v, len);
     return i;
   }
 
   template <typename T>
   std::ostream &bytes(std::ostream &o, const T &v)
   {
-    Writer writer = Writer(o);
-    writer.write(static_cast<uint8_t *>(&v), sizeof(v));
+    o.write(static_cast<char *>(&v), sizeof(v));
     return o;
   }
 
-  std::ostream &bytes(std::ostream &o, uint8_t *v, const size_t len)
+  std::ostream &bytes(std::ostream &o, const char *v, const size_t len)
   {
-    Writer writer = Writer(o);
-    writer.write(v, len);
+    o.write(v, len);
     return o;
   }
 
   template <typename T>
   std::istream &varint(std::istream &i, T &v)
   {
-    Reader reader = Reader(i);
-    reader.readVarint(v);
+    T temp = 0;
+    for (uint8_t shift = 0;; shift += 7)
+    {
+      uint8_t piece;
+      i.read((char *)(&piece), 1);
+      if (shift >= sizeof(temp) * 8 - 7 && piece >= 1 << (sizeof(temp) * 8 - shift))
+      {
+        throw std::runtime_error("readVarint, value overflow");
+      }
+
+      temp |= static_cast<size_t>(piece & 0x7f) << shift;
+      if ((piece & 0x80) == 0)
+      {
+        if (piece == 0 && shift != 0)
+        {
+          throw std::runtime_error("readVarint, invalid value representation");
+        }
+
+        break;
+      }
+    }
+
+    v = temp;
     return i;
   }
 
   template <typename T>
-  std::ostream &varint(std::ostream &o, T &v)
+  std::ostream &varint(std::ostream &o, T &t)
   {
-    Writer writer = Writer(o);
-    writer.writeVarint(v);
+    uint64_t v = t;
+    while (v >= 0x80)
+    {
+      uint8_t tag = (static_cast<char>(v) & 0x7f) | 0x80;
+      o << tag;
+      v >>= 7;
+    }
+    uint8_t tag = static_cast<char>(v);
+    o << tag;
     return o;
   }
 
