@@ -2,18 +2,10 @@
 
 #include <serialization/ISerializer.h>
 
+#include "cryptonote/types.h"
+
 namespace cryptonote
 {
-struct transaction_index_t
-{
-    uint32_t block;
-    uint16_t transaction;
-
-    void serialize(ISerializer &s)
-    {
-        s(block, "block");
-        s(transaction, "tx");
-    }
-};
+    void serialize(transaction_index_t &idx, ISerializer &s);
 
 } // namespace cryptonote
