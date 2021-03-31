@@ -10,7 +10,16 @@ bool BlockCacheStream::serialize(std::ostream &o)
   o << version;
   o << m_lastBlockHash;
   o << index;
+  o << map;
+  o << m_spent_keys;
 }
+
 bool BlockCacheStream::serialize(std::istream &i)
 {
+  i >> version;
+  i >> m_lastBlockHash;
+  i >> index;
+  i >> map;
+  i >> m_spent_keys;
+
 }
