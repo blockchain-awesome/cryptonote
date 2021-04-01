@@ -9,7 +9,6 @@
 #include <numeric>
 #include <tuple>
 
-#include "common/StringTools.h"
 #include "cryptonote/crypto/hash.h"
 #include "cryptonote/core/currency.h"
 #include "cryptonote/core/transaction/TransactionApi.h"
@@ -1265,7 +1264,7 @@ std::string removeTxPublicKey(const std::string& txExtra) {
 std::string createExtraNonce(const std::string& nonce) {
   cryptonote::TransactionExtra txExtra;
   cryptonote::transaction_extra_nonce_t extraNonce;
-  extraNonce.nonce = array::fromString(nonce);
+  extraNonce.nonce = IBinary::from(nonce);
   txExtra.set(extraNonce);
   auto vec = txExtra.serialize();
   return std::string(vec.begin(), vec.end());

@@ -18,7 +18,6 @@
 
 #include "cryptonote/crypto/crypto.h"
 #include "command_line/options.h"
-#include "common/StringTools.h"
 #include "serialization/SerializationTools.h"
 
 #include "CryptoNoteFormatUtils.h"
@@ -144,7 +143,7 @@ namespace cryptonote
   bool miner::init(const MinerConfig& config) {
     if (!config.extraMessages.empty()) {
       std::string buff;
-      if (!stream::load(config.extraMessages, buff)) {
+      if (!binary::load(config.extraMessages, buff)) {
         logger(ERROR, BRIGHT_RED) << "Failed to load file with extra messages: " << config.extraMessages; 
         return false; 
       }
@@ -155,7 +154,7 @@ namespace cryptonote
         boost::algorithm::trim(extra_vec[i]);
         if(!extra_vec[i].size())
           continue;
-        binary_array_t ba = array::fromString(Common::base64Decode(extra_vec[i]));
+        binary_array_t ba = IBinary::from(::string::Base64::decode(extra_vec[i]));
         if(buff != "0")
           m_extra_messages[i] = ba;
       }
@@ -163,7 +162,7 @@ namespace cryptonote
       m_config = boost::value_initialized<decltype(m_config)>();
 
       std::string filebuf;
-      if (stream::load(os::getCoinFile(std::string(config::get().filenames.miner)), filebuf)) {
+      if (binary::load(os::getCoinFile(std::string(config::get().filenames.miner)), filebuf)) {
         loadFromJson(m_config, filebuf);
       }
 
@@ -388,7 +387,7 @@ namespace cryptonote
           --m_config.current_extra_message_index;
         } else {
           //success update, lets update config
-          stream::save(os::getCoinFile(std::string(config::get().filenames.miner)), storeToJson(m_config));
+          binary::save(os::getCoinFile(std::string(config::get().filenames.miner)), storeToJson(m_config));
         }
       }
 

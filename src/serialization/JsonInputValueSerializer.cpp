@@ -7,7 +7,7 @@
 #include <cassert>
 #include <stdexcept>
 
-#include "common/StringTools.h"
+#include "common/hex.h"
 
 using Common::JsonValue;
 using namespace cryptonote;
@@ -138,7 +138,7 @@ bool JsonInputValueSerializer::binary(void* value, size_t size, Common::StringVi
     return false;
   }
 
-  hex::fromString(ptr->getString(), value, size);
+  hex::from(ptr->getString(), value, size);
   return true;
 }
 
@@ -149,7 +149,7 @@ bool JsonInputValueSerializer::binary(std::string& value, Common::StringView nam
   }
 
   std::string valueHex = ptr->getString();
-  value = array::toString(hex::fromString(valueHex));
+  value = IBinary::to(hex::from(valueHex));
 
   return true;
 }

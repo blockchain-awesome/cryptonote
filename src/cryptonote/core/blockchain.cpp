@@ -9,6 +9,7 @@
 #include <cstdio>
 #include <boost/foreach.hpp>
 #include "common/math.hpp"
+#include "common/str.h"
 #include "common/ShuffleGenerator.h"
 #include "stream/reader.h"
 #include "stream/writer.h"
@@ -209,7 +210,7 @@ bool Blockchain::init(bool load_existing) {
 
   logger(INFO, BRIGHT_GREEN)
     << "Blockchain initialized. last block: " << m_blocks.size() - 1 << ", "
-    << Common::timeIntervalToString(timestamp_diff)
+    << ::string::Time::ago(timestamp_diff)
     << " time ago, current difficulty: " << getDifficultyForNextBlock();
   return true;
 }
@@ -676,7 +677,7 @@ bool Blockchain::handle_alternative_block(const block_t& b, const hash_t& id, bl
   auto block_height = get_block_height(b);
   if (block_height == 0) {
     logger(ERROR, BRIGHT_RED) <<
-      "Block with id: " << hex::podToString(id) << " (as alternative) have wrong miner transaction";
+      "Block with id: " << hex::podTo(id) << " (as alternative) have wrong miner transaction";
     bvc.m_verifivation_failed = true;
     return false;
   }
@@ -768,7 +769,7 @@ bool Blockchain::handle_alternative_block(const block_t& b, const hash_t& id, bl
 
     if (!prevalidate_miner_transaction(b, bei.height)) {
       logger(INFO, BRIGHT_RED) <<
-        "Block with id: " << hex::podToString(id) << " (as alternative) have wrong miner transaction.";
+        "Block with id: " << hex::podTo(id) << " (as alternative) have wrong miner transaction.";
       bvc.m_verifivation_failed = true;
       return false;
     }
@@ -877,10 +878,10 @@ bool Blockchain::handleGetObjects(NOTIFY_REQUEST_GET_OBJECTS::request& arg, NOTI
     rsp.blocks.push_back(block_complete_entry_t());
     block_complete_entry_t& e = rsp.blocks.back();
     //pack block
-    e.block = BinaryArray::toString(BinaryArray::to(bl));
+    e.block = IBinary::to(BinaryArray::to(bl));
     //pack transactions
     for (transaction_t& tx : txs) {
-      e.txs.push_back(BinaryArray::toString(BinaryArray::to(tx)));
+      e.txs.push_back(IBinary::to(BinaryArray::to(tx)));
     }
   }
 
@@ -889,7 +890,7 @@ bool Blockchain::handleGetObjects(NOTIFY_REQUEST_GET_OBJECTS::request& arg, NOTI
   getTransactions(arg.txs, txs, rsp.missed_ids);
   //pack aside transactions
   for (const auto& tx : txs) {
-    rsp.txs.push_back(BinaryArray::toString(BinaryArray::to(tx)));
+    rsp.txs.push_back(IBinary::to(BinaryArray::to(tx)));
   }
 
   return true;
@@ -1040,7 +1041,7 @@ void Blockchain::print_blockchain_outs(const std::string& file) {
     }
   }
 
-  if (stream::save(file, ss.str())) {
+  if (binary::save(file, ss.str())) {
     logger(INFO, BRIGHT_WHITE) <<
       "Current outputs index writen to file: " << file;
   } else {
@@ -1164,7 +1165,7 @@ bool Blockchain::checkTransactionInputs(const transaction_t& tx, const hash_t& t
 
       if (have_tx_keyimg_as_spent(in_to_key.keyImage)) {
         logger(DEBUGGING) <<
-          "Key image already spent in blockchain: " << hex::podToString(in_to_key.keyImage);
+          "Key image already spent in blockchain: " << hex::podTo(in_to_key.keyImage);
         return false;
       }
 

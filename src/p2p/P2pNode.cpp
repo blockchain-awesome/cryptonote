@@ -283,7 +283,7 @@ bool P2pNode::makeNewConnectionFromPeerlist(const PeerlistManager::Peerlist& pee
     }
 
     logger(DEBUGGING) << "Selected peer: [" << peer.id << " " << peer.adr << "] last_seen: " <<
-      (peer.last_seen ? Common::timeIntervalToString(time(NULL) - peer.last_seen) : "never");
+      (peer.last_seen ? ::string::Time::ago(time(NULL) - peer.last_seen) : "never");
 
     auto conn = tryToConnectPeer(peer.adr);
     if (conn.get()) {
@@ -353,7 +353,7 @@ P2pNode::ContextPtr P2pNode::tryToConnectPeer(const network_address_t& address) 
 
     doWithTimeoutAndThrow(m_dispatcher, m_cfg.getConnectTimeout(), [&] {
       tcpConnection = connector.connect(
-        Ipv4Address(Common::ipAddressToString(address.ip)),
+        Ipv4Address(::string::IPv4::to(address.ip)),
         static_cast<uint16_t>(address.port));
     });
 
@@ -495,7 +495,7 @@ void P2pNode::tryPing(P2pContext& ctx) {
     TcpConnection connection;
 
     doWithTimeoutAndThrow(m_dispatcher, m_cfg.getConnectTimeout(), [&] {
-      connection = connector.connect(Ipv4Address(Common::ipAddressToString(peerAddress.ip)), static_cast<uint16_t>(peerAddress.port));
+      connection = connector.connect(Ipv4Address(::string::IPv4::to(peerAddress.ip)), static_cast<uint16_t>(peerAddress.port));
     });
 
     doWithTimeoutAndThrow(m_dispatcher, m_cfg.getHandshakeTimeout(), [&]  {

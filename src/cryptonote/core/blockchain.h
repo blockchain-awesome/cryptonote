@@ -133,7 +133,7 @@ namespace cryptonote {
         if (!m_blockIndex.getBlockHeight(bl_id, height)) {
           missed_bs.push_back(bl_id);
         } else {
-          if (!(height < m_blocks.size())) { logger(Logging::ERROR, Logging::BRIGHT_RED) << "Internal error: bl_id=" << hex::podToString(bl_id)
+          if (!(height < m_blocks.size())) { logger(Logging::ERROR, Logging::BRIGHT_RED) << "Internal error: bl_id=" << hex::podTo(bl_id)
             << " have index record with offset=" << height << ", bigger then m_blocks.size()=" << m_blocks.size(); return false; }
             blocks.push_back(m_blocks[height].bl);
         }
@@ -285,7 +285,7 @@ namespace cryptonote {
       }
 
       //auto tx_it = m_transactionMap.find(amount_outs_vec[i].first);
-      //if (!(tx_it != m_transactionMap.end())) { logger(ERROR, BRIGHT_RED) << "Wrong transaction id in output indexes: " << hex::podToString(amount_outs_vec[i].first); return false; }
+      //if (!(tx_it != m_transactionMap.end())) { logger(ERROR, BRIGHT_RED) << "Wrong transaction id in output indexes: " << hex::podTo(amount_outs_vec[i].first); return false; }
 
       const transaction_entry_t& tx = transactionByIndex(amount_outs_vec[i].first);
 

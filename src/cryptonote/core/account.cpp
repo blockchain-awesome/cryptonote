@@ -6,7 +6,6 @@
 // #include "cryptonote/core/transaction/serializer/basics.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "common/base58.h"
-#include "common/StringTools.h"
 #include "cryptonote/structures/array.hpp"
 
 namespace cryptonote
@@ -51,7 +50,7 @@ std::string Account::getAddress(const account_public_address_t &adr, uint64_t pr
   binary_array_t ba;
   bool r = BinaryArray::to(adr, ba);
   assert(r);
-  return tools::base58::encode_addr(prefix, BinaryArray::toString(ba));
+  return tools::base58::encode_addr(prefix, IBinary::to(ba));
 }
 
 std::string Account::toAddress()
@@ -59,7 +58,7 @@ std::string Account::toAddress()
   binary_array_t ba;
   bool r = BinaryArray::to(m_keys.address, ba);
   assert(r);
-  return tools::base58::encode_addr(m_publicAddressBase58Prefix, BinaryArray::toString(ba));
+  return tools::base58::encode_addr(m_publicAddressBase58Prefix, IBinary::to(ba));
 }
 
 bool Account::parseAddress(uint64_t &prefix, account_public_address_t &adr, const std::string &str)
@@ -67,7 +66,7 @@ bool Account::parseAddress(uint64_t &prefix, account_public_address_t &adr, cons
   std::string data;
 
   return tools::base58::decode_addr(str, prefix, data) &&
-         BinaryArray::from(adr, array::fromString(data)) &&
+         BinaryArray::from(adr, IBinary::from(data)) &&
          // ::serialization::parse_binary(data, adr) &&
          check_key((uint8_t *)&adr.spendPublicKey) &&
          check_key((uint8_t *)&adr.viewPublicKey);

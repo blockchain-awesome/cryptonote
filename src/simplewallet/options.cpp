@@ -1,7 +1,6 @@
 #include "options.h"
 
 #include  <fstream>
-#include "common/stream.h"
 #include "wallet_legacy/WalletHelper.h"
 #include "wallet/LegacyKeysImporter.h"
 
@@ -40,7 +39,7 @@ bool parseUrlAddress(const std::string& url, std::string& address, uint16_t& por
 
   if (addrEnd != std::string::npos) {
     auto portEnd = url.find('/', addrEnd);
-    port = stream::fromString<uint16_t>(url.substr(
+    port =   binary::is::from<uint16_t>(url.substr(
       addrEnd + 1, portEnd == std::string::npos ? std::string::npos : portEnd - addrEnd - 1));
   } else {
     addrEnd = url.find('/');

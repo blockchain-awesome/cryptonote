@@ -5,7 +5,7 @@
 #include "JsonOutputStreamSerializer.h"
 #include <cassert>
 #include <stdexcept>
-#include "common/StringTools.h"
+#include "common/hex.h"
 
 using Common::JsonValue;
 using namespace cryptonote;
@@ -122,7 +122,7 @@ bool JsonOutputStreamSerializer::operator()(bool& value, Common::StringView name
 }
 
 bool JsonOutputStreamSerializer::binary(void* value, size_t size, Common::StringView name) {
-  std::string hex = hex::toString(value, size);
+  std::string hex = hex::to(value, size);
   return (*this)(hex, name);
 }
 

@@ -6,7 +6,6 @@
 
 #include <fstream>
 
-#include <common/StringTools.h>
 #include <system/Dispatcher.h>
 #include <system/Timer.h>
 
@@ -35,12 +34,12 @@ namespace cryptonote {
     if (s.type() == ISerializer::INPUT) {
       std::string blockBinary;
       if (s.binary(blockBinary, "block")) {
-        BinaryArray::from(v.block, array::fromString(blockBinary));
+        BinaryArray::from(v.block, IBinary::from(blockBinary));
         v.hasBlock = true;
       }
     } else {
       if (v.hasBlock) {
-        std::string blockBinary(BinaryArray::toString(BinaryArray::to(v.block)));
+        std::string blockBinary(IBinary::to(BinaryArray::to(v.block)));
         s.binary(blockBinary, "block");
       }
     }
@@ -351,7 +350,7 @@ TEST_F(NodeTest, observerHeightNotifications) {
     uint32_t newLocalHeight = 0;
 
     auto blockData = BinaryArray::to(extraBlocks.blocks.begin()->block);
-    ASSERT_TRUE(daemon.submitBlock(hex::toString(blockData.data(), blockData.size())));
+    ASSERT_TRUE(daemon.submitBlock(hex::to(blockData.data(), blockData.size())));
 
     ASSERT_TRUE(observer.m_localHeight.waitFor(timeout, newLocalHeight));
     ASSERT_TRUE(observer.m_knownHeight.waitFor(timeout, newKnownHeight));

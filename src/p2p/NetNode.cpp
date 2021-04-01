@@ -91,7 +91,7 @@ void addPortMapping(Logging::LoggerRef& logger, uint32_t port) {
 }
 
 bool parse_peer_from_string(network_address_t& pe, const std::string& node_addr) {
-  return Common::parseIpAddressAndPort(pe.ip, pe.port, node_addr);
+  return parseSocket(node_addr, pe);
 }
 
 }
@@ -107,7 +107,7 @@ namespace cryptonote
       std::stringstream ss;
       ss << std::setfill('0') << std::setw(8) << std::hex << std::noshowbase;
       for (const auto& pe : pl) {
-        ss << pe.id << "\t" << pe.adr << " \tlast_seen: " << Common::timeIntervalToString(now_time - pe.last_seen) << std::endl;
+        ss << pe.id << "\t" << pe.adr << " \tlast_seen: " << ::string::Time::ago(now_time - pe.last_seen) << std::endl;
       }
       return ss.str();
     }
@@ -409,7 +409,7 @@ namespace cryptonote
     std::string host = addr.substr(0, pos);
 
     try {
-      uint32_t port = stream::fromString<uint32_t>(addr.substr(pos + 1));
+      uint32_t port = binary::is::from<uint32_t>(addr.substr(pos + 1));
 
       System::Ipv4Resolver resolver(m_dispatcher);
       auto addr = resolver.resolve(host);
@@ -459,7 +459,7 @@ namespace cryptonote
 
     //try to bind
     logger(INFO) << "Binding on " << m_bind_ip << ":" << m_port;
-    m_listeningPort = stream::fromString<uint16_t>(m_port);
+    m_listeningPort = binary::is::from<uint16_t>(m_port);
 
     m_listener = System::TcpListener(m_dispatcher, System::Ipv4Address(m_bind_ip), static_cast<uint16_t>(m_listeningPort));
 
@@ -687,7 +687,7 @@ namespace cryptonote
   bool NodeServer::try_to_connect_and_handshake_with_new_peer(const network_address_t& na, bool just_take_peerlist, uint64_t last_seen_stamp, bool white)  {
 
     logger(DEBUGGING) << "Connecting to " << na << " (white=" << white << ", last_seen: "
-        << (last_seen_stamp ? Common::timeIntervalToString(time(NULL) - last_seen_stamp) : "never") << ")...";
+        << (last_seen_stamp ? ::string::Time::ago(time(NULL) - last_seen_stamp) : "never") << ")...";
 
     try {
       System::TcpConnection connection;
@@ -695,7 +695,7 @@ namespace cryptonote
       try {
         System::Context<System::TcpConnection> connectionContext(m_dispatcher, [&] {
           System::TcpConnector connector(m_dispatcher);
-          return connector.connect(System::Ipv4Address(Common::ipAddressToString(na.ip)), static_cast<uint16_t>(na.port));
+          return connector.connect(System::Ipv4Address(::string::IPv4::to(na.ip)), static_cast<uint16_t>(na.port));
         });
 
         System::Context<> timeoutContext(m_dispatcher, [&] {
@@ -805,7 +805,7 @@ namespace cryptonote
         continue;
 
       logger(DEBUGGING) << "Selected peer: " << pe.id << " " << pe.adr << " [white=" << use_white_list
-                    << "] last_seen: " << (pe.last_seen ? Common::timeIntervalToString(time(NULL) - pe.last_seen) : "never");
+                    << "] last_seen: " << (pe.last_seen ? ::string::Time::ago(time(NULL) - pe.last_seen) : "never");
       
       if(!try_to_connect_and_handshake_with_new_peer(pe.adr, false, pe.last_seen, use_white_list))
         continue;
@@ -983,8 +983,8 @@ namespace cryptonote
     public_key_t pk;
     const config::config_t &conf = config::get();
 
-    hex::podFromString(conf.net.p2p_stat_trusted_pub_key, pk);
-    // hex::podFromString(cryptonote::P2P_STAT_TRUSTED_PUB_KEY, pk);
+    hex::podFrom(conf.net.p2p_stat_trusted_pub_key, pk);
+    // hex::podFrom(cryptonote::P2P_STAT_TRUSTED_PUB_KEY, pk);
     hash_t h = get_proof_of_trust_t_hash(tr);
     if (!check_signature((const uint8_t *)&h, (const uint8_t *)&pk, (const uint8_t *)&tr.sign)) {
       logger(ERROR) << "check_trust failed: sign check failed";
@@ -1079,7 +1079,7 @@ namespace cryptonote
       return false;
     }
 
-    auto ip = Common::ipAddressToString(actual_ip);
+    auto ip = ::string::IPv4::to(actual_ip);
     auto port = node_data.my_port;
     auto peerId = node_data.peer_id;
 
@@ -1174,7 +1174,7 @@ namespace cryptonote
           pe.id = peer_id_l;
           m_peerlist.append_with_peer_white(pe);
 
-          logger(Logging::TRACE) << context << "BACK PING SUCCESS, " << Common::ipAddressToString(context.m_remote_ip) << ":" << port_l << " added to whitelist";
+          logger(Logging::TRACE) << context << "BACK PING SUCCESS, " << ::string::IPv4::to(context.m_remote_ip) << ":" << port_l << " added to whitelist";
       }
     }
 
@@ -1218,7 +1218,7 @@ namespace cryptonote
     std::stringstream ss;
 
     for (const auto& cntxt : m_connections) {
-      ss << Common::ipAddressToString(cntxt.second.m_remote_ip) << ":" << cntxt.second.m_remote_port
+      ss << ::string::IPv4::to(cntxt.second.m_remote_ip) << ":" << cntxt.second.m_remote_port
         << " \t\tpeer_id " << cntxt.second.peerId
         << " \t\tconn_id " << cntxt.second.m_connection_id << (cntxt.second.m_is_income ? " INC" : " OUT")
         << std::endl;

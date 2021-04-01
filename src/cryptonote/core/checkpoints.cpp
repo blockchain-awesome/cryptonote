@@ -3,7 +3,6 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "checkpoints.h"
-#include "common/StringTools.h"
 
 using namespace Logging;
 
@@ -14,7 +13,7 @@ Checkpoints::Checkpoints(Logging::ILogger &log) : logger(log, "checkpoints") {}
 bool Checkpoints::add(uint32_t height, const std::string &hash_str) {
   hash_t h = NULL_HASH;
 
-  if (!hex::podFromString(hash_str, h)) {
+  if (!hex::podFrom(hash_str, h)) {
     logger(ERROR) << "WRONG HASH IN CHECKPOINTS!!!";
     return false;
   }

@@ -10,7 +10,6 @@
 #include <boost/lexical_cast.hpp>
 #include "common/base58.h"
 #include "common/int-util.h"
-#include "common/StringTools.h"
 #include "cryptonote/structures/block.h"
 
 #include "account.h"
@@ -400,7 +399,7 @@ bool Currency::parseAmount(const std::string &str, uint64_t &amount) const
     strAmount.append(m_numberOfDecimalPlaces - fractionSize, '0');
   }
 
-  return stream::fromString(strAmount, amount);
+  return binary::is::from(strAmount, amount);
 }
 
 difficulty_t Currency::nextDifficulty(std::vector<uint64_t> timestamps,

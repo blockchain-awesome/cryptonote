@@ -6,7 +6,6 @@
 
 #include <set>
 #include <logging/LoggerRef.h>
-#include <common/varint.h>
 
 #include "serialization/BinaryOutputStreamSerializer.h"
 #include "serialization/BinaryInputStreamSerializer.h"
@@ -148,8 +147,8 @@ bool constructTransaction(
     //check that derived key is equal with real output key
     if (!(in_ephemeral.publicKey == src_entr.outputs[src_entr.realOutput].second)) {
       logger(ERROR) << "derived public key mismatch with output public key! " << ENDL << "derived_key:"
-        << hex::podToString(in_ephemeral.publicKey) << ENDL << "real output_public_key:"
-        << hex::podToString(src_entr.outputs[src_entr.realOutput].second);
+        << hex::podTo(in_ephemeral.publicKey) << ENDL << "real output_public_key:"
+        << hex::podTo(src_entr.outputs[src_entr.realOutput].second);
       return false;
     }
 
@@ -377,7 +376,7 @@ uint64_t get_outs_money_amount(const transaction_t& tx) {
 }
 
 std::string short_hash_str(const hash_t& h) {
-  std::string res = hex::podToString(h);
+  std::string res = hex::podTo(h);
 
   if (res.size() == 64) {
     auto erased_pos = res.erase(8, 48);

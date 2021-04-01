@@ -5,7 +5,6 @@
 #include <logging/LoggerManager.h>
 #include "NodeRpcProxy/NodeRpcProxy.h"
 #include "common/SignalHandler.h"
-#include "common/StringTools.h"
 
 using namespace Common;
 using namespace Logging;

@@ -11,6 +11,7 @@
 #include <string>
 
 #include "hash.h"
+#include "crypto/types.h"
 
 namespace crypto
 {
@@ -20,24 +21,6 @@ namespace crypto
     void chacha8(const void *data, size_t length, const uint8_t *key, const uint8_t *iv, char *cipher);
 #if defined(__cplusplus)
   }
-
-#pragma pack(push, 1)
-  struct chacha_key_t
-  {
-    uint8_t data[CHACHA_KEY_SIZE];
-
-    ~chacha_key_t()
-    {
-      memset(data, 0, sizeof(data));
-    }
-  };
-
-  // MS VC 2012 doesn't interpret `class chacha_iv_t` as POD in spite of [9.0.10], so it is a struct
-  struct chacha_iv_t
-  {
-    uint8_t data[CHACHA_IV_SIZE];
-  };
-#pragma pack(pop)
 
   static_assert(sizeof(chacha_key_t) == CHACHA_KEY_SIZE && sizeof(chacha_iv_t) == CHACHA_IV_SIZE, "Invalid structure size");
 
@@ -52,7 +35,7 @@ namespace crypto
     hash_t pwd_hash;
     cn_slow_hash(password.data(), password.size(), (char *)&pwd_hash, 0, 0);
     memcpy(key.data, &pwd_hash, sizeof(key.data));
-    memset(&pwd_hash, 0, sizeof(pwd_hash));
+    // memset(&pwd_hash, 0, sizeof(pwd_hash));
   }
 }
 

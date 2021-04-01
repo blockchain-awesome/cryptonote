@@ -1,7 +1,7 @@
 version: 1.0.{build}
 image: 
-- Visual Studio 2017
-- ubuntu
+# - Visual Studio 2017
+- ubuntu2004
 - ubuntu1804
 platform:
   - x64
@@ -9,7 +9,7 @@ install:
   - cmd: set QTDIR=C:\Qt\5.11\msvc2017_64
   - cmd: set BOOST_ROOT=C:\Libraries\boost_1_67_0
   - cmd: set PATH=%PATH%;%QTDIR%\bin
-  - sh: sudo apt update && sudo apt install -y build-essential curl cmake libboost-all-dev libssl-dev libsodium-dev python-pip python-dev lcov git mercurial
+  - sh: sudo apt update && sudo apt install -y build-essential curl cmake libboost-all-dev libssl-dev libsodium-dev lcov git mercurial
 build_script:
 - sh: mkdir -p build && cd build && cmake .. -DCMAKE_BUILD_TYPE=Debug -DENABLE_GCOV=1 && make
 

@@ -92,7 +92,7 @@ bool BinaryArray::objectHash(const T &object, hash_t &hash)
     return false;
   }
 
-  hash = BinaryArray::getHash(ba);
+  hash = BinaryArray::hash(ba);
   return true;
 }
 
@@ -108,7 +108,7 @@ bool BinaryArray::objectHash(const T &object, hash_t &hash, size_t &size)
   }
 
   size = ba.size();
-  hash = BinaryArray::getHash(ba);
+  hash = BinaryArray::hash(ba);
   return true;
 }
 

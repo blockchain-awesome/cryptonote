@@ -7,7 +7,6 @@
 #include <sstream>
 #include <unordered_set>
 #include "../CryptoNoteConfig.h"
-#include "../common/StringTools.h"
 #include "../cryptonote/crypto/crypto.h"
 #include "../cryptonote/protocol/definitions.h"
 #include "../cryptonote/core/locker.hpp"
@@ -15,7 +14,7 @@
 #include "../rpc/CoreRpcServerCommandsDefinitions.h"
 #include "CryptoNoteFormatUtils.h"
 #include "CryptoNoteTools.h"
-#include "CryptoNoteStatInfo.h"
+#include "../serializer/CryptoNoteStatInfo.h"
 #include "Miner.h"
 #include "transaction/TransactionExtra.h"
 #include "IBlock.h"
@@ -205,7 +204,7 @@ bool core::get_stat_info(CoreStateInfo& st_inf) {
   st_inf.alternative_blocks = m_blockchain.getAlternativeBlocksCount();
   st_inf.blockchain_height = m_blockchain.getHeight();
   st_inf.tx_pool_size = m_mempool.get_transactions_count();
-  st_inf.top_block_id_str = hex::podToString(m_blockchain.getTailId());
+  st_inf.top_block_id_str = hex::podTo(m_blockchain.getTailId());
   return true;
 }
 
@@ -510,9 +509,9 @@ bool core::handle_incoming_block(const block_t& b, block_verification_context_t&
       binary_array_t blockBa;
       bool r = BinaryArray::to(b, blockBa);
       if (!(r)) { logger(ERROR, BRIGHT_RED) << "failed to serialize block"; return false; }
-      arg.b.block = BinaryArray::toString(blockBa);
+      arg.b.block = IBinary::to(blockBa);
       for (auto& tx : txs) {
-        arg.b.txs.push_back(BinaryArray::toString(BinaryArray::to(tx)));
+        arg.b.txs.push_back(IBinary::to(BinaryArray::to(tx)));
       }
 
       m_pprotocol->relay_block(arg);
@@ -676,9 +675,9 @@ bool core::queryBlocks(const std::vector<hash_t>& knownBlockIds, uint64_t timest
 
       // fill data
       block_complete_entry_t& completeEntry = item;
-      completeEntry.block = BinaryArray::toString(BinaryArray::to(b));
+      completeEntry.block = IBinary::to(BinaryArray::to(b));
       for (auto& tx : txs) {
-        completeEntry.txs.push_back(BinaryArray::toString(BinaryArray::to(tx)));
+        completeEntry.txs.push_back(IBinary::to(BinaryArray::to(tx)));
       }
     }
 
@@ -761,7 +760,7 @@ bool core::queryBlocksLite(const std::vector<hash_t>& knownBlockIds, uint64_t ti
       std::list<hash_t> missedTxs;
       m_blockchain.getTransactions(b.transactionHashes, txs, missedTxs);
 
-      item.block = BinaryArray::toString(BinaryArray::to(b));
+      item.block = IBinary::to(BinaryArray::to(b));
 
       for (const auto& tx: txs) {
         transaction_prefix_info_t info;

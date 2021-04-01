@@ -11,7 +11,6 @@
 #include "crypto.h"
 
 #include <boost/variant.hpp>
-#include "serialization/ISerializer.h"
 
 using namespace crypto;
 

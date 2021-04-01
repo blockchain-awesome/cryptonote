@@ -7,8 +7,6 @@
 #include <vector>
 #include <system_error>
 
-#include "common/StringTools.h"
-
 #include "cryptonote/core/currency.h"
 #include "cryptonote/core/account.h"
 #include "cryptonote/structures/array.hpp"
@@ -44,11 +42,11 @@ void loadKeysFromFile(const std::string& filename, const std::string& password, 
   keys_file_data keys_file_data;
   std::string buf;
 
-  if (!stream::load(filename, buf)) {
+  if (!binary::load(filename, buf)) {
     throw std::system_error(make_error_code(cryptonote::error::INTERNAL_WALLET_ERROR), "failed to load \"" + filename + '\"');
   }
 
-  if (!cryptonote::BinaryArray::from(keys_file_data, array::fromString(buf))) {
+  if (!cryptonote::BinaryArray::from(keys_file_data, IBinary::from(buf))) {
     throw std::system_error(make_error_code(cryptonote::error::INTERNAL_WALLET_ERROR), "failed to deserialize \"" + filename + '\"');
   }
 

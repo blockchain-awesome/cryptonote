@@ -1,10 +1,8 @@
-#include "common/varint.h"
-#include "common/StringTools.h"
+#include "common/binary.h"
 #include "block.h"
 #include "array.hpp"
 #include <boost/utility/value_init.hpp>
 #include "config/common.h"
-#include "common/StringTools.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include <boost/system/system_error.hpp>
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
@@ -40,7 +38,8 @@ bool Block::getBlob(const block_t& b, binary_array_t& ba) {
 
   hash_t treeRootHash = get_tx_tree_hash(b);
   ba.insert(ba.end(), treeRootHash.data, treeRootHash.data + 32);
-  auto transactionCount = array::fromString(varint::get(b.transactionHashes.size() + 1));
+  size_t size = b.transactionHashes.size() + 1;
+  auto transactionCount = IBinary::from(fromVarint(size));
   ba.insert(ba.end(), transactionCount.begin(), transactionCount.end());
   return true;
 }
@@ -77,7 +76,7 @@ block_t Block::genesis(config::config_t &conf)
   binary_array_t minerTxBlob;
 
   bool r =
-      hex::fromString(genesisCoinbaseTxHex, minerTxBlob) &&
+      hex::from(genesisCoinbaseTxHex, minerTxBlob) &&
       BinaryArray::from(block.baseTransaction, minerTxBlob);
 
   if (!r)

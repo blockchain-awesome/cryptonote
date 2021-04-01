@@ -6,7 +6,6 @@
 
 #include <future>
 
-#include <common/StringTools.h>
 #include <logging/ConsoleLogger.h>
 
 #include "cryptonote/core/core.h"
@@ -26,7 +25,7 @@ namespace Tests {
 
 namespace {
 bool parse_peer_from_string(network_address_t &pe, const std::string &node_addr) {
-  return ::Common::parseIpAddressAndPort(pe.ip, pe.port, node_addr);
+  return ::cryptonote::parseSocket(node_addr, pe);
 }
 }
 
@@ -154,7 +153,7 @@ bool InProcTestNode::getBlockTemplate(const std::string &minerAddress, cryptonot
 
 bool InProcTestNode::submitBlock(const std::string& block) {
   block_verification_context_t bvc = boost::value_initialized<block_verification_context_t>();
-  core->handle_incoming_block_blob(hex::fromString(block), bvc, true, true);
+  core->handle_incoming_block_blob(hex::from(block), bvc, true, true);
   return bvc.m_added_to_main_chain;
 }
 

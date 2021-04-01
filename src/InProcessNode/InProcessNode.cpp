@@ -9,7 +9,6 @@
 #include <cryptonote/core/transaction/TransactionApi.h>
 
 #include "CryptoNoteConfig.h"
-#include "common/StringTools.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/core/IBlock.h"
 #include "cryptonote/core/VerificationContext.h"
@@ -150,11 +149,11 @@ std::error_code InProcessNode::doGetNewBlocks(std::vector<hash_t>&& knownBlockId
       assert(completeBlock != nullptr);
 
       cryptonote::block_complete_entry_t be;
-      be.block = BinaryArray::toString(BinaryArray::to(completeBlock->getBlock()));
+      be.block = IBinary::to(BinaryArray::to(completeBlock->getBlock()));
 
       be.txs.reserve(completeBlock->getTransactionCount());
       for (size_t i = 0; i < completeBlock->getTransactionCount(); ++i) {
-        be.txs.push_back(BinaryArray::toString(BinaryArray::to(completeBlock->getTransaction(i))));
+        be.txs.push_back(IBinary::to(BinaryArray::to(completeBlock->getTransaction(i))));
       }
 
       newBlocks.push_back(std::move(be));
@@ -325,7 +324,7 @@ std::error_code InProcessNode::doRelayTransaction(const cryptonote::transaction_
     }
 
     cryptonote::NOTIFY_NEW_TRANSACTIONS::request r;
-    r.txs.push_back(BinaryArray::toString(transactionBinaryArray));
+    r.txs.push_back(IBinary::to(transactionBinaryArray));
     core.get_protocol()->relay_transactions(r);
   } catch (std::system_error& e) {
     return e.code();
@@ -487,7 +486,7 @@ std::error_code InProcessNode::doQueryBlocksLite(std::vector<hash_t>&& knownBloc
 
     if (!entry.block.empty()) {
       bse.hasBlock = true;
-      if (!BinaryArray::from(bse.block, array::fromString(entry.block))) {
+      if (!BinaryArray::from(bse.block, IBinary::from(entry.block))) {
         return std::make_error_code(std::errc::invalid_argument);
       }
     }

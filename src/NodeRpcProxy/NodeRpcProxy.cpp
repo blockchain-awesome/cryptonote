@@ -18,7 +18,6 @@
 #include <system/Timer.h>
 #include "cryptonote/core/transaction/TransactionApi.h"
 
-#include "common/StringTools.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "rpc/CoreRpcServerCommandsDefinitions.h"
 #include "rpc/HttpClient.h"
@@ -464,7 +463,7 @@ void NodeRpcProxy::isSynchronized(bool& syncStatus, const Callback& callback) {
 std::error_code NodeRpcProxy::doRelayTransaction(const cryptonote::transaction_t& transaction) {
   COMMAND_RPC_SEND_RAW_TX::request req;
   COMMAND_RPC_SEND_RAW_TX::response rsp;
-  req.tx_as_hex = hex::toString(BinaryArray::to(transaction));
+  req.tx_as_hex = hex::to(BinaryArray::to(transaction));
   return jsonCommand("/sendrawtransaction", req, rsp);
 }
 
@@ -537,7 +536,7 @@ std::error_code NodeRpcProxy::doQueryBlocksLite(const std::vector<hash_t>& known
 
     bse.blockHash = std::move(item.blockId);
     if (!item.block.empty()) {
-      if (!BinaryArray::from(bse.block, array::fromString(item.block))) {
+      if (!BinaryArray::from(bse.block, IBinary::from(item.block))) {
         return std::make_error_code(std::errc::invalid_argument);
       }
 

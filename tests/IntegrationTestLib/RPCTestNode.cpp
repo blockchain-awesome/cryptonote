@@ -8,7 +8,6 @@
 #include <vector>
 #include <thread>
 
-#include "common/StringTools.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/structures/array.hpp"
 #include "NodeRpcProxy/NodeRpcProxy.h"
@@ -65,7 +64,7 @@ bool RPCTestNode::getBlockTemplate(const std::string& minerAddress, cryptonote::
 
     difficulty = rsp.difficulty;
 
-    binary_array_t blockBlob = (::hex::fromString(rsp.blocktemplate_blob));
+    binary_array_t blockBlob = (::hex::from(rsp.blocktemplate_blob));
     return BinaryArray::from(blockTemplate, blockBlob);
   } catch (std::exception& e) {
     LOG_ERROR("JSON-RPC call startMining() failed: " + std::string(e.what()));
@@ -123,7 +122,7 @@ bool RPCTestNode::getTailBlockId(hash_t& tailBlockId) {
       throw std::runtime_error(rsp.status);
     }
 
-    return ::hex::podFromString(rsp.block_header.hash, tailBlockId);
+    return ::hex::podFrom(rsp.block_header.hash, tailBlockId);
   } catch (std::exception& e) {
     LOG_ERROR("JSON-RPC call getTailBlockId() failed: " + std::string(e.what()));
     return false;

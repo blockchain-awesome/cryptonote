@@ -7,31 +7,37 @@
 namespace cryptonote
 {
 
-bool serialize(std::vector<std::pair<transaction_index_t, uint16_t>> &value, Common::StringView name, cryptonote::ISerializer &s)
-{
-    const size_t elementSize = sizeof(std::pair<transaction_index_t, uint16_t>);
-    size_t size = value.size() * elementSize;
-
-    if (!s.beginArray(size, name))
+    void serialize(transaction_index_t &idx, ISerializer &s)
     {
-        return false;
+        s(idx.block, "block");
+        s(idx.transaction, "tx");
     }
 
-    if (s.type() == cryptonote::ISerializer::INPUT)
+    bool serialize(std::vector<std::pair<transaction_index_t, uint16_t>> &value, Common::StringView name, cryptonote::ISerializer &s)
     {
-        if (size % elementSize != 0)
+        const size_t elementSize = sizeof(std::pair<transaction_index_t, uint16_t>);
+        size_t size = value.size() * elementSize;
+
+        if (!s.beginArray(size, name))
         {
-            throw std::runtime_error("Invalid vector size");
+            return false;
         }
-        value.resize(size / elementSize);
-    }
 
-    if (size)
-    {
-        s.binary(value.data(), size, "");
-    }
+        if (s.type() == cryptonote::ISerializer::INPUT)
+        {
+            if (size % elementSize != 0)
+            {
+                throw std::runtime_error("Invalid vector size");
+            }
+            value.resize(size / elementSize);
+        }
 
-    s.endArray();
-    return true;
-}
+        if (size)
+        {
+            s.binary(value.data(), size, "");
+        }
+
+        s.endArray();
+        return true;
+    }
 } // namespace cryptonote

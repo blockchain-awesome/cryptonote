@@ -17,7 +17,6 @@
 #include <system/Timer.h>
 
 #include "command_line/options.h"
-#include "common/StringTools.h"
 #include "cryptonote/crypto/crypto.h"
 #include "p2p/P2pProtocolDefinitions.h"
 #include "p2p/LevinProtocol.h"
@@ -97,7 +96,7 @@ std::ostream& get_response_schema_as_json(std::ostream& ss, response_schema &rs)
 
     size_t i = 0;
     for (const connection_entry_t &ce : networkState.connections_list) {
-      ss << "      {\"peer_id\": \"" << ce.id << "\", \"ip\": \"" << Common::ipAddressToString(ce.adr.ip) << "\", \"port\": " << ce.adr.port << ", \"is_income\": " << ce.is_income << "}";
+      ss << "      {\"peer_id\": \"" << ce.id << "\", \"ip\": \"" << ::string::IPv4::to(ce.adr.ip) << "\", \"port\": " << ce.adr.port << ", \"is_income\": " << ce.is_income << "}";
       if (networkState.connections_list.size() - 1 != i)
         ss << ",";
       ss << ENDL;
@@ -107,7 +106,7 @@ std::ostream& get_response_schema_as_json(std::ostream& ss, response_schema &rs)
     ss << "    \"local_peerlist_white\": [" << ENDL;
     i = 0;
     for (const peerlist_entry_t &pe : networkState.local_peerlist_white) {
-      ss << "      {\"peer_id\": \"" << pe.id << "\", \"ip\": \"" << Common::ipAddressToString(pe.adr.ip) << "\", \"port\": " << pe.adr.port << ", \"last_seen\": " << networkState.local_time - pe.last_seen << "}";
+      ss << "      {\"peer_id\": \"" << pe.id << "\", \"ip\": \"" << ::string::IPv4::to(pe.adr.ip) << "\", \"port\": " << pe.adr.port << ", \"last_seen\": " << networkState.local_time - pe.last_seen << "}";
       if (networkState.local_peerlist_white.size() - 1 != i)
         ss << ",";
       ss << ENDL;
@@ -118,7 +117,7 @@ std::ostream& get_response_schema_as_json(std::ostream& ss, response_schema &rs)
     ss << "    \"local_peerlist_gray\": [" << ENDL;
     i = 0;
     for (const peerlist_entry_t &pe : networkState.local_peerlist_gray) {
-      ss << "      {\"peer_id\": \"" << pe.id << "\", \"ip\": \"" << Common::ipAddressToString(pe.adr.ip) << "\", \"port\": " << pe.adr.port << ", \"last_seen\": " << networkState.local_time - pe.last_seen << "}";
+      ss << "      {\"peer_id\": \"" << pe.id << "\", \"ip\": \"" << ::string::IPv4::to(pe.adr.ip) << "\", \"port\": " << pe.adr.port << ", \"last_seen\": " << networkState.local_time - pe.last_seen << "}";
       if (networkState.local_peerlist_gray.size() - 1 != i)
         ss << ",";
       ss << ENDL;
@@ -160,12 +159,12 @@ bool print_COMMAND_REQUEST_NETWORK_STATE(const COMMAND_REQUEST_NETWORK_STATE::re
 
   std::cout << "Peer list white:" << ns.my_id << ENDL;
   for (const peerlist_entry_t &pe : ns.local_peerlist_white) {
-    std::cout << pe.id << "\t" << pe.adr << "\t" << Common::timeIntervalToString(ns.local_time - pe.last_seen) << ENDL;
+    std::cout << pe.id << "\t" << pe.adr << "\t" << ::string::Time::ago(ns.local_time - pe.last_seen) << ENDL;
   }
 
   std::cout << "Peer list gray:" << ns.my_id << ENDL;
   for (const peerlist_entry_t &pe : ns.local_peerlist_gray) {
-    std::cout << pe.id << "\t" << pe.adr << "\t" << Common::timeIntervalToString(ns.local_time - pe.last_seen) << ENDL;
+    std::cout << pe.id << "\t" << pe.adr << "\t" << ::string::Time::ago(ns.local_time - pe.last_seen) << ENDL;
   }
 
   return true;
@@ -212,7 +211,7 @@ bool handle_request_stat(po::variables_map& vm, peer_id_type_t peer_id) {
   }
 
   secret_key_t prvk;
-  if (!hex::podFromString(command_line::get_arg(vm, arg_priv_key), prvk)) {
+  if (!hex::podFrom(command_line::get_arg(vm, arg_priv_key), prvk)) {
     std::cout << "{" << ENDL << "  \"status\": \"ERROR: " << "wrong secret key set \"" << ENDL << "}";
     return false;
   }
@@ -253,7 +252,7 @@ bool handle_request_stat(po::variables_map& vm, peer_id_type_t peer_id) {
     pot.time = time(NULL);
     public_key_t pubk;
 
-    hex::podFromString(config::get().net.p2p_stat_trusted_pub_key, pubk);
+    hex::podFrom(config::get().net.p2p_stat_trusted_pub_key, pubk);
     hash_t h = get_proof_of_trust_t_hash(pot);
     generate_signature((const uint8_t *)&h, (const uint8_t *)&pubk, (const uint8_t *)&prvk, (uint8_t *)&pot.sign);
 
@@ -313,8 +312,8 @@ bool generate_and_print_keys() {
   public_key_t pk;
   secret_key_t sk;
   generate_keys((uint8_t *) &pk, (uint8_t *) &sk);
-  std::cout << "PUBLIC KEY: " << hex::podToString(pk) << ENDL
-            << "PRIVATE KEY: " << hex::podToString(sk);
+  std::cout << "PUBLIC KEY: " << hex::podTo(pk) << ENDL
+            << "PRIVATE KEY: " << hex::podTo(sk);
   return true;
 }
 

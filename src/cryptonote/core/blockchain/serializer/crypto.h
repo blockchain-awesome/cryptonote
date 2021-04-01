@@ -3,7 +3,8 @@
 #include "cryptonote/crypto/chacha.h"
 #include "serialization/ISerializer.h"
 #include "cryptonote/crypto/crypto.h"
-#include "common/StringTools.h"
+#include "common/hex.h"
+#include "common/str.h"
 
 using namespace crypto;
 
@@ -16,7 +17,7 @@ bool serializePod(T &v, Common::StringView name, cryptonote::ISerializer &serial
 template <class T>
 std::ostream &print256(std::ostream &o, const T &v)
 {
-  return o << "<" << hex::podToString(v) << ">";
+  return o << "<" << hex::podTo(v) << ">";
 }
 
 bool parse_hash256(const std::string &str_hash, hash_t &hash);

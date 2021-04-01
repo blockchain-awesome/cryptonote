@@ -6,7 +6,6 @@
 #include "TestGenerator.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/structures/array.hpp"
-#include "common/StringTools.h"
 
 using namespace Common;
 using namespace crypto;
@@ -19,14 +18,14 @@ using namespace cryptonote;
 namespace {
   bool lift_up_difficulty(const cryptonote::Currency& currency, std::vector<test_event_entry>& events,
                           std::vector<uint64_t>& timestamps,
-                          std::vector<cryptonote::difficulty_t>& cummulative_difficulties, test_generator& generator,
+                          std::vector<difficulty_t>& cummulative_difficulties, test_generator& generator,
                           size_t new_block_count, const cryptonote::block_t blk_last,
                           const cryptonote::Account& miner_account, uint8_t block_major_version) {
-    cryptonote::difficulty_t commulative_diffic = cummulative_difficulties.empty() ? 0 : cummulative_difficulties.back();
+    difficulty_t commulative_diffic = cummulative_difficulties.empty() ? 0 : cummulative_difficulties.back();
     cryptonote::block_t blk_prev = blk_last;
     for (size_t i = 0; i < new_block_count; ++i) {
       cryptonote::block_t blk_next;
-      cryptonote::difficulty_t diffic = currency.nextDifficulty(timestamps, cummulative_difficulties);
+      difficulty_t diffic = currency.nextDifficulty(timestamps, cummulative_difficulties);
       if (!generator.constructBlockManually(blk_next, blk_prev, miner_account,
         test_generator::bf_major_ver | test_generator::bf_timestamp | test_generator::bf_diffic, 
         block_major_version, 0, blk_prev.timestamp, hash_t(), diffic)) {

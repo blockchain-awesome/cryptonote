@@ -22,7 +22,6 @@
 #include "common/ShuffleGenerator.h"
 #include "stream/reader.h"
 #include "stream/writer.h"
-#include "common/StringTools.h"
 #include "cryptonote/core/account.h"
 #include "cryptonote/core/currency.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
@@ -996,7 +995,7 @@ bool WalletGreen::updateWalletTransactionInfo(size_t transactionId, const crypto
 
     // Fix LegacyWallet error. Some old versions didn't fill extra field
     if (transaction.extra.empty() && !info.extra.empty()) {
-      transaction.extra = BinaryArray::toString(info.extra);
+      transaction.extra = IBinary::to(info.extra);
       updated = true;
     }
 
@@ -1257,7 +1256,7 @@ std::unique_ptr<cryptonote::ITransaction> WalletGreen::makeTransaction(const std
   }
 
   tx->setUnlockTime(unlockTimestamp);
-  tx->appendExtra(array::fromString(extra));
+  tx->appendExtra(IBinary::from(extra));
 
   for (auto& input: keysInfo) {
     tx->addInput(makeAccountKeys(*input.walletRecord), input.keyInfo, input.ephKeys);

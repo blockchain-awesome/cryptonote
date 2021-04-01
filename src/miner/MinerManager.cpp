@@ -8,7 +8,6 @@
 #include <system/InterruptedException.h>
 #include <system/Timer.h>
 
-#include "common/StringTools.h"
 #include "CryptoNoteConfig.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
@@ -187,17 +186,17 @@ bool MinerManager::submitBlock(const block_t& minedBlock, const std::string& dae
     HttpClient client(m_dispatcher, daemonHost, daemonPort);
 
     COMMAND_RPC_SUBMITBLOCK::request request;
-    request.emplace_back(hex::toString(BinaryArray::to(minedBlock)));
+    request.emplace_back(hex::to(BinaryArray::to(minedBlock)));
 
     COMMAND_RPC_SUBMITBLOCK::response response;
 
     System::EventLock lk(m_httpEvent);
     JsonRpc::invokeJsonRpcCommand(client, "submitblock", request, response);
 
-    m_logger(Logging::INFO) << "Block has been successfully submitted. block_t hash: " << hex::podToString(Block::getHash(minedBlock));
+    m_logger(Logging::INFO) << "Block has been successfully submitted. block_t hash: " << hex::podTo(Block::getHash(minedBlock));
     return true;
   } catch (std::exception& e) {
-    m_logger(Logging::WARNING) << "Couldn't submit block: " << hex::podToString(Block::getHash(minedBlock)) << ", reason: " << e.what();
+    m_logger(Logging::WARNING) << "Couldn't submit block: " << hex::podTo(Block::getHash(minedBlock)) << ", reason: " << e.what();
     return false;
   }
 }
@@ -222,11 +221,11 @@ BlockMiningParameters MinerManager::requestMiningParameters(System::Dispatcher& 
     BlockMiningParameters params;
     params.difficulty = response.difficulty;
 
-    if(!BinaryArray::from(params.blockTemplate, hex::fromString(response.blocktemplate_blob))) {
+    if(!BinaryArray::from(params.blockTemplate, hex::from(response.blocktemplate_blob))) {
       throw std::runtime_error("Couldn't deserialize block template");
     }
 
-    m_logger(Logging::DEBUGGING) << "Requested block template with previous block hash: " << hex::podToString(params.blockTemplate.previousBlockHash);
+    m_logger(Logging::DEBUGGING) << "Requested block template with previous block hash: " << hex::podTo(params.blockTemplate.previousBlockHash);
     return params;
   } catch (std::exception& e) {
     m_logger(Logging::WARNING) << "Couldn't get block template: " << e.what();

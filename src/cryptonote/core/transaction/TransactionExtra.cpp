@@ -6,7 +6,6 @@
 
 #include "stream/reader.h"
 #include "stream/writer.h"
-#include "common/StringTools.h"
 #include "CryptoNoteTools.h"
 #include "serialization/BinaryOutputStreamSerializer.h"
 #include "serialization/BinaryInputStreamSerializer.h"
@@ -198,7 +197,7 @@ namespace cryptonote
 
   bool parsePaymentId(const std::string &paymentIdString, hash_t &paymentId)
   {
-    return hex::podFromString(paymentIdString, paymentId);
+    return hex::podFrom(paymentIdString, paymentId);
   }
 
   bool createTxExtraWithPaymentId(const std::string &paymentIdString, std::vector<uint8_t> &extra)

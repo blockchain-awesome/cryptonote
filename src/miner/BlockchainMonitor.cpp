@@ -3,9 +3,6 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "BlockchainMonitor.h"
-
-#include "common/StringTools.h"
-
 #include <system/EventLock.h>
 #include <system/Timer.h>
 #include <system/InterruptedException.h>
@@ -78,11 +75,11 @@ hash_t BlockchainMonitor::requestLastBlockHash() {
     }
 
     hash_t blockHash;
-    if (!hex::podFromString(response.block_header.hash, blockHash)) {
+    if (!hex::podFrom(response.block_header.hash, blockHash)) {
       throw std::runtime_error("Couldn't parse block hash: " + response.block_header.hash);
     }
 
-    m_logger(Logging::DEBUGGING) << "Last block hash: " << hex::podToString(blockHash);
+    m_logger(Logging::DEBUGGING) << "Last block hash: " << hex::podTo(blockHash);
 
     return blockHash;
   } catch (std::exception& e) {

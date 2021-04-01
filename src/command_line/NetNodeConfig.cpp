@@ -8,7 +8,7 @@
 
 #include "common/os.h"
 #include "command_line/options.h"
-#include "common/StringTools.h"
+#include "common/str.h"
 #include "cryptonote/crypto/crypto.h"
 #include "CryptoNoteConfig.h"
 
@@ -17,8 +17,18 @@ using namespace command_line;
 namespace cryptonote {
 namespace {
 
-bool parsePeerFromString(network_address_t& pe, const std::string& node_addr) {
-  return Common::parseIpAddressAndPort(pe.ip, pe.port, node_addr);
+bool parsePeerFromString(network_address_t& pe, const std::string& socket) {
+      auto start = 0U;
+    auto end = socket.find(":");
+
+  std::string ip = socket.substr(start, end);
+  start = end + 1;
+  std::string port = socket.substr(start);
+  pe.ip = ::string::IPv4::from(ip);
+  pe.port = ::string::Port::from(port);
+
+
+  return pe.ip != UINT32_MAX && pe.port != UINT32_MAX;
 }
 
 bool parsePeersAndAddToContainer(const boost::program_options::variables_map& vm,

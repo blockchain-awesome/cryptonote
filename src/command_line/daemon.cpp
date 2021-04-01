@@ -5,7 +5,6 @@
 #include "common/os.h"
 #include "daemon.h"
 #include "logging/ConsoleLogger.h"
-#include "common/StringTools.h"
 #include "version.h"
 #include "cryptonote/core/core.h"
 #include "cryptonote/core/CryptoNoteTools.h"
@@ -73,7 +72,7 @@ void Daemon::printGenesisTx()
   Logging::ConsoleLogger logger;
   cryptonote::transaction_t tx = cryptonote::CurrencyBuilder(os::appdata::path(), config::get(), logger).generateGenesisTransaction();
   binary_array_t txb = cryptonote::BinaryArray::to(tx);
-  std::string tx_hex = hex::toString(txb);
+  std::string tx_hex = hex::to(txb);
 
   std::cout << "Insert this line into your coin configuration file as is: " << std::endl;
   std::cout << "const char GENESIS_COINBASE_TX_HEX[] = \"" << tx_hex << "\";" << std::endl;

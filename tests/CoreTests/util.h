@@ -1,5 +1,4 @@
 #pragma once
-#include "common/StringTools.h"
 #include "cryptonote/crypto/crypto.h"
 #include "cryptonote/crypto/hash.h"
 #include "cryptonote/core/key.h"

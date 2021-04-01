@@ -6,7 +6,6 @@
 #include "BinaryInputStreamSerializer.h"
 #include "BinaryOutputStreamSerializer.h"
 #include "stream/reader.h"
-#include "stream/reader.h"
 #include "stream/writer.h"
 
 #include <fstream>
