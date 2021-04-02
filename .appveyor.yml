@@ -1,6 +1,6 @@
 version: 1.0.{build}
 image: 
-# - Visual Studio 2017
+- Visual Studio 2017
 - ubuntu2004
 - ubuntu1804
 platform:
