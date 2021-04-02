@@ -68,3 +68,55 @@ void Reader::readVarint(T &value)
 
   value = temp;
 }
+
+inline Reader &operator>>(Reader &i, int8_t &v)
+{
+  i.readVarint(v);
+  return i;
+}
+inline Reader &operator>>(Reader &i, uint8_t &v)
+{
+  i.readVarint(v);
+  return i;
+}
+inline Reader &operator>>(Reader &i, int16_t &v)
+{
+  i.readVarint(v);
+  return i;
+}
+inline Reader &operator>>(Reader &i, uint16_t &v)
+{
+  i.readVarint(v);
+  return i;
+}
+inline Reader &operator>>(Reader &i, int32_t &v)
+{
+  i.readVarint(v);
+  return i;
+}
+inline Reader &operator>>(Reader &i, uint32_t &v)
+{
+  i.readVarint(v);
+  return i;
+}
+inline Reader &operator>>(Reader &i, int64_t &v)
+{
+  i.readVarint(v);
+  return i;
+}
+inline Reader &operator>>(Reader &i, uint64_t &v)
+{
+  i.readVarint(v);
+  return i;
+}
+
+inline Reader &operator>>(Reader &i, bool &v)
+{
+  i.read((void *)&v, sizeof(v));
+  return i;
+}
+inline Reader &operator>>(Reader &i, std::string &v)
+{
+  i.read((char *)v.data(), v.size());
+  return i;
+}

@@ -64,3 +64,56 @@ void write(const T &t, std::ostringstream &oss)
   uint8_t tag = static_cast<char>(v);
   oss << tag;
 }
+
+inline Writer &operator<<(Writer &o, const int8_t &v)
+{
+  o.writeVarint(v);
+  return o;
+}
+inline Writer &operator<<(Writer &o, const uint8_t &v)
+{
+  o.writeVarint(v);
+  return o;
+}
+inline Writer &operator<<(Writer &o, const int16_t &v)
+{
+  o.writeVarint(v);
+  return o;
+}
+inline Writer &operator<<(Writer &o, const uint16_t &v)
+{
+  o.writeVarint(v);
+  return o;
+}
+inline Writer &operator<<(Writer &o, const int32_t &v)
+{
+  o.writeVarint(v);
+  return o;
+}
+inline Writer &operator<<(Writer &o, const uint32_t &v)
+{
+  o.writeVarint(v);
+  return o;
+}
+inline Writer &operator<<(Writer &o, const int64_t &v)
+{
+  o.writeVarint(v);
+  return o;
+}
+inline Writer &operator<<(Writer &o, const uint64_t &v)
+{
+  o.writeVarint(v);
+  return o;
+}
+
+inline Writer &operator<<(Writer &o, const bool &v)
+{
+  o.write((const void *)&v, sizeof(v));
+  return o;
+}
+
+inline Writer &operator<<(Writer &o, const std::string &v)
+{
+  o.write(v.data(), v.size());
+  return o;
+}

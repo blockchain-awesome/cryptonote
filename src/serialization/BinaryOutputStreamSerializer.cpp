@@ -24,7 +24,7 @@ void BinaryOutputStreamSerializer::endObject() {
 }
 
 bool BinaryOutputStreamSerializer::beginArray(size_t& size, Common::StringView name) {
-  stream.writeVarint(size);
+  stream << size;
   return true;
 }
 
@@ -32,49 +32,50 @@ void BinaryOutputStreamSerializer::endArray() {
 }
 
 bool BinaryOutputStreamSerializer::operator()(uint8_t& value, Common::StringView name) {
-  stream.writeVarint(value);
+  stream << value;
   return true;
 }
 
 bool BinaryOutputStreamSerializer::operator()(uint16_t& value, Common::StringView name) {
-  stream.writeVarint(value);
+  stream << value;
   return true;
 }
 
 bool BinaryOutputStreamSerializer::operator()(int16_t& value, Common::StringView name) {
-  stream.writeVarint(value);
+  stream << value;
   return true;
 }
 
 bool BinaryOutputStreamSerializer::operator()(uint32_t& value, Common::StringView name) {
-  stream.writeVarint(value);
+  stream << value;
   return true;
 }
 
 bool BinaryOutputStreamSerializer::operator()(int32_t& value, Common::StringView name) {
-  stream.writeVarint(value);
+  stream << value;
   return true;
 }
 
 bool BinaryOutputStreamSerializer::operator()(int64_t& value, Common::StringView name) {
-  stream.writeVarint(value);
+  stream << value;
   return true;
 }
 
 bool BinaryOutputStreamSerializer::operator()(uint64_t& value, Common::StringView name) {
-  stream.writeVarint(value);
+  stream << value;
   return true;
 }
 
 bool BinaryOutputStreamSerializer::operator()(bool& value, Common::StringView name) {
-  char boolVal = value;
-  checkedWrite(&boolVal, 1);
+  stream << value;
   return true;
 }
 
 bool BinaryOutputStreamSerializer::operator()(std::string& value, Common::StringView name) {
-  stream.writeVarint(value.size());
-  checkedWrite(value.data(), value.size());
+  stream << value.size();
+  stream.write(value.data(), value.size());
+  // stream.writeVarint(value.size());
+  // checkedWrite(value.data(), value.size());
   return true;
 }
 
