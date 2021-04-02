@@ -20,8 +20,8 @@ option(gtest_build_tests "Build all of gtest's own tests." OFF)
 
 option(gtest_build_samples "Build gtest's sample programs." OFF)
 
-option(CMAKE_USE_WIN32_THREADS_INIT "using WIN32 threads" ON)
-option(gtest_disable_pthreads "Disable uses of pthreads in gtest." ON)
+option(gtest_disable_pthreads "Disable uses of pthreads in gtest." OFF)
+
 # Defines pre_project_set_up_hermetic_build() and set_up_hermetic_build().
 include(cmake/hermetic_build.cmake OPTIONAL)
 
