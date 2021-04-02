@@ -29,7 +29,7 @@ public:
   friend std::ostream &operator<<(std::ostream &os, const IBinary &base);
 
   template <typename T>
-  friend binary_array_t fromVarint(T &t);
+  friend std::string fromVarint(T &t);
 };
 
 template <typename T>

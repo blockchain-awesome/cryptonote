@@ -39,7 +39,7 @@ bool Block::getBlob(const block_t& b, binary_array_t& ba) {
   hash_t treeRootHash = get_tx_tree_hash(b);
   ba.insert(ba.end(), treeRootHash.data, treeRootHash.data + 32);
   size_t size = b.transactionHashes.size() + 1;
-  auto transactionCount = IBinary::from(fromVarint(size));
+  binary_array_t transactionCount = IBinary::from(fromVarint(size));
   ba.insert(ba.end(), transactionCount.begin(), transactionCount.end());
   return true;
 }
