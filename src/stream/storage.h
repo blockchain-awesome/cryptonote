@@ -1,7 +1,0 @@
-namespace serialize
-{
-
-  class FileStorage
-  {
-  };
-}

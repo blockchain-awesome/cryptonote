@@ -2,12 +2,12 @@
 #include <vector>
 #include "complex.h"
 
-namespace serialize
+namespace stream
 {
 
   namespace complex
   {
-    std::istream &operator>>(std::istream &i, std::string &v)
+    vistream &operator>>(vistream &i, std::string &v)
     {
       size_t size = v.length();
       varint(i, size);
@@ -15,7 +15,7 @@ namespace serialize
       return i;
     }
 
-    std::ostream &operator<<(std::ostream &o, std::string &v)
+    vostream &operator<<(vostream &o, std::string &v)
     {
       size_t size;
       varint(o, size);

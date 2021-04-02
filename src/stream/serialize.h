@@ -1,42 +1,51 @@
+#pragma once
+
 #include <istream>
 #include <ostream>
 
-namespace serialize
+namespace stream
 {
-  template <typename T>
-  std::istream &bytes(std::istream &i, T &v)
+
+  class vistream
   {
-    i.read(static_cast<char *>(&v), sizeof(v));
+  public:
+    vistream(std::istream &i) : i(i) {}
+    std::istream &i;
+  };
+
+  class vostream
+  {
+  public:
+    vostream(std::ostream &o) : o(o) {}
+    std::ostream &o;
+  };
+
+  template <typename T>
+  vistream &bytes(vistream &i, T &v)
+  {
+    i.i.read(static_cast<char *>(&v), sizeof(v));
     return i;
   }
 
-  std::istream &bytes(std::istream &i, char *v, const size_t len)
-  {
-    i.read(v, len);
-    return i;
-  }
+  vistream &bytes(vistream &i, char *v, const size_t len);
 
   template <typename T>
-  std::ostream &bytes(std::ostream &o, const T &v)
+  vostream &bytes(vostream &o, const T &v)
   {
-    o.write(static_cast<char *>(&v), sizeof(v));
+    o.o.write(static_cast<char *>(&v), sizeof(v));
     return o;
   }
 
-  std::ostream &bytes(std::ostream &o, const char *v, const size_t len)
-  {
-    o.write(v, len);
-    return o;
-  }
+  vostream &bytes(vostream &o, const char *v, const size_t len);
 
   template <typename T>
-  std::istream &varint(std::istream &i, T &v)
+  vistream &varint(vistream &i, T &v)
   {
     T temp = 0;
     for (uint8_t shift = 0;; shift += 7)
     {
       uint8_t piece;
-      i.read((char *)(&piece), 1);
+      i.i.read((char *)(&piece), 1);
       if (shift >= sizeof(temp) * 8 - 7 && piece >= 1 << (sizeof(temp) * 8 - shift))
       {
         throw std::runtime_error("readVarint, value overflow");
@@ -59,37 +68,18 @@ namespace serialize
   }
 
   template <typename T>
-  std::ostream &varint(std::ostream &o, T &t)
+  vostream &varint(vostream &o, T &t)
   {
     uint64_t v = t;
     while (v >= 0x80)
     {
       uint8_t tag = (static_cast<char>(v) & 0x7f) | 0x80;
-      o << tag;
+      o.o << tag;
       v >>= 7;
     }
     uint8_t tag = static_cast<char>(v);
-    o << tag;
+    o.o << tag;
     return o;
   }
 
-  class IStream
-  {
-    virtual bool serialize(std::ostream &o) = 0;
-    virtual bool serialize(std::istream &i) = 0;
-    friend std::ostream &operator<<(std::ostream &o, IStream &value);
-    friend std::istream &operator>>(std::istream &o, IStream &value);
-  };
-
-  std::ostream &operator<<(std::ostream &o, IStream &value)
-  {
-    value.serialize(o);
-    return o;
-  };
-
-  std::istream &operator>>(std::istream &i, IStream &value)
-  {
-    value.serialize(i);
-    return i;
-  };
 }

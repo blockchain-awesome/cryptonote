@@ -3,11 +3,11 @@
 #include "crypto/types.h"
 #include "serialize.h"
 
-namespace serialize
+namespace stream
 {
   namespace complex
   {
-    std::istream &operator>>(std::istream &i, std::string &v);
-    std::ostream &operator<<(std::ostream &o, std::string &v);
+    vistream &operator>>(vistream &i, std::string &v);
+    vostream &operator<<(vostream &o, std::string &v);
   }
 }
