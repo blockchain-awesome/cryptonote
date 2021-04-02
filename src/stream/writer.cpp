@@ -1,18 +1,14 @@
 
 #include "writer.h"
 
-Writer::Writer()
-{
-}
-
-Writer::Writer(std::ostream &out) : out(&out)
+Writer::Writer(std::ostream &out) : out(out)
 {
 }
 
 size_t Writer::writeSome(const void *data, size_t size)
 {
-  out->write(static_cast<const char *>(data), size);
-  if (out->bad())
+  out.write(static_cast<const char *>(data), size);
+  if (out.bad())
   {
     return 0;
   }

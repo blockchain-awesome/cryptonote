@@ -11,7 +11,6 @@ class Writer
 {
 
 public:
-  Writer();
   Writer(std::ostream &out);
   template <typename T>
   void write(const T &value);
@@ -26,7 +25,7 @@ public:
   friend std::ostringstream &write(const T &value);
 
 private:
-  std::ostream *out;
+  std::ostream &out;
 };
 
 template <typename T>
