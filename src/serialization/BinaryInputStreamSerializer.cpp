@@ -32,8 +32,7 @@ namespace cryptonote
   bool BinaryInputStreamSerializer::beginArray(size_t &size, Common::StringView name)
   {
     uint64_t temp;
-    // stream.readVarint(temp);
-    stream >> temp;
+    i >> temp;
     size = temp;
 
     return true;
@@ -43,51 +42,52 @@ namespace cryptonote
   {
   }
 
+
   bool BinaryInputStreamSerializer::operator()(uint8_t &value, Common::StringView name)
   {
-    stream >> value;
+    i >> value;
     return true;
   }
 
   bool BinaryInputStreamSerializer::operator()(uint16_t &value, Common::StringView name)
   {
-    stream >> value;
+    i >> value;
     return true;
   }
 
   bool BinaryInputStreamSerializer::operator()(int16_t &value, Common::StringView name)
   {
-    stream >> value;
+    i >> value;
     return true;
   }
 
   bool BinaryInputStreamSerializer::operator()(uint32_t &value, Common::StringView name)
   {
-    stream >> value;
+    i >> value;
     return true;
   }
 
   bool BinaryInputStreamSerializer::operator()(int32_t &value, Common::StringView name)
   {
-    stream >> value;
+    i >> value;
     return true;
   }
 
   bool BinaryInputStreamSerializer::operator()(int64_t &value, Common::StringView name)
   {
-    stream >> value;
+    i >> value;
     return true;
   }
 
   bool BinaryInputStreamSerializer::operator()(uint64_t &value, Common::StringView name)
   {
-    stream >> value;
+    i >> value;
     return true;
   }
 
   bool BinaryInputStreamSerializer::operator()(bool &value, Common::StringView name)
   {
-    stream >> value;
+    i >> value;
     return true;
   }
 
@@ -95,13 +95,13 @@ namespace cryptonote
   {
     uint64_t size;
 
-    stream >> size;
+    i >> size;
 
     if (size > 0)
     {
       std::vector<char> temp;
       temp.resize(size);
-      stream.read(&temp[0], size);
+      i.read(&temp[0], size);
       value.reserve(size);
       value.assign(&temp[0], size);
     }
@@ -115,7 +115,7 @@ namespace cryptonote
 
   bool BinaryInputStreamSerializer::binary(void *value, size_t size, Common::StringView name)
   {
-    stream.read(static_cast<char *>(value), size);
+    i.read(static_cast<char *>(value), size);
     return true;
   }
 

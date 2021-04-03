@@ -14,7 +14,7 @@ namespace cryptonote
   class BinaryInputStreamSerializer : public ISerializer
   {
   public:
-    BinaryInputStreamSerializer(Reader &strm) : stream(strm) {}
+    BinaryInputStreamSerializer(Reader &i) : i(i) {}
     virtual ~BinaryInputStreamSerializer() {}
 
     virtual ISerializer::SerializerType type() const override;
@@ -44,8 +44,7 @@ namespace cryptonote
       return ISerializer::operator()(value, name);
     }
 
-  private:
-    Reader &stream;
+    Reader &i;
   };
 
 }

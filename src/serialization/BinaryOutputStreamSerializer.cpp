@@ -24,7 +24,7 @@ void BinaryOutputStreamSerializer::endObject() {
 }
 
 bool BinaryOutputStreamSerializer::beginArray(size_t& size, Common::StringView name) {
-  stream << size;
+  o << size;
   return true;
 }
 
@@ -32,55 +32,53 @@ void BinaryOutputStreamSerializer::endArray() {
 }
 
 bool BinaryOutputStreamSerializer::operator()(uint8_t& value, Common::StringView name) {
-  stream << value;
+  o << value;
   return true;
 }
 
 bool BinaryOutputStreamSerializer::operator()(uint16_t& value, Common::StringView name) {
-  stream << value;
+  o << value;
   return true;
 }
 
 bool BinaryOutputStreamSerializer::operator()(int16_t& value, Common::StringView name) {
-  stream << value;
+  o << value;
   return true;
 }
 
 bool BinaryOutputStreamSerializer::operator()(uint32_t& value, Common::StringView name) {
-  stream << value;
+  o << value;
   return true;
 }
 
 bool BinaryOutputStreamSerializer::operator()(int32_t& value, Common::StringView name) {
-  stream << value;
+  o << value;
   return true;
 }
 
 bool BinaryOutputStreamSerializer::operator()(int64_t& value, Common::StringView name) {
-  stream << value;
+  o << value;
   return true;
 }
 
 bool BinaryOutputStreamSerializer::operator()(uint64_t& value, Common::StringView name) {
-  stream << value;
+  o << value;
   return true;
 }
 
 bool BinaryOutputStreamSerializer::operator()(bool& value, Common::StringView name) {
-  stream << value;
+  o << value;
   return true;
 }
 
 bool BinaryOutputStreamSerializer::operator()(std::string& value, Common::StringView name) {
-  stream << value.size();
-  stream.write(value.data(), value.size());
-  // stream.writeVarint(value.size());
-  // checkedWrite(value.data(), value.size());
+  o << value.size();
+  o.write(value.data(), value.size());
   return true;
 }
 
 bool BinaryOutputStreamSerializer::binary(void* value, size_t size, Common::StringView name) {
-  checkedWrite(static_cast<const char*>(value), size);
+  o.write(static_cast<const char*>(value), size);
   return true;
 }
 
@@ -93,10 +91,6 @@ bool BinaryOutputStreamSerializer::operator()(double& value, Common::StringView 
   assert(false); //the method is not supported for this type of serialization
   throw std::runtime_error("double serialization is not supported in BinaryOutputStreamSerializer");
   return false;
-}
-
-void BinaryOutputStreamSerializer::checkedWrite(const char* buf, size_t size) {
-  stream.write(buf, size);
 }
 
 }
