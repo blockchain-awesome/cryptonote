@@ -88,7 +88,7 @@ protected:
   std::string doCreateAddress(const public_key_t& spendPublicKey, const secret_key_t& spendSecretKey, uint64_t creationTimestamp);
 
   struct InputInfo {
-    TransactionTypes::input_key_info_t keyInfo;
+    input_key_info_t keyInfo;
     WalletRecord* walletRecord = nullptr;
     key_pair_t ephKeys;
   };

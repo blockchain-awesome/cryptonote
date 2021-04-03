@@ -32,7 +32,7 @@ struct TransactionInformation {
 
 struct TransactionOutputInformation {
   // output info
-  TransactionTypes::output_type_t type;
+  output_type_t type;
   uint64_t amount;
   uint32_t globalOutputIndex;
   uint32_t outputInTransaction;
@@ -51,7 +51,7 @@ struct TransactionSpentOutputInformation: public TransactionOutputInformation {
   uint32_t spendingBlockHeight;
   uint64_t timestamp;
   hash_t spendingTransactionHash;
-  key_image_t keyImage;  //!< \attention Used only for TransactionTypes::output_type_t::Key
+  key_image_t keyImage;  //!< \attention Used only for output_type_t::Key
   uint32_t inputInTransaction;
 };
 

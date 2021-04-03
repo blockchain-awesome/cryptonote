@@ -44,7 +44,7 @@ public:
   size_t hash() const;
 
 private:
-  TransactionTypes::output_type_t m_type;
+  output_type_t m_type;
   union {
     const key_image_t* m_keyImage;
     struct {
@@ -61,7 +61,7 @@ struct SpentOutputDescriptorHasher {
 };
 
 struct TransactionOutputInformationIn : public TransactionOutputInformation {
-  key_image_t keyImage;  //!< \attention Used only for TransactionTypes::output_type_t::Key
+  key_image_t keyImage;  //!< \attention Used only for output_type_t::Key
 };
 
 struct TransactionOutputInformationEx : public TransactionOutputInformationIn {
@@ -86,9 +86,9 @@ struct TransactionOutputInformationEx : public TransactionOutputInformationIn {
     s(transactionHash, "");
     s(visible, "");
 
-    if (type == TransactionTypes::output_type_t::Key)
+    if (type == output_type_t::Key)
       s(outputKey, "");
-    else if (type == TransactionTypes::output_type_t::Multisignature)
+    else if (type == output_type_t::Multisignature)
       s(requiredSignatures, "");
   }
 
@@ -255,7 +255,7 @@ private:
   void deleteTransactionTransfers(const hash_t& transactionHash);
   bool isSpendTimeUnlocked(uint64_t unlockTime) const;
   bool isIncluded(const TransactionOutputInformationEx& info, uint32_t flags) const;
-  static bool isIncluded(TransactionTypes::output_type_t type, uint32_t state, uint32_t flags);
+  static bool isIncluded(output_type_t type, uint32_t state, uint32_t flags);
   void updateTransfersVisibility(const key_image_t& keyImage);
 
   void copyToSpent(const TransactionBlockInfo& block, const ITransactionReader& tx, size_t inputIndex, const TransactionOutputInformationEx& output);

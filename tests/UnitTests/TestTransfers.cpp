@@ -220,16 +220,16 @@ namespace {
 
   auto tx = createTransaction();
 
-  std::vector<std::pair<TransactionTypes::input_key_info_t, key_pair_t>> inputs;
+  std::vector<std::pair<input_key_info_t, key_pair_t>> inputs;
 
   uint64_t foundMoney = 0;
 
   for (const auto& t : transfers) {
-    TransactionTypes::input_key_info_t info;
+    input_key_info_t info;
 
     info.amount = t.amount;
 
-    TransactionTypes::global_output_t globalOut;
+    global_output_t globalOut;
     globalOut.outputIndex = t.globalOutputIndex;
     globalOut.targetKey = t.outputKey;
     info.outputs.push_back(globalOut);

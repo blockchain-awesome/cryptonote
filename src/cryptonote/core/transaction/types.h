@@ -13,8 +13,6 @@ using namespace crypto;
 namespace cryptonote
 {
 
-namespace TransactionTypes
-{
 
 enum class input_type_t : uint8_t
 {
@@ -51,7 +49,6 @@ struct input_key_info_t
     global_output_container_t outputs;
     output_key_info_t realOutput;
 };
-} // namespace TransactionTypes
 
 struct base_input_t
 {

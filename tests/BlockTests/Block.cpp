@@ -95,7 +95,7 @@ TEST_F(BlockTest, types)
 {
   block_info_t bi = block_info_t();
   ASSERT_TRUE(bi.empty());
-  TransactionTypes::input_key_info_t ikit = TransactionTypes::input_key_info_t();
+  input_key_info_t ikit = input_key_info_t();
   ASSERT_TRUE(sizeof(ikit) > 0);
 }
 

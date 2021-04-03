@@ -37,14 +37,14 @@ public:
   // inputs
   virtual size_t getInputCount() const override;
   virtual uint64_t getInputTotalAmount() const override;
-  virtual TransactionTypes::input_type_t getInputType(size_t index) const override;
+  virtual input_type_t getInputType(size_t index) const override;
   virtual void getInput(size_t index, key_input_t& input) const override;
   virtual void getInput(size_t index, multi_signature_input_t& input) const override;
 
   // outputs
   virtual size_t getOutputCount() const override;
   virtual uint64_t getOutputTotalAmount() const override;
-  virtual TransactionTypes::output_type_t getOutputType(size_t index) const override;
+  virtual output_type_t getOutputType(size_t index) const override;
   virtual void getOutput(size_t index, key_output_t& output, uint64_t& amount) const override;
   virtual void getOutput(size_t index, multi_signature_output_t& output, uint64_t& amount) const override;
 
@@ -134,16 +134,16 @@ uint64_t TransactionPrefixImpl::getInputTotalAmount() const {
     return val + getTransactionInputAmount(in); });
 }
 
-TransactionTypes::input_type_t TransactionPrefixImpl::getInputType(size_t index) const {
+input_type_t TransactionPrefixImpl::getInputType(size_t index) const {
   return getTransactionInputType(getInputChecked(m_txPrefix, index));
 }
 
 void TransactionPrefixImpl::getInput(size_t index, key_input_t& input) const {
-  input = boost::get<key_input_t>(getInputChecked(m_txPrefix, index, TransactionTypes::input_type_t::Key));
+  input = boost::get<key_input_t>(getInputChecked(m_txPrefix, index, input_type_t::Key));
 }
 
 void TransactionPrefixImpl::getInput(size_t index, multi_signature_input_t& input) const {
-  input = boost::get<multi_signature_input_t>(getInputChecked(m_txPrefix, index, TransactionTypes::input_type_t::Multisignature));
+  input = boost::get<multi_signature_input_t>(getInputChecked(m_txPrefix, index, input_type_t::Multisignature));
 }
 
 size_t TransactionPrefixImpl::getOutputCount() const {
@@ -155,18 +155,18 @@ uint64_t TransactionPrefixImpl::getOutputTotalAmount() const {
     return val + out.amount; });
 }
 
-TransactionTypes::output_type_t TransactionPrefixImpl::getOutputType(size_t index) const {
+output_type_t TransactionPrefixImpl::getOutputType(size_t index) const {
   return getTransactionOutputType(getOutputChecked(m_txPrefix, index).target);
 }
 
 void TransactionPrefixImpl::getOutput(size_t index, key_output_t& output, uint64_t& amount) const {
-  const auto& out = getOutputChecked(m_txPrefix, index, TransactionTypes::output_type_t::Key);
+  const auto& out = getOutputChecked(m_txPrefix, index, output_type_t::Key);
   output = boost::get<key_output_t>(out.target);
   amount = out.amount;
 }
 
 void TransactionPrefixImpl::getOutput(size_t index, multi_signature_output_t& output, uint64_t& amount) const {
-  const auto& out = getOutputChecked(m_txPrefix, index, TransactionTypes::output_type_t::Multisignature);
+  const auto& out = getOutputChecked(m_txPrefix, index, output_type_t::Multisignature);
   output = boost::get<multi_signature_output_t>(out.target);
   amount = out.amount;
 }

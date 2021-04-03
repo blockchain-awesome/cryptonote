@@ -58,7 +58,7 @@ void findMyOutputs(
 
     auto outType = tx.getOutputType(size_t(idx));
 
-    if (outType == TransactionTypes::output_type_t::Key) {
+    if (outType == output_type_t::Key) {
 
       uint64_t amount;
       key_output_t out;
@@ -66,7 +66,7 @@ void findMyOutputs(
       checkOutputKey(derivation, out.key, keyIndex, idx, spendKeys, outputs);
       ++keyIndex;
 
-    } else if (outType == TransactionTypes::output_type_t::Multisignature) {
+    } else if (outType == output_type_t::Multisignature) {
 
       uint64_t amount;
       multi_signature_output_t out;
@@ -368,8 +368,8 @@ std::error_code createTransfers(
     auto outType = tx.getOutputType(size_t(idx));
 
     if (
-      outType != TransactionTypes::output_type_t::Key &&
-      outType != TransactionTypes::output_type_t::Multisignature) {
+      outType != output_type_t::Key &&
+      outType != output_type_t::Multisignature) {
       continue;
     }
 
@@ -381,7 +381,7 @@ std::error_code createTransfers(
     info.globalOutputIndex = (blockInfo.height == WALLET_UNCONFIRMED_TRANSACTION_HEIGHT) ?
       UNCONFIRMED_TRANSACTION_GLOBAL_OUTPUT_INDEX : globalIdxs[idx];
 
-    if (outType == TransactionTypes::output_type_t::Key) {
+    if (outType == output_type_t::Key) {
       uint64_t amount;
       key_output_t out;
       tx.getOutput(idx, out, amount);
@@ -399,7 +399,7 @@ std::error_code createTransfers(
       info.amount = amount;
       info.outputKey = out.key;
 
-    } else if (outType == TransactionTypes::output_type_t::Multisignature) {
+    } else if (outType == output_type_t::Multisignature) {
       uint64_t amount;
       multi_signature_output_t out;
       tx.getOutput(idx, out, amount);

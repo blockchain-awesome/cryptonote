@@ -61,8 +61,8 @@ namespace {
       txHash = tx->getTransactionHash();
     }
 
-    TransactionTypes::input_key_info_t createInputInfo(uint64_t amount) {
-      TransactionTypes::input_key_info_t info;
+    input_key_info_t createInputInfo(uint64_t amount) {
+      input_key_info_t info;
 
       // cryptonote::key_pair_t srcTxKeys = cryptonote::generateKeyPair();
       key_pair_t srcTxKeys = Key::generate();
@@ -71,7 +71,7 @@ namespace {
 
       derivePublicKey(sender, srcTxKeys.publicKey, 5, targetKey);
 
-      TransactionTypes::global_output_t gout = { targetKey, 0 };
+      global_output_t gout = { targetKey, 0 };
 
       info.amount = 1000;
       info.outputs.push_back(gout);
@@ -115,14 +115,14 @@ TEST_F(TransactionApi, addAndSignInput) {
   ASSERT_EQ(0, tx->getInputCount());
   ASSERT_EQ(0, tx->getInputTotalAmount());
 
-  TransactionTypes::input_key_info_t info = createInputInfo(1000);
+  input_key_info_t info = createInputInfo(1000);
   key_pair_t ephKeys;
   size_t index = tx->addInput(sender, info, ephKeys);
 
   ASSERT_EQ(0, index);
   ASSERT_EQ(1, tx->getInputCount());
   ASSERT_EQ(1000, tx->getInputTotalAmount());
-  ASSERT_EQ(TransactionTypes::input_type_t::Key, tx->getInputType(index));
+  ASSERT_EQ(input_type_t::Key, tx->getInputType(index));
   ASSERT_EQ(1, tx->getRequiredSignaturesCount(index));
 
   ASSERT_TRUE(tx->validateInputs());
@@ -151,7 +151,7 @@ TEST_F(TransactionApi, addAndSignInputMsig) {
   ASSERT_EQ(0, index);
   ASSERT_EQ(1, tx->getInputCount());
   ASSERT_EQ(1000, tx->getInputTotalAmount());
-  ASSERT_EQ(TransactionTypes::input_type_t::Multisignature, tx->getInputType(index));
+  ASSERT_EQ(input_type_t::Multisignature, tx->getInputType(index));
   ASSERT_EQ(3, tx->getRequiredSignaturesCount(index));
 
   key_pair_t kp1;
@@ -183,7 +183,7 @@ TEST_F(TransactionApi, addOutputKey) {
   ASSERT_EQ(0, index);
   ASSERT_EQ(1, tx->getOutputCount());
   ASSERT_EQ(1000, tx->getOutputTotalAmount());
-  ASSERT_EQ(TransactionTypes::output_type_t::Key, tx->getOutputType(index));
+  ASSERT_EQ(output_type_t::Key, tx->getOutputType(index));
   EXPECT_NO_FATAL_FAILURE(checkHashChanged());
 }
 
@@ -202,7 +202,7 @@ TEST_F(TransactionApi, addOutputMsig) {
   ASSERT_EQ(0, index);
   ASSERT_EQ(1, tx->getOutputCount());
   ASSERT_EQ(1000, tx->getOutputTotalAmount());
-  ASSERT_EQ(TransactionTypes::output_type_t::Multisignature, tx->getOutputType(index));
+  ASSERT_EQ(output_type_t::Multisignature, tx->getOutputType(index));
   EXPECT_NO_FATAL_FAILURE(checkHashChanged());
 }
 
@@ -312,7 +312,7 @@ TEST_F(TransactionApi, appendExtra) {
 
 
 TEST_F(TransactionApi, doubleSpendInTransactionKey) {
-  TransactionTypes::input_key_info_t info = createInputInfo(1000);
+  input_key_info_t info = createInputInfo(1000);
 
   key_pair_t ephKeys;
   tx->addInput(sender, info, ephKeys);
