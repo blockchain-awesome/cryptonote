@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <string>
 #include <vector>
-#include "crypto.h"
+#include "crypto/crypto.h"
 #include <boost/variant.hpp>
 
 namespace cryptonote

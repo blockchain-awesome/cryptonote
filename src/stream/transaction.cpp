@@ -1,7 +1,6 @@
 
 #include "transaction.h"
-
-using namespace stream::crypto;
+#include "./crypto.h"
 
 namespace stream
 {
@@ -14,13 +13,13 @@ namespace stream
       return i;
     }
 
-    // Reader &operator>>(Reader &i, key_input_t &v)
-    // {
-    //   i >> v.amount;
-    //   i >> v.outputIndexes;
-    //   i >> v.keyImage;
-    //   return i;
-    // }
+    Reader &operator>>(Reader &i, key_input_t &v)
+    {
+      i >> v.amount;
+      i >> v.outputIndexes;
+      i >> v.keyImage;
+      return i;
+    }
 
     Writer &operator<<(Writer &o, const base_input_t &v)
     {

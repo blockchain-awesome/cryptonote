@@ -9,7 +9,6 @@ namespace stream
 {
   namespace cryptonote
   {
-    Reader &operator>>(Reader &i, public_key_t &v);
     template <typename T>
     Reader &operator>>(Reader &i, std::vector<T> &v)
     {
@@ -19,13 +18,11 @@ namespace stream
       v.resize(size);
       for (auto &item : v)
       {
-        i << item;
+        i >> item;
       }
 
       return i;
     }
-
-    Writer &operator<<(Writer &o, const public_key_t &v);
 
     template <typename T>
     Writer &operator<<(Writer &o, std::vector<T> &v)

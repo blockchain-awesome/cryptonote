@@ -1,5 +1,12 @@
 
-#pragma once
+
+#ifndef CRYPTO_TYPES_H_
+#define CRYPTO_TYPES_H_
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
 #include <stdint.h>
 
@@ -58,11 +65,9 @@ typedef struct
   uint8_t data[32];
 } elliptic_curve_scalar_t;
 
-// typedef struct
-// {
-//   hash_t h;
-//   struct
-//   {
-//     elliptic_curve_point_t a, b;
-//   } ab[];
-// } rs_comm_t;
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
+
+#endif

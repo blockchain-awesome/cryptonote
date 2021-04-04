@@ -6,7 +6,7 @@
 
 #include <vector>
 #include <boost/variant.hpp>
-#include "crypto.h"
+#include "crypto/crypto.h"
 #include "cryptonote/core/transaction/transaction.h"
 #include "cryptonote/structures/account.h"
 #include "cryptonote/structures/block.h"
