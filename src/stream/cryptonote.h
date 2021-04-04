@@ -15,7 +15,12 @@ namespace stream
       size_t size = 0;
       i >> size;
 
+      assert(size >= 0);
+
       v.resize(size);
+      if (size == 0) {
+        v.clear();
+      }
       for (auto &item : v)
       {
         i >> item;
