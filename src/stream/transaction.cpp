@@ -12,6 +12,11 @@ namespace stream
       i >> v.blockIndex;
       return i;
     }
+    Writer &operator<<(Writer &o, const base_input_t &v)
+    {
+      o << v.blockIndex;
+      return o;
+    }
 
     Reader &operator>>(Reader &i, key_input_t &v)
     {
@@ -21,14 +26,7 @@ namespace stream
       return i;
     }
 
-    Writer &operator<<(Writer &o, const base_input_t &v)
-    {
-      o << v.blockIndex;
-      return o;
-    }
-
-
-    Writer &operator>>(Writer &o, key_input_t &v)
+    Writer &operator<<(Writer &o, key_input_t &v)
     {
       o << v.amount;
       o << v.outputIndexes;
@@ -36,45 +34,55 @@ namespace stream
       return o;
     }
 
-    // Reader &operator>>(Reader &i, transaction_prefix_t &v)
-    // {
-    //   i >> v.version;
-    //   i >> v.unlockTime;
-    //   i >> v.inputs;
-    //   i >> v.outputs;
-    // }
+    Reader &operator>>(Reader &i, multi_signature_input_t &v)
+    {
+      i >> v.amount;
+      i >> v.signatureCount;
+      i >> v.outputIndex;
+      return i;
+    }
 
-    //     void serialize(transaction_prefix_t &txP, ISerializer &serializer)
-    // {
-    //   serializer(txP.version, "version");
+    Writer &operator<<(Writer &o, multi_signature_input_t &v)
+    {
+      o << v.amount;
+      o << v.signatureCount;
+      o << v.outputIndex;
+      return o;
+    }
 
-    //   // if (CURRENT_TRANSACTION_VERSION < txP.version) {
-    //   //   throw std::runtime_error("Wrong transaction version");
-    //   // }
+    Reader &operator>>(Reader &i, transaction_input_t &v)
+    {
+      uint8_t tag;
+      i.read(&tag, 1);
 
-    //   serializer(txP.unlockTime, "unlock_time");
-    //   serializer(txP.inputs, "vin");
-    //   serializer(txP.outputs, "vout");
-    //   serializeAsBinary(txP.extra, "extra", serializer);
-    // }
+      switch (tag)
+      {
+      case 0xff:
+      {
+        base_input_t key;
+        i >> key;
+        v = key;
+        break;
+      }
+      case 0x2:
+      {
+        key_input_t key;
+        i >> key;
+        v = key;
+        break;
+      }
+      case 0x3:
+      {
+        multi_signature_input_t key;
+        i >> key;
+        v = key;
+        break;
+      }
+      default:
+        throw std::runtime_error("Unknown variant tag");
+      }
+      return i;
+    }
 
-    //     void serialize(base_input_t &gen, ISerializer &serializer)
-    // {
-    //   serializer(gen.blockIndex, "height");
-    // }
-
-    // void serialize(key_input_t &key, ISerializer &serializer)
-    // {
-    //   serializer(key.amount, "amount");
-    //   serializeVarintVector(key.outputIndexes, serializer, "key_offsets");
-    //   serializer(key.keyImage, "k_image");
-    // }
-
-    // void serialize(multi_signature_input_t &multisignature, ISerializer &serializer)
-    // {
-    //   serializer(multisignature.amount, "amount");
-    //   serializer(multisignature.signatureCount, "signatures");
-    //   serializer(multisignature.outputIndex, "outputIndex");
-    // }
   }
 }
