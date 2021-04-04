@@ -1,9 +1,11 @@
 
 #include "transaction.h"
 
+using namespace stream::crypto;
+
 namespace stream
 {
-  namespace transaction
+  namespace cryptonote
   {
 
     Reader &operator>>(Reader &i, base_input_t &v)
@@ -11,6 +13,14 @@ namespace stream
       i >> v.blockIndex;
       return i;
     }
+
+    // Reader &operator>>(Reader &i, key_input_t &v)
+    // {
+    //   i >> v.amount;
+    //   i >> v.outputIndexes;
+    //   i >> v.keyImage;
+    //   return i;
+    // }
 
     Writer &operator<<(Writer &o, const base_input_t &v)
     {

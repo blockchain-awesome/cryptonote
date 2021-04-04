@@ -27,6 +27,6 @@ namespace stream
     inline Writer &operator<<(Writer &o, const hash_t &v) { o.write(v); return o; }
     inline Writer &operator<<(Writer &o, const chacha_iv_t &v) { o.write(v); return o; }
     inline Writer &operator<<(Writer &o, const elliptic_curve_scalar_t &v) { o.write(v); return o; }
-    inline Writer &operator<<(Writer &o, const elliptic_curve_scalar_t &v) { o.write(v); return o; }
+    inline Writer &operator<<(Writer &o, const elliptic_curve_point_t &v) { o.write(v); return o; }
   }
 }
