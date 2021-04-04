@@ -27,6 +27,15 @@ namespace stream
       return o;
     }
 
+
+    Writer &operator>>(Writer &o, key_input_t &v)
+    {
+      o << v.amount;
+      o << v.outputIndexes;
+      o << v.keyImage;
+      return o;
+    }
+
     // Reader &operator>>(Reader &i, transaction_prefix_t &v)
     // {
     //   i >> v.version;
