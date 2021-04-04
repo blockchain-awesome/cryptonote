@@ -63,23 +63,31 @@ void hash_process(union hash_state *state, const uint8_t *buf, size_t count);
 
 #endif
 
-enum
+
+#define HASH_SIZE 32
+#define HASH_DATA_AREA 136
+#define SLOW_HASH_CONTEXT_SIZE 2097552
+
+
+#ifdef __cplusplus
+extern "C"
 {
-  HASH_SIZE = 32,
-  HASH_DATA_AREA = 136,
-  SLOW_HASH_CONTEXT_SIZE = 2097552
-};
+#endif
+extern void cn_fast_hash(const void *data, size_t length, char *hash);
 
-void cn_fast_hash(const void *data, size_t length, char *hash);
+extern void cn_slow_hash(const void *data, size_t length, char *hash, int variant, int prehashed);
 
-void cn_slow_hash(const void *data, size_t length, char *hash, int variant, int prehashed);
+extern void hash_extra_blake(const void *data, size_t length, char *hash);
+extern void hash_extra_groestl(const void *data, size_t length, char *hash);
+extern void hash_extra_jh(const void *data, size_t length, char *hash);
+extern void hash_extra_skein(const void *data, size_t length, char *hash);
 
-void hash_extra_blake(const void *data, size_t length, char *hash);
-void hash_extra_groestl(const void *data, size_t length, char *hash);
-void hash_extra_jh(const void *data, size_t length, char *hash);
-void hash_extra_skein(const void *data, size_t length, char *hash);
+extern void tree_hash(const char (*hashes)[HASH_SIZE], size_t count, char *root_hash);
+extern size_t tree_depth(size_t count);
+extern void tree_branch(const char (*hashes)[HASH_SIZE], size_t count, char (*branch)[HASH_SIZE]);
+extern void tree_hash_from_branch(const char (*branch)[HASH_SIZE], size_t depth, const char *leaf, const void *path, char *root_hash);
 
-void tree_hash(const char (*hashes)[HASH_SIZE], size_t count, char *root_hash);
-size_t tree_depth(size_t count);
-void tree_branch(const char (*hashes)[HASH_SIZE], size_t count, char (*branch)[HASH_SIZE]);
-void tree_hash_from_branch(const char (*branch)[HASH_SIZE], size_t depth, const char *leaf, const void *path, char *root_hash);
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
