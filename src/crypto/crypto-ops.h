@@ -28,8 +28,8 @@
 // 
 // Parts of this file are originally copyright (c) 2012-2013 The Cryptonote developers
 
-#pragma once
-
+ #ifndef CRYPTO_OPS_H_
+ #define CRYPTO_OPS_H_
 /* From fe.h */
 
 typedef int32_t fe[10];
@@ -161,3 +161,5 @@ void fe_tobytes(unsigned char *, const fe);
 void fe_invert(fe out, const fe z);
 
 int ge_p3_is_point_at_infinity(const ge_p3 *p);
+
+#endif

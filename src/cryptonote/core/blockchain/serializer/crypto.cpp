@@ -4,8 +4,6 @@ bool parse_hash256(const std::string& str_hash, hash_t& hash) {
   return hex::podFrom(str_hash, hash);
 }
 
-namespace crypto {
-
 bool serialize(public_key_t& pubKey, Common::StringView name, cryptonote::ISerializer& serializer) {
   return serializePod(pubKey, name, serializer);
 }
@@ -36,6 +34,4 @@ bool serialize(elliptic_curve_scalar_t& ecScalar, Common::StringView name, crypt
 
 bool serialize(elliptic_curve_point_t& ecPoint, Common::StringView name, cryptonote::ISerializer& serializer) {
   return serializePod(ecPoint, name, serializer);
-}
-
 }

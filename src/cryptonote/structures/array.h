@@ -5,8 +5,6 @@
 #include "common/binary.h"
 #include "crypto.h"
 
-using namespace crypto;
-
 namespace cryptonote
 {
 extern const hash_t NULL_HASH;

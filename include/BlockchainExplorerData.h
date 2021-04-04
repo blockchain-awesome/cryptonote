@@ -12,7 +12,6 @@
 
 #include <boost/variant.hpp>
 
-using namespace crypto;
 
 namespace cryptonote
 {

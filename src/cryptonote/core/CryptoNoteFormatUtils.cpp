@@ -21,8 +21,6 @@ using namespace Logging;
 using namespace crypto;
 using namespace Common;
 
-#include "cryptonote/core/crypto.h"
-
 namespace cryptonote {
 
 bool parseAndValidateTransactionFromBinaryArray(const binary_array_t& tx_blob, transaction_t& tx, hash_t& tx_hash, hash_t& tx_prefix_hash) {

@@ -170,7 +170,7 @@ std::string encrypt(const std::string& plain, cryptonote::CryptoContext& cryptoC
   std::string cipher;
   cipher.resize(plain.size());
 
-  crypto::chacha8(plain.data(), plain.size(), cryptoContext.key, cryptoContext.iv, &cipher[0]);
+  chacha8(plain.data(), plain.size(), cryptoContext.key, cryptoContext.iv, &cipher[0]);
 
   return cipher;
 }
@@ -200,7 +200,7 @@ std::string decrypt(const std::string& cipher, cryptonote::CryptoContext& crypto
   std::string plain;
   plain.resize(cipher.size());
 
-  crypto::chacha8(cipher.data(), cipher.size(), cryptoContext.key, cryptoContext.iv, &plain[0]);
+  chacha8(cipher.data(), cipher.size(), cryptoContext.key, cryptoContext.iv, &plain[0]);
   return plain;
 }
 
@@ -331,9 +331,9 @@ void WalletSerializer::save(const std::string& password, Writer& destination, bo
 CryptoContext WalletSerializer::generateCryptoContext(const std::string& password) {
   CryptoContext context;
 
-  crypto::generate_chacha_key(password, context.key);
+  generate_chacha_key(password, context.key);
 
-  context.iv = crypto::rand<crypto::chacha_iv_t>();
+  context.iv = rand<chacha_iv_t>();
 
   return context;
 }
@@ -345,7 +345,7 @@ void WalletSerializer::saveVersion(Writer& destination) {
   s(version, "version");
 }
 
-void WalletSerializer::saveIv(Writer& destination, crypto::chacha_iv_t& iv) {
+void WalletSerializer::saveIv(Writer& destination, chacha_iv_t& iv) {
   BinaryOutputStreamSerializer s(destination);
   s.binary(reinterpret_cast<void *>(&iv.data), sizeof(iv.data), "chacha_iv_t");
 }
@@ -616,14 +616,14 @@ uint32_t WalletSerializer::loadVersion(Reader& source) {
   return version;
 }
 
-void WalletSerializer::loadIv(Reader& source, crypto::chacha_iv_t& iv) {
+void WalletSerializer::loadIv(Reader& source, chacha_iv_t& iv) {
   cryptonote::BinaryInputStreamSerializer s(source);
 
   s.binary(static_cast<void *>(&iv.data), sizeof(iv.data), "chacha_iv_t");
 }
 
-void WalletSerializer::generateKey(const std::string& password, crypto::chacha_key_t& key) {
-  crypto::generate_chacha_key(password, key);
+void WalletSerializer::generateKey(const std::string& password, chacha_key_t& key) {
+  generate_chacha_key(password, key);
 }
 
 void WalletSerializer::loadKeys(Reader& source, CryptoContext& cryptoContext) {

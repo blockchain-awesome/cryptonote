@@ -6,8 +6,6 @@
 #include <boost/utility/value_init.hpp>
 #include <cryptonote.h>
 
-using namespace crypto;
-
 namespace cryptonote
 {
 class Key

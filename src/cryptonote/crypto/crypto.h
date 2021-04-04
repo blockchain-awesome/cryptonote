@@ -10,76 +10,73 @@
 #include <type_traits>
 #include <vector>
 
-#include <crypto.h>
+extern "C" {
+#include "crypto/crypto.h"
+}
 
 #include "generic-ops.h"
 #include "hash.h"
 
-extern "C"
-{
-#include "crypto/random.h"
-#include "crypto/crypto.h"
-}
 
 namespace crypto
 {
+   extern void generate_random_bytes_not_thread_safe(size_t n, void *result);
+  extern std::mutex random_lock;
 
-extern std::mutex random_lock;
-
-/* Generate a value filled with random bytes.
+  /* Generate a value filled with random bytes.
    */
-template <typename T>
-typename std::enable_if<std::is_pod<T>::value, T>::type rand()
-{
-  typename std::remove_cv<T>::type res;
-  std::lock_guard<std::mutex> lock(random_lock);
-  generate_random_bytes_not_thread_safe(sizeof(T), &res);
-  return res;
-}
+  template <typename T>
+  typename std::enable_if<std::is_pod<T>::value, T>::type rand()
+  {
+    typename std::remove_cv<T>::type res;
+    std::lock_guard<std::mutex> lock(random_lock);
+    generate_random_bytes_not_thread_safe(sizeof(T), &res);
+    return res;
+  }
 
-/* Random number engine based on crypto::rand()
+  /* Random number engine based on crypto::rand()
    */
-template <typename T>
-class random_engine
-{
-public:
-  typedef T result_type;
+  template <typename T>
+  class random_engine
+  {
+  public:
+    typedef T result_type;
 
 #ifdef __clang__
-  constexpr static T min()
-  {
-    return (std::numeric_limits<T>::min)();
-  }
+    constexpr static T min()
+    {
+      return (std::numeric_limits<T>::min)();
+    }
 
-  constexpr static T max()
-  {
-    return (std::numeric_limits<T>::max)();
-  }
+    constexpr static T max()
+    {
+      return (std::numeric_limits<T>::max)();
+    }
 #else
-  static T(min)()
-  {
-    return (std::numeric_limits<T>::min)();
-  }
+    static T(min)()
+    {
+      return (std::numeric_limits<T>::min)();
+    }
 
-  static T(max)()
-  {
-    return (std::numeric_limits<T>::max)();
-  }
+    static T(max)()
+    {
+      return (std::numeric_limits<T>::max)();
+    }
 #endif
-  typename std::enable_if<std::is_unsigned<T>::value, T>::type operator()()
-  {
-    return rand<T>();
-  }
-};
+    typename std::enable_if<std::is_unsigned<T>::value, T>::type operator()()
+    {
+      return rand<T>();
+    }
+  };
 
-/* To generate an ephemeral key used to send money to:
+  /* To generate an ephemeral key used to send money to:
    * * The sender generates a new key pair, which becomes the transaction key. The public transaction key is included in "extra" field.
    * * Both the sender and the receiver generate key derivation from the transaction key and the receivers' "view" key.
    * * The sender uses key derivation, the output index, and the receivers' "spend" key to derive an ephemeral public key.
    * * The receiver can either derive the public key (to check that the transaction is addressed to him) or the private key (to spend the money).
    */
 
-/* To send money to a key:
+  /* To send money to a key:
    * * The sender generates an ephemeral key and includes it in transaction output.
    * * To spend the money, the receiver generates a key image from it.
    * * Then he selects a bunch of outputs, including the one he spends, and uses them to generate a ring signature.

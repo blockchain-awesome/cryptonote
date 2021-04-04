@@ -22,9 +22,6 @@ std::ostream &print256(std::ostream &o, const T &v)
 
 bool parse_hash256(const std::string &str_hash, hash_t &hash);
 
-
-namespace crypto
-{
   // Serialize for crypto data
 bool serialize(public_key_t &pubKey, Common::StringView name, cryptonote::ISerializer &serializer);
 bool serialize(secret_key_t &secKey, Common::StringView name, cryptonote::ISerializer &serializer);
@@ -41,4 +38,3 @@ inline std::ostream &operator<<(std::ostream &o, const key_derivation_t &v) { re
 inline std::ostream &operator<<(std::ostream &o, const key_image_t &v) { return print256(o, v); }
 inline std::ostream &operator<<(std::ostream &o, const signature_t &v) { return print256(o, v); }
 inline std::ostream &operator<<(std::ostream &o, const hash_t &v) { return print256(o, v); }
-} // namespace crypto

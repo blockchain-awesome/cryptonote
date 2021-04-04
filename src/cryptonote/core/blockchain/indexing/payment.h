@@ -28,7 +28,7 @@ class PaymentIdIndex
     }
 
   private:
-    std::unordered_multimap<hash_t, crypto::hash_t> index;
+    std::unordered_multimap<hash_t, hash_t> index;
 };
 
 } // namespace cryptonote

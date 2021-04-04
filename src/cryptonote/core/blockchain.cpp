@@ -17,7 +17,6 @@
 #include "serialization/BinarySerializationTools.h"
 #include "CryptoNoteTools.h"
 #include "cryptonote/structures/array.hpp"
-#include "cryptonote/core/crypto.h"
 
 #include "cryptonote/core/blockchain/serializer/block_cache.hpp"
 #include "cryptonote/core/blockchain/serializer/blockchain_indices.hpp"

@@ -22,13 +22,6 @@ using std::int32_t;
 using std::lock_guard;
 using std::mutex;
 
-extern "C"
-{
-#include "crypto/crypto-ops.h"
-#include "crypto/random.h"
-#include "crypto/crypto.h"
-}
-
 mutex random_lock;
 
 #ifdef _MSC_VER

@@ -32,8 +32,8 @@ private:
   void saveKeys(cryptonote::ISerializer& serializer);
   void loadKeys(cryptonote::ISerializer& serializer);
 
-  crypto::chacha_iv_t encrypt(const std::string& plain, const std::string& password, std::string& cipher);
-  void decrypt(const std::string& cipher, std::string& plain, crypto::chacha_iv_t iv, const std::string& password);
+  chacha_iv_t encrypt(const std::string& plain, const std::string& password, std::string& cipher);
+  void decrypt(const std::string& cipher, std::string& plain, chacha_iv_t iv, const std::string& password);
 
   cryptonote::Account& account;
   WalletUserTransactionsCache& transactionsCache;
