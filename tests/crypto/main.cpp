@@ -13,9 +13,6 @@
 #include "crypto-tests.h"
 #include "../io.h"
 
-#include "cryptonote/core/crypto.h"
-
-
 using namespace std;
 typedef hash_t chash;
 

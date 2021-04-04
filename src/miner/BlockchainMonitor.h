@@ -12,8 +12,6 @@
 
 #include "logging/LoggerRef.h"
 
-using namespace crypto;
-
 class BlockchainMonitor {
 public:
   BlockchainMonitor(System::Dispatcher& dispatcher, const std::string& daemonHost, uint16_t daemonPort, size_t pollingInterval, Logging::ILogger& logger);

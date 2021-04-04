@@ -28,9 +28,21 @@
 // 
 // Parts of this file are originally copyright (c) 2012-2013 The Cryptonote developers
 
-#pragma once
 
+#ifndef RANDOM_H_
+#define RANDOM_H_
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 #include <stddef.h>
 
-void generate_random_bytes_not_thread_safe(size_t n, void *result);
-void setup_random(int value);
+extern void generate_random_bytes_not_thread_safe(size_t n, void *result);
+extern void setup_random(int value);
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
+
+#endif

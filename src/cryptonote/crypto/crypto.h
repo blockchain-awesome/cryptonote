@@ -10,17 +10,17 @@
 #include <type_traits>
 #include <vector>
 
-extern "C" {
+extern "C"
+{
 #include "crypto/crypto.h"
+#include "crypto/random.h"
 }
 
 #include "generic-ops.h"
 #include "hash.h"
 
-
 namespace crypto
 {
-   extern void generate_random_bytes_not_thread_safe(size_t n, void *result);
   extern std::mutex random_lock;
 
   /* Generate a value filled with random bytes.

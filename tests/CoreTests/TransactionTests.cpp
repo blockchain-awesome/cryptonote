@@ -11,7 +11,6 @@
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/core/currency.h"
 #include "cryptonote/structures/array.hpp"
-#include "cryptonote/core/crypto.h"
 
 #include <common/math.hpp>
 

@@ -101,7 +101,7 @@ private:
 
   std::unordered_map<hash_t, cryptonote::block_t> blocks;
   std::unordered_map<uint32_t, hash_t> blockHashByHeightIndex;
-  std::unordered_map<hash_t, crypto::hash_t> blockHashByTxHashIndex;
+  std::unordered_map<hash_t, hash_t> blockHashByTxHashIndex;
 
   std::unordered_map<hash_t, cryptonote::transaction_t> transactions;
   std::unordered_map<hash_t, cryptonote::transaction_t> transactionPool;
