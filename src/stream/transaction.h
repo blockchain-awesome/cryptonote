@@ -15,16 +15,21 @@ namespace stream
 {
   namespace cryptonote
   {
-    Reader &operator>>(Reader &i,  base_input_t &v);
-    Reader &operator>>(Reader &i,  key_input_t &v);
-    Reader &operator>>(Reader &i,  multi_signature_input_t &v);
-    Reader &operator>>(Reader &i,  transaction_input_t &v);
+    Reader &operator>>(Reader &i, base_input_t &v);
+    Reader &operator>>(Reader &i, key_input_t &v);
+    Reader &operator>>(Reader &i, multi_signature_input_t &v);
+    Reader &operator>>(Reader &i, transaction_input_t &v);
+    // Reader &operator>>(Reader &i, key_output_t &v);
+    // Reader &operator>>(Reader &i, multi_signature_output_t &v);
+
     // Reader &operator>>(Reader &i, transaction_prefix_t &v);
 
-    Writer &operator<<(Writer &o, const base_input_t &v);
-    Writer &operator<<(Writer &o, const key_input_t &v);
-    Writer &operator<<(Writer &o, const multi_signature_input_t &v);
-    Writer &operator<<(Writer &o, const transaction_input_t &v);
+    Writer &operator<<(Writer &o, base_input_t &v);
+    Writer &operator<<(Writer &o, key_input_t &v);
+    Writer &operator<<(Writer &o, multi_signature_input_t &v);
+    Writer &operator<<(Writer &o, transaction_input_t &v);
+    // Writer &operator<<(Writer &o, const key_output_t &v);
+    // Writer &operator<<(Writer &o, const multi_signature_output_t &v);
     // Writer &operator<<(Writer &o, const public_key_t &v);
   }
 }

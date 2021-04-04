@@ -1,11 +1,42 @@
 
+#include <boost/variant/static_visitor.hpp>
+#include <boost/variant/apply_visitor.hpp>
 #include "transaction.h"
 #include "./crypto.h"
+
+typedef enum : uint8_t
+{
+  BASE = 0xFF,
+  KEY = 0x2,
+  SIGN = 0x3,
+  TRANSACTION = 0xcc,
+  BLOCK = 0Xbb
+} ioput_t;
+
+struct tag_getter_t : boost::static_visitor<uint8_t>
+{
+  uint8_t operator()(const cryptonote::base_input_t) { return BASE; }
+  uint8_t operator()(const cryptonote::key_input_t) { return KEY; }
+  uint8_t operator()(const cryptonote::multi_signature_input_t) { return SIGN; }
+  uint8_t operator()(const cryptonote::key_output_t) { return KEY; }
+  uint8_t operator()(const cryptonote::multi_signature_output_t) { return SIGN; }
+  uint8_t operator()(const cryptonote::transaction_t) { return TRANSACTION; }
+};
 
 namespace stream
 {
   namespace cryptonote
   {
+
+    struct input_visitor_t : boost::static_visitor<>
+    {
+      input_visitor_t(Writer &o) : o(o) {}
+
+      template <typename T>
+      void operator()(T &param) { o << param; }
+
+      Writer &o;
+    };
 
     Reader &operator>>(Reader &i, base_input_t &v)
     {
@@ -57,21 +88,21 @@ namespace stream
 
       switch (tag)
       {
-      case 0xff:
+      case BASE:
       {
         base_input_t key;
         i >> key;
         v = key;
         break;
       }
-      case 0x2:
+      case KEY:
       {
         key_input_t key;
         i >> key;
         v = key;
         break;
       }
-      case 0x3:
+      case SIGN:
       {
         multi_signature_input_t key;
         i >> key;
@@ -82,6 +113,18 @@ namespace stream
         throw std::runtime_error("Unknown variant tag");
       }
       return i;
+    }
+
+    Writer &operator<<(Writer &o, transaction_input_t &v)
+    {
+      tag_getter_t getter;
+      uint8_t tag = boost::apply_visitor(getter, v);
+
+      o << tag;
+
+      input_visitor_t visitor(o);
+      boost::apply_visitor(visitor, v);
+      return o;
     }
 
   }
