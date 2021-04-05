@@ -257,13 +257,49 @@ namespace stream
           }
         }
         std::vector<signature_t> signatures(ssize);
-        for(signature_t &sig: signatures) {
+        for (signature_t &sig : signatures)
+        {
           i >> sig;
         }
         v.signatures[j] = std::move(signatures);
       }
       return i;
-
     }
+
+    Writer &operator<<(Writer &o, transaction_t &v)
+    {
+      o << (*(transaction_prefix_t *)&v);
+
+      size_t size = v.inputs.size();
+      bool empty = v.signatures.empty();
+      bool equalSize = v.inputs.size() == v.signatures.size();
+      if (!empty && !equalSize)
+      {
+        throw std::runtime_error("Serialization error: unexpected signatures size");
+      }
+
+      for (size_t j = 0; j < size; j++)
+      {
+        signature_size_visitor visitor;
+        size_t ssize = boost::apply_visitor(visitor, v.inputs[j]);
+        if (empty)
+        {
+          if (ssize == 0)
+          {
+            continue;
+          }
+          else
+          {
+            throw std::runtime_error("Serialization error: signatures are not expected");
+          }
+        }
+        for (signature_t &sig : v.signatures[j])
+        {
+          o << sig;
+        }
+      }
+      return o;
+    }
+
   }
 }

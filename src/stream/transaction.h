@@ -35,6 +35,6 @@ namespace stream
     Writer &operator<<(Writer &o, transaction_output_target_t &v);
     Writer &operator<<(Writer &o, transaction_output_t &v);
     Writer &operator<<(Writer &o, transaction_prefix_t &v);
-    // Writer &operator<<(Writer &o, transaction_t &v);
+    Writer &operator<<(Writer &o, transaction_t &v);
   }
 }
