@@ -12,11 +12,11 @@
     return i;                                \
   }
 
-#define OSTREAMOP(T)                         \
-  inline Writer &operator<<(Writer &o, T &v) \
-  {                                          \
-    o.write(v);                              \
-    return o;                                \
+#define OSTREAMOP(T)                               \
+  inline Writer &operator<<(Writer &o, const T &v) \
+  {                                                \
+    o.write(v);                                    \
+    return o;                                      \
   }
 
 ISTREAMOP(public_key_t);

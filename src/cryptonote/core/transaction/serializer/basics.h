@@ -9,6 +9,7 @@
 #include "serialization/ISerializer.h"
 #include "cryptonote/crypto/crypto.h"
 #include "cryptonote/core/blockchain/serializer/crypto.h"
+#include "cryptonote/types.h"
 
 namespace cryptonote {
 

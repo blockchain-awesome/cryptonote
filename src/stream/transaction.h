@@ -7,7 +7,7 @@
 
 #include "cryptonote.h"
 #include "crypto.h"
-#include "cryptonote/core/transaction/types.h"
+#include "cryptonote/types.h"
 
 using namespace cryptonote;
 
@@ -15,6 +15,7 @@ namespace stream
 {
   namespace cryptonote
   {
+    // Basic
     Reader &operator>>(Reader &i, base_input_t &v);
     Reader &operator>>(Reader &i, key_input_t &v);
     Reader &operator>>(Reader &i, multi_signature_input_t &v);
@@ -36,5 +37,12 @@ namespace stream
     Writer &operator<<(Writer &o, transaction_output_t &v);
     Writer &operator<<(Writer &o, transaction_prefix_t &v);
     Writer &operator<<(Writer &o, transaction_t &v);
+
+    // Extra
+    Reader &operator>>(Reader &i, transaction_index_t &v);
+    // Reader &operator>>(Reader &i, transaction_map_t &v);
+
+    Writer &operator<<(Writer &o, const transaction_index_t &v);
+    // Writer &operator<<(Writer &o, const transaction_map_t &v);
   }
 }

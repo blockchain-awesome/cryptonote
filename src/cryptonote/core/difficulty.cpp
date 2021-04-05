@@ -6,7 +6,6 @@
 #include <cassert>
 #include <cstddef>
 #include <cstdint>
-#include <vector>
 
 #include "crypto/util.h"
 #include "crypto/types.h"
