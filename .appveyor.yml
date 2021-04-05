@@ -3,6 +3,7 @@ image:
 - Visual Studio 2017
 - ubuntu2004
 - ubuntu1804
+- macos
 platform:
   - x64
 install:
