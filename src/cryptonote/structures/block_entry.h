@@ -2,7 +2,7 @@
 
 #include "block.h"
 #include "array.h"
-#include "cryptonote/core/blockchain/serializer/transaction_entry.hpp"
+#include "cryptonote/core/transaction/serializer/transaction_entry.hpp"
 #include "cryptonote/core/key.h"
 
 namespace cryptonote

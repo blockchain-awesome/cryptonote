@@ -17,7 +17,6 @@ struct account_keys_t;
 void serialize(transaction_prefix_t& txP, ISerializer& serializer);
 void serialize(transaction_t& tx, ISerializer& serializer);
 void serialize(transaction_input_t& in, ISerializer& serializer);
-void serialize(transaction_output_t& in, ISerializer& serializer);
 
 void serialize(base_input_t& gen, ISerializer& serializer);
 void serialize(key_input_t& key, ISerializer& serializer);
@@ -27,6 +26,7 @@ void serialize(transaction_output_t& output, ISerializer& serializer);
 void serialize(transaction_output_target_t& output, ISerializer& serializer);
 void serialize(key_output_t& key, ISerializer& serializer);
 void serialize(multi_signature_output_t& multisignature, ISerializer& serializer);
+void serialize(transaction_index_t &idx, ISerializer &serializer);
 
 void serialize(block_header_t& header, ISerializer& serializer);
 void serialize(block_t& block, ISerializer& serializer);
