@@ -2,7 +2,7 @@
 
 #include "config/common.h"
 #include "cryptonote/core/transaction/transaction.h"
-#include "cryptonote/core/difficulty.h"
+#include "crypto/types.h"
 
 namespace cryptonote
 {

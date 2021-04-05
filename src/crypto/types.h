@@ -67,6 +67,15 @@ extern "C"
 
   typedef uint64_t difficulty_t;
 
+  typedef struct
+  {
+    uint8_t target;  // seconds
+    uint8_t cut;     //  timestamps to cut after sorting
+    uint16_t lag;    //
+    uint32_t window; // expected numbers of blocks per day
+
+  } difficulty_config_t;
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

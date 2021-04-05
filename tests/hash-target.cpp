@@ -33,10 +33,9 @@
 #include <cstring>
 #include <limits>
 #include "crypto/types.h"
-#include "cryptonote/core/difficulty.h"
+#include "crypto/difficulty.h"
 
 using namespace std;
-using cryptonote::check_hash;
 
 int main(int argc, char *argv[]) {
   hash_t h;

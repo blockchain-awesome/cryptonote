@@ -5,7 +5,7 @@
 #pragma once
 
 #include "cryptonote/core/key.h"
-#include "cryptonote/core/difficulty.h"
+#include "crypto/difficulty.h"
 
 namespace cryptonote {
   struct IMinerHandler {

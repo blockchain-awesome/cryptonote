@@ -11,7 +11,7 @@
 #include <system_error>
 #include <functional>
 #include <cryptonote.h>
-#include "cryptonote/core/difficulty.h"
+#include "crypto/difficulty.h"
 
 #include "cryptonote/core/template/MessageQueue.h"
 #include "cryptonote/core/BlockchainMessages.h"

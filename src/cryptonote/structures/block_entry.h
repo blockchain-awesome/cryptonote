@@ -2,6 +2,7 @@
 
 #include "block.h"
 #include "array.h"
+#include "crypto/difficulty.h"
 #include "cryptonote/core/transaction/serializer/transaction_entry.hpp"
 #include "cryptonote/core/key.h"
 

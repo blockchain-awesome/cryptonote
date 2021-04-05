@@ -11,7 +11,7 @@
 
 #include "cryptonote/core/key.h"
 #include "cryptonote/core/currency.h"
-#include "cryptonote/core/difficulty.h"
+#include "crypto/difficulty.h"
 #include "cryptonote/core/IMinerHandler.h"
 #include "command_line/MinerConfig.h"
 #include "cryptonote/core/OnceInInterval.h"
