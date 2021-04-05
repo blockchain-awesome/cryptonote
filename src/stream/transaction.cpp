@@ -3,6 +3,7 @@
 #include <boost/variant/apply_visitor.hpp>
 #include "transaction.h"
 #include "crypto.h"
+#include "cryptonote/crypto/crypto.h"
 
 typedef enum : uint8_t
 {
@@ -308,25 +309,6 @@ namespace stream
       return i;
     }
 
-    // Reader &operator>>(Reader &i, transaction_map_t &v)
-    // {
-
-    //   size_t size = 0;
-    //   v.clear();
-
-    //   i >> size;
-
-    //   for (size_t j = 0; j < size; j++)
-    //   {
-    //     hash_t key;
-    //     transaction_index_t idx;
-    //     i >> key;
-    //     i >> idx;
-    //     v.insert(std::make_pair(key, idx));
-    //   }
-    //   return i;
-    // }
-
     Writer &operator<<(Writer &o, const transaction_index_t &v)
     {
       o << v.block;
@@ -334,18 +316,36 @@ namespace stream
       return o;
     }
 
-    // Writer &operator<<(Writer &o, const transaction_map_t &v)
-    // {
+    Reader &operator>>(Reader &i, transaction_map_t &v)
+    {
 
-    //   size_t size = v.size();
-    //   o << size;
+      size_t size = 0;
 
-    //   for (auto &kv : v)
-    //   {
-    //     o << kv.first;
-    //     o << kv.second;
-    //   }
-    //   return o;
-    // }
+      i >> size;
+
+      for (size_t j = 0; j < size; j++)
+      {
+        hash_t key;
+        transaction_index_t idx;
+        i >> key;
+        i >> idx;
+        v.insert(std::make_pair<hash_t, transaction_index_t>(std::move(key), std::move(idx)));
+      }
+      return i;
+    }
+
+    Writer &operator<<(Writer &o, const transaction_map_t &v)
+    {
+
+      size_t size = v.size();
+      o << size;
+
+      for (auto &kv : v)
+      {
+        o << kv.first;
+        o << kv.second;
+      }
+      return o;
+    }
   }
 }

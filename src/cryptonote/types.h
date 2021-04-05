@@ -3,8 +3,6 @@
 #include <cstdint>
 #include <unordered_map>
 #include "crypto/types.h"
-#include "cryptonote/structures/block.h"
-#include "cryptonote/core/transaction/types.h"
 
 struct transaction_index_t
 {
