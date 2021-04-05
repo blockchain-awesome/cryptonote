@@ -4,6 +4,7 @@
 #include "crypto/types.h"
 #include "reader.h"
 #include "writer.h"
+#include <assert.h>
 
 namespace stream
 {
