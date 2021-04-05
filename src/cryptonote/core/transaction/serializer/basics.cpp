@@ -420,4 +420,11 @@ namespace cryptonote
     serializer(tid.input, "input");
   }
 
+  void mou_t::serialize(ISerializer &s)
+  {
+    s(transactionIndex, "txindex");
+    s(outputIndex, "outindex");
+    s(isUsed, "used");
+  }
+
 } //namespace cryptonote

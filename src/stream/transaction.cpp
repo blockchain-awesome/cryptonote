@@ -347,5 +347,22 @@ namespace stream
       }
       return o;
     }
+
+    Reader &operator>>(Reader &i, multisignature_output_usage_t &v)
+    {
+      i >> v.transactionIndex;
+      i >> v.outputIndex;
+      i >> v.isUsed;
+      return i;
+    }
+
+    Writer &operator<<(Writer &o, const multisignature_output_usage_t &v)
+    {
+      o << v.transactionIndex;
+      o << v.outputIndex;
+      o << v.isUsed;
+      return o;
+    }
+
   }
 }

@@ -45,4 +45,10 @@ void serialize(transaction_input_multisignature_details_t& timd, ISerializer& se
 void serialize(transaction_input_details_base_t &tid, ISerializer &serializer);
 void serialize(transaction_input_details_t& tid, ISerializer& serializer);
 
+
+struct mou_t : public multisignature_output_usage_t
+{
+    void serialize(ISerializer &s);
+};
+
 }

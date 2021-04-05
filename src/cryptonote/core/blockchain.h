@@ -12,7 +12,6 @@
 
 #include "common/ObserverManager.h"
 #include "cryptonote/core/blockchain/serializer/block_index.h"
-#include "cryptonote/core/transaction/serializer/multisignature_output_usage.hpp"
 #include "cryptonote/core/checkpoints.h"
 #include "cryptonote/core/currency.h"
 #include "cryptonote/core/IBlockchainStorageObserver.h"
@@ -188,7 +187,7 @@ namespace cryptonote {
     typedef google::sparse_hash_set<key_image_t> key_images_container_t;
     typedef std::unordered_map<hash_t, block_entry_t> blocks_ext_by_hash_t;
     typedef google::sparse_hash_map<uint64_t, std::vector<std::pair<transaction_index_t, uint16_t>>> outputs_container_t; //hash_t - tx hash, size_t - index of out in transaction
-    typedef google::sparse_hash_map<uint64_t, std::vector<multisignature_output_usage_t>> multisignature_outputs_container_t;
+    typedef google::sparse_hash_map<uint64_t, std::vector<mou_t>> multisignature_outputs_container_t;
 
     const Currency& m_currency;
     TxMemoryPool& m_tx_pool;

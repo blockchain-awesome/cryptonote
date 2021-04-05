@@ -6,6 +6,7 @@
 #include <vector>
 #include "crypto/crypto.h"
 #include <boost/variant.hpp>
+#include "cryptonote/types.h"
 
 namespace cryptonote
 {
@@ -97,5 +98,12 @@ namespace cryptonote
     struct transaction_t : public transaction_prefix_t
     {
         std::vector<std::vector<signature_t>> signatures;
+    };
+
+    struct multisignature_output_usage_t
+    {
+        transaction_index_t transactionIndex;
+        uint16_t outputIndex;
+        bool isUsed;
     };
 } // namespace cryptonote
