@@ -11,44 +11,49 @@
 #include "cryptonote/core/blockchain/serializer/crypto.h"
 #include "cryptonote/types.h"
 
-namespace cryptonote {
-
-struct account_keys_t;
-
-void serialize(transaction_prefix_t& txP, ISerializer& serializer);
-void serialize(transaction_t& tx, ISerializer& serializer);
-void serialize(transaction_input_t& in, ISerializer& serializer);
-
-void serialize(base_input_t& gen, ISerializer& serializer);
-void serialize(key_input_t& key, ISerializer& serializer);
-void serialize(multi_signature_input_t& multisignature, ISerializer& serializer);
-
-void serialize(transaction_output_t& output, ISerializer& serializer);
-void serialize(transaction_output_target_t& output, ISerializer& serializer);
-void serialize(key_output_t& key, ISerializer& serializer);
-void serialize(multi_signature_output_t& multisignature, ISerializer& serializer);
-void serialize(transaction_index_t &idx, ISerializer &serializer);
-
-void serialize(block_header_t& header, ISerializer& serializer);
-void serialize(block_t& block, ISerializer& serializer);
-
-void serialize(account_public_address_t& address, ISerializer& serializer);
-void serialize(account_keys_t& keys, ISerializer& s);
-
-void serialize(key_pair_t& keyPair, ISerializer& serializer);
-
-// For block explorer
-
-void serialize(transaction_input_generate_details_t& tigd, ISerializer& serializer);
-void serialize(transaction_input_to_key_details_t& titkd, ISerializer& serializer);
-void serialize(transaction_input_multisignature_details_t& timd, ISerializer& serializer);
-void serialize(transaction_input_details_base_t &tid, ISerializer &serializer);
-void serialize(transaction_input_details_t& tid, ISerializer& serializer);
-
-
-struct mou_t : public multisignature_output_usage_t
+namespace cryptonote
 {
+
+  struct account_keys_t;
+
+  void serialize(transaction_prefix_t &txP, ISerializer &serializer);
+  void serialize(transaction_t &tx, ISerializer &serializer);
+  void serialize(transaction_input_t &in, ISerializer &serializer);
+
+  void serialize(base_input_t &gen, ISerializer &serializer);
+  void serialize(key_input_t &key, ISerializer &serializer);
+  void serialize(multi_signature_input_t &multisignature, ISerializer &serializer);
+
+  void serialize(transaction_output_t &output, ISerializer &serializer);
+  void serialize(transaction_output_target_t &output, ISerializer &serializer);
+  void serialize(key_output_t &key, ISerializer &serializer);
+  void serialize(multi_signature_output_t &multisignature, ISerializer &serializer);
+  void serialize(transaction_index_t &idx, ISerializer &serializer);
+
+  void serialize(block_header_t &header, ISerializer &serializer);
+  void serialize(block_t &block, ISerializer &serializer);
+
+  void serialize(account_public_address_t &address, ISerializer &serializer);
+  void serialize(account_keys_t &keys, ISerializer &s);
+
+  void serialize(key_pair_t &keyPair, ISerializer &serializer);
+
+  // For block explorer
+
+  void serialize(transaction_input_generate_details_t &tigd, ISerializer &serializer);
+  void serialize(transaction_input_to_key_details_t &titkd, ISerializer &serializer);
+  void serialize(transaction_input_multisignature_details_t &timd, ISerializer &serializer);
+  void serialize(transaction_input_details_base_t &tid, ISerializer &serializer);
+  void serialize(transaction_input_details_t &tid, ISerializer &serializer);
+
+  struct mou_t : public multisignature_output_usage_t
+  {
     void serialize(ISerializer &s);
-};
+  };
+
+  struct te_t : transaction_entry_t
+  {
+    void serialize(ISerializer &s);
+  };
 
 }

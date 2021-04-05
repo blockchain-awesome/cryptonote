@@ -31,7 +31,7 @@ namespace stream
     }
 
     template <typename T>
-    Writer &operator<<(Writer &o, std::vector<T> &v)
+    Writer &operator<<(Writer &o, const std::vector<T> &v)
     {
       size_t size = v.size();
       o << size;

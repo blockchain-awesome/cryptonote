@@ -426,5 +426,10 @@ namespace cryptonote
     s(outputIndex, "outindex");
     s(isUsed, "used");
   }
+  void te_t::serialize(ISerializer &s)
+  {
+    s(tx, "tx");
+    s(m_global_output_indexes, "indexes");
+  }
 
 } //namespace cryptonote
