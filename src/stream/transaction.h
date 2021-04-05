@@ -24,7 +24,7 @@ namespace stream
     Reader &operator>>(Reader &i, transaction_output_target_t &v);
     Reader &operator>>(Reader &i, transaction_output_t &v);
     Reader &operator>>(Reader &i, transaction_prefix_t &v);
-    // Reader &operator>>(Reader &i, transaction_t &v);
+    Reader &operator>>(Reader &i, transaction_t &v);
 
     Writer &operator<<(Writer &o, base_input_t &v);
     Writer &operator<<(Writer &o, key_input_t &v);

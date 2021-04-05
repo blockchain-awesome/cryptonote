@@ -38,6 +38,13 @@ namespace stream
       Writer &o;
     };
 
+    struct signature_size_visitor : public boost::static_visitor<size_t>
+    {
+      size_t operator()(const base_input_t &txin) const { return 0; }
+      size_t operator()(const key_input_t &txin) const { return txin.outputIndexes.size(); }
+      size_t operator()(const multi_signature_input_t &txin) const { return txin.signatureCount; }
+    };
+
     Reader &operator>>(Reader &i, base_input_t &v)
     {
       i >> v.blockIndex;
@@ -223,15 +230,40 @@ namespace stream
       return o;
     }
 
-    // Reader &operator>>(Reader &i, transaction_t &v)
-    // {
-    //   i >> (*(transaction_prefix_t *)&v);
-    //   size_t size = v.inputs.size();
-    //   v.signatures.resize(size);
-    //   bool empty = v.signatures.empty();
+    Reader &operator>>(Reader &i, transaction_t &v)
+    {
+      i >> (*(transaction_prefix_t *)&v);
+      size_t size = v.inputs.size();
+      v.signatures.resize(size);
+      bool empty = v.signatures.empty();
+      bool equalSize = v.inputs.size() == v.signatures.size();
+      if (!empty && !equalSize)
+      {
+        throw std::runtime_error("Serialization error: unexpected signatures size");
+      }
+      for (size_t j = 0; j < size; j++)
+      {
+        signature_size_visitor visitor;
+        size_t ssize = boost::apply_visitor(visitor, v.inputs[j]);
+        if (empty)
+        {
+          if (ssize == 0)
+          {
+            continue;
+          }
+          else
+          {
+            throw std::runtime_error("Serialization error: signatures are not expected");
+          }
+        }
+        std::vector<signature_t> signatures(ssize);
+        for(signature_t &sig: signatures) {
+          i >> sig;
+        }
+        v.signatures[j] = std::move(signatures);
+      }
+      return i;
 
-    //   i >> v.signatures;
-    // }
-
+    }
   }
 }
