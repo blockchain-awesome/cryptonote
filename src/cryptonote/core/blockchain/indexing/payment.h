@@ -3,8 +3,8 @@
 #include <unordered_map>
 #include "cryptonote/crypto/hash.h"
 #include "cryptonote/core/key.h"
+#include "stream/map.hpp"
 
-#include "stream/cryptonote.h"
 
 using namespace stream::cryptonote;
 
@@ -30,10 +30,7 @@ namespace cryptonote
     {
       archive &index;
     }
-  friend Reader &operator>>(Reader &i, PaymentIdIndex &v);
 
-  friend Writer &operator<<(Writer &o, const PaymentIdIndex &v);
-  private:
     std::unordered_multimap<hash_t, hash_t> index;
   };
 

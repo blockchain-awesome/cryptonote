@@ -1,5 +1,9 @@
 #include "writer.h"
 #include "reader.h"
+#include "crypto/types.h"
+#include "stream/crypto.h"
+#include "stream/cryptonote.h"
+#include "stream/block.h"
 #include <map>
 #include <unordered_map>
 #include <unordered_set>
@@ -10,8 +14,8 @@ namespace stream
   namespace cryptonote
   {
 
-    template <typename KEY, typename VALUE, typename HASH>
-    Reader &operator>>(Reader &i, std::unordered_map<KEY, VALUE, HASH> &v)
+    template <typename T>
+    Reader &readMap(Reader &i, T &v)
     {
 
       size_t size = 0;
@@ -20,8 +24,8 @@ namespace stream
 
       for (size_t j = 0; j < size; j++)
       {
-        typename std::unordered_map<KEY, VALUE, HASH>::key_type key;
-        typename std::unordered_map<KEY, VALUE, HASH>::mapped_type idx;
+        typename T::key_type key;
+        typename T::mapped_type idx;
         i >> key;
         i >> idx;
         v.insert(std::make_pair(std::move(key), std::move(idx)));
@@ -29,8 +33,8 @@ namespace stream
       return i;
     }
 
-    template <typename KEY, typename VALUE, typename HASH>
-    Writer &operator>>(Writer &o, const std::unordered_map<KEY, VALUE, HASH> &v)
+    template <typename T>
+    Writer &writeMap(Writer &o, const T &v)
     {
       size_t size = v.size();
       o << size;
@@ -44,14 +48,44 @@ namespace stream
     }
 
     // template <typename KEY, typename VALUE, typename HASH>
-    // Reader &operator>>(Reader &i, std::unordered_multimap<KEY, VALUE, HASH> &v);
+    // Reader &operator>>(Reader &i, std::unordered_map<KEY, VALUE, HASH> &v)
+    // {
+    //   return readMap(i, v);
+    // }
+
+    // template <typename KEY, typename VALUE, typename HASH>
+    // Writer &operator<<(Writer &o, const std::unordered_map<KEY, VALUE, HASH> &v)
+    // {
+    //   return writeMap(o, v);
+    // }
+
+    // template <typename KEY, typename VALUE, typename HASH>
+    // Reader &operator>>(Reader &i, std::unordered_multimap<KEY, VALUE, HASH> &v)
+    // {
+    //   return readMap(i, v);
+    // }
+
+    // template <typename KEY, typename VALUE>
+    // Reader &operator>>(Reader &i, std::unordered_multimap<KEY, VALUE> &v)
+    // {
+    //   return readMap(i, v);
+    // }
     // template <typename KEY, typename VALUE, typename HASH>
     // Reader &operator>>(Reader &i, std::map<KEY, VALUE, HASH> &v);
     // template <typename KEY, typename VALUE, typename HASH>
     // Reader &operator>>(Reader &i, std::multimap<KEY, VALUE, HASH> &v);
 
     // template <typename KEY, typename VALUE, typename HASH>
-    // Writer &operator>>(Writer &o, const std::unordered_multimap<KEY, VALUE, HASH> &v);
+    // Writer &operator<<(Writer &o, const std::unordered_multimap<KEY, VALUE, HASH> &v)
+    // {
+    //   return writeMap(o, v);
+    // }
+
+    // template <typename KEY, typename VALUE>
+    // Writer &operator<<(Writer &o, const std::unordered_multimap<KEY, VALUE> &v)
+    // {
+    //   return writeMap(o, v);
+    // }
     // template <typename KEY, typename VALUE, typename HASH>
     // Writer &operator>>(Writer &o, const std::map<KEY, VALUE, HASH> &v);
     // template <typename KEY, typename VALUE, typename HASH>
