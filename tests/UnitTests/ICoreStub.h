@@ -43,7 +43,7 @@ public:
   virtual bool have_block(const hash_t& id) override;
   std::vector<hash_t> buildSparseChain() override;
   std::vector<hash_t> buildSparseChain(const hash_t& startBlockId) override;
-  virtual bool get_stat_info(cryptonote::csi_t& st_inf) override { return false; }
+  virtual bool get_stat_info(cryptonote::core_state_info_t& st_inf) override { return false; }
   virtual bool on_idle() override { return false; }
   virtual void pause_mining() override {}
   virtual void update_block_template_and_resume_mining() override {}

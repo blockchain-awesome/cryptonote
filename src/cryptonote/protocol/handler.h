@@ -52,7 +52,7 @@ namespace cryptonote
     bool on_idle();
     void onConnectionOpened(CryptoNoteConnectionContext& context);
     void onConnectionClosed(CryptoNoteConnectionContext& context);
-    bool get_stat_info(csi_t& stat_inf);
+    bool get_stat_info(core_state_info_t& stat_inf);
     bool get_payload_sync_data(CORE_SYNC_DATA& hshd);
     bool process_payload_sync_data(const CORE_SYNC_DATA& hshd, CryptoNoteConnectionContext& context, bool is_inital);
     int handleCommand(bool is_notify, int command, const binary_array_t& in_buff, binary_array_t& buff_out, CryptoNoteConnectionContext& context, bool& handled);

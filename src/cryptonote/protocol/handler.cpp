@@ -108,7 +108,7 @@ bool CryptoNoteProtocolHandler::start_sync(CryptoNoteConnectionContext& context)
   return true;
 }
 
-bool CryptoNoteProtocolHandler::get_stat_info(csi_t& stat_inf) {
+bool CryptoNoteProtocolHandler::get_stat_info(core_state_info_t& stat_inf) {
   return m_core.get_stat_info(stat_inf);
 }
 

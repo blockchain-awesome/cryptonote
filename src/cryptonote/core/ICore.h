@@ -30,7 +30,7 @@ class Block;
 struct block_verification_context_t;
 struct block_full_info_t;
 struct block_short_info_t;
-struct csi_t;
+struct core_state_info_t;
 struct ICryptonoteProtocol;
 struct transaction_t;
 struct multi_signature_input_t;
@@ -48,7 +48,7 @@ public:
   virtual bool have_block(const hash_t& id) = 0;
   virtual std::vector<hash_t> buildSparseChain() = 0;
   virtual std::vector<hash_t> buildSparseChain(const hash_t& startBlockId) = 0;
-  virtual bool get_stat_info(cryptonote::csi_t& st_inf) = 0;
+  virtual bool get_stat_info(cryptonote::core_state_info_t& st_inf) = 0;
   virtual bool on_idle() = 0;
   virtual void pause_mining() = 0;
   virtual void update_block_template_and_resume_mining() = 0;

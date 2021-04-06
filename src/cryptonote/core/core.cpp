@@ -199,7 +199,7 @@ bool core::handle_incoming_tx(const binary_array_t& tx_blob, tx_verification_con
   return handleIncomingTransaction(tx, tx_hash, tx_blob.size(), tvc, keeped_by_block);
 }
 
-bool core::get_stat_info(csi_t& st_inf) {
+bool core::get_stat_info(core_state_info_t& st_inf) {
   st_inf.mining_speed = m_miner->get_speed();
   st_inf.alternative_blocks = m_blockchain.getAlternativeBlocksCount();
   st_inf.blockchain_height = m_blockchain.getHeight();

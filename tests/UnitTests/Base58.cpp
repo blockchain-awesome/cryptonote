@@ -14,12 +14,15 @@
 #include "cryptonote/core/account.h"
 #include "cryptonote/core/currency.h"
 #include "cryptonote/core/transaction/serializer/basics.h"
+#include "stream/block.h"
+#include "stream/persistent.h"
 #include "common/os.h"
 
 #include "serialization/BinarySerializationTools.h"
 #include "common/base58.cpp"
 
 using namespace cryptonote;
+using namespace stream::cryptonote;
 
 #define MAKE_STR(arr) std::string(arr, sizeof(arr) - 1)
 
@@ -470,7 +473,7 @@ TEST(parseAccountAddressString, handles_valid_address)
   ASSERT_EQ(TEST_PUBLIC_ADDRESS_BASE58_PREFIX, prefix);
 
   binary_array_t blob;
-  ASSERT_NO_THROW(blob = cryptonote::storeToBinary(addr));
+  ASSERT_NO_THROW(blob = serialize(addr));
   ASSERT_EQ(IBinary::to(blob), test_serialized_keys);
 }
 
