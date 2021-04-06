@@ -10,7 +10,7 @@
 #include <boost/lexical_cast.hpp>
 #include "common/base58.h"
 #include "common/int-util.h"
-#include "cryptonote/structures/block.h"
+#include "cryptonote/types.h"
 
 #include "account.h"
 #include "CryptoNoteFormatUtils.h"

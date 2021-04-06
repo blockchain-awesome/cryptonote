@@ -9,5 +9,5 @@
 #include "crypto/crypto.h"
 #include "cryptonote/core/transaction/transaction.h"
 #include "cryptonote/structures/account.h"
-#include "cryptonote/structures/block.h"
+#include "cryptonote/types.h"
 #include "cryptonote/structures/array.h"

@@ -1,6 +1,7 @@
 #pragma once
 
-#include "block.h"
+#include "cryptonote/types.h"
+#include "config/common.h"
 #include "array.h"
 #include "crypto/difficulty.h"
 #include "cryptonote/core/key.h"

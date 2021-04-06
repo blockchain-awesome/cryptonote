@@ -17,7 +17,7 @@
 
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "system/Event.h"
-#include "cryptonote/core/transaction/types.h"
+#include "cryptonote/types.h"
 
 using namespace cryptonote;
 using namespace config;

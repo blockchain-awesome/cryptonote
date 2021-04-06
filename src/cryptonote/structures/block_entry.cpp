@@ -1,5 +1,4 @@
 #include "common/binary.h"
-#include "block.h"
 #include "array.hpp"
 #include <boost/utility/value_init.hpp>
 #include "config/common.h"

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "config/common.h"
-#include "../structures/block.h"
+#include "cryptonote/types.h"
 
 using namespace config;
 

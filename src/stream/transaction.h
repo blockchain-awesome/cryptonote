@@ -8,7 +8,6 @@
 #include "cryptonote.h"
 #include "crypto.h"
 #include "cryptonote/types.h"
-#include "cryptonote/core/transaction/types.h"
 
 using namespace cryptonote;
 
