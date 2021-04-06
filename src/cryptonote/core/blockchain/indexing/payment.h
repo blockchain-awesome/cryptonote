@@ -4,13 +4,17 @@
 #include "cryptonote/crypto/hash.h"
 #include "cryptonote/core/key.h"
 
+#include "stream/cryptonote.h"
+
+using namespace stream::cryptonote;
+
 namespace cryptonote
 {
 
-class ISerializer;
+  class ISerializer;
 
-class PaymentIdIndex
-{
+  class PaymentIdIndex
+  {
   public:
     PaymentIdIndex() = default;
 
@@ -24,11 +28,17 @@ class PaymentIdIndex
     template <class Archive>
     void serialize(Archive &archive, unsigned int version)
     {
-        archive &index;
+      archive &index;
     }
+  friend Reader &operator>>(Reader &i, PaymentIdIndex &v);
 
+  friend Writer &operator<<(Writer &o, const PaymentIdIndex &v);
   private:
     std::unordered_multimap<hash_t, hash_t> index;
-};
+  };
+
+  Reader &operator>>(Reader &i, PaymentIdIndex &v);
+
+  Writer &operator<<(Writer &o, const PaymentIdIndex &v);
 
 } // namespace cryptonote
