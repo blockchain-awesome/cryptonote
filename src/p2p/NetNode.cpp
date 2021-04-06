@@ -29,6 +29,7 @@
 #include "stream/reader.h"
 #include "stream/writer.h"
 #include "cryptonote/crypto/crypto.h"
+#include "cryptonote/serializer/core_state_info.h"
 #include "common/os.h"
 #include "command_line/options.h"
 

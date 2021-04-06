@@ -8,7 +8,7 @@
 
 #include "cryptonote/crypto/crypto.h"
 #include "CryptoNoteConfig.h"
-#include "cryptonote/serializer/CryptoNoteStatInfo.h"
+#include "cryptonote/serializer/core_state_info.h"
 
 // new serialization
 #include "serialization/ISerializer.h"
@@ -222,7 +222,7 @@ namespace cryptonote
       std::string os_version;
       uint64_t connections_count;
       uint64_t incoming_connections_count;
-      CoreStateInfo payload_info;
+      csi_t payload_info;
 
       void serialize(ISerializer& s) {
         KV_MEMBER(version)

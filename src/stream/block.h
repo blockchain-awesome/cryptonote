@@ -19,11 +19,13 @@ namespace stream
     Reader &operator>>(Reader &i, key_pair_t &v);
     Reader &operator>>(Reader &i, account_public_address_t &v);
     Reader &operator>>(Reader &i, account_keys_t &v);
+    Reader &operator>>(Reader &i, core_state_info_t &v);
 
     Writer &operator<<(Writer &o, const block_header_t &v);
     Writer &operator<<(Writer &o, const block_t &v);
     Writer &operator<<(Writer &o, const key_pair_t &v);
     Writer &operator<<(Writer &o, const account_public_address_t &v);
     Writer &operator<<(Writer &o, const account_keys_t &v);
+    Writer &operator<<(Writer &o, const core_state_info_t &v);
   }
 }

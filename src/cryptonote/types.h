@@ -156,4 +156,15 @@ namespace cryptonote
     secret_key_t secretKey;
   };
 
+  // State types
+
+  struct core_state_info_t
+  {
+    uint64_t tx_pool_size;
+    uint64_t blockchain_height;
+    uint64_t mining_speed;
+    uint64_t alternative_blocks;
+    std::string top_block_id_str;
+  };
+
 } // namespace cryptonote

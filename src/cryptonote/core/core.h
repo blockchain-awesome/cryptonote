@@ -22,7 +22,7 @@
 
 namespace cryptonote {
   class Locker;
-  struct CoreStateInfo;
+  struct csi_t;
   class miner;
   class CoreConfig;
 
@@ -112,7 +112,7 @@ namespace cryptonote {
      //bool get_outs(uint64_t amount, std::list<public_key_t>& pkeys);
      virtual std::vector<hash_t> findBlockchainSupplement(const std::vector<hash_t>& remoteBlockIds, size_t maxCount,
        uint32_t& totalBlockCount, uint32_t& startBlockIndex) override;
-     bool get_stat_info(CoreStateInfo& st_inf) override;
+     bool get_stat_info(csi_t& st_inf) override;
      
      virtual bool get_tx_outputs_gindexs(const hash_t& tx_id, std::vector<uint32_t>& indexs) override;
      hash_t get_tail_id();

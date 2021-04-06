@@ -78,5 +78,25 @@ namespace stream
       o << v.viewSecretKey;
       return o;
     }
+
+    Reader &operator>>(Reader &i, core_state_info_t &v)
+    {
+      i >> v.tx_pool_size;
+      i >> v.blockchain_height;
+      i >> v.mining_speed;
+      i >> v.alternative_blocks;
+      i >> v.top_block_id_str;
+      return i;
+    }
+
+    Writer &operator<<(Writer &o, const core_state_info_t &v)
+    {
+      o << v.tx_pool_size;
+      o << v.blockchain_height;
+      o << v.mining_speed;
+      o << v.alternative_blocks;
+      o << v.top_block_id_str;
+      return o;
+    }
   }
 }
