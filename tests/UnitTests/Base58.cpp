@@ -460,7 +460,7 @@ TEST(getAccountAddressAsStr, works_correctly)
 {
   cryptonote::account_public_address_t addr;
 
-  ASSERT_NO_THROW(cryptonote::loadFromBinary(addr, IBinary::from(test_serialized_keys)));
+  ASSERT_NO_THROW(unserialize(addr, IBinary::from(test_serialized_keys)));
   std::string addr_str = Account::getAddress(addr, TEST_PUBLIC_ADDRESS_BASE58_PREFIX);
   ASSERT_EQ(addr_str, test_keys_addr_str);
 }

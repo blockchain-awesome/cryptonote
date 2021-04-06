@@ -13,16 +13,6 @@
 namespace cryptonote {
 
 template <typename T>
-void loadFromBinary(T& obj, const binary_array_t& blob) {
-  const unsigned char * b = static_cast<const unsigned char *>(blob.data());
-  membuf mem((char *)(b), (char *)(b + blob.size()));
-  std::istream istream(&mem);
-  Reader stream(istream);
-  BinaryInputStreamSerializer ba(stream);
-  serialize(obj, ba);
-}
-
-template <typename T>
 bool storeToBinaryFile(const T& obj, const std::string& filename) {
   try {
     std::ofstream dataFile;
