@@ -420,16 +420,39 @@ namespace cryptonote
     serializer(tid.input, "input");
   }
 
-  void mou_t::serialize(ISerializer &s)
+  void multisignature_output_usage_t::serialize(ISerializer &s)
   {
     s(transactionIndex, "txindex");
     s(outputIndex, "outindex");
     s(isUsed, "used");
   }
-  void te_t::serialize(ISerializer &s)
+  void transaction_entry_t::serialize(ISerializer &s)
   {
     s(tx, "tx");
     s(m_global_output_indexes, "indexes");
   }
 
+  void block_entry_t::serialize(ISerializer &s)
+  {
+    s(bl, "block");
+    s(height, "height");
+    s(block_cumulative_size, "block_cumulative_size");
+    s(cumulative_difficulty, "cumulative_difficulty");
+    s(already_generated_coins, "already_generated_coins");
+    s(transactions, "transactions");
+  }
+
+  void serialize(transaction_details_t &td, ISerializer &s)
+  {
+    s(td.id, "id");
+    s(td.blobSize, "blobSize");
+    s(td.fee, "fee");
+    s(td.tx, "tx");
+    s(td.maxUsedBlock.height, "maxUsedBlock.height");
+    s(td.maxUsedBlock.id, "maxUsedBlock.id");
+    s(td.lastFailedBlock.height, "lastFailedBlock.height");
+    s(td.lastFailedBlock.id, "lastFailedBlock.id");
+    s(td.keptByBlock, "keptByBlock");
+    s(reinterpret_cast<uint64_t &>(td.receiveTime), "receiveTime");
+  }
 } //namespace cryptonote

@@ -8,18 +8,18 @@
 
 namespace cryptonote
 {
-class Key
-{
+  class Key
+  {
   public:
     template <typename T>
     static T zero()
     {
-        return boost::value_initialized<T>();
+      return boost::value_initialized<T>();
     }
     static key_pair_t generate();
-};
-extern const hash_t NULL_HASH;
-const public_key_t NULL_PUBLIC_KEY = Key::zero<public_key_t>();
-const secret_key_t NULL_SECRET_KEY = Key::zero<secret_key_t>();
+  };
+  extern const hash_t NULL_HASH;
+  const public_key_t NULL_PUBLIC_KEY = Key::zero<public_key_t>();
+  const secret_key_t NULL_SECRET_KEY = Key::zero<secret_key_t>();
 
 } // namespace cryptonote

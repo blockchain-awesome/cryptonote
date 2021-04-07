@@ -5,6 +5,7 @@
 #pragma once
 
 #include "cryptonote/core/key.h"
+#include "common/int-util.h"
 #include "cryptonote/crypto/chacha.h"
 #include "serialization/ISerializer.h"
 #include "cryptonote/crypto/crypto.h"
@@ -46,14 +47,30 @@ namespace cryptonote
   void serialize(transaction_input_details_base_t &tid, ISerializer &serializer);
   void serialize(transaction_input_details_t &tid, ISerializer &serializer);
 
-  struct mou_t : public multisignature_output_usage_t
+
+  struct transaction_priority_comparator_t
   {
-    void serialize(ISerializer &s);
+    // lhs > hrs
+    bool operator()(const transaction_details_t &lhs, const transaction_details_t &rhs) const
+    {
+      // price(lhs) = lhs.fee / lhs.blobSize
+      // price(lhs) > price(rhs) -->
+      // lhs.fee / lhs.blobSize > rhs.fee / rhs.blobSize -->
+      // lhs.fee * rhs.blobSize > rhs.fee * lhs.blobSize
+      uint64_t lhs_hi, lhs_lo = mul128(lhs.fee, rhs.blobSize, &lhs_hi);
+      uint64_t rhs_hi, rhs_lo = mul128(rhs.fee, lhs.blobSize, &rhs_hi);
+
+      return
+          // prefer more profitable transactions
+          (lhs_hi > rhs_hi) ||
+          (lhs_hi == rhs_hi && lhs_lo > rhs_lo) ||
+          // prefer smaller
+          (lhs_hi == rhs_hi && lhs_lo == rhs_lo && lhs.blobSize < rhs.blobSize) ||
+          // prefer older
+          (lhs_hi == rhs_hi && lhs_lo == rhs_lo && lhs.blobSize == rhs.blobSize && lhs.receiveTime < rhs.receiveTime);
+    }
   };
 
-  struct te_t : transaction_entry_t
-  {
-    void serialize(ISerializer &s);
-  };
+  void serialize(transaction_details_t &td, ISerializer &s);
 
 }

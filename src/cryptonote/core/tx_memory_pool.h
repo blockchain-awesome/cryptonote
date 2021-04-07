@@ -28,8 +28,6 @@
 #include "cryptonote/core/ITxPoolObserver.h"
 #include "cryptonote/core/VerificationContext.h"
 #include "cryptonote/core/blockchain/indexing/exports.h"
-#include "cryptonote/core/transaction/structures.h"
-
 #include <logging/LoggerRef.h>
 
 #include "cryptonote/core/transaction/once_in_time_interval.hpp"
@@ -102,10 +100,10 @@ namespace cryptonote {
 
   private:
 
-    typedef hashed_unique<BOOST_MULTI_INDEX_MEMBER(transaction::transaction_details_t, hash_t, id)> main_index_t;
-    typedef ordered_non_unique<identity<transaction::transaction_details_t>, transaction::transaction_priority_comparator_t> fee_index_t;
+    typedef hashed_unique<BOOST_MULTI_INDEX_MEMBER(transaction_details_t, hash_t, id)> main_index_t;
+    typedef ordered_non_unique<identity<transaction_details_t>, transaction_priority_comparator_t> fee_index_t;
 
-    typedef multi_index_container<transaction::transaction_details_t,
+    typedef multi_index_container<transaction_details_t,
       indexed_by<main_index_t, fee_index_t>
     > tx_container_t;
 
@@ -121,7 +119,7 @@ namespace cryptonote {
 
     tx_container_t::iterator removeTransaction(tx_container_t::iterator i);
     bool removeExpiredTransactions();
-    bool is_transaction_ready_to_go(const transaction_t& tx, transaction::transaction_check_info_t& txd) const;
+    bool is_transaction_ready_to_go(const transaction_t& tx, transaction_check_info_t& txd) const;
 
     void buildIndices();
 

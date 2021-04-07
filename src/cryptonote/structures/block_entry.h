@@ -9,46 +9,6 @@
 
 namespace cryptonote
 {
-  struct block_info_t
-  {
-    uint32_t height;
-    hash_t id;
-
-    block_info_t()
-    {
-      clear();
-    }
-
-    void clear()
-    {
-      height = 0;
-      id = cryptonote::NULL_HASH;
-    }
-
-    bool empty() const
-    {
-      return id == cryptonote::NULL_HASH;
-    }
-  };
-  struct block_entry_t
-  {
-    block_t bl;
-    uint32_t height;
-    uint64_t block_cumulative_size;
-    difficulty_t cumulative_difficulty;
-    uint64_t already_generated_coins;
-    std::vector<te_t> transactions;
-
-    void serialize(ISerializer &s)
-    {
-      s(bl, "block");
-      s(height, "height");
-      s(block_cumulative_size, "block_cumulative_size");
-      s(cumulative_difficulty, "cumulative_difficulty");
-      s(already_generated_coins, "already_generated_coins");
-      s(transactions, "transactions");
-    }
-  };
 
   class Block
   {

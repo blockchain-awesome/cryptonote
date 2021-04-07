@@ -248,7 +248,7 @@ void Blockchain::rebuildCache() {
         if (out.target.type() == typeid(key_output_t)) {
           m_outputs[out.amount].push_back(std::make_pair<>(transactionIndex, o));
         } else if (out.target.type() == typeid(multi_signature_output_t)) {
-          mou_t usage;
+          multisignature_output_usage_t usage;
           usage.transactionIndex = transactionIndex;
           usage.outputIndex = o;
           usage.isUsed = false;
@@ -1639,7 +1639,7 @@ bool Blockchain::pushTransaction(block_entry_t& block, const hash_t& transaction
     } else if (transaction.tx.outputs[output].target.type() == typeid(multi_signature_output_t)) {
       auto& amountOutputs = m_multisignatureOutputs[transaction.tx.outputs[output].amount];
       transaction.m_global_output_indexes[output] = static_cast<uint32_t>(amountOutputs.size());
-      mou_t outputUsage;
+      multisignature_output_usage_t outputUsage;
       outputUsage.transactionIndex = transactionIndex;
       outputUsage.outputIndex = output;
       outputUsage.isUsed = false;
@@ -1776,7 +1776,7 @@ bool Blockchain::validateInput(const multi_signature_input_t& input, const hash_
     return false;
   }
 
-  const mou_t& outputIndex = amountOutputs->second[input.outputIndex];
+  const multisignature_output_usage_t& outputIndex = amountOutputs->second[input.outputIndex];
   if (outputIndex.isUsed) {
     logger(DEBUGGING) <<
       "transaction_t << " << transactionHash << " contains double spending multisignature input.";
@@ -1904,7 +1904,7 @@ bool Blockchain::getMultisigOutputReference(const multi_signature_input_t& txInM
     logger(DEBUGGING) << "transaction_t contains multisignature input with invalid outputIndex.";
     return false;
   }
-  const mou_t& outputIndex = amountIter->second[txInMultisig.outputIndex];
+  const multisignature_output_usage_t& outputIndex = amountIter->second[txInMultisig.outputIndex];
   const transaction_t& outputTransaction = m_blocks[outputIndex.transactionIndex.block].transactions[outputIndex.transactionIndex.transaction].tx;
   outputReference.first = BinaryArray::objectHash(outputTransaction);
   outputReference.second = outputIndex.outputIndex;

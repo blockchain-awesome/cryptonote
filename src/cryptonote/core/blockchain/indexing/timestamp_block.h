@@ -33,6 +33,7 @@ namespace cryptonote
 
     std::multimap<uint64_t, hash_t> index;
   };
+  
   Reader &operator>>(Reader &i, TimestampBlocksIndex &v);
 
   Writer &operator<<(Writer &o, const TimestampBlocksIndex &v);

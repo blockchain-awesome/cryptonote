@@ -1,4 +1,5 @@
 #pragma once
+#include "serialization/ISerializer.h"
 
 #include <cstdint>
 #include <unordered_map>
@@ -19,6 +20,7 @@ typedef std::unordered_map<hash_t, transaction_index_t> transaction_map_t;
 
 namespace cryptonote
 {
+  extern const hash_t NULL_HASH;
   enum class input_type_t : uint8_t
   {
     Invalid,
@@ -114,12 +116,35 @@ namespace cryptonote
     transaction_index_t transactionIndex;
     uint16_t outputIndex;
     bool isUsed;
+    void serialize(ISerializer &s);
   };
 
   struct transaction_entry_t
   {
     transaction_t tx;
     std::vector<uint32_t> m_global_output_indexes;
+    void serialize(ISerializer &s);
+  };
+
+  struct block_info_t
+  {
+    uint32_t height;
+    hash_t id;
+    block_info_t()
+    {
+      clear();
+    }
+
+    void clear()
+    {
+      height = 0;
+      id = NULL_HASH;
+    }
+
+    bool empty() const
+    {
+      return id == NULL_HASH;
+    }
   };
 
   struct block_header_t
@@ -135,6 +160,33 @@ namespace cryptonote
   {
     transaction_t baseTransaction;
     std::vector<hash_t> transactionHashes;
+  };
+
+  struct block_entry_t
+  {
+    block_t bl;
+    uint32_t height;
+    uint64_t block_cumulative_size;
+    difficulty_t cumulative_difficulty;
+    uint64_t already_generated_coins;
+    std::vector<transaction_entry_t> transactions;
+    void serialize(ISerializer &s);
+  };
+
+  struct transaction_check_info_t
+  {
+    block_info_t maxUsedBlock;
+    block_info_t lastFailedBlock;
+  };
+
+  struct transaction_details_t : public transaction_check_info_t
+  {
+    hash_t id;
+    transaction_t tx;
+    size_t blobSize;
+    uint64_t fee;
+    bool keptByBlock;
+    time_t receiveTime;
   };
 
   struct account_public_address_t
