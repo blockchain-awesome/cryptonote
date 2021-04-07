@@ -416,7 +416,7 @@ void NodeRpcProxy::getBlocks(const std::vector<hash_t>& blockHashes, std::vector
   callback(std::error_code());
 }
 
-void NodeRpcProxy::getTransactions(const std::vector<hash_t>& transactionHashes, std::vector<transaction_details_t>& transactions, const Callback& callback) {
+void NodeRpcProxy::getTransactions(const std::vector<hash_t>& transactionHashes, std::vector<transaction_explorer_details_t>& transactions, const Callback& callback) {
   std::lock_guard<std::mutex> lock(m_mutex);
   if (m_state != STATE_INITIALIZED) {
     callback(make_error_code(error::NOT_INITIALIZED));
@@ -427,7 +427,7 @@ void NodeRpcProxy::getTransactions(const std::vector<hash_t>& transactionHashes,
   callback(std::error_code());
 }
 
-void NodeRpcProxy::getPoolTransactions(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t transactionsNumberLimit, std::vector<transaction_details_t>& transactions, uint64_t& transactionsNumberWithinTimestamps, const Callback& callback) {
+void NodeRpcProxy::getPoolTransactions(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t transactionsNumberLimit, std::vector<transaction_explorer_details_t>& transactions, uint64_t& transactionsNumberWithinTimestamps, const Callback& callback) {
   std::lock_guard<std::mutex> lock(m_mutex);
   if (m_state != STATE_INITIALIZED) {
     callback(make_error_code(error::NOT_INITIALIZED));
@@ -438,7 +438,7 @@ void NodeRpcProxy::getPoolTransactions(uint64_t timestampBegin, uint64_t timesta
   callback(std::error_code());
 }
 
-void NodeRpcProxy::getTransactionsByPaymentId(const hash_t& paymentId, std::vector<transaction_details_t>& transactions, const Callback& callback) {
+void NodeRpcProxy::getTransactionsByPaymentId(const hash_t& paymentId, std::vector<transaction_explorer_details_t>& transactions, const Callback& callback) {
   std::lock_guard<std::mutex> lock(m_mutex);
   if (m_state != STATE_INITIALIZED) {
     callback(make_error_code(error::NOT_INITIALIZED));

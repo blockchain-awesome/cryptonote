@@ -316,7 +316,7 @@ bool BlockchainExplorer::getBlockchainTop(block_details_t& topBlock) {
   return true;
 }
 
-bool BlockchainExplorer::getTransactions(const std::vector<hash_t>& transactionHashes, std::vector<transaction_details_t>& transactions) {
+bool BlockchainExplorer::getTransactions(const std::vector<hash_t>& transactionHashes, std::vector<transaction_explorer_details_t>& transactions) {
   if (state.load() != INITIALIZED) {
     throw std::system_error(make_error_code(cryptonote::error::BlockchainExplorerErrorCodes::NOT_INITIALIZED));
   }
@@ -327,7 +327,7 @@ bool BlockchainExplorer::getTransactions(const std::vector<hash_t>& transactionH
       static_cast<
         void(INode::*)(
           const std::vector<hash_t>&, 
-          std::vector<transaction_details_t>&, 
+          std::vector<transaction_explorer_details_t>&, 
           const INode::Callback&
         )
       >(&INode::getTransactions), 
@@ -345,7 +345,7 @@ bool BlockchainExplorer::getTransactions(const std::vector<hash_t>& transactionH
   return true;
 }
 
-bool BlockchainExplorer::getPoolTransactions(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t transactionsNumberLimit, std::vector<transaction_details_t>& transactions, uint64_t& transactionsNumberWithinTimestamps) {
+bool BlockchainExplorer::getPoolTransactions(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t transactionsNumberLimit, std::vector<transaction_explorer_details_t>& transactions, uint64_t& transactionsNumberWithinTimestamps) {
   if (state.load() != INITIALIZED) {
     throw std::system_error(make_error_code(cryptonote::error::BlockchainExplorerErrorCodes::NOT_INITIALIZED));
   }
@@ -371,7 +371,7 @@ bool BlockchainExplorer::getPoolTransactions(uint64_t timestampBegin, uint64_t t
   return true;
 }
 
-bool BlockchainExplorer::getTransactionsByPaymentId(const hash_t& paymentId, std::vector<transaction_details_t>& transactions) {
+bool BlockchainExplorer::getTransactionsByPaymentId(const hash_t& paymentId, std::vector<transaction_explorer_details_t>& transactions) {
   if (state.load() != INITIALIZED) {
     throw std::system_error(make_error_code(cryptonote::error::BlockchainExplorerErrorCodes::NOT_INITIALIZED));
   }
@@ -394,7 +394,7 @@ bool BlockchainExplorer::getTransactionsByPaymentId(const hash_t& paymentId, std
   return true;
 }
 
-bool BlockchainExplorer::getPoolState(const std::vector<hash_t>& knownPoolTransactionHashes, hash_t knownBlockchainTopHash, bool& isBlockchainActual, std::vector<transaction_details_t>& newTransactions, std::vector<hash_t>& removedTransactions) {
+bool BlockchainExplorer::getPoolState(const std::vector<hash_t>& knownPoolTransactionHashes, hash_t knownBlockchainTopHash, bool& isBlockchainActual, std::vector<transaction_explorer_details_t>& newTransactions, std::vector<hash_t>& removedTransactions) {
   if (state.load() != INITIALIZED) {
     throw std::system_error(make_error_code(cryptonote::error::BlockchainExplorerErrorCodes::NOT_INITIALIZED));
   }
@@ -542,13 +542,13 @@ void BlockchainExplorer::poolChanged() {
         }
       }
 
-      std::shared_ptr<std::vector<transaction_details_t>> newTransactionsPtr = std::make_shared<std::vector<transaction_details_t>>();
+      std::shared_ptr<std::vector<transaction_explorer_details_t>> newTransactionsPtr = std::make_shared<std::vector<transaction_explorer_details_t>>();
       NodeRequest request(
         std::bind(
           static_cast<
             void(INode::*)(
               const std::vector<hash_t>&, 
-              std::vector<transaction_details_t>&, 
+              std::vector<transaction_explorer_details_t>&, 
               const INode::Callback&
             )
           >(&INode::getTransactions), 

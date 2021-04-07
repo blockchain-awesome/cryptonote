@@ -155,7 +155,7 @@ bool BlockchainExplorerDataBuilder::fillBlockDetails(const block_t&block, block_
 
 
   blockDetails.transactions.reserve(block.transactionHashes.size() + 1);
-  transaction_details_t transactionDetails;
+  transaction_explorer_details_t transactionDetails;
   if (!fillTransactionDetails(block.baseTransaction, transactionDetails, block.timestamp)) {
     return false;
   }
@@ -171,7 +171,7 @@ bool BlockchainExplorerDataBuilder::fillBlockDetails(const block_t&block, block_
   blockDetails.totalFeeAmount = 0;
 
   for (const transaction_t& tx : found) {
-    transaction_details_t transactionDetails;
+    transaction_explorer_details_t transactionDetails;
     if (!fillTransactionDetails(tx, transactionDetails, block.timestamp)) {
       return false;
     }
@@ -181,7 +181,7 @@ bool BlockchainExplorerDataBuilder::fillBlockDetails(const block_t&block, block_
   return true;
 }
 
-bool BlockchainExplorerDataBuilder::fillTransactionDetails(const transaction_t& transaction, transaction_details_t& transactionDetails, uint64_t timestamp) {
+bool BlockchainExplorerDataBuilder::fillTransactionDetails(const transaction_t& transaction, transaction_explorer_details_t& transactionDetails, uint64_t timestamp) {
   hash_t hash = BinaryArray::objectHash(transaction);
   transactionDetails.hash = hash;
 

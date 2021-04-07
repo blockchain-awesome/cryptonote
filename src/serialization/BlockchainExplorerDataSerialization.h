@@ -31,7 +31,7 @@ void serialize(transaction_output_reference_details_t& outputReference, ISeriali
 void serialize(transaction_input_details_t& input, ISerializer& serializer);
 
 void serialize(transaction_extra_details_t& extra, ISerializer& serializer);
-void serialize(transaction_details_t& transaction, ISerializer& serializer);
+void serialize(transaction_explorer_details_t& transaction, ISerializer& serializer);
 
 void serialize(block_details_t& block, ISerializer& serializer);
 

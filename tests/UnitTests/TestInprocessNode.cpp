@@ -437,7 +437,7 @@ TEST_F(InProcessNodeTests, getBlocksByHashNotInited) {
 
 TEST_F(InProcessNodeTests, getTxEmpty) {
   std::vector<hash_t> transactionHashes;
-  std::vector<cryptonote::transaction_details_t> transactions;
+  std::vector<cryptonote::transaction_explorer_details_t> transactions;
   ASSERT_EQ(transactionHashes.size(), 0);
   ASSERT_EQ(transactions.size(), 0);
 
@@ -454,7 +454,7 @@ TEST_F(InProcessNodeTests, getTxMany) {
   size_t BLOCKCHAIN_TX_NUMBER = 10;
 
   std::vector<hash_t> transactionHashes;
-  std::vector<cryptonote::transaction_details_t> actualTransactions;
+  std::vector<cryptonote::transaction_explorer_details_t> actualTransactions;
 
   std::vector<std::tuple<cryptonote::transaction_t, hash_t, uint64_t>> expectedTransactions;
 
@@ -499,7 +499,7 @@ TEST_F(InProcessNodeTests, getTxMany) {
   ASSERT_EQ(transactionHashes.size(), actualTransactions.size());
   auto range1 = boost::combine(transactionHashes, actualTransactions);
   auto range = boost::combine(range1, expectedTransactions);
-  for (const boost::tuple<boost::tuple<hash_t, cryptonote::transaction_details_t>, std::tuple<cryptonote::transaction_t, hash_t, uint64_t>>& sameHeight : range) {
+  for (const boost::tuple<boost::tuple<hash_t, cryptonote::transaction_explorer_details_t>, std::tuple<cryptonote::transaction_t, hash_t, uint64_t>>& sameHeight : range) {
     hash_t expectedCryptoHash = cryptonote::BinaryArray::objectHash(std::get<0>(sameHeight.get<1>()));
     EXPECT_EQ(expectedCryptoHash, sameHeight.get<0>().get<0>());
     hash_t expectedHash = reinterpret_cast<const hash_t&>(expectedCryptoHash);
@@ -520,7 +520,7 @@ TEST_F(InProcessNodeTests, getTxFail) {
   size_t BLOCKCHAIN_TX_NUMBER = 10;
 
   std::vector<hash_t> transactionHashes;
-  std::vector<cryptonote::transaction_details_t> actualTransactions;
+  std::vector<cryptonote::transaction_explorer_details_t> actualTransactions;
 
   std::vector<std::tuple<cryptonote::transaction_t, hash_t, uint64_t>> expectedTransactions;
 
@@ -566,7 +566,7 @@ TEST_F(InProcessNodeTests, getTxNotInited) {
   cryptonote::InProcessNode newNode(coreStub, protocolQueryStub);
 
   std::vector<hash_t> transactionHashes;
-  std::vector<cryptonote::transaction_details_t> transactions;
+  std::vector<cryptonote::transaction_explorer_details_t> transactions;
   ASSERT_EQ(transactionHashes.size(), 0);
   ASSERT_EQ(transactions.size(), 0);
 

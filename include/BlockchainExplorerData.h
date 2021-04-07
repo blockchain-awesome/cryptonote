@@ -89,7 +89,7 @@ struct transaction_extra_details_t
   std::vector<uint8_t> raw;
 };
 
-struct transaction_details_t
+struct transaction_explorer_details_t
 {
   hash_t hash;
   uint64_t size;
@@ -129,7 +129,7 @@ struct block_details_t
   uint64_t sizeMedian;
   double penalty;
   uint64_t totalFeeAmount;
-  std::vector<transaction_details_t> transactions;
+  std::vector<transaction_explorer_details_t> transactions;
 };
 
 } // namespace cryptonote

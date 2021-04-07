@@ -134,7 +134,7 @@ void serialize(transaction_extra_details_t &extra, ISerializer &serializer)
   serializeAsBinary(extra.raw, "raw", serializer);
 }
 
-void serialize(transaction_details_t &transaction, ISerializer &serializer)
+void serialize(transaction_explorer_details_t &transaction, ISerializer &serializer)
 {
   serializePod(transaction.hash, "hash", serializer);
   serializer(transaction.size, "size");

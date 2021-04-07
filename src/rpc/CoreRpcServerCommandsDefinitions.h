@@ -592,7 +592,7 @@ struct F_COMMAND_RPC_GET_TRANSACTION_DETAILS {
 
   struct response {
     transaction_t tx;
-    transaction_details_t txDetails;
+    transaction_explorer_details_t txDetails;
     block_details_t block;
     std::string status;
 
@@ -747,7 +747,7 @@ struct COMMAND_RPC_GET_TRANSACTION_DETAILS_BY_HASHES {
   };
 
   struct response {
-    std::vector<transaction_details_t> transactions;
+    std::vector<transaction_explorer_details_t> transactions;
     std::string status;
 
     void serialize(ISerializer &s) {

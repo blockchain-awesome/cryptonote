@@ -788,7 +788,7 @@ std::error_code InProcessNode::doGetBlocks(uint64_t timestampBegin, uint64_t tim
   return std::error_code();
 }
 
-void InProcessNode::getTransactions(const std::vector<hash_t>& transactionHashes, std::vector<transaction_details_t>& transactions, const Callback& callback) {
+void InProcessNode::getTransactions(const std::vector<hash_t>& transactionHashes, std::vector<transaction_explorer_details_t>& transactions, const Callback& callback) {
   std::unique_lock<std::mutex> lock(mutex);
   if (state != INITIALIZED) {
     lock.unlock();
@@ -801,7 +801,7 @@ void InProcessNode::getTransactions(const std::vector<hash_t>& transactionHashes
       static_cast<
         void(InProcessNode::*)(
           const std::vector<hash_t>&, 
-          std::vector<transaction_details_t>&, 
+          std::vector<transaction_explorer_details_t>&, 
           const Callback&
         )
       >(&InProcessNode::getTransactionsAsync),
@@ -813,13 +813,13 @@ void InProcessNode::getTransactions(const std::vector<hash_t>& transactionHashes
   );
 }
 
-void InProcessNode::getTransactionsAsync(const std::vector<hash_t>& transactionHashes, std::vector<transaction_details_t>& transactions, const Callback& callback) {
+void InProcessNode::getTransactionsAsync(const std::vector<hash_t>& transactionHashes, std::vector<transaction_explorer_details_t>& transactions, const Callback& callback) {
   std::error_code ec = core.executeLocked(
     std::bind(
       static_cast<
         std::error_code(InProcessNode::*)(
           const std::vector<hash_t>&, 
-          std::vector<transaction_details_t>&
+          std::vector<transaction_explorer_details_t>&
         )
       >(&InProcessNode::doGetTransactions),
       this,
@@ -830,7 +830,7 @@ void InProcessNode::getTransactionsAsync(const std::vector<hash_t>& transactionH
   callback(ec);
 }
 
-std::error_code InProcessNode::doGetTransactions(const std::vector<hash_t>& transactionHashes, std::vector<transaction_details_t>& transactions) {
+std::error_code InProcessNode::doGetTransactions(const std::vector<hash_t>& transactionHashes, std::vector<transaction_explorer_details_t>& transactions) {
   try {
     std::list<transaction_t> txs;
     std::list<hash_t> missed_txs;
@@ -839,7 +839,7 @@ std::error_code InProcessNode::doGetTransactions(const std::vector<hash_t>& tran
       return make_error_code(cryptonote::error::REQUEST_ERROR);
     }
     for (const transaction_t& tx : txs) {
-      transaction_details_t transactionDetails;
+      transaction_explorer_details_t transactionDetails;
       if (!blockchainExplorerDataBuilder.fillTransactionDetails(tx, transactionDetails)) {
         return make_error_code(cryptonote::error::INTERNAL_NODE_ERROR);
       }
@@ -853,7 +853,7 @@ std::error_code InProcessNode::doGetTransactions(const std::vector<hash_t>& tran
   return std::error_code();
 }
 
-void InProcessNode::getPoolTransactions(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t transactionsNumberLimit, std::vector<transaction_details_t>& transactions, uint64_t& transactionsNumberWithinTimestamps, const Callback& callback) {
+void InProcessNode::getPoolTransactions(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t transactionsNumberLimit, std::vector<transaction_explorer_details_t>& transactions, uint64_t& transactionsNumberWithinTimestamps, const Callback& callback) {
   std::unique_lock<std::mutex> lock(mutex);
   if (state != INITIALIZED) {
     lock.unlock();
@@ -875,7 +875,7 @@ void InProcessNode::getPoolTransactions(uint64_t timestampBegin, uint64_t timest
   );
 }
 
-void InProcessNode::getPoolTransactionsAsync(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t transactionsNumberLimit, std::vector<transaction_details_t>& transactions, uint64_t& transactionsNumberWithinTimestamps, const Callback& callback) {
+void InProcessNode::getPoolTransactionsAsync(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t transactionsNumberLimit, std::vector<transaction_explorer_details_t>& transactions, uint64_t& transactionsNumberWithinTimestamps, const Callback& callback) {
   std::error_code ec = core.executeLocked(
     std::bind(
       &InProcessNode::doGetPoolTransactions,
@@ -891,14 +891,14 @@ void InProcessNode::getPoolTransactionsAsync(uint64_t timestampBegin, uint64_t t
   callback(ec);
 }
 
-std::error_code InProcessNode::doGetPoolTransactions(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t transactionsNumberLimit, std::vector<transaction_details_t>& transactions, uint64_t& transactionsNumberWithinTimestamps) {
+std::error_code InProcessNode::doGetPoolTransactions(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t transactionsNumberLimit, std::vector<transaction_explorer_details_t>& transactions, uint64_t& transactionsNumberWithinTimestamps) {
   try {
     std::vector<transaction_t> rawTransactions;
     if (!core.getPoolTransactionsByTimestamp(timestampBegin, timestampEnd, transactionsNumberLimit, rawTransactions, transactionsNumberWithinTimestamps)) {
       return make_error_code(cryptonote::error::REQUEST_ERROR);
     }
     for (const transaction_t& rawTransaction : rawTransactions) {
-      transaction_details_t transactionDetails;
+      transaction_explorer_details_t transactionDetails;
       if (!blockchainExplorerDataBuilder.fillTransactionDetails(rawTransaction, transactionDetails)) {
         return make_error_code(cryptonote::error::INTERNAL_NODE_ERROR);
       }
@@ -912,7 +912,7 @@ std::error_code InProcessNode::doGetPoolTransactions(uint64_t timestampBegin, ui
   return std::error_code();
 }
 
-void InProcessNode::getTransactionsByPaymentId(const hash_t& paymentId, std::vector<transaction_details_t>& transactions, const Callback& callback) {
+void InProcessNode::getTransactionsByPaymentId(const hash_t& paymentId, std::vector<transaction_explorer_details_t>& transactions, const Callback& callback) {
   std::unique_lock<std::mutex> lock(mutex);
   if (state != INITIALIZED) {
     lock.unlock();
@@ -931,7 +931,7 @@ void InProcessNode::getTransactionsByPaymentId(const hash_t& paymentId, std::vec
   );
 }
 
-void InProcessNode::getTransactionsByPaymentIdAsync(const hash_t& paymentId, std::vector<transaction_details_t>& transactions, const Callback& callback) {
+void InProcessNode::getTransactionsByPaymentIdAsync(const hash_t& paymentId, std::vector<transaction_explorer_details_t>& transactions, const Callback& callback) {
   std::error_code ec = core.executeLocked(
     std::bind(
       &InProcessNode::doGetTransactionsByPaymentId,
@@ -944,14 +944,14 @@ void InProcessNode::getTransactionsByPaymentIdAsync(const hash_t& paymentId, std
   callback(ec);
 }
 
-std::error_code InProcessNode::doGetTransactionsByPaymentId(const hash_t& paymentId, std::vector<transaction_details_t>& transactions) {
+std::error_code InProcessNode::doGetTransactionsByPaymentId(const hash_t& paymentId, std::vector<transaction_explorer_details_t>& transactions) {
   try {
     std::vector<transaction_t> rawTransactions;
     if (!core.getTransactionsByPaymentId(paymentId, rawTransactions)) {
       return make_error_code(cryptonote::error::REQUEST_ERROR);
     }
     for (const transaction_t& rawTransaction : rawTransactions) {
-      transaction_details_t transactionDetails;
+      transaction_explorer_details_t transactionDetails;
       if (!blockchainExplorerDataBuilder.fillTransactionDetails(rawTransaction, transactionDetails)) {
         return make_error_code(cryptonote::error::INTERNAL_NODE_ERROR);
       }

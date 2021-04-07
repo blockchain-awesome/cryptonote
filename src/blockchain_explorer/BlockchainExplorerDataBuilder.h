@@ -25,7 +25,7 @@ public:
   BlockchainExplorerDataBuilder& operator=(BlockchainExplorerDataBuilder&&) = delete;
 
   bool fillBlockDetails(const block_t& block, block_details_t& blockDetails);
-  bool fillTransactionDetails(const transaction_t &tx, transaction_details_t& txRpcInfo, uint64_t timestamp = 0);
+  bool fillTransactionDetails(const transaction_t &tx, transaction_explorer_details_t& txRpcInfo, uint64_t timestamp = 0);
 
   static bool getPaymentId(const transaction_t& transaction, hash_t& paymentId);
 

@@ -57,13 +57,13 @@ public:
   virtual void getBlocks(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t blocksNumberLimit, std::vector<cryptonote::block_details_t>& blocks, uint32_t& blocksNumberWithinTimestamps,
     const Callback& callback) override { }
 
-  virtual void getTransactions(const std::vector<hash_t>& transactionHashes, std::vector<cryptonote::transaction_details_t>& transactions,
+  virtual void getTransactions(const std::vector<hash_t>& transactionHashes, std::vector<cryptonote::transaction_explorer_details_t>& transactions,
     const Callback& callback) override { }
 
-  virtual void getPoolTransactions(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t transactionsNumberLimit, std::vector<cryptonote::transaction_details_t>& transactions, uint64_t& transactionsNumberWithinTimestamps,
+  virtual void getPoolTransactions(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t transactionsNumberLimit, std::vector<cryptonote::transaction_explorer_details_t>& transactions, uint64_t& transactionsNumberWithinTimestamps,
     const Callback& callback) override { }
 
-  virtual void getTransactionsByPaymentId(const hash_t& paymentId, std::vector<cryptonote::transaction_details_t>& transactions, 
+  virtual void getTransactionsByPaymentId(const hash_t& paymentId, std::vector<cryptonote::transaction_explorer_details_t>& transactions, 
     const Callback& callback) override { }
 
   virtual void getMultisignatureOutputByGlobalIndex(uint64_t amount, uint32_t gindex, cryptonote::multi_signature_output_t& out,

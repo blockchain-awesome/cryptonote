@@ -41,10 +41,10 @@ public:
 
   virtual bool getBlockchainTop(block_details_t& topBlock) override;
 
-  virtual bool getTransactions(const std::vector<hash_t>& transactionHashes, std::vector<transaction_details_t>& transactions) override;
-  virtual bool getTransactionsByPaymentId(const hash_t& paymentId, std::vector<transaction_details_t>& transactions) override;
-  virtual bool getPoolTransactions(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t transactionsNumberLimit, std::vector<transaction_details_t>& transactions, uint64_t& transactionsNumberWithinTimestamps) override;
-  virtual bool getPoolState(const std::vector<hash_t>& knownPoolTransactionHashes, hash_t knownBlockchainTop, bool& isBlockchainActual, std::vector<transaction_details_t>& newTransactions, std::vector<hash_t>& removedTransactions) override;
+  virtual bool getTransactions(const std::vector<hash_t>& transactionHashes, std::vector<transaction_explorer_details_t>& transactions) override;
+  virtual bool getTransactionsByPaymentId(const hash_t& paymentId, std::vector<transaction_explorer_details_t>& transactions) override;
+  virtual bool getPoolTransactions(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t transactionsNumberLimit, std::vector<transaction_explorer_details_t>& transactions, uint64_t& transactionsNumberWithinTimestamps) override;
+  virtual bool getPoolState(const std::vector<hash_t>& knownPoolTransactionHashes, hash_t knownBlockchainTop, bool& isBlockchainActual, std::vector<transaction_explorer_details_t>& newTransactions, std::vector<hash_t>& removedTransactions) override;
 
   virtual uint64_t getRewardBlocksWindow() override;
   virtual uint64_t getFullRewardMaxBlockSize(uint8_t majorVersion) override;
