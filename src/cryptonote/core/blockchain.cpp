@@ -11,8 +11,7 @@
 #include "common/math.hpp"
 #include "common/str.h"
 #include "common/ShuffleGenerator.h"
-#include "stream/reader.h"
-#include "stream/writer.h"
+#include "stream/persistence.h"
 #include "rpc/CoreRpcServerCommandsDefinitions.h"
 #include "serialization/BinarySerializationTools.h"
 #include "CryptoNoteTools.h"
@@ -138,7 +137,6 @@ bool Blockchain::checkTransactionSize(size_t blobSize) {
       (getCurrentCumulativeBlocksizeLimit() - m_currency.minerTxBlobReservedSize());
     return false;
   }
-
   return true;
 }
 
@@ -1919,7 +1917,7 @@ bool Blockchain::storeBlockchainIndices() {
   logger(INFO, BRIGHT_WHITE) << "Saving blockchain indices...";
   BlockchainIndicesSerializer ser(*this, getTailId(), logger.getLogger());
 
-  if (!storeToBinaryFile(ser, m_currency.blockchainIndexesFileName())) {
+  if (!save(ser,  m_currency.blockchainIndexesFileName())) {
     logger(ERROR, BRIGHT_RED) << "Failed to save blockchain indices";
     return false;
   }
@@ -1933,8 +1931,7 @@ bool Blockchain::loadBlockchainIndices() {
   logger(INFO, BRIGHT_WHITE) << "Loading blockchain indices for BlockchainExplorer...";
   BlockchainIndicesSerializer loader(*this, Block::getHash(m_blocks.back().bl), logger.getLogger());
 
-  loadFromBinaryFile(loader, m_currency.blockchainIndexesFileName());
-
+  read(loader, m_currency.blockchainIndexesFileName());
   if (!loader.loaded()) {
     logger(WARNING, BRIGHT_YELLOW) << "No actual blockchain indices for BlockchainExplorer found, rebuilding...";
     std::chrono::steady_clock::time_point timePoint = std::chrono::steady_clock::now();

@@ -15,7 +15,7 @@
 #include "cryptonote/core/currency.h"
 #include "cryptonote/core/transaction/serializer/basics.h"
 #include "stream/block.h"
-#include "stream/persistent.h"
+#include "stream/persistence.h"
 #include "common/os.h"
 
 #include "serialization/BinarySerializationTools.h"
