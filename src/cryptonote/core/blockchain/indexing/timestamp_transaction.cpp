@@ -48,4 +48,16 @@ void TimestampTransactionsIndex::clear() {
 void TimestampTransactionsIndex::serialize(ISerializer& s) {
   s(index, "index");
 }
+
+  Reader &operator>>(Reader &i, TimestampTransactionsIndex &v)
+  {
+    i >> v.index;
+    return i;
+  }
+
+  Writer &operator<<(Writer &o, const TimestampTransactionsIndex &v)
+  {
+    o << v.index;
+    return o;
+  }
 } // namespace cryptonote

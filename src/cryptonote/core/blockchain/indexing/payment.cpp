@@ -62,16 +62,6 @@ namespace cryptonote
     s(index, "index");
   }
 
-  Reader &operator>>(Reader &i, std::unordered_multimap<hash_t, hash_t> &v)
-  {
-    return readMap(i, v);
-  }
-
-  Writer &operator<<(Writer &o, const std::unordered_multimap<hash_t, hash_t> &v)
-  {
-    return writeMap(o, v);
-  }
-
   Reader &operator>>(Reader &i, PaymentIdIndex &v)
   {
     i >> v.index;

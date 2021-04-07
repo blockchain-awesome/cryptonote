@@ -22,7 +22,6 @@
 #include "common/base58.cpp"
 
 using namespace cryptonote;
-using namespace stream::cryptonote;
 
 #define MAKE_STR(arr) std::string(arr, sizeof(arr) - 1)
 
