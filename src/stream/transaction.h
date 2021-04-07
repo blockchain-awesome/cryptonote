@@ -36,11 +36,11 @@ Writer &operator<<(Writer &o, const transaction_t &v);
 
 // Extra
 Reader &operator>>(Reader &i, transaction_index_t &v);
-// Reader &operator>>(Reader &i, transaction_map_t &v);
 Reader &operator>>(Reader &i, multisignature_output_usage_t &v);
 Reader &operator>>(Reader &i, transaction_entry_t &v);
+Reader &operator>>(Reader &i, transaction_details_t &v);
 
 Writer &operator<<(Writer &o, const transaction_index_t &v);
-// Writer &operator<<(Writer &o, const transaction_map_t &v);
 Writer &operator<<(Writer &o, const multisignature_output_usage_t &v);
 Writer &operator<<(Writer &o, const transaction_entry_t &v);
+Writer &operator<<(Writer &o, const transaction_details_t &v);

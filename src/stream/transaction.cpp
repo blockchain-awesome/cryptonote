@@ -372,3 +372,34 @@ Writer &operator<<(Writer &o, const transaction_entry_t &v)
   o << v.m_global_output_indexes;
   return o;
 }
+
+Reader &operator>>(Reader &i, transaction_details_t &v)
+{
+  i >> v.id;
+  i >> v.blobSize;
+  i >> v.fee;
+  i >> v.tx;
+  i >> v.maxUsedBlock.height;
+  i >> v.maxUsedBlock.id;
+  i >> v.lastFailedBlock.height;
+  i >> v.lastFailedBlock.id;
+  i >> v.keptByBlock;
+  i >> reinterpret_cast<uint64_t &>(v.receiveTime);
+  return i;
+}
+
+Writer &operator<<(Writer &o, const transaction_details_t &v)
+{
+  o << v.id;
+  o << v.blobSize;
+  o << v.fee;
+  o << v.tx;
+  o << v.maxUsedBlock.height;
+  o << v.maxUsedBlock.id;
+  o << v.lastFailedBlock.height;
+  o << v.lastFailedBlock.id;
+  o << v.keptByBlock;
+  o << reinterpret_cast<const uint64_t &>(v.receiveTime);
+
+  return o;
+}
