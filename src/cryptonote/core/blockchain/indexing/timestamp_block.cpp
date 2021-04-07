@@ -5,34 +5,34 @@
 namespace cryptonote
 {
 
-bool TimestampBlocksIndex::add(uint64_t timestamp, const hash_t &hash)
-{
+  bool TimestampBlocksIndex::add(uint64_t timestamp, const hash_t &hash)
+  {
     index.emplace(timestamp, hash);
     return true;
-}
+  }
 
-bool TimestampBlocksIndex::remove(uint64_t timestamp, const hash_t &hash)
-{
+  bool TimestampBlocksIndex::remove(uint64_t timestamp, const hash_t &hash)
+  {
     auto range = index.equal_range(timestamp);
     for (auto iter = range.first; iter != range.second; ++iter)
     {
-        if (iter->second == hash)
-        {
-            index.erase(iter);
-            return true;
-        }
+      if (iter->second == hash)
+      {
+        index.erase(iter);
+        return true;
+      }
     }
 
     return false;
-}
+  }
 
-bool TimestampBlocksIndex::find(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t hashesNumberLimit, std::vector<hash_t> &hashes, uint32_t &hashesNumberWithinTimestamps)
-{
+  bool TimestampBlocksIndex::find(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t hashesNumberLimit, std::vector<hash_t> &hashes, uint32_t &hashesNumberWithinTimestamps)
+  {
     uint32_t hashesNumber = 0;
     if (timestampBegin > timestampEnd)
     {
-        //std::swap(timestampBegin, timestampEnd);
-        return false;
+      //std::swap(timestampBegin, timestampEnd);
+      return false;
     }
     auto begin = index.lower_bound(timestampBegin);
     auto end = index.upper_bound(timestampEnd);
@@ -41,19 +41,31 @@ bool TimestampBlocksIndex::find(uint64_t timestampBegin, uint64_t timestampEnd, 
 
     for (auto iter = begin; iter != end && hashesNumber < hashesNumberLimit; ++iter)
     {
-        ++hashesNumber;
-        hashes.emplace_back(iter->second);
+      ++hashesNumber;
+      hashes.emplace_back(iter->second);
     }
     return hashesNumber > 0;
-}
+  }
 
-void TimestampBlocksIndex::clear()
-{
+  void TimestampBlocksIndex::clear()
+  {
     index.clear();
-}
+  }
 
-void TimestampBlocksIndex::serialize(ISerializer &s)
-{
+  void TimestampBlocksIndex::serialize(ISerializer &s)
+  {
     s(index, "index");
-}
+  }
+
+  Reader &operator>>(Reader &i, TimestampBlocksIndex &v)
+  {
+    i >> v.index;
+    return i;
+  }
+
+  Writer &operator<<(Writer &o, const TimestampBlocksIndex &v)
+  {
+    o << v.index;
+    return o;
+  }
 } // namespace cryptonote

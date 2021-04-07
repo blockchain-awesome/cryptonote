@@ -80,4 +80,16 @@ void GeneratedTransactionsIndex::serialize(ISerializer &s)
   s(lastGeneratedTxNumber, "lastGeneratedTxNumber");
 }
 
+  Reader &operator>>(Reader &i, GeneratedTransactionsIndex &v) {
+    i >> v.index;
+    i >> v.lastGeneratedTxNumber;
+    return i;
+  }
+
+  Writer &operator<<(Writer &o, const GeneratedTransactionsIndex &v) {
+    o << v.index;
+    o << v.lastGeneratedTxNumber;
+    return o;
+  }
+
 } // namespace cryptonote

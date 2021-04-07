@@ -2,19 +2,20 @@
 
 #include <unordered_map>
 #include "cryptonote/core/key.h"
+#include "stream/map.hpp"
 
 namespace cryptonote
 {
 
-class ISerializer;
+  class ISerializer;
 
-class GeneratedTransactionsIndex
-{
+  class GeneratedTransactionsIndex
+  {
   public:
     GeneratedTransactionsIndex();
 
-    bool add(const block_t&block);
-    bool remove(const block_t&block);
+    bool add(const block_t &block);
+    bool remove(const block_t &block);
     bool find(uint32_t height, uint64_t &generatedTransactions);
     void clear();
 
@@ -23,12 +24,15 @@ class GeneratedTransactionsIndex
     template <class Archive>
     void serialize(Archive &archive, unsigned int version)
     {
-        archive &index;
-        archive &lastGeneratedTxNumber;
+      archive &index;
+      archive &lastGeneratedTxNumber;
     }
 
-  private:
     std::unordered_map<uint32_t, uint64_t> index;
     uint64_t lastGeneratedTxNumber;
-};
+  };
+
+  Reader &operator>>(Reader &i, GeneratedTransactionsIndex &v);
+
+  Writer &operator<<(Writer &o, const GeneratedTransactionsIndex &v);
 } // namespace cryptonote

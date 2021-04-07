@@ -17,118 +17,120 @@ using namespace Common;
 namespace cryptonote
 {
 
-class Blockchain;
+  class Blockchain;
+  class PaymentIdIndex;
+  class TimestampBlocksIndex;
+  class GeneratedTransactionsIndex;
 
-class BlockchainIndicesSerializer
-{
+  class BlockchainIndicesSerializer
+  {
 
   public:
     BlockchainIndicesSerializer(Blockchain &bs, const hash_t lastBlockHash, ILogger &logger) :
-    
-     payment(bs.m_paymentIdIndex), 
-     timestamp(bs.m_timestampIndex),
-     transaction(bs.m_generatedTransactionsIndex),
-     m_lastBlockHash(lastBlockHash), m_loaded(false), logger(logger, "BlockchainIndicesSerializer")
+
+                                                                                               payment(bs.m_paymentIdIndex),
+                                                                                               timestamp(bs.m_timestampIndex),
+                                                                                               transaction(bs.m_generatedTransactionsIndex),
+                                                                                               m_lastBlockHash(lastBlockHash), m_loaded(false), logger(logger, "BlockchainIndicesSerializer")
     {
     }
 
     void serialize(ISerializer &s)
     {
 
-        config::config_t &data = config::get();
-        uint8_t version = data.storageVersions.blockcache_archive.major;
+      config::config_t &data = config::get();
+      uint8_t version = data.storageVersions.blockcache_archive.major;
 
-        KV_MEMBER(version);
+      KV_MEMBER(version);
 
-        // ignore old versions, do rebuild
-        if (version != data.storageVersions.blockcache_indices_archive.major)
-            return;
+      // ignore old versions, do rebuild
+      if (version != data.storageVersions.blockcache_indices_archive.major)
+        return;
 
-        std::string operation;
+      std::string operation;
 
-        if (s.type() == ISerializer::INPUT)
+      if (s.type() == ISerializer::INPUT)
+      {
+        operation = "- loading ";
+
+        hash_t blockHash;
+        s(blockHash, "blockHash");
+
+        if (blockHash != m_lastBlockHash)
         {
-            operation = "- loading ";
-
-            hash_t blockHash;
-            s(blockHash, "blockHash");
-
-            if (blockHash != m_lastBlockHash)
-            {
-                return;
-            }
+          return;
         }
-        else
-        {
-            operation = "- saving ";
-            s(m_lastBlockHash, "blockHash");
-        }
+      }
+      else
+      {
+        operation = "- saving ";
+        s(m_lastBlockHash, "blockHash");
+      }
 
-        logger(INFO) << operation << "paymentID index...";
-        s(payment, "paymentIdIndex");
+      logger(INFO) << operation << "paymentID index...";
+      s(payment, "paymentIdIndex");
 
-        logger(INFO) << operation << "timestamp index...";
-        s(timestamp, "timestampIndex");
+      logger(INFO) << operation << "timestamp index...";
+      s(timestamp, "timestampIndex");
 
-        logger(INFO) << operation << "generated transactions index...";
-        s(transaction, "generatedTransactionsIndex");
+      logger(INFO) << operation << "generated transactions index...";
+      s(transaction, "generatedTransactionsIndex");
 
-        m_loaded = true;
+      m_loaded = true;
     }
-
-    // template <class Archive>
-    // void serialize(Archive &ar, unsigned int version)
-    // {
-    //     uint8_t ver = config::get().storageVersions.blockcache_indices_archive.major;
-
-    //     std::cout << "indexes version: " << ver 
-    //     << " current version: " << version << std::endl;
-
-    //     // ignore old versions, do rebuild
-    //     if (version < ver)
-    //         return;
-
-    //     std::string operation;
-    //     if (Archive::is_loading::value)
-    //     {
-    //         operation = "- loading ";
-    //         hash_t blockHash;
-    //         ar &blockHash;
-
-    //         if (blockHash != m_lastBlockHash)
-    //         {
-    //             return;
-    //         }
-    //     }
-    //     else
-    //     {
-    //         operation = "- saving ";
-    //         ar &m_lastBlockHash;
-    //     }
-
-    //     logger(INFO) << operation << "paymentID index...";
-    //     ar &m_bs.m_paymentIdIndex;
-
-    //     logger(INFO) << operation << "timestamp index...";
-    //     ar &m_bs.m_timestampIndex;
-
-    //     logger(INFO) << operation << "generated transactions index...";
-    //     ar &m_bs.m_generatedTransactionsIndex;
-
-    //     m_loaded = true;
-    // }
 
     bool loaded() const
     {
-        return m_loaded;
+      return m_loaded;
     }
 
     LoggerRef logger;
     bool m_loaded;
-    PaymentIdIndex& payment;
-    TimestampBlocksIndex& timestamp;
-    GeneratedTransactionsIndex& transaction;
+    PaymentIdIndex &payment;
+    TimestampBlocksIndex &timestamp;
+    GeneratedTransactionsIndex &transaction;
 
     hash_t m_lastBlockHash;
-};
+  };
+  Reader &operator>>(Reader &i, BlockchainIndicesSerializer &v)
+  {
+    config::config_t &data = config::get();
+    uint8_t version = data.storageVersions.blockcache_archive.major;
+    i >> version;
+
+    // ignore old versions, do rebuild
+    if (version != data.storageVersions.blockcache_indices_archive.major)
+      return i;
+    hash_t blockHash;
+    i >> blockHash;
+
+    if (blockHash != v.m_lastBlockHash)
+    {
+      return i;
+    }
+
+    i >> v.payment;
+    i >> v.timestamp;
+    i >> v.transaction;
+    v.m_loaded = true;
+    return i;
+  }
+
+  Writer &operator<<(Writer &o, const BlockchainIndicesSerializer &v)
+  {
+    config::config_t &data = config::get();
+    uint8_t version = data.storageVersions.blockcache_archive.major;
+    o << version;
+
+    // ignore old versions, do rebuild
+    if (version != data.storageVersions.blockcache_indices_archive.major)
+      return o;
+
+    o << v.m_lastBlockHash;
+    o << v.payment;
+    o << v.timestamp;
+    o << v.transaction;
+    return o;
+  }
+
 } // namespace cryptonote

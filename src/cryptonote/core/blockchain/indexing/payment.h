@@ -3,7 +3,7 @@
 #include <unordered_map>
 #include "cryptonote/crypto/hash.h"
 #include "cryptonote/core/key.h"
-#include "cryptonote/core/blockchain/serializer/map.h"
+#include "stream/map.hpp"
 
 namespace cryptonote
 {
