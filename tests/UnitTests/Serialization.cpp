@@ -8,7 +8,6 @@
 #include "stream/writer.h"
 #include "serialization/BinaryInputStreamSerializer.h"
 #include "serialization/BinaryOutputStreamSerializer.h"
-#include "serialization/BinarySerializationTools.h"
 
 using namespace Common;
 using namespace cryptonote;

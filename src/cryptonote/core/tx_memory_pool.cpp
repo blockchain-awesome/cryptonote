@@ -16,7 +16,6 @@
 #include "cryptonote/crypto/hash.h"
 
 #include "serialization/SerializationTools.h"
-#include "serialization/BinarySerializationTools.h"
 
 #include "CryptoNoteFormatUtils.h"
 #include "CryptoNoteTools.h"
@@ -24,6 +23,7 @@
 #include "cryptonote/structures/array.hpp"
 #include "stream/transaction.h"
 #include "stream/set.hpp"
+#include "stream/persistence.h"
 
 using namespace Logging;
 
@@ -454,7 +454,7 @@ namespace cryptonote
   {
     std::cout << "Tx Memory Pool init" << std::endl;
     std::lock_guard<std::recursive_mutex> lock(m_transactions_lock);
-    if (!loadFromBinaryFile(*this, m_currency.txPoolFileName()))
+    if (!read(*this, m_currency.txPoolFileName()))
     {
       logger(ERROR) << "Failed to load memory pool from file " << m_currency.txPoolFileName();
 
@@ -483,7 +483,8 @@ namespace cryptonote
     {
       std::file::create(m_currency.txPoolFileName());
     }
-    if (!storeToBinaryFile(*this, m_currency.txPoolFileName()))
+
+    if (!save(*this, m_currency.txPoolFileName()))
     {
       logger(INFO) << "Failed to serialize memory pool to file " << m_currency.txPoolFileName();
     }

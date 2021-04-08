@@ -17,8 +17,6 @@
 #include "stream/block.h"
 #include "stream/persistence.h"
 #include "common/os.h"
-
-#include "serialization/BinarySerializationTools.h"
 #include "common/base58.cpp"
 
 using namespace cryptonote;

@@ -13,7 +13,6 @@
 #include "common/ShuffleGenerator.h"
 #include "stream/persistence.h"
 #include "rpc/CoreRpcServerCommandsDefinitions.h"
-#include "serialization/BinarySerializationTools.h"
 #include "CryptoNoteTools.h"
 #include "cryptonote/structures/array.hpp"
 
