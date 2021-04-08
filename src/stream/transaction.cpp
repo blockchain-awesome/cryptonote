@@ -311,38 +311,6 @@ Writer &operator<<(Writer &o, const transaction_index_t &v)
   return o;
 }
 
-// Reader &operator>>(Reader &i, transaction_map_t &v)
-// {
-
-//   size_t size = 0;
-
-//   i >> size;
-
-//   for (size_t j = 0; j < size; j++)
-//   {
-//     hash_t key;
-//     transaction_index_t idx;
-//     i >> key;
-//     i >> idx;
-//     v.insert(std::make_pair<hash_t, transaction_index_t>(std::move(key), std::move(idx)));
-//   }
-//   return i;
-// }
-
-// Writer &operator<<(Writer &o, const transaction_map_t &v)
-// {
-
-//   size_t size = v.size();
-//   o << size;
-
-//   for (auto &kv : v)
-//   {
-//     o << kv.first;
-//     o << kv.second;
-//   }
-//   return o;
-// }
-
 Reader &operator>>(Reader &i, multisignature_output_usage_t &v)
 {
   i >> v.transactionIndex;

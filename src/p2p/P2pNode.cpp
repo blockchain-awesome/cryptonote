@@ -537,4 +537,29 @@ void P2pNode::handleNodeData(const basic_node_data& node, P2pContext& context) {
   }
 }
 
+
+Reader &operator>>(Reader &i, P2pNode &v)
+{
+  uint8_t version = 1;
+
+  i >> version;
+
+  if (version != 1) {
+    return i;
+  }
+
+  i >> v.m_peerlist;
+
+  return i;
+}
+Writer &operator<<(Writer &o, const P2pNode &v)
+{
+    uint8_t version = 1;
+
+  o << version;
+
+  o << v.m_peerlist;
+  return o;
+}
+
 }
