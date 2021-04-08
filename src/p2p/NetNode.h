@@ -30,8 +30,9 @@
 #include "P2pNetworks.h"
 #include "PeerListManager.h"
 
-namespace System {
-class TcpConnection;
+namespace System
+{
+  class TcpConnection;
 }
 
 namespace cryptonote
@@ -39,22 +40,25 @@ namespace cryptonote
   class LevinProtocol;
   class ISerializer;
 
-  struct P2pMessage {
-    enum Type {
+  struct P2pMessage
+  {
+    enum Type
+    {
       COMMAND,
       REPLY,
       NOTIFY
     };
 
-    P2pMessage(Type type, uint32_t command, const binary_array_t& buffer, int32_t returnCode = 0) :
-      type(type), command(command), buffer(buffer), returnCode(returnCode) {
+    P2pMessage(Type type, uint32_t command, const binary_array_t &buffer, int32_t returnCode = 0) : type(type), command(command), buffer(buffer), returnCode(returnCode)
+    {
     }
 
-    P2pMessage(P2pMessage&& msg) :
-      type(msg.type), command(msg.command), buffer(std::move(msg.buffer)), returnCode(msg.returnCode) {
+    P2pMessage(P2pMessage &&msg) : type(msg.type), command(msg.command), buffer(std::move(msg.buffer)), returnCode(msg.returnCode)
+    {
     }
 
-    size_t size() {
+    size_t size()
+    {
       return buffer.size();
     }
 
@@ -64,35 +68,36 @@ namespace cryptonote
     int32_t returnCode;
   };
 
-  struct P2pConnectionContext : public CryptoNoteConnectionContext {
+  struct P2pConnectionContext : public CryptoNoteConnectionContext
+  {
   public:
     using Clock = std::chrono::steady_clock;
     using TimePoint = Clock::time_point;
 
-    System::Context<void>* context;
+    System::Context<void> *context;
     peer_id_type_t peerId;
     System::TcpConnection connection;
 
-    P2pConnectionContext(System::Dispatcher& dispatcher, Logging::ILogger& log, System::TcpConnection&& conn) :
-      context(nullptr),
-      peerId(0),
-      connection(std::move(conn)),
-      logger(log, "node_server"),
-      queueEvent(dispatcher),
-      stopped(false) {
+    P2pConnectionContext(System::Dispatcher &dispatcher, Logging::ILogger &log, System::TcpConnection &&conn) : context(nullptr),
+                                                                                                                peerId(0),
+                                                                                                                connection(std::move(conn)),
+                                                                                                                logger(log, "node_server"),
+                                                                                                                queueEvent(dispatcher),
+                                                                                                                stopped(false)
+    {
     }
 
-    P2pConnectionContext(P2pConnectionContext&& ctx) : 
-      CryptoNoteConnectionContext(std::move(ctx)),
-      context(ctx.context),
-      peerId(ctx.peerId),
-      connection(std::move(ctx.connection)),
-      logger(ctx.logger.getLogger(), "node_server"),
-      queueEvent(std::move(ctx.queueEvent)),
-      stopped(std::move(ctx.stopped)) {
+    P2pConnectionContext(P2pConnectionContext &&ctx) : CryptoNoteConnectionContext(std::move(ctx)),
+                                                       context(ctx.context),
+                                                       peerId(ctx.peerId),
+                                                       connection(std::move(ctx.connection)),
+                                                       logger(ctx.logger.getLogger(), "node_server"),
+                                                       queueEvent(std::move(ctx.queueEvent)),
+                                                       stopped(std::move(ctx.stopped))
+    {
     }
 
-    bool pushMessage(P2pMessage&& msg);
+    bool pushMessage(P2pMessage &&msg);
     std::vector<P2pMessage> popBuffer();
     void interrupt();
 
@@ -107,23 +112,22 @@ namespace cryptonote
     bool stopped;
   };
 
-  class NodeServer :  public IP2pEndpoint
+  class NodeServer : public IP2pEndpoint
   {
   public:
+    static void init_options(boost::program_options::options_description &desc);
 
-    static void init_options(boost::program_options::options_description& desc);
+    NodeServer(System::Dispatcher &dispatcher, cryptonote::CryptoNoteProtocolHandler &payload_handler, Logging::ILogger &log);
 
-    NodeServer(System::Dispatcher& dispatcher, cryptonote::CryptoNoteProtocolHandler& payload_handler, Logging::ILogger& log);
-
-    virtual ~NodeServer() {};
+    virtual ~NodeServer(){};
     bool run();
-    bool init(const NetNodeConfig& conf);
+    bool init(const NetNodeConfig &conf);
     bool deinit();
     bool sendStopSignal();
-    uint32_t get_this_peer_port(){return m_listeningPort;}
-    cryptonote::CryptoNoteProtocolHandler& get_payload_object();
+    uint32_t get_this_peer_port() { return m_listeningPort; }
+    cryptonote::CryptoNoteProtocolHandler &get_payload_object();
 
-    void serialize(ISerializer& s);
+    void serialize(ISerializer &s);
 
     // debug functions
     bool log_peerlist();
@@ -131,66 +135,64 @@ namespace cryptonote
     virtual uint64_t get_connections_count() override;
     size_t get_outgoing_connections_count();
 
-    cryptonote::PeerlistManager& getPeerlistManager() { return m_peerlist; }
+    cryptonote::PeerlistManager &getPeerlistManager() { return m_peerlist; }
 
-  private:
-
-    int handleCommand(const LevinProtocol::Command& cmd, binary_array_t& buff_out, P2pConnectionContext& context, bool& handled);
+    int handleCommand(const LevinProtocol::Command &cmd, binary_array_t &buff_out, P2pConnectionContext &context, bool &handled);
 
     //----------------- commands handlers ----------------------------------------------
-    int handle_handshake(int command, COMMAND_HANDSHAKE::request& arg, COMMAND_HANDSHAKE::response& rsp, P2pConnectionContext& context);
-    int handle_timed_sync(int command, COMMAND_TIMED_SYNC::request& arg, COMMAND_TIMED_SYNC::response& rsp, P2pConnectionContext& context);
-    int handle_ping(int command, COMMAND_PING::request& arg, COMMAND_PING::response& rsp, P2pConnectionContext& context);
+    int handle_handshake(int command, COMMAND_HANDSHAKE::request &arg, COMMAND_HANDSHAKE::response &rsp, P2pConnectionContext &context);
+    int handle_timed_sync(int command, COMMAND_TIMED_SYNC::request &arg, COMMAND_TIMED_SYNC::response &rsp, P2pConnectionContext &context);
+    int handle_ping(int command, COMMAND_PING::request &arg, COMMAND_PING::response &rsp, P2pConnectionContext &context);
 #ifdef ALLOW_DEBUG_COMMANDS
-    int handle_get_stat_info(int command, COMMAND_REQUEST_STAT_INFO::request& arg, COMMAND_REQUEST_STAT_INFO::response& rsp, P2pConnectionContext& context);
-    int handle_get_network_state(int command, COMMAND_REQUEST_NETWORK_STATE::request& arg, COMMAND_REQUEST_NETWORK_STATE::response& rsp, P2pConnectionContext& context);
-    int handle_get_peer_id(int command, COMMAND_REQUEST_PEER_ID::request& arg, COMMAND_REQUEST_PEER_ID::response& rsp, P2pConnectionContext& context);
+    int handle_get_stat_info(int command, COMMAND_REQUEST_STAT_INFO::request &arg, COMMAND_REQUEST_STAT_INFO::response &rsp, P2pConnectionContext &context);
+    int handle_get_network_state(int command, COMMAND_REQUEST_NETWORK_STATE::request &arg, COMMAND_REQUEST_NETWORK_STATE::response &rsp, P2pConnectionContext &context);
+    int handle_get_peer_id(int command, COMMAND_REQUEST_PEER_ID::request &arg, COMMAND_REQUEST_PEER_ID::response &rsp, P2pConnectionContext &context);
 #endif
 
     bool init_config();
     bool make_default_config();
     bool store_config();
-    bool check_trust(const proof_of_trust_t& tr);
+    bool check_trust(const proof_of_trust_t &tr);
     void initUpnp();
 
-    bool handshake(cryptonote::LevinProtocol& proto, P2pConnectionContext& context, bool just_take_peerlist = false);
+    bool handshake(cryptonote::LevinProtocol &proto, P2pConnectionContext &context, bool just_take_peerlist = false);
     bool timedSync();
-    bool handleTimedSyncResponse(const binary_array_t& in, P2pConnectionContext& context);
-    void forEachConnection(std::function<void(P2pConnectionContext&)> action);
+    bool handleTimedSyncResponse(const binary_array_t &in, P2pConnectionContext &context);
+    void forEachConnection(std::function<void(P2pConnectionContext &)> action);
 
-    void on_connection_new(P2pConnectionContext& context);
-    void on_connection_close(P2pConnectionContext& context);
+    void on_connection_new(P2pConnectionContext &context);
+    void on_connection_close(P2pConnectionContext &context);
 
     //----------------- i_p2p_endpoint -------------------------------------------------------------
-    virtual void relay_notify_to_all(int command, const binary_array_t& data_buff, const net_connection_id* excludeConnection) override;
-    virtual bool invoke_notify_to_peer(int command, const binary_array_t& req_buff, const CryptoNoteConnectionContext& context) override;
-    virtual void for_each_connection(std::function<void(cryptonote::CryptoNoteConnectionContext&, peer_id_type_t)> f) override;
-    virtual void externalRelayNotifyToAll(int command, const binary_array_t& data_buff) override;
+    virtual void relay_notify_to_all(int command, const binary_array_t &data_buff, const net_connection_id *excludeConnection) override;
+    virtual bool invoke_notify_to_peer(int command, const binary_array_t &req_buff, const CryptoNoteConnectionContext &context) override;
+    virtual void for_each_connection(std::function<void(cryptonote::CryptoNoteConnectionContext &, peer_id_type_t)> f) override;
+    virtual void externalRelayNotifyToAll(int command, const binary_array_t &data_buff) override;
 
     //-----------------------------------------------------------------------------------------------
-    bool handle_command_line(const boost::program_options::variables_map& vm);
-    bool handleConfig(const NetNodeConfig& conf);
-    bool append_net_address(std::vector<network_address_t>& nodes, const std::string& addr);
+    bool handle_command_line(const boost::program_options::variables_map &vm);
+    bool handleConfig(const NetNodeConfig &conf);
+    bool append_net_address(std::vector<network_address_t> &nodes, const std::string &addr);
     bool idle_worker();
-    bool handle_remote_peerlist(const std::list<peerlist_entry_t>& peerlist, time_t local_time, const CryptoNoteConnectionContext& context);
-    bool get_local_node_data(basic_node_data& node_data);
+    bool handle_remote_peerlist(const std::list<peerlist_entry_t> &peerlist, time_t local_time, const CryptoNoteConnectionContext &context);
+    bool get_local_node_data(basic_node_data &node_data);
 
-    bool merge_peerlist_with_local(const std::list<peerlist_entry_t>& bs);
-    bool fix_time_delta(std::list<peerlist_entry_t>& local_peerlist, time_t local_time, int64_t& delta);
+    bool merge_peerlist_with_local(const std::list<peerlist_entry_t> &bs);
+    bool fix_time_delta(std::list<peerlist_entry_t> &local_peerlist, time_t local_time, int64_t &delta);
 
     bool connections_maker();
     bool make_new_connection_from_peerlist(bool use_white_list);
-    bool try_to_connect_and_handshake_with_new_peer(const network_address_t& na, bool just_take_peerlist = false, uint64_t last_seen_stamp = 0, bool white = true);
-    bool is_peer_used(const peerlist_entry_t& peer);
-    bool is_addr_connected(const network_address_t& peer);  
-    bool try_ping(basic_node_data& node_data, P2pConnectionContext& context);
+    bool try_to_connect_and_handshake_with_new_peer(const network_address_t &na, bool just_take_peerlist = false, uint64_t last_seen_stamp = 0, bool white = true);
+    bool is_peer_used(const peerlist_entry_t &peer);
+    bool is_addr_connected(const network_address_t &peer);
+    bool try_ping(basic_node_data &node_data, P2pConnectionContext &context);
     bool make_expected_connections_count(bool white_list, size_t expected_connections);
-    bool is_priority_node(const network_address_t& na);
+    bool is_priority_node(const network_address_t &na);
 
-    bool connect_to_peerlist(const std::vector<network_address_t>& peers);
+    bool connect_to_peerlist(const std::vector<network_address_t> &peers);
 
-    bool parse_peers_and_add_to_container(const boost::program_options::variables_map& vm, 
-      const command_line::arg_descriptor<std::vector<std::string> > & arg, std::vector<network_address_t>& container);
+    bool parse_peers_and_add_to_container(const boost::program_options::variables_map &vm,
+                                          const command_line::arg_descriptor<std::vector<std::string>> &arg, std::vector<network_address_t> &container);
 
     //debug functions
     std::string print_connections_container();
@@ -200,18 +202,19 @@ namespace cryptonote
     ConnectionContainer m_connections;
 
     void acceptLoop();
-    void connectionHandler(const boost::uuids::uuid& connectionId, P2pConnectionContext& connection);
-    void writeHandler(P2pConnectionContext& ctx);
+    void connectionHandler(const boost::uuids::uuid &connectionId, P2pConnectionContext &connection);
+    void writeHandler(P2pConnectionContext &ctx);
     void onIdle();
     void timedSyncLoop();
     void timeoutLoop();
 
-    struct  net_config_t
+    struct net_config_t
     {
       network_config m_net_config;
       uint64_t m_peer_id;
 
-      void serialize(ISerializer& s) {
+      void serialize(ISerializer &s)
+      {
         KV_MEMBER(m_net_config)
         KV_MEMBER(m_peer_id)
       }
@@ -229,7 +232,7 @@ namespace cryptonote
     bool m_hide_my_port;
     std::string m_p2p_state_filename;
 
-    System::Dispatcher& m_dispatcher;
+    System::Dispatcher &m_dispatcher;
     System::ContextGroup m_workingContextGroup;
     System::Event m_stopEvent;
     System::Timer m_idleTimer;
@@ -238,7 +241,7 @@ namespace cryptonote
     Logging::LoggerRef logger;
     std::atomic<bool> m_stop;
 
-    CryptoNoteProtocolHandler& m_payload_handler;
+    CryptoNoteProtocolHandler &m_payload_handler;
     PeerlistManager m_peerlist;
 
     // OnceInInterval m_peer_handshake_idle_maker_interval;
@@ -258,4 +261,8 @@ namespace cryptonote
     uint64_t m_peer_livetime;
     boost::uuids::uuid m_network_id;
   };
+
+  Reader &operator>>(Reader &i, NodeServer &v);
+
+  Writer &operator<<(Writer &o, const NodeServer &v);
 }
