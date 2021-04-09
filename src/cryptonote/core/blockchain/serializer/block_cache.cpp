@@ -46,8 +46,6 @@ namespace cryptonote
             Reader stream(stdStream);
 
             stream >> *this;
-            // BinaryInputStreamSerializer s(stream);
-            // serialize(s);
         }
         catch (std::exception &e)
         {
@@ -67,8 +65,6 @@ namespace cryptonote
 
             Writer stream(file);
             stream << *this;
-            // BinaryOutputStreamSerializer s(stream);
-            // serialize(s);
         }
         catch (std::exception &)
         {

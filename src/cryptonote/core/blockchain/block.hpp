@@ -15,10 +15,12 @@
 #include <vector>
 #include "common/file.h"
 
-#include "stream/reader.h"
-#include "stream/writer.h"
-#include "serialization/BinaryInputStreamSerializer.h"
-#include "serialization/BinaryOutputStreamSerializer.h"
+#include "stream/block.h"
+#include "stream/transaction.h"
+#include "stream/cryptonote.h"
+#include "stream/map.hpp"
+#include "stream/set.hpp"
+
 #include "cryptonote/core/currency.h"
 
 using namespace cryptonote;
@@ -338,8 +340,8 @@ template<class T> const T& BlockAccessor<T>::operator[](uint64_t index) {
   T tempItem;
   
   Reader stream = Reader(m_itemsFile);
-  cryptonote::BinaryInputStreamSerializer archive(stream);
-  serialize(tempItem, archive);
+
+  stream >> tempItem;
 
   T* item = prepare(index);
   std::swap(tempItem, *item);
@@ -388,8 +390,8 @@ template<class T> void BlockAccessor<T>::push_back(const T& item) {
     m_itemsFile.seekp(m_itemsFileSize);
 
     Writer stream(m_itemsFile);
-    cryptonote::BinaryOutputStreamSerializer archive(stream);
-    serialize(const_cast<T&>(item), archive);
+
+    stream << const_cast<T&>(item);
 
     itemsFileSize = m_itemsFile.tellp();
   }

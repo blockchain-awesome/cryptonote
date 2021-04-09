@@ -94,3 +94,27 @@ Writer &operator<<(Writer &o, const core_state_info_t &v)
   o << v.top_block_id_str;
   return o;
 }
+
+
+
+Reader &operator>>(Reader &i, block_entry_t &v)
+{
+  i >> v.bl;
+  i >> v.height;
+  i >> v.block_cumulative_size;
+  i >> v.cumulative_difficulty;
+  i >> v.already_generated_coins;
+  i >> v.transactions;
+  return i;
+}
+
+Writer &operator<<(Writer &o, const block_entry_t &v)
+{
+  o <<v.bl;
+  o <<v.height;
+  o <<v.block_cumulative_size;
+  o <<v.cumulative_difficulty;
+  o <<v.already_generated_coins;
+  o <<v.transactions;
+  return o;
+}
