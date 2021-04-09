@@ -25,4 +25,15 @@ void KeysStorage::serialize(ISerializer& serializer, const std::string& name) {
   serializer.endObject();
 }
 
+Reader &operator>>(Reader &i, KeysStorage &v)
+{
+  i >> v.creationTimestamp >> v.spendPublicKey >> v.spendSecretKey >> v.viewPublicKey >> v.viewSecretKey;
+  return i;
+}
+
+Writer &operator<<(Writer &o, const KeysStorage &v)
+{
+  o << v.creationTimestamp << v.spendPublicKey << v.spendSecretKey << v.viewPublicKey << v.viewSecretKey;
+  return o;
+}
 }
