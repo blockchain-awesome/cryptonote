@@ -5,10 +5,9 @@
 #include "TransfersSynchronizer.h"
 #include "TransfersConsumer.h"
 
-#include "stream/reader.h"
-#include "stream/writer.h"
-#include "serialization/BinaryInputStreamSerializer.h"
-#include "serialization/BinaryOutputStreamSerializer.h"
+#include "stream/crypto.h"
+#include "stream/cryptonote.h"
+#include "stream/block.h"
 
 using namespace Common;
 using namespace crypto;
@@ -140,49 +139,41 @@ void TransfersSyncronizer::save(std::ostream& os) {
   m_sync.save(os);
 
   Writer stream(os);
-  cryptonote::BinaryOutputStreamSerializer s(stream);
-  s(const_cast<uint32_t&>(TRANSFERS_STORAGE_ARCHIVE_VERSION), "version");
+  stream << const_cast<uint32_t&>(TRANSFERS_STORAGE_ARCHIVE_VERSION);
 
   size_t subscriptionCount = m_consumers.size();
 
-  s.beginArray(subscriptionCount, "consumers");
+  stream << subscriptionCount;
 
   for (const auto& consumer : m_consumers) {
-    s.beginObject("");
-    s(const_cast<public_key_t&>(consumer.first), "view_key");
+
+    stream << const_cast<const public_key_t&>(consumer.first);
 
     std::stringstream consumerState;
     // synchronization state
     m_sync.getConsumerState(consumer.second.get())->save(consumerState);
 
     std::string blob = consumerState.str();
-    s(blob, "state");
-    
+    stream << blob;    
     std::vector<account_public_address_t> subscriptions;
     consumer.second->getSubscriptions(subscriptions);
     size_t subCount = subscriptions.size();
 
-    s.beginArray(subCount, "subscriptions");
+    stream << subCount;
 
     for (auto& addr : subscriptions) {
       auto sub = consumer.second->getSubscription(addr);
       if (sub != nullptr) {
-        s.beginObject("");
-
         std::stringstream subState;
         assert(sub);
         sub->getContainer().save(subState);
         // store data block
         std::string blob = subState.str();
-        s(addr, "address");
-        s(blob, "state");
+        stream << addr;
+        stream << blob;
 
-        s.endObject();
       }
     }
-
-    s.endArray();
-    s.endObject();
   }
 }
 
@@ -203,11 +194,10 @@ void setObjectState(IStreamSerializable& obj, const std::string& state) {
 void TransfersSyncronizer::load(std::istream& is) {
   m_sync.load(is);
 
-  Reader inputStream(is);
-  cryptonote::BinaryInputStreamSerializer s(inputStream);
+  Reader i(is);
   uint32_t version = 0;
 
-  s(version, "version");
+  i >> version;
 
   if (version > TRANSFERS_STORAGE_ARCHIVE_VERSION) {
     throw std::runtime_error("TransfersSyncronizer version mismatch");
@@ -224,15 +214,16 @@ void TransfersSyncronizer::load(std::istream& is) {
 
   try {
     size_t subscriptionCount = 0;
-    s.beginArray(subscriptionCount, "consumers");
+
+    i >> subscriptionCount;
 
     while (subscriptionCount--) {
-      s.beginObject("");
       public_key_t viewKey;
-      s(viewKey, "view_key");
+      i >> viewKey;
 
       std::string blob;
-      s(blob, "state");
+
+      i >> blob;
 
       auto subIter = m_consumers.find(viewKey);
       if (subIter != m_consumers.end()) {
@@ -249,16 +240,15 @@ void TransfersSyncronizer::load(std::istream& is) {
 
         // load subscriptions
         size_t subCount = 0;
-        s.beginArray(subCount, "subscriptions");
+        i >> subCount;
 
         while (subCount--) {
-          s.beginObject("");
 
           account_public_address_t acc;
           std::string state;
 
-          s(acc, "address");
-          s(state, "state");
+          i >> acc;
+          i >> state;
 
           auto sub = subIter->second->getSubscription(acc);
 
@@ -268,15 +258,9 @@ void TransfersSyncronizer::load(std::istream& is) {
             updatedStates.back().subscriptionStates.push_back(std::make_pair(acc, prevState));
           }
 
-          s.endObject();
         }
-        s.endArray();
       }
     }
-
-    s.endObject();
-    s.endArray();
-
   } catch (...) {
     // rollback state
     for (const auto& consumerState : updatedStates) {

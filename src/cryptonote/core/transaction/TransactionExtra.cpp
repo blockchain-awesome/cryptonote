@@ -4,11 +4,8 @@
 
 #include "TransactionExtra.h"
 
-#include "stream/reader.h"
-#include "stream/writer.h"
+#include "stream/crypto.h"
 #include "CryptoNoteTools.h"
-#include "serialization/BinaryOutputStreamSerializer.h"
-#include "serialization/BinaryInputStreamSerializer.h"
 
 using namespace crypto;
 using namespace Common;
@@ -30,8 +27,6 @@ namespace cryptonote
       membuf mem((char *)(b), (char *)(b + transactionExtra.size()));
       std::istream istream(&mem);
       Reader iss(istream);
-      BinaryInputStreamSerializer ar(iss);
-
       uint8_t tag = 0;
 
       while (!iss.endOfStream())
@@ -64,7 +59,7 @@ namespace cryptonote
         case TX_EXTRA_TAG_PUBKEY:
         {
           transaction_extra_public_key_t extraPk;
-          ar(extraPk.publicKey, "public_key");
+          iss >> extraPk.publicKey;
           transactionExtraFields.push_back(extraPk);
           break;
         }
