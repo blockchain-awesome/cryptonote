@@ -206,7 +206,7 @@ protected:
   void testIWalletDataCompatibility(bool details, const std::string& cache = std::string(),
           const std::vector<WalletLegacyTransaction>& txs = std::vector<WalletLegacyTransaction>(),
           const std::vector<WalletLegacyTransfer>& trs = std::vector<WalletLegacyTransfer>(),
-          const std::vector<std::pair<TransactionInformation, int64_t>>& externalTxs = std::vector<std::pair<TransactionInformation, int64_t>>());
+          const std::vector<std::pair<transaction_infomation_t, int64_t>>& externalTxs = std::vector<std::pair<transaction_infomation_t, int64_t>>());
 
   uint32_t TRANSACTION_SOFTLOCK_TIME;
 
@@ -1038,7 +1038,7 @@ TEST_F(WalletApi, loadWithWrongPassword) {
 }
 
 void WalletApi::testIWalletDataCompatibility(bool details, const std::string& cache, const std::vector<WalletLegacyTransaction>& txs,
-    const std::vector<WalletLegacyTransfer>& trs, const std::vector<std::pair<TransactionInformation, int64_t>>& externalTxs) {
+    const std::vector<WalletLegacyTransfer>& trs, const std::vector<std::pair<transaction_infomation_t, int64_t>>& externalTxs) {
   cryptonote::Account account;
   account.generate();
 
@@ -1169,9 +1169,9 @@ TEST_F(WalletApi, IWalletDataCompatibilityDetails) {
   tr2.address = alice.getAddress(0);
   trs.push_back(tr2);
 
-  std::vector<std::pair<TransactionInformation, int64_t>> incomingTxs;
+  std::vector<std::pair<transaction_infomation_t, int64_t>> incomingTxs;
 
-  TransactionInformation iTx1;
+  transaction_infomation_t iTx1;
   iTx1.timestamp = 929453;
   iTx1.totalAmountIn = 200353;
   iTx1.blockHeight = 2349;
@@ -1182,7 +1182,7 @@ TEST_F(WalletApi, IWalletDataCompatibilityDetails) {
   iTx1.unlockTime = 17;
   incomingTxs.push_back(std::make_pair(iTx1, 99874442));
 
-  TransactionInformation iTx2;
+  transaction_infomation_t iTx2;
   iTx2.timestamp = 10010;
   iTx2.totalAmountIn = 0;
   iTx2.blockHeight = 2350;

@@ -4,8 +4,9 @@
 
 #include "TransfersContainer.h"
 #include "IWalletLegacy.h"
-#include "stream/reader.h"
-#include "stream/writer.h"
+#include "stream/crypto.h"
+#include "stream/cryptonote.h"
+#include "stream/map.hpp"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "serialization/BinaryInputStreamSerializer.h"
 #include "serialization/BinaryOutputStreamSerializer.h"
@@ -16,7 +17,7 @@ using namespace crypto;
 
 namespace cryptonote {
 
-void serialize(TransactionInformation& ti, cryptonote::ISerializer& s) {
+void serialize(transaction_infomation_t& ti, cryptonote::ISerializer& s) {
   s(ti.transactionHash, "");
   s(ti.publicKey, "");
   serializeBlockHeight(s, ti.blockHeight, "");
@@ -26,6 +27,73 @@ void serialize(TransactionInformation& ti, cryptonote::ISerializer& s) {
   s(ti.totalAmountOut, "");
   s(ti.extra, "");
   s(ti.paymentId, "");
+}
+
+Reader &operator>>(Reader &i, transaction_infomation_t &v)
+{
+  i >> v.transactionHash;
+  i >> v.publicKey;
+  uint64_t height;
+  i >> height;
+  v.blockHeight = static_cast<uint32_t>(height);
+  assert(height <= std::numeric_limits<uint64_t>::max());
+  i >> v.timestamp >> v.unlockTime >> v.totalAmountIn >> v.totalAmountOut >> v.extra >> v.paymentId;
+  return i;
+}
+
+Writer &operator<<(Writer &o, const transaction_infomation_t &v)
+{
+  o << v.transactionHash << v.publicKey;
+  uint64_t height = v.blockHeight;
+  o << height << v.timestamp << v.unlockTime << v.totalAmountIn << v.totalAmountOut << v.extra << v.paymentId;
+  return o;
+}
+
+Reader &operator>>(Reader &i, TransactionOutputInformationEx &v)
+{
+  i >> reinterpret_cast<uint8_t &>(v.type);
+  i >> v.amount;
+  uint64_t temp = 0;
+  i >> temp;
+  v.globalOutputIndex = temp;
+  i >> v.outputInTransaction >> v.transactionPublicKey >> v.keyImage >> v.unlockTime;
+  i >> temp;
+  v.blockHeight = temp;
+  i >> v.transactionIndex >> v.transactionHash >> v.visible;
+  switch (v.type)
+  {
+  case output_type_t::Key:
+    i >> v.outputKey;
+    break;
+  case output_type_t::Multisignature:
+    i >> v.requiredSignatures;
+    break;
+  default:
+    throw std::runtime_error("Unknown type!");
+    break;
+  }
+
+  return i;
+}
+
+Writer &operator<<(Writer &o, const TransactionOutputInformationEx &v)
+{
+  uint8_t type = static_cast<uint8_t>(v.type);
+  uint64_t temp = v.globalOutputIndex;
+  o << type << v.amount << temp << v.transactionIndex << v.transactionHash << v.visible;
+  switch (v.type)
+  {
+  case output_type_t::Key:
+    o << v.outputKey;
+    break;
+  case output_type_t::Multisignature:
+    o << v.requiredSignatures;
+    break;
+  default:
+    throw std::runtime_error("Unknown type!");
+    break;
+  }
+  return o;
 }
 
 const uint32_t TRANSFERS_CONTAINER_STORAGE_VERSION = 0;
@@ -191,7 +259,7 @@ bool TransfersContainer::addTransaction(const TransactionBlockInfo& block, const
 void TransfersContainer::addTransaction(const TransactionBlockInfo& block, const ITransactionReader& tx) {
   auto txHash = tx.getTransactionHash();
 
-  TransactionInformation txInfo;
+  transaction_infomation_t txInfo;
   txInfo.blockHeight = block.height;
   txInfo.timestamp = block.timestamp;
   txInfo.transactionHash = txHash;
@@ -630,7 +698,7 @@ void TransfersContainer::getOutputs(std::vector<TransactionOutputInformation>& t
   }
 }
 
-bool TransfersContainer::getTransactionInformation(const hash_t& transactionHash, TransactionInformation& info, uint64_t* amountIn, uint64_t* amountOut) const {
+bool TransfersContainer::getTransactionInformation(const hash_t& transactionHash, transaction_infomation_t& info, uint64_t* amountIn, uint64_t* amountOut) const {
   std::lock_guard<std::mutex> lk(m_mutex);
   auto it = m_transactions.find(transactionHash);
   if (it == m_transactions.end()) {
@@ -762,12 +830,15 @@ void TransfersContainer::save(std::ostream& os) {
   Writer stream(os);
   cryptonote::BinaryOutputStreamSerializer s(stream);
 
-  s(const_cast<uint32_t&>(TRANSFERS_CONTAINER_STORAGE_VERSION), "version");
-
-  s(m_currentHeight, "height");
-  writeSequence<TransactionInformation>(m_transactions.begin(), m_transactions.end(), "transactions", s);
-  writeSequence<TransactionOutputInformationEx>(m_unconfirmedTransfers.begin(), m_unconfirmedTransfers.end(), "unconfirmedTransfers", s);
-  writeSequence<TransactionOutputInformationEx>(m_availableTransfers.begin(), m_availableTransfers.end(), "availableTransfers", s);
+  stream << const_cast<uint32_t&>(TRANSFERS_CONTAINER_STORAGE_VERSION);
+  stream << m_currentHeight;
+  iterate<transaction_infomation_t>(stream, m_transactions.begin(), m_transactions.end());
+  iterate<TransactionOutputInformationEx>(stream, m_unconfirmedTransfers.begin(), m_unconfirmedTransfers.end());
+  iterate<TransactionOutputInformationEx>(stream, m_availableTransfers.begin(), m_availableTransfers.end());
+  // iterate<SpentTransactionOutput>(stream, m_spentTransfers.begin(), m_spentTransfers.end());
+  // writeSequence<transaction_infomation_t>(m_transactions.begin(), m_transactions.end(), "transactions", s);
+  // writeSequence<TransactionOutputInformationEx>(m_unconfirmedTransfers.begin(), m_unconfirmedTransfers.end(), "unconfirmedTransfers", s);
+  // writeSequence<TransactionOutputInformationEx>(m_availableTransfers.begin(), m_availableTransfers.end(), "availableTransfers", s);
   writeSequence<SpentTransactionOutput>(m_spentTransfers.begin(), m_spentTransfers.end(), "spentTransfers", s);
 }
 
@@ -777,25 +848,31 @@ void TransfersContainer::load(std::istream& in) {
   cryptonote::BinaryInputStreamSerializer s(stream);
 
   uint32_t version = 0;
-  s(version, "version");
+  stream >> version;
 
   if (version > TRANSFERS_CONTAINER_STORAGE_VERSION) {
     throw std::runtime_error("Unsupported transfers storage version");
   }
 
   uint32_t currentHeight = 0;
+  stream >> currentHeight;
+  m_currentHeight = currentHeight;
+
   TransactionMultiIndex transactions;
   UnconfirmedTransfersMultiIndex unconfirmedTransfers;
   AvailableTransfersMultiIndex availableTransfers;
   SpentTransfersMultiIndex spentTransfers;
 
-  s(currentHeight, "height");
-  readSequence<TransactionInformation>(std::inserter(transactions, transactions.end()), "transactions", s);
-  readSequence<TransactionOutputInformationEx>(std::inserter(unconfirmedTransfers, unconfirmedTransfers.end()), "unconfirmedTransfers", s);
-  readSequence<TransactionOutputInformationEx>(std::inserter(availableTransfers, availableTransfers.end()), "availableTransfers", s);
+  iterate<transaction_infomation_t>(stream, std::inserter(transactions, transactions.end()));
+  iterate<TransactionOutputInformationEx>(stream, std::inserter(unconfirmedTransfers, unconfirmedTransfers.end()));
+  iterate<TransactionOutputInformationEx>(stream, std::inserter(availableTransfers, availableTransfers.end()));
+  // iterate<SpentTransactionOutput>(stream, std::inserter(spentTransfers, spentTransfers.end()));
+
+  // readSequence<transaction_infomation_t>(std::inserter(transactions, transactions.end()), "transactions", s);
+  // readSequence<TransactionOutputInformationEx>(std::inserter(unconfirmedTransfers, unconfirmedTransfers.end()), "unconfirmedTransfers", s);
+  // readSequence<TransactionOutputInformationEx>(std::inserter(availableTransfers, availableTransfers.end()), "availableTransfers", s);
   readSequence<SpentTransactionOutput>(std::inserter(spentTransfers, spentTransfers.end()), "spentTransfers", s);
 
-  m_currentHeight = currentHeight;
   m_transactions = std::move(transactions);
   m_unconfirmedTransfers = std::move(unconfirmedTransfers);
   m_availableTransfers = std::move(availableTransfers);

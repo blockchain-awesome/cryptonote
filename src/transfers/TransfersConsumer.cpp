@@ -481,7 +481,7 @@ void TransfersConsumer::processTransaction(const TransactionBlockInfo& blockInfo
 void TransfersConsumer::processOutputs(const TransactionBlockInfo& blockInfo, TransfersSubscription& sub, const ITransactionReader& tx,
   const std::vector<TransactionOutputInformationIn>& transfers, const std::vector<uint32_t>& globalIdxs, bool& contains, bool& updated) {
 
-  TransactionInformation subscribtionTxInfo;
+  transaction_infomation_t subscribtionTxInfo;
   contains = sub.getContainer().getTransactionInformation(tx.getTransactionHash(), subscribtionTxInfo);
   updated = false;
 

@@ -819,7 +819,7 @@ void WalletSerializer::updateTransactionsBaseStatus() {
   for (; begin != end; ++begin) {
     transactions.modify(begin, [this](WalletTransaction& tx) {
       auto& wallets = m_walletsContainer.get<RandomAccessIndex>();
-      TransactionInformation txInfo;
+      transaction_infomation_t txInfo;
       auto it = std::find_if(std::begin(wallets), std::end(wallets), [&](const WalletRecord& rec) {
         assert(rec.container != nullptr);
         return rec.container->getTransactionInformation(tx.hash, txInfo);

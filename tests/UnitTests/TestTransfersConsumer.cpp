@@ -727,7 +727,7 @@ TEST_F(TransfersConsumerTest, onNewBlocks_checkTransactionInformation) {
 
   ASSERT_TRUE(m_consumer.onNewBlocks(&blocks[0], 0, 2));
 
-  TransactionInformation info;
+  transaction_infomation_t info;
   ASSERT_TRUE(container.getTransactionInformation(tx->getTransactionHash(), info));
 
   ASSERT_EQ(tx->getTransactionHash(), info.transactionHash);

@@ -522,7 +522,7 @@ void WalletLegacy::synchronizationCompleted(std::error_code result) {
 void WalletLegacy::onTransactionUpdated(ITransfersSubscription* object, const hash_t& transactionHash) {
   std::shared_ptr<WalletLegacyEvent> event;
 
-  TransactionInformation txInfo;
+  transaction_infomation_t txInfo;
   uint64_t amountIn;
   uint64_t amountOut;
   if (m_transferDetails->getTransactionInformation(transactionHash, txInfo, &amountIn, &amountOut)) {
