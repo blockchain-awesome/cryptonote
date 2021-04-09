@@ -7,6 +7,7 @@
 #include "block.h"
 #include <set>
 #include <unordered_set>
+#include "google/sparse_hash_set"
 
 template <typename T>
 Reader &readSet(Reader &i, T &v)
@@ -75,5 +76,18 @@ Reader &operator>>(Reader &i, std::set<KEY, VALUE, HASH> &v)
 template <typename KEY, typename VALUE, typename HASH>
 Writer &operator<<(Writer &o, const std::set<KEY, VALUE, HASH> &v)
 {
+  return writeSet(o, v);
+}
+
+template <typename KEY, typename HASH>
+Reader &operator>>(Reader &i, google::sparse_hash_set<KEY, HASH> &v)
+{
+  return readSet(i, v);
+}
+
+template <typename KEY, typename HASH>
+Writer &operator<<(Writer &o, const google::sparse_hash_set<KEY, HASH> &v)
+{
+
   return writeSet(o, v);
 }

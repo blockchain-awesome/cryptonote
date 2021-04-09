@@ -72,4 +72,16 @@ namespace cryptonote {
       writeSequence<hash_t>(m_container.begin(), m_container.end(), "index", s);
     }
   }
+
+  Reader &operator>>(Reader &i, BlockIndex &v)
+  {
+    iterate<hash_t>(i, std::back_inserter(v.m_container));
+    return i;
+  }
+
+  Writer &operator<<(Writer &o, const BlockIndex &v)
+  {
+    iterate<hash_t>(o, v.m_container.begin(), v.m_container.end());
+    return o;
+  }
 }

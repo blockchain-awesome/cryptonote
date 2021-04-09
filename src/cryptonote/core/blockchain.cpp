@@ -16,7 +16,7 @@
 #include "CryptoNoteTools.h"
 #include "cryptonote/structures/array.hpp"
 
-#include "cryptonote/core/blockchain/serializer/block_cache.hpp"
+#include "cryptonote/core/blockchain/serializer/block_cache.h"
 #include "cryptonote/core/blockchain/serializer/blockchain_indices.hpp"
 
 using namespace Logging;
@@ -29,35 +29,6 @@ namespace std {
 }
 
 namespace cryptonote {
-
-template<typename K, typename V, typename hash_t>
-bool serialize(google::sparse_hash_map<K, V, hash_t>& value, Common::StringView name, cryptonote::ISerializer& serializer) {
-  return serializeMap(value, name, serializer, [&value](size_t size) { value.resize(size); });
-}
-
-template<typename K, typename hash_t>
-bool serialize(google::sparse_hash_set<K, hash_t>& value, Common::StringView name, cryptonote::ISerializer& serializer) {
-  size_t size = value.size();
-  if (!serializer.beginArray(size, name)) {
-    return false;
-  }
-
-  if (serializer.type() == ISerializer::OUTPUT) {
-    for (auto& key : value) {
-      serializer(const_cast<K&>(key), "");
-    }
-  } else {
-    value.resize(size);
-    while (size--) {
-      K key;
-      serializer(key, "");
-      value.insert(key);
-    }
-  }
-
-  serializer.endArray();
-  return true;
-}
 
 Blockchain::Blockchain(const Currency& currency, TxMemoryPool& tx_pool, ILogger& logger) :
 logger(logger, "Blockchain"),
