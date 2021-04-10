@@ -89,3 +89,31 @@ Writer &operator<<(Writer &o, const std::map<KEY, VALUE, HASH> &v)
 {
   return writeMap(o, v);
 }
+
+template <typename Element, typename Indexed>
+Reader &iterate(Reader &i, Indexed &idx)
+{
+  size_t size = 0;
+  i >> size;
+  while (size--)
+  {
+    Element e;
+    i >> e;
+    idx.insert(std::move(e));
+  }
+  return i;
+}
+
+template <typename Element, typename Indexed>
+Writer &iterate(Writer &o, Indexed &idx)
+{
+  auto &begin = idx.begin();
+  auto &end = idx.end();
+  size_t size = std::distance(begin, end);
+  o << size;
+  for (auto& i = begin; i != end; ++i)
+  {
+    o << const_cast<Element &>(*i);
+  }
+  return o;
+}
