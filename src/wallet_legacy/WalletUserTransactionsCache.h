@@ -10,12 +10,11 @@
 
 #include "wallet_legacy/WalletLegacyEvent.h"
 #include "wallet_legacy/WalletUnconfirmedTransactions.h"
+#include "stream/crypto.h"
+#include "stream/cryptonote.h"
 
 namespace cryptonote {
 class ISerializer;
-}
-
-namespace cryptonote {
 
 class WalletUserTransactionsCache
 {
@@ -48,8 +47,6 @@ public:
 
   std::vector<TransactionId> deleteOutdatedTransactions();
 
-private:
-
   TransactionId findTransactionByHash(const hash_t& hash);
   TransactionId insertTransaction(WalletLegacyTransaction&& transaction_t);
   TransferId insertTransfers(const std::vector<WalletLegacyTransfer>& transfers);
@@ -67,5 +64,6 @@ private:
   UserTransfers m_transfers;
   WalletUnconfirmedTransactions m_unconfirmedTransactions;
 };
-
+Reader &operator>>(Reader &i, WalletUserTransactionsCache &v);
+Writer &operator<<(Writer &o, const WalletUserTransactionsCache &v);
 } //namespace cryptonote

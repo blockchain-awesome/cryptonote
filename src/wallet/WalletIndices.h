@@ -40,7 +40,7 @@ struct TransactionOutputIndex {};
 struct BlockHeightIndex {};
 
 struct TransactionHashIndex {};
-struct transaction_index_t {};
+struct TransactionIndex {};
 struct BlockHashIndex {};
 
 typedef boost::multi_index_container <
@@ -76,7 +76,7 @@ typedef boost::multi_index_container <
   cryptonote::WalletTransaction,
   boost::multi_index::indexed_by <
     boost::multi_index::random_access < boost::multi_index::tag <RandomAccessIndex> >,
-    boost::multi_index::hashed_unique < boost::multi_index::tag <transaction_index_t>,
+    boost::multi_index::hashed_unique < boost::multi_index::tag <TransactionIndex>,
       boost::multi_index::member<cryptonote::WalletTransaction, hash_t, &cryptonote::WalletTransaction::hash >
     >,
     boost::multi_index::ordered_non_unique < boost::multi_index::tag <BlockHeightIndex>,

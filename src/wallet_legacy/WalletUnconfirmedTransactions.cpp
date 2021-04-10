@@ -140,5 +140,15 @@ std::vector<TransactionId> WalletUnconfirmedTransactions::deleteOutdatedTransact
 
   return deletedTransactions;
 }
-
+Reader &operator>>(Reader &i, WalletUnconfirmedTransactions &v)
+{
+  i >> v.m_unconfirmedTxs;
+  v.collectUsedOutputs();
+  return i;
+}
+Writer &operator<<(Writer &o, const WalletUnconfirmedTransactions &v)
+{
+  o << v.m_unconfirmedTxs;
+  return o;
+}
 } /* namespace cryptonote */

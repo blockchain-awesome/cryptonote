@@ -9,10 +9,7 @@
 #include "stream/reader.h"
 #include "stream/reader.h"
 #include "stream/writer.h"
-#include "serialization/BinaryOutputStreamSerializer.h"
-#include "serialization/BinaryInputStreamSerializer.h"
 #include "cryptonote/core/account.h"
-#include "cryptonote/core/transaction/serializer/basics.h"
 #include "wallet_legacy/WalletUserTransactionsCache.h"
 #include "wallet/WalletErrors.h"
 #include "wallet_legacy/KeysStorage.h"
@@ -45,17 +42,24 @@ WalletLegacySerializer::WalletLegacySerializer(cryptonote::Account& account, Wal
 
 void WalletLegacySerializer::serialize(std::ostream& stream, const std::string& password, bool saveDetailed, const std::string& cache) {
   std::stringstream plainArchive;
-  Writer plainStream(plainArchive);
-  cryptonote::BinaryOutputStreamSerializer serializer(plainStream);
-  saveKeys(serializer);
+  Writer o(plainArchive);
+    cryptonote::KeysStorage keys;
+  cryptonote::account_keys_t acc = account.getAccountKeys();
 
-  serializer(saveDetailed, "has_details");
+  keys.creationTimestamp = account.getCreatetime();
+  keys.spendPublicKey = acc.address.spendPublicKey;
+  keys.spendSecretKey = acc.spendSecretKey;
+  keys.viewPublicKey = acc.address.viewPublicKey;
+  keys.viewSecretKey = acc.viewSecretKey;
+
+  o << keys;
+
+  o << saveDetailed;
 
   if (saveDetailed) {
-    serializer(transactionsCache, "details");
+    o << transactionsCache;
   }
-
-  serializer.binary(const_cast<std::string&>(cache), "cache");
+  o.write(cache);
 
   std::string plain = plainArchive.str();
   std::string cipher;
@@ -63,13 +67,8 @@ void WalletLegacySerializer::serialize(std::ostream& stream, const std::string& 
   chacha_iv_t iv = encrypt(plain, password, cipher);
 
   uint32_t version = walletSerializationVersion;
-  Writer output(stream);
-  cryptonote::BinaryOutputStreamSerializer s(output);
-  s.beginObject("wallet");
-  s(version, "version");
-  s(iv, "iv");
-  s(cipher, "data");
-  s.endObject();
+  Writer oo(stream);
+  oo << version << iv << cipher;
 
   stream.flush();
 }
@@ -101,21 +100,13 @@ chacha_iv_t WalletLegacySerializer::encrypt(const std::string& plain, const std:
 
 
 void WalletLegacySerializer::deserialize(std::istream& stream, const std::string& password, std::string& cache) {
-  Reader stdStream(stream);
-  cryptonote::BinaryInputStreamSerializer serializerEncrypted(stdStream);
-
-  serializerEncrypted.beginObject("wallet");
-
+  Reader i(stream);
   uint32_t version;
-  serializerEncrypted(version, "version");
-
+  i >> version;
   chacha_iv_t iv;
-  serializerEncrypted(iv, "iv");
-
+  i >> iv;
   std::string cipher;
-  serializerEncrypted(cipher, "data");
-
-  serializerEncrypted.endObject();
+  i >> cipher;
 
   std::string plain;
   decrypt(cipher, plain, iv, password);
@@ -123,10 +114,20 @@ void WalletLegacySerializer::deserialize(std::istream& stream, const std::string
   const char * b = static_cast<const char *>(plain.data());
   membuf mem((char *)(b), (char *)(b + plain.size()));
   std::istream istream(&mem);
-  Reader decrypted(istream);
-  cryptonote::BinaryInputStreamSerializer serializer(decrypted);
+  Reader di(istream);
+  cryptonote::KeysStorage keys;
 
-  loadKeys(serializer);
+  di >> keys;
+
+  cryptonote::account_keys_t acc;
+  acc.address.spendPublicKey = keys.spendPublicKey;
+  acc.spendSecretKey = keys.spendSecretKey;
+  acc.address.viewPublicKey = keys.viewPublicKey;
+  acc.viewSecretKey = keys.viewSecretKey;
+
+  account.setAccountKeys(acc);
+  account.setCreatetime(keys.creationTimestamp);
+  
   throwIfKeysMissmatch(account.getAccountKeys().viewSecretKey, account.getAccountKeys().address.viewPublicKey);
 
   if (account.getAccountKeys().spendSecretKey != NULL_SECRET_KEY) {
@@ -138,14 +139,12 @@ void WalletLegacySerializer::deserialize(std::istream& stream, const std::string
   }
 
   bool detailsSaved;
-
-  serializer(detailsSaved, "has_details");
+  di >> detailsSaved;
 
   if (detailsSaved) {
-    serializer(transactionsCache, "details");
+    di >> transactionsCache;
   }
-
-  serializer.binary(cache, "cache");
+  di.read(cache);
 }
 
 void WalletLegacySerializer::decrypt(const std::string& cipher, std::string& plain, chacha_iv_t iv, const std::string& password) {
