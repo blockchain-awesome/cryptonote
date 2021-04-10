@@ -20,8 +20,7 @@
 
 #include "common/ScopeExit.h"
 #include "common/ShuffleGenerator.h"
-#include "stream/reader.h"
-#include "stream/writer.h"
+#include "stream/transaction.h"
 #include "cryptonote/core/account.h"
 #include "cryptonote/core/currency.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"

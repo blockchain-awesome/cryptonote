@@ -9,6 +9,8 @@
 #include <thread>
 
 #include "cryptonote/core/CryptoNoteTools.h"
+#include "stream/block.h"
+#include "stream/transaction.h"
 #include "cryptonote/structures/array.hpp"
 #include "NodeRpcProxy/NodeRpcProxy.h"
 #include "rpc/CoreRpcServerCommandsDefinitions.h"

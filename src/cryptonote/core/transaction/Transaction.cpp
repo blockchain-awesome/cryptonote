@@ -9,6 +9,7 @@
 #include "account.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "CryptoNoteConfig.h"
+#include "stream/transaction.h"
 #include "cryptonote/structures/array.hpp"
 
 #include <boost/optional.hpp>

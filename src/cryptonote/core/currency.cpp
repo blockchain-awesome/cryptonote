@@ -17,6 +17,7 @@
 #include "CryptoNoteTools.h"
 #include "transaction/TransactionExtra.h"
 #include "../structures/block_entry.h"
+#include "stream/transaction.h"
 #include "cryptonote/structures/array.hpp"
 #include "cryptonote/core/util/amount.h"
 #include "difficulty.h"

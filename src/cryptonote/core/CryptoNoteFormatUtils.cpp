@@ -7,14 +7,12 @@
 #include <set>
 #include <logging/LoggerRef.h>
 
-#include "serialization/BinaryOutputStreamSerializer.h"
-#include "serialization/BinaryInputStreamSerializer.h"
-
 #include "account.h"
 #include "transaction/TransactionExtra.h"
 #include "CryptoNoteTools.h"
 
 #include "CryptoNoteConfig.h"
+#include "stream/transaction.h"
 #include "cryptonote/structures/array.hpp"
 
 using namespace Logging;

@@ -32,6 +32,15 @@ struct keys_file_data {
   }
 };
 
+Reader &operator>>(Reader &i, keys_file_data &v)
+{
+  return i >> v.iv >> v.account_data;
+}
+Writer &operator<<(Writer &o, const keys_file_data &v)
+{
+  return o << v.iv << v.account_data;
+}
+
 bool verify_keys(const secret_key_t& sec, const public_key_t& expected_pub) {
   public_key_t pub;
   bool r = secret_key_to_public_key((const uint8_t*)&sec, (uint8_t*)&pub);

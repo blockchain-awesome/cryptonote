@@ -5,6 +5,8 @@
 #include "INodeStubs.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/CryptoNoteTools.h"
+#include "stream/block.h"
+#include "stream/transaction.h"
 #include "cryptonote/structures/array.hpp"
 #include "cryptonote/core/transaction/TransactionApi.h"
 #include "wallet/WalletErrors.h"

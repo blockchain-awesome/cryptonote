@@ -10,6 +10,8 @@
 #include "cryptonote/core/VerificationContext.h"
 #include "cryptonote/structures/array.h"
 #include "cryptonote/structures/block_entry.h"
+#include "stream/block.h"
+#include "stream/transaction.h"
 #include "cryptonote/structures/array.hpp"
 
 ICoreStub::ICoreStub() :

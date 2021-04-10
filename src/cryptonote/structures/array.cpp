@@ -15,9 +15,8 @@ bool BinaryArray::to(const binary_array_t &object, binary_array_t &binaryArray)
   {
     std::ostringstream oss;
     Writer stream(oss);
-    BinaryOutputStreamSerializer serializer(stream);
     std::string oldBlob = IBinary::to(object);
-    serializer(oldBlob, "");
+    stream << oldBlob;
     binaryArray.resize(oss.str().length());
     memcpy(&binaryArray[0], oss.str().c_str(), oss.str().length());
   }

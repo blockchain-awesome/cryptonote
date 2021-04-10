@@ -11,6 +11,8 @@
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/core/transaction/TransactionExtra.h"
 #include "CryptoNoteConfig.h"
+#include "stream/block.h"
+#include "stream/transaction.h"
 #include "cryptonote/structures/array.hpp"
 
 namespace cryptonote {

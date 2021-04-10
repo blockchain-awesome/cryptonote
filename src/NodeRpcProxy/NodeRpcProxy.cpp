@@ -22,6 +22,8 @@
 #include "rpc/CoreRpcServerCommandsDefinitions.h"
 #include "rpc/HttpClient.h"
 #include "rpc/JsonRpc.h"
+#include "stream/block.h"
+#include "stream/transaction.h"
 #include "cryptonote/structures/array.hpp"
 
 #ifndef AUTO_VAL_INIT

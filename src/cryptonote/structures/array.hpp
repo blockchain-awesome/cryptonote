@@ -17,8 +17,7 @@ bool BinaryArray::from(T &object, const binary_array_t &binaryArray)
     membuf mem((char *)(b), (char *)(b + binaryArray.size()));
     std::istream istream(&mem);
     Reader stream(istream);
-    BinaryInputStreamSerializer serializer(stream);
-    serialize(object, serializer);
+    stream >> object;
     result = stream.endOfStream(); // check that all data was consumed
   }
   catch (std::exception &)
@@ -35,8 +34,7 @@ bool BinaryArray::to(const T &object, binary_array_t &binaryArray)
   {
     std::ostringstream oss;
     Writer stream(oss);
-    BinaryOutputStreamSerializer serializer(stream);
-    serialize(const_cast<T &>(object), serializer);
+    stream << const_cast<T &>(object);
 
     binaryArray.resize(oss.str().length());
     memcpy(&binaryArray[0], oss.str().c_str(), oss.str().length());

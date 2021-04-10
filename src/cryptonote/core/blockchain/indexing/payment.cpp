@@ -1,4 +1,5 @@
 #include "payment.h"
+#include "stream/transaction.h"
 #include "cryptonote/structures/array.hpp"
 #include "blockchain_explorer/BlockchainExplorerDataBuilder.h"
 

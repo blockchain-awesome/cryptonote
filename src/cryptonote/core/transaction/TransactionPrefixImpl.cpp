@@ -11,6 +11,7 @@
 #include "TransactionApiExtra.h"
 #include "TransactionUtils.h"
 #include "cryptonote/core/CryptoNoteTools.h"
+#include "stream/transaction.h"
 #include "cryptonote/structures/array.hpp"
 
 using namespace crypto;

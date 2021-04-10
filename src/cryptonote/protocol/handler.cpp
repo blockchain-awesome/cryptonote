@@ -15,6 +15,8 @@
 #include "cryptonote/core/currency.h"
 #include "cryptonote/core/VerificationContext.h"
 #include "p2p/LevinProtocol.h"
+#include "stream/block.h"
+#include "stream/transaction.h"
 #include "cryptonote/structures/array.hpp"
 
 using namespace Logging;
