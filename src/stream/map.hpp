@@ -8,6 +8,7 @@
 #include <map>
 #include <unordered_map>
 #include <unordered_set>
+#include "google/sparse_hash_map"
 
 template <typename T>
 Reader &readMap(Reader &i, T &v)
@@ -116,4 +117,16 @@ Writer &iterate(Writer &o, Iterator begin, Iterator end)
     o << const_cast<Element &>(*i);
   }
   return o;
+}
+
+template <typename KEY, typename VALUE, typename HASH>
+Reader &operator>>(Reader &i, google::sparse_hash_map<KEY, VALUE, HASH> &v)
+{
+  return readMap(i, v);
+}
+
+template <typename KEY, typename VALUE, typename HASH>
+Writer &operator<<(Writer &o, const google::sparse_hash_map<KEY, VALUE, HASH> &v)
+{
+  return writeMap(o, v);
 }

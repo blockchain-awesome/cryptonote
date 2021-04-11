@@ -17,6 +17,8 @@
 #include <map>
 #include <unordered_map>
 #include <unordered_set>
+#include "google/sparse_hash_set"
+#include "google/sparse_hash_map"
 
 namespace cryptonote {
 
@@ -241,5 +243,36 @@ void serializeBlockHeight(ISerializer& s, uint32_t& blockHeight, Common::StringV
 
 //convinience function since we change global output index type
 void serializeGlobalOutputIndex(ISerializer& s, uint32_t& globalOutputIndex, Common::StringView name);
+
+
+
+template<typename K, typename V, typename hash_t>
+bool serialize(google::sparse_hash_map<K, V, hash_t>& value, Common::StringView name, cryptonote::ISerializer& serializer) {
+  return serializeMap(value, name, serializer, [&value](size_t size) { value.resize(size); });
+}
+
+template<typename K, typename hash_t>
+bool serialize(google::sparse_hash_set<K, hash_t>& value, Common::StringView name, cryptonote::ISerializer& serializer) {
+  size_t size = value.size();
+  if (!serializer.beginArray(size, name)) {
+    return false;
+  }
+
+  if (serializer.type() == ISerializer::OUTPUT) {
+    for (auto& key : value) {
+      serializer(const_cast<K&>(key), "");
+    }
+  } else {
+    value.resize(size);
+    while (size--) {
+      K key;
+      serializer(key, "");
+      value.insert(key);
+    }
+  }
+
+  serializer.endArray();
+  return true;
+}
 
 }

@@ -183,7 +183,6 @@ namespace cryptonote {
       return m_blocks[height].cumulative_difficulty;
     }
 
-  private:
     typedef google::sparse_hash_set<key_image_t> key_images_container_t;
     typedef std::unordered_map<hash_t, block_entry_t> blocks_ext_by_hash_t;
     typedef google::sparse_hash_map<uint64_t, std::vector<std::pair<transaction_index_t, uint16_t>>> outputs_container_t; //hash_t - tx hash, size_t - index of out in transaction

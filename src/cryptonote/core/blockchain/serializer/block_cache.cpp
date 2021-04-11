@@ -1,33 +1,37 @@
-#pragma once
 
-#include "cryptonote/crypto/hash.h"
-#include <logging/LoggerRef.h>
-#include <logging/ILogger.h>
-#include <stream/reader.h>
-#include <serialization/BinaryInputStreamSerializer.h>
-#include <stream/writer.h>
-#include <serialization/BinaryOutputStreamSerializer.h>
-#include <fstream>
-#include <chrono>
-#include <cryptonote/core/blockchain.h>
 
-using namespace Logging;
-using namespace Common;
+#include "block_cache.h"
 
 namespace cryptonote
 {
-
-class Blockchain;
-
-class BlockCacheSerializer
-{
-
-public:
-  BlockCacheSerializer(Blockchain &bs, const hash_t lastBlockHash, ILogger &logger) : m_bs(bs), m_lastBlockHash(lastBlockHash), m_loaded(false), logger(logger, "BlockCacheSerializer")
+  Reader &operator>>(Reader &i, BlockCacheSerializer &v)
   {
+    config::config_t &data = config::get();
+
+    uint8_t version = data.storageVersions.blockcache_archive.major;
+    i >> version;
+    if (version < data.storageVersions.blockcache_archive.major)
+      return i;
+    i >> v.m_lastBlockHash >> v.m_bs.m_blockIndex >> v.m_bs.m_transactionMap >> v.m_bs.m_outputs >> v.m_bs.m_multisignatureOutputs;
+    return i;
   }
 
-  void load(const std::string &filename)
+  Writer &operator<<(Writer &o, const BlockCacheSerializer &v)
+  {
+    auto start = std::chrono::steady_clock::now();
+    config::config_t &data = config::get();
+
+    uint8_t version = data.storageVersions.blockcache_archive.major;
+    o << version
+      << v.m_lastBlockHash
+      << v.m_bs.m_blockIndex
+      << v.m_bs.m_transactionMap
+      << v.m_bs.m_outputs
+      << v.m_bs.m_multisignatureOutputs;
+    return o;
+  }
+
+  void BlockCacheSerializer::load(const std::string &filename)
   {
     try
     {
@@ -40,8 +44,10 @@ public:
       }
 
       Reader stream(stdStream);
-      BinaryInputStreamSerializer s(stream);
-      serialize(s);
+
+      stream >> *this;
+      // BinaryInputStreamSerializer s(stream);
+      // serialize(s);
     }
     catch (std::exception &e)
     {
@@ -49,7 +55,7 @@ public:
     }
   }
 
-  bool save(const std::string &filename)
+  bool BlockCacheSerializer::save(const std::string &filename)
   {
     try
     {
@@ -60,8 +66,9 @@ public:
       }
 
       Writer stream(file);
-      BinaryOutputStreamSerializer s(stream);
-      serialize(s);
+      stream << *this;
+      // BinaryOutputStreamSerializer s(stream);
+      // serialize(s);
     }
     catch (std::exception &)
     {
@@ -71,7 +78,7 @@ public:
     return true;
   }
 
-  void serialize(ISerializer &s)
+  void BlockCacheSerializer::serialize(ISerializer &s)
   {
     auto start = std::chrono::steady_clock::now();
 
@@ -126,16 +133,4 @@ public:
     m_loaded = true;
   }
 
-  bool loaded() const
-  {
-    return m_loaded;
-  }
-
-private:
-  LoggerRef logger;
-  bool m_loaded;
-  Blockchain &m_bs;
-  hash_t m_lastBlockHash;
-};
-
-} // namespace cryptonote
+}

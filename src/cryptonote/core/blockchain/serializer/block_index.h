@@ -7,6 +7,10 @@
 #include <boost/multi_index/random_access_index.hpp>
 
 #include "cryptonote/crypto/hash.h"
+#include "stream/crypto.h"
+#include "stream/cryptonote.h"
+#include "stream/transaction.h"
+#include "stream/map.hpp"
 #include <vector>
 
 using namespace crypto;
@@ -60,8 +64,6 @@ namespace cryptonote
 
     void serialize(ISerializer& s);
 
-  private:
-
     typedef boost::multi_index_container <
       hash_t,
       boost::multi_index::indexed_by<
@@ -74,4 +76,8 @@ namespace cryptonote
     ContainerT::nth_index<1>::type& m_index;
 
   };
+
+  Reader &operator>>(Reader &i, BlockIndex &v);
+
+  Writer &operator<<(Writer &o, const BlockIndex &v);
 }

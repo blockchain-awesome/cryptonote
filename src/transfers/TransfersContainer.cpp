@@ -8,9 +8,6 @@
 #include "stream/cryptonote.h"
 #include "stream/map.hpp"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
-#include "serialization/BinaryInputStreamSerializer.h"
-#include "serialization/BinaryOutputStreamSerializer.h"
-#include "serialization/SerializationOverloads.h"
 
 using namespace Common;
 using namespace crypto;
@@ -871,7 +868,6 @@ std::vector<TransactionSpentOutputInformation> TransfersContainer::getSpentOutpu
 void TransfersContainer::save(std::ostream& os) {
   std::lock_guard<std::mutex> lk(m_mutex);
   Writer stream(os);
-  cryptonote::BinaryOutputStreamSerializer s(stream);
 
   stream << const_cast<uint32_t&>(TRANSFERS_CONTAINER_STORAGE_VERSION);
   stream << m_currentHeight;
@@ -879,10 +875,6 @@ void TransfersContainer::save(std::ostream& os) {
   iterate<TransactionOutputInformationEx>(stream, m_unconfirmedTransfers.begin(), m_unconfirmedTransfers.end());
   iterate<TransactionOutputInformationEx>(stream, m_availableTransfers.begin(), m_availableTransfers.end());
   iterate<SpentTransactionOutput>(stream, m_spentTransfers.begin(), m_spentTransfers.end());
-  // writeSequence<transaction_infomation_t>(m_transactions.begin(), m_transactions.end(), "transactions", s);
-  // writeSequence<TransactionOutputInformationEx>(m_unconfirmedTransfers.begin(), m_unconfirmedTransfers.end(), "unconfirmedTransfers", s);
-  // writeSequence<TransactionOutputInformationEx>(m_availableTransfers.begin(), m_availableTransfers.end(), "availableTransfers", s);
-  // writeSequence<SpentTransactionOutput>(m_spentTransfers.begin(), m_spentTransfers.end(), "spentTransfers", s);
 }
 
 void TransfersContainer::load(std::istream& in) {
@@ -909,11 +901,6 @@ void TransfersContainer::load(std::istream& in) {
   iterate<TransactionOutputInformationEx>(stream, std::inserter(unconfirmedTransfers, unconfirmedTransfers.end()));
   iterate<TransactionOutputInformationEx>(stream, std::inserter(availableTransfers, availableTransfers.end()));
   iterate<SpentTransactionOutput>(stream, std::inserter(spentTransfers, spentTransfers.end()));
-
-  // readSequence<transaction_infomation_t>(std::inserter(transactions, transactions.end()), "transactions", s);
-  // readSequence<TransactionOutputInformationEx>(std::inserter(unconfirmedTransfers, unconfirmedTransfers.end()), "unconfirmedTransfers", s);
-  // readSequence<TransactionOutputInformationEx>(std::inserter(availableTransfers, availableTransfers.end()), "availableTransfers", s);
-  // readSequence<SpentTransactionOutput>(std::inserter(spentTransfers, spentTransfers.end()), "spentTransfers", s);
 
   m_currentHeight = currentHeight;
   m_transactions = std::move(transactions);
