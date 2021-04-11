@@ -4,10 +4,8 @@
 
 #include "SynchronizationState.h"
 
-#include "stream/reader.h"
-#include "stream/writer.h"
-#include "serialization/BinaryInputStreamSerializer.h"
-#include "serialization/BinaryOutputStreamSerializer.h"
+#include "stream/crypto.h"
+#include "stream/cryptonote.h"
 #include "cryptonote/core/transaction/serializer/basics.h"
 
 using namespace Common;
@@ -96,14 +94,12 @@ const std::vector<hash_t>& SynchronizationState::getKnownBlockHashes() const {
 
 void SynchronizationState::save(std::ostream& os) {
   Writer stream(os);
-  cryptonote::BinaryOutputStreamSerializer s(stream);
-  serialize(s, "state");
+  stream << m_blockchain;
 }
 
 void SynchronizationState::load(std::istream& in) {
   Reader stream(in);
-  cryptonote::BinaryInputStreamSerializer s(stream);
-  serialize(s, "state");
+  stream >> m_blockchain;
 }
 
 cryptonote::ISerializer& SynchronizationState::serialize(cryptonote::ISerializer& s, const std::string& name) {
