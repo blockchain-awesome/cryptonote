@@ -48,3 +48,24 @@ void Reader::read(std::string &data, size_t size)
   read(temp.data(), size);
   data.assign(temp.data(), size);
 }
+
+Reader &operator>>(Reader &i, std::string &v)
+{
+  uint64_t size;
+
+  i >> size;
+
+  if (size > 0)
+  {
+    std::vector<char> temp;
+    temp.resize(size);
+    i.read(&temp[0], size);
+    v.reserve(size);
+    v.assign(&temp[0], size);
+  }
+  else
+  {
+    v.clear();
+  }
+  return i;
+}

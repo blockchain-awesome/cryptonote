@@ -112,8 +112,4 @@ inline Writer &operator<<(Writer &o, const bool &v)
   return o;
 }
 
-inline Writer &operator<<(Writer &o, const std::string &v)
-{
-  o.write(v.data(), v.size());
-  return o;
-}
+Writer &operator<<(Writer &o, const std::string &v);

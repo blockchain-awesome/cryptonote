@@ -115,8 +115,5 @@ inline Reader &operator>>(Reader &i, bool &v)
   i.read((void *)&v, sizeof(v));
   return i;
 }
-inline Reader &operator>>(Reader &i, std::string &v)
-{
-  i.read((char *)v.data(), v.size());
-  return i;
-}
+
+Reader &operator>>(Reader &i, std::string &v);

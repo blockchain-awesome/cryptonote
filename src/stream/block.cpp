@@ -81,7 +81,7 @@ Reader &operator>>(Reader &i, core_state_info_t &v)
   i >> v.blockchain_height;
   i >> v.mining_speed;
   i >> v.alternative_blocks;
-  i >> v.top_block_id_str;
+  i.read((char *)v.top_block_id_str.data(), v.top_block_id_str.length());
   return i;
 }
 
@@ -91,6 +91,6 @@ Writer &operator<<(Writer &o, const core_state_info_t &v)
   o << v.blockchain_height;
   o << v.mining_speed;
   o << v.alternative_blocks;
-  o << v.top_block_id_str;
+  o.write(v.top_block_id_str.data(), v.top_block_id_str.size());
   return o;
 }
