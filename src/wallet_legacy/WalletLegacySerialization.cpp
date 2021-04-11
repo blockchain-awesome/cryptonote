@@ -24,6 +24,20 @@ void serialize(UnconfirmedTransferDetails& utd, cryptonote::ISerializer& seriali
   utd.transactionId = static_cast<size_t>(txId);
 }
 
+  Reader &operator>>(Reader &i, UnconfirmedTransferDetails &v)
+  {
+    uint64_t time, id;
+    i >> v.tx >> v.amount >> v.outsAmount >> time >> id;
+    v.sentTime = static_cast<time_t>(time);
+    v.transactionId = static_cast<size_t>(id);
+    return i;
+  }
+  Writer &operator<<(Writer &o, const UnconfirmedTransferDetails &v)
+  {
+    o << v.tx << v.amount << v.outsAmount << static_cast<uint64_t>(v.sentTime)
+      << static_cast<uint64_t>(v.transactionId);
+    return o;
+  }
 void serialize(WalletLegacyTransaction& txi, cryptonote::ISerializer& serializer) {
   uint64_t trId = static_cast<uint64_t>(txi.firstTransferId);
   serializer(trId, "first_transfer_id");
@@ -51,9 +65,43 @@ void serialize(WalletLegacyTransaction& txi, cryptonote::ISerializer& serializer
   txi.sentTime = 0;
 }
 
+  Reader &operator>>(Reader &i, WalletLegacyTransaction &v)
+  {
+    uint64_t id, count, height;
+
+    i >> id >> count >> v.totalAmount >> v.fee >> v.hash >> v.isCoinbase;
+	i.readHeight(height);
+	i >> v.timestamp >> v.extra;
+
+    v.firstTransferId = static_cast<size_t>(id);
+    v.transferCount = static_cast<size_t>(count);
+    v.blockHeight = static_cast<uint32_t>(height);
+    return i;
+  }
+  Writer &operator<<(Writer &o, const WalletLegacyTransaction &v)
+  {
+    o << static_cast<uint64_t>(v.firstTransferId)
+      << static_cast<uint64_t>(v.transferCount)
+      << v.totalAmount << v.fee << v.hash << v.isCoinbase;
+
+    size_t heihgt = v.blockHeight;
+	  o.writeHeight(heihgt);
+    o << v.timestamp << v.extra;
+    return o;
+  }
 void serialize(WalletLegacyTransfer& tr, cryptonote::ISerializer& serializer) {
   serializer(tr.address, "address");
   serializer(tr.amount, "amount");
 }
 
+  Reader &operator>>(Reader &i, WalletLegacyTransfer &v)
+  {
+    i >> v.address >> v.amount;
+    return i;
+  }
+  Writer &operator<<(Writer &o, const WalletLegacyTransfer &v)
+  {
+    o << v.address << v.amount;
+    return o;
+  }
 } //namespace cryptonote

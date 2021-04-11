@@ -9,16 +9,26 @@
 #include <string>
 
 #include "IWalletLegacy.h"
+#include "stream/crypto.h"
+#include "stream/cryptonote.h"
+#include "stream/transaction.h"
 
-namespace cryptonote {
-class ISerializer;
+namespace cryptonote
+{
+  class ISerializer;
 
-struct UnconfirmedTransferDetails;
-struct WalletLegacyTransaction;
-struct WalletLegacyTransfer;
+  struct UnconfirmedTransferDetails;
+  struct WalletLegacyTransaction;
+  struct WalletLegacyTransfer;
 
-void serialize(UnconfirmedTransferDetails& utd, ISerializer& serializer);
-void serialize(WalletLegacyTransaction& txi, ISerializer& serializer);
-void serialize(WalletLegacyTransfer& tr, ISerializer& serializer);
+  void serialize(UnconfirmedTransferDetails &utd, ISerializer &serializer);
+  void serialize(WalletLegacyTransaction &txi, ISerializer &serializer);
+  void serialize(WalletLegacyTransfer &tr, ISerializer &serializer);
 
+  Reader &operator>>(Reader &i, UnconfirmedTransferDetails &v);
+  Writer &operator<<(Writer &o, const UnconfirmedTransferDetails &v);
+  Reader &operator>>(Reader &i, WalletLegacyTransaction &v);
+  Writer &operator<<(Writer &o, const WalletLegacyTransaction &v);
+  Reader &operator>>(Reader &i, WalletLegacyTransfer &v);
+  Writer &operator<<(Writer &o, const WalletLegacyTransfer &v);
 }

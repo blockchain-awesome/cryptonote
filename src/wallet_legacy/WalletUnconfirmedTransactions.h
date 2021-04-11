@@ -14,6 +14,10 @@
 
 #include "cryptonote/core/key.h"
 #include "cryptonote/crypto/crypto.h"
+#include "stream/crypto.h"
+#include "stream/cryptonote.h"
+#include "stream/transaction.h"
+#include "stream/map.hpp"
 
 namespace cryptonote {
 class ISerializer;
@@ -69,8 +73,6 @@ public:
 
   std::vector<TransactionId> deleteOutdatedTransactions();
 
-private:
-
   void collectUsedOutputs();
   void deleteUsedOutputs(const std::vector<TransactionOutputId>& usedOutputs);
 
@@ -81,5 +83,8 @@ private:
   UsedOutputsContainer m_usedOutputs;
   uint64_t m_uncofirmedTransactionsLiveTime;
 };
+
+Reader &operator>>(Reader &i, WalletUnconfirmedTransactions &v);
+Writer &operator<<(Writer &o, const WalletUnconfirmedTransactions &v);
 
 } // namespace cryptonote
