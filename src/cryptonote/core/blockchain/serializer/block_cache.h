@@ -3,9 +3,7 @@
 #include "cryptonote/crypto/hash.h"
 #include <logging/LoggerRef.h>
 #include <logging/ILogger.h>
-#include <serialization/BinaryInputStreamSerializer.h>
 #include <stream/writer.h>
-#include <serialization/BinaryOutputStreamSerializer.h>
 #include <fstream>
 #include <chrono>
 #include <cryptonote/core/blockchain.h>

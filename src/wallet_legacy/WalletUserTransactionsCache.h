@@ -13,9 +13,6 @@
 
 namespace cryptonote {
 class ISerializer;
-}
-
-namespace cryptonote {
 
 class WalletUserTransactionsCache
 {

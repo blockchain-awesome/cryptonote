@@ -8,6 +8,8 @@
 
 #include <stdint.h>
 
+#include "stream/crypto.h"
+
 using namespace crypto;
 
 namespace cryptonote {
@@ -26,5 +28,8 @@ struct KeysStorage {
 
   void serialize(ISerializer& serializer, const std::string& name);
 };
+
+Reader &operator>>(Reader &i, KeysStorage &v);
+Writer &operator<<(Writer &o, const KeysStorage &v);
 
 } //namespace cryptonote

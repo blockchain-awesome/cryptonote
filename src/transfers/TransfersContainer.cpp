@@ -120,20 +120,20 @@ Writer &operator<<(Writer &o, const TransactionBlockInfo &v)
 
 Reader &operator>>(Reader &i, SpentTransactionOutput &v)
 {
-  i >> *(TransactionOutputInformationEx *) &v;
+  i >> *(TransactionOutputInformationEx *)&v;
   i >> v.spendingBlock;
   i >> v.spendingTransactionHash;
   i >> v.inputInTransaction;
- return i;
+  return i;
 }
 
 Writer &operator<<(Writer &o, const SpentTransactionOutput &v)
 {
-  o << *(TransactionOutputInformationEx *) &v;
+  o << *(TransactionOutputInformationEx*)&v;
   o << v.spendingBlock;
   o << v.spendingTransactionHash;
   o << v.inputInTransaction;
-   return o;
+  return o;
 }
 
 const uint32_t TRANSFERS_CONTAINER_STORAGE_VERSION = 0;
@@ -880,8 +880,6 @@ void TransfersContainer::save(std::ostream& os) {
 void TransfersContainer::load(std::istream& in) {
   std::lock_guard<std::mutex> lk(m_mutex);
   Reader stream(in);
-  cryptonote::BinaryInputStreamSerializer s(stream);
-
   uint32_t version = 0;
   stream >> version;
 
