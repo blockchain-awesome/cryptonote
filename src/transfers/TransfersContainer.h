@@ -152,7 +152,7 @@ public:
   virtual size_t transactionsCount() const override;
   virtual uint64_t balance(uint32_t flags) const override;
   virtual void getOutputs(std::vector<TransactionOutputInformation>& transfers, uint32_t flags) const override;
-  virtual bool getTransactionInformation(const hash_t& transactionHash, TransactionInformation& info,
+  virtual bool getTransactionInformation(const hash_t& transactionHash, transaction_infomation_t& info,
     uint64_t* amountIn = nullptr, uint64_t* amountOut = nullptr) const override;
   virtual std::vector<TransactionOutputInformation> getTransactionOutputs(const hash_t& transactionHash, uint32_t flags) const override;
   //only type flags are feasible for this function
@@ -170,10 +170,10 @@ private:
   struct SpentOutputDescriptorIndex { };
 
   typedef boost::multi_index_container<
-    TransactionInformation,
+    transaction_infomation_t,
     boost::multi_index::indexed_by<
-    boost::multi_index::hashed_unique<BOOST_MULTI_INDEX_MEMBER(TransactionInformation, hash_t, transactionHash)>,
-    boost::multi_index::ordered_non_unique < BOOST_MULTI_INDEX_MEMBER(TransactionInformation, uint32_t, blockHeight) >
+    boost::multi_index::hashed_unique<BOOST_MULTI_INDEX_MEMBER(transaction_infomation_t, hash_t, transactionHash)>,
+    boost::multi_index::ordered_non_unique < BOOST_MULTI_INDEX_MEMBER(transaction_infomation_t, uint32_t, blockHeight) >
     >
   > TransactionMultiIndex;
 

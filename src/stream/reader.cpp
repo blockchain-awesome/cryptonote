@@ -1,5 +1,6 @@
 
 #include "reader.h"
+#include <limits>
 
 Reader::Reader(std::istream &in) : in(in)
 {
@@ -47,6 +48,24 @@ void Reader::read(std::string &data, size_t size)
   std::vector<char> temp(size);
   read(temp.data(), size);
   data.assign(temp.data(), size);
+}
+
+void Reader::readHeight(size_t &blockHeight)
+{
+  uint64_t height;
+  *this >> height;
+  if (height == std::numeric_limits<uint64_t>::max())
+  {
+    blockHeight = std::numeric_limits<uint32_t>::max();
+  }
+  else if (height > std::numeric_limits<uint32_t>::max() && height < std::numeric_limits<uint64_t>::max())
+  {
+    throw std::runtime_error("Deserialization error: wrong value");
+  }
+  else
+  {
+    blockHeight = static_cast<uint32_t>(height);
+  }
 }
 
 Reader &operator>>(Reader &i, std::string &v)

@@ -281,7 +281,7 @@ TEST_F(TransfersContainer_addTransaction, handlesAddingUnconfirmedOutputToKey) {
   transfers = container.getTransactionOutputs(tx->getTransactionHash(), ITransfersContainer::IncludeAllUnlocked);
   ASSERT_TRUE(transfers.empty());
 
-  TransactionInformation txInfo;
+  transaction_infomation_t txInfo;
   uint64_t amountIn;
   uint64_t amountOut;
   ASSERT_TRUE(container.getTransactionInformation(tx->getTransactionHash(), txInfo, &amountIn, &amountOut));
@@ -327,7 +327,7 @@ TEST_F(TransfersContainer_addTransaction, handlesAddingConfirmedOutputToKey) {
   transfers = container.getTransactionOutputs(tx->getTransactionHash(), ITransfersContainer::IncludeAllUnlocked);
   ASSERT_EQ(1, transfers.size());
 
-  TransactionInformation txInfo;
+  transaction_infomation_t txInfo;
   uint64_t amountIn;
   uint64_t amountOut;
   ASSERT_TRUE(container.getTransactionInformation(tx->getTransactionHash(), txInfo, &amountIn, &amountOut));
@@ -369,7 +369,7 @@ TEST_F(TransfersContainer_addTransaction, addingEmptyTransactionOuptutsDoesNotCh
   transfers = container.getTransactionOutputs(tx->getTransactionHash(), ITransfersContainer::IncludeAll);
   ASSERT_TRUE(transfers.empty());
 
-  TransactionInformation txInfo;
+  transaction_infomation_t txInfo;
   ASSERT_FALSE(container.getTransactionInformation(tx->getTransactionHash(), txInfo));
 
   std::vector<hash_t> unconfirmedTransactions;

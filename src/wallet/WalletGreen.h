@@ -127,7 +127,7 @@ protected:
   virtual void onTransactionUpdated(ITransfersSubscription* object, const hash_t& transactionHash) override;
   virtual void onTransactionUpdated(const public_key_t& viewPublicKey, const hash_t& transactionHash,
     const std::vector<ITransfersContainer*>& containers) override;
-  void transactionUpdated(const TransactionInformation& transactionInfo, const std::vector<ContainerAmounts>& containerAmountsList);
+  void transactionUpdated(const transaction_infomation_t& transactionInfo, const std::vector<ContainerAmounts>& containerAmountsList);
 
   virtual void onTransactionDeleted(ITransfersSubscription* object, const hash_t& transactionHash) override;
   void transactionDeleted(ITransfersSubscription* object, const hash_t& transactionHash);
@@ -213,10 +213,10 @@ protected:
   void sendTransaction(const cryptonote::transaction_t& cryptoNoteTransaction);
   size_t validateSaveAndSendTransaction(const ITransactionReader& transaction, const std::vector<WalletTransfer>& destinations, bool isFusion, bool send);
 
-  size_t insertBlockchainTransaction(const TransactionInformation& info, int64_t txBalance);
+  size_t insertBlockchainTransaction(const transaction_infomation_t& info, int64_t txBalance);
   size_t insertOutgoingTransactionAndPushEvent(const hash_t& transactionHash, uint64_t fee, const binary_array_t& extra, uint64_t unlockTimestamp);
   void updateTransactionStateAndPushEvent(size_t transactionId, WalletTransactionState state);
-  bool updateWalletTransactionInfo(size_t transactionId, const cryptonote::TransactionInformation& info, int64_t totalAmount);
+  bool updateWalletTransactionInfo(size_t transactionId, const cryptonote::transaction_infomation_t& info, int64_t totalAmount);
   bool updateTransactionTransfers(size_t transactionId, const std::vector<ContainerAmounts>& containerAmountsList,
     int64_t allInputsAmount, int64_t allOutputsAmount);
   TransfersMap getKnownTransfersMap(size_t transactionId, size_t firstTransferIdx) const;

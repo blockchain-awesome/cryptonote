@@ -961,7 +961,7 @@ void WalletGreen::updateTransactionStateAndPushEvent(size_t transactionId, Walle
   }
 }
 
-bool WalletGreen::updateWalletTransactionInfo(size_t transactionId, const cryptonote::TransactionInformation& info, int64_t totalAmount) {
+bool WalletGreen::updateWalletTransactionInfo(size_t transactionId, const cryptonote::transaction_infomation_t& info, int64_t totalAmount) {
   auto& txIdIndex = m_transactions.get<RandomAccessIndex>();
   assert(transactionId < txIdIndex.size());
   auto it = std::next(txIdIndex.begin(), transactionId);
@@ -1011,7 +1011,7 @@ bool WalletGreen::updateWalletTransactionInfo(size_t transactionId, const crypto
   return updated;
 }
 
-size_t WalletGreen::insertBlockchainTransaction(const TransactionInformation& info, int64_t txBalance) {
+size_t WalletGreen::insertBlockchainTransaction(const transaction_infomation_t& info, int64_t txBalance) {
   auto& index = m_transactions.get<RandomAccessIndex>();
 
   WalletTransaction tx;
@@ -1789,7 +1789,7 @@ void WalletGreen::onTransactionUpdated(ITransfersSubscription* /*object*/, const
 void WalletGreen::onTransactionUpdated(const public_key_t&, const hash_t& transactionHash, const std::vector<ITransfersContainer*>& containers) {
   assert(!containers.empty());
 
-  TransactionInformation info;
+  transaction_infomation_t info;
   std::vector<ContainerAmounts> containerAmountsList;
   containerAmountsList.reserve(containers.size());
   for (auto container : containers) {
@@ -1811,7 +1811,7 @@ void WalletGreen::onTransactionUpdated(const public_key_t&, const hash_t& transa
   });
 }
 
-void WalletGreen::transactionUpdated(const TransactionInformation& transactionInfo, const std::vector<ContainerAmounts>& containerAmountsList) {
+void WalletGreen::transactionUpdated(const transaction_infomation_t& transactionInfo, const std::vector<ContainerAmounts>& containerAmountsList) {
   System::EventLock lk(m_readyEvent);
 
   if (m_state == WalletState::NOT_INITIALIZED) {
@@ -2154,7 +2154,7 @@ bool WalletGreen::isFusionTransaction(const WalletTransaction& walletTx) const {
   uint64_t outputsSum = 0;
   std::vector<uint64_t> outputsAmounts;
   std::vector<uint64_t> inputsAmounts;
-  TransactionInformation txInfo;
+  transaction_infomation_t txInfo;
   bool gotTx = false;
   const auto& walletsIndex = m_walletsContainer.get<RandomAccessIndex>();
   for (const WalletRecord& wallet : walletsIndex) {

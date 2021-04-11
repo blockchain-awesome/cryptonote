@@ -95,7 +95,7 @@ void WalletUserTransactionsCache::updateTransactionSendingState(TransactionId tr
   }
 }
 
-std::shared_ptr<WalletLegacyEvent> WalletUserTransactionsCache::onTransactionUpdated(const TransactionInformation& txInfo, int64_t txBalance) {
+std::shared_ptr<WalletLegacyEvent> WalletUserTransactionsCache::onTransactionUpdated(const transaction_infomation_t& txInfo, int64_t txBalance) {
   std::shared_ptr<WalletLegacyEvent> event;
 
   TransactionId id = cryptonote::WALLET_LEGACY_INVALID_TRANSACTION_ID;

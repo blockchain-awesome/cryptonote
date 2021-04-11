@@ -16,7 +16,7 @@ namespace cryptonote {
 
 const uint32_t UNCONFIRMED_TRANSACTION_GLOBAL_OUTPUT_INDEX = std::numeric_limits<uint32_t>::max();
 
-struct TransactionInformation {
+struct transaction_infomation_t {
   // transaction info
   hash_t transactionHash;
   public_key_t publicKey;
@@ -84,7 +84,7 @@ public:
   virtual size_t transactionsCount() const = 0;
   virtual uint64_t balance(uint32_t flags = IncludeDefault) const = 0;
   virtual void getOutputs(std::vector<TransactionOutputInformation>& transfers, uint32_t flags = IncludeDefault) const = 0;
-  virtual bool getTransactionInformation(const hash_t& transactionHash, TransactionInformation& info,
+  virtual bool getTransactionInformation(const hash_t& transactionHash, transaction_infomation_t& info,
     uint64_t* amountIn = nullptr, uint64_t* amountOut = nullptr) const = 0;
   virtual std::vector<TransactionOutputInformation> getTransactionOutputs(const hash_t& transactionHash, uint32_t flags = IncludeDefault) const = 0;
   //only type flags are feasible for this function

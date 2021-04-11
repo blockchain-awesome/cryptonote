@@ -33,7 +33,7 @@ public:
   void updateTransaction(TransactionId transactionId, const cryptonote::transaction_t& tx, uint64_t amount, const std::list<TransactionOutputInformation>& usedOutputs);
   void updateTransactionSendingState(TransactionId transactionId, std::error_code ec);
 
-  std::shared_ptr<WalletLegacyEvent> onTransactionUpdated(const TransactionInformation& txInfo, int64_t txBalance);
+  std::shared_ptr<WalletLegacyEvent> onTransactionUpdated(const transaction_infomation_t& txInfo, int64_t txBalance);
   std::shared_ptr<WalletLegacyEvent> onTransactionDeleted(const hash_t& transactionHash);
 
   TransactionId findTransactionByTransferId(TransferId transferId) const;
