@@ -40,25 +40,26 @@ bool WalletUserTransactionsCache::serialize(cryptonote::ISerializer& s) {
   return true;
 }
 
-  Reader &operator>>(Reader &i, WalletUserTransactionsCache &v)
-  {
-    WalletUserTransactionsCache::UserTransactions txsToSave;
-    WalletUserTransactionsCache::UserTransfers transfersToSave;
+Reader &operator>>(Reader &i, WalletUserTransactionsCache &v)
+{
+  WalletUserTransactionsCache::UserTransactions txsToSave;
+  WalletUserTransactionsCache::UserTransfers transfersToSave;
 
-    v.getGoodItems(txsToSave, transfersToSave);
-    i >> txsToSave >> transfersToSave >> v.m_unconfirmedTransactions;
-    return i;
-  }
+  v.getGoodItems(txsToSave, transfersToSave);
+  i >> txsToSave >> transfersToSave >> v.m_unconfirmedTransactions;
+  return i;
+}
 
-  Writer &operator<<(Writer &o, const WalletUserTransactionsCache &v)
-  {
+Writer &operator<<(Writer &o, const WalletUserTransactionsCache &v)
+{
 
-    o << v.m_transactions << v.m_transfers << v.m_unconfirmedTransactions;
+  o << v.m_transactions << v.m_transfers << v.m_unconfirmedTransactions;
 
-    (*(WalletUserTransactionsCache *)&v).updateUnconfirmedTransactions();
-    (*(WalletUserTransactionsCache *)&v).deleteOutdatedTransactions();
-    return o;
-  }
+  (*(WalletUserTransactionsCache *)&v).updateUnconfirmedTransactions();
+  (*(WalletUserTransactionsCache *)&v).deleteOutdatedTransactions();
+  return o;
+}
+
 uint64_t WalletUserTransactionsCache::unconfirmedTransactionsAmount() const {
   return m_unconfirmedTransactions.countUnconfirmedTransactionsAmount();
 }

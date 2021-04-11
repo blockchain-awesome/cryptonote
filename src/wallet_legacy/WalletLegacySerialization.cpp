@@ -10,19 +10,21 @@
 #include "serialization/ISerializer.h"
 #include "serialization/SerializationOverloads.h"
 
-namespace cryptonote {
+namespace cryptonote
+{
 
-void serialize(UnconfirmedTransferDetails& utd, cryptonote::ISerializer& serializer) {
-  serializer(utd.tx, "transaction");
-  serializer(utd.amount, "amount");
-  serializer(utd.outsAmount, "outs_amount");
-  uint64_t time = static_cast<uint64_t>(utd.sentTime);
-  serializer(time, "sent_time");
-  utd.sentTime = static_cast<time_t>(time);
-  uint64_t txId = static_cast<uint64_t>(utd.transactionId);
-  serializer(txId, "transaction_id");
-  utd.transactionId = static_cast<size_t>(txId);
-}
+  void serialize(UnconfirmedTransferDetails &utd, cryptonote::ISerializer &serializer)
+  {
+    serializer(utd.tx, "transaction");
+    serializer(utd.amount, "amount");
+    serializer(utd.outsAmount, "outs_amount");
+    uint64_t time = static_cast<uint64_t>(utd.sentTime);
+    serializer(time, "sent_time");
+    utd.sentTime = static_cast<time_t>(time);
+    uint64_t txId = static_cast<uint64_t>(utd.transactionId);
+    serializer(txId, "transaction_id");
+    utd.transactionId = static_cast<size_t>(txId);
+  }
 
   Reader &operator>>(Reader &i, UnconfirmedTransferDetails &v)
   {
@@ -38,40 +40,42 @@ void serialize(UnconfirmedTransferDetails& utd, cryptonote::ISerializer& seriali
       << static_cast<uint64_t>(v.transactionId);
     return o;
   }
-void serialize(WalletLegacyTransaction& txi, cryptonote::ISerializer& serializer) {
-  uint64_t trId = static_cast<uint64_t>(txi.firstTransferId);
-  serializer(trId, "first_transfer_id");
-  txi.firstTransferId = static_cast<size_t>(trId);
 
-  uint64_t trCount = static_cast<uint64_t>(txi.transferCount);
-  serializer(trCount, "transfer_count");
-  txi.transferCount = static_cast<size_t>(trCount);
+  void serialize(WalletLegacyTransaction &txi, cryptonote::ISerializer &serializer)
+  {
+    uint64_t trId = static_cast<uint64_t>(txi.firstTransferId);
+    serializer(trId, "first_transfer_id");
+    txi.firstTransferId = static_cast<size_t>(trId);
 
-  serializer(txi.totalAmount, "total_amount");
+    uint64_t trCount = static_cast<uint64_t>(txi.transferCount);
+    serializer(trCount, "transfer_count");
+    txi.transferCount = static_cast<size_t>(trCount);
 
-  serializer(txi.fee, "fee");
-  serializer(txi.hash, "hash");
-  serializer(txi.isCoinbase, "is_coinbase");
+    serializer(txi.totalAmount, "total_amount");
 
-  cryptonote::serializeBlockHeight(serializer, txi.blockHeight, "block_height");
+    serializer(txi.fee, "fee");
+    serializer(txi.hash, "hash");
+    serializer(txi.isCoinbase, "is_coinbase");
 
-  serializer(txi.timestamp, "timestamp");
-  serializer(txi.unlockTime, "unlock_time");
-  serializer(txi.extra, "extra");
+    cryptonote::serializeBlockHeight(serializer, txi.blockHeight, "block_height");
 
-  //this field has been added later in the structure.
-  //in order to not break backward binary compatibility
-  // we just set it to zero
-  txi.sentTime = 0;
-}
+    serializer(txi.timestamp, "timestamp");
+    serializer(txi.unlockTime, "unlock_time");
+    serializer(txi.extra, "extra");
+
+    //this field has been added later in the structure.
+    //in order to not break backward binary compatibility
+    // we just set it to zero
+    txi.sentTime = 0;
+  }
 
   Reader &operator>>(Reader &i, WalletLegacyTransaction &v)
   {
     uint64_t id, count, height;
 
     i >> id >> count >> v.totalAmount >> v.fee >> v.hash >> v.isCoinbase;
-	i.readHeight(height);
-	i >> v.timestamp >> v.extra;
+    i.readHeight(height);
+    i >> v.timestamp >> v.unlockTime >> v.extra;
 
     v.firstTransferId = static_cast<size_t>(id);
     v.transferCount = static_cast<size_t>(count);
@@ -85,14 +89,15 @@ void serialize(WalletLegacyTransaction& txi, cryptonote::ISerializer& serializer
       << v.totalAmount << v.fee << v.hash << v.isCoinbase;
 
     size_t heihgt = v.blockHeight;
-	  o.writeHeight(heihgt);
-    o << v.timestamp << v.extra;
+    o.writeHeight(heihgt);
+    o << v.timestamp << v.unlockTime << v.extra;
     return o;
   }
-void serialize(WalletLegacyTransfer& tr, cryptonote::ISerializer& serializer) {
-  serializer(tr.address, "address");
-  serializer(tr.amount, "amount");
-}
+  void serialize(WalletLegacyTransfer &tr, cryptonote::ISerializer &serializer)
+  {
+    serializer(tr.address, "address");
+    serializer(tr.amount, "amount");
+  }
 
   Reader &operator>>(Reader &i, WalletLegacyTransfer &v)
   {
