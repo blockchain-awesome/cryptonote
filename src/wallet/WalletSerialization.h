@@ -9,7 +9,6 @@
 #include "stream/reader.h"
 #include "stream/writer.h"
 #include "transfers/TransfersSynchronizer.h"
-#include "serialization/BinaryInputStreamSerializer.h"
 
 #include "cryptonote/crypto/chacha.h"
 
@@ -83,8 +82,8 @@ private:
   void loadTransactions(Reader& source, CryptoContext& cryptoContext);
   void loadTransfers(Reader& source, CryptoContext& cryptoContext, uint32_t version);
 
-  void loadWalletV1Keys(cryptonote::BinaryInputStreamSerializer& serializer);
-  void loadWalletV1Details(cryptonote::BinaryInputStreamSerializer& serializer);
+  void loadWalletV1Keys(Reader &i);
+  void loadWalletV1Details(Reader &i);
   void addWalletV1Details(const std::vector<WalletLegacyTransaction>& txs, const std::vector<WalletLegacyTransfer>& trs);
   void initTransactionPool();
   void resetCachedBalance();

@@ -609,24 +609,23 @@ void WalletSerializer::loadWalletV1(Reader& i, const std::string& password) {
   membuf mem((char *)(b), (char *)(b + plain.size()));
   std::istream istream(&mem);
   Reader decrypted(istream);
-  cryptonote::BinaryInputStreamSerializer serializer(decrypted);
 
-  loadWalletV1Keys(serializer);
+  loadWalletV1Keys(decrypted);
   checkKeys();
 
   subscribeWallets();
 
   bool detailsSaved;
-  serializer(detailsSaved, "has_details");
+  decrypted >> detailsSaved;
 
   if (detailsSaved) {
-    loadWalletV1Details(serializer);
+    loadWalletV1Details(decrypted);
   }
 }
 
-void WalletSerializer::loadWalletV1Keys(cryptonote::BinaryInputStreamSerializer& serializer) {
+void WalletSerializer::loadWalletV1Keys(Reader &i) {
   cryptonote::KeysStorage keys;
-  keys.serialize(serializer, "keys");
+  i >> keys;
 
   m_viewPublicKey = keys.viewPublicKey;
   m_viewSecretKey = keys.viewSecretKey;
@@ -641,12 +640,10 @@ void WalletSerializer::loadWalletV1Keys(cryptonote::BinaryInputStreamSerializer&
   m_walletsContainer.get<RandomAccessIndex>().push_back(wallet);
 }
 
-void WalletSerializer::loadWalletV1Details(cryptonote::BinaryInputStreamSerializer& serializer) {
+void WalletSerializer::loadWalletV1Details(Reader &i) {
   std::vector<WalletLegacyTransaction> txs;
   std::vector<WalletLegacyTransfer> trs;
-
-  serializer(txs, "transactions");
-  serializer(trs, "transfers");
+  i >> txs >> trs;
 
   addWalletV1Details(txs, trs);
 }
