@@ -10,17 +10,17 @@
 
 #include "stream/reader.h"
 #include "stream/writer.h"
-#include "cryptonote/core/transaction/serializer/basics.h"
 #include "cryptonote/core/CryptoNoteTools.h"
-#include "cryptonote/structures/array.hpp"
 
-#include "serialization/BinaryOutputStreamSerializer.h"
-#include "serialization/BinaryInputStreamSerializer.h"
-#include "serialization/SerializationOverloads.h"
 
 #include "wallet/WalletErrors.h"
 #include "wallet_legacy/KeysStorage.h"
 #include "wallet_legacy/WalletLegacySerialization.h"
+
+#include "stream/crypto.h"
+#include "stream/cryptonote.h"
+#include "stream/transaction.h"
+#include "stream/map.hpp"
 
 using namespace Common;
 using namespace crypto;
@@ -109,6 +109,13 @@ void serialize(WalletRecordDto& value, cryptonote::ISerializer& serializer) {
   serializer(value.creationTimestamp, "creation_timestamp");
 }
 
+Reader &operator>>(Reader &i, WalletRecordDto &v) {
+  return i >> v.spendPublicKey >> v.spendSecretKey >> v.pendingBalance >> v.actualBalance >> v.creationTimestamp;
+}
+Writer &operator<<(Writer &o, const WalletRecordDto &v) {
+  return o << v.spendPublicKey << v.spendSecretKey << v.pendingBalance << v.actualBalance << v.creationTimestamp;
+}
+
 void serialize(ObsoleteSpentOutputDto& value, cryptonote::ISerializer& serializer) {
   serializer(value.amount, "amount");
   serializer(value.transactionHash, "transaction_hash");
@@ -117,15 +124,36 @@ void serialize(ObsoleteSpentOutputDto& value, cryptonote::ISerializer& serialize
   serializer(value.spendingTransactionHash, "spending_transaction_hash");
 }
 
+Reader &operator>>(Reader &i, ObsoleteSpentOutputDto &v) {
+  return i >> v.amount >> v.transactionHash >> v.outputInTransaction >> v.walletIndex >> v.spendingTransactionHash;
+}
+Writer &operator<<(Writer &o, const ObsoleteSpentOutputDto &v) {
+  return o << v.amount << v.transactionHash << v.outputInTransaction << v.walletIndex << v.spendingTransactionHash;
+}
+
 void serialize(ObsoleteChangeDto& value, cryptonote::ISerializer& serializer) {
   serializer(value.txHash, "transaction_hash");
   serializer(value.amount, "amount");
+}
+
+Reader &operator>>(Reader &i, ObsoleteChangeDto &v) {
+  return i >> v.txHash >> v.amount;
+}
+Writer &operator<<(Writer &o, const ObsoleteChangeDto &v) {
+  return o << v.txHash << v.amount;
 }
 
 void serialize(UnlockTransactionJobDto& value, cryptonote::ISerializer& serializer) {
   serializer(value.blockHeight, "block_height");
   serializer(value.transactionHash, "transaction_hash");
   serializer(value.walletIndex, "wallet_index");
+}
+
+Reader &operator>>(Reader &i, UnlockTransactionJobDto &v) {
+  return i >> v.blockHeight >> v.transactionHash >> v.walletIndex;
+}
+Writer &operator<<(Writer &o, const UnlockTransactionJobDto &v) {
+  return o << v.blockHeight << v.transactionHash << v.walletIndex;
 }
 
 void serialize(WalletTransactionDto& value, cryptonote::ISerializer& serializer) {
@@ -145,6 +173,26 @@ void serialize(WalletTransactionDto& value, cryptonote::ISerializer& serializer)
   serializer(value.extra, "extra");
 }
 
+Reader &operator>>(Reader &i, WalletTransactionDto &v) {
+  uint8_t state;
+  uint64_t height;
+  i >> state >> v.timestamp;
+  i.readHeight(height);
+  i >> v.hash >> v.totalAmount >> v.fee
+  >> v.creationTime >> v.unlockTime >> v.extra;
+  v.state = static_cast<cryptonote::WalletTransactionState>(state);
+  v.blockHeight = static_cast<uint64_t>(height);
+  return i;
+}
+Writer &operator<<(Writer &o, const WalletTransactionDto &v) {
+   o << (uint8_t)v.state << v.timestamp;
+   size_t height = v.blockHeight;
+  o.writeHeight(height);
+  o << v.hash << v.totalAmount
+  << v.fee << v.creationTime << v.unlockTime << v.extra;
+  return o;
+}
+
 void serialize(WalletTransferDto& value, cryptonote::ISerializer& serializer) {
   serializer(value.address, "address");
   serializer(value.amount, "amount");
@@ -154,13 +202,27 @@ void serialize(WalletTransferDto& value, cryptonote::ISerializer& serializer) {
   }
 }
 
+Reader &operator>>(Reader &i, WalletTransferDto &v) {
+  i >> v.address >> v.amount; 
+  if (v.version > 2) {
+    i  >> v.type;
+  }
+  return i;
+}
+Writer &operator<<(Writer &o, const WalletTransferDto &v) {
+  o << v.address << v.amount;
+  if (v.version > 2) {
+    o << v.type;
+  }
+  return o;
+}
+
 template <typename Object>
 std::string serialize(Object& obj, const std::string& name) {
   std::stringstream stream;
   Writer output(stream);
-  cryptonote::BinaryOutputStreamSerializer s(output);
 
-  s(obj, Common::StringView(name));
+  output << obj;
 
   stream.flush();
   return stream.str();
@@ -175,9 +237,8 @@ std::string encrypt(const std::string& plain, cryptonote::CryptoContext& cryptoC
   return cipher;
 }
 
-void addToStream(const std::string& cipher, const std::string& name, Writer& destination) {
-  cryptonote::BinaryOutputStreamSerializer s(destination);
-  s(const_cast<std::string& >(cipher), name);
+void addToStream(const std::string& cipher, const std::string& name, Writer& o) {
+  o << const_cast<std::string& >(cipher);
 }
 
 template<typename Object>
@@ -188,10 +249,9 @@ void serializeEncrypted(Object& obj, const std::string& name, cryptonote::Crypto
   addToStream(cipher, name, destination);
 }
 
-std::string readCipher(Reader& source, const std::string& name) {
+std::string readCipher(Reader& i, const std::string& name) {
   std::string cipher;
-  cryptonote::BinaryInputStreamSerializer s(source);
-  s(cipher, name);
+  i >> cipher;
 
   return cipher;
 }
@@ -210,9 +270,8 @@ void deserialize(Object& obj, const std::string& name, const std::string& plain)
   const char * b = static_cast<const char *>(plain.data());
   membuf mem((char *)(b), (char *)(b + plain.size()));
   std::istream istream(&mem);
-  Reader stream(istream);
-  cryptonote::BinaryInputStreamSerializer s(stream);
-  s(obj, Common::StringView(name));
+  Reader i(istream);
+  i >> obj;
 }
 
 template<typename Object>
@@ -300,32 +359,27 @@ WalletSerializer::WalletSerializer(
   uncommitedTransactions(uncommitedTransactions)
 { }
 
-void WalletSerializer::save(const std::string& password, Writer& destination, bool saveDetails, bool saveCache) {
+void WalletSerializer::save(const std::string& password, Writer& o, bool saveDetails, bool saveCache) {
   CryptoContext cryptoContext = generateCryptoContext(password);
 
-  cryptonote::BinaryOutputStreamSerializer s(destination);
-  s.beginObject("wallet");
+  saveVersion(o);
+  saveIv(o, cryptoContext.iv);
 
-  saveVersion(destination);
-  saveIv(destination, cryptoContext.iv);
-
-  saveKeys(destination, cryptoContext);
-  saveWallets(destination, saveCache, cryptoContext);
-  saveFlags(saveDetails, saveCache, destination, cryptoContext);
+  saveKeys(o, cryptoContext);
+  saveWallets(o, saveCache, cryptoContext);
+  saveFlags(saveDetails, saveCache, o, cryptoContext);
 
   if (saveDetails) {
-    saveTransactions(destination, cryptoContext);
-    saveTransfers(destination, cryptoContext);
+    saveTransactions(o, cryptoContext);
+    saveTransfers(o, cryptoContext);
   }
 
   if (saveCache) {
-    saveBalances(destination, saveCache, cryptoContext);
-    saveTransfersSynchronizer(destination, cryptoContext);
-    saveUnlockTransactionsJobs(destination, cryptoContext);
-    saveUncommitedTransactions(destination, cryptoContext);
+    saveBalances(o, saveCache, cryptoContext);
+    saveTransfersSynchronizer(o, cryptoContext);
+    saveUnlockTransactionsJobs(o, cryptoContext);
+    saveUncommitedTransactions(o, cryptoContext);
   }
-
-  s.endObject();
 }
 
 CryptoContext WalletSerializer::generateCryptoContext(const std::string& password) {
@@ -338,46 +392,43 @@ CryptoContext WalletSerializer::generateCryptoContext(const std::string& passwor
   return context;
 }
 
-void WalletSerializer::saveVersion(Writer& destination) {
+void WalletSerializer::saveVersion(Writer& o) {
   uint32_t version = SERIALIZATION_VERSION;
-
-  BinaryOutputStreamSerializer s(destination);
-  s(version, "version");
+  o << version;
 }
 
-void WalletSerializer::saveIv(Writer& destination, chacha_iv_t& iv) {
-  BinaryOutputStreamSerializer s(destination);
-  s.binary(reinterpret_cast<void *>(&iv.data), sizeof(iv.data), "chacha_iv_t");
+void WalletSerializer::saveIv(Writer& o, chacha_iv_t& iv) {
+  o.write(reinterpret_cast<void *>(&iv.data), sizeof(iv.data));
 }
 
-void WalletSerializer::saveKeys(Writer& destination, CryptoContext& cryptoContext) {
-  savePublicKey(destination, cryptoContext);
-  saveSecretKey(destination, cryptoContext);
+void WalletSerializer::saveKeys(Writer& o, CryptoContext& cryptoContext) {
+  savePublicKey(o, cryptoContext);
+  saveSecretKey(o, cryptoContext);
 }
 
-void WalletSerializer::savePublicKey(Writer& destination, CryptoContext& cryptoContext) {
-  serializeEncrypted(m_viewPublicKey, "public_key", cryptoContext, destination);
+void WalletSerializer::savePublicKey(Writer& o, CryptoContext& cryptoContext) {
+  serializeEncrypted(m_viewPublicKey, "public_key", cryptoContext, o);
   cryptoContext.incIv();
 }
 
-void WalletSerializer::saveSecretKey(Writer& destination, CryptoContext& cryptoContext) {
-  serializeEncrypted(m_viewSecretKey, "secret_key", cryptoContext, destination);
+void WalletSerializer::saveSecretKey(Writer& o, CryptoContext& cryptoContext) {
+  serializeEncrypted(m_viewSecretKey, "secret_key", cryptoContext, o);
   cryptoContext.incIv();
 }
 
-void WalletSerializer::saveFlags(bool saveDetails, bool saveCache, Writer& destination, CryptoContext& cryptoContext) {
-  serializeEncrypted(saveDetails, "details", cryptoContext, destination);
+void WalletSerializer::saveFlags(bool saveDetails, bool saveCache, Writer& o, CryptoContext& cryptoContext) {
+  serializeEncrypted(saveDetails, "details", cryptoContext, o);
   cryptoContext.incIv();
 
-  serializeEncrypted(saveCache, "cache", cryptoContext, destination);
+  serializeEncrypted(saveCache, "cache", cryptoContext, o);
   cryptoContext.incIv();
 }
 
-void WalletSerializer::saveWallets(Writer& destination, bool saveCache, CryptoContext& cryptoContext) {
+void WalletSerializer::saveWallets(Writer& o, bool saveCache, CryptoContext& cryptoContext) {
   auto& index = m_walletsContainer.get<RandomAccessIndex>();
 
   uint64_t count = index.size();
-  serializeEncrypted(count, "wallets_count", cryptoContext, destination);
+  serializeEncrypted(count, "wallets_count", cryptoContext, o);
   cryptoContext.incIv();
 
   for (const auto& w: index) {
@@ -388,7 +439,7 @@ void WalletSerializer::saveWallets(Writer& destination, bool saveCache, CryptoCo
     dto.actualBalance = saveCache ? w.actualBalance : 0;
     dto.creationTimestamp = static_cast<uint64_t>(w.creationTimestamp);
 
-    serializeEncrypted(dto, "", cryptoContext, destination);
+    serializeEncrypted(dto, "", cryptoContext, o);
     cryptoContext.incIv();
   }
 }
@@ -475,21 +526,17 @@ void WalletSerializer::saveTransfers(Writer& destination, CryptoContext& cryptoC
   }
 }
 
-void WalletSerializer::load(const std::string& password, Reader& source) {
-  cryptonote::BinaryInputStreamSerializer s(source);
-  s.beginObject("wallet");
+void WalletSerializer::load(const std::string& password, Reader& i) {
 
-  uint32_t version = loadVersion(source);
+  uint32_t version = loadVersion(i);
 
   if (version > SERIALIZATION_VERSION) {
     throw std::system_error(make_error_code(error::WRONG_VERSION));
   } else if (version != 1) {
-    loadWallet(source, password, version);
+    loadWallet(i, password, version);
   } else {
-    loadWalletV1(source, password);
+    loadWalletV1(i, password);
   }
-
-  s.endObject();
 }
 
 void WalletSerializer::loadWallet(Reader& source, const std::string& password, uint32_t version) {
@@ -548,17 +595,14 @@ void WalletSerializer::loadWallet(Reader& source, const std::string& password, u
   }
 }
 
-void WalletSerializer::loadWalletV1(Reader& source, const std::string& password) {
+void WalletSerializer::loadWalletV1(Reader& i, const std::string& password) {
   cryptonote::CryptoContext cryptoContext;
 
-  cryptonote::BinaryInputStreamSerializer encrypted(source);
-
-  encrypted(cryptoContext.iv, "iv");
+  i >> cryptoContext.iv;
   generateKey(password, cryptoContext.key);
 
   std::string cipher;
-  encrypted(cipher, "data");
-
+  i >> cipher;
   std::string plain = decrypt(cipher, cryptoContext);
 
   const char * b = static_cast<const char *>(plain.data());
@@ -607,19 +651,15 @@ void WalletSerializer::loadWalletV1Details(cryptonote::BinaryInputStreamSerializ
   addWalletV1Details(txs, trs);
 }
 
-uint32_t WalletSerializer::loadVersion(Reader& source) {
-  cryptonote::BinaryInputStreamSerializer s(source);
+uint32_t WalletSerializer::loadVersion(Reader& i) {
 
   uint32_t version = std::numeric_limits<uint32_t>::max();
-  s(version, "version");
-
+  i >> version;
   return version;
 }
 
-void WalletSerializer::loadIv(Reader& source, chacha_iv_t& iv) {
-  cryptonote::BinaryInputStreamSerializer s(source);
-
-  s.binary(static_cast<void *>(&iv.data), sizeof(iv.data), "chacha_iv_t");
+void WalletSerializer::loadIv(Reader& i, chacha_iv_t& iv) {
+  i.read(static_cast<void *>(&iv.data), sizeof(iv.data));
 }
 
 void WalletSerializer::generateKey(const std::string& password, chacha_key_t& key) {
