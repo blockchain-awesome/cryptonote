@@ -62,8 +62,6 @@ namespace cryptonote
     std::vector<hash_t> buildSparseChain(const hash_t& startBlockId) const;
     hash_t getTailId() const;
 
-    void serialize(ISerializer& s);
-
     typedef boost::multi_index_container <
       hash_t,
       boost::multi_index::indexed_by<

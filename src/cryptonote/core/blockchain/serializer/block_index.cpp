@@ -65,14 +65,6 @@ namespace cryptonote {
     return m_container.back();
   }
 
-  void BlockIndex::serialize(ISerializer& s) {
-    if (s.type() == ISerializer::INPUT) {
-      readSequence<hash_t>(std::back_inserter(m_container), "index", s);
-    } else {
-      writeSequence<hash_t>(m_container.begin(), m_container.end(), "index", s);
-    }
-  }
-
   Reader &operator>>(Reader &i, BlockIndex &v)
   {
     iterate<hash_t>(i, std::back_inserter(v.m_container));
