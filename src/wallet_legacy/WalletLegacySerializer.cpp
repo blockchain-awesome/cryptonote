@@ -14,8 +14,6 @@
 #include "wallet/WalletErrors.h"
 #include "wallet_legacy/KeysStorage.h"
 
-using namespace Common;
-
 namespace {
 
 bool verifyKeys(const secret_key_t& sec, const public_key_t& expected_pub) {

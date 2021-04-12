@@ -2,6 +2,8 @@
 #include "crypto/hash-ops.h"
 
 
+using namespace crypto;
+
 namespace cryptonote
 {
 

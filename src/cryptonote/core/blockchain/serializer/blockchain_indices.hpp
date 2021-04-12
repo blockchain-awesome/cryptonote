@@ -35,50 +35,6 @@ namespace cryptonote
     {
     }
 
-    void serialize(ISerializer &s)
-    {
-
-      config::config_t &data = config::get();
-      uint8_t version = data.storageVersions.blockcache_archive.major;
-
-      KV_MEMBER(version);
-
-      // ignore old versions, do rebuild
-      if (version != data.storageVersions.blockcache_indices_archive.major)
-        return;
-
-      std::string operation;
-
-      if (s.type() == ISerializer::INPUT)
-      {
-        operation = "- loading ";
-
-        hash_t blockHash;
-        s(blockHash, "blockHash");
-
-        if (blockHash != m_lastBlockHash)
-        {
-          return;
-        }
-      }
-      else
-      {
-        operation = "- saving ";
-        s(m_lastBlockHash, "blockHash");
-      }
-
-      logger(INFO) << operation << "paymentID index...";
-      s(payment, "paymentIdIndex");
-
-      logger(INFO) << operation << "timestamp index...";
-      s(timestamp, "timestampIndex");
-
-      logger(INFO) << operation << "generated transactions index...";
-      s(transaction, "generatedTransactionsIndex");
-
-      m_loaded = true;
-    }
-
     bool loaded() const
     {
       return m_loaded;

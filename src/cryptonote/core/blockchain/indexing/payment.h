@@ -20,8 +20,6 @@ namespace cryptonote
     bool find(const hash_t &paymentId, std::vector<hash_t> &transactionHashes);
     void clear();
 
-    void serialize(ISerializer &s);
-
     template <class Archive>
     void serialize(Archive &archive, unsigned int version)
     {

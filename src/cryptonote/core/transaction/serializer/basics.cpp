@@ -420,28 +420,6 @@ namespace cryptonote
     serializer(tid.input, "input");
   }
 
-  void multisignature_output_usage_t::serialize(ISerializer &s)
-  {
-    s(transactionIndex, "txindex");
-    s(outputIndex, "outindex");
-    s(isUsed, "used");
-  }
-  void transaction_entry_t::serialize(ISerializer &s)
-  {
-    s(tx, "tx");
-    s(m_global_output_indexes, "indexes");
-  }
-
-  void block_entry_t::serialize(ISerializer &s)
-  {
-    s(bl, "block");
-    s(height, "height");
-    s(block_cumulative_size, "block_cumulative_size");
-    s(cumulative_difficulty, "cumulative_difficulty");
-    s(already_generated_coins, "already_generated_coins");
-    s(transactions, "transactions");
-  }
-
   void serialize(transaction_details_t &td, ISerializer &s)
   {
     s(td.id, "id");

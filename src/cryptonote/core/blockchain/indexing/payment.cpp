@@ -57,11 +57,6 @@ namespace cryptonote
     index.clear();
   }
 
-  void PaymentIdIndex::serialize(ISerializer &s)
-  {
-    s(index, "index");
-  }
-
   Reader &operator>>(Reader &i, PaymentIdIndex &v)
   {
     i >> v.index;
