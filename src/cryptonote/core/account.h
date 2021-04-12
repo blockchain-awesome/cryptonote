@@ -49,4 +49,6 @@ private:
   uint64_t m_creation_timestamp;
   uint64_t m_publicAddressBase58Prefix;
 };
+
+
 } // namespace cryptonote

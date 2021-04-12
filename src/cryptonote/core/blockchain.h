@@ -75,9 +75,6 @@ namespace cryptonote {
       return m_blocks[height];
     }
 
-    template<class archive_t> void serialize(archive_t & ar, const unsigned int version);
-
-
     uint32_t getHeight(); //TODO rename to getCurrentBlockchainSize
     hash_t getTailId();
     hash_t getTailId(uint32_t& height);

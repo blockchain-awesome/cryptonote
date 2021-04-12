@@ -154,7 +154,7 @@ namespace cryptonote {
 
     transaction.version = config::get().transaction.version.major;
     transaction.unlockTime = 0;
-    transaction.extra = extra.serialize();
+    transaction.extra = extra.save();
 
     secretKey = txKeys.secretKey;
   }
@@ -415,7 +415,7 @@ namespace cryptonote {
     checkIfSigning();
     transaction_extra_nonce_t extraNonce = { nonce };
     extra.set(extraNonce);
-    transaction.extra = extra.serialize();
+    transaction.extra = extra.save();
     invalidateHash();
   }
 
