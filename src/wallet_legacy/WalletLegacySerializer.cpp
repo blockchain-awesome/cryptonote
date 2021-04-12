@@ -14,8 +14,6 @@
 #include "wallet/WalletErrors.h"
 #include "wallet_legacy/KeysStorage.h"
 
-using namespace Common;
-
 namespace {
 
 bool verifyKeys(const secret_key_t& sec, const public_key_t& expected_pub) {
@@ -42,24 +40,15 @@ WalletLegacySerializer::WalletLegacySerializer(cryptonote::Account& account, Wal
 
 void WalletLegacySerializer::serialize(std::ostream& stream, const std::string& password, bool saveDetailed, const std::string& cache) {
   std::stringstream plainArchive;
-  Writer o(plainArchive);
-    cryptonote::KeysStorage keys;
-  cryptonote::account_keys_t acc = account.getAccountKeys();
+  Writer plainStream(plainArchive);
+  saveKeys(plainStream);
 
-  keys.creationTimestamp = account.getCreatetime();
-  keys.spendPublicKey = acc.address.spendPublicKey;
-  keys.spendSecretKey = acc.spendSecretKey;
-  keys.viewPublicKey = acc.address.viewPublicKey;
-  keys.viewSecretKey = acc.viewSecretKey;
-
-  o << keys;
-
-  o << saveDetailed;
-
+  plainStream << saveDetailed;
   if (saveDetailed) {
-    o << transactionsCache;
+    plainStream << transactionsCache;
   }
-  o.write(cache);
+
+  plainStream << cache;
 
   std::string plain = plainArchive.str();
   std::string cipher;
@@ -73,7 +62,7 @@ void WalletLegacySerializer::serialize(std::ostream& stream, const std::string& 
   stream.flush();
 }
 
-void WalletLegacySerializer::saveKeys(cryptonote::ISerializer& serializer) {
+void WalletLegacySerializer::saveKeys(Writer &o) {
   cryptonote::KeysStorage keys;
   cryptonote::account_keys_t acc = account.getAccountKeys();
 
@@ -82,8 +71,7 @@ void WalletLegacySerializer::saveKeys(cryptonote::ISerializer& serializer) {
   keys.spendSecretKey = acc.spendSecretKey;
   keys.viewPublicKey = acc.address.viewPublicKey;
   keys.viewSecretKey = acc.viewSecretKey;
-
-  keys.serialize(serializer, "keys");
+  o << keys;
 }
 
 chacha_iv_t WalletLegacySerializer::encrypt(const std::string& plain, const std::string& password, std::string& cipher) {
@@ -114,20 +102,9 @@ void WalletLegacySerializer::deserialize(std::istream& stream, const std::string
   const char * b = static_cast<const char *>(plain.data());
   membuf mem((char *)(b), (char *)(b + plain.size()));
   std::istream istream(&mem);
-  Reader di(istream);
-  cryptonote::KeysStorage keys;
+  Reader decrypted(istream);
 
-  di >> keys;
-
-  cryptonote::account_keys_t acc;
-  acc.address.spendPublicKey = keys.spendPublicKey;
-  acc.spendSecretKey = keys.spendSecretKey;
-  acc.address.viewPublicKey = keys.viewPublicKey;
-  acc.viewSecretKey = keys.viewSecretKey;
-
-  account.setAccountKeys(acc);
-  account.setCreatetime(keys.creationTimestamp);
-  
+  loadKeys(decrypted);
   throwIfKeysMissmatch(account.getAccountKeys().viewSecretKey, account.getAccountKeys().address.viewPublicKey);
 
   if (account.getAccountKeys().spendSecretKey != NULL_SECRET_KEY) {
@@ -139,12 +116,14 @@ void WalletLegacySerializer::deserialize(std::istream& stream, const std::string
   }
 
   bool detailsSaved;
-  di >> detailsSaved;
+
+  decrypted >> detailsSaved;
 
   if (detailsSaved) {
-    di >> transactionsCache;
+    decrypted >> transactionsCache;
   }
-  di.read(cache);
+
+  decrypted >> cache;
 }
 
 void WalletLegacySerializer::decrypt(const std::string& cipher, std::string& plain, chacha_iv_t iv, const std::string& password) {
@@ -156,11 +135,9 @@ void WalletLegacySerializer::decrypt(const std::string& cipher, std::string& pla
   chacha8(cipher.data(), cipher.size(), key, iv, &plain[0]);
 }
 
-void WalletLegacySerializer::loadKeys(cryptonote::ISerializer& serializer) {
+void WalletLegacySerializer::loadKeys(Reader &i) {
   cryptonote::KeysStorage keys;
-
-  keys.serialize(serializer, "keys");
-
+  i >> keys;
   cryptonote::account_keys_t acc;
   acc.address.spendPublicKey = keys.spendPublicKey;
   acc.spendSecretKey = keys.spendSecretKey;

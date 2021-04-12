@@ -19,6 +19,8 @@ public:
   void write(const void *data, size_t size);
   void write(std::vector<uint8_t> &data, size_t size);
   void write(std::string &data, size_t size);
+  void writeHeight(size_t &height);
+
   virtual size_t writeSome(const void *data, size_t size);
 
   template <typename T>
@@ -112,8 +114,4 @@ inline Writer &operator<<(Writer &o, const bool &v)
   return o;
 }
 
-inline Writer &operator<<(Writer &o, const std::string &v)
-{
-  o.write(v.data(), v.size());
-  return o;
-}
+Writer &operator<<(Writer &o, const std::string &v);

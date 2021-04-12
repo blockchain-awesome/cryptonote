@@ -6,7 +6,6 @@
 // #include "cryptonote/core/transaction/serializer/basics.h"
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "common/base58.h"
-#include "stream/block.h"
 #include "cryptonote/structures/array.hpp"
 
 namespace cryptonote

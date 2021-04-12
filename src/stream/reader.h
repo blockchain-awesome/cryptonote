@@ -25,6 +25,8 @@ public:
   template <typename T>
   void readVarint(T &value);
   void read(void *data, size_t size);
+
+  void readHeight(size_t &height);
   virtual size_t readSome(void *data, size_t size);
   void read(std::vector<uint8_t> &data, size_t size);
   void read(std::string &data, size_t size);
@@ -115,8 +117,7 @@ inline Reader &operator>>(Reader &i, bool &v)
   i.read((void *)&v, sizeof(v));
   return i;
 }
-inline Reader &operator>>(Reader &i, std::string &v)
-{
-  i.read((char *)v.data(), v.size());
-  return i;
-}
+
+Reader &operator>>(Reader &i, std::string &v);
+
+

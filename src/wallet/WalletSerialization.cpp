@@ -176,16 +176,21 @@ void serialize(WalletTransactionDto& value, cryptonote::ISerializer& serializer)
 Reader &operator>>(Reader &i, WalletTransactionDto &v) {
   uint8_t state;
   uint64_t height;
-  i >> state >> v.timestamp >> height
-  >> v.hash >> v.totalAmount >> v.fee
+  i >> state >> v.timestamp;
+  i.readHeight(height);
+  i >> v.hash >> v.totalAmount >> v.fee
   >> v.creationTime >> v.unlockTime >> v.extra;
   v.state = static_cast<cryptonote::WalletTransactionState>(state);
   v.blockHeight = static_cast<uint64_t>(height);
   return i;
 }
 Writer &operator<<(Writer &o, const WalletTransactionDto &v) {
-  return o << (uint8_t)v.state << v.timestamp << v.blockHeight << v.hash << v.totalAmount
+   o << (uint8_t)v.state << v.timestamp;
+   size_t height = v.blockHeight;
+  o.writeHeight(height);
+  o << v.hash << v.totalAmount
   << v.fee << v.creationTime << v.unlockTime << v.extra;
+  return o;
 }
 
 void serialize(WalletTransferDto& value, cryptonote::ISerializer& serializer) {
@@ -603,10 +608,24 @@ void WalletSerializer::loadWalletV1(Reader& i, const std::string& password) {
   const char * b = static_cast<const char *>(plain.data());
   membuf mem((char *)(b), (char *)(b + plain.size()));
   std::istream istream(&mem);
-  Reader di(istream);
+  Reader decrypted(istream);
 
-    cryptonote::KeysStorage keys;
-    di >> keys;
+  loadWalletV1Keys(decrypted);
+  checkKeys();
+
+  subscribeWallets();
+
+  bool detailsSaved;
+  decrypted >> detailsSaved;
+
+  if (detailsSaved) {
+    loadWalletV1Details(decrypted);
+  }
+}
+
+void WalletSerializer::loadWalletV1Keys(Reader &i) {
+  cryptonote::KeysStorage keys;
+  i >> keys;
 
   m_viewPublicKey = keys.viewPublicKey;
   m_viewSecretKey = keys.viewSecretKey;
@@ -619,23 +638,14 @@ void WalletSerializer::loadWalletV1(Reader& i, const std::string& password) {
   wallet.creationTimestamp = static_cast<time_t>(keys.creationTimestamp);
 
   m_walletsContainer.get<RandomAccessIndex>().push_back(wallet);
+}
 
-  checkKeys();
-
-  subscribeWallets();
-
-  bool detailsSaved;
-  di >> detailsSaved;
-  // serializer(detailsSaved, "has_details");
-
-  if (detailsSaved) {
-    // loadWalletV1Details(serializer);
-      std::vector<WalletLegacyTransaction> txs;
+void WalletSerializer::loadWalletV1Details(Reader &i) {
+  std::vector<WalletLegacyTransaction> txs;
   std::vector<WalletLegacyTransfer> trs;
-  di >> txs >> trs;
+  i >> txs >> trs;
 
   addWalletV1Details(txs, trs);
-  }
 }
 
 uint32_t WalletSerializer::loadVersion(Reader& i) {

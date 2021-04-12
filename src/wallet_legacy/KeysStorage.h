@@ -12,7 +12,6 @@
 
 using namespace crypto;
 
-
 namespace cryptonote {
 
 class ISerializer;

@@ -14,8 +14,6 @@
 #include "cryptonote/core/currency.h"
 #include "cryptonote/core/transaction/TransactionExtra.h"
 #include "cryptonote/core/tx_memory_pool.h"
-#include "stream/block.h"
-#include "stream/transaction.h"
 #include "cryptonote/structures/array.hpp"
 
 #include <logging/ConsoleLogger.h>

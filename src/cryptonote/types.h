@@ -1,6 +1,4 @@
 #pragma once
-#include "serialization/ISerializer.h"
-
 #include <cstdint>
 #include <unordered_map>
 #include "crypto/types.h"
@@ -116,14 +114,12 @@ namespace cryptonote
     transaction_index_t transactionIndex;
     uint16_t outputIndex;
     bool isUsed;
-    void serialize(ISerializer &s);
   };
 
   struct transaction_entry_t
   {
     transaction_t tx;
     std::vector<uint32_t> m_global_output_indexes;
-    void serialize(ISerializer &s);
   };
 
   struct block_info_t
@@ -170,7 +166,6 @@ namespace cryptonote
     difficulty_t cumulative_difficulty;
     uint64_t already_generated_coins;
     std::vector<transaction_entry_t> transactions;
-    void serialize(ISerializer &s);
   };
 
   struct transaction_check_info_t

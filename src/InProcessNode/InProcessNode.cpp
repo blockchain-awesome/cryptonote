@@ -14,8 +14,6 @@
 #include "cryptonote/core/VerificationContext.h"
 #include "cryptonote/protocol/handler_common.h"
 #include "InProcessNodeErrors.h"
-#include "stream/block.h"
-#include "stream/transaction.h"
 #include "cryptonote/structures/array.hpp"
 
 using namespace crypto;

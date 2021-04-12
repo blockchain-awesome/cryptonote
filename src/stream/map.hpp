@@ -94,8 +94,10 @@ Writer &operator<<(Writer &o, const std::map<KEY, VALUE, HASH> &v)
 template <typename Element, typename Iterator>
 Reader &iterate(Reader &i, Iterator iterator)
 {
-  size_t size = 0;
-  i >> size;
+  uint64_t s;
+  
+  i >> s;
+  size_t size = s;
   while (size--)
   {
     Element e;
@@ -110,7 +112,7 @@ Writer &iterate(Writer &o, Iterator begin, Iterator end)
 {
   size_t size = std::distance(begin, end);
   o << size;
-  for (auto &i = begin; i != end; ++i)
+  for (Iterator i = begin; i != end; ++i)
   {
     o << const_cast<Element &>(*i);
   }

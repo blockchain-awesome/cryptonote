@@ -1266,7 +1266,7 @@ std::string createExtraNonce(const std::string& nonce) {
   cryptonote::transaction_extra_nonce_t extraNonce;
   extraNonce.nonce = IBinary::from(nonce);
   txExtra.set(extraNonce);
-  auto vec = txExtra.serialize();
+  auto vec = txExtra.save();
   return std::string(vec.begin(), vec.end());
 }
 

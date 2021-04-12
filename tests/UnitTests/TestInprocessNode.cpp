@@ -18,8 +18,6 @@
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "cryptonote/core/VerificationContext.h"
 #include "cryptonote/structures/block_entry.h"
-#include "stream/block.h"
-#include "stream/transaction.h"
 #include "cryptonote/structures/array.hpp"
 
 using namespace crypto;

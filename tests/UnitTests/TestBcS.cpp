@@ -13,8 +13,6 @@
 #include "cryptonote/core/CryptoNoteTools.h"
 #include "logging/ConsoleLogger.h"
 #include "cryptonote/structures/block_entry.h"
-#include "stream/block.h"
-#include "stream/transaction.h"
 #include "cryptonote/structures/array.hpp"
 
 #include "INodeStubs.h"

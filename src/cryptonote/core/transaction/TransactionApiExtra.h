@@ -55,7 +55,7 @@ namespace cryptonote {
       return true;
     }
 
-    std::vector<uint8_t> serialize() const {
+    std::vector<uint8_t> save() const {
       std::vector<uint8_t> extra;
       writeTransactionExtra(extra, fields);
       return extra;

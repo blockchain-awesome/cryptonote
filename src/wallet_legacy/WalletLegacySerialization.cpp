@@ -73,7 +73,9 @@ namespace cryptonote
   {
     uint64_t id, count, height;
 
-    i >> id >> count >> v.totalAmount >> v.fee >> v.hash >> v.isCoinbase >> height >> v.timestamp >> v.extra;
+    i >> id >> count >> v.totalAmount >> v.fee >> v.hash >> v.isCoinbase;
+    i.readHeight(height);
+    i >> v.timestamp >> v.unlockTime >> v.extra;
 
     v.firstTransferId = static_cast<size_t>(id);
     v.transferCount = static_cast<size_t>(count);
@@ -84,11 +86,13 @@ namespace cryptonote
   {
     o << static_cast<uint64_t>(v.firstTransferId)
       << static_cast<uint64_t>(v.transferCount)
-      << v.totalAmount << v.fee << v.hash << v.isCoinbase << v.blockHeight
-      << v.timestamp << v.extra;
+      << v.totalAmount << v.fee << v.hash << v.isCoinbase;
+
+    size_t heihgt = v.blockHeight;
+    o.writeHeight(heihgt);
+    o << v.timestamp << v.unlockTime << v.extra;
     return o;
   }
-
   void serialize(WalletLegacyTransfer &tr, cryptonote::ISerializer &serializer)
   {
     serializer(tr.address, "address");
@@ -105,5 +109,4 @@ namespace cryptonote
     o << v.address << v.amount;
     return o;
   }
-
 } //namespace cryptonote

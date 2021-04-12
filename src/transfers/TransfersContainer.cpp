@@ -31,7 +31,7 @@ Reader &operator>>(Reader &i, transaction_infomation_t &v)
   i >> v.transactionHash;
   i >> v.publicKey;
   uint64_t height;
-  i >> height;
+  i.readHeight(height);
   v.blockHeight = static_cast<uint32_t>(height);
   assert(height <= std::numeric_limits<uint64_t>::max());
   i >> v.timestamp >> v.unlockTime >> v.totalAmountIn >> v.totalAmountOut >> v.extra >> v.paymentId;
@@ -50,12 +50,15 @@ Reader &operator>>(Reader &i, TransactionOutputInformationEx &v)
 {
   i >> reinterpret_cast<uint8_t &>(v.type);
   i >> v.amount;
-  uint64_t temp = 0;
-  i >> temp;
-  v.globalOutputIndex = temp;
+
+  uint64_t index;
+  i.readHeight(index);
+  v.globalOutputIndex = index;
   i >> v.outputInTransaction >> v.transactionPublicKey >> v.keyImage >> v.unlockTime;
-  i >> temp;
-  v.blockHeight = temp;
+  uint64_t height;
+  i.readHeight(height);
+  v.blockHeight = height;
+
   i >> v.transactionIndex >> v.transactionHash >> v.visible;
   switch (v.type)
   {
@@ -76,8 +79,14 @@ Reader &operator>>(Reader &i, TransactionOutputInformationEx &v)
 Writer &operator<<(Writer &o, const TransactionOutputInformationEx &v)
 {
   uint8_t type = static_cast<uint8_t>(v.type);
-  uint64_t temp = v.globalOutputIndex;
-  o << type << v.amount << temp << v.transactionIndex << v.transactionHash << v.visible;
+  o << type << v.amount;
+  size_t index = v.globalOutputIndex;
+  o.writeHeight(index);
+
+  o << v.outputInTransaction << v.transactionPublicKey << v.keyImage << v.unlockTime;
+  uint64_t height = v.blockHeight;
+  o << height << v.transactionIndex << v.transactionHash << v.visible;
+
   switch (v.type)
   {
   case output_type_t::Key:
@@ -95,24 +104,23 @@ Writer &operator<<(Writer &o, const TransactionOutputInformationEx &v)
 
 Reader &operator>>(Reader &i, TransactionBlockInfo &v)
 {
-  uint64_t height;
-  i >> height;
-  v.height = (uint32_t)height;
-  i >> v.timestamp >> v.transactionIndex;
-  return i;
+  uint64_t height = 0;
+  i.readHeight(height);
+  v.height = height;
+  i >> v.timestamp;
+  i >> v.transactionIndex;
+ return i;
 }
 
 Writer &operator<<(Writer &o, const TransactionBlockInfo &v)
 {
-  uint64_t height = v.height;
-  o << height << v.timestamp << v.transactionIndex;
-  return o;
+  o << v.height << v.timestamp << v.transactionIndex;
+   return o;
 }
-
 
 Reader &operator>>(Reader &i, SpentTransactionOutput &v)
 {
-  i >> *(TransactionOutputInformationEx*)&v;
+  i >> *(TransactionOutputInformationEx *)&v;
   i >> v.spendingBlock;
   i >> v.spendingTransactionHash;
   i >> v.inputInTransaction;
@@ -127,7 +135,6 @@ Writer &operator<<(Writer &o, const SpentTransactionOutput &v)
   o << v.inputInTransaction;
   return o;
 }
-
 
 const uint32_t TRANSFERS_CONTAINER_STORAGE_VERSION = 0;
 
@@ -882,7 +889,6 @@ void TransfersContainer::load(std::istream& in) {
 
   uint32_t currentHeight = 0;
   stream >> currentHeight;
-  m_currentHeight = currentHeight;
 
   TransactionMultiIndex transactions;
   UnconfirmedTransfersMultiIndex unconfirmedTransfers;
@@ -894,6 +900,7 @@ void TransfersContainer::load(std::istream& in) {
   iterate<TransactionOutputInformationEx>(stream, std::inserter(availableTransfers, availableTransfers.end()));
   iterate<SpentTransactionOutput>(stream, std::inserter(spentTransfers, spentTransfers.end()));
 
+  m_currentHeight = currentHeight;
   m_transactions = std::move(transactions);
   m_unconfirmedTransfers = std::move(unconfirmedTransfers);
   m_availableTransfers = std::move(availableTransfers);

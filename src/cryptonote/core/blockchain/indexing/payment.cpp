@@ -1,5 +1,4 @@
 #include "payment.h"
-#include "stream/transaction.h"
 #include "cryptonote/structures/array.hpp"
 #include "blockchain_explorer/BlockchainExplorerDataBuilder.h"
 
@@ -56,11 +55,6 @@ namespace cryptonote
   void PaymentIdIndex::clear()
   {
     index.clear();
-  }
-
-  void PaymentIdIndex::serialize(ISerializer &s)
-  {
-    s(index, "index");
   }
 
   Reader &operator>>(Reader &i, PaymentIdIndex &v)

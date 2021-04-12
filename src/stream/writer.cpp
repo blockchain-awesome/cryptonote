@@ -45,3 +45,15 @@ void Writer::write(std::string &data, size_t size)
   write(temp.data(), size);
   data.assign(temp.data(), size);
 }
+
+void Writer::writeHeight(size_t &blockHeight)
+{
+  *this << blockHeight;
+}
+
+Writer &operator<<(Writer &o, const std::string &v)
+{
+  o << v.size();
+  o.write(v.data(), v.size());
+  return o;
+}

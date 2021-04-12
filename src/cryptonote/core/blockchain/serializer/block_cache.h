@@ -35,9 +35,6 @@ namespace cryptonote
     void load(const std::string &filename);
 
     bool save(const std::string &filename);
-
-    void serialize(ISerializer &s);
-
     LoggerRef logger;
     bool m_loaded;
     Blockchain &m_bs;

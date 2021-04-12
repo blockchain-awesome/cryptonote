@@ -21,14 +21,6 @@ namespace cryptonote
     bool find(uint64_t timestampBegin, uint64_t timestampEnd, uint64_t hashesNumberLimit, std::vector<hash_t> &hashes, uint64_t &hashesNumberWithinTimestamps);
     void clear();
 
-    void serialize(ISerializer &s);
-
-    template <class Archive>
-    void serialize(Archive &archive, unsigned int version)
-    {
-      archive &index;
-    }
-
     std::multimap<uint64_t, hash_t> index;
   };
 

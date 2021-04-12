@@ -498,38 +498,6 @@ namespace cryptonote
 #define CURRENT_MEMPOOL_ARCHIVE_VER 1
 
   //---------------------------------------------------------------------------------
-  void TxMemoryPool::serialize(ISerializer &s)
-  {
-
-    uint8_t version = CURRENT_MEMPOOL_ARCHIVE_VER;
-
-    s(version, "version");
-
-    std::cout << "Mempool version: " << (uint32_t)version << std::endl;
-
-    if (version != CURRENT_MEMPOOL_ARCHIVE_VER)
-    {
-      return;
-    }
-
-    std::lock_guard<std::recursive_mutex> lock(m_transactions_lock);
-
-    if (s.type() == ISerializer::INPUT)
-    {
-      m_transactions.clear();
-      readSequence<transaction_details_t>(std::inserter(m_transactions, m_transactions.end()), "transactions", s);
-    }
-    else
-    {
-      writeSequence<transaction_details_t>(m_transactions.begin(), m_transactions.end(), "transactions", s);
-    }
-
-    KV_MEMBER(m_spent_key_images);
-    KV_MEMBER(m_spentOutputs);
-    KV_MEMBER(m_recentlyDeletedTransactions);
-  }
-
-  //---------------------------------------------------------------------------------
   void TxMemoryPool::on_idle()
   {
     m_txCheckInterval.call([this]() { return removeExpiredTransactions(); });

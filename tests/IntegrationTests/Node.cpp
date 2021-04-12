@@ -20,8 +20,6 @@
 #include "../IntegrationTestLib/TestNetwork.h"
 #include "../IntegrationTestLib/NodeObserver.h"
 #include "../IntegrationTestLib/NodeCallback.h"
-#include "stream/block.h"
-#include "stream/transaction.h"
 #include "cryptonote/structures/array.hpp"
 
 #include "BaseTests.h"

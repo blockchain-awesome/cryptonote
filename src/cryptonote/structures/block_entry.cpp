@@ -1,6 +1,4 @@
 #include "common/binary.h"
-#include "stream/block.h"
-#include "stream/transaction.h"
 #include "array.hpp"
 #include <boost/utility/value_init.hpp>
 #include "config/common.h"
@@ -9,7 +7,6 @@
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "block_entry.h"
 #include "cryptonote/core/hardfork.h"
-
 
 
 namespace cryptonote
