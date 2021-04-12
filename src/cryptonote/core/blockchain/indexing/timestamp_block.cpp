@@ -52,11 +52,6 @@ namespace cryptonote
     index.clear();
   }
 
-  void TimestampBlocksIndex::serialize(ISerializer &s)
-  {
-    s(index, "index");
-  }
-
   Reader &operator>>(Reader &i, TimestampBlocksIndex &v)
   {
     i >> v.index;

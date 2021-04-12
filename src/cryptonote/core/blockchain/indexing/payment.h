@@ -20,12 +20,6 @@ namespace cryptonote
     bool find(const hash_t &paymentId, std::vector<hash_t> &transactionHashes);
     void clear();
 
-    template <class Archive>
-    void serialize(Archive &archive, unsigned int version)
-    {
-      archive &index;
-    }
-
     std::unordered_multimap<hash_t, hash_t> index;
   };
 

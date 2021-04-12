@@ -74,12 +74,6 @@ void GeneratedTransactionsIndex::clear()
   index.clear();
 }
 
-void GeneratedTransactionsIndex::serialize(ISerializer &s)
-{
-  s(index, "index");
-  s(lastGeneratedTxNumber, "lastGeneratedTxNumber");
-}
-
   Reader &operator>>(Reader &i, GeneratedTransactionsIndex &v) {
     i >> v.index;
     i >> v.lastGeneratedTxNumber;
