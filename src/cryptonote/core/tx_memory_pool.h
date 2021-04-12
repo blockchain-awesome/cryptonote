@@ -103,8 +103,6 @@ namespace cryptonote
       }
     }
 
-    void serialize(ISerializer &s);
-
     typedef hashed_unique<BOOST_MULTI_INDEX_MEMBER(transaction_details_t, hash_t, id)> main_index_t;
     typedef ordered_non_unique<identity<transaction_details_t>, transaction_priority_comparator_t> fee_index_t;
 
