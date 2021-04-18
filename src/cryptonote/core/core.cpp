@@ -970,7 +970,7 @@ std::unique_ptr<IBlock> core::getBlock(const hash_t& blockId) {
     return std::unique_ptr<BlockWithTransactions>(nullptr);
   }
 
-  return std::move(blockPtr);
+  return blockPtr;
 }
 
 bool core::addMessageQueue(MessageQueue<BlockchainMessage>& messageQueue) {

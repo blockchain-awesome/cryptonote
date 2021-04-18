@@ -12,6 +12,8 @@
 #include "cryptonote/core/account.h"
 #include "cryptonote/core/CryptoNoteFormatUtils.h"
 #include "cryptonote/core/CryptoNoteTools.h"
+#include "cryptonote/structures/array.hpp"
+
 
 #include "transfers/TransfersContainer.h"
 

@@ -412,7 +412,7 @@ difficulty_t Currency::nextDifficulty(std::vector<uint64_t> timestamps,
   config.cut = m_difficultyCut;
   config.lag = m_difficultyLag;
   return next_difficulty(timestamps.data(), timestamps.size(),
-                         cumulativeDifficulties.data(), cumulativeDifficulties.size(),
+                         cumulativeDifficulties.data(),
                          (uint64_t *)&config);
 }
 

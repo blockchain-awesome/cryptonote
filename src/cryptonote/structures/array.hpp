@@ -1,4 +1,5 @@
 
+#pragma once
 #include "array.h"
 #include "stream/VectorOutputStream.h"
 #include "serialization/BinaryOutputStreamSerializer.h"
