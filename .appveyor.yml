@@ -11,6 +11,9 @@ install:
   - cmd: set BOOST_ROOT=C:\Libraries\boost_1_67_0
   - cmd: set PATH=%PATH%;%QTDIR%\bin
   - sh: sudo apt update && sudo apt install -y build-essential curl cmake libboost-all-dev libssl-dev libsodium-dev lcov git mercurial
+build_script:
+- sh: mkdir -p build && cd build && cmake .. && make && cmake .. -DCMAKE_BUILD_TYPE=Debug -DENABLE_GCOV=1 && make
+
 for:
   -
     matrix:
@@ -29,15 +32,15 @@ for:
     matrix:
       only:
         - image: ubuntu
-    build_script:
-      - mkdir -p build && cd build && cmake .. -DCMAKE_BUILD_TYPE=Debug -DENABLE_GCOV=1 && make
     test_script:
       - env CTEST_OUTPUT_ON_FAILURE=1 make test
       - lcov --capture --directory src --output-file temp.info && lcov --remove temp.info "/usr/include/*" "*/google/*" "*/include/*" "*/tests/*" > coverage.info && lcov --list coverage.info
       - bash <(curl -s https://codecov.io/bash) -t 2a2cf36f-81d6-43b9-abba-d5955cb0cafe --root src
--
+  -
     matrix:
       only:
         - image: ubuntu
-    build_script:
-      - mkdir -p build && cd build && cmake .. && make
+    test_script:
+      - env CTEST_OUTPUT_ON_FAILURE=1 make test
+      - lcov --capture --directory src --output-file temp.info && lcov --remove temp.info "/usr/include/*" "*/google/*" "*/include/*" "*/tests/*" > coverage.info && lcov --list coverage.info
+      - bash <(curl -s https://codecov.io/bash) -t 2a2cf36f-81d6-43b9-abba-d5955cb0cafe --root src
