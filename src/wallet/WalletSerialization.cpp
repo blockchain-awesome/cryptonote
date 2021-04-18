@@ -21,6 +21,7 @@
 #include "stream/cryptonote.h"
 #include "stream/transaction.h"
 #include "stream/map.hpp"
+#include "cryptonote/structures/array.hpp"
 
 using namespace Common;
 using namespace crypto;
